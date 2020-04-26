@@ -68,8 +68,7 @@ usar primero los nros mas bajos.
 [INIT]
 'aca va el numero de OBJ mas alto, NO la cantidad de OBJs.
 'esto sirve para que los GMS puedan ver la lista completa de items para crear en una ventanita.
-NumOBJs=1201
-
+NumOBJs=1203
 
 
 [OBJ1]
@@ -444,7 +443,7 @@ Crucial=1
 
 [OBJ36]
 Name=Pocion Amarilla
-GrhIndex=540
+GrhIndex=30788
 ObjType=11
 Agarrable=0
 TipoPocion=1
@@ -456,7 +455,7 @@ Crucial=1
 
 [OBJ37] 
 Name=Pocion Azul
-GrhIndex=541
+GrhIndex=5734
 ObjType=11
 Agarrable=0
 TipoPocion=4
@@ -467,7 +466,7 @@ Crucial=1
 
 [OBJ38]
 Name=Pocion Roja
-GrhIndex=542
+GrhIndex=5736
 ObjType=11
 Agarrable=0
 TipoPocion=3
@@ -478,7 +477,7 @@ Crucial=1
 
 [OBJ39]
 Name=Pocion Verde
-GrhIndex=543
+GrhIndex=30791
 ObjType=11
 Agarrable=0
 TipoPocion=2
@@ -5241,18 +5240,18 @@ Crucial=0
 
 [OBJ461] 'Repone HP
 Name=Pocion Roja (Newbie)
-GrhIndex=5736
+GrhIndex=542
 ObjType=11
 Agarrable=0
 newbie=1
 TipoPocion=3
-MaxModificador=30
-MinModificador=30
+MaxModificador=10
+MinModificador=8
 Crucial=0
 
 [OBJ462] 'Mod Fuerza
 Name=Pocion Verde (Newbie)
-GrhIndex=5737
+GrhIndex=543
 ObjType=11
 Agarrable=0
 newbie=1
@@ -9737,7 +9736,7 @@ SkHerreria=75
 
 [OBJ855]
 Name=Pocion Amarilla (Newbie)
-GrhIndex=5733
+GrhIndex=540
 ObjType=11
 Agarrable=0
 TipoPocion=1
@@ -9750,7 +9749,7 @@ Crucial=1
 
 [OBJ856] 
 Name=Pocion Azul (Newbie)
-GrhIndex=5734
+GrhIndex=541
 ObjType=11
 Agarrable=0
 TipoPocion=4
@@ -9762,19 +9761,19 @@ Crucial=1
 
 [OBJ857]
 Name=Pocion Roja (Newbie)
-GrhIndex=5736
+GrhIndex=542
 ObjType=11
 Agarrable=0
 TipoPocion=3
 MaxModificador=10
-MinModificador=10
+MinModificador=8
 Valor=4
 Newbie=1
 Crucial=1
 
 [OBJ858]
 Name=Pocion Verde (Newbie)
-GrhIndex=5737
+GrhIndex=543
 ObjType=11
 Agarrable=0
 TipoPocion=2
@@ -14969,3 +14968,25 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Catacumbas que comunical la ciudad de Ullathorpe con Nix.
+
+[OBJ1202] 
+Name=Pocion Azul Principiantes
+GrhIndex=30789
+ObjType=11
+Agarrable=0
+TipoPocion=4
+MaxModificador=13
+MinModificador=8
+Valor=25
+Crucial=1
+
+[OBJ1203]
+Name=Pocion Roja Principiantes
+GrhIndex=30790
+ObjType=11
+Agarrable=0
+TipoPocion=3
+MaxModificador=20
+MinModificador=15
+Valor=20
+Crucial=1
