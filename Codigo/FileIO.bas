@@ -76,13 +76,13 @@ End Type
 Private Type tDatosNPC
     X As Integer
     Y As Integer
-    NPCIndex As Integer
+    NpcIndex As Integer
 End Type
 
 Private Type tDatosObjs
     X As Integer
     Y As Integer
-    objindex As Integer
+    ObjIndex As Integer
     ObjAmmount As Integer
 End Type
 
@@ -154,7 +154,7 @@ Public Sub CargarSpawnList()
             
             i = i + 1
             
-            SpawnList(i).NPCIndex = LoopC
+            SpawnList(i).NpcIndex = LoopC
             SpawnList(i).NpcName = LeerNPCs.GetValue("NPC" & LoopC, "Name")
             
         End If
@@ -755,10 +755,10 @@ Public Sub GrabarMapa(ByVal Map As Long, ByRef MAPFILE As String)
                 '.inf file
                 ByFlags = 0
                 
-                If .ObjInfo.objindex > 0 Then
+                If .ObjInfo.ObjIndex > 0 Then
                     
-                    If ObjData(.ObjInfo.objindex).OBJType = eOBJType.otFogata Then
-                        .ObjInfo.objindex = 0
+                    If ObjData(.ObjInfo.ObjIndex).OBJType = eOBJType.otFogata Then
+                        .ObjInfo.ObjIndex = 0
                         .ObjInfo.Amount = 0
                     End If
 
@@ -767,16 +767,16 @@ Public Sub GrabarMapa(ByVal Map As Long, ByRef MAPFILE As String)
                 If .TileExit.Map Then ByFlags = ByFlags Or 1
                 
                 ' No hacer backup de los NPCs invalidos (Pretorianos, Mascotas, Invocados )
-                If .NPCIndex Then
+                If .NpcIndex Then
                     
-                    NpcInvalido = (Npclist(.NPCIndex).NPCtype = eNPCType.Pretoriano) Or _
-                                  (Npclist(.NPCIndex).MaestroUser > 0)
+                    NpcInvalido = (Npclist(.NpcIndex).NPCtype = eNPCType.Pretoriano) Or _
+                                  (Npclist(.NpcIndex).MaestroUser > 0)
                     
                     If Not NpcInvalido Then ByFlags = ByFlags Or 2
 
                 End If
                 
-                If .ObjInfo.objindex Then ByFlags = ByFlags Or 4
+                If .ObjInfo.ObjIndex Then ByFlags = ByFlags Or 4
                 
                 Call InfWriter.putByte(ByFlags)
                 
@@ -786,10 +786,10 @@ Public Sub GrabarMapa(ByVal Map As Long, ByRef MAPFILE As String)
                     Call InfWriter.putInteger(.TileExit.Y)
                 End If
                 
-                If .NPCIndex And Not NpcInvalido Then Call InfWriter.putInteger(Npclist(.NPCIndex).Numero)
+                If .NpcIndex And Not NpcInvalido Then Call InfWriter.putInteger(Npclist(.NpcIndex).Numero)
                 
-                If .ObjInfo.objindex Then
-                    Call InfWriter.putInteger(.ObjInfo.objindex)
+                If .ObjInfo.ObjIndex Then
+                    Call InfWriter.putInteger(.ObjInfo.ObjIndex)
                     Call InfWriter.putInteger(.ObjInfo.Amount)
                 End If
                 
@@ -1287,7 +1287,7 @@ Sub LoadOBJData()
                 S = Leer.GetValue("OBJ" & Object, "ItemCrafteo" & i)
                 If Len(S) <= 0 Then Exit For
 
-                .ItemCrafteo(i).objindex = val(ReadField(1, S, Asc("-")))
+                .ItemCrafteo(i).ObjIndex = val(ReadField(1, S, Asc("-")))
                 .ItemCrafteo(i).Amount = val(ReadField(2, S, Asc("-")))
             Next i
             
@@ -1542,10 +1542,10 @@ Sub LoadUserInit(ByVal Userindex As Integer, ByRef UserFile As clsIniManager)
         For LoopC = 1 To MAX_BANCOINVENTORY_SLOTS
             ln = UserFile.GetValue("BancoInventory", "Obj" & LoopC)
             If (val(ReadField(1, ln, 45))) > NumObjDatas Then
-                .BancoInvent.Object(LoopC).objindex = 0
+                .BancoInvent.Object(LoopC).ObjIndex = 0
                 .BancoInvent.Object(LoopC).Amount = 0
             Else
-                .BancoInvent.Object(LoopC).objindex = CInt(ReadField(1, ln, 45))
+                .BancoInvent.Object(LoopC).ObjIndex = CInt(ReadField(1, ln, 45))
                 .BancoInvent.Object(LoopC).Amount = CInt(ReadField(2, ln, 45))
             End If
         Next LoopC
@@ -1554,11 +1554,11 @@ Sub LoadUserInit(ByVal Userindex As Integer, ByRef UserFile As clsIniManager)
         For LoopC = 1 To MAX_INVENTORY_SLOTS
             ln = UserFile.GetValue("Inventory", "Obj" & LoopC)
             If (val(ReadField(1, ln, 45))) > NumObjDatas Then
-                .Invent.Object(LoopC).objindex = 0
+                .Invent.Object(LoopC).ObjIndex = 0
                 .Invent.Object(LoopC).Amount = 0
                 .Invent.Object(LoopC).Equipped = 0
             Else
-                .Invent.Object(LoopC).objindex = val(ReadField(1, ln, 45))
+                .Invent.Object(LoopC).ObjIndex = val(ReadField(1, ln, 45))
                 .Invent.Object(LoopC).Amount = val(ReadField(2, ln, 45))
                 .Invent.Object(LoopC).Equipped = val(ReadField(3, ln, 45))
             End If
@@ -1821,7 +1821,7 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
                 ReDim Objetos(1 To .NumeroOBJs)
                 Get #fh, , Objetos
                 For i = 1 To .NumeroOBJs
-                    MapData(Map, Objetos(i).X, Objetos(i).Y).ObjInfo.objindex = Objetos(i).objindex
+                    MapData(Map, Objetos(i).X, Objetos(i).Y).ObjInfo.ObjIndex = Objetos(i).ObjIndex
                     MapData(Map, Objetos(i).X, Objetos(i).Y).ObjInfo.Amount = Objetos(i).ObjAmmount
                 Next i
             End If
@@ -1830,27 +1830,27 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
                 ReDim NPCs(1 To .NumeroNPCs)
                 Get #fh, , NPCs
                 For i = 1 To .NumeroNPCs
-                    MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex = NPCs(i).NPCIndex
-                    If MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex > 0 Then
+                    MapData(Map, NPCs(i).X, NPCs(i).Y).NpcIndex = NPCs(i).NpcIndex
+                    If MapData(Map, NPCs(i).X, NPCs(i).Y).NpcIndex > 0 Then
                         
                         npcfile = DatPath & "NPCs.dat"
                         
                         'Si el npc debe hacer respawn en la pos original la guardamos
-                        If val(GetVar(npcfile, "NPC" & MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex, "PosOrig")) = 1 Then
-                            MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex = OpenNPC(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex)
-                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Orig.Map = Map
-                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Orig.X = NPCs(i).X
-                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Orig.Y = NPCs(i).Y
+                        If val(GetVar(npcfile, "NPC" & MapData(Map, NPCs(i).X, NPCs(i).Y).NpcIndex, "PosOrig")) = 1 Then
+                            MapData(Map, NPCs(i).X, NPCs(i).Y).NpcIndex = OpenNPC(MapData(Map, NPCs(i).X, NPCs(i).Y).NpcIndex)
+                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NpcIndex).Orig.Map = Map
+                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NpcIndex).Orig.X = NPCs(i).X
+                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NpcIndex).Orig.Y = NPCs(i).Y
                         Else
-                            MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex = OpenNPC(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex)
+                            MapData(Map, NPCs(i).X, NPCs(i).Y).NpcIndex = OpenNPC(MapData(Map, NPCs(i).X, NPCs(i).Y).NpcIndex)
                         End If
                         
-                        If Not MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex = 0 Then
-                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Pos.Map = Map
-                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Pos.X = NPCs(i).X
-                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Pos.Y = NPCs(i).Y
+                        If Not MapData(Map, NPCs(i).X, NPCs(i).Y).NpcIndex = 0 Then
+                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NpcIndex).Pos.Map = Map
+                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NpcIndex).Pos.X = NPCs(i).X
+                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NpcIndex).Pos.Y = NPCs(i).Y
        
-                            Call MakeNPCChar(True, 0, MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex, Map, NPCs(i).X, NPCs(i).Y)
+                            Call MakeNPCChar(True, 0, MapData(Map, NPCs(i).X, NPCs(i).Y).NpcIndex, Map, NPCs(i).X, NPCs(i).Y)
                         End If
                         
                     End If
@@ -2415,7 +2415,7 @@ Sub SaveUserToCharfile(ByVal Userindex As Integer, Optional ByVal SaveTimeOnline
         Call Manager.ChangeValue("BancoInventory", "CantidadItems", CInt(.BancoInvent.NroItems))
 
         For LoopC = 1 To MAX_BANCOINVENTORY_SLOTS
-            Call Manager.ChangeValue("BancoInventory", "Obj" & LoopC, .BancoInvent.Object(LoopC).objindex & "-" & .BancoInvent.Object(LoopC).Amount)
+            Call Manager.ChangeValue("BancoInventory", "Obj" & LoopC, .BancoInvent.Object(LoopC).ObjIndex & "-" & .BancoInvent.Object(LoopC).Amount)
         Next LoopC
 
         '*******************************************************************************************
@@ -2425,7 +2425,7 @@ Sub SaveUserToCharfile(ByVal Userindex As Integer, Optional ByVal SaveTimeOnline
         Call Manager.ChangeValue("Inventory", "CantidadItems", CInt(.Invent.NroItems))
     
         For LoopC = 1 To MAX_INVENTORY_SLOTS
-            Call Manager.ChangeValue("Inventory", "Obj" & LoopC, .Invent.Object(LoopC).objindex & "-" & .Invent.Object(LoopC).Amount & "-" & .Invent.Object(LoopC).Equipped)
+            Call Manager.ChangeValue("Inventory", "Obj" & LoopC, .Invent.Object(LoopC).ObjIndex & "-" & .Invent.Object(LoopC).Amount & "-" & .Invent.Object(LoopC).Equipped)
         Next LoopC
     
         Call Manager.ChangeValue("Inventory", "WeaponEqpSlot", CByte(.Invent.WeaponEqpSlot))
@@ -2526,7 +2526,7 @@ Function criminal(ByVal Userindex As Integer) As Boolean
 
 End Function
 
-Sub BackUPnPc(ByVal NPCIndex As Integer, ByVal hFile As Integer)
+Sub BackUPnPc(ByVal NpcIndex As Integer, ByVal hFile As Integer)
     '***************************************************
     'Author: Unknown
     'Last Modification: 10/09/2010
@@ -2535,9 +2535,9 @@ Sub BackUPnPc(ByVal NPCIndex As Integer, ByVal hFile As Integer)
 
     Dim LoopC As Integer
     
-    Print #hFile, "[NPC" & Npclist(NPCIndex).Numero & "]"
+    Print #hFile, "[NPC" & Npclist(NpcIndex).Numero & "]"
     
-    With Npclist(NPCIndex)
+    With Npclist(NpcIndex)
         'General
         Print #hFile, "Name=" & .Name
         Print #hFile, "Desc=" & .Desc
@@ -2573,7 +2573,7 @@ Sub BackUPnPc(ByVal NPCIndex As Integer, ByVal hFile As Integer)
         If .Invent.NroItems > 0 Then
 
             For LoopC = 1 To .Invent.NroItems
-                Print #hFile, "Obj" & LoopC & "=" & .Invent.Object(LoopC).objindex & "-" & .Invent.Object(LoopC).Amount
+                Print #hFile, "Obj" & LoopC & "=" & .Invent.Object(LoopC).ObjIndex & "-" & .Invent.Object(LoopC).Amount
             Next LoopC
 
         End If
@@ -2584,7 +2584,7 @@ Sub BackUPnPc(ByVal NPCIndex As Integer, ByVal hFile As Integer)
 
 End Sub
 
-Sub CargarNpcBackUp(ByVal NPCIndex As Integer, ByVal NpcNumber As Integer)
+Sub CargarNpcBackUp(ByVal NpcIndex As Integer, ByVal NpcNumber As Integer)
     '***************************************************
     'Author: Unknown
     'Last Modification: -
@@ -2602,7 +2602,7 @@ Sub CargarNpcBackUp(ByVal NPCIndex As Integer, ByVal NpcNumber As Integer)
     npcfile = DatPath & "bkNPCs.dat"
     'End If
     
-    With Npclist(NPCIndex)
+    With Npclist(NpcIndex)
     
         .Numero = NpcNumber
         .Name = GetVar(npcfile, "NPC" & NpcNumber, "Name")
@@ -2640,7 +2640,7 @@ Sub CargarNpcBackUp(ByVal NPCIndex As Integer, ByVal NpcNumber As Integer)
 
             For LoopC = 1 To MAX_INVENTORY_SLOTS
                 ln = GetVar(npcfile, "NPC" & NpcNumber, "Obj" & LoopC)
-                .Invent.Object(LoopC).objindex = val(ReadField(1, ln, 45))
+                .Invent.Object(LoopC).ObjIndex = val(ReadField(1, ln, 45))
                 .Invent.Object(LoopC).Amount = val(ReadField(2, ln, 45))
                
             Next LoopC
@@ -2648,7 +2648,7 @@ Sub CargarNpcBackUp(ByVal NPCIndex As Integer, ByVal NpcNumber As Integer)
         Else
 
             For LoopC = 1 To MAX_INVENTORY_SLOTS
-                .Invent.Object(LoopC).objindex = 0
+                .Invent.Object(LoopC).ObjIndex = 0
                 .Invent.Object(LoopC).Amount = 0
             Next LoopC
 
@@ -2656,7 +2656,7 @@ Sub CargarNpcBackUp(ByVal NPCIndex As Integer, ByVal NpcNumber As Integer)
         
         For LoopC = 1 To MAX_NPC_DROPS
             ln = GetVar(npcfile, "NPC" & NpcNumber, "Drop" & LoopC)
-            .Drop(LoopC).objindex = val(ReadField(1, ln, 45))
+            .Drop(LoopC).ObjIndex = val(ReadField(1, ln, 45))
             .Drop(LoopC).Amount = val(ReadField(2, ln, 45))
         Next LoopC
         

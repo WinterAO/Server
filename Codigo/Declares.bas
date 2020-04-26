@@ -911,7 +911,7 @@ End Type
 
 Public Type UserObj
 
-    ObjIndex As Integer
+    objindex As Integer
     Amount As Integer
     Equipped As Byte
 
@@ -990,7 +990,7 @@ Public Type Char
 End Type
 
 Public Type CraftingItem
-    ObjIndex As Integer
+    objindex As Integer
     Amount As Integer
 End Type
 
@@ -1138,14 +1138,14 @@ End Type
 
 Public Type obj
 
-    ObjIndex As Integer
+    objindex As Integer
     Amount As Integer
 
 End Type
 
 Public Type tQuestNpc
 
-    NpcIndex As Integer
+    NPCIndex As Integer
     Amount As Integer
 
 End Type
@@ -1740,7 +1740,7 @@ End Type
 
 Public Type tCriaturasEntrenador
 
-    NpcIndex As Integer
+    NPCIndex As Integer
     NpcName As String
     tmpIndex As Integer
 
@@ -1768,7 +1768,7 @@ End Type
 
 Public Type tDrops
 
-    ObjIndex As Integer
+    objindex As Integer
     Amount As Long
 
 End Type
@@ -1853,11 +1853,11 @@ Public Type MapBlock
     Blocked As Byte
     Graphic(1 To 4) As Long
     Userindex As Integer
-    NpcIndex As Integer
+    NPCIndex As Integer
     ObjInfo As obj
     TileExit As WorldPos
-    trigger As eTrigger
-    particulas As Integer
+    Trigger As eTrigger
+    Particulas As Integer
     
 End Type
 
@@ -1888,6 +1888,8 @@ Type MapInfo
     Zona As String
     Restringir As Byte
     BackUp As Byte
+    
+    lvlMinimo As Byte
 
 End Type
 
