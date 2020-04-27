@@ -1093,25 +1093,25 @@ Error:
 End Sub
 
 Public Sub WarpPosAnt(ByVal Userindex As Integer)
-          ' � Warpeo del personaje a su posici�n anterior.
+    ' � Warpeo del personaje a su posici�n anterior.
           
-          Dim Pos As WorldPos
+    Dim Pos As WorldPos
           
-   On Error GoTo WarpPosAnt_Error
+    On Error GoTo WarpPosAnt_Error
 
-10        With UserList(Userindex)
-20            Pos.Map = .PosAnt.Map
-30            Pos.X = .PosAnt.X
-40            Pos.Y = .PosAnt.Y
+        With UserList(Userindex)
+            Pos.Map = .PosAnt.Map
+            Pos.X = .PosAnt.X
+            Pos.Y = .PosAnt.Y
                           
-50            Call FindLegalPos(Userindex, Pos.Map, Pos.X, Pos.Y)
-60            Call WarpUserChar(Userindex, Pos.Map, Pos.X, Pos.Y, False)
+            Call FindLegalPos(Userindex, Pos.Map, Pos.X, Pos.Y)
+            Call WarpUserChar(Userindex, Pos.Map, Pos.X, Pos.Y, False)
               
-70            .PosAnt.Map = 0
-80            .PosAnt.X = 0
-90            .PosAnt.Y = 0
+            .PosAnt.Map = 0
+            .PosAnt.X = 0
+            .PosAnt.Y = 0
           
-100       End With
+        End With
 
    On Error GoTo 0
    Exit Sub

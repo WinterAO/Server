@@ -106,6 +106,17 @@ Public Sub DoTileEvents(ByVal Userindex As Integer, _
             End If
             
             If .TileExit.Map > 0 And .TileExit.Map <= NumMaps Then
+            
+                If UserList(Userindex).Stats.ELV < MapInfo(.TileExit.Map).lvlMinimo Then
+                    Call WriteConsoleMsg(Userindex, "Para entrar a este mapa necesitas ser nivel " & MapInfo(.TileExit.Map).lvlMinimo & ".", FontTypeNames.FONTTYPE_INFO)
+                    Call ClosestStablePos(UserList(Userindex).Pos, nPos)
+            
+                    If nPos.X <> 0 And nPos.Y <> 0 Then
+                        Call WarpUserChar(Userindex, nPos.Map, nPos.X, nPos.Y, False)
+                    End If
+                    Exit Sub
+                    
+                End If
                 
                 ' Es un teleport, entra en una posicion random, acorde al radio (si es 0, es pos fija)
                 ' We have 5 attempts to not falling into another teleport or a map exit.. If we get to the fifth attemp,
@@ -1068,9 +1079,9 @@ Function LegalPosNPC(ByVal Map As Integer, _
         End If
     
         If AguaValida = 0 Then
-            LegalPosNPC = (.Blocked <> 1) And (.Userindex = 0 Or IsDeadChar Or IsAdminInvisible) And (.NpcIndex = 0) And (.trigger <> eTrigger.POSINVALIDA Or IsPet) And Not HayAgua(Map, X, Y)
+            LegalPosNPC = (.Blocked <> 1) And (.Userindex = 0 Or IsDeadChar Or IsAdminInvisible) And (.NpcIndex = 0) And (.Trigger <> eTrigger.POSINVALIDA Or IsPet) And Not HayAgua(Map, X, Y)
         Else
-            LegalPosNPC = (.Blocked <> 1) And (.Userindex = 0 Or IsDeadChar Or IsAdminInvisible) And (.NpcIndex = 0) And (.trigger <> eTrigger.POSINVALIDA Or IsPet)
+            LegalPosNPC = (.Blocked <> 1) And (.Userindex = 0 Or IsDeadChar Or IsAdminInvisible) And (.NpcIndex = 0) And (.Trigger <> eTrigger.POSINVALIDA Or IsPet)
 
         End If
 
@@ -1294,7 +1305,7 @@ Sub LookatTile(ByVal Userindex As Integer, _
                             End If
                                         
                             If .flags.Privilegios And PlayerType.RoyalCouncil Then
-                                Stat = Stat & " [CONSEJO DE BANDERBILL]"
+                                Stat = Stat & " [CONSEJO DE BELLEUVE]"
                                 ft = FontTypeNames.FONTTYPE_CONSEJOVesA
                             ElseIf .flags.Privilegios And PlayerType.ChaosCouncil Then
                                 Stat = Stat & " [CONCILIO DE LAS SOMBRAS]"

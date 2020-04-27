@@ -146,18 +146,12 @@ Sub QuitarNewbieObj(ByVal Userindex As Integer)
             Dim DeDonde As WorldPos
         
             Select Case .Hogar
-
-                Case eCiudad.cLindos 'Vamos a tener que ir por todo el desierto... uff!
-                    DeDonde = Lindos
-
-                Case eCiudad.cUllathorpe
-                    DeDonde = Ullathorpe
-
-                Case eCiudad.cBanderbill
-                    DeDonde = Banderbill
+            
+                Case eCiudad.cRamx
+                    DeDonde = Ramx
 
                 Case Else
-                    DeDonde = Nix
+                    DeDonde = Ramx
 
             End Select
         
@@ -585,7 +579,7 @@ Sub MakeObj(ByRef obj As obj, _
                 xPos.Map = Map
                 xPos.X = X
                 xPos.Y = Y
-                If (MapData(xPos.Map, xPos.X, xPos.Y).trigger <> eTrigger.CASA Or MapData(xPos.Map, xPos.X, xPos.Y).trigger <> eTrigger.BAJOTECHO) And MapData(xPos.Map, xPos.X, xPos.Y).Blocked <> 1 Then AgregarObjetoLimpieza xPos
+                If (MapData(xPos.Map, xPos.X, xPos.Y).Trigger <> eTrigger.CASA Or MapData(xPos.Map, xPos.X, xPos.Y).Trigger <> eTrigger.BAJOTECHO) And MapData(xPos.Map, xPos.X, xPos.Y).Blocked <> 1 Then AgregarObjetoLimpieza xPos
 
             End If
 
@@ -2146,7 +2140,7 @@ Sub TirarTodo(ByVal Userindex As Integer)
 
     With UserList(Userindex)
 
-        If MapData(.Pos.Map, .Pos.X, .Pos.Y).trigger = eTrigger.ZONAPELEA Then Exit Sub
+        If MapData(.Pos.Map, .Pos.X, .Pos.Y).Trigger = eTrigger.ZONAPELEA Then Exit Sub
         
         Call TirarTodosLosItems(Userindex)
         
@@ -2289,7 +2283,7 @@ Sub TirarTodosLosItemsNoNewbies(ByVal Userindex As Integer)
     
     With UserList(Userindex)
 
-        If MapData(.Pos.Map, .Pos.X, .Pos.Y).trigger = eTrigger.ZONAPELEA Then Exit Sub
+        If MapData(.Pos.Map, .Pos.X, .Pos.Y).Trigger = eTrigger.ZONAPELEA Then Exit Sub
         
         For i = 1 To UserList(Userindex).CurrentInventorySlots
             ItemIndex = .Invent.Object(i).ObjIndex
@@ -2337,14 +2331,14 @@ Sub TirarTodosLosItemsEnMochila(ByVal Userindex As Integer)
     
     With UserList(Userindex)
 
-        If MapData(.Pos.Map, .Pos.X, .Pos.Y).trigger = eTrigger.ZONAPELEA Then Exit Sub
+        If MapData(.Pos.Map, .Pos.X, .Pos.Y).Trigger = eTrigger.ZONAPELEA Then Exit Sub
         
         For i = MAX_NORMAL_INVENTORY_SLOTS + 1 To .CurrentInventorySlots
             ItemIndex = .Invent.Object(i).ObjIndex
 
             If ItemIndex > 0 Then
                 If Not ItemSeCae(ItemIndex) Then
-                    Call WriteConsoleMsg(UserIndex, "Acabas de tirar un objeto que no se cae normalmente ya que lo tenias en tu mochila u alforja y la desequipaste o tiraste", FontTypeNames.FONTTYPE_WARNING)
+                    Call WriteConsoleMsg(Userindex, "Acabas de tirar un objeto que no se cae normalmente ya que lo tenias en tu mochila u alforja y la desequipaste o tiraste", FontTypeNames.FONTTYPE_WARNING)
                 End If
 
                 NuevaPos.X = 0

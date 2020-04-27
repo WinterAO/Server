@@ -316,7 +316,6 @@ Sub ConnectNewUser(ByVal Userindex As Integer, _
                    ByVal UserRaza As eRaza, _
                    ByVal UserSexo As eGenero, _
                    ByVal UserClase As eClass, _
-                   ByVal Hogar As eCiudad, _
                    ByVal Head As Integer)
 
     '*************************************************
@@ -391,7 +390,7 @@ Sub ConnectNewUser(ByVal Userindex As Integer, _
         .Clase = UserClase
         .raza = UserRaza
         .Genero = UserSexo
-        .Hogar = Hogar
+        .Hogar = eCiudad.cRamx
 
         'CHOTS | Accounts
         .AccountHash = AccountHash
@@ -1187,21 +1186,12 @@ Sub ConnectUser(ByVal Userindex As Integer, _
         'Posicion de comienzo
         If Mapa = 0 Then
 
-            'Configurable desde el Server.ini / CustomWorld
-            'En caso que usemos mundo propio, cargamos el mapa y la coordeanas donde se hara el spawn inicial'
-            'Caso contrario sigue modo Alkon'
-            If UsarMundoPropio Then
-                .Pos = CustomSpawnMap
-                Mapa = CustomSpawnMap.Map
-            Else
-                'Dejo esto comentado aqui por si se quiere utilizar la ciudad elegida desde el menu
-                'Crear personaje, ahora se utiliza solo Nemahuak ya que es una ciudad nw utilizada desde la 0.13
-                ' .Pos = Ciudades(.Hogar)
-                ' mapa = Ciudades(.Hogar).Map
-                .Pos = Nemahuak
-                Mapa = Nemahuak.Map
-            End If
-
+            'Dejo esto comentado aqui por si se quiere utilizar la ciudad elegida desde el menu
+            'Crear personaje, ahora se utiliza solo Ramx ya que es la ciudad inicial de Winter
+            ' .Pos = Ciudades(.Hogar)
+            ' mapa = Ciudades(.Hogar).Map
+            .Pos = Ramx
+            Mapa = Ramx.Map
         Else
     
             If Not MapaValido(Mapa) Then
@@ -1329,12 +1319,8 @@ Sub ConnectUser(ByVal Userindex As Integer, _
         Call WriteUserIndexInServer(Userindex) 'Enviamos el User index
         Call WriteChangeMap(Userindex, .Pos.Map, MapInfo(.Pos.Map).MapVersion) 'Carga el mapa
 
-        'Si tiene MP3 el mapa mandamos que lo reproduzca, sino reproducimos el MIDI de toda la vida
-        If MapInfo(.Pos.Map).MusicMp3 <> vbNullString Then
-            Call WritePlayMp3(Userindex, MapInfo(.Pos.Map).MusicMp3)
-        Else
-            Call WritePlayMidi(Userindex, val(ReadField(1, MapInfo(.Pos.Map).Music, 45)))
-        End If
+        'Si tiene MP3 el mapa mandamos que lo reproduzca
+        Call WritePlayMusic(Userindex, val(ReadField(1, MapInfo(.Pos.Map).music, 45)))
         
         If .flags.Privilegios = PlayerType.Dios Then
             .flags.ChatColor = RGB(250, 250, 150)

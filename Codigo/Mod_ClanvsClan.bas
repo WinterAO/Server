@@ -365,8 +365,8 @@ Private Sub GanaCVC(ByVal guildWinner As Byte, ByVal guildLooser As Byte)
 
         Dim startY As Byte
 
-        startX = Ullathorpe.x
-        startY = Ullathorpe.Y
+        startX = Ramx.X
+        startY = Ramx.Y
 
         Dim sMessage As String
 
@@ -381,12 +381,12 @@ Private Sub GanaCVC(ByVal guildWinner As Byte, ByVal guildLooser As Byte)
 
                     If (.UsUaRiOs(j) <> -1) Then
                         'busco una pos
-                        Call FindLegalPos(.UsUaRiOs(j), Ullathorpe.Map, CInt(startX), CInt(startY))
+                        Call FindLegalPos(.UsUaRiOs(j), Ramx.Map, CInt(startX), CInt(startY))
 
                         'hay pos
 
                         If (startX <> 0) And (startY <> 0) Then
-                            Call WarpUserChar(.UsUaRiOs(j), Ullathorpe.Map, startX, startY, True)
+                            Call WarpUserChar(.UsUaRiOs(j), Ramx.Map, startX, startY, True)
 
                         End If
 

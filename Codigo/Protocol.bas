@@ -87,88 +87,87 @@ Private Enum ServerPacketID
     ObjectCreate = 35            ' HO
     ObjectDelete = 36            ' BO
     BlockPosition = 37           ' BQ
-    PlayMp3 = 38
-    PlayMidi = 39                ' TM
-    PlayWave = 40                ' TW
-    guildList = 41               ' GL
-    AreaChanged = 42             ' CA
-    PauseToggle = 43             ' BKW
-    RainToggle = 44              ' LLU
-    CreateFX = 45                ' CFX
-    UpdateUserStats = 46         ' EST
-    ChangeInventorySlot = 47     ' CSI
-    ChangeBankSlot = 48          ' SBO
-    ChangeSpellSlot = 49         ' SHS
-    Atributes = 50               ' ATR
-    BlacksmithWeapons = 51       ' LAH
-    BlacksmithArmors = 52        ' LAR
-    InitCarpenting = 53          ' OBR
-    RestOK = 54                  ' DOK
-    errorMsg = 55                ' ERR
-    Blind = 56                   ' CEGU
-    Dumb = 57                    ' DUMB
-    ShowSignal = 58              ' MCAR
-    ChangeNPCInventorySlot = 59  ' NPCI
-    UpdateHungerAndThirst = 60   ' EHYS
-    Fame = 61                    ' FAMA
-    MiniStats = 62               ' MEST
-    LevelUp = 63                 ' SUNI
-    AddForumMsg = 64             ' FMSG
-    ShowForumForm = 65           ' MFOR
-    SetInvisible = 66            ' NOVER
-    DiceRoll = 67                ' DADOS
-    MeditateToggle = 68          ' MEDOK
-    BlindNoMore = 69             ' NSEGUE
-    DumbNoMore = 70              ' NESTUP
-    SendSkills = 71              ' SKILLS
-    TrainerCreatureList = 72     ' LSTCRI
-    guildNews = 73               ' GUILDNE
-    OfferDetails = 74            ' PEACEDE & ALLIEDE
-    AlianceProposalsList = 75    ' ALLIEPR
-    PeaceProposalsList = 76      ' PEACEPR
-    CharacterInfo = 77           ' CHRINFO
-    GuildLeaderInfo = 78         ' LEADERI
-    GuildMemberInfo = 79
-    GuildDetails = 80            ' CLANDET
-    ShowGuildFundationForm = 81  ' SHOWFUN
-    ParalizeOK = 82              ' PARADOK
-    ShowUserRequest = 83         ' PETICIO
-    ChangeUserTradeSlot = 84     ' COMUSUINV
-    SendNight = 85               ' NOC
-    Pong = 86
-    UpdateTagAndStatus = 87
+    PlayMusic                    ' TM
+    PlayWave                     ' TW
+    guildList                    ' GL
+    AreaChanged                  ' CA
+    PauseToggle                  ' BKW
+    RainToggle                   ' LLU
+    CreateFX                     ' CFX
+    UpdateUserStats              ' EST
+    ChangeInventorySlot          ' CSI
+    ChangeBankSlot               ' SBO
+    ChangeSpellSlot              ' SHS
+    Atributes                    ' ATR
+    BlacksmithWeapons            ' LAH
+    BlacksmithArmors             ' LAR
+    InitCarpenting               ' OBR
+    RestOK                       ' DOK
+    errorMsg                     ' ERR
+    Blind                        ' CEGU
+    Dumb                         ' DUMB
+    ShowSignal                   ' MCAR
+    ChangeNPCInventorySlot       ' NPCI
+    UpdateHungerAndThirst        ' EHYS
+    Fame                         ' FAMA
+    MiniStats                    ' MEST
+    LevelUp                      ' SUNI
+    AddForumMsg                  ' FMSG
+    ShowForumForm                ' MFOR
+    SetInvisible                 ' NOVER
+    DiceRoll                     ' DADOS
+    MeditateToggle               ' MEDOK
+    BlindNoMore                  ' NSEGUE
+    DumbNoMore                   ' NESTUP
+    SendSkills                   ' SKILLS
+    TrainerCreatureList          ' LSTCRI
+    guildNews                    ' GUILDNE
+    OfferDetails                 ' PEACEDE & ALLIEDE
+    AlianceProposalsList         ' ALLIEPR
+    PeaceProposalsList           ' PEACEPR
+    CharacterInfo                ' CHRINFO
+    GuildLeaderInfo              ' LEADERI
+    GuildMemberInfo
+    GuildDetails                 ' CLANDET
+    ShowGuildFundationForm       ' SHOWFUN
+    ParalizeOK                   ' PARADOK
+    ShowUserRequest              ' PETICIO
+    ChangeUserTradeSlot          ' COMUSUINV
+    SendNight                    ' NOC
+    Pong
+    UpdateTagAndStatus
     
     'GM =  messages
-    SpawnList = 88               ' SPL
-    ShowSOSForm = 89             ' MSOS
-    ShowMOTDEditionForm = 90     ' ZMOTD
-    ShowGMPanelForm = 91         ' ABPANEL
-    UserNameList = 92            ' LISTUSU
-    ShowDenounces = 93
-    RecordList = 94
-    RecordDetails = 95
+    SpawnList                    ' SPL
+    ShowSOSForm                  ' MSOS
+    ShowMOTDEditionForm          ' ZMOTD
+    ShowGMPanelForm              ' ABPANEL
+    UserNameList                 ' LISTUSU
+    ShowDenounces
+    RecordList
+    RecordDetails
     
-    ShowGuildAlign = 96
-    ShowPartyForm = 97
-    UpdateStrenghtAndDexterity = 98
-    UpdateStrenght = 99
-    UpdateDexterity = 100
-    AddSlots = 101
-    MultiMessage = 102
-    StopWorking = 103
-    CancelOfferItem = 104
-    PalabrasMagicas = 105
-    PlayAttackAnim = 106
-    FXtoMap = 107
-    AccountLogged = 108 'CHOTS | Accounts
-    SearchList = 109
-    QuestDetails = 110
-    QuestListSend = 111
-    CreateDamage = 112           ' CDMG
-    UserInEvent = 113
-    RenderMsg = 114
-    DeletedChar = 115
-    EquitandoToggle = 116
+    ShowGuildAlign
+    ShowPartyForm
+    UpdateStrenghtAndDexterity
+    UpdateStrenght
+    UpdateDexterity
+    AddSlots
+    MultiMessage
+    StopWorking
+    CancelOfferItem
+    PalabrasMagicas
+    PlayAttackAnim
+    FXtoMap
+    AccountLogged  'CHOTS | Accounts
+    SearchList
+    QuestDetails
+    QuestListSend
+    CreateDamage                ' CDMG
+    UserInEvent
+    RenderMsg
+    DeletedChar
+    EquitandoToggle
     InitCraftman
     EnviarListDeAmigos
 End Enum
@@ -1216,11 +1215,8 @@ Private Sub HandleGMCommands(ByVal Userindex As Integer)
         
             Case eGMCommands.SetCharDescription      '/SETDESC
                 Call HandleSetCharDescription(Userindex)
-
-            Case eGMCommands.ForceMP3ToMap          '/FORCEMP3MAP
-                Call HanldeForceMP3ToMap(Userindex)
         
-            Case eGMCommands.ForceMIDIToMap          '/FORCEMIDIMAP
+            Case eGMCommands.ForceMUSICToMap          '/FORCEMUSICMAP
                 Call HanldeForceMIDIToMap(Userindex)
         
             Case eGMCommands.ForceWAVEToMap          '/FORCEWAVMAP
@@ -1300,12 +1296,9 @@ Private Sub HandleGMCommands(ByVal Userindex As Integer)
         
             Case eGMCommands.RoyalArmyKick           '/NOREAL
                 Call HandleRoyalArmyKick(Userindex)
-
-            Case eGMCommands.ForceMP3All            '/FORCEMP3
-                Call HandleForceMP3All(Userindex)
         
-            Case eGMCommands.ForceMIDIAll            '/FORCEMIDI
-                Call HandleForceMIDIAll(Userindex)
+            Case eGMCommands.ForceMUSICAll            '/FORCEMUSIC
+                Call HandleForceMUSICAll(Userindex)
         
             Case eGMCommands.ForceWAVEAll            '/FORCEWAV
                 Call HandleForceWAVEAll(Userindex)
@@ -1775,7 +1768,6 @@ Private Sub HandleLoginNewChar(ByVal Userindex As Integer)
     Dim version     As String
     Dim race        As eRaza
     Dim gender      As eGenero
-    Dim homeland    As eCiudad
     Dim Class As eClass
     Dim Head As Integer
 
@@ -1789,7 +1781,6 @@ Private Sub HandleLoginNewChar(ByVal Userindex As Integer)
     gender = buffer.ReadByte()
     Class = buffer.ReadByte()
     Head = buffer.ReadInteger
-    homeland = buffer.ReadByte()
     
     'If we got here then packet is complete, copy data back to original queue
     Call UserList(Userindex).incomingData.CopyBuffer(buffer)
@@ -1821,7 +1812,7 @@ Private Sub HandleLoginNewChar(ByVal Userindex As Integer)
     If Not VersionOK(version) Then
         Call WriteErrorMsg(Userindex, "Esta version del juego es obsoleta, la version correcta es la " & ULTIMAVERSION & ". La misma se encuentra disponible en www.argentumonline.org")
     Else
-        Call ConnectNewUser(Userindex, UserName, AccountHash, race, gender, Class, homeland, Head)
+        Call ConnectNewUser(Userindex, UserName, AccountHash, race, gender, Class, Head)
 
     End If
   
@@ -3459,7 +3450,7 @@ Private Sub HandleWorkLeftClick(ByVal Userindex As Integer)
                 
                 'Basado en la idea de Barrin
                 'Comentario por Barrin: jah, "basado", caradura ! ^^
-                If MapData(.Pos.Map, .Pos.X, .Pos.Y).trigger = eTrigger.BAJOTECHO Or MapData(.Pos.Map, .Pos.X, .Pos.Y).trigger = eTrigger.CASA Then
+                If MapData(.Pos.Map, .Pos.X, .Pos.Y).Trigger = eTrigger.BAJOTECHO Or MapData(.Pos.Map, .Pos.X, .Pos.Y).Trigger = eTrigger.CASA Then
                     Call WriteConsoleMsg(Userindex, "No puedes pescar desde donde te encuentras.", FontTypeNames.FONTTYPE_INFO)
                     Exit Sub
 
@@ -3542,13 +3533,13 @@ Private Sub HandleWorkLeftClick(ByVal Userindex As Integer)
                                  
                                 '17/09/02
                                 'Check the trigger
-                                If MapData(UserList(tU).Pos.Map, X, Y).trigger = eTrigger.ZONASEGURA Then
+                                If MapData(UserList(tU).Pos.Map, X, Y).Trigger = eTrigger.ZONASEGURA Then
                                     Call WriteConsoleMsg(Userindex, "No puedes robar aqui.", FontTypeNames.FONTTYPE_WARNING)
                                     Exit Sub
 
                                 End If
                                  
-                                If MapData(.Pos.Map, .Pos.X, .Pos.Y).trigger = eTrigger.ZONASEGURA Then
+                                If MapData(.Pos.Map, .Pos.X, .Pos.Y).Trigger = eTrigger.ZONASEGURA Then
                                     Call WriteConsoleMsg(Userindex, "No puedes robar aqui.", FontTypeNames.FONTTYPE_WARNING)
                                     Exit Sub
 
@@ -13241,59 +13232,6 @@ ErrHandler:
 End Sub
 
 ''
-' Handles the "ForceMP3ToMap" message.
-'
-' @param    userIndex The index of the user sending the message.
-
-Private Sub HanldeForceMP3ToMap(ByVal Userindex As Integer)
-
-'***************************************************
-'Author: Lucas Recoaro(Recox)
-'Last Modification: 07/01/20
-'
-'***************************************************
-    If UserList(Userindex).incomingData.Length < 4 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
-        Exit Sub
-
-    End If
-    
-    With UserList(Userindex)
-        'Remove packet ID
-        Call .incomingData.ReadByte
-        
-        Dim Mp3Id As Byte
-
-        Dim Mapa   As Integer
-        
-        Mp3Id = .incomingData.ReadByte
-        Mapa = .incomingData.ReadInteger
-        
-        'Solo dioses, admins y RMS
-        If .flags.Privilegios And (PlayerType.Dios Or PlayerType.Admin Or PlayerType.RoleMaster) Then
-
-            'Si el mapa no fue enviado tomo el actual
-            If Not InMapBounds(Mapa, 50, 50) Then
-                Mapa = .Pos.Map
-
-            End If
-        
-            If Mp3Id = 0 Then
-                'Ponemos el default del mapa
-                Call SendData(SendTarget.toMap, Mapa, PrepareMessagePlayMp3(MapInfo(.Pos.Map).Music))
-            Else
-                'Ponemos el pedido por el GM
-                Call SendData(SendTarget.toMap, Mapa, PrepareMessagePlayMp3(Mp3Id))
-
-            End If
-
-        End If
-
-    End With
-
-End Sub
-
-''
 ' Handles the "ForceMIDIToMap" message.
 '
 ' @param    userIndex The index of the user sending the message.
@@ -13315,11 +13253,11 @@ Private Sub HanldeForceMIDIToMap(ByVal Userindex As Integer)
         'Remove packet ID
         Call .incomingData.ReadByte
         
-        Dim midiID As Byte
+        Dim musicID As Byte
 
         Dim Mapa   As Integer
         
-        midiID = .incomingData.ReadByte
+        musicID = .incomingData.ReadByte
         Mapa = .incomingData.ReadInteger
         
         'Solo dioses, admins y RMS
@@ -13331,12 +13269,12 @@ Private Sub HanldeForceMIDIToMap(ByVal Userindex As Integer)
 
             End If
         
-            If midiID = 0 Then
+            If musicID = 0 Then
                 'Ponemos el default del mapa
-                Call SendData(SendTarget.toMap, Mapa, PrepareMessagePlayMidi(MapInfo(.Pos.Map).Music))
+                Call SendData(SendTarget.toMap, Mapa, PrepareMessagePlayMusic(MapInfo(.Pos.Map).music))
             Else
                 'Ponemos el pedido por el GM
-                Call SendData(SendTarget.toMap, Mapa, PrepareMessagePlayMidi(midiID))
+                Call SendData(SendTarget.toMap, Mapa, PrepareMessagePlayMusic(musicID))
 
             End If
 
@@ -13806,7 +13744,7 @@ Private Sub HandleAcceptRoyalCouncilMember(ByVal Userindex As Integer)
             If tUser <= 0 Then
                 Call WriteConsoleMsg(Userindex, "Usuario offline", FontTypeNames.FONTTYPE_INFO)
             Else
-                Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(UserName & " fue aceptado en el honorable Consejo Real de Banderbill.", FontTypeNames.FONTTYPE_CONSEJO))
+                Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(UserName & " fue aceptado en el honorable Consejo Real de Belleuve.", FontTypeNames.FONTTYPE_CONSEJO))
 
                 With UserList(tUser)
 
@@ -14184,11 +14122,11 @@ Private Sub HandleCouncilKick(ByVal Userindex As Integer)
                 With UserList(tUser)
 
                     If .flags.Privilegios And PlayerType.RoyalCouncil Then
-                        Call WriteConsoleMsg(tUser, "Has sido echado del consejo de Banderbill.", FontTypeNames.FONTTYPE_TALK)
+                        Call WriteConsoleMsg(tUser, "Has sido echado del consejo de Belleuve.", FontTypeNames.FONTTYPE_TALK)
                         .flags.Privilegios = .flags.Privilegios - PlayerType.RoyalCouncil
                         
                         Call WarpUserChar(tUser, .Pos.Map, .Pos.X, .Pos.Y, False)
-                        Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(UserName & " fue expulsado del consejo de Banderbill.", FontTypeNames.FONTTYPE_CONSEJO))
+                        Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(UserName & " fue expulsado del consejo de Belleuve.", FontTypeNames.FONTTYPE_CONSEJO))
 
                     End If
                     
@@ -14258,7 +14196,7 @@ Private Sub HandleSetTrigger(ByVal Userindex As Integer)
         If .flags.Privilegios And (PlayerType.User Or PlayerType.Consejero Or PlayerType.SemiDios Or PlayerType.RoleMaster) Then Exit Sub
         
         If tTrigger >= 0 Then
-            MapData(.Pos.Map, .Pos.X, .Pos.Y).trigger = tTrigger
+            MapData(.Pos.Map, .Pos.X, .Pos.Y).Trigger = tTrigger
             tLog = "Trigger " & tTrigger & " en mapa " & .Pos.Map & " " & .Pos.X & "," & .Pos.Y
             
             Call LogGM(.Name, tLog)
@@ -14290,7 +14228,7 @@ Private Sub HandleAskTrigger(ByVal Userindex As Integer)
         
         If .flags.Privilegios And (PlayerType.User Or PlayerType.Consejero Or PlayerType.SemiDios Or PlayerType.RoleMaster) Then Exit Sub
         
-        tTrigger = MapData(.Pos.Map, .Pos.X, .Pos.Y).trigger
+        tTrigger = MapData(.Pos.Map, .Pos.X, .Pos.Y).Trigger
         
         Call LogGM(.Name, "Miro el trigger en " & .Pos.Map & "," & .Pos.X & "," & .Pos.Y & ". Era " & tTrigger)
         
@@ -14926,47 +14864,11 @@ ErrHandler:
 End Sub
 
 ''
-' Handles the "ForceMP3All" message.
-'
-' @param    userIndex The index of the user sending the message.
-
-Private Sub HandleForceMP3All(ByVal Userindex As Integer)
-
-    '***************************************************
-    'Author: Lucas Recoaro(Recox)
-    'Last Modification: 07/01/20
-    '
-    '***************************************************
-    If UserList(Userindex).incomingData.Length < 2 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
-        Exit Sub
-
-    End If
-    
-    With UserList(Userindex)
-        'Remove packet ID
-        Call .incomingData.ReadByte
-
-        Dim Mp3Id As Byte
-
-        Mp3Id = .incomingData.ReadByte()
-        
-        If .flags.Privilegios And (PlayerType.User Or PlayerType.Consejero Or PlayerType.SemiDios) Then Exit Sub
-        
-        Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(.Name & " broadcast musica MP3: " & Mp3Id, FontTypeNames.FONTTYPE_SERVER))
-        
-        Call SendData(SendTarget.ToAll, 0, PrepareMessagePlayMp3(Mp3Id))
-
-    End With
-
-End Sub
-
-''
 ' Handles the "ForceMIDIAll" message.
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleForceMIDIAll(ByVal Userindex As Integer)
+Private Sub HandleForceMUSICAll(ByVal Userindex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
@@ -14983,15 +14885,15 @@ Private Sub HandleForceMIDIAll(ByVal Userindex As Integer)
         'Remove packet ID
         Call .incomingData.ReadByte
 
-        Dim midiID As Byte
+        Dim musicID As Byte
 
-        midiID = .incomingData.ReadByte()
+        musicID = .incomingData.ReadByte()
         
         If .flags.Privilegios And (PlayerType.User Or PlayerType.Consejero Or PlayerType.SemiDios) Then Exit Sub
         
-        Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(.Name & " broadcast musica MIDI: " & midiID, FontTypeNames.FONTTYPE_SERVER))
+        Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(.Name & " broadcast musica MUSIC: " & musicID, FontTypeNames.FONTTYPE_SERVER))
         
-        Call SendData(SendTarget.ToAll, 0, PrepareMessagePlayMidi(midiID))
+        Call SendData(SendTarget.ToAll, 0, PrepareMessagePlayMusic(musicID))
 
     End With
 
@@ -18949,38 +18851,6 @@ ErrHandler:
 End Sub
 
 ''
-' Writes the "PlayMp3" message to the given user's outgoing data buffer.
-'
-' @param    UserIndex User to which the message is intended.
-' @param    mp3 The mp3 to be played.
-' @param    loops Number of repets for the midi.
-' @remarks  The data is not actually sent until the buffer is properly flushed.
-
-Public Sub WritePlayMp3(ByVal Userindex As Integer, _
-                         ByVal mp3 As Integer, _
-                         Optional ByVal loops As Integer = -1)
-
-    '***************************************************
-    'Author: Lucas Recoaro (Recox)
-    'Last Modification: 05/17/06
-    'Writes the "PlayMp3" message to the given user's outgoing data buffer
-    '***************************************************
-    On Error GoTo ErrHandler
-
-    Call UserList(Userindex).outgoingData.WriteASCIIStringFixed(PrepareMessagePlayMp3(mp3, loops))
-    Exit Sub
-
-ErrHandler:
-
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
-        Resume
-
-    End If
-
-End Sub
-
-''
 ' Writes the "PlayMidi" message to the given user's outgoing data buffer.
 '
 ' @param    UserIndex User to which the message is intended.
@@ -18988,8 +18858,8 @@ End Sub
 ' @param    loops Number of repets for the midi.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WritePlayMidi(ByVal Userindex As Integer, _
-                         ByVal midi As Integer, _
+Public Sub WritePlayMusic(ByVal Userindex As Integer, _
+                         ByVal music As Integer, _
                          Optional ByVal loops As Integer = -1)
 
     '***************************************************
@@ -18999,7 +18869,7 @@ Public Sub WritePlayMidi(ByVal Userindex As Integer, _
     '***************************************************
     On Error GoTo ErrHandler
 
-    Call UserList(Userindex).outgoingData.WriteASCIIStringFixed(PrepareMessagePlayMidi(midi, loops))
+    Call UserList(Userindex).outgoingData.WriteASCIIStringFixed(PrepareMessagePlayMusic(music, loops))
     Exit Sub
 
 ErrHandler:
@@ -21757,33 +21627,6 @@ Public Function PrepareMessageShowMessageBox(ByVal Chat As String) As String
 End Function
 
 ''
-' Prepares the "PlayMp3" message and returns it.
-'
-' @param    mp3 The mp3 to be played.
-' @param    loops Number of repets for the midi.
-' @return   The formated message ready to be writen as is on outgoing buffers.
-' @remarks  The data is not actually sent until the buffer is properly flushed.
-
-Public Function PrepareMessagePlayMp3(ByVal mp3 As Integer, _
-                                       Optional ByVal loops As Integer = -1) As String
-
-    '***************************************************
-    'Author: Lucas Recoaro (Recox)
-    'Last Modification: 05/17/06
-    'Prepares the "PlayMp3" message and returns it
-    '***************************************************
-    With auxiliarBuffer
-        Call .WriteByte(ServerPacketID.PlayMp3)
-        Call .WriteInteger(mp3)
-        Call .WriteInteger(loops)
-        
-        PrepareMessagePlayMp3 = .ReadASCIIStringFixed(.Length)
-
-    End With
-
-End Function
-
-''
 ' Prepares the "PlayMidi" message and returns it.
 '
 ' @param    midi The midi to be played.
@@ -21791,7 +21634,7 @@ End Function
 ' @return   The formated message ready to be writen as is on outgoing buffers.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Function PrepareMessagePlayMidi(ByVal midi As Integer, _
+Public Function PrepareMessagePlayMusic(ByVal music As Integer, _
                                        Optional ByVal loops As Integer = -1) As String
 
     '***************************************************
@@ -21800,11 +21643,11 @@ Public Function PrepareMessagePlayMidi(ByVal midi As Integer, _
     'Prepares the "PlayMidi" message and returns it
     '***************************************************
     With auxiliarBuffer
-        Call .WriteByte(ServerPacketID.PlayMidi)
-        Call .WriteInteger(midi)
+        Call .WriteByte(ServerPacketID.PlayMusic)
+        Call .WriteInteger(music)
         Call .WriteInteger(loops)
         
-        PrepareMessagePlayMidi = .ReadASCIIStringFixed(.Length)
+        PrepareMessagePlayMusic = .ReadASCIIStringFixed(.Length)
 
     End With
 

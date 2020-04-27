@@ -29,6 +29,104 @@ Attribute VB_Name = "ES"
 
 Option Explicit
 
+'***************************
+'Map format .CSM
+'***************************
+Private Type tMapHeader
+    NumeroBloqueados As Long
+    NumeroLayers(2 To 4) As Long
+    NumeroTriggers As Long
+    NumeroLuces As Long
+    NumeroParticulas As Long
+    NumeroNPCs As Long
+    NumeroOBJs As Long
+    NumeroTE As Long
+End Type
+
+Private Type tDatosBloqueados
+    X As Integer
+    Y As Integer
+End Type
+
+Private Type tDatosGrh
+    X As Integer
+    Y As Integer
+    GrhIndex As Long
+End Type
+
+Private Type tDatosTrigger
+    X As Integer
+    Y As Integer
+    Trigger As Integer
+End Type
+
+Private Type tDatosLuces
+    X As Integer
+    Y As Integer
+    light_value(3) As Long
+    base_light(0 To 3) As Boolean 'Indica si el tile tiene luz propia.
+End Type
+
+Private Type tDatosParticulas
+    X As Integer
+    Y As Integer
+    Particula As Long
+End Type
+
+Private Type tDatosNPC
+    X As Integer
+    Y As Integer
+    NpcIndex As Integer
+End Type
+
+Private Type tDatosObjs
+    X As Integer
+    Y As Integer
+    ObjIndex As Integer
+    ObjAmmount As Integer
+End Type
+
+Private Type tDatosTE
+    X As Integer
+    Y As Integer
+    DestM As Integer
+    DestX As Integer
+    DestY As Integer
+End Type
+
+Private Type tMapSize
+    XMax As Integer
+    XMin As Integer
+    YMax As Integer
+    YMin As Integer
+End Type
+
+Private Type tMapDat
+    map_name As String
+    battle_mode As Boolean
+    backup_mode As Boolean
+    restrict_mode As String
+    music_number As String
+    zone As String
+    terrain As String
+    ambient As String
+    lvlMinimo As String
+    RoboNpcsPermitido As Boolean
+    InvocarSinEfecto As Boolean
+    OcultarSinEfecto As Boolean
+    ResuSinEfecto As Boolean
+    MagiaSinEfecto As Boolean
+    InviSinEfecto As Boolean
+    NoEncriptarMP As Boolean
+    version As Long
+End Type
+
+Public MapSize As tMapSize
+Public MapDat As tMapDat
+'********************************
+'END - Load Map with .CSM format
+'********************************
+
 #If False Then
 
     Dim X, Y, n, Map, Mapa, Email, max, Value As Variant
@@ -642,7 +740,7 @@ Public Sub GrabarMapa(ByVal Map As Long, ByRef MAPFILE As String)
                 If .Graphic(2) Then ByFlags = ByFlags Or 2
                 If .Graphic(3) Then ByFlags = ByFlags Or 4
                 If .Graphic(4) Then ByFlags = ByFlags Or 8
-                If .trigger Then ByFlags = ByFlags Or 16
+                If .Trigger Then ByFlags = ByFlags Or 16
                 
                 Call MapWriter.putByte(ByFlags)
                 
@@ -652,7 +750,7 @@ Public Sub GrabarMapa(ByVal Map As Long, ByRef MAPFILE As String)
                     If .Graphic(LoopC) Then Call MapWriter.putLong(.Graphic(LoopC))
                 Next LoopC
                 
-                If .trigger Then Call MapWriter.putInteger(CInt(.trigger))
+                If .Trigger Then Call MapWriter.putInteger(CInt(.Trigger))
                 
                 '.inf file
                 ByFlags = 0
@@ -717,7 +815,7 @@ Public Sub GrabarMapa(ByVal Map As Long, ByRef MAPFILE As String)
     With MapInfo(Map)
         'write .dat file
         Call IniManager.ChangeValue("Mapa" & Map, "Name", .Name)
-        Call IniManager.ChangeValue("Mapa" & Map, "MusicNum", .Music)
+        Call IniManager.ChangeValue("Mapa" & Map, "MusicNum", .music)
         Call IniManager.ChangeValue("Mapa" & Map, "MagiaSinefecto", .MagiaSinEfecto)
         Call IniManager.ChangeValue("Mapa" & Map, "InviSinEfecto", .InviSinEfecto)
         Call IniManager.ChangeValue("Mapa" & Map, "ResuSinEfecto", .ResuSinEfecto)
@@ -1630,197 +1728,187 @@ man:
 
 End Sub
 
-Public Sub CargarMapa(ByVal Map As Long, ByRef MAPFl As String)
+Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
     '***************************************************
     'Author: Unknown
     'Last Modification: 10/08/2010
-    '10/08/2010 - Pato: Implemento el clsByteBuffer y el clsIniManager para la carga de mapa
     '***************************************************
-
+    
     On Error GoTo errh
-
-    Dim hFile     As Integer
-    Dim X         As Long
-    Dim Y         As Long
-    Dim ByFlags   As Byte
-    Dim npcfile   As String
     
-    Dim Leer      As clsIniManager
-    Dim MapReader As clsByteBuffer
-    Dim InfReader As clsByteBuffer
-
-    Dim Buff()    As Byte
+    Dim fh              As Integer
+    Dim MH              As tMapHeader
+    Dim Blqs()          As tDatosBloqueados
+    Dim L1()            As Long
+    Dim L2()            As tDatosGrh
+    Dim L3()            As tDatosGrh
+    Dim L4()            As tDatosGrh
+    Dim Triggers()      As tDatosTrigger
+    Dim Luces()         As tDatosLuces
+    Dim Particulas()    As tDatosParticulas
+    Dim Objetos()       As tDatosObjs
+    Dim NPCs()          As tDatosNPC
+    Dim TEs()           As tDatosTE
+    Dim MapSize         As tMapSize
+    Dim MapDat          As tMapDat
+    Dim npcfile         As String
+    Dim i               As Long
+    Dim j               As Long
     
-    Set MapReader = New clsByteBuffer
-    Set InfReader = New clsByteBuffer
-    Set Leer = New clsIniManager
+    fh = FreeFile
     
-    npcfile = DatPath & "NPCs.dat"
-    
-    hFile = FreeFile
-    
-    'Leemos el archivo ".MAP"
-    Open MAPFl & ".map" For Binary As #hFile
-        Seek hFile, 1
-        ReDim Buff(LOF(hFile) - 1) As Byte
-        Get #hFile, , Buff
-    Close hFile
-    
-    Call MapReader.initializeReader(Buff)
-
-    'Leemos el archivo ".INF"
-    Open MAPFl & ".inf" For Binary As #hFile
-        Seek hFile, 1
-        ReDim Buff(LOF(hFile) - 1) As Byte
-        Get #hFile, , Buff
-    Close hFile
-    
-    Call InfReader.initializeReader(Buff)
-    
-    'map Header
-    MapInfo(Map).MapVersion = MapReader.getInteger
-    
-    With MiCabecera
-        .Desc = MapReader.getString(Len(MiCabecera.Desc))
-        .crc = MapReader.getLong
-        .MagicWord = MapReader.getLong
-    End With
-    
-    Call MapReader.getDouble
-
-    'inf Header
-    Call InfReader.getDouble
-    Call InfReader.getInteger
-
-    For Y = YMinMapSize To YMaxMapSize
-        For X = XMinMapSize To XMaxMapSize
-
-            With MapData(Map, X, Y)
-                '.map file
-                ByFlags = MapReader.getByte
-
-                If ByFlags And 1 Then .Blocked = 1
+    Open MAPFl & ".csm" For Binary Access Read As fh
+        Get #fh, , MH
+        Get #fh, , MapSize
+        Get #fh, , MapDat
+        
+        ReDim L1(MapSize.XMin To MapSize.XMax, MapSize.YMin To MapSize.YMax) As Long
+        
+        Get #fh, , L1
+        
+        With MH
+            If .NumeroBloqueados > 0 Then
+                ReDim Blqs(1 To .NumeroBloqueados)
+                Get #fh, , Blqs
+                For i = 1 To .NumeroBloqueados
+                    MapData(Map, Blqs(i).X, Blqs(i).Y).Blocked = 1
+                Next i
+            End If
+            
+            If .NumeroLayers(2) > 0 Then
+                ReDim L2(1 To .NumeroLayers(2))
+                Get #fh, , L2
+                For i = 1 To .NumeroLayers(2)
+                    MapData(Map, L2(i).X, L2(i).Y).Graphic(2) = L2(i).GrhIndex
+                Next i
+            End If
+            
+            If .NumeroLayers(3) > 0 Then
+                ReDim L3(1 To .NumeroLayers(3))
+                Get #fh, , L3
+                For i = 1 To .NumeroLayers(3)
+                    MapData(Map, L3(i).X, L3(i).Y).Graphic(3) = L3(i).GrhIndex
+                Next i
+            End If
+            
+            If .NumeroLayers(4) > 0 Then
+                ReDim L4(1 To .NumeroLayers(4))
+                Get #fh, , L4
+                For i = 1 To .NumeroLayers(4)
+                    MapData(Map, L4(i).X, L4(i).Y).Graphic(4) = L4(i).GrhIndex
+                Next i
+            End If
+            
+            If .NumeroTriggers > 0 Then
+                ReDim Triggers(1 To .NumeroTriggers)
+                Get #fh, , Triggers
+                For i = 1 To .NumeroTriggers
+                    MapData(Map, Triggers(i).X, Triggers(i).Y).Trigger = Triggers(i).Trigger
+                Next i
+            End If
+            
+            If .NumeroParticulas > 0 Then
+                ReDim Particulas(1 To .NumeroParticulas)
+                Get #fh, , Particulas
+            End If
+            
+            If .NumeroLuces > 0 Then
+                ReDim Luces(1 To .NumeroLuces)
+                Get #fh, , Luces
+            End If
+            
+            If .NumeroOBJs > 0 Then
+                ReDim Objetos(1 To .NumeroOBJs)
+                Get #fh, , Objetos
+                For i = 1 To .NumeroOBJs
+                    MapData(Map, Objetos(i).X, Objetos(i).Y).ObjInfo.ObjIndex = Objetos(i).ObjIndex
+                    MapData(Map, Objetos(i).X, Objetos(i).Y).ObjInfo.Amount = Objetos(i).ObjAmmount
+                Next i
+            End If
                 
-                'Layer 1
-                .Graphic(1) = MapReader.getLong
-
-                'Layer 2 used?
-                If ByFlags And 2 Then .Graphic(2) = MapReader.getLong
-
-                'Layer 3 used?
-                If ByFlags And 4 Then .Graphic(3) = MapReader.getLong
-
-                'Layer 4 used?
-                If ByFlags And 8 Then .Graphic(4) = MapReader.getLong
-
-                'Trigger used?
-                If ByFlags And 16 Then .trigger = MapReader.getInteger
-                
-                'Trigger used?
-                If ByFlags And 32 Then .particulas = MapReader.getInteger
-
-                '.inf file
-                ByFlags = InfReader.getByte
-
-                If ByFlags And 1 Then
-                    .TileExit.Map = InfReader.getInteger
-                    .TileExit.X = InfReader.getInteger
-                    .TileExit.Y = InfReader.getInteger
-                End If
-
-                If ByFlags And 2 Then
-                    'Get and make NPC
-                    .NpcIndex = InfReader.getInteger
-
-                    If .NpcIndex > 0 Then
-
-                        'Si el npc debe hacer respawn en la pos
-                        'original la guardamos
-                        If val(GetVar(npcfile, "NPC" & .NpcIndex, "PosOrig")) = 1 Then
-                            .NpcIndex = OpenNPC(.NpcIndex)
-                            Npclist(.NpcIndex).Orig.Map = Map
-                            Npclist(.NpcIndex).Orig.X = X
-                            Npclist(.NpcIndex).Orig.Y = Y
+            If .NumeroNPCs > 0 Then
+                ReDim NPCs(1 To .NumeroNPCs)
+                Get #fh, , NPCs
+                For i = 1 To .NumeroNPCs
+                    MapData(Map, NPCs(i).X, NPCs(i).Y).NpcIndex = NPCs(i).NpcIndex
+                    If MapData(Map, NPCs(i).X, NPCs(i).Y).NpcIndex > 0 Then
+                        
+                        npcfile = DatPath & "NPCs.dat"
+                        
+                        'Si el npc debe hacer respawn en la pos original la guardamos
+                        If val(GetVar(npcfile, "NPC" & MapData(Map, NPCs(i).X, NPCs(i).Y).NpcIndex, "PosOrig")) = 1 Then
+                            MapData(Map, NPCs(i).X, NPCs(i).Y).NpcIndex = OpenNPC(MapData(Map, NPCs(i).X, NPCs(i).Y).NpcIndex)
+                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NpcIndex).Orig.Map = Map
+                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NpcIndex).Orig.X = NPCs(i).X
+                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NpcIndex).Orig.Y = NPCs(i).Y
                         Else
-                            .NpcIndex = OpenNPC(.NpcIndex)
-
+                            MapData(Map, NPCs(i).X, NPCs(i).Y).NpcIndex = OpenNPC(MapData(Map, NPCs(i).X, NPCs(i).Y).NpcIndex)
                         End If
-
-                        Npclist(.NpcIndex).Pos.Map = Map
-                        Npclist(.NpcIndex).Pos.X = X
-                        Npclist(.NpcIndex).Pos.Y = Y
-
-                        Call MakeNPCChar(True, 0, .NpcIndex, Map, X, Y)
-
+                        
+                        If Not MapData(Map, NPCs(i).X, NPCs(i).Y).NpcIndex = 0 Then
+                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NpcIndex).Pos.Map = Map
+                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NpcIndex).Pos.X = NPCs(i).X
+                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NpcIndex).Pos.Y = NPCs(i).Y
+       
+                            Call MakeNPCChar(True, 0, MapData(Map, NPCs(i).X, NPCs(i).Y).NpcIndex, Map, NPCs(i).X, NPCs(i).Y)
+                        End If
+                        
                     End If
-
-                End If
-
-                If ByFlags And 4 Then
-                    'Get and make Object
-                    .ObjInfo.ObjIndex = InfReader.getInteger
-                    .ObjInfo.Amount = InfReader.getInteger
-
-                End If
-
-            End With
-
-        Next X
-    Next Y
+                Next i
+            End If
+                
+            If .NumeroTE > 0 Then
+                ReDim TEs(1 To .NumeroTE)
+                Get #fh, , TEs
+                For i = 1 To .NumeroTE
+                    MapData(Map, TEs(i).X, TEs(i).Y).TileExit.Map = TEs(i).DestM
+                    MapData(Map, TEs(i).X, TEs(i).Y).TileExit.X = TEs(i).DestX
+                    MapData(Map, TEs(i).X, TEs(i).Y).TileExit.Y = TEs(i).DestY
+                Next i
+            End If
+            
+        End With
     
-    Call Leer.Initialize(MAPFl & ".dat")
+    Close fh
     
+        
+    For j = MapSize.YMin To MapSize.YMax
+        For i = MapSize.XMin To MapSize.XMax
+            If L1(i, j) > 0 Then
+                MapData(Map, j, i).Graphic(1) = L1(j, i)
+            End If
+        Next i
+    Next j
+    
+    'Cargamos los extras
     With MapInfo(Map)
-        .Name = Leer.GetValue("Mapa" & Map, "Name")
-        .Music = Leer.GetValue("Mapa" & Map, "MusicNum")
-        .MusicMp3 = Leer.GetValue("Mapa" & Map, "MusicNumMp3")
+        .Name = MapDat.map_name
+        .music = MapDat.music_number
         
-        .StartPos.Map = val(ReadField(1, Leer.GetValue("Mapa" & Map, "StartPos"), Asc("-")))
-        .StartPos.X = val(ReadField(2, Leer.GetValue("Mapa" & Map, "StartPos"), Asc("-")))
-        .StartPos.Y = val(ReadField(3, Leer.GetValue("Mapa" & Map, "StartPos"), Asc("-")))
-        
-        .OnDeathGoTo.Map = val(ReadField(1, Leer.GetValue("Mapa" & Map, "OnDeathGoTo"), Asc("-")))
-        .OnDeathGoTo.X = val(ReadField(2, Leer.GetValue("Mapa" & Map, "OnDeathGoTo"), Asc("-")))
-        .OnDeathGoTo.Y = val(ReadField(3, Leer.GetValue("Mapa" & Map, "OnDeathGoTo"), Asc("-")))
-        
-        .MagiaSinEfecto = val(Leer.GetValue("Mapa" & Map, "MagiaSinEfecto"))
-        .InviSinEfecto = val(Leer.GetValue("Mapa" & Map, "InviSinEfecto"))
-        .ResuSinEfecto = val(Leer.GetValue("Mapa" & Map, "ResuSinEfecto"))
-        .OcultarSinEfecto = val(Leer.GetValue("Mapa" & Map, "OcultarSinEfecto"))
-        .InvocarSinEfecto = val(Leer.GetValue("Mapa" & Map, "InvocarSinEfecto"))
-        
-        .NoEncriptarMP = val(Leer.GetValue("Mapa" & Map, "NoEncriptarMP"))
+        .MagiaSinEfecto = MapDat.MagiaSinEfecto
+        .InviSinEfecto = MapDat.InviSinEfecto
+        .ResuSinEfecto = MapDat.ResuSinEfecto
+        .OcultarSinEfecto = MapDat.OcultarSinEfecto
+        .InvocarSinEfecto = MapDat.InvocarSinEfecto
+        .RoboNpcsPermitido = MapDat.RoboNpcsPermitido
 
-        .RoboNpcsPermitido = val(Leer.GetValue("Mapa" & Map, "RoboNpcsPermitido"))
+        .lvlMinimo = MapDat.lvlMinimo
         
-        If val(Leer.GetValue("Mapa" & Map, "Pk")) = 0 Then
-            .Pk = True
-        Else
-            .Pk = False
+        .NoEncriptarMP = MapDat.NoEncriptarMP
 
-        End If
+        .Pk = MapDat.battle_mode
         
-        .Terreno = TerrainStringToByte(Leer.GetValue("Mapa" & Map, "Terreno"))
-        .Zona = Leer.GetValue("Mapa" & Map, "Zona")
-        .Restringir = RestrictStringToByte(Leer.GetValue("Mapa" & Map, "Restringir"))
-        .BackUp = val(Leer.GetValue("Mapa" & Map, "BACKUP"))
-
+        .Terreno = MapDat.terrain
+        .Zona = MapDat.zone
+        .Restringir = RestrictStringToByte(MapDat.restrict_mode)
+        .BackUp = MapDat.backup_mode
+        
     End With
     
-    Set MapReader = Nothing
-    Set InfReader = Nothing
-    Set Leer = Nothing
-    
-    Erase Buff
-    Exit Sub
+Exit Sub
 
 errh:
-    Call LogError("Error cargando mapa: " & Map & " - Pos: " & X & "," & Y & "." & Err.description)
-
-    Set MapReader = Nothing
-    Set InfReader = Nothing
-    Set Leer = Nothing
-
+    'Call LogError("Error cargando mapa: " & map & " - Pos: " & .X & "," & Y & "." & Err.description)
 End Sub
 
 Sub LoadSini()
@@ -1913,9 +2001,6 @@ Sub LoadSini()
     ContadorAntiPiquete = val(Lector.GetValue("INIT", "ContadorAntiPiquete"))
     MinutosCarcelPiquete = val(Lector.GetValue("INIT", "MinutosCarcelPiquete"))
 
-    'Usar Mundo personalizado / Use custom world
-    UsarMundoPropio = CBool(Lector.GetValue("MUNDO", "UsarMundoPropio"))
-
     'Inventario Inicial
     InventarioUsarConfiguracionPersonalizada = CBool(val(Lector.GetValue("INVENTARIO", "InventarioUsarConfiguracionPersonalizada")))
 
@@ -1995,7 +2080,7 @@ Sub LoadSini()
     ApiPath = Lector.GetValue("CONEXIONAPI", "ApiPath")
 
     'CHOTS | Database
-    Database_Enabled = CBool(val(Lector.GetValue("DATABASE", "Enabled")))
+    Database_Enabled = True
     Database_DataSource = Lector.GetValue("DATABASE", "DSN")
     Database_Host = Lector.GetValue("DATABASE", "Host")
     Database_Name = Lector.GetValue("DATABASE", "Name")
@@ -2017,13 +2102,6 @@ Sub LoadSini()
     
     ''&&&&&&&&&&&&&&&&&&&&& FIN BALANCE &&&&&&&&&&&&&&&&&&&&&&&
     Call Statistics.Initialize
-
-    'En caso que usemos mundo propio, cargamos el mapa y la coordeanas donde se hara el spawn inicial'
-    If UsarMundoPropio Then
-        CustomSpawnMap.Map = Lector.GetValue("MUNDO", "Mapa")
-        CustomSpawnMap.X = Lector.GetValue("MUNDO", "X")
-        CustomSpawnMap.Y = Lector.GetValue("MUNDO", "Y")
-    End If
     
     Set Lector = Nothing
     
@@ -2050,46 +2128,34 @@ Sub CargarCiudades()
     
     Call Lector.Initialize(DatPath & "Ciudades.dat")
         
-        With Ullathorpe
-            .Map = Lector.GetValue("Ullathorpe", "Mapa")
-            .X = Lector.GetValue("Ullathorpe", "X")
-            .Y = Lector.GetValue("Ullathorpe", "Y")
+        With Ramx
+            .Map = Lector.GetValue("Ramx", "Mapa")
+            .X = Lector.GetValue("Ramx", "X")
+            .Y = Lector.GetValue("Ramx", "Y")
         End With
         
-        With Nix
-            .Map = Lector.GetValue("Nix", "Mapa")
-            .X = Lector.GetValue("Nix", "X")
-            .Y = Lector.GetValue("Nix", "Y")
+        With Shakoud
+            .Map = Lector.GetValue("Shakoud", "Mapa")
+            .X = Lector.GetValue("Shakoud", "X")
+            .Y = Lector.GetValue("Shakoud", "Y")
         End With
         
-        With Banderbill
-            .Map = Lector.GetValue("Banderbill", "Mapa")
-            .X = Lector.GetValue("Banderbill", "X")
-            .Y = Lector.GetValue("Banderbill", "Y")
-        End With
-      
-        With Lindos
-            .Map = Lector.GetValue("Lindos", "Mapa")
-            .X = Lector.GetValue("Lindos", "X")
-            .Y = Lector.GetValue("Lindos", "Y")
+        With Belleuve
+            .Map = Lector.GetValue("Belleuve", "Mapa")
+            .X = Lector.GetValue("Belleuve", "X")
+            .Y = Lector.GetValue("Belleuve", "Y")
         End With
         
-        With Arghal
-            .Map = Lector.GetValue("Arghal", "Mapa")
-            .X = Lector.GetValue("Arghal", "X")
-            .Y = Lector.GetValue("Arghal", "Y")
+        With Orac
+            .Map = Lector.GetValue("Orac", "Mapa")
+            .X = Lector.GetValue("Orac", "X")
+            .Y = Lector.GetValue("Orac", "Y")
         End With
         
-        With Arkhein
-            .Map = Lector.GetValue("Arkhein", "Mapa")
-            .X = Lector.GetValue("Arkhein", "X")
-            .Y = Lector.GetValue("Arkhein", "Y")
-        End With
-        
-        With Nemahuak
-            .Map = Lector.GetValue("Nemahuak", "Mapa")
-            .X = Lector.GetValue("Nemahuak", "X")
-            .Y = Lector.GetValue("Nemahuak", "Y")
+        With Haverwood
+            .Map = Lector.GetValue("Haverwood", "Mapa")
+            .X = Lector.GetValue("Haverwood", "X")
+            .Y = Lector.GetValue("Haverwood", "Y")
         End With
         
         With Prision
@@ -2106,12 +2172,11 @@ Sub CargarCiudades()
 
     Set Lector = Nothing
     
-    Ciudades(eCiudad.cUllathorpe) = Ullathorpe
-    Ciudades(eCiudad.cNix) = Nix
-    Ciudades(eCiudad.cBanderbill) = Banderbill
-    Ciudades(eCiudad.cLindos) = Lindos
-    Ciudades(eCiudad.cArghal) = Arghal
-    Ciudades(eCiudad.cArkhein) = Arkhein
+    Ciudades(eCiudad.cRamx) = Ramx
+    Ciudades(eCiudad.cShakoud) = Shakoud
+    Ciudades(eCiudad.cBelleuve) = Belleuve
+    Ciudades(eCiudad.cOrac) = Orac
+    Ciudades(eCiudad.cHaverwood) = Haverwood
 
     If frmMain.Visible Then frmMain.txtStatus.Text = Date & " " & time & " - Se cargaron las ciudades.dat"
 
