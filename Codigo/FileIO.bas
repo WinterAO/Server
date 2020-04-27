@@ -815,7 +815,7 @@ Public Sub GrabarMapa(ByVal Map As Long, ByRef MAPFILE As String)
     With MapInfo(Map)
         'write .dat file
         Call IniManager.ChangeValue("Mapa" & Map, "Name", .Name)
-        Call IniManager.ChangeValue("Mapa" & Map, "MusicNum", .Music)
+        Call IniManager.ChangeValue("Mapa" & Map, "MusicNum", .music)
         Call IniManager.ChangeValue("Mapa" & Map, "MagiaSinefecto", .MagiaSinEfecto)
         Call IniManager.ChangeValue("Mapa" & Map, "InviSinEfecto", .InviSinEfecto)
         Call IniManager.ChangeValue("Mapa" & Map, "ResuSinEfecto", .ResuSinEfecto)
@@ -1883,7 +1883,7 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
     'Cargamos los extras
     With MapInfo(Map)
         .Name = MapDat.map_name
-        .Music = MapDat.music_number
+        .music = MapDat.music_number
         
         .MagiaSinEfecto = MapDat.MagiaSinEfecto
         .InviSinEfecto = MapDat.InviSinEfecto
@@ -1891,7 +1891,7 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
         .OcultarSinEfecto = MapDat.OcultarSinEfecto
         .InvocarSinEfecto = MapDat.InvocarSinEfecto
         .RoboNpcsPermitido = MapDat.RoboNpcsPermitido
-        
+
         .lvlMinimo = MapDat.lvlMinimo
         
         .NoEncriptarMP = MapDat.NoEncriptarMP
@@ -2001,9 +2001,6 @@ Sub LoadSini()
     ContadorAntiPiquete = val(Lector.GetValue("INIT", "ContadorAntiPiquete"))
     MinutosCarcelPiquete = val(Lector.GetValue("INIT", "MinutosCarcelPiquete"))
 
-    'Usar Mundo personalizado / Use custom world
-    UsarMundoPropio = CBool(Lector.GetValue("MUNDO", "UsarMundoPropio"))
-
     'Inventario Inicial
     InventarioUsarConfiguracionPersonalizada = CBool(val(Lector.GetValue("INVENTARIO", "InventarioUsarConfiguracionPersonalizada")))
 
@@ -2105,13 +2102,6 @@ Sub LoadSini()
     
     ''&&&&&&&&&&&&&&&&&&&&& FIN BALANCE &&&&&&&&&&&&&&&&&&&&&&&
     Call Statistics.Initialize
-
-    'En caso que usemos mundo propio, cargamos el mapa y la coordeanas donde se hara el spawn inicial'
-    If UsarMundoPropio Then
-        CustomSpawnMap.Map = Lector.GetValue("MUNDO", "Mapa")
-        CustomSpawnMap.X = Lector.GetValue("MUNDO", "X")
-        CustomSpawnMap.Y = Lector.GetValue("MUNDO", "Y")
-    End If
     
     Set Lector = Nothing
     
@@ -2138,46 +2128,34 @@ Sub CargarCiudades()
     
     Call Lector.Initialize(DatPath & "Ciudades.dat")
         
-        With Ullathorpe
-            .Map = Lector.GetValue("Ullathorpe", "Mapa")
-            .X = Lector.GetValue("Ullathorpe", "X")
-            .Y = Lector.GetValue("Ullathorpe", "Y")
+        With Ramx
+            .Map = Lector.GetValue("Ramx", "Mapa")
+            .X = Lector.GetValue("Ramx", "X")
+            .Y = Lector.GetValue("Ramx", "Y")
         End With
         
-        With Nix
-            .Map = Lector.GetValue("Nix", "Mapa")
-            .X = Lector.GetValue("Nix", "X")
-            .Y = Lector.GetValue("Nix", "Y")
+        With Shakoud
+            .Map = Lector.GetValue("Shakoud", "Mapa")
+            .X = Lector.GetValue("Shakoud", "X")
+            .Y = Lector.GetValue("Shakoude", "Y")
         End With
         
-        With Banderbill
-            .Map = Lector.GetValue("Banderbill", "Mapa")
-            .X = Lector.GetValue("Banderbill", "X")
-            .Y = Lector.GetValue("Banderbill", "Y")
-        End With
-      
-        With Lindos
-            .Map = Lector.GetValue("Lindos", "Mapa")
-            .X = Lector.GetValue("Lindos", "X")
-            .Y = Lector.GetValue("Lindos", "Y")
+        With Belleuve
+            .Map = Lector.GetValue("Belleuve", "Mapa")
+            .X = Lector.GetValue("Belleuve", "X")
+            .Y = Lector.GetValue("Belleuve", "Y")
         End With
         
-        With Arghal
-            .Map = Lector.GetValue("Arghal", "Mapa")
-            .X = Lector.GetValue("Arghal", "X")
-            .Y = Lector.GetValue("Arghal", "Y")
+        With Orac
+            .Map = Lector.GetValue("Orac", "Mapa")
+            .X = Lector.GetValue("Orac", "X")
+            .Y = Lector.GetValue("Orac", "Y")
         End With
         
-        With Arkhein
-            .Map = Lector.GetValue("Arkhein", "Mapa")
-            .X = Lector.GetValue("Arkhein", "X")
-            .Y = Lector.GetValue("Arkhein", "Y")
-        End With
-        
-        With Nemahuak
-            .Map = Lector.GetValue("Nemahuak", "Mapa")
-            .X = Lector.GetValue("Nemahuak", "X")
-            .Y = Lector.GetValue("Nemahuak", "Y")
+        With Haverwood
+            .Map = Lector.GetValue("Haverwood", "Mapa")
+            .X = Lector.GetValue("Haverwood", "X")
+            .Y = Lector.GetValue("Haverwood", "Y")
         End With
         
         With Prision
@@ -2194,12 +2172,11 @@ Sub CargarCiudades()
 
     Set Lector = Nothing
     
-    Ciudades(eCiudad.cUllathorpe) = Ullathorpe
-    Ciudades(eCiudad.cNix) = Nix
-    Ciudades(eCiudad.cBanderbill) = Banderbill
-    Ciudades(eCiudad.cLindos) = Lindos
-    Ciudades(eCiudad.cArghal) = Arghal
-    Ciudades(eCiudad.cArkhein) = Arkhein
+    Ciudades(eCiudad.cRamx) = Ramx
+    Ciudades(eCiudad.cShakoud) = Shakoud
+    Ciudades(eCiudad.cBelleuve) = Belleuve
+    Ciudades(eCiudad.cOrac) = Orac
+    Ciudades(eCiudad.cHaverwood) = Haverwood
 
     If frmMain.Visible Then frmMain.txtStatus.Text = Date & " " & time & " - Se cargaron las ciudades.dat"
 

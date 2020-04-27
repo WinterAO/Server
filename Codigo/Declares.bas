@@ -197,13 +197,11 @@ End Enum
 
 Public Enum eCiudad
 
-    cUllathorpe = 1
-    cNix
-    cBanderbill
-    cLindos
-    cArghal
-    cArkhein
-    cLastCity
+    cRamx = 1
+    cShakoud
+    cBelleuve
+    cOrac
+    cHaverwood
 
 End Enum
 
@@ -911,7 +909,7 @@ End Type
 
 Public Type UserObj
 
-    objindex As Integer
+    ObjIndex As Integer
     Amount As Integer
     Equipped As Byte
 
@@ -990,7 +988,7 @@ Public Type Char
 End Type
 
 Public Type CraftingItem
-    objindex As Integer
+    ObjIndex As Integer
     Amount As Integer
 End Type
 
@@ -1138,14 +1136,14 @@ End Type
 
 Public Type obj
 
-    objindex As Integer
+    ObjIndex As Integer
     Amount As Integer
 
 End Type
 
 Public Type tQuestNpc
 
-    NPCIndex As Integer
+    NpcIndex As Integer
     Amount As Integer
 
 End Type
@@ -1740,7 +1738,7 @@ End Type
 
 Public Type tCriaturasEntrenador
 
-    NPCIndex As Integer
+    NpcIndex As Integer
     NpcName As String
     tmpIndex As Integer
 
@@ -1768,7 +1766,7 @@ End Type
 
 Public Type tDrops
 
-    objindex As Integer
+    ObjIndex As Integer
     Amount As Long
 
 End Type
@@ -1853,7 +1851,7 @@ Public Type MapBlock
     Blocked As Byte
     Graphic(1 To 4) As Long
     Userindex As Integer
-    NPCIndex As Integer
+    NpcIndex As Integer
     ObjInfo As obj
     TileExit As WorldPos
     Trigger As eTrigger
@@ -1865,8 +1863,7 @@ End Type
 Type MapInfo
 
     NumUsers As Integer
-    Music As String
-    MusicMp3 As String
+    music As String
     Name As String
     StartPos As WorldPos
     OnDeathGoTo As WorldPos
@@ -2063,25 +2060,19 @@ Type HomeDistance
 
 End Type
 
-Public Nix             As WorldPos
+Public Ramx            As WorldPos
 
-Public Ullathorpe      As WorldPos
+Public Shakoud         As WorldPos
 
-Public Banderbill      As WorldPos
+Public Belleuve        As WorldPos
 
-Public Lindos          As WorldPos
+Public Haverwood       As WorldPos
 
-Public Arghal          As WorldPos
-
-Public Arkhein         As WorldPos
-
-Public Nemahuak        As WorldPos
+Public Orac            As WorldPos
 
 Public Prision         As WorldPos
 
 Public Libertad        As WorldPos
-
-Public CustomSpawnMap  As WorldPos
 
 Public Ayuda           As cCola
 
@@ -2211,8 +2202,7 @@ Public Enum eGMCommands
     TeleportDestroy         '/DT
     RainToggle              '/LLUVIA
     SetCharDescription      '/SETDESC
-    ForceMP3ToMap          '/FORCEMP3MAP
-    ForceMIDIToMap          '/FORCEMIDIMAP
+    ForceMUSICToMap          '/FORCEMUSICMAP
     ForceWAVEToMap          '/FORCEWAVMAP
     RoyalArmyMessage        '/REALMSG
     ChaosLegionMessage      '/CAOSMSG
@@ -2239,8 +2229,7 @@ Public Enum eGMCommands
     DestroyItems            '/DEST
     ChaosLegionKick         '/NOCAOS
     RoyalArmyKick           '/NOREAL
-    ForceMP3All             '/FORCEMP3
-    ForceMIDIAll            '/FORCEMIDI
+    ForceMUSICAll           '/FORCEMUSIC
     ForceWAVEAll            '/FORCEWAV
     RemovePunishment        '/BORRARPENA
     TileBlockedToggle       '/BLOQ
@@ -2426,8 +2415,6 @@ Public InventarioUsarConfiguracionPersonalizada As Boolean
 
 Public EstadisticasInicialesUsarConfiguracionPersonalizada As Boolean
 
-Public UsarMundoPropio As Boolean
-
 Public ConexionAPI As Boolean
 
 Public ApiUrlServer As String
@@ -2436,10 +2423,6 @@ Public ApiPath As String
 
 'Esta variable es para poder luego cerrar el programa cuando cerramos el cliente.
 Public ApiNodeJsTaskId As Double
-
-Public MundoSeleccionado As String
-
-Public DescripcionServidor As String
 
 Public NombreServidor As String
 

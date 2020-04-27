@@ -99,9 +99,9 @@ Public Sub DoTileEvents(ByVal Userindex As Integer, _
 
         With MapData(Map, X, Y)
 
-            If .ObjInfo.objindex > 0 Then
-                FxFlag = ObjData(.ObjInfo.objindex).OBJType = eOBJType.otTeleport
-                TelepRadio = ObjData(.ObjInfo.objindex).Radio
+            If .ObjInfo.ObjIndex > 0 Then
+                FxFlag = ObjData(.ObjInfo.ObjIndex).OBJType = eOBJType.otTeleport
+                TelepRadio = ObjData(.ObjInfo.ObjIndex).Radio
 
             End If
             
@@ -385,7 +385,7 @@ Public Function InVisionRangeAndMap(ByVal Userindex As Integer, _
     
 End Function
 
-Function InRangoVisionNPC(ByVal NPCIndex As Integer, _
+Function InRangoVisionNPC(ByVal NpcIndex As Integer, _
                           X As Integer, _
                           Y As Integer) As Boolean
     '***************************************************
@@ -394,8 +394,8 @@ Function InRangoVisionNPC(ByVal NPCIndex As Integer, _
     '
     '***************************************************
 
-    If X > Npclist(NPCIndex).Pos.X - MinXBorder And X < Npclist(NPCIndex).Pos.X + MinXBorder Then
-        If Y > Npclist(NPCIndex).Pos.Y - MinYBorder And Y < Npclist(NPCIndex).Pos.Y + MinYBorder Then
+    If X > Npclist(NpcIndex).Pos.X - MinXBorder And X < Npclist(NpcIndex).Pos.X + MinXBorder Then
+        If Y > Npclist(NpcIndex).Pos.Y - MinYBorder And Y < Npclist(NpcIndex).Pos.Y + MinYBorder Then
             InRangoVisionNPC = True
             Exit Function
 
@@ -509,7 +509,7 @@ Public Function RhombLegalTilePos(ByRef Pos As WorldPos, _
                                   ByRef vX As Long, _
                                   ByRef vY As Long, _
                                   ByVal Distance As Long, _
-                                  ByVal objindex As Integer, _
+                                  ByVal ObjIndex As Integer, _
                                   ByVal ObjAmount As Long, _
                                   ByVal PuedeAgua As Boolean, _
                                   ByVal PuedeTierra As Boolean) As Boolean
@@ -544,7 +544,7 @@ Public Function RhombLegalTilePos(ByRef Pos As WorldPos, _
         If (LegalPos(Pos.Map, X, Y, PuedeAgua, PuedeTierra, True)) Then
             
             ' No hay obj tirado o la suma de lo que hay + lo nuevo <= 10k
-            If Not HayObjeto(Pos.Map, X, Y, objindex, ObjAmount) Then
+            If Not HayObjeto(Pos.Map, X, Y, ObjIndex, ObjAmount) Then
                 vX = X
                 vY = Y
                 
@@ -568,7 +568,7 @@ Public Function RhombLegalTilePos(ByRef Pos As WorldPos, _
         If (LegalPos(Pos.Map, X, Y, PuedeAgua, PuedeTierra, True)) Then
             
             ' No hay obj tirado o la suma de lo que hay + lo nuevo <= 10k
-            If Not HayObjeto(Pos.Map, X, Y, objindex, ObjAmount) Then
+            If Not HayObjeto(Pos.Map, X, Y, ObjIndex, ObjAmount) Then
                 vX = X
                 vY = Y
                 
@@ -592,7 +592,7 @@ Public Function RhombLegalTilePos(ByRef Pos As WorldPos, _
         If (LegalPos(Pos.Map, X, Y, PuedeAgua, PuedeTierra, True)) Then
         
             ' No hay obj tirado o la suma de lo que hay + lo nuevo <= 10k
-            If Not HayObjeto(Pos.Map, X, Y, objindex, ObjAmount) Then
+            If Not HayObjeto(Pos.Map, X, Y, ObjIndex, ObjAmount) Then
                 vX = X
                 vY = Y
                 
@@ -616,7 +616,7 @@ Public Function RhombLegalTilePos(ByRef Pos As WorldPos, _
         If (LegalPos(Pos.Map, X, Y, PuedeAgua, PuedeTierra, True)) Then
 
             ' No hay obj tirado o la suma de lo que hay + lo nuevo <= 10k
-            If Not HayObjeto(Pos.Map, X, Y, objindex, ObjAmount) Then
+            If Not HayObjeto(Pos.Map, X, Y, ObjIndex, ObjAmount) Then
                 vX = X
                 vY = Y
                 
@@ -641,7 +641,7 @@ End Function
 Public Function HayObjeto(ByVal Mapa As Integer, _
                           ByVal X As Long, _
                           ByVal Y As Long, _
-                          ByVal objindex As Integer, _
+                          ByVal ObjIndex As Integer, _
                           ByVal ObjAmount As Long) As Boolean
 
     '***************************************************
@@ -651,13 +651,13 @@ Public Function HayObjeto(ByVal Mapa As Integer, _
     '***************************************************
     Dim MapObjIndex As Integer
 
-    MapObjIndex = MapData(Mapa, X, Y).ObjInfo.objindex
+    MapObjIndex = MapData(Mapa, X, Y).ObjInfo.ObjIndex
             
     ' Hay un objeto tirado?
     If MapObjIndex <> 0 Then
 
         ' Es el mismo objeto?
-        If MapObjIndex = objindex Then
+        If MapObjIndex = ObjIndex Then
             ' La suma es menor a 10k?
             HayObjeto = (MapData(Mapa, X, Y).ObjInfo.Amount + ObjAmount > MAX_INVENTORY_OBJS)
         Else
@@ -883,11 +883,11 @@ Function LegalPos(ByVal Map As Integer, _
         With MapData(Map, X, Y)
 
             If PuedeAgua And PuedeTierra Then
-                LegalPos = (.Blocked <> 1) And (.Userindex = 0) And (.NPCIndex = 0)
+                LegalPos = (.Blocked <> 1) And (.Userindex = 0) And (.NpcIndex = 0)
             ElseIf PuedeTierra And Not PuedeAgua Then
-                LegalPos = (.Blocked <> 1) And (.Userindex = 0) And (.NPCIndex = 0) And (Not HayAgua(Map, X, Y))
+                LegalPos = (.Blocked <> 1) And (.Userindex = 0) And (.NpcIndex = 0) And (Not HayAgua(Map, X, Y))
             ElseIf PuedeAgua And Not PuedeTierra Then
-                LegalPos = (.Blocked <> 1) And (.Userindex = 0) And (.NPCIndex = 0) And (HayAgua(Map, X, Y))
+                LegalPos = (.Blocked <> 1) And (.Userindex = 0) And (.NpcIndex = 0) And (HayAgua(Map, X, Y))
             Else
                 LegalPos = False
 
@@ -941,11 +941,11 @@ Function MoveToLegalPos(ByVal Map As Integer, _
             End If
 
             If PuedeAgua And PuedeTierra Then
-                MoveToLegalPos = (.Blocked <> 1) And (Userindex = 0 Or IsDeadChar Or IsAdminInvisible) And (.NPCIndex = 0)
+                MoveToLegalPos = (.Blocked <> 1) And (Userindex = 0 Or IsDeadChar Or IsAdminInvisible) And (.NpcIndex = 0)
             ElseIf PuedeTierra And Not PuedeAgua Then
-                MoveToLegalPos = (.Blocked <> 1) And (Userindex = 0 Or IsDeadChar Or IsAdminInvisible) And (.NPCIndex = 0) And (Not HayAgua(Map, X, Y))
+                MoveToLegalPos = (.Blocked <> 1) And (Userindex = 0 Or IsDeadChar Or IsAdminInvisible) And (.NpcIndex = 0) And (Not HayAgua(Map, X, Y))
             ElseIf PuedeAgua And Not PuedeTierra Then
-                MoveToLegalPos = (.Blocked <> 1) And (Userindex = 0 Or IsDeadChar Or IsAdminInvisible) And (.NPCIndex = 0) And (HayAgua(Map, X, Y))
+                MoveToLegalPos = (.Blocked <> 1) And (Userindex = 0 Or IsDeadChar Or IsAdminInvisible) And (.NpcIndex = 0) And (HayAgua(Map, X, Y))
             Else
                 MoveToLegalPos = False
 
@@ -967,7 +967,7 @@ Public Sub FindLegalPos(ByVal Userindex As Integer, _
     'Search for a Legal pos for the user who is being teleported.
     '***************************************************
 
-    If MapData(Map, X, Y).Userindex <> 0 Or MapData(Map, X, Y).NPCIndex <> 0 Then
+    If MapData(Map, X, Y).Userindex <> 0 Or MapData(Map, X, Y).NpcIndex <> 0 Then
                     
         ' Se teletransporta a la misma pos a la que estaba
         If MapData(Map, X, Y).Userindex = Userindex Then Exit Sub
@@ -987,7 +987,7 @@ Public Sub FindLegalPos(ByVal Userindex As Integer, _
                 For tX = X - Rango To X + Rango
 
                     'Reviso que no haya User ni NPC
-                    If MapData(Map, tX, tY).Userindex = 0 And MapData(Map, tX, tY).NPCIndex = 0 Then
+                    If MapData(Map, tX, tY).Userindex = 0 And MapData(Map, tX, tY).NpcIndex = 0 Then
                         
                         If InMapBounds(Map, tX, tY) Then FoundPlace = True
                         
@@ -1079,9 +1079,9 @@ Function LegalPosNPC(ByVal Map As Integer, _
         End If
     
         If AguaValida = 0 Then
-            LegalPosNPC = (.Blocked <> 1) And (.Userindex = 0 Or IsDeadChar Or IsAdminInvisible) And (.NPCIndex = 0) And (.Trigger <> eTrigger.POSINVALIDA Or IsPet) And Not HayAgua(Map, X, Y)
+            LegalPosNPC = (.Blocked <> 1) And (.Userindex = 0 Or IsDeadChar Or IsAdminInvisible) And (.NpcIndex = 0) And (.Trigger <> eTrigger.POSINVALIDA Or IsPet) And Not HayAgua(Map, X, Y)
         Else
-            LegalPosNPC = (.Blocked <> 1) And (.Userindex = 0 Or IsDeadChar Or IsAdminInvisible) And (.NPCIndex = 0) And (.Trigger <> eTrigger.POSINVALIDA Or IsPet)
+            LegalPosNPC = (.Blocked <> 1) And (.Userindex = 0 Or IsDeadChar Or IsAdminInvisible) And (.NpcIndex = 0) And (.Trigger <> eTrigger.POSINVALIDA Or IsPet)
 
         End If
 
@@ -1108,19 +1108,19 @@ Sub SendHelp(ByVal index As Integer)
 
 End Sub
 
-Public Sub Expresar(ByVal NPCIndex As Integer, ByVal Userindex As Integer)
+Public Sub Expresar(ByVal NpcIndex As Integer, ByVal Userindex As Integer)
     '***************************************************
     'Author: Unknown
     'Last Modification: -
     '
     '***************************************************
 
-    If Npclist(NPCIndex).NroExpresiones > 0 Then
+    If Npclist(NpcIndex).NroExpresiones > 0 Then
 
         Dim randomi
 
-        randomi = RandomNumber(1, Npclist(NPCIndex).NroExpresiones)
-        Call SendData(SendTarget.ToPCArea, Userindex, PrepareMessageChatOverHead(Npclist(NPCIndex).Expresiones(randomi), Npclist(NPCIndex).Char.CharIndex, vbWhite))
+        randomi = RandomNumber(1, Npclist(NpcIndex).NroExpresiones)
+        Call SendData(SendTarget.ToPCArea, Userindex, PrepareMessageChatOverHead(Npclist(NpcIndex).Expresiones(randomi), Npclist(NpcIndex).Char.CharIndex, vbWhite))
 
     End If
 
@@ -1167,16 +1167,16 @@ Sub LookatTile(ByVal Userindex As Integer, _
                 .TargetY = Y
 
                 'Es un obj?
-                If MapData(Map, X, Y).ObjInfo.objindex > 0 Then
+                If MapData(Map, X, Y).ObjInfo.ObjIndex > 0 Then
                     'Informa el nombre
                     .TargetObjMap = Map
                     .TargetObjX = X
                     .TargetObjY = Y
                     FoundSomething = 1
-                ElseIf MapData(Map, X + 1, Y).ObjInfo.objindex > 0 Then
+                ElseIf MapData(Map, X + 1, Y).ObjInfo.ObjIndex > 0 Then
 
                     'Informa el nombre
-                    If ObjData(MapData(Map, X + 1, Y).ObjInfo.objindex).OBJType = eOBJType.otPuertas Then
+                    If ObjData(MapData(Map, X + 1, Y).ObjInfo.ObjIndex).OBJType = eOBJType.otPuertas Then
                         .TargetObjMap = Map
                         .TargetObjX = X + 1
                         .TargetObjY = Y
@@ -1184,9 +1184,9 @@ Sub LookatTile(ByVal Userindex As Integer, _
 
                     End If
 
-                ElseIf MapData(Map, X + 1, Y + 1).ObjInfo.objindex > 0 Then
+                ElseIf MapData(Map, X + 1, Y + 1).ObjInfo.ObjIndex > 0 Then
 
-                    If ObjData(MapData(Map, X + 1, Y + 1).ObjInfo.objindex).OBJType = eOBJType.otPuertas Then
+                    If ObjData(MapData(Map, X + 1, Y + 1).ObjInfo.ObjIndex).OBJType = eOBJType.otPuertas Then
                         'Informa el nombre
                         .TargetObjMap = Map
                         .TargetObjX = X + 1
@@ -1195,9 +1195,9 @@ Sub LookatTile(ByVal Userindex As Integer, _
 
                     End If
 
-                ElseIf MapData(Map, X, Y + 1).ObjInfo.objindex > 0 Then
+                ElseIf MapData(Map, X, Y + 1).ObjInfo.ObjIndex > 0 Then
 
-                    If ObjData(MapData(Map, X, Y + 1).ObjInfo.objindex).OBJType = eOBJType.otPuertas Then
+                    If ObjData(MapData(Map, X, Y + 1).ObjInfo.ObjIndex).OBJType = eOBJType.otPuertas Then
                         'Informa el nombre
                         .TargetObjMap = Map
                         .TargetObjX = X
@@ -1209,7 +1209,7 @@ Sub LookatTile(ByVal Userindex As Integer, _
                 End If
             
                 If FoundSomething = 1 Then
-                    .TargetObj = MapData(Map, .TargetObjX, .TargetObjY).ObjInfo.objindex
+                    .TargetObj = MapData(Map, .TargetObjX, .TargetObjY).ObjInfo.ObjIndex
 
                     If MostrarCantidad(.TargetObj) Then
                         Call WriteConsoleMsg(Userindex, ObjData(.TargetObj).Name & " - " & MapData(.TargetObjMap, .TargetObjX, .TargetObjY).ObjInfo.Amount & "", FontTypeNames.FONTTYPE_INFO)
@@ -1228,8 +1228,8 @@ Sub LookatTile(ByVal Userindex As Integer, _
 
                     End If
 
-                    If MapData(Map, X, Y + 1).NPCIndex > 0 Then
-                        TempCharIndex = MapData(Map, X, Y + 1).NPCIndex
+                    If MapData(Map, X, Y + 1).NpcIndex > 0 Then
+                        TempCharIndex = MapData(Map, X, Y + 1).NpcIndex
                         FoundChar = 2
 
                     End If
@@ -1244,8 +1244,8 @@ Sub LookatTile(ByVal Userindex As Integer, _
 
                     End If
 
-                    If MapData(Map, X, Y).NPCIndex > 0 Then
-                        TempCharIndex = MapData(Map, X, Y).NPCIndex
+                    If MapData(Map, X, Y).NpcIndex > 0 Then
+                        TempCharIndex = MapData(Map, X, Y).NpcIndex
                         FoundChar = 2
 
                     End If
@@ -1305,7 +1305,7 @@ Sub LookatTile(ByVal Userindex As Integer, _
                             End If
                                         
                             If .flags.Privilegios And PlayerType.RoyalCouncil Then
-                                Stat = Stat & " [CONSEJO DE BANDERBILL]"
+                                Stat = Stat & " [CONSEJO DE BELLEUVE]"
                                 ft = FontTypeNames.FONTTYPE_CONSEJOVesA
                             ElseIf .flags.Privilegios And PlayerType.ChaosCouncil Then
                                 Stat = Stat & " [CONCILIO DE LAS SOMBRAS]"

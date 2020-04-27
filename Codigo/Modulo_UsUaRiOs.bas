@@ -1005,7 +1005,7 @@ Sub MoveUserChar(ByVal Userindex As Integer, ByVal nHeading As eHeading)
     isAdminInvi = (UserList(Userindex).flags.AdminInvisible = 1)
     
     If MoveToLegalPos(UserList(Userindex).Pos.Map, nPos.X, nPos.Y, sailing, Not sailing) Then
-        If UserList(Userindex).flags.Equitando And (MapData(UserList(Userindex).Pos.Map, nPos.X, nPos.Y).trigger = eTrigger.CASA Or MapData(UserList(Userindex).Pos.Map, nPos.X, nPos.Y).trigger = eTrigger.BAJOTECHO) Then Exit Sub
+        If UserList(Userindex).flags.Equitando And (MapData(UserList(Userindex).Pos.Map, nPos.X, nPos.Y).Trigger = eTrigger.CASA Or MapData(UserList(Userindex).Pos.Map, nPos.X, nPos.Y).Trigger = eTrigger.BAJOTECHO) Then Exit Sub
         'si no estoy solo en el mapa...
         If MapInfo(UserList(Userindex).Pos.Map).NumUsers > 1 Then
                
@@ -1078,7 +1078,7 @@ Sub MoveUserChar(ByVal Userindex As Integer, ByVal nHeading As eHeading)
             End With
             
             'Actualizamos las areas de ser necesario
-            Call Areas.CheckUpdateNeededUser(UserIndex, nHeading)
+            Call Areas.CheckUpdateNeededUser(Userindex, nHeading)
         Else
             Call WritePosUpdate(Userindex)
 
@@ -1905,7 +1905,7 @@ Public Sub UserDie(ByVal Userindex As Integer, Optional ByVal AttackerIndex As I
         ' Retos nVSn. User muere
         If AttackerIndex <> 0 Then
             If .flags.SlotReto > 0 Then
-                Call Retos.UserdieFight(Userindex, AttackerIndex, False)
+                Call Retos.UserDieFight(Userindex, AttackerIndex, False)
             End If
         End If
     End With
@@ -2100,12 +2100,7 @@ Sub WarpUserChar(ByVal Userindex As Integer, _
 
             End If
 
-            'Si tiene MP3 el mapa mandamos que lo reproduzca, sino reproducimos el MIDI de toda la vida
-            If MapInfo(Map).MusicMp3 <> vbNullString Then
-                Call WritePlayMp3(Userindex, MapInfo(Map).MusicMp3)
-            Else
-                Call WritePlayMidi(Userindex, val(ReadField(1, MapInfo(Map).Music, 45)))
-            End If
+            Call WritePlayMusic(Userindex, val(ReadField(1, MapInfo(Map).music, 45)))
 
             'Update new Map Users
             MapInfo(Map).NumUsers = MapInfo(Map).NumUsers + 1
@@ -2485,7 +2480,7 @@ Sub VolverCriminal(ByVal Userindex As Integer)
     '**************************************************************
     With UserList(Userindex)
 
-        If MapData(.Pos.Map, .Pos.X, .Pos.Y).trigger = eTrigger.ZONAPELEA Then Exit Sub
+        If MapData(.Pos.Map, .Pos.X, .Pos.Y).Trigger = eTrigger.ZONAPELEA Then Exit Sub
         
         If .flags.Privilegios And (PlayerType.User Or PlayerType.Consejero) Then
             .Reputacion.BurguesRep = 0
@@ -2515,7 +2510,7 @@ Sub VolverCiudadano(ByVal Userindex As Integer)
     '**************************************************************
     With UserList(Userindex)
 
-        If MapData(.Pos.Map, .Pos.X, .Pos.Y).trigger = eTrigger.ZONAPELEA Then Exit Sub
+        If MapData(.Pos.Map, .Pos.X, .Pos.Y).Trigger = eTrigger.ZONAPELEA Then Exit Sub
         
         .Reputacion.LadronesRep = 0
         .Reputacion.BandidoRep = 0
@@ -2701,7 +2696,7 @@ Public Sub ApropioNpc(ByVal Userindex As Integer, ByVal NpcIndex As Integer)
         Mapa = .Pos.Map
         
         ' No aplica a triggers seguras
-        If MapData(Mapa, .Pos.X, .Pos.Y).trigger = eTrigger.ZONASEGURA Then Exit Sub
+        If MapData(Mapa, .Pos.X, .Pos.Y).Trigger = eTrigger.ZONASEGURA Then Exit Sub
         
         ' No se aplica a mapas seguros
         If MapInfo(Mapa).Pk = False Then Exit Sub
@@ -3042,7 +3037,7 @@ Public Sub setHome(ByVal Userindex As Integer, _
     '30/04/2010: ZaMa - Ahora el npc avisa que se cambio de hogar.
     '01/06/2010: ZaMa - Ahora te avisa si ya tenes ese hogar.
     '***************************************************
-    If newHome < eCiudad.cUllathorpe Or newHome > eCiudad.cLastCity - 1 Then Exit Sub
+    If newHome < eCiudad.cRamx Or newHome > eCiudad.cHaverwood - 1 Then Exit Sub
     
     If UserList(Userindex).Hogar <> newHome Then
         UserList(Userindex).Hogar = newHome

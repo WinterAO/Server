@@ -367,14 +367,10 @@ Sub Main()
     IpPublicaServidor = frmMain.Inet1.OpenURL("http://ip1.dynupdate.no-ip.com:8245/")
     frmMain.lblIp.Caption = IpPublicaServidor & ":" & Puerto
 
-    MundoSeleccionado = GetVar(App.Path & "\Dat\Map.dat", "INIT", "MapPath")
     NombreServidor = GetVar(App.Path & "\Server.ini", "INIT", "Nombre")
 
-    frmMain.Caption = GetVersionOfTheServer() & " - Mundo Seleccionado: " & MundoSeleccionado & " - " & NombreServidor
+    frmMain.Caption = GetVersionOfTheServer() & " - Mundo Seleccionado: " & " - " & NombreServidor
 
-    'Esta descripcion de servidor se muestra en la lista de servers.
-    DescripcionServidor = GetVar(App.Path & "\Server.ini", "INIT", "Descripcion")
-    
     'Este ultimo es para saber siempre los records en el frmMain
     frmMain.txtRecordOnline.Text = RecordUsuariosOnline
     
@@ -815,9 +811,9 @@ Public Function Intemperie(ByVal Userindex As Integer) As Boolean
     With UserList(Userindex)
 
         If MapInfo(.Pos.Map).Zona <> "DUNGEON" Then
-            If MapData(.Pos.Map, .Pos.X, .Pos.Y).trigger <> eTrigger.BAJOTECHO And _
-             MapData(.Pos.Map, .Pos.X, .Pos.Y).trigger <> eTrigger.CASA And _
-            MapData(.Pos.Map, .Pos.X, .Pos.Y).trigger <> eTrigger.ZONASEGURA Then _
+            If MapData(.Pos.Map, .Pos.X, .Pos.Y).Trigger <> eTrigger.BAJOTECHO And _
+             MapData(.Pos.Map, .Pos.X, .Pos.Y).Trigger <> eTrigger.CASA And _
+            MapData(.Pos.Map, .Pos.X, .Pos.Y).Trigger <> eTrigger.ZONASEGURA Then _
                 Intemperie = True
         Else
             Intemperie = False
