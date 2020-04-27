@@ -2080,7 +2080,7 @@ Sub LoadSini()
     ApiPath = Lector.GetValue("CONEXIONAPI", "ApiPath")
 
     'CHOTS | Database
-    Database_Enabled = CBool(val(Lector.GetValue("DATABASE", "Enabled")))
+    Database_Enabled = True
     Database_DataSource = Lector.GetValue("DATABASE", "DSN")
     Database_Host = Lector.GetValue("DATABASE", "Host")
     Database_Name = Lector.GetValue("DATABASE", "Name")
@@ -2137,7 +2137,7 @@ Sub CargarCiudades()
         With Shakoud
             .Map = Lector.GetValue("Shakoud", "Mapa")
             .X = Lector.GetValue("Shakoud", "X")
-            .Y = Lector.GetValue("Shakoude", "Y")
+            .Y = Lector.GetValue("Shakoud", "Y")
         End With
         
         With Belleuve

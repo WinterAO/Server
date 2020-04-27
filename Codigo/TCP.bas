@@ -316,7 +316,6 @@ Sub ConnectNewUser(ByVal Userindex As Integer, _
                    ByVal UserRaza As eRaza, _
                    ByVal UserSexo As eGenero, _
                    ByVal UserClase As eClass, _
-                   ByVal Hogar As eCiudad, _
                    ByVal Head As Integer)
 
     '*************************************************
@@ -391,7 +390,7 @@ Sub ConnectNewUser(ByVal Userindex As Integer, _
         .Clase = UserClase
         .raza = UserRaza
         .Genero = UserSexo
-        .Hogar = Hogar
+        .Hogar = eCiudad.cRamx
 
         'CHOTS | Accounts
         .AccountHash = AccountHash

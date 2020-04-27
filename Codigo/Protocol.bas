@@ -1768,7 +1768,6 @@ Private Sub HandleLoginNewChar(ByVal Userindex As Integer)
     Dim version     As String
     Dim race        As eRaza
     Dim gender      As eGenero
-    Dim homeland    As eCiudad
     Dim Class As eClass
     Dim Head As Integer
 
@@ -1782,7 +1781,6 @@ Private Sub HandleLoginNewChar(ByVal Userindex As Integer)
     gender = buffer.ReadByte()
     Class = buffer.ReadByte()
     Head = buffer.ReadInteger
-    homeland = buffer.ReadByte()
     
     'If we got here then packet is complete, copy data back to original queue
     Call UserList(Userindex).incomingData.CopyBuffer(buffer)
@@ -1814,7 +1812,7 @@ Private Sub HandleLoginNewChar(ByVal Userindex As Integer)
     If Not VersionOK(version) Then
         Call WriteErrorMsg(Userindex, "Esta version del juego es obsoleta, la version correcta es la " & ULTIMAVERSION & ". La misma se encuentra disponible en www.argentumonline.org")
     Else
-        Call ConnectNewUser(Userindex, UserName, AccountHash, race, gender, Class, homeland, Head)
+        Call ConnectNewUser(Userindex, UserName, AccountHash, race, gender, Class, Head)
 
     End If
   
