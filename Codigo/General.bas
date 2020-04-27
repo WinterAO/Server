@@ -602,7 +602,7 @@ Private Sub InitMainTimers()
         .AutoSave.Enabled = True
 
         .GameTimer.Enabled = True
-        .packetResend.Enabled = True
+        .PacketResend.Enabled = True
         .TIMER_AI.Enabled = True
         .Auditoria.Enabled = True
     End With
@@ -1574,13 +1574,8 @@ Sub SaveUser(ByVal Userindex As Integer, Optional ByVal SaveTimeOnline As Boolea
         Prom = (-.Reputacion.AsesinoRep) + (-.Reputacion.BandidoRep) + .Reputacion.BurguesRep + (-.Reputacion.LadronesRep) + .Reputacion.NobleRep + .Reputacion.PlebeRep
         Prom = Prom / 6
         .Reputacion.Promedio = Prom
-
-        If Not Database_Enabled Then
-            Call SaveUserToCharfile(Userindex, SaveTimeOnline)
-        Else
-            Call SaveUserToDatabase(Userindex, SaveTimeOnline)
-
-        End If
+        
+        Call SaveUserToDatabase(Userindex, SaveTimeOnline)
 
     End With
 

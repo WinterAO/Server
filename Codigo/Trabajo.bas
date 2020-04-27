@@ -1687,6 +1687,9 @@ Sub DoAdminInvisible(ByVal Userindex As Integer)
 
             End If
             
+            .flags.OldBody = .Char.body
+            .flags.OldHead = .Char.Head
+            
             .flags.AdminInvisible = 1
             .flags.invisible = 1
             .flags.Oculto = 1
@@ -3188,7 +3191,7 @@ Public Sub DoEquita(ByVal Userindex As Integer, _
             Exit Sub
         End If
 
-        If MapData(.Pos.Map, .Pos.X, .Pos.Y).trigger = eTrigger.BAJOTECHO Or MapData(.Pos.Map, .Pos.X, .Pos.Y).trigger = eTrigger.CASA Then
+        If MapData(.Pos.Map, .Pos.X, .Pos.Y).Trigger = eTrigger.BAJOTECHO Or MapData(.Pos.Map, .Pos.X, .Pos.Y).Trigger = eTrigger.CASA Then
             'TODO: SACAR ESTA VALIDACION DE ACA, Y HACER UN legalpos HAY TECHO en el cliente
             If .flags.Equitando = 0 Then Exit Sub
 
@@ -3216,7 +3219,7 @@ Public Sub DoEquita(ByVal Userindex As Integer, _
                 Call WriteEquitandoToggle(Userindex)
 
                 'Mostramos solo el casco de los items equipados por que los demas items quedan mal en el render, solo es un tema visual (Recox)
-                Call ChangeUserChar(Userindex, .Char.body, .Char.Head, .Char.heading, NingunArma, NingunEscudo, .Char.CascoAnim) 
+                Call ChangeUserChar(Userindex, .Char.body, .Char.Head, .Char.heading, NingunArma, NingunEscudo, .Char.CascoAnim)
             Else
                 Call WriteConsoleMsg(Userindex, "Debe esperar " & .Counters.MonturaCounter & " segundos para volver a usar tu montura", FontTypeNames.FONTTYPE_INFO)
             End If
