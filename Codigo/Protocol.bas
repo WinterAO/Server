@@ -10649,7 +10649,7 @@ Private Sub HandleEditChar(ByVal Userindex As Integer)
         End If
 
         'CHOTS | The user is not online and we are working with Database
-        If Database_Enabled And tUser <= 0 Then
+        If tUser <= 0 Then
             valido = False
             Call WriteConsoleMsg(Userindex, "El usuario esta offline.", FontTypeNames.FONTTYPE_INFO)
 
@@ -11133,12 +11133,7 @@ Private Sub HandleRequestCharInfo(ByVal Userindex As Integer)
                 If Not (EsDios(TargetName) Or EsAdmin(TargetName)) Then
                     Call WriteConsoleMsg(Userindex, "Usuario offline, buscando...", FontTypeNames.FONTTYPE_INFO)
 
-                    If Not Database_Enabled Then
-                        Call SendUserStatsTxtCharfile(Userindex, TargetName)
-                    Else
-                        Call SendUserStatsTxtDatabase(Userindex, TargetName)
-
-                    End If
+                    Call SendUserStatsTxtDatabase(Userindex, TargetName)
 
                 End If
 
@@ -11228,12 +11223,7 @@ Private Sub HandleRequestCharStats(ByVal Userindex As Integer)
                 If UserIsAdmin Or Not OtherUserIsAdmin Then
                     Call WriteConsoleMsg(Userindex, "Usuario offline. Buscando... ", FontTypeNames.FONTTYPE_INFO)
 
-                    If Not Database_Enabled Then
-                        Call SendUserMiniStatsTxtFromCharfile(Userindex, UserName)
-                    Else
-                        Call SendUserMiniStatsTxtFromDatabase(Userindex, UserName)
-
-                    End If
+                    Call SendUserMiniStatsTxtFromDatabase(Userindex, UserName)
 
                 Else
                     Call WriteConsoleMsg(Userindex, "No puedes ver los stats de un dios o admin.", FontTypeNames.FONTTYPE_INFO)
@@ -11330,12 +11320,7 @@ Private Sub HandleRequestCharGold(ByVal Userindex As Integer)
                 If UserIsAdmin Or Not OtherUserIsAdmin Then
                     Call WriteConsoleMsg(Userindex, "Usuario offline. Buscando... ", FontTypeNames.FONTTYPE_TALK)
 
-                    If Not Database_Enabled Then
-                        Call SendUserOROTxtFromCharfile(Userindex, UserName)
-                    Else
-                        Call SendUserOROTxtFromDatabase(Userindex, UserName)
-
-                    End If
+                    Call SendUserOROTxtFromDatabase(Userindex, UserName)
 
                 Else
                     Call WriteConsoleMsg(Userindex, "No puedes ver el oro de un dios o admin.", FontTypeNames.FONTTYPE_INFO)
@@ -11431,12 +11416,7 @@ Private Sub HandleRequestCharInventory(ByVal Userindex As Integer)
                 If UserIsAdmin Or Not OtherUserIsAdmin Then
                     Call WriteConsoleMsg(Userindex, "Usuario offline. Buscando...", FontTypeNames.FONTTYPE_TALK)
 
-                    If Not Database_Enabled Then
-                        Call SendUserInvTxtFromCharfile(Userindex, UserName)
-                    Else
-                        Call SendUserInvTxtFromDatabase(Userindex, UserName)
-
-                    End If
+                    Call SendUserInvTxtFromDatabase(Userindex, UserName)
 
                 Else
                     Call WriteConsoleMsg(Userindex, "No puedes ver el inventario de un dios o admin.", FontTypeNames.FONTTYPE_INFO)
@@ -11532,12 +11512,7 @@ Private Sub HandleRequestCharBank(ByVal Userindex As Integer)
                 If UserIsAdmin Or Not OtherUserIsAdmin Then
                     Call WriteConsoleMsg(Userindex, "Usuario offline. Buscando... ", FontTypeNames.FONTTYPE_TALK)
 
-                    If Not Database_Enabled Then
-                        Call SendUserBovedaTxtFromCharfile(Userindex, UserName)
-                    Else
-                        Call SendUserBovedaTxtFromDatabase(Userindex, UserName)
-
-                    End If
+                    Call SendUserBovedaTxtFromDatabase(Userindex, UserName)
 
                 Else
                     Call WriteConsoleMsg(Userindex, "No puedes ver la boveda de un dios o admin.", FontTypeNames.FONTTYPE_INFO)
@@ -16448,11 +16423,6 @@ Public Sub HandleAlterName(ByVal Userindex As Integer)
 
                             If Not PersonajeExiste(newName) Then
                                 Call CopyUser(UserName, newName)
-                                
-                                If Not Database_Enabled Then
-                                    Call SaveBan(UserName, "BAN POR Cambio de nick a " & UCase$(newName), .Name)
-
-                                End If
 
                                 Call WriteConsoleMsg(Userindex, "Transferencia exitosa.", FontTypeNames.FONTTYPE_INFO)
                                 Call LogGM(.Name, "Ha cambiado de nombre al usuario " & UserName & ". Ahora se llama " & newName)

@@ -1595,12 +1595,7 @@ Sub LoadUser(ByVal Userindex As Integer)
 
     On Error GoTo ErrorHandler
 
-    If Not Database_Enabled Then
-        Call LoadUserFromCharfile(Userindex)
-    Else
-        Call LoadUserFromDatabase(Userindex)
-
-    End If
+    Call LoadUserFromDatabase(Userindex)
 
     With UserList(Userindex)
 

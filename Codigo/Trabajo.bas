@@ -1687,6 +1687,7 @@ Sub DoAdminInvisible(ByVal Userindex As Integer)
 
             End If
             
+            'Guardamos el antiguo body y head
             .flags.OldBody = .Char.body
             .flags.OldHead = .Char.Head
             
