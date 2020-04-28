@@ -428,12 +428,6 @@ Sub ConnectNewUser(ByVal Userindex As Integer, _
     Call ResetFacciones(Userindex)
 
     Call SaveUser(Userindex)
-
-    'CHOTS | Account in charfile
-    If Not Database_Enabled Then
-        Call SaveUserToAccountCharfile(Name, AccountHash)
-
-    End If
   
     'Open User
     Call ConnectUser(Userindex, Name, AccountHash)
@@ -820,12 +814,8 @@ Sub ConnectAccount(ByVal Userindex As Integer, _
     End If
 
 
-    If Not Database_Enabled Then
-        Call LoginAccountCharfile(Userindex, UserName)
-    Else
-        Call SaveAccountLastLoginDatabase(UserName, UserList(Userindex).IP)
-        Call LoginAccountDatabase(Userindex, UserName)
-    End If
+    Call SaveAccountLastLoginDatabase(UserName, UserList(Userindex).IP)
+    Call LoginAccountDatabase(Userindex, UserName)
 
 End Sub
 

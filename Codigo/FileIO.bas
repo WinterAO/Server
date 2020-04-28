@@ -2080,7 +2080,6 @@ Sub LoadSini()
     ApiPath = Lector.GetValue("CONEXIONAPI", "ApiPath")
 
     'CHOTS | Database
-    Database_Enabled = True
     Database_DataSource = Lector.GetValue("DATABASE", "DSN")
     Database_Host = Lector.GetValue("DATABASE", "Host")
     Database_Name = Lector.GetValue("DATABASE", "Name")

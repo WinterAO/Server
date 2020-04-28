@@ -314,11 +314,7 @@ Public Sub BorrarUsuario(ByVal Userindex As Integer, ByVal UserName As String, B
         Exit Sub
     End If
     
-    If Not Database_Enabled Then
-        Call BorrarUsuarioCharfile(UserName)
-    Else
-        Call BorrarUsuarioDatabase(UserName)
-    End If
+    Call BorrarUsuarioDatabase(UserName)
 
 End Sub
 
@@ -329,12 +325,8 @@ Public Function BANCheck(ByVal Name As String) As Boolean
     'Last Modification: 18/09/2018
     '18/09/2018 CHOTS: Checks database too
     '***************************************************
-    If Not Database_Enabled Then
-        BANCheck = BANCheckCharfile(Name)
-    Else
-        BANCheck = BANCheckDatabase(Name)
 
-    End If
+    BANCheck = BANCheckDatabase(Name)
 
 End Function
 
@@ -345,12 +337,8 @@ Public Function PersonajeExiste(ByVal UserName As String) As Boolean
     'Last Modification: 18/09/2018
     '18/09/2018 CHOTS: Checks database too
     '***************************************************
-    If Not Database_Enabled Then
-        PersonajeExiste = PersonajeExisteCharfile(UserName)
-    Else
-        PersonajeExiste = PersonajeExisteDatabase(UserName)
 
-    End If
+    PersonajeExiste = PersonajeExisteDatabase(UserName)
 
 End Function
 
@@ -360,12 +348,8 @@ Public Function CuentaExiste(ByVal UserName As String) As Boolean
     'Author: Juan Andres Dalmasso (CHOTS)
     'Last Modification: 12/10/2018
     '***************************************************
-    If Not Database_Enabled Then
-        CuentaExiste = CuentaExisteCharfile(UserName)
-    Else
-        CuentaExiste = CuentaExisteDatabase(UserName)
 
-    End If
+    CuentaExiste = CuentaExisteDatabase(UserName)
 
 End Function
 
@@ -376,12 +360,8 @@ Public Function PersonajePerteneceCuenta(ByVal UserName As String, _
     'Author: Juan Andres Dalmasso (CHOTS)
     'Last Modification: 18/10/2018
     '***************************************************
-    If Not Database_Enabled Then
-        PersonajePerteneceCuenta = PersonajePerteneceCuentaCharfile(UserName, AccountHash)
-    Else
-        PersonajePerteneceCuenta = PersonajePerteneceCuentaDatabase(UserName, AccountHash)
 
-    End If
+    PersonajePerteneceCuenta = PersonajePerteneceCuentaDatabase(UserName, AccountHash)
 
 End Function
 
@@ -392,13 +372,8 @@ Public Sub UnBan(ByVal Name As String)
     '18/09/2018 CHOTS: Checks database too
     '***************************************************
     
-    If Not Database_Enabled Then
-        Call UnBanCharfile(Name)
-    Else
-        Call UnBanDatabase(Name)
+    Call UnBanDatabase(Name)
 
-    End If
-    
     'Remove it from the banned people database
     Call WriteVar(App.Path & "\logs\" & "BanDetail.dat", Name, "BannedBy", "NOBODY")
     Call WriteVar(App.Path & "\logs\" & "BanDetail.dat", Name, "Reason", "NO REASON")
@@ -427,12 +402,7 @@ Public Function GetUserGuildIndex(ByVal UserName As String) As Integer
 
     End If
 
-    If Not Database_Enabled Then
-        GetUserGuildIndex = GetUserGuildIndexCharfile(UserName)
-    Else
-        GetUserGuildIndex = GetUserGuildIndexDatabase(UserName)
-
-    End If
+    GetUserGuildIndex = GetUserGuildIndexDatabase(UserName)
 
 End Function
 
@@ -443,12 +413,7 @@ Public Sub CopyUser(ByVal UserName As String, ByVal newName As String)
     '18/09/2018 CHOTS: Checks database too
     '***************************************************
     
-    If Not Database_Enabled Then
-        Call CopyUserCharfile(UserName, newName)
-    Else
-        Call CopyUserDatabase(UserName, newName)
-
-    End If
+    Call CopyUserDatabase(UserName, newName)
 
 End Sub
 

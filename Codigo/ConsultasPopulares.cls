@@ -173,23 +173,13 @@ End Function
 Private Sub MarcarPjComoQueYaVoto(ByVal Userindex As Integer, _
                                   ByVal NumeroEncuesta As Integer)
 
-    If Not Database_Enabled Then
-        Call MarcarPjComoQueYaVotoCharfile(Userindex, NumeroEncuesta)
-    Else
-        Call MarcarPjComoQueYaVotoDatabase(Userindex, NumeroEncuesta)
+    Call MarcarPjComoQueYaVotoDatabase(Userindex, NumeroEncuesta)
 
-    End If
-    
 End Sub
 
 Private Function PersonajeCantidadVotos(ByVal UserName As String) As Integer
 
-    If Not Database_Enabled Then
-        PersonajeCantidadVotos = PersonajeCantidadVotosCharfile(UserName)
-    Else
-        PersonajeCantidadVotos = PersonajeCantidadVotosDatabase(UserName)
-
-    End If
+    PersonajeCantidadVotos = PersonajeCantidadVotosDatabase(UserName)
 
 End Function
 
