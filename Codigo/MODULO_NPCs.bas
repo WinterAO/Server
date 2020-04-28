@@ -571,9 +571,9 @@ Private Function TestSpawnTrigger(Pos As WorldPos, _
     '***************************************************
     
     If LegalPos(Pos.Map, Pos.X, Pos.Y, PuedeAgua) Then
-        TestSpawnTrigger = MapData(Pos.Map, Pos.X, Pos.Y).trigger <> eTrigger.POSINVALIDA And _
-                           MapData(Pos.Map, Pos.X, Pos.Y).trigger <> eTrigger.CASA And _
-                           MapData(Pos.Map, Pos.X, Pos.Y).trigger <> eTrigger.BAJOTECHO
+        TestSpawnTrigger = MapData(Pos.Map, Pos.X, Pos.Y).Trigger <> eTrigger.POSINVALIDA And _
+                           MapData(Pos.Map, Pos.X, Pos.Y).Trigger <> eTrigger.CASA And _
+                           MapData(Pos.Map, Pos.X, Pos.Y).Trigger <> eTrigger.BAJOTECHO
 
     End If
     
@@ -738,9 +738,9 @@ Public Sub MakeNPCChar(ByVal toMap As Boolean, _
     If Not toMap Then
         'En caso de que sea hostil no mostramos el nombre, si es un npc no hostil mostramos nombre. (Recox)
         If Not Npclist(NpcIndex).Hostile = 1 Then
-            Call WriteCharacterCreate(sndIndex, Npclist(NpcIndex).Char.body, Npclist(NpcIndex).Char.Head, Npclist(NpcIndex).Char.heading, Npclist(NpcIndex).Char.CharIndex, X, Y, 0, 0, 0, 0, 0, Npclist(NpcIndex).Name, 0, 0)
+            Call WriteCharacterCreate(sndIndex, Npclist(NpcIndex).Char.body, Npclist(NpcIndex).Char.Head, Npclist(NpcIndex).Char.heading, Npclist(NpcIndex).Char.CharIndex, X, Y, 0, 0, 0, 0, 0, Npclist(NpcIndex).Name, 0, 0, Npclist(NpcIndex).NoShadow)
         Else
-            Call WriteCharacterCreate(sndIndex, Npclist(NpcIndex).Char.body, Npclist(NpcIndex).Char.Head, Npclist(NpcIndex).Char.heading, Npclist(NpcIndex).Char.CharIndex, X, Y, 0, 0, 0, 0, 0, vbNullString, 0, 0)
+            Call WriteCharacterCreate(sndIndex, Npclist(NpcIndex).Char.body, Npclist(NpcIndex).Char.Head, Npclist(NpcIndex).Char.heading, Npclist(NpcIndex).Char.CharIndex, X, Y, 0, 0, 0, 0, 0, vbNullString, 0, 0, Npclist(NpcIndex).NoShadow)
         End If
 
     Else
@@ -1248,6 +1248,8 @@ Public Function OpenNPC(ByVal NpcNumber As Integer, _
         .TipoItems = val(Leer.GetValue("NPC" & NpcNumber, "TipoItems"))
         
         .Ciudad = val(Leer.GetValue("NPC" & NpcNumber, "Ciudad"))
+        
+        .NoShadow = val(Leer.GetValue("NPC" & NpcNumber, "NoShadow"))
 
     End With
     

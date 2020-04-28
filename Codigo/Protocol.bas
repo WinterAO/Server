@@ -18546,6 +18546,7 @@ End Sub
 ' @param    name Name of the new character.
 ' @param    criminal Determines if the character is a criminal or not.
 ' @param    privileges Sets if the character is a normal one or any kind of administrative character.
+' @param    NoShadow establece si el cuerpo no emite sombra
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
 Public Sub WriteCharacterCreate(ByVal Userindex As Integer, _
@@ -18562,7 +18563,8 @@ Public Sub WriteCharacterCreate(ByVal Userindex As Integer, _
                                 ByVal helmet As Integer, _
                                 ByVal Name As String, _
                                 ByVal NickColor As Byte, _
-                                ByVal Privileges As Byte)
+                                ByVal Privileges As Byte, _
+                                Optional ByVal NoShadow As Byte = False)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -18571,7 +18573,7 @@ Public Sub WriteCharacterCreate(ByVal Userindex As Integer, _
     '***************************************************
     On Error GoTo ErrHandler
 
-    Call UserList(Userindex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterCreate(body, Head, heading, CharIndex, X, Y, weapon, shield, FX, FXLoops, helmet, Name, NickColor, Privileges))
+    Call UserList(Userindex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterCreate(body, Head, heading, CharIndex, X, Y, weapon, shield, FX, FXLoops, helmet, Name, NickColor, Privileges, NoShadow))
     Exit Sub
 
 ErrHandler:
@@ -18722,12 +18724,14 @@ End Sub
 ' @param    GrhIndex Grh of the object.
 ' @param    X X coord of the character's new position.
 ' @param    Y Y coord of the character's new position.
+' @param    Shadow establece si el objeto emite sombra
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
 Public Sub WriteObjectCreate(ByVal Userindex As Integer, _
                              ByVal GrhIndex As Long, _
                              ByVal X As Byte, _
-                             ByVal Y As Byte)
+                             ByVal Y As Byte, _
+                             Optional ByVal Shadow As Byte = 0)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -18736,7 +18740,7 @@ Public Sub WriteObjectCreate(ByVal Userindex As Integer, _
     '***************************************************
     On Error GoTo ErrHandler
 
-    Call UserList(Userindex).outgoingData.WriteASCIIStringFixed(PrepareMessageObjectCreate(GrhIndex, X, Y))
+    Call UserList(Userindex).outgoingData.WriteASCIIStringFixed(PrepareMessageObjectCreate(GrhIndex, X, Y, Shadow))
     Exit Sub
 
 ErrHandler:
@@ -21733,7 +21737,7 @@ End Function
 
 Public Function PrepareMessageObjectCreate(ByVal GrhIndex As Long, _
                                            ByVal X As Byte, _
-                                           ByVal Y As Byte) As String
+                                           ByVal Y As Byte, ByVal Shadow As Byte) As String
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -21745,6 +21749,7 @@ Public Function PrepareMessageObjectCreate(ByVal GrhIndex As Long, _
         Call .WriteByte(X)
         Call .WriteByte(Y)
         Call .WriteLong(GrhIndex)
+        Call .WriteByte(Shadow)
         
         PrepareMessageObjectCreate = .ReadASCIIStringFixed(.Length)
 
@@ -21833,7 +21838,8 @@ Public Function PrepareMessageCharacterCreate(ByVal body As Integer, _
                                               ByVal helmet As Integer, _
                                               ByVal Name As String, _
                                               ByVal NickColor As Byte, _
-                                              ByVal Privileges As Byte) As String
+                                              ByVal Privileges As Byte, _
+                                              ByVal NoShadow As Byte) As String
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -21857,6 +21863,7 @@ Public Function PrepareMessageCharacterCreate(ByVal body As Integer, _
         Call .WriteASCIIString(Name)
         Call .WriteByte(NickColor)
         Call .WriteByte(Privileges)
+        Call .WriteByte(NoShadow)
         
         PrepareMessageCharacterCreate = .ReadASCIIStringFixed(.Length)
 

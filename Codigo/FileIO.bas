@@ -1080,6 +1080,8 @@ Sub LoadOBJData()
             
             .Newbie = val(Leer.GetValue("OBJ" & Object, "Newbie"))
             
+            .Shadow = val(Leer.GetValue("OBJ" & Object, "Shadow"))
+            
             Select Case .OBJType
 
                 Case eOBJType.otArmadura

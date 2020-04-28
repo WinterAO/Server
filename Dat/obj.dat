@@ -126,18 +126,21 @@ Name=Arbol
 GrhIndex=7000
 ObjType=4
 Agarrable=1
+Shadow=1
 
 [OBJ5]
 Name=Arbol
 GrhIndex=7001
 ObjType=4
 Agarrable=1
+Shadow=1
 
 [OBJ6]
 Name=Arbol
 GrhIndex=7002
 ObjType=4
 Agarrable=1
+Shadow=1
 
 [OBJ7] 'Puerta para negocio porque no tiene clave
 Name=Puerta de madera abierta
@@ -190,6 +193,7 @@ Abierta=0
 Llave=0
 CantItems=10
 NroItems=0
+Shadow=1
 
 [OBJ11]
 Name=Cofre Cerrado
@@ -200,6 +204,7 @@ Abierta=0
 Llave=0
 CantItems=10
 NroItems=0
+Shadow=1
 
 [OBJ12]
 Name=Monedas de Oro
@@ -214,6 +219,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Tenemos las mejores armas para los mejores guerreros.
+Shadow=1
 
 [OBJ14]
 Name=Llave
@@ -270,6 +276,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=La mejor comida, al mejor precio!
+Shadow=1
 
 [OBJ19]
 Name=Espada Dos Manos
@@ -422,6 +429,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Ropa Azrra, los mejores precios!
+Shadow=1
 
 [OBJ34]
 Name=Foro de Ullathorpe
@@ -429,6 +437,7 @@ ID=Ullathorpe
 GrhIndex=529
 ObjType=10
 Agarrable=1
+Shadow=1
 
 [OBJ35]
 Name=Vestimentas Comunes
@@ -545,30 +554,35 @@ Name=Arbol
 GrhIndex=641
 ObjType=4
 Agarrable=1
+Shadow=1
 
 [OBJ47]'Nieve 2
 Name=Arbol
 GrhIndex=642
 ObjType=4
 Agarrable=1
+Shadow=1
 
 [OBJ48]'Nieve 3
 Name=Arbol
 GrhIndex=641
 ObjType=4
 Agarrable=1
+Shadow=1
 
 [OBJ49]'Nieve 4
 Name=Arbol
 GrhIndex=644
 ObjType=4
 Agarrable=1
+Shadow=1
 
 [OBJ50]'Nieve 5
 Name=Arbol
 GrhIndex=647
 ObjType=4
 Agarrable=1
+Shadow=1
 
 
 '<--------------------------------CASAS ULLA-------------------------------->
@@ -661,6 +675,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Pociones, aumente su fuerza, agilidad, recupere salud y demas efectos magicos!!
+Shadow=1
 
 [OBJ60]
 Name=Casa Numero 1
@@ -669,6 +684,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Residencia Privada.
+Shadow=1
 
 [OBJ61]
 Name=Cartel Carpinteria
@@ -677,6 +693,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Compra y venta de madera!
+Shadow=1
 
 [OBJ62]
 Name=Cartel Propiedades
@@ -685,6 +702,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Compra y venta de propiedades. Stock limitado!
+Shadow=1
 
 [OBJ63]
 Name=Fogata
@@ -1591,6 +1609,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Compra y venta de armaduras, cascos y escudos.
+Shadow=1
 
 [OBJ135]
 Name=Tunica Roja Burda
@@ -1710,48 +1729,56 @@ Name=Arbol
 GrhIndex=7001
 ObjType=4
 Agarrable=1
+Shadow=1
 
 [OBJ148] 
 Name=Arbol de la Jungla
 GrhIndex=7002
 ObjType=4
 Agarrable=1
+Shadow=1
 
 [OBJ149] 
 Name=Arbol
 GrhIndex=7000
 ObjType=4
 Agarrable=1
+Shadow=1
 
 [OBJ150] 
 Name=Arbol
 GrhIndex=7222
 ObjType=4
 Agarrable=1
+Shadow=1
 
 [OBJ151] 
 Name=Arbol
 GrhIndex=7223
 ObjType=4
 Agarrable=1
+Shadow=1
 
 [OBJ152] 
 Name=Arbol
 GrhIndex=7224
 ObjType=4
 Agarrable=1
+Shadow=1
 
 [OBJ153] 
 Name=Arbol
 GrhIndex=7225
 ObjType=4
 Agarrable=1
+Shadow=1
 
 [OBJ154] 
 Name=Arbol
 GrhIndex=7226
 ObjType=4
 Agarrable=1
+Shadow=1
 
 [OBJ155]
 Name=Cama
@@ -2356,6 +2383,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Bienvenidos al Gremio de los Mineros, contamos con fabulosas herramientas y los mejores minerales de todo Argentum.
+Shadow=1
 
 [OBJ210]
 Name=Casa Numero 11
@@ -2364,6 +2392,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Residencia Privada.
+Shadow=1
 
 [OBJ211]
 Name=Casa Numero 12
@@ -2372,6 +2401,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Residencia Privada.
+Shadow=1
 
 [OBJ212]
 Name=Casa Numero 13
@@ -2380,6 +2410,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Residencia Privada.
+Shadow=1
 
 [OBJ213]
 Name=Casa Numero 14
@@ -2388,6 +2419,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Residencia Privada.
+Shadow=1
 
 [OBJ214]
 Name=Casa Numero 15
@@ -2396,6 +2428,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Residencia Privada.
+Shadow=1
 
 [OBJ215]
 Name=Casa Numero 16
@@ -2404,6 +2437,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Residencia Privada.
+Shadow=1
 
 [OBJ216]
 Name=Casa Numero 17
@@ -2412,6 +2446,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Residencia Privada.
+Shadow=1
 
 [OBJ217]
 Name=Casa Numero 18
@@ -2420,6 +2455,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Residencia Privada.
+Shadow=1
 
 [OBJ218]
 Name=Casa Numero 19
@@ -2428,6 +2464,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Residencia Privada.
+Shadow=1
 
 [OBJ219]
 Name=Casa Numero 10
@@ -2436,6 +2473,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Residencia Privada.
+Shadow=1
 
 [OBJ220]
 Name=Casa Numero 20
@@ -2444,6 +2482,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Residencia Privada.
+Shadow=1
 
 [OBJ221]
 Name=Cartel Hechizos
@@ -2452,6 +2491,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Entrad noble Mago! Puedo ofrecerte mis mejores Hechizos.
+Shadow=1
 
 [OBJ222]
 Name=Cartel Pescadores
@@ -2460,6 +2500,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Gremio de Pescadores
+Shadow=1
 
 [OBJ223]
 Name=Cartel
@@ -2468,6 +2509,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Hola aventurero, unos cuantos kilomentros al Norte se encuentra el pueblo de Ullathorpe y al Oeste encontraras la ciudad de Nix. Buena Suerte, viajero!
+Shadow=1
 
 [OBJ224]
 Name=Cartel
@@ -2476,6 +2518,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Forasteros: Este Pueblo forma parte del Gran Imperio de Argentum, cualquier accion criminal sera reprimida por la Guardia Real. Todo criminal sera perseguido y ajusticiado.                                Ordenanza Real.
+Shadow=1
 
 [OBJ225]
 Name=Cartel Newbie Dungeon
@@ -2484,6 +2527,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Hola osados aventureros, sed bienvenidos en el Dungeon Newbie! Aqui podran entrenar sus habilidades sin correr ningun riesgo ya que el Dungeon esta fuertemente custodiado por la Guardia Imperial. Adentrandose encontraran criaturas perversas con las cuales podran luchar, tambien encontraran un Sacerdote para ser resucitados, provisiones, etc. Suerte y que lo disfruteis!
+Shadow=1
 
 [OBJ226]
 Name=Cartel
@@ -2492,6 +2536,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Sigue el camino del Sur para ir a Nix, hacia al Oeste encontraras el peligroso bosque de Dorck.
+Shadow=1
 
 [OBJ227]
 Name=Cartel Bosque Dorck
@@ -2500,6 +2545,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Entrada al bosque de Dorck. Mantengase alejado, zona de peligro.
+Shadow=1
 
 [OBJ228]
 Name=Yacimiento de Oro
@@ -2811,6 +2857,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Banco Goliath. La mayor seguridad.
+Shadow=1
 
 [OBJ259]
 Name=Cartel Provisiones
@@ -2819,6 +2866,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Provisiones.
+Shadow=1
 
 [OBJ260]
 Name=Cartel Sacerdote
@@ -2827,6 +2875,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Sacerdote.
+Shadow=1
 
 [OBJ261]
 Name=Cartel Meson Hostigado
@@ -2835,6 +2884,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=El Meson Hostigado.
+Shadow=1
 
 [OBJ262]
 Name=Cartel
@@ -2843,7 +2893,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=El Gran Consejo.
-
+Shadow=1
 
 '<------------------------------CASAS BANDERBILL----------------------------->
 
@@ -3467,6 +3517,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Muelles:Prohibido arrojar basura al mar!. Todo aquel que incurra en una infraccion sera multado.
+Shadow=1
 
 [OBJ316]
 Name=Cartel Goliath
@@ -3475,6 +3526,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Casa Central del Banco Goliath.
+Shadow=1
 
 [OBJ317]
 Name=Cartel Palacio Real
@@ -3483,6 +3535,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Bienvenido al Palacio Real.
+Shadow=1
 
 [OBJ318]
 Name=Invisibilidad
@@ -5208,6 +5261,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Prision del Reino
+Shadow=1
 
 [OBJ458]'Prision 2
 Name=Cartel
@@ -5216,6 +5270,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Prision
+Shadow=1
 
 [OBJ459]'Abadia de Lindos
 Name=Cartel
@@ -5224,6 +5279,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Abadia de Lindos
+Shadow=1
 
 [OBJ460]
 Name=Daga (Newbie)
@@ -6494,6 +6550,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Cuidado!! El Dungeon de Veriil es uno de los lugares mas peligrosos de todo Argentum; pocos son los aventureros que logran salir con vida de el.
+Shadow=1
 
 [OBJ548]
 Name=Cartel Arghâl
@@ -6502,6 +6559,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Bienvenidos a Arghâl!!!
+Shadow=1
 
 [OBJ549]
 Name=Tunica de Mago del Imperio (E/G)
@@ -6804,6 +6862,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=La mistica ciudad de Arghâl se encuentra hacia el este.
+Shadow=1
 
 [OBJ575]
 Name=Foro
@@ -6826,6 +6885,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=El refugio de los aventureros, lugar propicio para beber y emprender nuevas aventuras.
+Shadow=1
 
 [OBJ578]'Arghâl Central
 Name=Cartel
@@ -6834,6 +6894,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Al este se encuentra el centro historico de Arghâl.
+Shadow=1
 
 [OBJ579]'Arghâl Central
 Name=Cartel
@@ -6842,6 +6903,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=El famoso espacio donde se congregan los mas grandes artistas y poetas de Argentum.
+Shadow=1
 
 '<-------------------------------CASAS ARKHEIN------------------------------->
 
@@ -7355,6 +7417,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Teleport a las Catacumbas.
+Shadow=1
 
 [OBJ622]
 Name=Barrilito de cerveza
@@ -7749,6 +7812,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Vd esta entrando en territorio del Imperio Pretoriano. Los visitantes NO son bienvenidos y seran atacados sin piedad.
+Shadow=1
 
 [OBJ648]
 Name=Armadura de Cazador (E/G)
@@ -7780,6 +7844,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=La reglamentacion del robo de NPCs no se aplica aqui. Es un lugar de entrenamiento comun y nadie puede proclamarse poseedor de las criaturas.
+Shadow=1
 
 [OBJ650]
 Name=Tunica Pretoriana
@@ -8699,6 +8764,7 @@ Name=Arbol
 GrhIndex=30680
 ObjType=4
 Agarrable=1
+Shadow=1
 
 [OBJ705]
 Name=El Ojo del Demiurgo
@@ -8716,6 +8782,7 @@ Vgrande=501
 ObjType=8
 Agarrable=1
 Texto=PROHIBIDO TOCAR (dioses y semidioses incluidos!). Este pergamino fue encargado al imperio real por los dioses de Argentum para su estudio.
+Shadow=1
 
 [OBJ707]
 Name=Vestimenta de Noble (E/G)
@@ -9125,24 +9192,28 @@ Name=Carreta
 GrhIndex=650
 ObjType=20
 Agarrable=1
+Shadow=1
 
 [OBJ764]
 Name=Carreta
 GrhIndex=651
 ObjType=20
 Agarrable=1
+Shadow=1
 
 [OBJ765]
 Name=Carreta
 GrhIndex=652
 ObjType=20
 Agarrable=1
+Shadow=1
 
 [OBJ766]
 Name=Arbolito
 GrhIndex=653
 ObjType=20
 Agarrable=1
+Shadow=1
 
 [OBJ767]
 Name=Margarita
@@ -9334,18 +9405,21 @@ Name=Arbolito en Maceta
 GrhIndex=1490
 ObjType=20
 Agarrable=1
+Shadow=1
 
 [OBJ795]
 Name=Arbolito en Maceta
 GrhIndex=1491
 ObjType=20
 Agarrable=1
+Shadow=1
 
 [OBJ796]
 Name=Arbolito en Maceta
 GrhIndex=1492
 ObjType=20
 Agarrable=1
+Shadow=1
 
 [OBJ797]
 Name=Hoguera
@@ -9528,36 +9602,42 @@ Name=Arbol
 GrhIndex=1529
 ObjType=4
 Agarrable=1
+Shadow=1
 
 [OBJ826]
 Name=Arbol
 GrhIndex=1530
 ObjType=4
 Agarrable=1
+Shadow=1
 
 [OBJ827]
 Name=Arbol
 GrhIndex=1531
 ObjType=4
 Agarrable=1
+Shadow=1
 
 [OBJ828]
 Name=Arbol
 GrhIndex=1532
 ObjType=4
 Agarrable=1
+Shadow=1
 
 [OBJ829]
 Name=Arbol
 GrhIndex=1533
 ObjType=4
 Agarrable=1
+Shadow=1
 
 [OBJ830]
 Name=Arbol
 GrhIndex=1534
 ObjType=4
 Agarrable=1
+Shadow=1
 
 [OBJ831]
 Name=Arbusto
@@ -12104,6 +12184,7 @@ Name=Arbol elfico
 GrhIndex=18802
 ObjType=36
 Agarrable=1
+Shadow=1
 
 [OBJ1009]
 Name=Cuchillas
@@ -12160,6 +12241,7 @@ Name=Farola
 GrhIndex=2639
 ObjType=20
 Agarrable=1
+Shadow=1
 
 [OBJ1012]
 Name=Teleport
@@ -12217,6 +12299,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Asesinos
+Shadow=1
 
 [OBJ1020]
 Name=Cartel Bandido
@@ -12225,6 +12308,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Bandidos
+Shadow=1
 
 [OBJ1021]
 Name=Cartel Bardo
@@ -12233,6 +12317,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Bardos
+Shadow=1
 
 [OBJ1022]
 Name=Cartel Clerigo
@@ -12241,6 +12326,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Clerigos
+Shadow=1
 
 [OBJ1023]
 Name=Cartel Druida
@@ -12249,6 +12335,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Druidas
+Shadow=1
 
 [OBJ1024]
 Name=Cartel Guerrero
@@ -12257,6 +12344,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Guerreros
+Shadow=1
 
 [OBJ1025]
 Name=Cartel Cazador
@@ -12265,6 +12353,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Cazadores
+Shadow=1
 
 [OBJ1026]
 Name=Cartel Ladron
@@ -12273,6 +12362,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Ladrones
+Shadow=1
 
 [OBJ1027]
 Name=Cartel Mago
@@ -12281,6 +12371,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Magos
+Shadow=1
 
 [OBJ1028]
 Name=Cartel Paladin
@@ -12289,6 +12380,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Paladines
+Shadow=1
 
 [OBJ1029]
 Name=Cartel Pirata
@@ -12297,6 +12389,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Piratas
+Shadow=1
 
 [OBJ1030]
 Name=Cartel Trabajador
@@ -12305,6 +12398,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Trabajadores
+Shadow=1
 
 [OBJ1031]
 Name=Cartel Gremio de Trabajadores
@@ -12313,6 +12407,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Gremio de Trabajadores
+Shadow=1
 
 [OBJ1032]
 Name=Cartel Taladores
@@ -12321,6 +12416,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Taladores
+Shadow=1
 
 [OBJ1033]' Cartel Ulla
 Name=Cartel
@@ -12330,7 +12426,7 @@ ObjType=8
 Agarrable=1
 Texto=Desde que se desato la Guerra que conllevo a la Plaga, Ullathorpe dejo de formar parte del Reino de Banderbill, para pasar a ser una zona comercial e ideal para todos los viajeros. Aqui podras pasear, comerciar y platicar libremente, mientras no disturbes a sus pobladores, la paz ni el orden.
 Alcaldia de Ullathorpe.
-
+Shadow=1
 
 [OBJ1034]' Cartel NIx
 Name=Cartel
@@ -12339,6 +12435,7 @@ VGrande=4987
 ObjType=8
 Agarrable=1
 Texto=Has llegado a la gran Ciudad de Nix, conocida por tener la Bahia de los Pescadores, actualmente es una ciudad neutral, ya que el Reino de Banderbill decidio retirar sus Guardias Reales. Desde ese momento Nix se convirtio en una zona portuaria ideal para los pescadores. Esta es una ciudad libre, donde ningun reino apuesta sus guardias, regida bajo nuestras propias leyes de paz y seguridad.
+Shadow=1
 
 [OBJ1035]
 Name=Cartel Nemahuak
@@ -12347,6 +12444,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Bienvenido a Nemahuak
+Shadow=1
 
 [OBJ1036]
 Name=Guantes de Lucha
@@ -12744,6 +12842,7 @@ Name=Arbol navidad
 GrhIndex=24155
 ObjType=4
 Agarrable=1
+Shadow=1
 
 [OBJ1059]
 Name=Cuadro
@@ -13821,24 +13920,28 @@ Name=Arbol
 GrhIndex=30685
 ObjType=4
 Agarrable=1
+Shadow=1
 
 [OBJ1114]
 Name=Arbol
 GrhIndex=30686
 ObjType=4
 Agarrable=1
+Shadow=1
 
 [OBJ1115]
 Name=Arbol
 GrhIndex=30683
 ObjType=4
 Agarrable=1
+Shadow=1
 
 [OBJ1116]
 Name=Arbol
 GrhIndex=30686
 ObjType=4
 Agarrable=1
+Shadow=1
 
 [OBJ1117]
 Name=Baston Nudoso Especial
@@ -13933,12 +14036,14 @@ Name=Arbol
 GrhIndex=30682
 ObjType=4
 Agarrable=1
+Shadow=1
 
 [OBJ1122]
 Name=Arbol
 GrhIndex=30681
 ObjType=4
 Agarrable=1
+Shadow=1
 
 [OBJ1123]
 Name=Vestimenta de Campeon (E/G)
@@ -14809,6 +14914,7 @@ MaxDef=45
 MinDef=40
 Valor=2000000
 Crucial=1
+
 [OBJ1182]
 Name=Cartel Arkhein
 GrhIndex=25927
@@ -14816,6 +14922,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Arkhein vas bien sigue al Sur
+Shadow=1
 
 [OBJ1183]
 Name=Cartel Banderbill
@@ -14824,6 +14931,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Banderbill vas bien sigue al Norte
+Shadow=1
 
 [OBJ1184]
 Name=Cartel Banderbill Nix
@@ -14832,6 +14940,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Viajero si sigues al Norte llegaras a Banderbill y al Sur a Nix.
+Shadow=1
 
 [OBJ1185]
 Name=Cartel Cementerio
@@ -14840,6 +14949,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Viajero si quieres llegar al Cementerio sigue al Este.
+Shadow=1
 
 [OBJ1186]
 Name=Cartel Dungeon Marabel
@@ -14848,6 +14958,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Bienvenido a Dungeon Marabel.
+Shadow=1
 
 [OBJ1187]
 Name=Cartel Dungeon Marabel
@@ -14856,6 +14967,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Continua al Este y llegaras al Dungeon Marabel.
+Shadow=1
 
 [OBJ1188]
 Name=Cartel Dungeon Newbie
@@ -14864,6 +14976,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Bienvenido a Dungeon Marabel.
+Shadow=1
 
 [OBJ1189]
 Name=Cartel Entranadora hija de ZeuS
@@ -14872,6 +14985,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Continua al Este y llegaras a la entrenadora con Criaturas especiales para entrenar Fuerte.
+Shadow=1
 
 [OBJ1190]
 Name=Cartel Entranadora hija de ZeuS
@@ -14880,14 +14994,16 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Continua al Oeste y llegaras a la entrenadora con Criaturas especiales para entrenar Fuerte.
+Shadow=1
 
 [OBJ1191]
-Name=Cartel Entranadora hija de ZeuS
+Name=Cartel Entrenadora hija de ZeuS
 GrhIndex=25929
 VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Entrada a catacumbas interciudades podras llegar rapidamente a otra ciudad poe ellas OJO son inseguras.
+Shadow=1
 
 [OBJ1192]
 Name=Cartel Laberinto
@@ -14896,6 +15012,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Entrada al Laberinto de ReyarB recomendamos no entrar.
+Shadow=1
 
 [OBJ1193]
 Name=Cartel Lindos
@@ -14904,6 +15021,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Bienvenido a Lindos.
+Shadow=1
 
 [OBJ1194]
 Name=Cartel Minas de Hierro
@@ -14912,6 +15030,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Continua al Este y llegaras a las minas de Hierro.
+Shadow=1
 
 [OBJ1195]
 Name=Cartel Minas de Hierro
@@ -14920,6 +15039,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Continua al Este y llegaras a las minas de Hierro de Arkhein.
+Shadow=1
 
 [OBJ1196]
 Name=Cartel Minas de Oro
@@ -14928,6 +15048,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Continua al Oeste y llegaras a las minas de Oro.
+Shadow=1
 
 [OBJ1197]
 Name=Cartel Minas de Oro
@@ -14936,6 +15057,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Continua y llegaras a las minas de Oro.
+Shadow=1
 
 [OBJ1198]
 Name=Cartel Nemahuak
@@ -14944,6 +15066,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Bienvenidoa la ciudad de Nemahuak.
+Shadow=1
 
 [OBJ1199]
 Name=Cartel Rothenburg
@@ -14952,6 +15075,7 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Continua al Este y llegaras las Ciudad de Rothenburg.
+Shadow=1
 
 [OBJ1200]
 Name=Cartel Stonehenge
@@ -14960,14 +15084,16 @@ VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Continua al Este y llegaras a las misticas piedras de Stonehenge.
+Shadow=1
 
 [OBJ1201]
-Name=Cartel torneoa
+Name=Cartel torneo
 GrhIndex=25930
 VGrande=501
 ObjType=8
 Agarrable=1
 Texto=Catacumbas que comunical la ciudad de Ullathorpe con Nix.
+Shadow=1
 
 [OBJ1202] 
 Name=Pocion Azul Principiantes

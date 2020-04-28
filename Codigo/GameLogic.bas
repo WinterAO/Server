@@ -1666,7 +1666,7 @@ Public Function ItemNoEsDeMapa(ByVal index As Integer) As Boolean
     '***************************************************
 
     With ObjData(index)
-        ItemNoEsDeMapa = .OBJType <> eOBJType.otPuertas And .OBJType <> eOBJType.otForos And .OBJType <> eOBJType.otCarteles And .OBJType <> eOBJType.otArboles And .OBJType <> eOBJType.otYacimiento And .OBJType <> eOBJType.otTeleport
+        ItemNoEsDeMapa = .OBJType <> eOBJType.otPuertas And .OBJType <> eOBJType.otArboles And .OBJType <> eOBJType.otYacimiento And .OBJType <> eOBJType.otTeleport
     
     End With
 
@@ -1693,7 +1693,7 @@ Public Function EsObjetoFijo(ByVal OBJType As eOBJType) As Boolean
     '
     '***************************************************
 
-    EsObjetoFijo = OBJType = eOBJType.otForos Or OBJType = eOBJType.otCarteles Or OBJType = eOBJType.otArboles Or OBJType = eOBJType.otYacimiento
+    EsObjetoFijo = OBJType = eOBJType.otArboles Or OBJType = eOBJType.otYacimiento
 
 End Function
 

@@ -10887,6 +10887,7 @@ MaxHIT=600
 MinHIT=300
 DEF=8
 AfectaParalisis=1
+NoShadow=1
 PoderAtaque=300
 PoderEvasion=100
 SND1=30

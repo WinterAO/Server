@@ -1026,6 +1026,8 @@ Public Type ObjData
     Crucial As Byte
     Newbie As Integer
     
+    Shadow As Byte
+    
     'Puntos de Stamina que da
     MinSta As Integer ' Minimo puntos de stamina
     
@@ -1837,6 +1839,8 @@ Public Type npc
     
     'Para diferenciar entre clanes
     ClanIndex As Integer
+    
+    NoShadow As Byte
 
 End Type
 
