@@ -1327,6 +1327,22 @@ Function PathFindingAI(ByVal NpcIndex As Integer) As Boolean
                                 Npclist(NpcIndex).PFINFO.Target.Y = .Pos.X 'ops!
                                 Npclist(NpcIndex).PFINFO.TargetUser = tmpUserIndex
                                 Call SeekPath(NpcIndex)
+                                
+                                'Si es un WorldBoss y se aleja 10 tiles de su OrigPos se le devuelve.
+                                If Npclist(NpcIndex).NPCtype = eNPCType.WorldBoss Then
+                                    If Npclist(NpcIndex).Pos.X = Npclist(NpcIndex).Orig.X - 10 Or Npclist(NpcIndex).Pos.X = Npclist(NpcIndex).Orig.X + 10 Or _
+                                        Npclist(NpcIndex).Pos.Y = Npclist(NpcIndex).Orig.Y - 10 Or Npclist(NpcIndex).Pos.Y = Npclist(NpcIndex).Orig.Y + 10 Then
+                                            Dim DragPos As WorldPos
+                                            DragPos.Map = Npclist(NpcIndex).Orig.Map
+                                            DragPos.X = Npclist(NpcIndex).Orig.X
+                                            DragPos.Y = Npclist(NpcIndex).Orig.Y
+                                            
+                                            Call SpawnNpc(Npclist(NpcIndex).Numero, DragPos, True, False, True)
+                                            Call SendData(SendTarget.ToPCArea, NpcIndex, PrepareMessagePlayWave(SND_WARP, X, Y))
+                                            Call QuitarNPC(NpcIndex)
+                                        End If
+                                End If
+                                
                                 Exit Function
 
                             End If

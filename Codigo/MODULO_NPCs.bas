@@ -163,7 +163,12 @@ Public Sub MuereNpc(ByVal NpcIndex As Integer, ByVal Userindex As Integer)
             
             '[/KEVIN]
             Call WriteConsoleMsg(Userindex, "Has matado a la criatura!", FontTypeNames.FONTTYPE_FIGHT)
-
+            
+            '¿Es un worldboss?
+            If Npclist(NpcIndex).NPCtype = WorldBoss Then
+                Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(UserList(Userindex).Name & " Ha matado al WorldBoss " & Npclist(NpcIndex).Name, FontTypeNames.FONTTYPE_SERVER))
+            End If
+            
             If .Stats.NPCsMuertos < 32000 Then .Stats.NPCsMuertos = .Stats.NPCsMuertos + 1
             
             EraCriminal = criminal(Userindex)
@@ -725,7 +730,8 @@ Public Sub MakeNPCChar(ByVal toMap As Boolean, _
     '***************************************************
     
     Dim CharIndex As Integer
-
+    Dim color As Byte
+    
     If Npclist(NpcIndex).Char.CharIndex = 0 Then
         CharIndex = NextOpenCharIndex
         Npclist(NpcIndex).Char.CharIndex = CharIndex
@@ -735,10 +741,12 @@ Public Sub MakeNPCChar(ByVal toMap As Boolean, _
     
     MapData(Map, X, Y).NpcIndex = NpcIndex
     
+    If Npclist(NpcIndex).NPCtype = WorldBoss Then color = 8
+    
     If Not toMap Then
-        'En caso de que sea hostil no mostramos el nombre, si es un npc no hostil mostramos nombre. (Recox)
-        If Not Npclist(NpcIndex).Hostile = 1 Then
-            Call WriteCharacterCreate(sndIndex, Npclist(NpcIndex).Char.body, Npclist(NpcIndex).Char.Head, Npclist(NpcIndex).Char.heading, Npclist(NpcIndex).Char.CharIndex, X, Y, 0, 0, 0, 0, 0, Npclist(NpcIndex).Name, 0, 0, Npclist(NpcIndex).NoShadow)
+        'En caso de que sea hostil no mostramos el nombre, si es un npc no hostil o un WorldBoss mostramos nombre. (Recox)
+        If Not Npclist(NpcIndex).Hostile = 1 Or Npclist(NpcIndex).NPCtype = WorldBoss Then
+            Call WriteCharacterCreate(sndIndex, Npclist(NpcIndex).Char.body, Npclist(NpcIndex).Char.Head, Npclist(NpcIndex).Char.heading, Npclist(NpcIndex).Char.CharIndex, X, Y, 0, 0, 0, 0, 0, Npclist(NpcIndex).Name, color, 0, Npclist(NpcIndex).NoShadow)
         Else
             Call WriteCharacterCreate(sndIndex, Npclist(NpcIndex).Char.body, Npclist(NpcIndex).Char.Head, Npclist(NpcIndex).Char.heading, Npclist(NpcIndex).Char.CharIndex, X, Y, 0, 0, 0, 0, 0, vbNullString, 0, 0, Npclist(NpcIndex).NoShadow)
         End If
@@ -943,7 +951,7 @@ End Sub
 Function SpawnNpc(ByVal NpcIndex As Integer, _
                   Pos As WorldPos, _
                   ByVal FX As Boolean, _
-                  ByVal Respawn As Boolean) As Integer
+                  ByVal Respawn As Boolean, Optional ByVal OrigPos As Boolean = False) As Integer
 
     '***************************************************
     'Autor: Unknown (orginal version)
@@ -1015,6 +1023,13 @@ Function SpawnNpc(ByVal NpcIndex As Integer, _
     Map = NEWPOS.Map
     X = Npclist(nIndex).Pos.X
     Y = Npclist(nIndex).Pos.Y
+    
+    '30/04/2016 - Lorwik: Se utiliza principalmente para los NPC con retardo de Spawn
+    If OrigPos Then
+        Npclist(nIndex).Orig.Map = Map
+        Npclist(nIndex).Orig.X = X
+        Npclist(nIndex).Orig.Y = Y
+    End If
 
     'Crea el NPC
     Call MakeNPCChar(True, Map, nIndex, Map, X, Y)
