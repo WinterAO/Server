@@ -1463,6 +1463,9 @@ Public Sub CargaNpcsDat()
     Set LeerNPCs = New clsIniManager
     Call LeerNPCs.Initialize(DatPath & "NPCs.dat")
     
+    'Cargamos el total de NPC
+    TotalNPCDat = GetVar(DatPath & "NPCs.dat", "INIT", "NumNPCs")
+    
     ' Cargamos la lista de NPC's hostiles disponibles para spawnear.
     Call CargarSpawnList
 

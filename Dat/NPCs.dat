@@ -1,3 +1,6 @@
+'ATENCIÓN: LOS NPC HOSTILES TIENEN QUE DATEARSE A PARTIR DEL 500
+TODOS LOS NPC CON RETARDO Y WORLDBOSS TIENEN QUE TENER PosOrig
+
 ##############################################
 ############TIPOS NPC (NpcType)###############
 ##############################################
@@ -16,6 +19,14 @@
 11 ====== Gobernador
 12 ====== WorldBoss
 
+##############################################
+############## EFECTOS DE NPC ################
+##############################################
+
+Retardo ===== El NPC tendra un retardo de Respawn especificado en Minutos
+Explotar ===== El NPC tendra un 50% de explota haciendo el doble de su golpe minimo
+LanzaMensaje ===== El NPC mandara un mensaje cuando le quede un 10% de su vida
+ActivoPotencia ===== El NPC pegar el doble a partir de su 50% de vida
 
 ##############################################
 ################ORDEN EN DAT##################
@@ -6177,6 +6188,7 @@ DEF=0
 PoderAtaque=10
 PoderEvasion=10
 BackUp=0
+Explota=1
 NROITEMS=5
 Drop1=12-50 'Oro
 Drop2=12-80 'Oro
@@ -7187,6 +7199,9 @@ DEF=10
 DEFm=20
 PoderAtaque=190
 PoderEvasion=90
+TiempoRetardoMin=1
+TiempoRetardoMax=2
+PosOrig=1
 BackUp=0
 NROITEMS=5
 Drop1=12-150 'Oro

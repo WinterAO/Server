@@ -1134,7 +1134,7 @@ Public Type ObjData
     NoLog As Byte 'es un objeto que esta prohibido loguear?
     
     Upgrade As Integer
-
+    
 End Type
 
 Public Type obj
@@ -1737,7 +1737,16 @@ Public Type NPCFlags
     Snd1 As Integer
     Snd2 As Integer
     Snd3 As Integer
-
+    
+    TiempoRetardoMin As Long
+    TiempoRetardoMax As Long
+    Explota As Byte
+    
+    LanzaMensaje As String
+    DijoMensaje As Boolean
+    
+    ActivoPotencia As Boolean
+    AumentaPotencia As Boolean
 End Type
 
 Public Type tCriaturasEntrenador
@@ -1856,7 +1865,7 @@ Public Type MapBlock
 
     Blocked As Byte
     Graphic(1 To 4) As Long
-    Userindex As Integer
+    UserIndex As Integer
     NpcIndex As Integer
     ObjInfo As obj
     TileExit As WorldPos
@@ -1959,6 +1968,8 @@ Public NumChars                           As Integer
 Public LastNPC                            As Integer
 
 Public NumNPCs                            As Integer
+
+Public TotalNPCDat                        As Integer
 
 Public NumFX                              As Integer
 
@@ -2434,4 +2445,13 @@ Public ApiNodeJsTaskId As Double
 
 Public NombreServidor As String
 
+'Lorwik> Sistema de retardo de Spawn de NPC
+Type tRetarded
+    Tiempo As Long
+    Mapa As Byte
+    X As Byte
+    Y As Byte
+    NPCNUM As Integer
+End Type
 
+Public RetardoSpawn(1 To MAXNPCS) As tRetarded

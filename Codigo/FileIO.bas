@@ -1934,7 +1934,7 @@ Sub WriteVar(ByVal File As String, _
     
 End Sub
 
-Function criminal(ByVal Userindex As Integer) As Boolean
+Function criminal(ByVal UserIndex As Integer) As Boolean
     '***************************************************
     'Author: Unknown
     'Last Modification: -
@@ -1943,7 +1943,7 @@ Function criminal(ByVal Userindex As Integer) As Boolean
 
     Dim L As Long
     
-    With UserList(Userindex).Reputacion
+    With UserList(UserIndex).Reputacion
         L = (-.AsesinoRep) + (-.BandidoRep) + .BurguesRep + (-.LadronesRep) + .NobleRep + .PlebeRep
         L = L / 6
         criminal = (L < 0)
@@ -1992,6 +1992,12 @@ Sub BackUPnPc(ByVal NpcIndex As Integer, ByVal hFile As Integer)
         Print #hFile, "ReSpawn=" & val(.flags.Respawn)
         Print #hFile, "BackUp=" & val(.flags.BackUp)
         Print #hFile, "Domable=" & val(.flags.Domable)
+        Print #hFile, "TiempoRetardoMin & "; val(.flags.TiempoRetardoMin)
+        Print #hFile, "TiempoRetardoMax" & val(.flags.TiempoRetardoMax)
+        Print #hFile, "Explota" & val(.flags.Explota)
+        
+        Print #hFile, "LanzaMensaje" & .flags.LanzaMensaje
+        Print #hFile, "AumentaPotencia" & val(.flags.AumentaPotencia)
         
         'Inventario
         Print #hFile, "NroItems=" & val(.Invent.NroItems)
@@ -2091,6 +2097,14 @@ Sub CargarNpcBackUp(ByVal NpcIndex As Integer, ByVal NpcNumber As Integer)
         .flags.BackUp = val(GetVar(npcfile, "NPC" & NpcNumber, "BackUp"))
         .flags.Domable = val(GetVar(npcfile, "NPC" & NpcNumber, "Domable"))
         .flags.RespawnOrigPos = val(GetVar(npcfile, "NPC" & NpcNumber, "OrigPos"))
+        
+        .flags.TiempoRetardoMax = val(GetVar(npcfile, "NPC" & NpcNumber, "TiempoRetardoMax"))
+        .flags.TiempoRetardoMin = val(GetVar(npcfile, "NPC" & NpcNumber, "TiempoRetardoMin"))
+        .flags.Explota = val(GetVar(npcfile, "NPC" & NpcNumber, "Explota"))
+        
+        .flags.LanzaMensaje = GetVar(npcfile, "NPC" & NpcNumber, "LanzaMensaje")
+        .flags.AumentaPotencia = val(GetVar(npcfile, "NPC" & NpcNumber, "AumentaPotencia"))
+        
         
         'Tipo de items con los que comercia
         .TipoItems = val(GetVar(npcfile, "NPC" & NpcNumber, "TipoItems"))

@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{48E59290-9880-11CF-9754-00AA00C00908}#1.0#0"; "MSINET.ocx"
+Object = "{48E59290-9880-11CF-9754-00AA00C00908}#1.0#0"; "MSINET.OCX"
 Begin VB.Form frmMain 
    BackColor       =   &H00FFC0C0&
    BorderStyle     =   3  'Fixed Dialog
@@ -658,6 +658,42 @@ Private Sub HappyHourManager()
     End If
 End Sub
 
+Private Sub SpawnRetardado()
+'***********************************************
+'Autor: Loriwk
+'Fecha: 30/04/2020
+'Descripcion: Comprobamos si los NPC con retardo pueden respawnear
+'***********************************************
+
+    Dim Posi As WorldPos
+    Dim i As Integer
+    
+    'Controla el retardo de Spawn
+    For i = 500 To TotalNPCDat
+        If i = RetardoSpawn(i).NPCNUM Then
+            If RetardoSpawn(i).Tiempo > 0 Then
+                RetardoSpawn(i).Tiempo = RetardoSpawn(i).Tiempo - 1
+                
+            ElseIf RetardoSpawn(i).Tiempo = 0 Then
+                Posi.Map = RetardoSpawn(i).Mapa
+                Posi.X = RetardoSpawn(i).X
+                Posi.Y = RetardoSpawn(i).Y
+                
+                Debug.Print Posi.X & " " & Posi.Y
+                
+                Call SpawnNpc(i, Posi, False, False, True)
+                
+                'Reseteamos:
+                RetardoSpawn(i).Tiempo = 0
+                RetardoSpawn(i).Mapa = 0
+                RetardoSpawn(i).X = 0
+                RetardoSpawn(i).Y = 0
+                RetardoSpawn(i).NPCNUM = 0
+            End If
+        End If
+    Next i
+End Sub
+
 Private Sub Auditoria_Timer()
     Call mMainLoop.Auditoria
 End Sub
@@ -677,6 +713,8 @@ Private Sub AutoSave_Timer()
     MinsPjesSave = MinsPjesSave + 1
 
     Call HappyHourManager
+    
+    Call SpawnRetardado
     
     'Actualizamos el Centinela en caso de que este activo en el server.ini
     If isCentinelaActivated Then
