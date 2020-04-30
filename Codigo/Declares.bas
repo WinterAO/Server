@@ -1311,6 +1311,7 @@ End Type
 Public Type UserStats
 
     Gld As Long 'Dinero
+
     Banco As Long
     
     MaxHp As Integer
@@ -2303,6 +2304,8 @@ Public Enum eGMCommands
     SearchNpc               '/BUSCAR
     SearchObj               '/BUSCAR
     LimpiarMundo            '/LIMPIARMUNDO
+    EditGems                '/EDITGEMS
+    ConsultarGemas          '/CONSULTARGEMS
 End Enum
 
 Public Const MATRIX_INITIAL_MAP                     As Integer = 1

@@ -1503,6 +1503,12 @@ Private Sub HandleGMCommands(ByVal Userindex As Integer)
                                            
             Case eGMCommands.LimpiarMundo                       '/LIMPIARMUNDO
                 Call HandleLimpiarMundo(Userindex)
+                
+            Case eGMCommands.EditGems                           '/EDITGEMS
+                Call HandleEditGems(Userindex)
+                
+            Case eGMCommands.ConsultarGemas                     '/CONSULTARGEMS
+                Call HandleConsultarGemas(Userindex)
                                            
         End Select
 
@@ -10582,7 +10588,7 @@ Private Sub HandleEditChar(ByVal Userindex As Integer)
 
         Dim tUser         As Integer
 
-        Dim opcion        As Byte
+        Dim Opcion        As Byte
 
         Dim Arg1          As String
 
@@ -10609,7 +10615,7 @@ Private Sub HandleEditChar(ByVal Userindex As Integer)
 
         End If
         
-        opcion = buffer.ReadByte()
+        Opcion = buffer.ReadByte()
         Arg1 = buffer.ReadASCIIString()
         Arg2 = buffer.ReadASCIIString()
         
@@ -10619,23 +10625,23 @@ Private Sub HandleEditChar(ByVal Userindex As Integer)
 
                 Case PlayerType.Consejero
                     ' Los RMs consejeros solo se pueden editar su head, body, level y vida
-                    valido = tUser = Userindex And (opcion = eEditOptions.eo_Body Or opcion = eEditOptions.eo_Head Or opcion = eEditOptions.eo_Level Or opcion = eEditOptions.eo_Vida)
+                    valido = tUser = Userindex And (Opcion = eEditOptions.eo_Body Or Opcion = eEditOptions.eo_Head Or Opcion = eEditOptions.eo_Level Or Opcion = eEditOptions.eo_Vida)
                 
                 Case PlayerType.SemiDios
                     ' Los RMs solo se pueden editar su level o vida y el head y body de cualquiera
-                    valido = ((opcion = eEditOptions.eo_Level Or opcion = eEditOptions.eo_Vida) And tUser = Userindex) Or opcion = eEditOptions.eo_Body Or opcion = eEditOptions.eo_Head
+                    valido = ((Opcion = eEditOptions.eo_Level Or Opcion = eEditOptions.eo_Vida) And tUser = Userindex) Or Opcion = eEditOptions.eo_Body Or Opcion = eEditOptions.eo_Head
                     
                 Case PlayerType.Dios
                     ' Los DRMs pueden aplicar los siguientes comandos sobre cualquiera
                     ' pero si quiere modificar el level o vida solo lo puede hacer sobre si mismo
-                    valido = ((opcion = eEditOptions.eo_Level Or opcion = eEditOptions.eo_Vida) And tUser = Userindex) Or opcion = eEditOptions.eo_Body Or opcion = eEditOptions.eo_Head Or opcion = eEditOptions.eo_CiticensKilled Or opcion = eEditOptions.eo_CriminalsKilled Or opcion = eEditOptions.eo_Class Or opcion = eEditOptions.eo_Skills Or opcion = eEditOptions.eo_addGold
+                    valido = ((Opcion = eEditOptions.eo_Level Or Opcion = eEditOptions.eo_Vida) And tUser = Userindex) Or Opcion = eEditOptions.eo_Body Or Opcion = eEditOptions.eo_Head Or Opcion = eEditOptions.eo_CiticensKilled Or Opcion = eEditOptions.eo_CriminalsKilled Or Opcion = eEditOptions.eo_Class Or Opcion = eEditOptions.eo_Skills Or Opcion = eEditOptions.eo_addGold
 
             End Select
         
             'Si no es RM debe ser dios para poder usar este comando
         ElseIf .flags.Privilegios And (PlayerType.Admin Or PlayerType.Dios) Then
             
-            If opcion = eEditOptions.eo_Vida Then
+            If Opcion = eEditOptions.eo_Vida Then
                 '  Por ahora dejo para que los dioses no puedan editar la vida de otros
                 valido = (tUser = Userindex)
             Else
@@ -10644,7 +10650,7 @@ Private Sub HandleEditChar(ByVal Userindex As Integer)
             End If
             
         ElseIf .flags.PrivEspecial Then
-            valido = (opcion = eEditOptions.eo_CiticensKilled) Or (opcion = eEditOptions.eo_CriminalsKilled)
+            valido = (Opcion = eEditOptions.eo_CiticensKilled) Or (Opcion = eEditOptions.eo_CriminalsKilled)
             
         End If
 
@@ -10666,7 +10672,7 @@ Private Sub HandleEditChar(ByVal Userindex As Integer)
                 'For making the Log
                 CommandString = "/MOD "
                 
-                Select Case opcion
+                Select Case Opcion
 
                     Case eEditOptions.eo_Gold
 
@@ -23538,6 +23544,87 @@ Public Sub HandleLimpiarMundo(ByVal Userindex As Integer)
     'Y de paso nos ahorramos en repetir codigo.
     counterSV.Limpieza = 6
     
+End Sub
+
+Public Sub HandleEditGems(ByVal Userindex As Integer)
+'***************************************************
+'Author: Lorwik
+'Last Modification: 30/04/2020
+'Edita las gemas del usuario
+'***************************************************
+    
+    Dim UserName As String
+    Dim CantGems As Long
+    Dim Opcion As Byte
+    
+    With UserList(Userindex)
+
+        'Remove packet ID
+        Call .incomingData.ReadByte
+        
+        UserName = .incomingData.ReadASCIIString
+        CantGems = .incomingData.ReadLong
+        Opcion = .incomingData.ReadByte
+        
+        'Me fijo si es Admin
+        If Not EsAdmin(UserList(Userindex).Name) Then Exit Sub
+        
+        If UserName = "" Then
+            Call WriteConsoleMsg(Userindex, "¡Faltan parametros!", FontTypeNames.FONTTYPE_INFO)
+            Exit Sub
+        End If
+        
+        If CantGems > 10000 Then
+            Call WriteConsoleMsg(Userindex, "El valor de las Gemas no puede superar 10000", FontTypeNames.FONTTYPE_INFO)
+            Exit Sub
+        End If
+        
+        Select Case Opcion
+        
+            Case 0 'Editar las gemas
+                Call modDatabase.SaveAccountEditGemasDatabase(UserName, CantGems)
+                Call WriteConsoleMsg(Userindex, "Se editaron " & CantGems & " Gemas Winter a la cuenta de " & UserName, FontTypeNames.FONTTYPE_INFO)
+            
+            Case 1 'Sumar las gemas
+                Call modDatabase.SaveAccountSumaGemasDatabase(UserName, CantGems)
+                Call WriteConsoleMsg(Userindex, "Se sumaron " & CantGems & " Gemas Winter a la cuenta de " & UserName & ". Ahora tiene " & modDatabase.GetGemasDatabase(UserName) & " Gemas Winter. ", FontTypeNames.FONTTYPE_INFO)
+                
+            Case 2 'Restar las gemas
+                Call modDatabase.SaveAccountRestaGemasDatabase(UserName, CantGems)
+                Call WriteConsoleMsg(Userindex, "Se restaron " & CantGems & " Gemas Winter a la cuenta de " & UserName & ". Ahora tiene " & modDatabase.GetGemasDatabase(UserName) & " Gemas Winter. ", FontTypeNames.FONTTYPE_INFO)
+                
+        End Select
+    End With
+    
+End Sub
+
+Public Sub HandleConsultarGemas(ByVal Userindex As Integer)
+'***************************************************
+'Author: Lorwik
+'Last Modification: 30/04/2020
+'Consulta las gemas del usuario
+'***************************************************
+
+    Dim UserName As String
+    
+    With UserList(Userindex)
+    
+        'Remove packet ID
+        Call .incomingData.ReadByte
+        
+        UserName = .incomingData.ReadASCIIString
+    
+        'Me fijo si es Admin
+        If Not EsAdmin(UserList(Userindex).Name) Then Exit Sub
+        
+        If UserName = "" Then
+            Call WriteConsoleMsg(Userindex, "¡Faltan parametros!", FontTypeNames.FONTTYPE_INFO)
+            Exit Sub
+        End If
+        
+        Call WriteConsoleMsg(Userindex, UserName & " tiene " & modDatabase.GetGemasDatabase(UserName) & " Gemas Winter en su cuenta.", FontTypeNames.FONTTYPE_INFO)
+    
+    End With
 End Sub
 
 ''

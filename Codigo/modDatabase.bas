@@ -2607,7 +2607,8 @@ Public Sub SaveNewAccountDatabase(ByVal UserName As String, _
     query = query & "salt = '" & Salt & "', "
     query = query & "hash = '" & Hash & "', "
     query = query & "date_created = NOW(), "
-    query = query & "date_last_login = NOW();"
+    query = query & "date_last_login = NOW(),"
+    query = query & "gemas = 0;"
 
     Database_Connection.Execute (query)
 
@@ -2645,6 +2646,111 @@ ErrorHandler:
     Call LogDatabaseError("Error in SaveAccountLastLoginDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
 
 End Sub
+
+Public Sub SaveAccountEditGemasDatabase(ByVal UserName As String, ByVal Gemas As Long)
+
+    '***************************************************
+    'Author: Lorwik
+    'Last Modification: 30/04/2020
+    '***************************************************
+    On Error GoTo ErrorHandler
+
+    Dim query As String
+
+    Call Database_Connect
+
+    query = "UPDATE account SET gemas = '" & Gemas & "' WHERE id = (SELECT account_id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "');"
+
+    Database_Connection.Execute (query)
+
+    Call Database_Close
+
+    Exit Sub
+ErrorHandler:
+    Call LogDatabaseError("Error in SaveAccountLastLoginDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
+
+End Sub
+
+Public Sub SaveAccountSumaGemasDatabase(ByVal UserName As String, ByVal Gemas As Long)
+
+    '***************************************************
+    'Author: Lorwik
+    'Last Modification: 30/04/2020
+    '***************************************************
+    On Error GoTo ErrorHandler
+
+    Dim query As String
+
+    Call Database_Connect
+
+    query = "UPDATE account SET gemas = gemas + '" & Gemas & "' WHERE id = (SELECT account_id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "');"
+
+    Database_Connection.Execute (query)
+
+    Call Database_Close
+
+    Exit Sub
+ErrorHandler:
+    Call LogDatabaseError("Error in SaveAccountLastLoginDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
+
+End Sub
+
+Public Sub SaveAccountRestaGemasDatabase(ByVal UserName As String, ByVal Gemas As Long)
+
+    '***************************************************
+    'Author: Lorwik
+    'Last Modification: 30/04/2020
+    '***************************************************
+    On Error GoTo ErrorHandler
+
+    Dim query As String
+
+    Call Database_Connect
+
+    query = "UPDATE account SET gemas = gemas - '" & Gemas & "' WHERE id = (SELECT account_id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "');"
+
+    Database_Connection.Execute (query)
+
+    Call Database_Close
+
+    Exit Sub
+ErrorHandler:
+    Call LogDatabaseError("Error in SaveAccountLastLoginDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
+
+End Sub
+
+Public Function GetGemasDatabase(ByVal UserName As String) As Long
+
+    '***************************************************
+    'Author: Lorwik
+    'Last Modification: 30/04/2020
+    '***************************************************
+    On Error GoTo ErrorHandler
+
+    Dim query As String
+
+    Call Database_Connect
+
+    query = "SELECT gemas FROM account WHERE id = (SELECT account_id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "');"
+    Debug.Print query
+    Set Database_RecordSet = Database_Connection.Execute(query)
+
+    If Database_RecordSet.BOF Or Database_RecordSet.EOF Then
+        GetGemasDatabase = 0
+        Exit Function
+
+    End If
+
+    GetGemasDatabase = CLng(Database_RecordSet!Gemas)
+    Set Database_RecordSet = Nothing
+    Call Database_Close
+
+    Exit Function
+
+ErrorHandler:
+    Call LogDatabaseError("Error in GetUserPromedioDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
+
+End Function
 
 Public Sub LoginAccountDatabase(ByVal Userindex As Integer, ByVal UserName As String)
 
