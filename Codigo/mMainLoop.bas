@@ -36,7 +36,7 @@ Public Sub PacketResend()
     'Last Modification: 04/01/07
     'Attempts to resend to the user all data that may be enqueued.
     '***************************************************
-    On Error GoTo ErrHandler:
+    On Error GoTo Errhandler:
 
     Dim i As Long
     For i = 1 To LastUser
@@ -45,7 +45,7 @@ Public Sub PacketResend()
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
     Call LogError("Error en packetResend - Error: " & Err.Number & " - Desc: " & Err.description)
 
     Resume Next
@@ -130,6 +130,7 @@ Public Sub GameTimer()
     Dim iUserIndex   As Long
     Dim bEnviarStats As Boolean
     Dim bEnviarAyS   As Boolean
+    Dim i        As Long
     
     On Error GoTo hayerror
     
@@ -308,6 +309,14 @@ Public Sub GameTimer()
         End With
 
     Next iUserIndex
+    
+    '<<<<Procesamo Bots>>>>>
+
+    For i = 1 To MAX_BOTS
+    
+        If ia_Bot(i).Invocado Then Call ia_Action(i)
+    
+    Next i
 
     Exit Sub
 
@@ -323,7 +332,7 @@ Public Sub PasarSegundo()
     '
     '***************************************************
 
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
     Dim i As Long
     
@@ -406,7 +415,7 @@ Public Sub PasarSegundo()
                 If Not .Pos.Map = 0 Then
 
                     'Counter de piquete
-                    If MapData(.Pos.Map, .Pos.X, .Pos.Y).trigger = eTrigger.ANTIPIQUETE Then
+                    If MapData(.Pos.Map, .Pos.X, .Pos.Y).Trigger = eTrigger.ANTIPIQUETE Then
                             If .flags.Muerto = 0 Then
                                 .Counters.PiqueteC = .Counters.PiqueteC + 1
                                 .Counters.ContadorPiquete = .Counters.ContadorPiquete + 1
@@ -439,7 +448,7 @@ Public Sub PasarSegundo()
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
     Call LogError("Error en PasarSegundo. Err: " & Err.description & " - " & Err.Number & " - UserIndex: " & i)
 
     Resume Next

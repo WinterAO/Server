@@ -31,7 +31,7 @@ Option Explicit
 
 #If False Then
 
-    Dim Map, X, Y, body, Clase, race, Email, obj, Length As Variant
+    Dim Map, X, Y, body, clase, race, Email, obj, Length As Variant
 
 #End If
 
@@ -941,7 +941,7 @@ End Type
 
 Public Type tPartyData
 
-    PIndex As Integer
+    pIndex As Integer
     RemXP As Double 'La exp. en el server se cuenta con Doubles
     TargetUser As Integer 'Para las invitaciones
 
@@ -1459,6 +1459,8 @@ Public Type UserFlags
     ParalizedBy As String
     ParalizedByIndex As Integer
     ParalizedByNpcIndex As Integer
+    
+    TargetBot As Byte
 
 End Type
 
@@ -1606,7 +1608,7 @@ Public Type User
     Desc As String ' Descripcion
     DescRM As String
     
-    Clase As eClass
+    clase As eClass
     raza As eRaza
     Genero As eGenero
     Email As String
@@ -1747,6 +1749,7 @@ Public Type NPCFlags
     
     ActivoPotencia As Boolean
     AumentaPotencia As Boolean
+    
 End Type
 
 Public Type tCriaturasEntrenador
@@ -1871,6 +1874,7 @@ Public Type MapBlock
     TileExit As WorldPos
     Trigger As eTrigger
     Particulas As Integer
+    BotIndex As Byte
     
 End Type
 

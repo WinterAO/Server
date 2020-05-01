@@ -3437,6 +3437,16 @@ Private Sub HandleWorkLeftClick(ByVal Userindex As Integer)
 
                 End If
                 
+               'está el bot? (esto ya comprobó que sea de su grupo, asi que no hay que volver a checkear)
+               If .flags.TargetBOT <> 0 Then
+                    If .flags.Hechizo > 0 Then
+                        ia_UserDamage .flags.Hechizo, .flags.TargetBOT, Userindex
+                        .flags.TargetBOT = 0
+                        .flags.Hechizo = 0
+                        Exit Sub
+                    End If
+                End If
+                
                 'Check intervals and cast
                 If .flags.Hechizo > 0 Then
                     Call LanzarHechizo(.flags.Hechizo, Userindex)

@@ -319,6 +319,10 @@ Sub Main()
     ' Pretorianos
     frmCargando.Label1(2).Caption = "Cargando Pretorianos.dat"
     Call LoadPretorianData
+    
+    'Bots
+    frmCargando.Label1(2).Caption = "Cargando Bots"
+    Call modBOTS.ia_Spells
 
     ' Mapas
     If BootDelBackUp Then

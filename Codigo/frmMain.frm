@@ -29,6 +29,14 @@ Begin VB.Form frmMain
    ScaleWidth      =   10425
    StartUpPosition =   2  'CenterScreen
    WindowState     =   1  'Minimized
+   Begin VB.CommandButton cmdCommand3 
+      Caption         =   "Command3"
+      Height          =   360
+      Left            =   5280
+      TabIndex        =   25
+      Top             =   6600
+      Width           =   990
+   End
    Begin VB.TextBox txtRecordOnline 
       Alignment       =   2  'Center
       BackColor       =   &H00C0FFFF&
@@ -700,7 +708,7 @@ End Sub
 
 Private Sub AutoSave_Timer()
 
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
     'fired every minute
     Static Minutos          As Long
@@ -768,7 +776,7 @@ Private Sub AutoSave_Timer()
     '<<<<<-------- Log the number of users online ------>>>
 
     Exit Sub
-ErrHandler:
+Errhandler:
     Call LogError("Error en TimerAutoSave " & Err.Number & ": " & Err.description)
 
     Resume Next
@@ -802,6 +810,10 @@ Private Sub cmdApagarServidor_Click()
 
     Call CloseServer
     
+End Sub
+
+Private Sub cmdCommand3_Click()
+    Call ia_Spawn(eIAClase.Mago, Ramx, "Pedro <TU PAPA>", False, True, 0)
 End Sub
 
 Private Sub cmdConfiguracion_Click()
