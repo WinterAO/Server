@@ -813,7 +813,7 @@ Private Sub cmdApagarServidor_Click()
 End Sub
 
 Private Sub cmdCommand3_Click()
-    Call ia_Spawn(eIAClase.Mago, Ramx, "Pedro <TU PAPA>", False, True, 0)
+    Call ia_Spawn(Ramx)
 End Sub
 
 Private Sub cmdConfiguracion_Click()

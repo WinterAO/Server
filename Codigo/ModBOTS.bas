@@ -5,24 +5,10 @@ Option Explicit
 Private Const IA_MINDEF  As Integer = 10
 Private Const IA_MAXDEF  As Integer = 12
  
- Public Const MAX_BOTS   As Byte = 25
+Public MAX_BOTS    As Byte
  
 'Charindex reservado.
-Private Const IA_CHAR    As Integer = (MAXCHARS - MAX_BOTS)
- 
-'Datos del char
- 
-'/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*
- 
-'ATENCION : Acá van los números de objetos!!!
- 
-Private Const IA_HEAD    As Integer = 4
-Private Const IA_BODY    As Integer = 986
- 
- 
-'ATENCION : Acá van los números de objetos!!!
- 
-'/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*
+Private IA_CHAR     As Integer
  
 'Cantidad de hechizos que lanza
  
@@ -85,15 +71,17 @@ Enum eIAMoviments
      MoverRandom = 2                     'Random moviment :P
 End Enum
  
-Type Bot
-     GrupoID            As Integer
+Type BOT
+     Name               As String       'Nombre del BOT
+     Level              As Byte         'Nivel del BOT
+     Raza               As eRaza        'Raza del BOT
+     Genero             As eGenero      'Genero del BOT
      EsCriminal         As Boolean
      Pos                As WorldPos     'Posicion en el mundo.
      maxVida            As Integer      'Maxima vida.
-     Vida               As Integer      'Vida del bot.
+     minVida            As Integer      'Vida del bot.
      clase              As eIAClase     'Clases de bot.
-     Tag                As String       'Tag del bot.
-     Mana               As Integer      'Mana del bot.
+     minMana            As Integer   'Mana del bot.
      maxMana            As Integer      'Maxima mana
      Char               As Char         'Apariencia.
      Invocado           As Boolean      'Si existe.
@@ -105,122 +93,131 @@ Type Bot
      UltimoMovimiento   As eIAMoviments 'ULTIMO MOVIMIENTO
      Navegando          As Boolean      'Navegando?
      ViajanteAntes      As WorldPos     'Pos cuando un viajante ataca un usuario.
+     NroItems           As Byte         'Numero de Items en el inventario
      Inv(1 To IA_SLOTS) As obj          'Inventario del bot.
      UltimaIdaObjeto    As Boolean      'Ultimo movimiento fue buscar objs?
 End Type
  
-Public ia_Bot(1 To MAX_BOTS)           As Bot
-Public ia_spell(1 To IA_M_SPELL)       As ia_Spells
-Public ia_Chats(1 To IA_NUMCHAT)      As String
+Public IA_Bot()                       As BOT
+Public IA_spell(1 To IA_M_SPELL)      As ia_Spells
+Public IA_Chats(1 To IA_NUMCHAT)      As String
  
 'Cantidad de bots invocados.
 Public NumInvocados                    As Byte
  
-Function ia_CascoByClase(ByVal BotIndex As Byte) As Integer
- 
-    ' @designer     :  maTih.-
-    ' @date         :  2012/02/01
-    ' @note         :  Devuelve el casco/gorro según la clase del bot
-     
-    Select Case ia_Bot(BotIndex).clase
-     
-           Case eIAClase.Clerigo        'Bot clero
-                ia_CascoByClase = 131   'Completo : P
+Function IA_EquiparCasco(ByVal BotIndex As Byte) As Integer
+'****************************************************
+'Autor: Lorwik
+'Fecha 01/05/2020
+'Descripcion: Si el BOT tiene un casco en el inventario lo equipamos
+'****************************************************
+    Dim i As Byte
+    
+    With IA_Bot(BotIndex)
+
+        '¿Tiene items en el inventario?
+        If .NroItems > 0 Then
+            For i = 1 To .NroItems
+                'Vamos a equipar el primer casco que encuentre
+                If ObjData(.Inv(i).ObjIndex).OBJType = otCasco Then
+                    IA_EquiparCasco = .Inv(i).ObjIndex
+                Else
+                    IA_EquiparCasco = -1
+                End If
             
-           Case eIAClase.Mago           'Bot mago.
-                ia_CascoByClase = 662   'Vara
-                
-           Case eIAClase.Cazador        'Bot kza
-                ia_CascoByClase = 405   'de plata
-            
-    End Select
+            Next i
+        Else
+            IA_EquiparCasco = -1
+        End If
+        
+    End With
  
 End Function
  
-Function ia_EscudoByClase(ByVal BotIndex As Byte) As Integer
- 
-    ' @designer     :  maTih.-
-    ' @date         :  2012/02/01
-    ' @note         :  Devuelve el escudo según la clase del bot
-     
-    Select Case ia_Bot(BotIndex).clase
-     
-           Case eIAClase.Clerigo        'Bot clero
-                ia_EscudoByClase = 130  'De plata.
+Function IA_EquiparEscudo(ByVal BotIndex As Byte) As Integer
+'****************************************************
+'Autor: Lorwik
+'Fecha 01/05/2020
+'Descripcion: Si el BOT tiene un escudo en el inventario lo equipamos
+'****************************************************
+    Dim i As Byte
+    
+    With IA_Bot(BotIndex)
+
+        '¿Tiene items en el inventario?
+        If .NroItems > 0 Then
+            For i = 1 To .NroItems
+                'Vamos a equipar el primer escudo que encuentre
+                If ObjData(.Inv(i).ObjIndex).OBJType = otEscudo Then
+                    IA_EquiparEscudo = .Inv(i).ObjIndex
+                Else
+                    IA_EquiparEscudo = -1
+                End If
             
-           Case eIAClase.Mago           'Bot mago.
-                ia_EscudoByClase = -1   'Nada
-                
-           Case eIAClase.Cazador        'bot kaza
-                ia_EscudoByClase = 404  'escudo d tortu
-            
-    End Select
+            Next i
+        Else
+            IA_EquiparEscudo = -1
+        End If
+        
+    End With
  
 End Function
  
-Function ia_ArmaByClase(ByVal BotIndex As Byte) As Integer
- 
-    ' @designer     :  maTih.-
-    ' @date         :  2012/02/01
-    ' @note         :  Devuelve el arma según la clase del bot
-     
-    Select Case ia_Bot(BotIndex).clase
-     
-           Case eIAClase.Clerigo        'Bot clero
-                ia_ArmaByClase = 129    'Dos filos : P
+Function IA_EquiparArma(ByVal BotIndex As Byte) As Integer
+'****************************************************
+'Autor: Lorwik
+'Fecha 01/05/2020
+'Descripcion: Si el BOT tiene un escudo en el inventario lo equipamos
+'****************************************************
+    Dim i As Byte
+    
+    With IA_Bot(BotIndex)
+
+        '¿Tiene items en el inventario?
+        If .NroItems > 0 Then
+            For i = 1 To .NroItems
+                'Vamos a equipar el primer arma que encuentre
+                If ObjData(.Inv(i).ObjIndex).OBJType = otWeapon Then
+                    IA_EquiparArma = .Inv(i).ObjIndex
+                Else
+                    IA_EquiparArma = -1
+                End If
             
-           Case eIAClase.Mago           'Bot mago.
-                ia_ArmaByClase = 400    'Vara
-                
-           Case eIAClase.Cazador        'bot cazador
-                ia_ArmaByClase = 665    'arko de kza
-            
-    End Select
+            Next i
+        Else
+            IA_EquiparArma = -1
+        End If
+        
+    End With
  
 End Function
- 
-Function ia_VidaByClase(ByVal BotIndex As Byte) As Integer
- 
-    ' @designer     :  maTih.-
-    ' @date         :  2012/02/01
-    ' @note         :  Devuelve la vida según la clase.
-     
-    Select Case ia_Bot(BotIndex).clase
-           Case eIAClase.Clerigo        '<Clerigo.
-                'Vida random. (de clerigo 41)
-                ia_VidaByClase = 21 + (RandomNumber(8, 10) * 41)
+
+Function IA_EquiparArmadura(ByVal BotIndex As Byte) As Integer
+'****************************************************
+'Autor: Lorwik
+'Fecha 01/05/2020
+'Descripcion: Si el BOT tiene ropa en el inventario lo equipamos
+'****************************************************
+    Dim i As Byte
+    
+    With IA_Bot(BotIndex)
+
+        '¿Tiene items en el inventario?
+        If .NroItems > 0 Then
+            For i = 1 To .NroItems
+                'Vamos a equipar la primera armadura que encuentre
+                If ObjData(.Inv(i).ObjIndex).OBJType = otArmadura Then
+                    IA_EquiparArmadura = .Inv(i).ObjIndex
+                Else
+                    IA_EquiparArmadura = -1
+                End If
             
-           Case eIAClase.Mago           '<Mago
-                'Vida random (de mago 39)
-                ia_VidaByClase = 21 + (RandomNumber(7, 9) * 39)
-                
-           Case eIAClase.Cazador        '<Kza
-                'Vida random de cazador humano 42
-                ia_VidaByClase = 21 + (RandomNumber(8, 11) * 42)
-                
-    End Select
- 
-End Function
- 
-Function ia_ManaByClase(ByVal BotIndex As Byte) As Integer
- 
-    ' @designer     :  maTih.-
-    ' @date         :  2012/02/01
-    ' @note         :  Devuelve maná según la clase.
-     
-    Select Case ia_Bot(BotIndex).clase
-           Case eIAClase.Clerigo        '<Clerigo.
-                'Mana de clero 41 : P
-                ia_ManaByClase = 1480
-            
-           Case eIAClase.Mago           '<Mago
-                'Mana de mago 39 : P
-                ia_ManaByClase = 1954
-                
-           Case eIAClase.Cazador        'caza sin mana
-                ia_ManaByClase = 0
-                
-    End Select
+            Next i
+        Else
+            IA_EquiparArmadura = -1
+        End If
+        
+    End With
  
 End Function
  
@@ -340,43 +337,54 @@ Function ia_PuedeMeele(ByRef PosBot As WorldPos, ByRef PosVictim As WorldPos, By
 End Function
  
 Sub ia_CreateChar(ByVal ProximoBot As Byte)
- 
-' @designer     :  maTih.-
-' @date         :  2012/02/01
-' @note         :  Crea el char.
- 
-Dim PackageToSend   As String
- 
-    With ia_Bot(ProximoBot).Char
-     
-        .body = ObjData(IA_BODY).Ropaje
-        .Head = IA_HEAD
+'******************************************
+'Autor: maTih.-
+'Fecha:: 2012/02/01
+'Descripcion: Crea el char.
+'Lorwik> Ahora comprueba si tiene arma, escudo y casco, y lo equipa
+'******************************************
+
+    Dim PackageToSend   As String
+    Dim Armadura        As Integer
+    Dim Arma            As Integer
+    Dim Escudo          As Integer
+    Dim Casco           As Integer
+
+    With IA_Bot(ProximoBot).Char
         
-        'Siempre tienen arma.
-        .WeaponAnim = ObjData(ia_ArmaByClase(ProximoBot)).WeaponAnim
-        
-        'Escudo no, me fijo si tienen..
-        If ia_EscudoByClase(ProximoBot) <> -1 Then
-            .ShieldAnim = ObjData(ia_EscudoByClase(ProximoBot)).ShieldAnim
+        Armadura = IA_EquiparArmadura(ProximoBot)
+        If Armadura <> -1 Then
+            .Body = ObjData(Armadura).Ropaje
+        Else 'Si no tiene le damos un cuerpo desnudo
+            .Body = CuerpoDesnudo(IA_Bot(ProximoBot).Genero, IA_Bot(ProximoBot).Raza)
         End If
+    
+        '¿Tiene Arma?
+        Arma = IA_EquiparArma(ProximoBot)
+        If Arma <> -1 Then .WeaponAnim = ObjData(Arma).WeaponAnim
         
-        'Casco si..
-        .CascoAnim = ObjData(ia_CascoByClase(ProximoBot)).CascoAnim
+        '¿Tiene escudo?
+        Escudo = IA_EquiparEscudo(ProximoBot)
+        If Escudo <> -1 Then .ShieldAnim = ObjData(Escudo).ShieldAnim
+            
+        '¿Tiene Casco?
+        Casco = IA_EquiparCasco(ProximoBot)
+        If Casco <> -1 Then .CascoAnim = ObjData(Casco).CascoAnim
         
         'Precalculado : P
         .CharIndex = IA_CHAR + ProximoBot
         
         'Preparo el paquete de datos.
         
-                Dim tmp_Color   As eNickColor
+        Dim tmp_Color   As eNickColor
                 
-                If ia_Bot(ProximoBot).EsCriminal Then
-                   tmp_Color = eNickColor.ieCriminal
-                Else
-                   tmp_Color = eNickColor.ieCiudadano
-                End If
+        If IA_Bot(ProximoBot).EsCriminal Then
+            tmp_Color = eNickColor.ieCriminal
+        Else
+            tmp_Color = eNickColor.ieCiudadano
+        End If
         
-        PackageToSend = PrepareMessageCharacterCreate(.body, .Head, eHeading.SOUTH, .CharIndex, ia_Bot(ProximoBot).Pos.X, ia_Bot(ProximoBot).Pos.Y, .WeaponAnim, .ShieldAnim, 0, 0, .CascoAnim, ia_Bot(ProximoBot).Tag, tmp_Color, 0, 0)
+        PackageToSend = PrepareMessageCharacterCreate(.Body, .Head, eHeading.SOUTH, .CharIndex, IA_Bot(ProximoBot).Pos.X, IA_Bot(ProximoBot).Pos.Y, .WeaponAnim, .ShieldAnim, 0, 0, .CascoAnim, IA_Bot(ProximoBot).Name, tmp_Color, 0, 0)
         
         'Actualizo el area.
         ia_SendToBotArea ProximoBot, PackageToSend
@@ -385,7 +393,7 @@ Dim PackageToSend   As String
  
 End Sub
  
-Public Function ia_Spawn(ByVal iaClase As eIAClase, ByRef PosToSpawn As WorldPos, ByRef BotTag As String, ByVal Viajante As Boolean, ByVal esPk As Boolean, ByVal g_ID As Integer) As Integer
+Public Function ia_Spawn(ByRef PosToSpawn As WorldPos) As Integer
  
     ' @designer     :  maTih.-
     ' @date         :  2012/02/01
@@ -397,25 +405,9 @@ Public Function ia_Spawn(ByVal iaClase As eIAClase, ByRef PosToSpawn As WorldPos
      
     If Not ProximoBot <> 0 Then Exit Function
      
-    With ia_Bot(ProximoBot)
+    With IA_Bot(ProximoBot)
         
         .Invocado = True
-        
-        .clase = iaClase
-        
-        .GrupoID = g_ID
-        
-        .Mana = ia_ManaByClase(ProximoBot)
-        .Vida = ia_VidaByClase(ProximoBot)
-        .maxMana = .Mana
-        .maxVida = .Vida
-        
-        .EsCriminal = esPk
-        
-        'Si es "viajante"..
-        .Viajante = Viajante
-        
-        .Tag = BotTag
         
         .Paralizado = False
         
@@ -453,27 +445,21 @@ Public Sub ia_Spells()
     'Un poco hardcodeado pero bueno :D
      
     'Hechizo 1 : descarga.
-    ia_spell(1).DamageMax = 120
-    ia_spell(1).DamageMax = 177
-    ia_spell(1).spellIndex = 23
+    IA_spell(1).DamageMax = 120
+    IA_spell(1).DamageMax = 177
+    IA_spell(1).spellIndex = 23
      
     'Hechizo 2 : apoca
      
-    ia_spell(2).DamageMin = 190
-    ia_spell(2).DamageMax = 220
-    ia_spell(2).spellIndex = 25
+    IA_spell(2).DamageMin = 190
+    IA_spell(2).DamageMax = 220
+    IA_spell(2).spellIndex = 25
      
     'Paralizar.
-    ia_spell(3).DamageMax = 0
-    ia_spell(3).DamageMin = 0
-    ia_spell(3).spellIndex = 9
+    IA_spell(3).DamageMax = 0
+    IA_spell(3).DamageMin = 0
+    IA_spell(3).spellIndex = 9
      
-    ia_Chats(1) = "LKA JÑKKLJA KÑL JAÑLKÑLKAJ LK AJ"
-    ia_Chats(2) = "NEGRO"
-    ia_Chats(3) = "CHAU CHE"
-    ia_Chats(4) = "NANANANA TE ISE PAPIYAA"
-    ia_Chats(5) = "HIJO DE PUTA"
- 
 End Sub
  
 Sub ia_RandomMoveChar(ByVal BotIndex As Byte, ByVal siguiendoIndex As Integer, ByRef HError As Boolean)
@@ -481,7 +467,7 @@ Sub ia_RandomMoveChar(ByVal BotIndex As Byte, ByVal siguiendoIndex As Integer, B
     ' @designer     :  maTih.-
     ' @date         :  2012/02/01
      
-    With ia_Bot(BotIndex)
+    With IA_Bot(BotIndex)
      
         Dim nRandom     As Byte
        
@@ -562,10 +548,10 @@ Function ia_LegalPos(ByVal X As Byte, ByVal Y As Byte, ByVal BotIndex As Byte, O
      
     ia_LegalPos = False
      
-    With MapData(ia_Bot(BotIndex).Pos.Map, X, Y)
+    With MapData(IA_Bot(BotIndex).Pos.Map, X, Y)
      
          '¿Es un mapa valido?
-        If (ia_Bot(BotIndex).Pos.Map <= 0 Or ia_Bot(BotIndex).Pos.Map > NumMaps) Or (X < MinXBorder Or X > MaxXBorder Or Y < MinYBorder Or Y > MaxYBorder) Then Exit Function
+        If (IA_Bot(BotIndex).Pos.Map <= 0 Or IA_Bot(BotIndex).Pos.Map > NumMaps) Or (X < MinXBorder Or X > MaxXBorder Or Y < MinYBorder Or Y > MaxYBorder) Then Exit Function
      
          'Tile bloqueado?
          If .Blocked <> 0 Then Exit Function
@@ -602,7 +588,7 @@ Sub ia_SearchPath(ByVal BotIndex As Byte, ByRef tPos As WorldPos, ByRef findHead
     ' @date         :  2012/03/13
     ' @                Buscá una ruta y devuelve un puntero con el heading.
      
-    findHeading = FindDirection(ia_Bot(BotIndex).Pos, tPos)
+    findHeading = FindDirection(IA_Bot(BotIndex).Pos, tPos)
  
 End Sub
  
@@ -618,42 +604,42 @@ Sub ia_MoveToHeading(ByVal BotIndex As Byte, ByVal toHeading As eHeading, ByRef 
      
            Case eHeading.NORTH  '<Move norte.
                 'No legal pos.
-                If Not ia_LegalPos(ia_Bot(BotIndex).Pos.X, ia_Bot(BotIndex).Pos.Y - 1, BotIndex) Then Exit Sub
+                If Not ia_LegalPos(IA_Bot(BotIndex).Pos.X, IA_Bot(BotIndex).Pos.Y - 1, BotIndex) Then Exit Sub
                 
                 'Se mueve, borro el anterior botIndex.
-                MapData(ia_Bot(BotIndex).Pos.Map, ia_Bot(BotIndex).Pos.X, ia_Bot(BotIndex).Pos.Y).BotIndex = 0
+                MapData(IA_Bot(BotIndex).Pos.Map, IA_Bot(BotIndex).Pos.X, IA_Bot(BotIndex).Pos.Y).BotIndex = 0
                 'Set la nueva posición
-                ia_Bot(BotIndex).Pos.Y = ia_Bot(BotIndex).Pos.Y - 1
+                IA_Bot(BotIndex).Pos.Y = IA_Bot(BotIndex).Pos.Y - 1
                 
            Case eHeading.EAST   '<Move este.
                 'Si hay posición inválida no se peude mover.
-                If Not ia_LegalPos(ia_Bot(BotIndex).Pos.X + 1, ia_Bot(BotIndex).Pos.Y, BotIndex) Then Exit Sub
+                If Not ia_LegalPos(IA_Bot(BotIndex).Pos.X + 1, IA_Bot(BotIndex).Pos.Y, BotIndex) Then Exit Sub
                 
                 'Se mueve, borro el anterior botIndex.
-                MapData(ia_Bot(BotIndex).Pos.Map, ia_Bot(BotIndex).Pos.X, ia_Bot(BotIndex).Pos.Y).BotIndex = 0
+                MapData(IA_Bot(BotIndex).Pos.Map, IA_Bot(BotIndex).Pos.X, IA_Bot(BotIndex).Pos.Y).BotIndex = 0
                 
                 'Set la nueva posición
-                ia_Bot(BotIndex).Pos.X = ia_Bot(BotIndex).Pos.X + 1
+                IA_Bot(BotIndex).Pos.X = IA_Bot(BotIndex).Pos.X + 1
                 
            Case eHeading.SOUTH  '<Move sur.
                 'Si hay posición inválida no se peude mover.
-                If Not ia_LegalPos(ia_Bot(BotIndex).Pos.X, ia_Bot(BotIndex).Pos.Y + 1, BotIndex) Then Exit Sub
+                If Not ia_LegalPos(IA_Bot(BotIndex).Pos.X, IA_Bot(BotIndex).Pos.Y + 1, BotIndex) Then Exit Sub
                 
                 'Se mueve, borro el anterior botIndex.
-                MapData(ia_Bot(BotIndex).Pos.Map, ia_Bot(BotIndex).Pos.X, ia_Bot(BotIndex).Pos.Y).BotIndex = 0
+                MapData(IA_Bot(BotIndex).Pos.Map, IA_Bot(BotIndex).Pos.X, IA_Bot(BotIndex).Pos.Y).BotIndex = 0
                 
                 'Set la nueva posición
-                ia_Bot(BotIndex).Pos.Y = ia_Bot(BotIndex).Pos.Y + 1
+                IA_Bot(BotIndex).Pos.Y = IA_Bot(BotIndex).Pos.Y + 1
                 
            Case eHeading.WEST   '<Move oeste.
                 'Si hay posición inválida no se peude mover.
-                If Not ia_LegalPos(ia_Bot(BotIndex).Pos.X - 1, ia_Bot(BotIndex).Pos.Y, BotIndex) Then Exit Sub
+                If Not ia_LegalPos(IA_Bot(BotIndex).Pos.X - 1, IA_Bot(BotIndex).Pos.Y, BotIndex) Then Exit Sub
                 
                 'Se mueve, borro el anterior botIndex.
-                MapData(ia_Bot(BotIndex).Pos.Map, ia_Bot(BotIndex).Pos.X, ia_Bot(BotIndex).Pos.Y).BotIndex = 0
+                MapData(IA_Bot(BotIndex).Pos.Map, IA_Bot(BotIndex).Pos.X, IA_Bot(BotIndex).Pos.Y).BotIndex = 0
                 
                 'Set la nueva posición
-                ia_Bot(BotIndex).Pos.X = ia_Bot(BotIndex).Pos.X - 1
+                IA_Bot(BotIndex).Pos.X = IA_Bot(BotIndex).Pos.X - 1
                 
     End Select
      
@@ -670,7 +656,7 @@ Sub ia_MoveViajante(ByVal BotIndex As Byte, ByVal Direccion As eHeading)
      
     Dim HabiaAgua As Boolean
      
-    With ia_Bot(BotIndex)
+    With IA_Bot(BotIndex)
      
          'Hacia donde se mueve..
          Select Case Direccion
@@ -706,7 +692,7 @@ Sub ia_MoveViajante(ByVal BotIndex As Byte, ByVal Direccion As eHeading)
             'No habia agua, y... estaba navegando?
             If .Navegando Then
                'cambio el body y demas.
-               ia_SendToBotArea BotIndex, PrepareMessageCharacterChange(.Char.body, .Char.Head, Direccion, .Char.CharIndex, .Char.WeaponAnim, .Char.ShieldAnim, 0, 0, .Char.CascoAnim)
+               ia_SendToBotArea BotIndex, PrepareMessageCharacterChange(.Char.Body, .Char.Head, Direccion, .Char.CharIndex, .Char.WeaponAnim, .Char.ShieldAnim, 0, 0, .Char.CascoAnim)
                .Navegando = False
             End If
         End If
@@ -776,7 +762,7 @@ Function ia_Objetos(ByVal BotIndex As Byte) As WorldPos
     Dim loopY   As Long
     Dim BotPos  As WorldPos
      
-    BotPos = ia_Bot(BotIndex).Pos
+    BotPos = IA_Bot(BotIndex).Pos
      
     '********************************
      
@@ -797,7 +783,7 @@ Function ia_SlotInventario(ByVal BotIndex As Byte) As Byte
     Dim loopX   As Long
      
     For loopX = 1 To IA_SLOTS
-        With ia_Bot(BotIndex).Inv(loopX)
+        With IA_Bot(BotIndex).Inv(loopX)
              'No hay objeto.
              If Not .ObjIndex <> 0 Then
                 ia_SlotInventario = CByte(loopX)
@@ -820,7 +806,7 @@ Sub ia_ActionViajante(ByVal BotIndex As Byte)
     Dim molestNpc   As Integer
     Dim ObjetoPos   As WorldPos
      
-    With ia_Bot(BotIndex)
+    With IA_Bot(BotIndex)
      
          'Está paralizado?
          If .Paralizado Then
@@ -948,7 +934,7 @@ Sub ia_ActionViajante(ByVal BotIndex As Byte)
                    tmp_Color = eNickColor.ieCiudadano
                 End If
                 
-                ia_SendToBotArea BotIndex, PrepareMessageCharacterCreate(.Char.body, .Char.Head, .Char.heading, .Char.CharIndex, .Pos.X, .Pos.Y, .Char.WeaponAnim, .Char.ShieldAnim, 0, 0, .Char.CascoAnim, .Tag, tmp_Color, 0, 0)
+                ia_SendToBotArea BotIndex, PrepareMessageCharacterCreate(.Char.Body, .Char.Head, .Char.heading, .Char.CharIndex, .Pos.X, .Pos.Y, .Char.WeaponAnim, .Char.ShieldAnim, 0, 0, .Char.CascoAnim, .Name, tmp_Color, 0, 0)
             End If
          End If
          
@@ -970,6 +956,90 @@ Function ia_HayRuta(ByRef InPos As WorldPos) As eHeading
  
 End Function
  
+Public Sub CargarBOTs()
+'*****************************************
+'Autor: Lorwik
+'Fecha: 01/05/2020
+'Descripción: Carga los bots desde un Dat
+'*****************************************
+
+    Dim BOT         As Integer
+    Dim LoopC       As Byte
+    Dim ln          As String
+    
+    Dim Leer        As clsIniManager
+
+    Set Leer = New clsIniManager
+    
+    Call Leer.Initialize(DatPath & "BOTs.dat")
+    
+    'obtiene el numero de BOTs
+    MAX_BOTS = val(Leer.GetValue("INIT", "NumBOTs"))
+    
+    ReDim Preserve IA_Bot(1 To MAX_BOTS) As BOT
+    
+    'Reservamos los char
+    IA_CHAR = (MAXCHARS - MAX_BOTS)
+    
+    For BOT = 1 To MAX_BOTS
+        With IA_Bot(BOT)
+    
+            .Name = Leer.GetValue("BOT" & BOT, "Name")
+            .Level = val(Leer.GetValue("BOT" & BOT, "Level"))
+            .Raza = val(Leer.GetValue("BOT" & BOT, "Raza"))
+            .Genero = val(Leer.GetValue("BOT" & BOT, "Genero"))
+            .Char.Head = val(Leer.GetValue("BOT" & BOT, "Head"))
+            .clase = val(Leer.GetValue("BOT" & BOT, "Clase"))
+            .EsCriminal = CBool(Leer.GetValue("BOT" & BOT, "EsCriminal"))
+            .minVida = val(Leer.GetValue("BOT" & BOT, "MinVida"))
+            .maxVida = val(Leer.GetValue("BOT" & BOT, "MaxVida"))
+            .minMana = val(Leer.GetValue("BOT" & BOT, "MinMana"))
+            .maxMana = val(Leer.GetValue("BOT" & BOT, "MaxMana"))
+            .Viajante = CBool(Leer.GetValue("BOT" & BOT, "Viajante"))
+            
+            .NroItems = val(Leer.GetValue("BOT" & BOT, "NROITEMS"))
+            'Si el BOT Tiene inventario lo cargamos
+            If .NroItems > 0 Then
+                For LoopC = 1 To .NroItems
+                    'No podemos superar la capacidad del inventario
+                    If LoopC <= IA_SLOTS Then
+                        ln = Leer.GetValue("BOT" & BOT, "Drop" & LoopC)
+                        .Inv(LoopC).ObjIndex = val(ReadField(1, ln, 45))
+                        .Inv(LoopC).Amount = val(ReadField(2, ln, 45))
+                    End If
+                Next LoopC
+            End If
+            
+        End With
+    Next BOT
+    
+    Set Leer = Nothing
+End Sub
+
+Public Sub CargarMensajesBOTS()
+'*****************************************
+'Autor: Lorwik
+'Fecha: 01/05/2020
+'Descripción: Carga los mensajes de los bots
+'*****************************************
+    Dim NumMsg      As Integer
+    Dim LoopC       As Integer
+    Dim Leer        As clsIniManager
+
+    Set Leer = New clsIniManager
+    
+    Call Leer.Initialize(DatPath & "BOTsMsg.dat")
+    
+    NumMsg = val(Leer.GetValue("INIT", "NumMsg"))
+    
+    '¿Hay mensajes para cargar?
+    If NumMsg = 0 Then Exit Sub
+    
+    For LoopC = 1 To NumMsg
+        IA_Chats(LoopC) = Leer.GetValue("INIT", "Msg" & LoopC)
+    Next LoopC
+End Sub
+ 
 Sub ia_SupportOthers(ByVal BotIndex As Byte, ByRef Supported As Boolean)
  
     ' @designer     :  maTih.-
@@ -980,7 +1050,7 @@ Sub ia_SupportOthers(ByVal BotIndex As Byte, ByRef Supported As Boolean)
     Dim supportAction       As eIASupportActions
      
     'Si no tiene intervalo..
-    If ia_Bot(BotIndex).Intervalos.SpellCount <> 0 Then Exit Sub
+    If IA_Bot(BotIndex).Intervalos.SpellCount <> 0 Then Exit Sub
      
     'Busca un bot a ayudar.
     botIndexToSupport = ia_GetSupportBot(BotIndex, supportAction)
@@ -994,16 +1064,16 @@ Sub ia_SupportOthers(ByVal BotIndex As Byte, ByRef Supported As Boolean)
            Case eIASupportActions.SCurar        '<Cura un compañero
                 'Lanza graves.
                 'Crea fx.
-                ia_SendToBotArea botIndexToSupport, Protocol.PrepareMessageCreateFX(ia_Bot(botIndexToSupport).Char.CharIndex, Hechizos(5).FXgrh, Hechizos(5).loops)
+                ia_SendToBotArea botIndexToSupport, Protocol.PrepareMessageCreateFX(IA_Bot(botIndexToSupport).Char.CharIndex, Hechizos(5).FXgrh, Hechizos(5).loops)
                 
                 'Cartel.
-                ia_SendToBotArea BotIndex, PrepareMessageChatOverHead("EN CORP SANCTIS", ia_Bot(BotIndex).Char.CharIndex, vbCyan)
+                ia_SendToBotArea BotIndex, PrepareMessageChatOverHead("EN CORP SANCTIS", IA_Bot(BotIndex).Char.CharIndex, vbCyan)
                 
                 'Suma un random de vida.
-                ia_Bot(botIndexToSupport).Vida = ia_Bot(botIndexToSupport).maxVida + RandomNumber(55, 77)
+                IA_Bot(botIndexToSupport).minVida = IA_Bot(botIndexToSupport).maxVida + RandomNumber(55, 77)
                 
                 'PARA QUE NO PASE LA VIDA MAXIMA
-                If ia_Bot(botIndexToSupport).Vida > ia_Bot(botIndexToSupport).maxVida Then ia_Bot(botIndexToSupport).Vida = ia_Bot(botIndexToSupport).maxVida
+                If IA_Bot(botIndexToSupport).minVida > IA_Bot(botIndexToSupport).maxVida Then IA_Bot(botIndexToSupport).minVida = IA_Bot(botIndexToSupport).maxVida
            
                 Supported = True
            
@@ -1012,13 +1082,13 @@ Sub ia_SupportOthers(ByVal BotIndex As Byte, ByRef Supported As Boolean)
                 'ia_sendtobotarea botindextosupport
                 
                 'Paralizis count.
-                If ia_Bot(botIndexToSupport).Intervalos.ParalizisCount > 6 Then Exit Sub
+                If IA_Bot(botIndexToSupport).Intervalos.ParalizisCount > 6 Then Exit Sub
                 
                 'Cartel
-                ia_SendToBotArea BotIndex, PrepareMessageChatOverHead("AN HOAX VORP", ia_Bot(BotIndex).Char.CharIndex, vbCyan)
+                ia_SendToBotArea BotIndex, PrepareMessageChatOverHead("AN HOAX VORP", IA_Bot(BotIndex).Char.CharIndex, vbCyan)
                 
                 'Saca el flag
-                ia_Bot(botIndexToSupport).Paralizado = False
+                IA_Bot(botIndexToSupport).Paralizado = False
                 
                 Supported = True
                 
@@ -1035,7 +1105,7 @@ Function ia_BotEnArea(ByVal BotIndex As Byte, ByVal otherBotIndex As Integer) As
      
     Dim BotIndexPos As WorldPos
      
-    BotIndexPos = ia_Bot(BotIndex).Pos
+    BotIndexPos = IA_Bot(BotIndex).Pos
      
     Dim loopX   As Long
     Dim loopY   As Long
@@ -1069,15 +1139,15 @@ Function ia_GetSupportBot(ByVal BotIndex As Byte, ByRef SAction As eIASupportAct
         If loopX <> BotIndex Then
             
            'Está invocado?
-           If ia_Bot(loopX).Invocado Then
+           If IA_Bot(loopX).Invocado Then
               'Está en el area?
               If ia_BotEnArea(BotIndex, loopX) Then
                  'Está paralizado/tiene poca vida?
-                 If ia_Bot(loopX).Vida <> ia_Bot(loopX).maxVida Or ia_Bot(loopX).Paralizado Then
+                 If IA_Bot(loopX).minVida <> IA_Bot(loopX).maxVida Or IA_Bot(loopX).Paralizado Then
                     'Encontrado.
                     ia_GetSupportBot = CByte(loopX)
                     'Devuelve la acción.
-                    SAction = IIf(ia_Bot(loopX).Vida <> ia_Bot(loopX).maxVida, eIASupportActions.SCurar, eIASupportActions.SRemover)
+                    SAction = IIf(IA_Bot(loopX).minVida <> IA_Bot(loopX).maxVida, eIASupportActions.SCurar, eIASupportActions.SRemover)
                     Exit Function
                  End If
               End If
@@ -1107,7 +1177,7 @@ On Error GoTo Errhandler        '< maTih XD
      
     If EnPausa Then Exit Sub
      
-    With ia_Bot(BotIndex)
+    With IA_Bot(BotIndex)
      
         'Es un bot viajante?
         If .Viajante Then
@@ -1137,7 +1207,7 @@ On Error GoTo Errhandler        '< maTih XD
            .Intervalos.ChatCount = (IA_TALKIN / 40)
             
            'Envia msj random
-           ia_SendToBotArea BotIndex, PrepareMessageChatOverHead(ia_Chats(RandomNumber(1, 5)), .Char.CharIndex, vbRed)
+           ia_SendToBotArea BotIndex, PrepareMessageChatOverHead(IA_Chats(RandomNumber(1, 5)), .Char.CharIndex, -1)
            .Intervalos.SpellCount = (IA_SINT / 100)
         End If
         
@@ -1153,7 +1223,7 @@ On Error GoTo Errhandler        '< maTih XD
             'Es clero?
             If Not .clase <> eIAClase.Clerigo Then
                'Si tiene la vida llena lo persigue.
-               If .Vida = .maxVida Then
+               If .minVida = .maxVida Then
                   ia_MoveToHeading BotIndex, moveHeading, FoundErr
                Else
                 'Si no , se mueve al azar.
@@ -1164,7 +1234,7 @@ On Error GoTo Errhandler        '< maTih XD
              'Es mago?
             If .clase = eIAClase.Mago Or .clase = eIAClase.Cazador Then
                'Si no tiene la vida llena se mueve al azar.
-               If Not .Vida = .maxVida Then
+               If Not .minVida = .maxVida Then
                   ia_RandomMoveChar BotIndex, pIndex, FoundErr
                Else
                   'Tiene la vida llena, que fue el ultimo movimiento?
@@ -1204,15 +1274,15 @@ On Error GoTo Errhandler        '< maTih XD
        
             'Prioriza la vida ante todo
            
-            If .Vida < .maxVida Then
+            If .minVida < .maxVida Then
                
                 'Checkeo el intervalo.
                 If .Intervalos.UseItemCount > 0 Then Exit Sub
                
                 'Recupera 20 cada 200 ms.
-                .Vida = .Vida + 20
+                .minVida = .minVida + 20
                
-                If .Vida > .maxVida Then .Vida = .maxVida
+                If .minVida > .maxVida Then .minVida = .maxVida
                
                 'Uso la poción, seteo el interval
                 .Intervalos.UseItemCount = (IA_USEOBJ / 40)
@@ -1222,7 +1292,7 @@ On Error GoTo Errhandler        '< maTih XD
            
             'Si tenia la vida llena usa azules.
            
-            If .Mana < .maxMana Then
+            If .minMana < .maxMana Then
            
                 'Checkeo el intervalo.
                
@@ -1238,10 +1308,10 @@ On Error GoTo Errhandler        '< maTih XD
                     End If
                     
                     'aumento el mana
-                    .Mana = .Mana + recuperoMana
+                    .minMana = .minMana + recuperoMana
                
                     'controlo el limite
-                    If .Mana > .maxMana Then .Mana = .maxMana
+                    If .minMana > .maxMana Then .minMana = .maxMana
                
                 'seteo el int
                 .Intervalos.UseItemCount = (IA_USEOBJ / 40)
@@ -1264,7 +1334,7 @@ On Error GoTo Errhandler        '< maTih XD
            'Probabilidad de evadir.
            If Not RandomNumber(1, 100) <= MaximoInt(10, MinimoInt(90, 50 + ((220 - PoderEvasion(pIndex)) * 0.4))) Then
               'Atacó y falló!!
-              Call WriteConsoleMsg(pIndex, .Tag & " Te lanzó un flechazo pero falló!", FontTypeNames.FONTTYPE_FIGHT)
+              Call WriteConsoleMsg(pIndex, .Name & " Te lanzó un flechazo pero falló!", FontTypeNames.FONTTYPE_FIGHT)
               'setea intervalo
               .Intervalos.ArrowCount = (IA_PROINT / 25)
               Exit Sub
@@ -1302,12 +1372,12 @@ On Error GoTo Errhandler        '< maTih XD
            'Sacude un flechazo.
            UserList(pIndex).Stats.MinHp = UserList(pIndex).Stats.MinHp - ArrowDamage
            
-           Call WriteConsoleMsg(pIndex, .Tag & " Te ha pegado un flechazo por " & ArrowDamage, FontTypeNames.FONTTYPE_FIGHT)
+           Call WriteConsoleMsg(pIndex, .Name & " Te ha pegado un flechazo por " & ArrowDamage, FontTypeNames.FONTTYPE_FIGHT)
            
            'Muere?
            If UserList(pIndex).Stats.MinHp <= 0 Then
               UserDie pIndex
-              Call WriteConsoleMsg(pIndex, .Tag & " Te ha matado!", FontTypeNames.FONTTYPE_FIGHT)
+              Call WriteConsoleMsg(pIndex, .Name & " Te ha matado!", FontTypeNames.FONTTYPE_FIGHT)
            End If
             
            'Intervalo
@@ -1353,7 +1423,7 @@ On Error GoTo Errhandler        '< maTih XD
                    SendData SendTarget.ToPCArea, pIndex, PrepareMessageCreateFX(UserList(pIndex).Char.CharIndex, FXSANGRE, 5)
                    
                    'Avisa.
-                   Call WriteConsoleMsg(pIndex, .Tag & " Te ha pegado por " & CStr(GolpeVal) & ".", FontTypeNames.FONTTYPE_FIGHT)
+                   Call WriteConsoleMsg(pIndex, .Name & " Te ha pegado por " & CStr(GolpeVal) & ".", FontTypeNames.FONTTYPE_FIGHT)
                    
                    'Setea flag.
                    .UltimaAccion = eIAactions.ePegar
@@ -1382,7 +1452,7 @@ On Error GoTo Errhandler        '< maTih XD
            
            'Si la mana es < a 300 [gasto del remo] no hacemos nada.
            
-           If .Mana < 300 Then Exit Sub
+           If .minMana < 300 Then Exit Sub
            
            'Si está paralizado AND el usuario no tiene poka vida prioriza removerse.
            
@@ -1450,26 +1520,26 @@ On Error GoTo Errhandler        '< maTih XD
                 'No hacemos nada ya que tampoco llega
                 'al apocalipsis.
                
-                rMan = Hechizos(ia_spell(1).spellIndex).ManaRequerido
+                rMan = Hechizos(IA_spell(1).spellIndex).ManaRequerido
                
-                If rMan > .Mana Then Exit Sub
+                If rMan > .minMana Then Exit Sub
                
             ElseIf sRandom = 2 Then
            
-                rMan = Hechizos(ia_spell(2).spellIndex).ManaRequerido
+                rMan = Hechizos(IA_spell(2).spellIndex).ManaRequerido
                    
                 'Pero si es spell 2 (apoca) AND llegamos
                 'con la mana para descarga, entonces
                 'Seteamos sRandom como 1 y casteamos
                 'descarga.
                
-                If rMan > .Mana Then
+                If rMan > .minMana Then
                    
                     'Modifico la formula y hago un random
                     'Dado a que una ves que queda en -1000 de mana
                     'Nunca más tira apoca y castea puras descargas.
                    
-                    If .Mana > 460 And RandomNumber(1, 100) < 30 Then
+                    If .minMana > 460 And RandomNumber(1, 100) < 30 Then
                         sRandom = 1
                     Else
                         Exit Sub
@@ -1477,10 +1547,10 @@ On Error GoTo Errhandler        '< maTih XD
                 End If
            End If
            
-            rMan = Hechizos(ia_spell(sRandom).spellIndex).ManaRequerido
+            rMan = Hechizos(IA_spell(sRandom).spellIndex).ManaRequerido
            
             'Descontamos la maná y seteamos el intervalo.
-            .Mana = .Mana - rMan
+            .minMana = .minMana - rMan
            
             'Set última action.
             .UltimaAccion = eIAactions.eMagia
@@ -1489,9 +1559,9 @@ On Error GoTo Errhandler        '< maTih XD
            
             'Creamos el fx y le descontamos la vida al usuario.
            
-            ia_SendToBotArea BotIndex, Protocol.PrepareMessageCreateFX(UserList(pIndex).Char.CharIndex, Hechizos(ia_spell(sRandom).spellIndex).FXgrh, Hechizos(ia_spell(sRandom).spellIndex).loops)
+            ia_SendToBotArea BotIndex, Protocol.PrepareMessageCreateFX(UserList(pIndex).Char.CharIndex, Hechizos(IA_spell(sRandom).spellIndex).FXgrh, Hechizos(IA_spell(sRandom).spellIndex).loops)
            
-            ia_SendToBotArea BotIndex, PrepareMessagePalabrasMagicas(ia_spell(sRandom).spellIndex, Npclist(BotIndex).Char.CharIndex)
+            ia_SendToBotArea BotIndex, PrepareMessagePalabrasMagicas(IA_spell(sRandom).spellIndex, Npclist(BotIndex).Char.CharIndex)
            
             'Paralizar?
             If sRandom = 3 Then
@@ -1499,12 +1569,12 @@ On Error GoTo Errhandler        '< maTih XD
                UserList(pIndex).flags.Paralizado = 1
                UserList(pIndex).Counters.Paralisis = IntervaloParalizado
                WriteParalizeOK pIndex
-               WriteConsoleMsg pIndex, .Tag & " Te ha paralizado", FontTypeNames.FONTTYPE_FIGHT
+               WriteConsoleMsg pIndex, .Name & " Te ha paralizado", FontTypeNames.FONTTYPE_FIGHT
             End If
            
             'Random damage :D
            
-            sRandom = RandomNumber(ia_spell(sRandom).DamageMin, ia_spell(sRandom).DamageMax)
+            sRandom = RandomNumber(IA_spell(sRandom).DamageMin, IA_spell(sRandom).DamageMax)
            
             'Al daño le restamos , si el usuario tiene, defensa mágica.
             If UserList(pIndex).Invent.AnilloEqpObjIndex <> 0 Then
@@ -1519,7 +1589,7 @@ On Error GoTo Errhandler        '< maTih XD
                 
             If sRandom <> 0 Then
                 'AVISO AL USUARIO DE ESTO
-                Call WriteConsoleMsg(pIndex, .Tag & " Te ha quitado " & sRandom & " puntos de vida.", FontTypeNames.FONTTYPE_FIGHT)
+                Call WriteConsoleMsg(pIndex, .Name & " Te ha quitado " & sRandom & " puntos de vida.", FontTypeNames.FONTTYPE_FIGHT)
             End If
             
             'Check si muere.
@@ -1532,7 +1602,7 @@ On Error GoTo Errhandler        '< maTih XD
                  End If
                  
                  'aviso que murio.
-                 Call WriteConsoleMsg(pIndex, .Tag & " Te ha matado!", FontTypeNames.FONTTYPE_FIGHT)
+                 Call WriteConsoleMsg(pIndex, .Name & " Te ha matado!", FontTypeNames.FONTTYPE_FIGHT)
                  
             End If
            
@@ -1555,16 +1625,16 @@ Sub ia_EnviarChar(ByVal UserIndex As Integer, ByVal BotIndex As Byte)
     ' @date         :  2012/03/13
     ' @                Envia el char del bot a un usuario (sistema de areas!!)
      
-        With ia_Bot(BotIndex).Char
+        With IA_Bot(BotIndex).Char
                 Dim tmp_Color   As eNickColor
                 
-                If ia_Bot(BotIndex).EsCriminal Then
+                If IA_Bot(BotIndex).EsCriminal Then
                    tmp_Color = eNickColor.ieCriminal
                 Else
                    tmp_Color = eNickColor.ieCiudadano
                 End If
                 
-                Call Protocol.WriteCharacterCreate(UserIndex, .body, .Head, eHeading.SOUTH, .CharIndex, ia_Bot(BotIndex).Pos.X, ia_Bot(BotIndex).Pos.Y, .WeaponAnim, .ShieldAnim, 0, 0, .CascoAnim, ia_Bot(BotIndex).Tag, tmp_Color, 0)
+                Call Protocol.WriteCharacterCreate(UserIndex, .Body, .Head, eHeading.SOUTH, .CharIndex, IA_Bot(BotIndex).Pos.X, IA_Bot(BotIndex).Pos.Y, .WeaponAnim, .ShieldAnim, 0, 0, .CascoAnim, IA_Bot(BotIndex).Name, tmp_Color, 0)
         End With
  
 End Sub
@@ -1600,7 +1670,7 @@ Sub ia_UserDamage(ByVal spell As Byte, ByVal BotIndex As Byte, ByVal UserIndex A
         End If
        
         'Soy ciudadano y el target es un bot viajante?
-        If Not criminal(UserIndex) And ia_Bot(BotIndex).Viajante And .flags.Seguro Then
+        If Not criminal(UserIndex) And IA_Bot(BotIndex).Viajante And .flags.Seguro Then
             WriteConsoleMsg UserIndex, "Para atacar bots viajantes debes desactivar el seguro", usedFont
             Exit Sub
         End If
@@ -1608,13 +1678,13 @@ Sub ia_UserDamage(ByVal spell As Byte, ByVal BotIndex As Byte, ByVal UserIndex A
         If Hechizos(spell).Inmoviliza Or Hechizos(spell).Paraliza Then
            
             'Le pongo el flag en verdadero.
-            ia_Bot(BotIndex).Paralizado = True
+            IA_Bot(BotIndex).Paralizado = True
            
             'Mensaje informando.
-            WriteConsoleMsg UserIndex, "Has paralizado ah " & ia_Bot(BotIndex).Tag, usedFont
+            WriteConsoleMsg UserIndex, "Has paralizado ah " & IA_Bot(BotIndex).Name, usedFont
             
             'Creo la animacion sobre el char.
-            ia_SendToBotArea BotIndex, Protocol.PrepareMessageCreateFX(ia_Bot(BotIndex).Char.CharIndex, Hechizos(spell).FXgrh, Hechizos(spell).loops)
+            ia_SendToBotArea BotIndex, Protocol.PrepareMessageCreateFX(IA_Bot(BotIndex).Char.CharIndex, Hechizos(spell).FXgrh, Hechizos(spell).loops)
             
             'SpellWorlds.
             DecirPalabrasMagicas spell, UserIndex
@@ -1624,7 +1694,7 @@ Sub ia_UserDamage(ByVal spell As Byte, ByVal BotIndex As Byte, ByVal UserIndex A
            
             'le doy intervalo
            
-            ia_Bot(BotIndex).Intervalos.ParalizisCount = (IA_SREMO / 10)
+            IA_Bot(BotIndex).Intervalos.ParalizisCount = (IA_SREMO / 10)
            
             WriteUpdateMana UserIndex
            
@@ -1638,11 +1708,11 @@ Sub ia_UserDamage(ByVal spell As Byte, ByVal BotIndex As Byte, ByVal UserIndex A
        
        If Not Damage <> 0 Then Exit Sub
        
-       If ia_Bot(BotIndex).Viajante Then
+       If IA_Bot(BotIndex).Viajante Then
             Dim eraPK   As Boolean
             
-            If Not ia_Bot(BotIndex).ViajanteAntes.Map Then
-                ia_Bot(BotIndex).ViajanteAntes = ia_Bot(BotIndex).Pos
+            If Not IA_Bot(BotIndex).ViajanteAntes.Map Then
+                IA_Bot(BotIndex).ViajanteAntes = IA_Bot(BotIndex).Pos
             End If
             
             'No era criminal.
@@ -1652,7 +1722,7 @@ Sub ia_UserDamage(ByVal spell As Byte, ByVal BotIndex As Byte, ByVal UserIndex A
             If Not eraPK Then VolverCriminal UserIndex
         
             'Ahora el bot se enojó viejo..
-            ia_Bot(BotIndex).ViajanteUser = UserIndex
+            IA_Bot(BotIndex).ViajanteUser = UserIndex
         
             'UserList(UserIndex).AtacoViajante = BotIndex
         
@@ -1674,10 +1744,10 @@ Sub ia_UserDamage(ByVal spell As Byte, ByVal BotIndex As Byte, ByVal UserIndex A
             Damage = Damage * 1.04  'laud magico de los bardos
          End If
         
-        ia_Bot(BotIndex).Vida = ia_Bot(BotIndex).Vida - Damage
+        IA_Bot(BotIndex).minVida = IA_Bot(BotIndex).minVida - Damage
         
         'No está paralizado.
-        If Not ia_Bot(BotIndex).Paralizado Then
+        If Not IA_Bot(BotIndex).Paralizado Then
             'Le pegaron, se cagó todo y se mueve random.
             Dim keepMoving  As Boolean
         
@@ -1686,35 +1756,35 @@ Sub ia_UserDamage(ByVal spell As Byte, ByVal BotIndex As Byte, ByVal UserIndex A
             'No hubo error, por ende se movió.
             If Not keepMoving Then
                'Guardo la nueva pos.
-               MapData(ia_Bot(BotIndex).Pos.Map, ia_Bot(BotIndex).Pos.X, ia_Bot(BotIndex).Pos.Y).BotIndex = BotIndex
+               MapData(IA_Bot(BotIndex).Pos.Map, IA_Bot(BotIndex).Pos.X, IA_Bot(BotIndex).Pos.Y).BotIndex = BotIndex
            
                'Actualizo el area del bot.
-               ia_SendToBotArea BotIndex, PrepareMessageCharacterMove(ia_Bot(BotIndex).Char.CharIndex, ia_Bot(BotIndex).Pos.X, ia_Bot(BotIndex).Pos.Y)
+               ia_SendToBotArea BotIndex, PrepareMessageCharacterMove(IA_Bot(BotIndex).Char.CharIndex, IA_Bot(BotIndex).Pos.X, IA_Bot(BotIndex).Pos.Y)
            
                'Intervalo de caminata.
-               ia_Bot(BotIndex).Intervalos.MoveCharCount = (IA_MOVINT / 40)
+               IA_Bot(BotIndex).Intervalos.MoveCharCount = (IA_MOVINT / 40)
             End If
             
         End If
         
         'Aviso al usuario.
-        WriteConsoleMsg UserIndex, "Le has quitado " & CStr(Damage) & " puntos de vida a " & ia_Bot(BotIndex).Tag, usedFont
+        WriteConsoleMsg UserIndex, "Le has quitado " & CStr(Damage) & " puntos de vida a " & IA_Bot(BotIndex).Name, usedFont
        
         'Tiro las spell worlds
         DecirPalabrasMagicas spell, UserIndex
        
         'Creo el fx.
-        ia_SendToBotArea BotIndex, Protocol.PrepareMessageCreateFX(ia_Bot(BotIndex).Char.CharIndex, Hechizos(spell).FXgrh, Hechizos(spell).loops)
+        ia_SendToBotArea BotIndex, Protocol.PrepareMessageCreateFX(IA_Bot(BotIndex).Char.CharIndex, Hechizos(spell).FXgrh, Hechizos(spell).loops)
        
         'saco mana y energia y actualizo el cliente
         .Stats.MinMAN = .Stats.MinMAN - rMan
            
         WriteUpdateMana UserIndex
        
-        If ia_Bot(BotIndex).Vida <= 0 Then
+        If IA_Bot(BotIndex).minVida <= 0 Then
             'Murió?
             ia_EraseChar BotIndex, True
-            WriteConsoleMsg UserIndex, "Has matado ah " & ia_Bot(BotIndex).Tag & ".", usedFont
+            WriteConsoleMsg UserIndex, "Has matado ah " & IA_Bot(BotIndex).Name & ".", usedFont
         End If
        
     End With
@@ -1735,22 +1805,22 @@ Sub ia_DamageHit(ByVal BotIndex As Byte, ByVal UserIndex As Integer)
     nDamage = nDamage - (RandomNumber(IA_MINDEF, IA_MAXDEF))
      
     'Aviso al usuario.
-    WriteConsoleMsg UserIndex, "Le has pegado a " & ia_Bot(BotIndex).Tag & " por " & nDamage, FontTypeNames.FONTTYPE_FIGHT
+    WriteConsoleMsg UserIndex, "Le has pegado a " & IA_Bot(BotIndex).Name & " por " & nDamage, FontTypeNames.FONTTYPE_FIGHT
      
     'Creo daño :)
     'ia_SendToBotArea BotIndex, mod_DunkanProtocol.Send_CreateDamage(ia_Bot(BotIndex).Pos.X, ia_Bot(BotIndex).Pos.Y, nDamage)
      
     'Resto vida.
-    ia_Bot(BotIndex).Vida = ia_Bot(BotIndex).Vida - nDamage
+    IA_Bot(BotIndex).minVida = IA_Bot(BotIndex).minVida - nDamage
      
     'seteo el flag.
     'UserList(UserIndex).AtacoViajante = BotIndex
      
     'Murio?
-    If ia_Bot(BotIndex).Vida <= 0 Then
+    If IA_Bot(BotIndex).minVida <= 0 Then
      
         'Era viajante?
-        If ia_Bot(BotIndex).Viajante Then
+        If IA_Bot(BotIndex).Viajante Then
            'Reset el flag.
            'UserList(UserIndex).AtacoViajante = 0
         End If
@@ -1769,7 +1839,7 @@ Sub ia_SendToBotArea(ByVal BotIndex As Byte, ByVal PackData As String)
      
     'Nueva versión del sub, más simple y diría que más práctica : P
      
-    With ia_Bot(BotIndex)
+    With IA_Bot(BotIndex)
         'd3 ao, borro esto : p
         
         'con esto tenemos algo simple, cuando mandamos el send
@@ -1797,110 +1867,61 @@ Sub ia_SendToBotArea(ByVal BotIndex As Byte, ByVal PackData As String)
  
 End Sub
  
-Sub ia_TirarInventario(ByVal BotIndex As Byte)
- 
-    ' @designer     :  maTih.-
-    ' @date         :  2012/02/01
-    ' @note         :  Pincha el inventario de un bot.
-     
-    Dim loopX   As Long
-    Dim iObjs() As Integer
-    Dim iObj    As obj
-    Dim tmpPos  As WorldPos
-     
-    'Arma array de objetos
-    ia_ArrayObjetos iObjs, BotIndex
-     
-    For loopX = 1 To UBound(iObjs())
-     
-        'Crea el objeto.
-        iObj.ObjIndex = iObjs(loopX)
-     
-        'Si el objIndex es >= 36 and <=30  , son pociones
-        If iObjs(loopX) >= 36 And iObjs(loopX) <= 39 Then
-           iObj.Amount = RandomNumber(1000, 1200)
-        Else
-           'No eran pociones, son flechas?
-           If Not iObjs(loopX) <> 553 Then
-              iObj.Amount = RandomNumber(500, 900)
-           Else
-              iObj.Amount = 1
-           End If
-        End If
-        
-        'Si eran pociones azules y el bot era caza..
-        If iObj.Amount = 37 And ia_Bot(BotIndex).clase = eIAClase.Cazador Then iObj.Amount = 0
-        
-        'si hay objIndex.
-        If iObj.ObjIndex Then
-            'Busca un tile libre.
-            Call Tilelibre(ia_Bot(BotIndex).Pos, tmpPos, iObj, True, True)
-        
-            'Si encontró (raro que no encuentre)
-            If tmpPos.X <> 0 And tmpPos.Y <> 0 Then
-               'Crea el objeto
-               MakeObj iObj, tmpPos.Map, tmpPos.X, tmpPos.Y
-            End If
-        End If
-        
-    Next loopX
-     
-    'Ya tiro los objetos de su equipo, ahora , si era viajante, tira los que lukeo, si es que tiene.
-    If ia_Bot(BotIndex).Viajante Then
-       For loopX = 1 To IA_SLOTS
-           With ia_Bot(BotIndex).Inv(loopX)
-                
-                iObj.ObjIndex = .ObjIndex
-                iObj.Amount = .Amount
-                
-                Call Tilelibre(ia_Bot(BotIndex).Pos, tmpPos, iObj, True, True)
-                
-                'Si encontró posición.
-                If tmpPos.X <> 0 And tmpPos.Y <> 0 Then
-                   MakeObj iObj, tmpPos.Map, tmpPos.X, tmpPos.Y
+Sub IA_TirarInventario(ByVal BotIndex As Byte)
+'*************************************
+'Autor: Lorwik
+'Fecha 01/05/2020
+'Descripcion: Si el BOT tiene inventario lo tiramos
+'*************************************
+    On Error GoTo Errhandler
+
+    Dim i         As Byte
+
+    Dim NuevaPos  As WorldPos
+
+    Dim MiObj     As obj
+
+    Dim ItemIndex As Integer
+
+    Dim DropAgua  As Boolean
+    
+    With IA_Bot(BotIndex)
+    
+        '¿Tiene items en el inventario?
+        If .NroItems = 0 Then Exit Sub
+
+        For i = 1 To .NroItems
+            ItemIndex = .Inv(i).ObjIndex
+
+            If ItemIndex > 0 Then
+                If ItemSeCae(ItemIndex) Then
+                    NuevaPos.X = 0
+                    NuevaPos.Y = 0
+                    
+                    'Creo el Obj
+                    MiObj.Amount = .Inv(i).Amount
+                    MiObj.ObjIndex = ItemIndex
+
+                    DropAgua = True
+                    
+                    Call Tilelibre(.Pos, NuevaPos, MiObj, DropAgua, True)
+                    
+                    If NuevaPos.X <> 0 And NuevaPos.Y <> 0 Then
+                        MakeObj MiObj, NuevaPos.Map, NuevaPos.X, NuevaPos.Y
+                    End If
+
                 End If
-           End With
-       Next loopX
-    End If
- 
-End Sub
- 
-Sub ia_ArrayObjetos(ByRef arrayObjs() As Integer, ByVal BotIndex As Byte)
- 
-    ' @designer     :  maTih.-
-    ' @date         :  2012/02/01
-    ' @note         :  Arma un array de objetos.
-     
-    'Set primeras dimensiones. (potas,arma y casco)
-     
-    ReDim arrayObjs(1 To 4) As Integer
-     
-    'Pociones.
-    arrayObjs(1) = 38
-    arrayObjs(2) = 37
-     
-    'Arma
-    arrayObjs(3) = ia_ArmaByClase(BotIndex)
-     
-    'Casco
-    arrayObjs(4) = ia_CascoByClase(BotIndex)
-     
-    'Si no es mago, tiene escudo y dopas.
-    If ia_Bot(BotIndex).clase <> eIAClase.Mago Then
-        'redim
-        ReDim Preserve arrayObjs(1 To 7) As Integer
-         arrayObjs(5) = ia_EscudoByClase(BotIndex)
-        arrayObjs(6) = 36
-        arrayObjs(7) = 39
-    End If
-     
-    'Si es caza, tira flechas.
-    'No sabemos el ultimo elemento que tenemos!! no jugarsela a tirar 5.
-     
-    If ia_Bot(BotIndex).clase = eIAClase.Cazador Then
-        ReDim Preserve arrayObjs(1 To UBound(arrayObjs()) + 1) As Integer
-        arrayObjs(UBound(arrayObjs())) = 553
-    End If
+
+            End If
+
+        Next i
+
+    End With
+    
+    Exit Sub
+    
+Errhandler:
+    Call LogError("Error en TirarTodosLosItems. Error: " & Err.Number & " - " & Err.description)
  
 End Sub
  
@@ -1910,7 +1931,7 @@ Sub ia_EraseChar(ByVal BotIndex As Byte, Optional ByVal killedbyUSER As Boolean 
     ' @date         :  2012/02/01
     ' @note         :  Borra el char y los datos del bot.
      
-    With ia_Bot(BotIndex)
+    With IA_Bot(BotIndex)
         'Borro el char.
         ia_SendToBotArea BotIndex, PrepareMessageCharacterRemove(.Char.CharIndex)
         
@@ -1923,12 +1944,12 @@ Sub ia_EraseChar(ByVal BotIndex As Byte, Optional ByVal killedbyUSER As Boolean 
         
         'Mató un usuario? pincha inventario
         If killedbyUSER Then
-           ia_TirarInventario BotIndex
+           IA_TirarInventario BotIndex
         End If
         
         'Reset char,
         With .Char
-             .body = 0
+             .Body = 0
              .CascoAnim = 0
              .FX = 0
              .loops = 0
@@ -1939,8 +1960,8 @@ Sub ia_EraseChar(ByVal BotIndex As Byte, Optional ByVal killedbyUSER As Boolean 
         End With
         
         'Reset STATS
-        .Vida = 0
-        .Mana = 0
+        .minVida = 0
+        .minMana = 0
         
         'Reset pos.
         With .Pos
@@ -1977,7 +1998,7 @@ Sub ia_CheckInts(ByVal BotIndex As Byte)
     ' @designer     :  maTih.-
     ' @date         :  2012/02/01
      
-    With ia_Bot(BotIndex).Intervalos
+    With IA_Bot(BotIndex).Intervalos
          
         If .ArrowCount > 0 Then .ArrowCount = .ArrowCount - 1
         If .MoveCharCount > 0 Then .MoveCharCount = .MoveCharCount - 1
@@ -2044,7 +2065,7 @@ Function IA_GetNextSlot() As Byte
     Dim loopX   As Long
      
     For loopX = 1 To MAX_BOTS
-        If Not ia_Bot(loopX).Invocado Then
+        If Not IA_Bot(loopX).Invocado Then
            IA_GetNextSlot = CByte(loopX)
            Exit Function
         End If

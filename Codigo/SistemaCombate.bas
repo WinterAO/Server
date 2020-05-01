@@ -1215,13 +1215,10 @@ Public Sub UsuarioAtaca(ByVal UserIndex As Integer)
         BOT_Index = MapData(AttackPos.Map, AttackPos.X, AttackPos.Y).BotIndex
         
         If BOT_Index <> 0 Then
-           'Checkeo que esté invocado.
-           If ia_Bot(BOT_Index).Invocado Then
-              'compruebo que este en mi grupo
-              'If ia_Bot(bot_Index).GrupoID = UserList(UserIndex).Group_User.Grupo_ID Then
-                 ia_DamageHit BOT_Index, UserIndex
-              'End If
-           End If
+            'Checkeo que esté invocado.
+            If ia_Bot(BOT_Index).Invocado Then
+                ia_DamageHit BOT_Index, UserIndex
+            End If
         End If
         
         index = MapData(AttackPos.Map, AttackPos.X, AttackPos.Y).UserIndex

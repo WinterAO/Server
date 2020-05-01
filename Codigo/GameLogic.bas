@@ -1226,21 +1226,18 @@ Sub LookatTile(ByVal UserIndex As Integer, _
                     
                     'Target the botName : D
                     If .TargetBot <> 0 Then
-                       'If ia_Bot(.TargetBOT).GrupoID = UserList(UserIndex).Group_User.Grupo_ID Then
-                            If ia_Bot(.TargetBot).Invocado Then
-                               Dim tmp_Font  As FontTypeNames
+                        If ia_Bot(.TargetBot).Invocado Then
+                            Dim tmp_Font  As FontTypeNames
                                
-                               If ia_Bot(.TargetBot).EsCriminal Then
-                                  tmp_Font = FontTypeNames.FONTTYPE_FIGHT
-                               Else
-                                  tmp_Font = FontTypeNames.FONTTYPE_CITIZEN
-                               End If
-                               
-                               Call WriteConsoleMsg(UserIndex, ia_Bot(.TargetBot).Tag & " - " & "( " & ia_Bot(.TargetBot).clase & " ", tmp_Font)
+                            If ia_Bot(.TargetBot).EsCriminal Then
+                                tmp_Font = FontTypeNames.FONTTYPE_FIGHT
+                            Else
+                                tmp_Font = FontTypeNames.FONTTYPE_CITIZEN
                             End If
-                       'Else
-                            .TargetBot = 0
-                       'End If
+                               
+                            Call WriteConsoleMsg(UserIndex, ia_Bot(.TargetBot).Name & " - " & "( " & ia_Bot(.TargetBot).clase & " ", tmp_Font)
+                        End If
+                        .TargetBot = 0
                     End If
                 End If
 
