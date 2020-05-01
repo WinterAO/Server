@@ -653,53 +653,47 @@ Public Const AumentoSTMago              As Byte = AumentoSTDef - 1
 Public Const AumentoSTTrabajador        As Byte = AumentoSTDef + 25
 
 'Sonidos
-Public Const SND_SWING                  As Byte = 2
+Public SND_SWING                        As Byte
 
-Public Const SND_TALAR                  As Byte = 13
+Public SND_TALAR                        As Byte
 
-Public Const SND_PESCAR                 As Byte = 14
+Public SND_PESCAR                       As Byte
 
-Public Const SND_MINERO                 As Byte = 15
+Public SND_MINERO                       As Byte
 
-Public Const SND_WARP                   As Byte = 3
+Public SND_WARP                         As Byte
 
-Public Const SND_PUERTA                 As Byte = 5
+Public SND_PUERTA                       As Byte
 
-Public Const SND_NIVEL                  As Byte = 6
+Public SND_NIVEL                        As Byte
 
-Public Const SND_USERMUERTE             As Byte = 11
+Public SND_USERMUERTE                   As Byte
 
-Public Const SND_IMPACTO                As Byte = 10
+Public SND_IMPACTO                      As Byte
 
-Public Const SND_IMPACTO2               As Byte = 12
+Public SND_IMPACTO2                     As Byte
 
-Public Const SND_LENADOR                As Byte = 13
+Public SND_LENADOR                      As Byte
 
-Public Const SND_FOGATA                 As Byte = 14
+Public SND_FOGATA                       As Byte
 
-Public Const SND_AVE                    As Byte = 21
+Public SND_AVE(1 To 3)                  As Byte
 
-Public Const SND_AVE2                   As Byte = 22
+Public SND_GRILLO(1 To 2)               As Byte
 
-Public Const SND_AVE3                   As Byte = 34
+Public SND_SACARARMA                    As Byte
 
-Public Const SND_GRILLO                 As Byte = 28
+Public SND_ESCUDO(1 To 4)               As Byte
 
-Public Const SND_GRILLO2                As Byte = 29
+Public SND_TRABAJO_HERRERO              As Byte
 
-Public Const SND_SACARARMA              As Byte = 25
+Public SND_TRABAJO_CARPINTERO           As Byte
 
-Public Const SND_ESCUDO                 As Byte = 37
+Public SND_BEBER                        As Byte
 
-Public Const SND_TRABAJO_HERRERO        As Byte = 41
+Public SND_RESUCITAR_SACERDOTE          As Byte
 
-Public Const SND_TRABAJO_CARPINTERO     As Byte = 42
-
-Public Const SND_BEBER                  As Byte = 46
-
-Public Const SND_RESUCITAR_SACERDOTE    As Byte = 213
-
-Public Const SND_CURAR_SACERDOTE        As Byte = 214
+Public SND_CURAR_SACERDOTE              As Byte
 
 ''
 ' Cantidad maxima de objetos por slot de inventario
@@ -1563,7 +1557,7 @@ Public Type AccountUser
     Class As Byte
     race As Byte
     Map As Integer
-    level As Byte
+    Level As Byte
     Gold As Long
     criminal As Boolean
     dead As Boolean
@@ -1609,7 +1603,7 @@ Public Type User
     DescRM As String
     
     clase As eClass
-    raza As eRaza
+    Raza As eRaza
     Genero As eGenero
     Email As String
     Hogar As eCiudad

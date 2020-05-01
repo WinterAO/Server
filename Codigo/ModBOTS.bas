@@ -354,9 +354,9 @@ Sub ia_CreateChar(ByVal ProximoBot As Byte)
         
         Armadura = IA_EquiparArmadura(ProximoBot)
         If Armadura <> -1 Then
-            .Body = ObjData(Armadura).Ropaje
+            .body = ObjData(Armadura).Ropaje
         Else 'Si no tiene le damos un cuerpo desnudo
-            .Body = CuerpoDesnudo(IA_Bot(ProximoBot).Genero, IA_Bot(ProximoBot).Raza)
+            .body = CuerpoDesnudo(IA_Bot(ProximoBot).Genero, IA_Bot(ProximoBot).Raza)
         End If
     
         '¿Tiene Arma?
@@ -384,7 +384,7 @@ Sub ia_CreateChar(ByVal ProximoBot As Byte)
             tmp_Color = eNickColor.ieCiudadano
         End If
         
-        PackageToSend = PrepareMessageCharacterCreate(.Body, .Head, eHeading.SOUTH, .CharIndex, IA_Bot(ProximoBot).Pos.X, IA_Bot(ProximoBot).Pos.Y, .WeaponAnim, .ShieldAnim, 0, 0, .CascoAnim, IA_Bot(ProximoBot).Name, tmp_Color, 0, 0)
+        PackageToSend = PrepareMessageCharacterCreate(.body, .Head, eHeading.SOUTH, .CharIndex, IA_Bot(ProximoBot).Pos.X, IA_Bot(ProximoBot).Pos.Y, .WeaponAnim, .ShieldAnim, 0, 0, .CascoAnim, IA_Bot(ProximoBot).Name, tmp_Color, 0, 0)
         
         'Actualizo el area.
         ia_SendToBotArea ProximoBot, PackageToSend
@@ -692,7 +692,7 @@ Sub ia_MoveViajante(ByVal BotIndex As Byte, ByVal Direccion As eHeading)
             'No habia agua, y... estaba navegando?
             If .Navegando Then
                'cambio el body y demas.
-               ia_SendToBotArea BotIndex, PrepareMessageCharacterChange(.Char.Body, .Char.Head, Direccion, .Char.CharIndex, .Char.WeaponAnim, .Char.ShieldAnim, 0, 0, .Char.CascoAnim)
+               ia_SendToBotArea BotIndex, PrepareMessageCharacterChange(.Char.body, .Char.Head, Direccion, .Char.CharIndex, .Char.WeaponAnim, .Char.ShieldAnim, 0, 0, .Char.CascoAnim)
                .Navegando = False
             End If
         End If
@@ -934,7 +934,7 @@ Sub ia_ActionViajante(ByVal BotIndex As Byte)
                    tmp_Color = eNickColor.ieCiudadano
                 End If
                 
-                ia_SendToBotArea BotIndex, PrepareMessageCharacterCreate(.Char.Body, .Char.Head, .Char.heading, .Char.CharIndex, .Pos.X, .Pos.Y, .Char.WeaponAnim, .Char.ShieldAnim, 0, 0, .Char.CascoAnim, .Name, tmp_Color, 0, 0)
+                ia_SendToBotArea BotIndex, PrepareMessageCharacterCreate(.Char.body, .Char.Head, .Char.heading, .Char.CharIndex, .Pos.X, .Pos.Y, .Char.WeaponAnim, .Char.ShieldAnim, 0, 0, .Char.CascoAnim, .Name, tmp_Color, 0, 0)
             End If
          End If
          
@@ -1634,7 +1634,7 @@ Sub ia_EnviarChar(ByVal UserIndex As Integer, ByVal BotIndex As Byte)
                    tmp_Color = eNickColor.ieCiudadano
                 End If
                 
-                Call Protocol.WriteCharacterCreate(UserIndex, .Body, .Head, eHeading.SOUTH, .CharIndex, IA_Bot(BotIndex).Pos.X, IA_Bot(BotIndex).Pos.Y, .WeaponAnim, .ShieldAnim, 0, 0, .CascoAnim, IA_Bot(BotIndex).Name, tmp_Color, 0)
+                Call Protocol.WriteCharacterCreate(UserIndex, .body, .Head, eHeading.SOUTH, .CharIndex, IA_Bot(BotIndex).Pos.X, IA_Bot(BotIndex).Pos.Y, .WeaponAnim, .ShieldAnim, 0, 0, .CascoAnim, IA_Bot(BotIndex).Name, tmp_Color, 0)
         End With
  
 End Sub
@@ -1669,9 +1669,9 @@ Sub ia_UserDamage(ByVal spell As Byte, ByVal BotIndex As Byte, ByVal UserIndex A
            Exit Sub
         End If
        
-        'Soy ciudadano y el target es un bot viajante?
-        If Not criminal(UserIndex) And IA_Bot(BotIndex).Viajante And .flags.Seguro Then
-            WriteConsoleMsg UserIndex, "Para atacar bots viajantes debes desactivar el seguro", usedFont
+        'Soy ciudadano y el target es un bot ciudadano?
+        If Not criminal(UserIndex) And IA_Bot(BotIndex).EsCriminal = False And .flags.Seguro Then
+            Call WriteConsoleMsg(UserIndex, "No puedes atacar ciudadanos, para hacerlo debes desactivar el seguro.", FontTypeNames.FONTTYPE_WARNING)
             Exit Sub
         End If
         
@@ -1708,25 +1708,22 @@ Sub ia_UserDamage(ByVal spell As Byte, ByVal BotIndex As Byte, ByVal UserIndex A
        
        If Not Damage <> 0 Then Exit Sub
        
+       '¿El Bot al que ataco es viajante?
        If IA_Bot(BotIndex).Viajante Then
-            Dim eraPK   As Boolean
             
             If Not IA_Bot(BotIndex).ViajanteAntes.Map Then
                 IA_Bot(BotIndex).ViajanteAntes = IA_Bot(BotIndex).Pos
             End If
-            
-            'No era criminal.
-            eraPK = criminal(UserIndex)
-        
-            'No era criminal y atacó un viajante, es criminal.
-            If Not eraPK Then VolverCriminal UserIndex
-        
+             
             'Ahora el bot se enojó viejo..
             IA_Bot(BotIndex).ViajanteUser = UserIndex
         
-            'UserList(UserIndex).AtacoViajante = BotIndex
-        
-            WriteConsoleMsg UserIndex, "Has atacado un viajante!! ahora eres un criminal, y además el viajante te atacará!", usedFont
+       End If
+       
+       '¿El Bot era ciudadano?
+       If IA_Bot(BotIndex).EsCriminal = False Then
+            'No era criminal y atacó un bot ciudadano, es criminal.
+            If Not criminal(UserIndex) Then VolverCriminal UserIndex
        End If
        
         'Quitamos vida
@@ -1755,14 +1752,14 @@ Sub ia_UserDamage(ByVal spell As Byte, ByVal BotIndex As Byte, ByVal UserIndex A
         
             'No hubo error, por ende se movió.
             If Not keepMoving Then
-               'Guardo la nueva pos.
-               MapData(IA_Bot(BotIndex).Pos.Map, IA_Bot(BotIndex).Pos.X, IA_Bot(BotIndex).Pos.Y).BotIndex = BotIndex
+                'Guardo la nueva pos.
+                MapData(IA_Bot(BotIndex).Pos.Map, IA_Bot(BotIndex).Pos.X, IA_Bot(BotIndex).Pos.Y).BotIndex = BotIndex
            
-               'Actualizo el area del bot.
-               ia_SendToBotArea BotIndex, PrepareMessageCharacterMove(IA_Bot(BotIndex).Char.CharIndex, IA_Bot(BotIndex).Pos.X, IA_Bot(BotIndex).Pos.Y)
+                'Actualizo el area del bot.
+                ia_SendToBotArea BotIndex, PrepareMessageCharacterMove(IA_Bot(BotIndex).Char.CharIndex, IA_Bot(BotIndex).Pos.X, IA_Bot(BotIndex).Pos.Y)
            
-               'Intervalo de caminata.
-               IA_Bot(BotIndex).Intervalos.MoveCharCount = (IA_MOVINT / 40)
+                'Intervalo de caminata.
+                IA_Bot(BotIndex).Intervalos.MoveCharCount = (IA_MOVINT / 40)
             End If
             
         End If
@@ -1949,7 +1946,7 @@ Sub ia_EraseChar(ByVal BotIndex As Byte, Optional ByVal killedbyUSER As Boolean 
         
         'Reset char,
         With .Char
-             .Body = 0
+             .body = 0
              .CascoAnim = 0
              .FX = 0
              .loops = 0
@@ -2024,7 +2021,7 @@ Function ia_FindTarget(Pos As WorldPos, Optional ByVal esPk As Boolean = False) 
      
     For loopY = Pos.Y - (MinYBorder + 1) To Pos.Y + (MinYBorder - 1)
         For loopX = Pos.X - (MinXBorder + 1) To Pos.X + (MinXBorder - 1)
-            'Hay usuario?
+            'Hay usuario ?
             If MapData(Pos.Map, loopX, loopY).UserIndex > 0 Then
             
                 '¿Es Admin o GM?

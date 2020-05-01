@@ -53,9 +53,9 @@ Sub DarCuerpoDesnudo(ByVal UserIndex As Integer, _
         MiCuerpoDesnudo = CuerpoDesnudo(.Genero, .Raza)
     
         If Mimetizado Then
-            .CharMimetizado.Body = MiCuerpoDesnudo
+            .CharMimetizado.body = MiCuerpoDesnudo
         Else
-            .Char.Body = MiCuerpoDesnudo
+            .Char.body = MiCuerpoDesnudo
 
         End If
     
@@ -281,6 +281,7 @@ Sub Main()
     ' Constants & vars
     frmCargando.Label1(2).Caption = "Cargando constantes..."
     Call LoadConstants
+    Call InicializarSonidos
     DoEvents
     
     ' Arrays
@@ -1062,7 +1063,7 @@ Public Sub EfectoMimetismo(ByVal UserIndex As Integer)
                 If .flags.Muerto = 0 Then
                     Call ToggleBoatBody(UserIndex)
                 Else
-                    .Char.Body = iFragataFantasmal
+                    .Char.body = iFragataFantasmal
                     .Char.ShieldAnim = NingunEscudo
                     .Char.WeaponAnim = NingunArma
                     .Char.CascoAnim = NingunCasco
@@ -1070,7 +1071,7 @@ Public Sub EfectoMimetismo(ByVal UserIndex As Integer)
                 End If
 
             Else
-                .Char.Body = .CharMimetizado.Body
+                .Char.body = .CharMimetizado.body
                 .Char.Head = .CharMimetizado.Head
                 .Char.CascoAnim = .CharMimetizado.CascoAnim
                 .Char.ShieldAnim = .CharMimetizado.ShieldAnim
@@ -1079,7 +1080,7 @@ Public Sub EfectoMimetismo(ByVal UserIndex As Integer)
             End If
             
             With .Char
-                Call ChangeUserChar(UserIndex, .Body, .Head, .heading, .WeaponAnim, .ShieldAnim, .CascoAnim)
+                Call ChangeUserChar(UserIndex, .body, .Head, .heading, .WeaponAnim, .ShieldAnim, .CascoAnim)
 
             End With
             
@@ -1576,7 +1577,7 @@ Sub SaveUser(ByVal UserIndex As Integer, Optional ByVal SaveTimeOnline As Boolea
         End If
 
         If .flags.Mimetizado = 1 Then
-            .Char.Body = .CharMimetizado.Body
+            .Char.body = .CharMimetizado.body
             .Char.Head = .CharMimetizado.Head
             .Char.CascoAnim = .CharMimetizado.CascoAnim
             .Char.ShieldAnim = .CharMimetizado.ShieldAnim
@@ -1680,7 +1681,7 @@ Sub LoadUser(ByVal UserIndex As Integer)
         If .flags.Muerto = 0 Then
             .Char = .OrigChar
         Else
-            .Char.Body = iCuerpoMuerto
+            .Char.body = iCuerpoMuerto
             .Char.Head = iCabezaMuerto
             .Char.WeaponAnim = NingunArma
             .Char.ShieldAnim = NingunEscudo
@@ -1762,4 +1763,40 @@ Public Sub CloseServer()
     End If
     
     End
+End Sub
+
+Private Sub InicializarSonidos()
+'****************************************
+'Autor: Lorwik
+'Fecha: 01/05/2020
+'Descripción: Inicializa las variable de los Sonidos
+'****************************************
+
+    SND_SWING = 2
+    SND_TALAR = 13
+    SND_PESCAR = 14
+    SND_MINERO = 15
+    SND_WARP = 3
+    SND_PUERTA = 5
+    SND_NIVEL = 6
+    SND_USERMUERTE = 11
+    SND_IMPACTO = 10
+    SND_IMPACTO2 = 12
+    SND_LENADOR = 13
+    SND_FOGATA = 14
+    SND_AVE(1) = 21
+    SND_AVE(2) = 22
+    SND_AVE(3) = 34
+    SND_GRILLO(1) = 28
+    SND_GRILLO(2) = 29
+    SND_SACARARMA = 25
+    SND_ESCUDO(1) = 211
+    SND_ESCUDO(2) = 212
+    SND_ESCUDO(3) = 213
+    SND_ESCUDO(4) = 214
+    SND_TRABAJO_HERRERO = 41
+    SND_TRABAJO_CARPINTERO = 42
+    SND_BEBER = 213
+    SND_CURAR_SACERDOTE = 214
+
 End Sub

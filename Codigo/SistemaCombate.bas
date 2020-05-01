@@ -282,7 +282,7 @@ Public Function NpcImpacto(ByVal NpcIndex As Integer, _
                 
             If Rechazo Then
                 'Se rechazo el ataque con el escudo
-                Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_ESCUDO, UserList(UserIndex).Pos.X, UserList(UserIndex).Pos.Y))
+                Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_ESCUDO(RandomNumber(1, 4)), UserList(UserIndex).Pos.X, UserList(UserIndex).Pos.Y))
                 Call WriteMultiMessage(UserIndex, eMessages.BlockedWithShieldUser) 'Call WriteBlockedWithShieldUser(UserIndex)
                 Call SubirSkill(UserIndex, eSkill.Defensa, True)
             Else
@@ -1216,7 +1216,7 @@ Public Sub UsuarioAtaca(ByVal UserIndex As Integer)
         
         If BOT_Index <> 0 Then
             'Checkeo que esté invocado.
-            If ia_Bot(BOT_Index).Invocado Then
+            If IA_Bot(BOT_Index).Invocado Then
                 ia_DamageHit BOT_Index, UserIndex
             End If
         End If
@@ -1362,7 +1362,7 @@ Public Function UsuarioImpacto(ByVal AtacanteIndex As Integer, _
 
                 If Rechazo Then
                     'Se rechazo el ataque con el escudo
-                    Call SendData(SendTarget.ToPCArea, VictimaIndex, PrepareMessagePlayWave(SND_ESCUDO, .Pos.X, .Pos.Y))
+                    Call SendData(SendTarget.ToPCArea, VictimaIndex, PrepareMessagePlayWave(SND_ESCUDO(RandomNumber(1, 4)), .Pos.X, .Pos.Y))
                       
                     Call WriteMultiMessage(AtacanteIndex, eMessages.BlockedWithShieldother)
                     Call WriteMultiMessage(VictimaIndex, eMessages.BlockedWithShieldUser)

@@ -21,7 +21,7 @@
 'Un BOT no puede tener mas de 20 items!!!!
 
 [INIT]
-NumBOTs=2
+NumBOTs=3
 
 [BOT1]
 Name=Dacker
@@ -30,7 +30,7 @@ Genero=1
 Head=4
 Level=40
 Clase=1
-EsCriminal=1
+EsCriminal=0
 Minvida=100
 MaxVida=200
 MinMana=50
@@ -52,5 +52,21 @@ MaxVida=200
 MinMana=50
 MaxMana=200
 Viajante=0
+NROITEMS=1
+Drop1=12-1000
+
+[BOT3]
+Name=Kiwrol
+Raza=4
+Genero=1
+Head=301
+Level=30
+Clase=3
+EsCriminal=1
+Minvida=100
+MaxVida=200
+MinMana=50
+MaxMana=200
+Viajante=1
 NROITEMS=1
 Drop1=12-1000
