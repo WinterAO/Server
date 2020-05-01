@@ -1236,7 +1236,7 @@ Sub LookatTile(ByVal UserIndex As Integer, _
                                   tmp_Font = FontTypeNames.FONTTYPE_CITIZEN
                                End If
                                
-                               Call WriteConsoleMsg(UserIndex, "Ves a " & ia_Bot(.TargetBot).Tag, tmp_Font)
+                               Call WriteConsoleMsg(UserIndex, ia_Bot(.TargetBot).Tag & " - " & "( " & ia_Bot(.TargetBot).clase & " ", tmp_Font)
                             End If
                        'Else
                             .TargetBot = 0

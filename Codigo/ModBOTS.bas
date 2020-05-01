@@ -2002,16 +2002,21 @@ Function ia_FindTarget(Pos As WorldPos, Optional ByVal esPk As Boolean = False) 
     Dim tmpIndex    As Integer
      
     For loopY = Pos.Y - (MinYBorder + 1) To Pos.Y + (MinYBorder - 1)
-            For loopX = Pos.X - (MinXBorder + 1) To Pos.X + (MinXBorder - 1)
-                'Hay usuario?
-                If MapData(Pos.Map, loopX, loopY).UserIndex > 0 Then
-                   'No está muerto
-                   If UserList(MapData(Pos.Map, loopX, loopY).UserIndex).flags.Muerto = 0 Then
+        For loopX = Pos.X - (MinXBorder + 1) To Pos.X + (MinXBorder - 1)
+            'Hay usuario?
+            If MapData(Pos.Map, loopX, loopY).UserIndex > 0 Then
+            
+                '¿Es Admin o GM?
+                If EsAdmin(UserList(MapData(Pos.Map, loopX, loopY).UserIndex).Name) Or EsGm(MapData(Pos.Map, loopX, loopY).UserIndex) Then Exit Function
+                
+                'No está muerto
+                If UserList(MapData(Pos.Map, loopX, loopY).UserIndex).flags.Muerto = 0 Then
+                
                       'Es ciuda el bot y el usuario?
-                      If Not esPk Then
-                         'el bot no es pk.
-                         ia_FindTarget = MapData(Pos.Map, loopX, loopY).UserIndex
-                      Else
+                    If Not esPk Then
+                        'el bot no es pk.
+                        ia_FindTarget = MapData(Pos.Map, loopX, loopY).UserIndex
+                    Else
                          tmpIndex = MapData(Pos.Map, loopX, loopY).UserIndex
                          If Not esPk And criminal(tmpIndex) Then
                              ia_FindTarget = tmpIndex
@@ -2020,11 +2025,13 @@ Function ia_FindTarget(Pos As WorldPos, Optional ByVal esPk As Boolean = False) 
                                ia_FindTarget = tmpIndex
                             End If
                         End If
-                     End If
-                      Exit Function
-                   End If
+                    End If
+                    Exit Function
+                    
                 End If
-            Next loopX
+                
+            End If
+        Next loopX
     Next loopY
      
     ia_FindTarget = 0
