@@ -13,7 +13,7 @@ Private IA_CHAR     As Integer
 'Cantidad de hechizos que lanza
  
 Private Const IA_M_SPELL As Byte = 3
-Private Const IA_NUMCHAT As Byte = 5
+Private IA_NUMCHAT As Byte
  
 'Constantes de intervalos.
  
@@ -100,10 +100,41 @@ End Type
  
 Public IA_Bot()                       As BOT
 Public IA_spell(1 To IA_M_SPELL)      As ia_Spells
-Public IA_Chats(1 To IA_NUMCHAT)      As String
+Public IA_Chats()      As String
  
 'Cantidad de bots invocados.
 Public NumInvocados                    As Byte
+ 
+Function IA_TienePotisRojas(ByVal BotIndex As Byte) As Integer
+'****************************************************
+'Autor: Lorwik
+'Fecha 01/05/2020
+'Descripcion: Si el BOT tiene rojas las toma
+'****************************************************
+    Dim i As Byte
+
+    With IA_Bot(BotIndex)
+    
+        '¿Tiene items en el inventario?
+        If .NroItems > 0 Then
+            For i = 1 To .NroItems
+                'Si el Objeto es de tipo pocion, son pociones rojas y tiene mas de 0, podemos usarlas
+                If ObjData(.Inv(i).ObjIndex).OBJType = otPociones And ObjData(.Inv(i).ObjIndex).TipoPocion = 3 And .Inv(i).Amount > 0 Then
+                    
+                    IA_TienePotisRojas = RandomNumber(ObjData(.Inv(i).ObjIndex).MinModificador, ObjData(.Inv(i).ObjIndex).MaxModificador)
+                    
+                    'Damos por hecho que la usa y le restamos 1
+                    .Inv(i).Amount = .Inv(i).Amount - 1
+                End If
+                
+            Next i
+            
+            IA_TienePotisRojas = 0
+        End If
+    
+    End With
+
+End Function
  
 Function IA_EquiparCasco(ByVal BotIndex As Byte) As Integer
 '****************************************************
@@ -1022,7 +1053,6 @@ Public Sub CargarMensajesBOTS()
 'Fecha: 01/05/2020
 'Descripción: Carga los mensajes de los bots
 '*****************************************
-    Dim NumMsg      As Integer
     Dim LoopC       As Integer
     Dim Leer        As clsIniManager
 
@@ -1030,14 +1060,14 @@ Public Sub CargarMensajesBOTS()
     
     Call Leer.Initialize(DatPath & "BOTsMsg.dat")
     
-    NumMsg = val(Leer.GetValue("INIT", "NumMsg"))
+    IA_NUMCHAT = val(Leer.GetValue("INIT", "NumMsg"))
     
-    '¿Hay mensajes para cargar?
-    If NumMsg = 0 Then Exit Sub
+    ReDim Preserve IA_Chats(1 To IA_NUMCHAT) As String
     
-    For LoopC = 1 To NumMsg
+    For LoopC = 1 To IA_NUMCHAT
         IA_Chats(LoopC) = Leer.GetValue("INIT", "Msg" & LoopC)
     Next LoopC
+    
 End Sub
  
 Sub ia_SupportOthers(ByVal BotIndex As Byte, ByRef Supported As Boolean)
@@ -1273,21 +1303,29 @@ On Error GoTo Errhandler        '< maTih XD
         'STATS..
        
             'Prioriza la vida ante todo
-           
+            'Si no tiene la vida entrera..
             If .minVida < .maxVida Then
-               
-                'Checkeo el intervalo.
-                If .Intervalos.UseItemCount > 0 Then Exit Sub
-               
-                'Recupera 20 cada 200 ms.
-                .minVida = .minVida + 20
-               
-                If .minVida > .maxVida Then .minVida = .maxVida
-               
-                'Uso la poción, seteo el interval
-                .Intervalos.UseItemCount = (IA_USEOBJ / 40)
-               
-                Exit Sub
+            
+                Dim PotisRojas As Integer
+                PotisRojas = IA_TienePotisRojas(BotIndex)
+                '¿Tiene pociones rojas?
+                If PotisRojas > 0 Then
+                   
+                    'Checkeo el intervalo.
+                    If .Intervalos.UseItemCount > 0 Then Exit Sub
+                   
+                    'Toma una poti cada 200 ms.
+                    .minVida = .minVida + PotisRojas
+                    'Mandamos el sonido de potear
+                    Call SendData(SendTarget.ToPCArea, BotIndex, PrepareMessagePlayWave(SND_BEBER, .Pos.X, .Pos.Y))
+                   
+                    If .minVida > .maxVida Then .minVida = .maxVida
+                    
+                    'Uso la poción, seteo el interval
+                    .Intervalos.UseItemCount = (IA_USEOBJ / 40)
+                   
+                    Exit Sub
+                End If
             End If
            
             'Si tenia la vida llena usa azules.
@@ -1681,7 +1719,7 @@ Sub ia_UserDamage(ByVal spell As Byte, ByVal BotIndex As Byte, ByVal UserIndex A
             IA_Bot(BotIndex).Paralizado = True
            
             'Mensaje informando.
-            WriteConsoleMsg UserIndex, "Has paralizado ah " & IA_Bot(BotIndex).Name, usedFont
+            WriteConsoleMsg UserIndex, "Has paralizado a " & IA_Bot(BotIndex).Name, usedFont
             
             'Creo la animacion sobre el char.
             ia_SendToBotArea BotIndex, Protocol.PrepareMessageCreateFX(IA_Bot(BotIndex).Char.CharIndex, Hechizos(spell).FXgrh, Hechizos(spell).loops)

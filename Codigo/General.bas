@@ -1796,7 +1796,7 @@ Private Sub InicializarSonidos()
     SND_ESCUDO(4) = 214
     SND_TRABAJO_HERRERO = 41
     SND_TRABAJO_CARPINTERO = 42
-    SND_BEBER = 213
+    SND_BEBER = 135
     SND_CURAR_SACERDOTE = 214
 
 End Sub

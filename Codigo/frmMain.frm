@@ -30,12 +30,12 @@ Begin VB.Form frmMain
    StartUpPosition =   2  'CenterScreen
    WindowState     =   1  'Minimized
    Begin VB.CommandButton cmdCommand3 
-      Caption         =   "Command3"
+      Caption         =   "SpawnBOT"
       Height          =   360
-      Left            =   5280
+      Left            =   5160
       TabIndex        =   25
-      Top             =   6600
-      Width           =   990
+      Top             =   6480
+      Width           =   1110
    End
    Begin VB.TextBox txtRecordOnline 
       Alignment       =   2  'Center
