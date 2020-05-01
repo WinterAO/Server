@@ -23,7 +23,7 @@ Private Const IA_MOVINT As Integer = 240    'Intervalo caminta.
 Private Const IA_USEOBJ As Integer = 200    'Intervalo usar potas.
 Private Const IA_HITINT As Integer = 200    'Intervalo para golpe
 Private Const IA_PROINT As Integer = 700    'Intervalo de flecha
-Private Const IA_TALKIN As Integer = 4000   'Intervalo de hablAR :P
+Private Const IA_TALKIN As Integer = 10000  'Intervalo de hablar
  
 'Probabilidades de que te pegue
  
@@ -1308,6 +1308,7 @@ On Error GoTo Errhandler        '< maTih XD
             
                 Dim PotisRojas As Integer
                 PotisRojas = IA_TienePotisRojas(BotIndex)
+                
                 '¿Tiene pociones rojas?
                 If PotisRojas > 0 Then
                    

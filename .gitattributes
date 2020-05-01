@@ -22,7 +22,7 @@
 *.ao -text
 *.ocx -text
 *.OCX -text
-*.map -text
+*.csm -text
 *.exe -text
 *.inf -text
 
