@@ -225,12 +225,12 @@ Public Sub CheckUpdateNeededUser(ByVal UserIndex As Integer, ByVal heading As By
                     End If
                     
                 End If
-                
-                '<< Bots >>
+
+                '<<< Bots >>>
                 botI = MapData(Map, X, Y).BotIndex
                 
                 If (botI <> 0) Then
-                    If (ia_Bot(botI).Invocado = True) Then
+                    If (IA_Bot(botI).Invocado = True) Then
                         Call ModBOTS.ia_EnviarChar(UserIndex, botI)
                     End If
                 End If

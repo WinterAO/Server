@@ -60,15 +60,12 @@ NPCS QUESTS
 ##############################################
 
 167 a 499
-563
 570
 571
 572
 580
 581
-
-Actual Npc con Nro mas alto: 938
-
+937
 
 ##############################################
 ###############OBSERVACIONES##################
@@ -86,8 +83,7 @@ Actual Npc con Nro mas alto: 938
 [INIT]
 'aca va el numero de NPC mas alto, NO la cantidad de NPCs.
 'esto sirve para que los GMS puedan ver la lista completa de npcs a invocar en una ventanita.
-NumNPCs=945
-
+NumNPCs=946
 
 
 
@@ -123,7 +119,7 @@ BackUp=1
 [NPC35] 'Propiedades Nix
 Name=Moraday
 NpcType=0
-Desc=Ha descubierto que la ciudad de Nix es la mas hermosa de todo Argentum, verdad? Pues que mejor que ser un terrateniente de este paraiso! Acercate que haremos negocios!
+Desc=Ha descubierto que la ciudad de Nix es la mas hermosa de todo Winter, verdad? Pues que mejor que ser un terrateniente de este paraiso! Acercate que haremos negocios!
 Head=35
 Heading=3
 Body=239
@@ -154,7 +150,7 @@ BackUp=1
 [NPC52] 'Propiedades Bander
 Name=Rantarisk
 NpcType=0
-Desc=De lejos pude ver vuestro blazon, seguro busca una de las moradas mas lujosas de todo el Argentum. En la ciudad real de Banderbill es donde deben habitar la flor y la nata de la nobleza Venga y hagamos negocios!
+Desc=De lejos pude ver vuestro blazon, seguro busca una de las moradas mas lujosas de todo el Winter. En la ciudad real de Banderbill es donde deben habitar la flor y la nata de la nobleza Venga y hagamos negocios!
 Head=32
 Heading=3
 Body=241
@@ -413,7 +409,7 @@ BackUp=0
 [NPC24]
 Name=Banquero
 NpcType=4
-Desc=Hola, bienvenido a la cadena de finanzas Goliath. Somos la cadena mas grande en Argentum, contamos con bancos en las ciudades mas importantes.
+Desc=Hola, bienvenido a la cadena de finanzas Goliath. Somos la cadena mas grande en Winter, contamos con bancos en las ciudades mas importantes.
 Head=503
 Heading=3
 Body=201
@@ -575,7 +571,7 @@ BackUp=1
 [NPC48] 'Minero
 Name=Minero
 NpcType=0
-Desc=Tengo los mejores utensillos para mineros de todo Argentum.
+Desc=Tengo los mejores utensillos para mineros de todo Winter.
 Head=2
 Heading=3
 Body=1
@@ -6768,6 +6764,33 @@ BackUp=0
 
 ############################################
 
+[NPC563]
+Name=Observador abisal
+NpcType=0
+Head=0
+Heading=3
+Body=615
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=45000
+GiveGLD=25000
+MinHP=45000
+MaxHP=45000
+MaxHIT=400
+MinHIT=50
+DEF=10
+PoderAtaque=350
+PoderEvasion=300
+BackUp=0
+
+############################################
+
 [NPC564] 'NO RESPAWN (npc para entrenador)
 Name=Escorpion
 NpcType=0
@@ -11134,36 +11157,6 @@ Drop2=402-1 'Espada Mata Dragones
 Drop3=532-1 'Apocalipsis
 Drop4=1156-1 'Montura de Gran Dragon Dorado
 
-[NPC937] 'Rick
-Name=Pickle Rick
-NpcType=0
-Head=0
-Heading=3
-Body=615
-Movement=3
-AguaValida=0
-Attackable=1
-ReSpawn=0
-Hostile=1
-Domable=0
-Alineacion=2
-Comercia=0
-GiveEXP=1000000
-MinHP=15000
-MaxHP=15000
-MaxHIT=600
-MinHIT=140
-DEF=8
-AfectaParalisis=1
-PoderAtaque=300
-PoderEvasion=100
-SND1=30
-SND2=31
-SND3=32
-BackUp=0
-NROITEMS=1
-Drop1=12-1000000 'Oro
-
 [NPC938]
 Name=Artesano
 NpcType=9
@@ -11216,7 +11209,7 @@ QuestNumber=2
 [NPC941]
 Name=Alfonsin [Quest 6 Banderbill]
 NpcType=0
-Desc=El clan de Asesinos y Bandidos no para de fastidiar a los ciudadanos de Argentum por eso te pedimos que acabes con esta plaga de una vez por todas. Escribe /QUEST.
+Desc=El clan de Asesinos y Bandidos no para de fastidiar a los ciudadanos de Winter por eso te pedimos que acabes con esta plaga de una vez por todas. Escribe /QUEST.
 Head=101
 Heading=3
 Body=349
@@ -11289,6 +11282,23 @@ Head=101
 Heading=3
 Body=339
 Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=0
+BackUp=0
+QuestNumber=10
+
+[NPC946]
+Name=Leon
+NpcType=0
+Desc=
+Head=101
+Heading=3
+Body=339
+Movement=2
 Attackable=0
 ReSpawn=0
 Hostile=0

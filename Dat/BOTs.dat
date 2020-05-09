@@ -31,13 +31,14 @@ Head=4
 Level=40
 Clase=1
 EsCriminal=0
-Minvida=100
+Minvida=200
 MaxVida=200
 MinMana=50
 MaxMana=200
 Viajante=0
-NROITEMS=1
+NROITEMS=2
 Drop1=12-1000
+Drop2=38-50
 
 [BOT2]
 Name=Perole

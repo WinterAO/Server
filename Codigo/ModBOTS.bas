@@ -17,20 +17,20 @@ Private IA_NUMCHAT As Byte
  
 'Constantes de intervalos.
  
-Private Const IA_SINT   As Integer = 800    'Intervalo entre hechizo-hechizo.
-Private Const IA_SREMO  As Integer = 500    'Intervalo remo.
-Private Const IA_MOVINT As Integer = 240    'Intervalo caminta.
-Private Const IA_USEOBJ As Integer = 200    'Intervalo usar potas.
-Private Const IA_HITINT As Integer = 200    'Intervalo para golpe
-Private Const IA_PROINT As Integer = 700    'Intervalo de flecha
-Private Const IA_TALKIN As Integer = 10000  'Intervalo de hablar
+Private Const IA_SINT   As Integer = 2500    'Intervalo entre hechizo-hechizo.
+Private Const IA_SREMO  As Integer = 300    'Intervalo remo.
+Private Const IA_MOVINT As Integer = 250    'Intervalo caminta.
+Private Const IA_USEOBJ As Integer = 350    'Intervalo usar potas.
+Private Const IA_HITINT As Integer = 300    'Intervalo para golpe
+Private Const IA_PROINT As Integer = 500    'Intervalo de flecha
+Private Const IA_TALKIN As Long = 100000  'Intervalo de hablar
  
 'Probabilidades de que te pegue
  
 Private Const IA_CASTEO As Byte = 77
  
-Private Const IA_PROBEV As Byte = 160
-Private Const IA_PROBEX As Byte = 220
+Private Const IA_PROBEV As Byte = 10
+Private Const IA_PROBEX As Byte = 20
  
 Private Const IA_SLOTS  As Byte = 20
  
@@ -119,12 +119,16 @@ Function IA_TienePotisRojas(ByVal BotIndex As Byte) As Integer
         If .NroItems > 0 Then
             For i = 1 To .NroItems
                 'Si el Objeto es de tipo pocion, son pociones rojas y tiene mas de 0, podemos usarlas
-                If ObjData(.Inv(i).ObjIndex).OBJType = otPociones And ObjData(.Inv(i).ObjIndex).TipoPocion = 3 And .Inv(i).Amount > 0 Then
-                    
-                    IA_TienePotisRojas = RandomNumber(ObjData(.Inv(i).ObjIndex).MinModificador, ObjData(.Inv(i).ObjIndex).MaxModificador)
-                    
-                    'Damos por hecho que la usa y le restamos 1
-                    .Inv(i).Amount = .Inv(i).Amount - 1
+                If ObjData(.Inv(i).ObjIndex).OBJType = otPociones And ObjData(.Inv(i).ObjIndex).TipoPocion = 3 Then
+                Debug.Print .Inv(i).Amount
+                    If .Inv(i).Amount > 0 Then
+                        IA_TienePotisRojas = RandomNumber(ObjData(.Inv(i).ObjIndex).MinModificador, ObjData(.Inv(i).ObjIndex).MaxModificador)
+                        
+                        'Damos por hecho que la usa y le restamos 1
+                        .Inv(i).Amount = .Inv(i).Amount - 1
+                    Else
+                        IA_TienePotisRojas = 0
+                    End If
                 End If
                 
             Next i
@@ -134,6 +138,118 @@ Function IA_TienePotisRojas(ByVal BotIndex As Byte) As Integer
     
     End With
 
+End Function
+ 
+Function IA_TienePotisMana(ByVal BotIndex As Byte) As Integer
+'****************************************************
+'Autor: Lorwik
+'Fecha 01/05/2020
+'Descripcion: Si el BOT tiene azules las toma
+'****************************************************
+    Dim i As Byte
+
+    With IA_Bot(BotIndex)
+    
+        '¿Tiene items en el inventario?
+        If .NroItems > 0 Then
+            For i = 1 To .NroItems
+                'Si el Objeto es de tipo pocion, son pociones azules y tiene mas de 0, podemos usarlas
+                If ObjData(.Inv(i).ObjIndex).OBJType = otPociones And ObjData(.Inv(i).ObjIndex).TipoPocion = 4 And .Inv(i).Amount > 0 Then
+                    
+                    IA_TienePotisMana = RandomNumber(ObjData(.Inv(i).ObjIndex).MinModificador, ObjData(.Inv(i).ObjIndex).MaxModificador)
+                    
+                    'Damos por hecho que la usa y le restamos 1
+                    .Inv(i).Amount = .Inv(i).Amount - 1
+                End If
+                
+            Next i
+            
+            IA_TienePotisMana = 0
+        End If
+    
+    End With
+
+End Function
+
+Private Function IA_Potea(ByVal BotIndex As Byte) As Boolean
+'**********************************************
+'Autor: Lorwik
+'Fecha: 02/05/2020
+'Descripción: Los Bots potean para recuperar vida y mana.
+'Solo va a poder tomar una pota por iteración, las tomara por orden de prioridad
+'Devolvemos un False si no queremos hacer mas acciones, un True si queremos seguir
+'***********************************************
+
+    Dim Potis As Integer
+
+    With IA_Bot(BotIndex)
+    
+        'Pociones de vida (Rojas)
+        If .minVida < .maxVida Then
+                
+            Potis = IA_TienePotisRojas(BotIndex)
+                    
+            '¿Tiene pociones rojas?
+            If Potis > 0 Then
+
+                'Checkeo el intervalo.
+                If .Intervalos.UseItemCount > 0 Then
+                    IA_Potea = False
+                    Exit Function
+                End If
+                           
+                'Toma una poti cada 200 ms.
+                .minVida = .minVida + Potis
+                'Mandamos el sonido de potear
+                Call SendData(SendTarget.ToPCArea, BotIndex, PrepareMessagePlayWave(SND_BEBER, .Pos.X, .Pos.Y))
+                           
+                If .minVida > .maxVida Then .minVida = .maxVida
+                'Uso la poción, seteo el interval
+                .Intervalos.UseItemCount = (IA_USEOBJ / 40)
+                
+                IA_Potea = False
+                Exit Function
+                
+            End If
+            
+        End If
+               
+        'Pociones de Maná (Azules)
+        If .minMana < .maxMana Then
+               
+            Potis = IA_TienePotisMana(BotIndex)
+                    
+            '¿Tiene pociones rojas?
+             If Potis > 0 Then
+                 'Checkeo el intervalo.
+                  If .Intervalos.UseItemCount = 0 Then
+                       
+                    'aumento el mana
+                    .minMana = .minMana + Potis
+                        
+                    'controlo el limite
+                    If .minMana > .maxMana Then .minMana = .maxMana
+                    'Mandamos el sonido de potear
+                    Call SendData(SendTarget.ToPCArea, BotIndex, PrepareMessagePlayWave(SND_BEBER, .Pos.X, .Pos.Y))
+                        
+                    'seteo el int
+                    .Intervalos.UseItemCount = (IA_USEOBJ / 40)
+            
+                  End If
+             End If
+                   
+            'Hacer una constante después, con esto hacemos un random
+            'Para que azulee y combee a la ves.
+            If RandomNumber(1, 4) < 4 Then
+                IA_Potea = False
+                Exit Function
+            End If
+            
+        End If
+        
+        IA_Potea = True
+            
+    End With
 End Function
  
 Function IA_EquiparCasco(ByVal BotIndex As Byte) As Integer
@@ -263,21 +379,24 @@ Function ia_CalcularGolpe(ByVal victimIndex As Integer) As Integer
      
     ParteCuerpo = RandomNumber(PartesCuerpo.bCabeza, PartesCuerpo.bTorso)
      
-    'Si pega en la cabeza.
-    If ParteCuerpo = PartesCuerpo.bCabeza Then
-       'Si tiene casco baja el golpe
-           If UserList(victimIndex).Invent.CascoEqpObjIndex <> 0 Then
-              DañoAbsorvido = RandomNumber(ObjData(UserList(victimIndex).Invent.CascoEqpObjIndex).MinDef, ObjData(UserList(victimIndex).Invent.CascoEqpObjIndex).MaxDef)
-           End If
-    Else
-        'Se fija por la armadura.
-           If UserList(victimIndex).Invent.ArmourEqpObjIndex <> 0 Then
-              DañoAbsorvido = RandomNumber(ObjData(UserList(victimIndex).Invent.ArmourEqpObjIndex).MinDef, ObjData(UserList(victimIndex).Invent.ArmourEqpObjIndex).MaxDef)
-           End If
-    End If
-           
+   With UserList(victimIndex)
+   
+        'Si pega en la cabeza.
+        If ParteCuerpo = PartesCuerpo.bCabeza Then
+           'Si tiene casco baja el golpe
+               If .Invent.CascoEqpObjIndex <> 0 Then
+                  DañoAbsorvido = RandomNumber(ObjData(.Invent.CascoEqpObjIndex).MinDef, ObjData(.Invent.CascoEqpObjIndex).MaxDef)
+               End If
+        Else
+            'Se fija por la armadura.
+               If .Invent.ArmourEqpObjIndex <> 0 Then
+                  DañoAbsorvido = RandomNumber(ObjData(.Invent.ArmourEqpObjIndex).MinDef, ObjData(.Invent.ArmourEqpObjIndex).MaxDef)
+               End If
+        End If
+        
+   End With
     'DEVUELVE.
-    ia_CalcularGolpe = (RandomNumber(150, 180) - DañoAbsorvido)
+    ia_CalcularGolpe = (RandomNumber(200, 210) - DañoAbsorvido)
        
 End Function
  
@@ -311,7 +430,7 @@ Function ia_AciertaGolpe(ByVal victimIndex As Integer) As Boolean
  
 End Function
  
-Function ia_PuedeMeele(ByRef PosBot As WorldPos, ByRef PosVictim As WorldPos, ByRef NewHeading As eHeading) As Boolean
+Function IA_PuedeMeele(ByRef PosBot As WorldPos, ByRef PosVictim As WorldPos, ByRef NewHeading As eHeading) As Boolean
  
     ' @designer     :  maTih.-
     ' @date         :  2012/02/01
@@ -321,9 +440,9 @@ Function ia_PuedeMeele(ByRef PosBot As WorldPos, ByRef PosVictim As WorldPos, By
         
         'Mirando hacia la derecha lo tiene ?
         If PosBot.X + 1 = .X Then
-           ia_PuedeMeele = (.Y = PosBot.Y)
+           IA_PuedeMeele = (.Y = PosBot.Y)
            
-           If ia_PuedeMeele Then
+           If IA_PuedeMeele Then
               NewHeading = eHeading.EAST
            End If
            
@@ -332,9 +451,9 @@ Function ia_PuedeMeele(ByRef PosBot As WorldPos, ByRef PosVictim As WorldPos, By
         
         'mirando hacia izq?
         If PosBot.X - 1 = .X Then
-           ia_PuedeMeele = (.Y = PosBot.Y)
+           IA_PuedeMeele = (.Y = PosBot.Y)
            
-           If ia_PuedeMeele Then
+           If IA_PuedeMeele Then
               NewHeading = eHeading.WEST
            End If
            
@@ -343,9 +462,9 @@ Function ia_PuedeMeele(ByRef PosBot As WorldPos, ByRef PosVictim As WorldPos, By
         
         'mirando arriba
         If PosBot.Y - 1 = .Y Then
-           ia_PuedeMeele = (.X = PosBot.X)
+           IA_PuedeMeele = (.X = PosBot.X)
            
-           If ia_PuedeMeele Then
+           If IA_PuedeMeele Then
               NewHeading = eHeading.NORTH
            End If
            
@@ -354,9 +473,9 @@ Function ia_PuedeMeele(ByRef PosBot As WorldPos, ByRef PosVictim As WorldPos, By
         
         'Abajo.
         If PosBot.Y + 1 = .Y Then
-           ia_PuedeMeele = (PosBot.X = .X)
+           IA_PuedeMeele = (PosBot.X = .X)
            
-           If ia_PuedeMeele Then
+           If IA_PuedeMeele Then
               NewHeading = eHeading.SOUTH
            End If
            
@@ -449,7 +568,7 @@ Public Function ia_Spawn(ByRef PosToSpawn As WorldPos) As Integer
         ia_CreateChar ProximoBot
        
         'Primer action ! : D
-        ia_Action ProximoBot
+        IA_Action ProximoBot
        
         'PackageSend = PrepareMessageChatOverHead("VeNGan PutOs xD!", .Char.CharIndex, vbCyan)
        
@@ -1190,7 +1309,7 @@ Function ia_GetSupportBot(ByVal BotIndex As Byte, ByRef SAction As eIASupportAct
 ia_GetSupportBot = 0
 End Function
  
-Sub ia_Action(ByVal BotIndex As Byte)
+Sub IA_Action(ByVal BotIndex As Byte)
  
 On Error GoTo Errhandler        '< maTih XD
  
@@ -1209,9 +1328,9 @@ On Error GoTo Errhandler        '< maTih XD
      
     With IA_Bot(BotIndex)
      
-        'Es un bot viajante?
+        '¿Es un bot viajante?
         If .Viajante Then
-              'Mientras no esté contra ningún pibe
+              'Mientras no este contra nadie...
               If Not .ViajanteUser <> 0 Then
                  ia_CheckInts BotIndex
                  ia_ActionViajante BotIndex
@@ -1219,29 +1338,30 @@ On Error GoTo Errhandler        '< maTih XD
               End If
         End If
         
-        'si no lo ataco nadie  busca un target
+        'Si no lo ataco nadie busca un target.
         If (.ViajanteUser = 0) Then
             pIndex = ia_FindTarget(.Pos, .EsCriminal)
         Else
             pIndex = .ViajanteUser
         End If
         
-        'No hay usuario.
+        'Si no hay usuarios no hacemos accion
+        '¿Podria ser este el punto donde el Bot hiciera una accion mientras no hay nadie?
         If pIndex <= 0 Then Exit Sub
      
         'Contadores de intervalo.
         ia_CheckInts BotIndex
        
-        'EL bot boquea XD
+        '¿El BOT puede decir algo?
         If Not .Intervalos.ChatCount <> 0 Then
            .Intervalos.ChatCount = (IA_TALKIN / 40)
             
-           'Envia msj random
+           'Envia un mensaje Random
            ia_SendToBotArea BotIndex, PrepareMessageChatOverHead(IA_Chats(RandomNumber(1, 5)), .Char.CharIndex, -1)
            .Intervalos.SpellCount = (IA_SINT / 100)
         End If
         
-        'Si se puede mover AND no está inmo se mueve al azar.
+        'Si se puede mover y no está inmo se mueve al azar.
         If .Intervalos.MoveCharCount = 0 And .Paralizado = False Then
             
             'Tiene target?
@@ -1299,71 +1419,13 @@ On Error GoTo Errhandler        '< maTih XD
             
         End If
        
-       
-        'STATS..
-       
-            'Prioriza la vida ante todo
-            'Si no tiene la vida entrera..
-            If .minVida < .maxVida Then
-            
-                Dim PotisRojas As Integer
-                PotisRojas = IA_TienePotisRojas(BotIndex)
-                
-                '¿Tiene pociones rojas?
-                If PotisRojas > 0 Then
-                   
-                    'Checkeo el intervalo.
-                    If .Intervalos.UseItemCount > 0 Then Exit Sub
-                   
-                    'Toma una poti cada 200 ms.
-                    .minVida = .minVida + PotisRojas
-                    'Mandamos el sonido de potear
-                    Call SendData(SendTarget.ToPCArea, BotIndex, PrepareMessagePlayWave(SND_BEBER, .Pos.X, .Pos.Y))
-                   
-                    If .minVida > .maxVida Then .minVida = .maxVida
-                    
-                    'Uso la poción, seteo el interval
-                    .Intervalos.UseItemCount = (IA_USEOBJ / 40)
-                   
-                    Exit Sub
-                End If
-            End If
-           
-            'Si tenia la vida llena usa azules.
-           
-            If .minMana < .maxMana Then
-           
-                'Checkeo el intervalo.
-               
-                If .Intervalos.UseItemCount = 0 Then
-                
-                    Dim recuperoMana    As Long
-                    
-                    'Recupera un % de la mana.
-                    If .clase <> eIAClase.Mago Then
-                        recuperoMana = Porcentaje(.maxMana, 5)
-                    Else
-                        recuperoMana = Porcentaje(.maxMana, 3)
-                    End If
-                    
-                    'aumento el mana
-                    .minMana = .minMana + recuperoMana
-               
-                    'controlo el limite
-                    If .minMana > .maxMana Then .minMana = .maxMana
-               
-                'seteo el int
-                .Intervalos.UseItemCount = (IA_USEOBJ / 40)
-     
-                End If
-               
-                'Hacer una constante después, con esto hacemos un random
-                'Para que azulee y combee a la ves.
-                If RandomNumber(1, 4) < 4 Then Exit Sub
-            End If
-       
-        'Bueno si está acá es por que tenia la vida y mana llenas.
-         
+        'Intentamos potear, si lo conseguimo terminamos las acciones
+        If IA_Potea(BotIndex) = False Then Exit Sub
+        
+        '****************************************************************
+        'Llegados a este punto es por que tiene la Maná y la vida a Full
+        '****************************************************************
+        
         'Es cazador??
         If .clase = eIAClase.Cazador Then
            'Intervalo permite?
@@ -1415,7 +1477,7 @@ On Error GoTo Errhandler        '< maTih XD
            
            'Muere?
            If UserList(pIndex).Stats.MinHp <= 0 Then
-              UserDie pIndex
+              Call UserDie(pIndex)
               Call WriteConsoleMsg(pIndex, .Name & " Te ha matado!", FontTypeNames.FONTTYPE_FIGHT)
            End If
             
@@ -1443,7 +1505,7 @@ On Error GoTo Errhandler        '< maTih XD
            'Está al alcance de la víctima para un gole meele?
            Dim newBotHeading   As eHeading
            
-           If ia_PuedeMeele(.Pos, UserList(pIndex).Pos, newBotHeading) Then
+           If IA_PuedeMeele(.Pos, UserList(pIndex).Pos, newBotHeading) Then
                 'Acierta el golpe?
                 If ia_AciertaGolpe(pIndex) Then
                    'Antes que nada cambiamos el heading, si es válido.
@@ -1633,7 +1695,7 @@ On Error GoTo Errhandler        '< maTih XD
             
             'Check si muere.
             If UserList(pIndex).Stats.MinHp <= 0 Then
-                 UserDie pIndex
+                 Call UserDie(pIndex)
                  
                 'Era viajante y mató el usuario?, resteo el ui
                  If Not pIndex <> .ViajanteUser Then
@@ -1819,8 +1881,8 @@ Sub ia_UserDamage(ByVal spell As Byte, ByVal BotIndex As Byte, ByVal UserIndex A
        
         If IA_Bot(BotIndex).minVida <= 0 Then
             'Murió?
-            ia_EraseChar BotIndex, True
-            WriteConsoleMsg UserIndex, "Has matado ah " & IA_Bot(BotIndex).Name & ".", usedFont
+            Call IA_EraseChar(BotIndex, True)
+            Call WriteConsoleMsg(UserIndex, "Has matado ah " & IA_Bot(BotIndex).Name & ".", usedFont)
         End If
        
     End With
@@ -1861,7 +1923,7 @@ Sub ia_DamageHit(ByVal BotIndex As Byte, ByVal UserIndex As Integer)
            'UserList(UserIndex).AtacoViajante = 0
         End If
         
-        ia_EraseChar BotIndex, True
+        IA_EraseChar BotIndex, True
         
     End If
  
@@ -1876,29 +1938,9 @@ Sub ia_SendToBotArea(ByVal BotIndex As Byte, ByVal PackData As String)
     'Nueva versión del sub, más simple y diría que más práctica : P
      
     With IA_Bot(BotIndex)
-        'd3 ao, borro esto : p
-        
-        'con esto tenemos algo simple, cuando mandamos el send
-        'tobotarea, nos devuelve un array con los ui y el ping de cada
-        'uno, y flush_ping tiene el promedio :), despues solo nos
-        'queda comprobar si el usuario puede flushbuffear los datos
-        'y enviamos, sacrificamos memoria pero ganamos MUCHA conexión.
-        
-        'Dim flush_Ping      As Integer
-        'Dim arr_PingUsers() As Integer
-        
-        'Call modSendData.SendToAreaByPos(.Pos.map, .Pos.X, .Pos.Y, PackData, .GrupoID, flush_Ping)
-        
-        'Do While flush_Ping <> 0
-        '    If can_Update_Ping(arr_PingUsers(flush_Ping)) Then
-        '       Call flusH_buffer_to_base_Ping(arr_PingUsers(flush_Ping), flush_Ping, .GrupoID)
-        '    End If
-            
-        '    flush_Ping = flush_Ping - 1
-            
-        'Loop
         
         Call modSendData.SendToAreaByPos(.Pos.Map, .Pos.X, .Pos.Y, PackData)
+        
     End With
  
 End Sub
@@ -1961,7 +2003,7 @@ Errhandler:
  
 End Sub
  
-Sub ia_EraseChar(ByVal BotIndex As Byte, Optional ByVal killedbyUSER As Boolean = False)
+Sub IA_EraseChar(ByVal BotIndex As Byte, Optional ByVal killedbyUSER As Boolean = False)
  
     ' @designer     :  maTih.-
     ' @date         :  2012/02/01

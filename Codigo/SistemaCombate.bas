@@ -1170,7 +1170,7 @@ Public Sub UsuarioAtaca(ByVal UserIndex As Integer)
     Dim index     As Integer
 
     Dim AttackPos As WorldPos
-    Dim BOT_Index As Byte
+    Dim bot_Index As Byte
     
     'Check bow's interval
     If Not IntervaloPermiteUsarArcos(UserIndex, False) Then Exit Sub
@@ -1212,13 +1212,13 @@ Public Sub UsuarioAtaca(ByVal UserIndex As Integer)
         End If
         
         '¿Está el bot?
-        BOT_Index = MapData(AttackPos.Map, AttackPos.X, AttackPos.Y).BotIndex
+        bot_Index = MapData(AttackPos.Map, AttackPos.X, AttackPos.Y).BotIndex
         
-        If BOT_Index <> 0 Then
-            'Checkeo que esté invocado.
-            If IA_Bot(BOT_Index).Invocado Then
-                ia_DamageHit BOT_Index, UserIndex
-            End If
+        If bot_Index <> 0 Then
+           'Checkeo que esté invocado.
+           If ModBOTS.IA_Bot(bot_Index).Invocado Then
+                 ia_DamageHit bot_Index, UserIndex
+           End If
         End If
         
         index = MapData(AttackPos.Map, AttackPos.X, AttackPos.Y).UserIndex

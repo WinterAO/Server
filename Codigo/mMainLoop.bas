@@ -310,11 +310,10 @@ Public Sub GameTimer()
 
     Next iUserIndex
     
-    '<<<<Procesamo Bots>>>>>
-
+    'BOTS:
     For i = 1 To MAX_BOTS
     
-        If ia_Bot(i).Invocado Then Call ia_Action(i)
+        If IA_Bot(i).Invocado Then IA_Action i
     
     Next i
 

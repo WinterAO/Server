@@ -165,7 +165,7 @@ Begin VB.Form frmMain
          Top             =   1440
       End
       Begin VB.Timer TIMER_AI 
-         Interval        =   380
+         Interval        =   340
          Left            =   1680
          Top             =   1440
       End
@@ -813,7 +813,7 @@ Private Sub cmdApagarServidor_Click()
 End Sub
 
 Private Sub cmdCommand3_Click()
-    Call ia_Spawn(Ramx)
+    Call ModBOTS.ia_Spawn(Ramx)
 End Sub
 
 Private Sub cmdConfiguracion_Click()

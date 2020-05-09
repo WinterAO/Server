@@ -1220,22 +1220,45 @@ Sub LookatTile(ByVal UserIndex As Integer, _
             
                 End If
                 
+                '************************************************
+                'BOTS
+                '************************************************
                 If Y + 1 <= YMaxMapSize Then
                     .TargetBot = MapData(Map, X, Y).BotIndex
                     If Not .TargetBot <> 0 Then .TargetBot = MapData(Map, X, Y + 1).BotIndex
                     
-                    'Target the botName : D
+                    'Target del BOT
                     If .TargetBot <> 0 Then
-                        If ia_Bot(.TargetBot).Invocado Then
+                        If IA_Bot(.TargetBot).Invocado Then
+                            
+                            'Aqui le damos informacion sobre el estado de salud del bot.
+                            If IA_Bot(.TargetBot).minVida < (IA_Bot(.TargetBot).maxVida * 0.05) Then
+                                Stat = Stat & " Muerto)"
+                            ElseIf IA_Bot(.TargetBot).minVida < (IA_Bot(.TargetBot).maxVida * 0.1) Then
+                                Stat = Stat & " Casi muerto)"
+                            ElseIf IA_Bot(.TargetBot).minVida < (IA_Bot(.TargetBot).maxVida * 0.25) Then
+                                Stat = Stat & " Muy Malherido)"
+                            ElseIf IA_Bot(.TargetBot).minVida < (IA_Bot(.TargetBot).maxVida * 0.5) Then
+                                Stat = Stat & " Malherido)"
+                            ElseIf IA_Bot(.TargetBot).minVida < (IA_Bot(.TargetBot).maxVida * 0.75) Then
+                                Stat = Stat & " Herido)"
+                            ElseIf IA_Bot(.TargetBot).minVida < (IA_Bot(.TargetBot).maxVida) Then
+                                Stat = Stat & " Levemente Herido)"
+                            Else
+                                Stat = Stat & " Intacto)"
+                            End If
+                            
                             Dim tmp_Font  As FontTypeNames
                                
-                            If ia_Bot(.TargetBot).EsCriminal Then
+                            If IA_Bot(.TargetBot).EsCriminal Then
                                 tmp_Font = FontTypeNames.FONTTYPE_FIGHT
+                                Stat = Stat & " <Renegado>"
                             Else
                                 tmp_Font = FontTypeNames.FONTTYPE_CITIZEN
+                                Stat = Stat & " <Ciudadano>"
                             End If
                                
-                            Call WriteConsoleMsg(UserIndex, ia_Bot(.TargetBot).Name & " - " & "( " & ia_Bot(.TargetBot).clase & " ", tmp_Font)
+                            Call WriteConsoleMsg(UserIndex, IA_Bot(.TargetBot).Name & " (" & ListaClases(IA_Bot(.TargetBot).clase) & " " & ListaRazas(IA_Bot(.TargetBot).Raza) & " Nivel: " & IA_Bot(.TargetBot).Level & " | " & Stat, tmp_Font)
                         End If
                         .TargetBot = 0
                     End If
@@ -1283,7 +1306,7 @@ Sub LookatTile(ByVal UserIndex As Integer, _
 
                         If LenB(.DescRM) = 0 And .showName Then 'No tiene descRM y quiere que se vea su nombre.
                             If EsNewbie(TempCharIndex) Then
-                                Stat = Stat & " <NEWBIE>"
+                                Stat = Stat & " <Newbie>"
 
                             End If
                         
@@ -1303,9 +1326,9 @@ Sub LookatTile(ByVal UserIndex As Integer, _
 
                             'Aqui ponemos o no la descripcion si tiene
                             If Len(UserList(TempCharIndex).Desc) > 1 Then
-                                Stat = UserList(TempCharIndex).Name & " - " & UserList(TempCharIndex).Desc & " (" & ListaClases(UserList(TempCharIndex).clase) & " " & ListaRazas(UserList(TempCharIndex).raza) & Stat & "  " & " | "
+                                Stat = UserList(TempCharIndex).Name & " - " & UserList(TempCharIndex).Desc & " (" & ListaClases(UserList(TempCharIndex).clase) & " " & ListaRazas(UserList(TempCharIndex).Raza) & Stat & "  " & " | "
                             Else
-                                Stat = UserList(TempCharIndex).Name & " (" & ListaClases(UserList(TempCharIndex).clase) & " " & ListaRazas(UserList(TempCharIndex).raza) & Stat & " " & " | "
+                                Stat = UserList(TempCharIndex).Name & " (" & ListaClases(UserList(TempCharIndex).clase) & " " & ListaRazas(UserList(TempCharIndex).Raza) & Stat & " " & " | "
                             End If
 
                             'Aqui le damos informacion sobre el estado de salud del pj.
@@ -1353,10 +1376,10 @@ Sub LookatTile(ByVal UserIndex As Integer, _
                                     End If
                                 
                                 ElseIf criminal(TempCharIndex) Then
-                                    Stat = Stat & " <CRIMINAL>"
+                                    Stat = Stat & " <Renegado>"
                                     ft = FontTypeNames.FONTTYPE_CRIMINAL
                                 Else
-                                    Stat = Stat & " <CIUDADANO>"
+                                    Stat = Stat & " <Ciudadano>"
                                     ft = FontTypeNames.FONTTYPE_CITIZEN
 
                                 End If
@@ -1610,13 +1633,13 @@ Errhandler:
 End Sub
 
 Function FindDirection(Pos As WorldPos, Target As WorldPos) As eHeading
-    '***************************************************
-    'Author: Unknown
-    'Last Modification: -
-    'Devuelve la direccion en la cual el target se encuentra
-    'desde pos, 0 si la direc es igual
-    '*****************************************************************
-
+'***************************************************
+'Author: Unknown
+'Last Modification: - Kshamenk 23/2/11
+'Devuelve la direccion en la cual el target se encuentra
+'desde pos, 0 si la direc es igual o hay un bloqueo
+'*****************************************************************
+ 
     Dim X As Integer
     Dim Y As Integer
     
@@ -1626,48 +1649,56 @@ Function FindDirection(Pos As WorldPos, Target As WorldPos) As eHeading
     'NE
     If Sgn(X) = -1 And Sgn(Y) = 1 Then
         FindDirection = IIf(RandomNumber(0, 1), eHeading.NORTH, eHeading.EAST)
+        If Not LegalPos(Pos.Map, Pos.X - Sgn(X), Pos.Y - Sgn(Y)) Then FindDirection = 0
         Exit Function
     End If
     
     'NW
     If Sgn(X) = 1 And Sgn(Y) = 1 Then
         FindDirection = IIf(RandomNumber(0, 1), eHeading.WEST, eHeading.NORTH)
+        If Not LegalPos(Pos.Map, Pos.X - Sgn(X), Pos.Y - Sgn(Y)) Then FindDirection = 0
         Exit Function
     End If
     
     'SW
     If Sgn(X) = 1 And Sgn(Y) = -1 Then
         FindDirection = IIf(RandomNumber(0, 1), eHeading.WEST, eHeading.SOUTH)
+        If Not LegalPos(Pos.Map, Pos.X - Sgn(X), Pos.Y - Sgn(Y)) Then FindDirection = 0
         Exit Function
     End If
     
     'SE
     If Sgn(X) = -1 And Sgn(Y) = -1 Then
         FindDirection = IIf(RandomNumber(0, 1), eHeading.SOUTH, eHeading.EAST)
+        If Not LegalPos(Pos.Map, Pos.X - Sgn(X), Pos.Y - Sgn(Y)) Then FindDirection = 0
         Exit Function
     End If
     
     'Sur
     If Sgn(X) = 0 And Sgn(Y) = -1 Then
         FindDirection = eHeading.SOUTH
+        If Not LegalPos(Pos.Map, Pos.X - Sgn(X), Pos.Y - Sgn(Y)) Then FindDirection = 0
         Exit Function
     End If
     
     'norte
     If Sgn(X) = 0 And Sgn(Y) = 1 Then
         FindDirection = eHeading.NORTH
+        If Not LegalPos(Pos.Map, Pos.X - Sgn(X), Pos.Y - Sgn(Y)) Then FindDirection = 0
         Exit Function
     End If
     
     'oeste
     If Sgn(X) = 1 And Sgn(Y) = 0 Then
         FindDirection = eHeading.WEST
+        If Not LegalPos(Pos.Map, Pos.X - Sgn(X), Pos.Y - Sgn(Y)) Then FindDirection = 0
         Exit Function
     End If
     
     'este
     If Sgn(X) = -1 And Sgn(Y) = 0 Then
         FindDirection = eHeading.EAST
+        If Not LegalPos(Pos.Map, Pos.X - Sgn(X), Pos.Y - Sgn(Y)) Then FindDirection = 0
         Exit Function
     End If
     
@@ -1676,7 +1707,7 @@ Function FindDirection(Pos As WorldPos, Target As WorldPos) As eHeading
         FindDirection = 0
         Exit Function
     End If
-
+ 
 End Function
 
 Public Function ItemNoEsDeMapa(ByVal index As Integer) As Boolean

@@ -460,7 +460,7 @@ Public Sub CargarHechizos()
     '
     '###################################################
 
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
     If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando Hechizos."
     
@@ -582,7 +582,7 @@ Public Sub CargarHechizos()
     
     Exit Sub
 
-ErrHandler:
+Errhandler:
     MsgBox "Error cargando hechizos.dat " & Err.Number & ": " & Err.description
  
 End Sub
@@ -1034,7 +1034,7 @@ Sub LoadOBJData()
 
     'Call LogTarea("Sub LoadOBJData")
 
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
     If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando base de datos de los objetos."
     
@@ -1335,7 +1335,7 @@ Sub LoadOBJData()
     If frmMain.Visible Then frmMain.txtStatus.Text = Date & " " & time & " - Se cargo base de datos de los objetos. Operacion Realizada con exito."
     
     Exit Sub
-ErrHandler:
+Errhandler:
     MsgBox "error cargando objetos " & Err.Number & ": " & Err.description
 
 End Sub
