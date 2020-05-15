@@ -719,52 +719,6 @@ Private Sub CargarObjetosIniciales()
 
 End Sub
 
-Sub CreateNewAccount(ByVal UserIndex As Integer, _
-                     ByRef UserName As String, _
-                     ByRef Password As String)
-
-    '*************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last modified: 12/10/2018
-    'Crea una nueva cuenta
-    '*************************************************
-    'SHA256
-    Dim Salt    As String
-
-    Dim oSHA256 As CSHA256
-
-    Set oSHA256 = New CSHA256
-
-    If Not CheckMailString(UserName) Or LenB(UserName) = 0 Then
-        Call WriteErrorMsg(UserIndex, "Nombre invalido.")
-        Exit Sub
-
-    End If
-
-    'Existe el personaje?
-    If CuentaExiste(UserName) Then
-        Call WriteErrorMsg(UserIndex, "Ya existe la cuenta.")
-        Exit Sub
-
-    End If
-        
-    'Aca Guardamos y Hasheamos el password + Salt
-    Salt = RandomString(10)
-
-    Call SaveNewAccount(UserName, oSHA256.SHA256(Password & Salt), Salt)
-
-    'Aqui solo vamos a hacer un request a los endpoints de la aplicacion en Node.js
-    'el repositorio para hacer funcionar esto, es este: https://github.com/ao-libre/ao-api-server
-    'Si no tienen interes en usarlo pueden desactivarlo en el Server.ini
-    If ConexionAPI Then
-        'Pasamos UserName tambien como email, ya que son lo mismo.... :(
-        Call ApiEndpointSendWelcomeEmail(UserName, Password, UserName)
-    End If
-
-    Call ConnectAccount(UserIndex, UserName, Password)
-
-End Sub
-
 Sub ConnectAccount(ByVal UserIndex As Integer, _
                    ByRef UserName As String, _
                    ByRef Password As String)

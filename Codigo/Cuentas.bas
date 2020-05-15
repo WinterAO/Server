@@ -26,7 +26,7 @@ Public Function GetUserAmountOfPunishments(ByVal UserName As String) As Integer
 
 End Function
 
-Public Sub SendUserPunishments(ByVal Userindex As Integer, _
+Public Sub SendUserPunishments(ByVal UserIndex As Integer, _
                                ByVal UserName As String, _
                                ByVal Count As Integer)
 
@@ -36,7 +36,7 @@ Public Sub SendUserPunishments(ByVal Userindex As Integer, _
     'Writes a console msg for each punishment
     '***************************************************
 
-    Call SendUserPunishmentsDatabase(Userindex, UserName, Count)
+    Call SendUserPunishmentsDatabase(UserIndex, UserName, Count)
 
 End Sub
 
@@ -369,22 +369,3 @@ Public Sub SaveUserReenlists(ByVal UserName As String, ByVal Reenlists As Byte)
     Call SaveUserReenlistsDatabase(UserName, Reenlists)
 
 End Sub
-
-Public Sub SaveNewAccount(ByVal UserName As String, _
-                          ByVal Password As String, _
-                          ByVal Salt As String)
-
-    '***************************************************
-    'Autor: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 12/10/2018
-    'Saves a new account
-    '***************************************************
-    Dim Hash As String
-
-    Hash = RandomString(32)
-
-    Call SaveNewAccountDatabase(UserName, Password, Salt, Hash)
-
-
-End Sub
-

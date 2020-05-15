@@ -11,25 +11,6 @@ Private XmlHttp As Object
 Private Endpoint As String
 Private Parameters As String
 
-Public Sub ApiEndpointBackupCharfiles()
-    'Este endpoint hace una copia de todos los charfiles a una base de datos mysql
-    'No todos los parametros estan incluidos, es mas que nada para usar de rankings
-    
-    Endpoint = ApiUrlServer & "/api/v1/charfiles/backupcharfiles"
-    
-    Call SendGETRequest(Endpoint)
-End Sub
-
-Public Sub ApiEndpointBackupCuentas()
-    'Este endpoint hace una copia de todos las cuentas a una base de datos mysql
-    'Es mas que nada para poder hacer cosas con los usuarios
-    'De forma mas facil en javascript
-    
-    Endpoint = ApiUrlServer & "/api/v1/accounts/backupaccountfiles"
-    
-    Call SendGETRequest(Endpoint)
-End Sub
-
 Public Sub ApiEndpointBackupLogs()
     'Este endpoint hace una copia de todos los logs a una base de datos mysql
     
@@ -67,11 +48,11 @@ Public Sub ApiEndpointSendResetPasswordAccountEmail(ByVal Email As String, ByVal
     Call SendPOSTRequest(Endpoint, Parameters)
 End Sub
 
-Public Sub ApiEndpointSendUserConnectedMessageDiscord(ByVal UserName As String, ByVal desc As String, ByVal EsCriminal As Boolean, ByVal Clase As String)
+Public Sub ApiEndpointSendUserConnectedMessageDiscord(ByVal UserName As String, ByVal Desc As String, ByVal EsCriminal As Boolean, ByVal clase As String)
     'Este endpoint envia un mensaje al chat avisando que alguien se conecto
 
     Endpoint = ApiUrlServer & "/api/v1/discord/sendConnectedMessage"
-    Parameters = "userName=" & UserName & "&desc=" & desc & "&esCriminal=" & EsCriminal & "&clase=" & Clase
+    Parameters = "userName=" & UserName & "&desc=" & Desc & "&esCriminal=" & EsCriminal & "&clase=" & clase
 
     Call SendPOSTRequest(Endpoint, Parameters)
 End Sub
@@ -107,15 +88,15 @@ Public Sub ApiEndpointSendNewGuildCreatedMessageDiscord(ByVal Message As String,
     'Este endpoint envia un mensaje al chat avisando que se creo un clan
 
     Endpoint = ApiUrlServer & "/api/v1/discord/sendNewGuildCreated"
-    Parameters = "message=" & Message & "&desc=" & Desc & "&guildname=" & Guildname & "&site=" & Site
+    Parameters = "message=" & Message & "&desc=" & Desc & "&guildname=" & GuildName & "&site=" & Site
 
     Call SendPOSTRequest(Endpoint, Parameters)
 End Sub
 
-Public Sub ApiEndpointSendCustomCharacterMessageDiscord(ByVal Chat As String, ByVal Name As String, ByVal desc As String)
+Public Sub ApiEndpointSendCustomCharacterMessageDiscord(ByVal Chat As String, ByVal Name As String, ByVal Desc As String)
     'Este endpoint envia un mensaje al discord desde dentro del juego por un usuario con el comando /discord
     Endpoint = ApiUrlServer & "/api/v1/discord/sendCustomCharacterMessageDiscord"
-    Parameters = "userName=" & Name & "&desc=" & desc & "&chat=" & Chat
+    Parameters = "userName=" & Name & "&desc=" & Desc & "&chat=" & Chat
 
     Call SendPOSTRequest(Endpoint, Parameters)
 End Sub
@@ -139,7 +120,6 @@ Public Sub ApiEndpointSendCreateNewCharacterMessageDiscord(ByVal Name As String)
     Call SendPOSTRequest(Endpoint, Parameters)
 End Sub
 
-
 Private Sub SendPOSTRequest(ByVal Endpoint As String, ByVal Parameters As String)
 
 On Error GoTo ErrorHandler
@@ -151,8 +131,8 @@ On Error GoTo ErrorHandler
         
     'Por alguna razon tengo que castearlo a string, sino no funciona, la verdad no tengo idea por que ya que la variable es String
     XmlHttp.send CStr(Parameters)
-	
-	Set XmlHttp = Nothing
+        
+        Set XmlHttp = Nothing
 
 ErrorHandler:
 
@@ -170,8 +150,8 @@ On Error GoTo ErrorHandler
     XmlHttp.Open "GET", Endpoint, True
     XmlHttp.setRequestHeader "Content-Type", "application/x-www-form-urlencoded"
     XmlHttp.send
-	
-	Set XmlHttp = Nothing
+        
+        Set XmlHttp = Nothing
 
 ErrorHandler:
 

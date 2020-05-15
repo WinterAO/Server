@@ -2620,40 +2620,6 @@ ErrorHandler:
 
 End Sub
 
-Public Sub SaveNewAccountDatabase(ByVal UserName As String, _
-                                  ByVal Password As String, _
-                                  ByVal Salt As String, _
-                                  ByVal Hash As String)
-
-    '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 12/10/2018
-    '***************************************************
-    On Error GoTo ErrorHandler
-
-    Dim query As String
-
-    Call Database_Connect
-
-    query = "INSERT INTO account SET "
-    query = query & "username = '" & UCase$(UserName) & "', "
-    query = query & "password = '" & Password & "', "
-    query = query & "salt = '" & Salt & "', "
-    query = query & "hash = '" & Hash & "', "
-    query = query & "date_created = NOW(), "
-    query = query & "date_last_login = NOW(),"
-    query = query & "gemas = 0;"
-
-    Database_Connection.Execute (query)
-
-    Call Database_Close
-
-    Exit Sub
-ErrorHandler:
-    Call LogDatabaseError("Error in SaveNewAccountDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
-
-End Sub
-
 Public Sub SaveAccountLastLoginDatabase(ByVal UserName As String, ByVal UserIP As String)
 
     '***************************************************

@@ -304,23 +304,22 @@ Private Enum ClientPacketID
     Consultation = 128
     moveItem = 129
     LoginExistingAccount = 130  'CHOTS | Accounts
-    LoginNewAccount = 131       'CHOTS | Accounts
-    CentinelReport = 132
-    Ecvc = 133
-    Acvc = 134
-    IrCvc = 135
-    DragAndDropHechizos = 136
-    Quest = 137                  '/QUEST
-    QuestAccept = 138
-    QuestListRequest = 139
-    QuestDetailsRequest = 140
-    QuestAbandon = 141
-    CambiarContrasena = 142
-    FightSend = 143
-    FightAccept = 144
-    CloseGuild = 145
-    Discord = 146
-    DeleteChar = 147
+    CentinelReport
+    Ecvc
+    Acvc
+    IrCvc
+    DragAndDropHechizos
+    Quest                       '/QUEST
+    QuestAccept
+    QuestListRequest
+    QuestDetailsRequest
+    QuestAbandon
+    CambiarContrasena
+    FightSend
+    FightAccept
+    CloseGuild
+    Discord
+    DeleteChar
     CraftsmanCreate
     AddAmigos
     DelAmigos
@@ -428,7 +427,6 @@ Public Function HandleIncomingData(ByVal UserIndex As Integer) As Boolean
         If Not (packetID = ClientPacketID.ThrowDices _
                 Or packetID = ClientPacketID.LoginExistingChar _
                 Or packetID = ClientPacketID.LoginNewChar _
-                Or packetID = ClientPacketID.LoginNewAccount _
                 Or packetID = ClientPacketID.LoginExistingAccount _
                 Or packetID = ClientPacketID.DeleteChar _
                 Or packetID = ClientPacketID.CambiarContrasena) Then
@@ -852,9 +850,6 @@ Public Function HandleIncomingData(ByVal UserIndex As Integer) As Boolean
 
         Case ClientPacketID.LoginExistingAccount
             Call HandleLoginExistingAccount(UserIndex)
-
-        Case ClientPacketID.LoginNewAccount
-            Call HandleLoginNewAccount(UserIndex)
         
         Case ClientPacketID.CentinelReport
             Call HandleCentinelReport(UserIndex)
@@ -22691,76 +22686,6 @@ Private Sub HandleLoginExistingAccount(ByVal UserIndex As Integer)
     Else
         Call ConnectAccount(UserIndex, UserName, Password)
 
-    End If
-
-    'If we got here then packet is complete, copy data back to original queue
-    Call UserList(UserIndex).incomingData.CopyBuffer(buffer)
-    
-Errhandler:
-
-    Dim Error As Long
-
-    Error = Err.Number
-
-    On Error GoTo 0
-    
-    'Destroy auxiliar buffer
-    Set buffer = Nothing
-    
-    If Error <> 0 Then Err.Raise Error
-
-End Sub
-
-''
-' Handles the "LoginNewAccount" message.
-'
-' @param    userIndex The index of the user sending the message.
-
-Private Sub HandleLoginNewAccount(ByVal UserIndex As Integer)
-
-    '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 10/05/2019
-    '
-    'CHOTS: Fix a bug reported by @juanmz
-    '***************************************************
-    If UserList(UserIndex).incomingData.Length < 6 Then
-        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
-        Exit Sub
-
-    End If
-
-    On Error GoTo Errhandler
-
-    'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
-    Dim buffer As clsByteQueue
-    Set buffer = New clsByteQueue
-
-    Call buffer.CopyBuffer(UserList(UserIndex).incomingData)
-    
-    'Remove packet ID
-    Call buffer.ReadByte
-
-    Dim UserName As String
-    Dim Password As String
-    Dim version  As String
-
-    UserName = buffer.ReadASCIIString()
-    Password = buffer.ReadASCIIString()
-
-    If CuentaExiste(UserName) Then
-        Call WriteErrorMsg(UserIndex, "La cuenta ya existe.")
-        Call CloseSocket(UserIndex)
-        Exit Sub
-    End If
-
-    'Convert version number to string
-    version = CStr(buffer.ReadByte()) & "." & CStr(buffer.ReadByte()) & "." & CStr(buffer.ReadByte())
-
-    If Not VersionOK(version) Then
-        Call WriteErrorMsg(UserIndex, "Esta version del juego es obsoleta, la version correcta es la " & ULTIMAVERSION & ". La misma se encuentra disponible en www.argentumonline.com.ar")
-    Else
-        Call CreateNewAccount(UserIndex, UserName, Password)
     End If
 
     'If we got here then packet is complete, copy data back to original queue

@@ -642,8 +642,6 @@ Public Sub DoBackUp()
     'el repositorio para hacer funcionar esto, es este: https://github.com/ao-libre/ao-api-server
     'Si no tienen interes en usarlo pueden desactivarlo en el Server.ini
     If ConexionAPI Then
-        Call ApiEndpointBackupCharfiles
-        Call ApiEndpointBackupCuentas
         Call ApiEndpointBackupLogs
         Call ApiEndpointSendWorldSaveMessageDiscord
     End If
