@@ -4707,7 +4707,7 @@ Private Sub HandleUserCommerceOffer(ByVal UserIndex As Integer)
 
             If .Invent.MochilaEqpSlot > 0 Then
                 If .Invent.MochilaEqpSlot = Slot Then
-                    Call WriteCommerceChat(UserIndex, "No puedes vender tu mochila mientras la estes usando.", FontTypeNames.FONTTYPE_TALK)
+                    Call WriteCommerceChat(UserIndex, "No puedes vender tu alforja o mochila mientras la estes usando.", FontTypeNames.FONTTYPE_TALK)
                     Exit Sub
 
                 End If

@@ -460,6 +460,14 @@ Sub DropObj(ByVal UserIndex As Integer, _
                 Call WriteConsoleMsg(UserIndex, "No podes tirar tu montura mientras la estas usando.", FontTypeNames.FONTTYPE_INFO)
                 Exit Sub
             End If
+            
+            'Validacion para que no podamos tirar nuestra mochila mientras la usamos.
+            If .Invent.MochilaEqpSlot > 0 Then
+                If .Invent.MochilaEqpSlot = Slot Then
+                    Call WriteConsoleMsg(UserIndex, "No puedes tirar tu alforja o mochila mientras la estes usando.", FontTypeNames.FONTTYPE_TALK)
+                    Exit Sub
+                End If
+            End If
         
             DropObj.ObjIndex = .Invent.Object(Slot).ObjIndex
         
@@ -1355,7 +1363,7 @@ Private Function CheckRazaUsaRopa(ByVal UserIndex As Integer, _
     With UserList(UserIndex)
 
         'Verifica si la raza puede usar la ropa
-        If .raza = eRaza.Humano Or .raza = eRaza.Elfo Or .raza = eRaza.Drow Then
+        If .Raza = eRaza.Humano Or .Raza = eRaza.Elfo Or .Raza = eRaza.Drow Then
             CheckRazaUsaRopa = (ObjData(ItemIndex).RazaEnana = 0)
         Else
             CheckRazaUsaRopa = (ObjData(ItemIndex).RazaEnana = 1)
@@ -1363,7 +1371,7 @@ Private Function CheckRazaUsaRopa(ByVal UserIndex As Integer, _
         End If
         
         'Solo se habilita la ropa exclusiva para Drows por ahora. Pablo (ToxicWaste)
-        If (.raza <> eRaza.Drow) And ObjData(ItemIndex).RazaDrow Then
+        If (.Raza <> eRaza.Drow) And ObjData(ItemIndex).RazaDrow Then
             CheckRazaUsaRopa = False
 
         End If
