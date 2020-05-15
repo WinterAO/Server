@@ -58,7 +58,7 @@ Sub DarCuerpo(ByVal UserIndex As Integer)
     Dim UserGenero As Byte
 
     UserGenero = UserList(UserIndex).Genero
-    UserRaza = UserList(UserIndex).raza
+    UserRaza = UserList(UserIndex).Raza
 
     Select Case UserGenero
 
@@ -388,7 +388,7 @@ Sub ConnectNewUser(ByVal UserIndex As Integer, _
     
         .Name = Name
         .clase = UserClase
-        .raza = UserRaza
+        .Raza = UserRaza
         .Genero = UserSexo
         .Hogar = eCiudad.cRamx
 
@@ -791,7 +791,6 @@ Sub ConnectAccount(ByVal UserIndex As Integer, _
     If Not CuentaExiste(UserName) Then
         Call WriteErrorMsg(UserIndex, "No existe la cuenta.")
         Exit Sub
-
     End If
         
     'Aca Guardamos y Hasheamos el password + Salt
@@ -802,7 +801,13 @@ Sub ConnectAccount(ByVal UserIndex As Integer, _
         Call WriteErrorMsg(UserIndex, "Password incorrecto.")
         Call CloseSocket(UserIndex)
         Exit Sub
+    End If
 
+    '¿La cuenta esta verificada?
+    If Not CuentaVerificadaDatabase(UserName) Then
+        Call WriteErrorMsg(UserIndex, "La cuenta aun no ha sido verificada, por favor revise su email.")
+        Call CloseSocket(UserIndex)
+        Exit Sub
     End If
 
     'Aqui solo vamos a hacer un request a los endpoints de la aplicacion en Node.js
@@ -1636,7 +1641,7 @@ Sub ResetBasicUserInfo(ByVal UserIndex As Integer)
         .Email = vbNullString
         .Genero = 0
         .Hogar = 0
-        .raza = 0
+        .Raza = 0
         
         .PartyIndex = 0
         .PartySolicitud = 0
