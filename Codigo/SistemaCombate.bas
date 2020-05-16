@@ -195,12 +195,20 @@ Public Function UserImpactoNpc(ByVal UserIndex As Integer, _
 
     Dim ProbExito   As Long
     
+    Dim MunicionObjIndex    As Integer
+    
     Arma = UserList(UserIndex).Invent.WeaponEqpObjIndex
     
     If Arma > 0 Then 'Usando un arma
         If ObjData(Arma).proyectil = 1 Then
             PoderAtaque = PoderAtaqueProyectil(UserIndex)
             Skill = eSkill.Proyectiles
+            
+            MunicionObjIndex = UserList(UserIndex).Invent.MunicionEqpObjIndex
+            'Tiene munición?
+            If MunicionObjIndex <> 0 Then
+                Call WriteProyectil(UserIndex, UserList(UserIndex).Char.CharIndex, Npclist(NpcIndex).Char.CharIndex, ObjData(MunicionObjIndex).GrhIndex)
+            End If
         Else
             PoderAtaque = PoderAtaqueArma(UserIndex)
             Skill = eSkill.Armas
@@ -483,12 +491,16 @@ Public Sub UserDanoNpc(ByVal UserIndex As Integer, ByVal NpcIndex As Integer)
         
         Call WriteMultiMessage(UserIndex, eMessages.UserHitNPC, dano)
         Call CalcularDarExp(UserIndex, NpcIndex, dano)
-        Call EventosDano(UserIndex, NpcIndex, dano)
-        .Stats.MinHp = .Stats.MinHp - dano
         
-        'Renderizo dano en render
-        Call SendData(SendTarget.ToNPCArea, NpcIndex, PrepareMessageCreateFX(.Char.CharIndex, FXSANGRE, 0))
-        Call SendData(SendTarget.ToNPCArea, NpcIndex, PrepareMessageCreateDamage(.Pos.X, .Pos.Y, dano, DAMAGE_NORMAL))
+        'Si el NPC es un Dummy no aplicamos el daño
+        If Not .NPCtype = eNPCType.dummy Then
+            Call EventosDano(UserIndex, NpcIndex, dano)
+            .Stats.MinHp = .Stats.MinHp - dano
+        
+            'Renderizo dano en render
+            Call SendData(SendTarget.ToNPCArea, NpcIndex, PrepareMessageCreateFX(.Char.CharIndex, FXSANGRE, 0))
+            Call SendData(SendTarget.ToNPCArea, NpcIndex, PrepareMessageCreateDamage(.Pos.X, .Pos.Y, dano, DAMAGE_NORMAL))
+        End If
         
         If .Stats.MinHp > 0 Then
 
@@ -1311,6 +1323,7 @@ Public Function UsuarioImpacto(ByVal AtacanteIndex As Integer, _
         If .Invent.EscudoEqpObjIndex > 0 Then
             UserPoderEvasionEscudo = PoderEvasionEscudo(VictimaIndex)
             UserPoderEvasion = UserPoderEvasion + UserPoderEvasionEscudo
+            Call WriteProyectil(AtacanteIndex, UserList(AtacanteIndex).Char.CharIndex, .Char.CharIndex, ObjData(UserList(AtacanteIndex).Invent.MunicionEqpObjIndex).GrhIndex)
         Else
             UserPoderEvasionEscudo = 0
 

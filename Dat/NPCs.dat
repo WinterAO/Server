@@ -18,6 +18,7 @@ TODOS LOS NPC CON RETARDO Y WORLDBOSS TIENEN QUE TENER PosOrig
 10 ====== Clan Praetoriano
 11 ====== Gobernador
 12 ====== WorldBoss
+13 ====== Dummys
 
 ##############################################
 ############## EFECTOS DE NPC ################
@@ -60,9 +61,6 @@ NPCS QUESTS
 ##############################################
 
 167 a 499
-570
-571
-572
 580
 581
 937
@@ -6972,6 +6970,83 @@ NROITEMS=5
 Drop2=12-3500 'Oro (Poner Mochila de Viajero despues)
 Drop3=474-1 'Barca
 Drop4=475-1 'Galera
+
+################# DUMMY ######################
+
+[NPC570]
+Name=Dummy
+NpcType=13
+Head=0
+Heading=3
+Body=630
+Movement=1
+AguaValida=0
+Attackable=1
+ReSpawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=0
+MinHP=7000
+MaxHP=7000
+MaxHIT=0
+MinHIT=0
+DEF=0
+PoderAtaque=0
+PoderEvasion=0
+Snd2=115
+BackUp=0
+
+[NPC571]
+Name=Dummy
+NpcType=13
+Head=0
+Heading=2
+Body=630
+Movement=1
+AguaValida=0
+Attackable=1
+ReSpawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=0
+MinHP=7000
+MaxHP=7000
+MaxHIT=0
+MinHIT=0
+DEF=0
+PoderAtaque=0
+PoderEvasion=0
+Snd2=115
+BackUp=0
+
+[NPC572]
+Name=Dummy
+NpcType=13
+Head=0
+Heading=1
+Body=630
+Movement=1
+AguaValida=0
+Attackable=1
+ReSpawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=0
+MinHP=7000
+MaxHP=7000
+MaxHIT=0
+MinHIT=0
+DEF=0
+PoderAtaque=0
+PoderEvasion=0
+Snd2=115
+BackUp=0
 
 ############################################
 

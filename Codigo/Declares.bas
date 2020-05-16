@@ -505,6 +505,7 @@ Public Enum eNPCType
     Pretoriano = 10
     Gobernador = 11
     WorldBoss = 12
+    dummy = 13
 
 End Enum
 

@@ -44,3 +44,14 @@ el che
 com
 testa
 NADIE
+paladin
+cazador
+brujo
+mago
+asesino
+loruik
+gallego
+gallegoputo
+lorwik
+clerigo
+trabajador
