@@ -333,8 +333,28 @@ Sub ConnectNewUser(ByVal UserIndex As Integer, _
     '12/10/2018: CHOTS - Sistema de cuentas
     '*************************************************
 
+    Dim i As Byte
+    Dim Suma As Byte
+    
     With UserList(UserIndex)
-
+        
+        '¿Intentaron hackear los atributos?
+        For i = 1 To NUMATRIBUTOS
+            If .Stats.UserAtributos(i) > 18 Then
+                Call WriteErrorMsg(UserIndex, "Error en la asignacion de atributos, vuelva a asignarlos.")
+                Exit Sub
+            End If
+            
+            'Vamos sumando todos los atributos para luego comprobarlos
+            Suma = Suma + .Stats.UserAtributos(i)
+        Next i
+        
+        Debug.Print "asdasd: " & Suma
+        If Suma <> 70 Then
+            Call WriteErrorMsg(UserIndex, "Error en la asignacion de atributos, vuelva a asignarlos.")
+            Exit Sub
+        End If
+        
         If Not AsciiValidos(Name) Or LenB(Name) = 0 Then
             Call WriteErrorMsg(UserIndex, "Nombre invalido.")
             Exit Sub

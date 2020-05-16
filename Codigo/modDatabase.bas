@@ -1875,6 +1875,38 @@ ErrorHandler:
 
 End Function
 
+Public Function GetCountUserAccount(ByVal HashAccount As String) As Byte
+
+    '***************************************************
+    'Author: Lorwik
+    'Last Modification: 17/05/2020
+    '***************************************************
+    On Error GoTo ErrorHandler
+
+    Dim query As String
+
+    Call Database_Connect
+
+    query = "SELECT COUNT(*) FROM usuario WHERE deleted = 0 and account_id = (SELECT id FROM account WHERE hash = '" & HashAccount & "');"
+
+    Set Database_RecordSet = Database_Connection.Execute(query)
+
+    If Database_RecordSet.BOF Or Database_RecordSet.EOF Then
+        GetCountUserAccount = 0
+        Exit Function
+
+    End If
+
+    GetCountUserAccount = val(Database_RecordSet.Fields(0).Value)
+    Set Database_RecordSet = Nothing
+    Call Database_Close
+
+    Exit Function
+ErrorHandler:
+    Call LogDatabaseError("Error in GetUserTrainingTimeDatabase: " & HashAccount & ". " & Err.Number & " - " & Err.description)
+
+End Function
+
 Public Function UserBelongsToRoyalArmyDatabase(ByVal UserName As String) As Boolean
 
     '***************************************************

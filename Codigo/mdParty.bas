@@ -113,6 +113,7 @@ Public Function PuedeCrearParty(ByVal UserIndex As Integer) As Boolean
         'staff members aren't allowed to party anyone.
         Call WriteConsoleMsg(UserIndex, "Los miembros del staff no pueden crear partys!", FontTypeNames.FONTTYPE_PARTY)
         PuedeCrearParty = False
+        
     ElseIf UserList(UserIndex).flags.Muerto = 1 Then
         Call WriteConsoleMsg(UserIndex, "Estas muerto!!", FontTypeNames.FONTTYPE_PARTY)
         PuedeCrearParty = False
