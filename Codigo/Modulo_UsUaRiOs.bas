@@ -133,7 +133,7 @@ Public Sub RevivirUsuario(ByVal UserIndex As Integer)
 
         End If
         
-        Call ChangeUserChar(UserIndex, .Char.Body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim)
+        Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim)
         Call WriteUpdateUserStats(UserIndex)
 
     End With
@@ -284,7 +284,7 @@ Public Sub ToggleBoatBody(ByVal UserIndex As Integer)
             
         End If
         
-        .Char.Body = NewBody
+        .Char.body = NewBody
         .Char.ShieldAnim = NingunEscudo
         .Char.WeaponAnim = NingunArma
         .Char.CascoAnim = NingunCasco
@@ -305,7 +305,7 @@ Public Sub ToggleMonturaBody(ByVal UserIndex As Integer)
         
         If .Invent.MonturaObjIndex = 0 Then Exit Sub
  
-        .Char.Body = ObjData(.Invent.MonturaObjIndex).Ropaje
+        .Char.body = ObjData(.Invent.MonturaObjIndex).Ropaje
         .Char.ShieldAnim = NingunEscudo
         .Char.WeaponAnim = NingunArma
 
@@ -314,7 +314,7 @@ Public Sub ToggleMonturaBody(ByVal UserIndex As Integer)
 End Sub
 
 Public Sub ChangeUserChar(ByVal UserIndex As Integer, _
-                          ByVal Body As Integer, _
+                          ByVal body As Integer, _
                           ByVal Head As Integer, _
                           ByVal heading As Byte, _
                           ByVal Arma As Integer, _
@@ -327,14 +327,14 @@ Public Sub ChangeUserChar(ByVal UserIndex As Integer, _
     '
     '***************************************************
     With UserList(UserIndex).Char
-        .Body = Body
+        .body = body
         .Head = Head
         .heading = heading
         .WeaponAnim = Arma
         .ShieldAnim = Escudo
         .CascoAnim = Casco
         
-        Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageCharacterChange(Body, Head, heading, .CharIndex, Arma, Escudo, .FX, .loops, Casco))
+        Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageCharacterChange(body, Head, heading, .CharIndex, Arma, Escudo, .FX, .loops, Casco))
         Call SendData(SendTarget.ToPCAreaButIndex, UserIndex, PrepareMessageHeadingChange(heading, .CharIndex))
 
     End With
@@ -485,13 +485,13 @@ Public Sub RefreshCharStatus(ByVal UserIndex As Integer)
         'Si esta navengando, se cambia la barca.
         If .flags.Navegando Then
             If .flags.Muerto = 1 Then
-                .Char.Body = iFragataFantasmal
+                .Char.body = iFragataFantasmal
             Else
                 Call ToggleBoatBody(UserIndex)
 
             End If
             
-            Call ChangeUserChar(UserIndex, .Char.Body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim)
+            Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim)
 
         End If
         
@@ -618,7 +618,7 @@ Public Sub MakeUserChar(ByVal toMap As Boolean, _
 
                 End If
             
-                Call WriteCharacterCreate(sndIndex, .Char.Body, .Char.Head, .Char.heading, .Char.CharIndex, X, Y, .Char.WeaponAnim, .Char.ShieldAnim, .Char.FX, 999, .Char.CascoAnim, UserName, NickColor, Privileges)
+                Call WriteCharacterCreate(sndIndex, .Char.body, .Char.Head, .Char.heading, .Char.CharIndex, X, Y, .Char.WeaponAnim, .Char.ShieldAnim, .Char.FX, 999, .Char.CascoAnim, UserName, NickColor, Privileges)
             Else
                 'Hide the name and clan - set privs as normal user
                 Call AgregarUser(UserIndex, .Pos.Map, ButIndex)
@@ -663,7 +663,6 @@ Public Sub CheckUserLevel(ByVal UserIndex As Integer, Optional ByVal PrintInCons
     '08/04/2011: Amraphen - Arreglada la distribucion de probabilidades para la vida en el caso de promedio entero.
     '06/09/2019: Jopi - Guardado de usuario al pasar de nivel.
     '*************************************************
-    Dim Pts              As Integer
     Dim AumentoHIT       As Integer
     Dim AumentoMANA      As Integer
     Dim AumentoSTA       As Integer
@@ -698,32 +697,34 @@ Public Sub CheckUserLevel(ByVal UserIndex As Integer, Optional ByVal PrintInCons
                 Call WriteConsoleMsg(UserIndex, "Has subido de nivel!", FontTypeNames.FONTTYPE_INFO)
             End If
             
-            If .Stats.ELV = 1 Then
-                Pts = 10
-            Else
-                'For multiple levels being rised at once
-                Pts = Pts + 5
-
-            End If
-            
             .Stats.ELV = .Stats.ELV + 1
             
             .Stats.Exp = .Stats.Exp - .Stats.ELU
             
-            'Nueva subida de exp x lvl. Pablo (ToxicWaste)
-            If .Stats.ELV < 15 Then
-                .Stats.ELU = .Stats.ELU * 1.4
-            ElseIf .Stats.ELV < 21 Then
-                .Stats.ELU = .Stats.ELU * 1.35
-            ElseIf .Stats.ELV < 26 Then
-                .Stats.ELU = .Stats.ELU * 1.3
-            ElseIf .Stats.ELV < 35 Then
+            If .Stats.ELV < 20 Then
+                .Stats.ELU = .Stats.ELU * 1.1
+            ElseIf .Stats.ELV < 30 Then
                 .Stats.ELU = .Stats.ELU * 1.2
             ElseIf .Stats.ELV < 40 Then
                 .Stats.ELU = .Stats.ELU * 1.3
+            ElseIf .Stats.ELV < 50 Then
+                .Stats.ELU = .Stats.ELU * 1.4
+            ElseIf .Stats.ELV < 60 Then
+                .Stats.ELU = .Stats.ELU * 1.5
+            ElseIf .Stats.ELV < 70 Then
+                .Stats.ELU = .Stats.ELU * 1.6
+            ElseIf .Stats.ELV < 80 Then
+                .Stats.ELU = .Stats.ELU * 1.7
+            ElseIf .Stats.ELV < 90 Then
+                .Stats.ELU = .Stats.ELU * 1.8
+            ElseIf .Stats.ELV < 100 Then
+                .Stats.ELU = .Stats.ELU * 1.9
+            ElseIf .Stats.ELV < 110 Then
+                .Stats.ELU = .Stats.ELU * 2
+            ElseIf .Stats.ELV < 120 Then
+                .Stats.ELU = .Stats.ELU * 2.1
             Else
-                .Stats.ELU = .Stats.ELU * 1.375
-
+                .Stats.ELU = .Stats.ELU * 2.2
             End If
             
             'Calculo subida de vida
@@ -936,17 +937,6 @@ Public Sub CheckUserLevel(ByVal UserIndex As Integer, Optional ByVal PrintInCons
                     Call WriteConsoleMsg(UserIndex, "Debes abandonar el Dungeon Newbie.", FontTypeNames.FONTTYPE_INFO)
                 End If
 
-            End If
-
-        End If
-        
-        'Send all gained skill points at once (if any)
-        If Pts > 0 Then
-            Call WriteLevelUp(UserIndex, Pts)
-            
-            .Stats.SkillPts = .Stats.SkillPts + Pts
-            If PrintInConsole Then
-                Call WriteConsoleMsg(UserIndex, "Has ganado un total de " & Pts & " skillpoints.", FontTypeNames.FONTTYPE_INFO)
             End If
 
         End If
@@ -1372,8 +1362,6 @@ Sub SendUserSkillsTxt(ByVal sendIndex As Integer, ByVal UserIndex As Integer)
     For j = 1 To NUMSKILLS
         Call WriteConsoleMsg(sendIndex, SkillsNames(j) & " = " & UserList(UserIndex).Stats.UserSkills(j), FontTypeNames.FONTTYPE_INFO)
     Next j
-    
-    Call WriteConsoleMsg(sendIndex, "SkillLibres:" & UserList(UserIndex).Stats.SkillPts, FontTypeNames.FONTTYPE_INFO)
 
 End Sub
 
@@ -1555,16 +1543,6 @@ Sub SubirSkill(ByVal UserIndex As Integer, _
     With UserList(UserIndex)
 
         If .flags.Hambre = 0 And .flags.Sed = 0 Then
-            If .Counters.AsignedSkills < 10 Then
-                If Not .flags.UltimoMensaje = 7 Then
-                    Call WriteConsoleMsg(UserIndex, "Para poder entrenar un skill debes asignar los 10 skills iniciales.", FontTypeNames.FONTTYPE_INFO)
-                    .flags.UltimoMensaje = 7
-
-                End If
-                
-                Exit Sub
-
-            End If
                 
             With .Stats
 
@@ -1827,7 +1805,7 @@ Public Sub UserDie(ByVal UserIndex As Integer, Optional ByVal AttackerIndex As I
         
         ' << Restauramos el mimetismo
         If .flags.Mimetizado = 1 Then
-            .Char.Body = .CharMimetizado.Body
+            .Char.body = .CharMimetizado.body
             .Char.Head = .CharMimetizado.Head
             .Char.CascoAnim = .CharMimetizado.CascoAnim
             .Char.ShieldAnim = .CharMimetizado.ShieldAnim
@@ -1850,13 +1828,13 @@ Public Sub UserDie(ByVal UserIndex As Integer, Optional ByVal AttackerIndex As I
         
         '<< Cambiamos la apariencia del char >>
         If .flags.Navegando = 0 Then
-            .Char.Body = iCuerpoMuerto
+            .Char.body = iCuerpoMuerto
             .Char.Head = iCabezaMuerto
             .Char.ShieldAnim = NingunEscudo
             .Char.WeaponAnim = NingunArma
             .Char.CascoAnim = NingunCasco
         Else
-            .Char.Body = iFragataFantasmal
+            .Char.body = iFragataFantasmal
 
         End If
         
@@ -1875,7 +1853,7 @@ Public Sub UserDie(ByVal UserIndex As Integer, Optional ByVal AttackerIndex As I
         .NroMascotas = 0
         
         '<< Actualizamos clientes >>
-        Call ChangeUserChar(UserIndex, .Char.Body, .Char.Head, .Char.heading, NingunArma, NingunEscudo, NingunCasco)
+        Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, NingunArma, NingunEscudo, NingunCasco)
         Call WriteUpdateUserStats(UserIndex)
         Call WriteUpdateStrenghtAndDexterity(UserIndex)
 
@@ -2405,7 +2383,7 @@ Sub Cerrar_Usuario(ByVal UserIndex As Integer)
                             ' Pierde la apariencia de fragata fantasmal
                             Call ToggleBoatBody(UserIndex)
                             Call WriteConsoleMsg(UserIndex, "Has recuperado tu apariencia normal!", FontTypeNames.FONTTYPE_INFO)
-                            Call ChangeUserChar(UserIndex, .Char.Body, .Char.Head, .Char.heading, NingunArma, NingunEscudo, NingunCasco)
+                            Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, NingunArma, NingunEscudo, NingunCasco)
                             HiddenPirat = True
 
                         End If
@@ -2532,7 +2510,7 @@ End Sub
 '@param body    The body index to bechecked.
 '@return    True if the body is a boat, false otherwise.
 
-Public Function BodyIsBoat(ByVal Body As Integer) As Boolean
+Public Function BodyIsBoat(ByVal body As Integer) As Boolean
 
     '**************************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -2540,7 +2518,7 @@ Public Function BodyIsBoat(ByVal Body As Integer) As Boolean
     'Checks if a given body index is a boat
     '**************************************************************
     'TODO : This should be checked somehow else. This is nasty....
-    If Body = iFragataReal Or Body = iFragataCaos Or Body = iBarcaPk Or Body = iGaleraPk Or Body = iGaleonPk Or Body = iBarcaCiuda Or Body = iGaleraCiuda Or Body = iGaleonCiuda Or Body = iFragataFantasmal Then
+    If body = iFragataReal Or body = iFragataCaos Or body = iBarcaPk Or body = iGaleraPk Or body = iGaleonPk Or body = iBarcaCiuda Or body = iGaleraCiuda Or body = iGaleonCiuda Or body = iFragataFantasmal Then
         BodyIsBoat = True
 
     End If
@@ -3088,7 +3066,7 @@ Public Sub HomeArrival(ByVal UserIndex As Integer)
 
         'Antes de que el pj llegue a la ciudad, lo hacemos dejar de navegar para que no se buguee.
         If .flags.Navegando = 1 Then
-            .Char.Body = iCuerpoMuerto
+            .Char.body = iCuerpoMuerto
             .Char.Head = iCabezaMuerto
             .Char.ShieldAnim = NingunEscudo
             .Char.WeaponAnim = NingunArma

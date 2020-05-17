@@ -111,7 +111,6 @@ Private Enum ServerPacketID
     UpdateHungerAndThirst        ' EHYS
     Fame                         ' FAMA
     MiniStats                    ' MEST
-    LevelUp                      ' SUNI
     AddForumMsg                  ' FMSG
     ShowForumForm                ' MFOR
     SetInvisible                 ' NOVER
@@ -210,7 +209,6 @@ Private Enum ClientPacketID
     sadasdA
     EquipItem                      'EQUI
     ChangeHeading                  'CHEA
-    ModifySkills                   'SKSE
     Train                          'ENTR
     CommerceBuy                    'COMP
     BankExtractItem                'RETI
@@ -367,7 +365,6 @@ Public Enum eEditOptions
     eo_Level
     eo_Class
     eo_Skills
-    eo_SkillPointsLeft
     eo_Nobleza
     eo_Asesino
     eo_Sex
@@ -568,9 +565,6 @@ Public Function HandleIncomingData(ByVal UserIndex As Integer) As Boolean
         
         Case ClientPacketID.ChangeHeading           'CHEA
             Call HandleChangeHeading(UserIndex)
-        
-        Case ClientPacketID.ModifySkills            'SKSE
-            Call HandleModifySkills(UserIndex)
         
         Case ClientPacketID.Train                   'ENTR
             Call HandleTrain(UserIndex)
@@ -3947,85 +3941,6 @@ Private Sub HandleChangeHeading(ByVal UserIndex As Integer)
             Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim)
 
         End If
-
-    End With
-
-End Sub
-
-''
-' Handles the "ModifySkills" message.
-'
-' @param    userIndex The index of the user sending the message.
-
-Private Sub HandleModifySkills(ByVal UserIndex As Integer)
-
-    '***************************************************
-    'Author: Juan Martin Sotuyo Dodero (Maraxus)
-    'Last Modification: 11/19/09
-    '11/19/09: Pato - Adapting to new skills system.
-    '***************************************************
-    If UserList(UserIndex).incomingData.Length < 1 + NUMSKILLS Then
-        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
-        Exit Sub
-
-    End If
-    
-    With UserList(UserIndex)
-        'Remove packet ID
-        Call .incomingData.ReadByte
-        
-        Dim i                      As Long
-
-        Dim Count                  As Integer
-
-        Dim points(1 To NUMSKILLS) As Byte
-        
-        'Codigo para prevenir el hackeo de los skills
-        For i = 1 To NUMSKILLS
-            points(i) = .incomingData.ReadByte()
-            
-            If points(i) < 0 Then
-                Call LogHackAttemp(.Name & " IP:" & .IP & " trato de hackear los skills.")
-                .Stats.SkillPts = 0
-                Call CloseSocket(UserIndex)
-                Exit Sub
-
-            End If
-            
-            Count = Count + points(i)
-        Next i
-        
-        If Count > .Stats.SkillPts Then
-            Call LogHackAttemp(.Name & " IP:" & .IP & " trato de hackear los skills.")
-            Call CloseSocket(UserIndex)
-            Exit Sub
-
-        End If
-        
-        .Counters.AsignedSkills = MinimoInt(10, .Counters.AsignedSkills + Count)
-        
-        With .Stats
-
-            For i = 1 To NUMSKILLS
-
-                If points(i) > 0 Then
-                    .SkillPts = .SkillPts - points(i)
-                    .UserSkills(i) = .UserSkills(i) + points(i)
-                    
-                    'Client should prevent this, but just in case...
-                    If .UserSkills(i) > 100 Then
-                        .SkillPts = .SkillPts + .UserSkills(i) - 100
-                        .UserSkills(i) = 100
-
-                    End If
-                    
-                    Call CheckEluSkill(UserIndex, i, True)
-
-                End If
-
-            Next i
-
-        End With
 
     End With
 
@@ -10117,13 +10032,17 @@ Private Sub HandleGMPanel(ByVal UserIndex As Integer)
     'Last Modification: 05/17/06
     '
     '***************************************************
+    
+    Dim id As Byte
+    
     With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
+        id = .incomingData.ReadByte
         
         If .flags.Privilegios And PlayerType.User Then Exit Sub
         
-        Call WriteShowGMPanelForm(UserIndex)
+        Call WriteShowGMPanelForm(UserIndex, id)
 
     End With
 
@@ -10855,19 +10774,6 @@ Private Sub HandleEditChar(ByVal UserIndex As Integer)
                         
                         ' Log it
                         CommandString = CommandString & "SKILLS "
-                    
-                    Case eEditOptions.eo_SkillPointsLeft
-
-                        If tUser <= 0 Then ' Offline
-                            Call WriteVar(UserCharPath, "STATS", "SkillPtsLibres", Arg1)
-                            Call WriteConsoleMsg(UserIndex, "Charfile Alterado: " & UserName, FontTypeNames.FONTTYPE_INFO)
-                        Else ' Online
-                            UserList(tUser).Stats.SkillPts = val(Arg1)
-
-                        End If
-                        
-                        ' Log it
-                        CommandString = CommandString & "SKILLSLIBRES "
                     
                     Case eEditOptions.eo_Nobleza
                         Var = IIf(val(Arg1) > MAXREP, MAXREP, val(Arg1))
@@ -19868,39 +19774,6 @@ Errhandler:
 End Sub
 
 ''
-' Writes the "LevelUp" message to the given user's outgoing data buffer.
-'
-' @param    skillPoints The number of free skill points the player has.
-' @remarks  The data is not actually sent until the buffer is properly flushed.
-
-Public Sub WriteLevelUp(ByVal UserIndex As Integer, ByVal skillPoints As Integer)
-
-    '***************************************************
-    'Author: Juan Martin Sotuyo Dodero (Maraxus)
-    'Last Modification: 05/17/06
-    'Writes the "LevelUp" message to the given user's outgoing data buffer
-    '***************************************************
-    On Error GoTo Errhandler
-
-    With UserList(UserIndex).outgoingData
-        Call .WriteByte(ServerPacketID.LevelUp)
-        Call .WriteInteger(skillPoints)
-
-    End With
-
-    Exit Sub
-
-Errhandler:
-
-    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(UserIndex)
-        Resume
-
-    End If
-
-End Sub
-
-''
 ' Writes the "AddForumMsg" message to the given user's outgoing data buffer.
 '
 ' @param    title The title of the message to display.
@@ -21160,7 +21033,7 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteShowGMPanelForm(ByVal UserIndex As Integer)
+Public Sub WriteShowGMPanelForm(ByVal UserIndex As Integer, ByVal id As Byte)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -21169,7 +21042,13 @@ Public Sub WriteShowGMPanelForm(ByVal UserIndex As Integer)
     '***************************************************
     On Error GoTo Errhandler
 
-    Call UserList(UserIndex).outgoingData.WriteByte(ServerPacketID.ShowGMPanelForm)
+    With UserList(UserIndex).outgoingData
+    
+        Call .WriteByte(ServerPacketID.ShowGMPanelForm)
+        Call .WriteByte(id)
+    
+    End With
+
     Exit Sub
 
 Errhandler:
@@ -22802,7 +22681,12 @@ Public Sub HandleSearchNpc(ByVal UserIndex As Integer)
         Dim tStr    As String
 
         UserNpc = buffer.ReadASCIIString()
-   
+        
+        Call .incomingData.CopyBuffer(buffer)
+        
+        ' Es Game-Master?
+        If .flags.Privilegios And (PlayerType.User Or PlayerType.Consejero Or PlayerType.SemiDios) Then Exit Sub
+        
         tStr = Tilde(UserNpc)
       
         For i = 1 To val(LeerNPCs.GetValue("INIT", "NumNPCs"))
@@ -22820,8 +22704,6 @@ Public Sub HandleSearchNpc(ByVal UserIndex As Integer)
             Call WriteSearchList(UserIndex, 0, "No hubo resultados de la busqueda.", False)
 
         End If
-   
-        Call .incomingData.CopyBuffer(buffer)
 
     End With
 
@@ -22862,6 +22744,11 @@ Private Sub HandleSearchObj(ByVal UserIndex As Integer)
         Dim tStr    As String
        
         UserObj = buffer.ReadASCIIString()
+        
+        Call .incomingData.CopyBuffer(buffer)
+        
+        ' Es Game-Master?
+        If .flags.Privilegios And (PlayerType.User Or PlayerType.Consejero Or PlayerType.SemiDios) Then Exit Sub
 
         tStr = Tilde(UserObj)
           
@@ -22879,8 +22766,6 @@ Private Sub HandleSearchObj(ByVal UserIndex As Integer)
             Call WriteSearchList(UserIndex, 0, "No hubo resultados de la busqueda.", False)
 
         End If
-           
-        Call .incomingData.CopyBuffer(buffer)
                 
     End With
      

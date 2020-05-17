@@ -2858,12 +2858,6 @@ Public Sub DoMeditar(ByVal UserIndex As Integer)
 
             If .Stats.MinMAN > .Stats.MaxMAN Then .Stats.MinMAN = .Stats.MaxMAN
             
-            If Not .flags.UltimoMensaje = 22 Then
-                Call WriteConsoleMsg(UserIndex, "Has recuperado " & cant & " puntos de mana!", FontTypeNames.FONTTYPE_INFO)
-                .flags.UltimoMensaje = 22
-
-            End If
-            
             'Renderizo el dano en render.
             Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageCreateDamage(.Pos.X, .Pos.Y, cant, DAMAGE_TRABAJO))
             

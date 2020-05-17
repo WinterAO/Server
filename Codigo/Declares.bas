@@ -1337,7 +1337,7 @@ Public Type UserStats
     UsuariosMatados As Long
     NPCsMuertos As Integer
     
-    SkillPts As Integer
+    ELO As Integer
     
     ExpSkills(1 To NUMSKILLS) As Long
     EluSkills(1 To NUMSKILLS) As Long
@@ -1512,7 +1512,6 @@ Public Type UserCounters
     failedUsageAttempts As Long
     
     goHome As Long
-    AsignedSkills As Byte
     
     PacketsTick As Byte
 

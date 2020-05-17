@@ -482,13 +482,6 @@ Private Sub SetAttributesCustomToNewUser(ByVal UserIndex As Integer)
             End If
         Next i
 
-        Dim SkillPointsIniciales As Long
-        SkillPointsIniciales = val(GetVar(IniPath & "Server.ini", "ESTADISTICASINICIALESPJ", "SkillPoints"))
-        For i = 1 To NUMSKILLS
-            .Stats.UserSkills(i) = SkillPointsIniciales
-        Next i
-
-        .Stats.SkillPts = 0
     End With
 
 End Sub
@@ -509,8 +502,6 @@ Private Sub SetAttributesToNewUser(ByVal UserIndex As Integer, ByVal UserClase A
             .Stats.UserSkills(i) = 0
             Call CheckEluSkill(UserIndex, i, True)
         Next i
-    
-        .Stats.SkillPts = 10
     
         Dim MiInt As Long
 
@@ -570,7 +561,7 @@ Private Sub SetAttributesToNewUser(ByVal UserIndex As Integer, ByVal UserClase A
         .Stats.Gld = 0
     
         .Stats.Exp = 0
-        .Stats.ELU = 300
+        .Stats.ELU = 150
         .Stats.ELV = 1
     End With
 
@@ -1359,12 +1350,6 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
     
         MapInfo(.Pos.Map).NumUsers = MapInfo(.Pos.Map).NumUsers + 1
     
-        If .Stats.SkillPts > 0 Then
-            Call WriteSendSkills(UserIndex)
-            Call WriteLevelUp(UserIndex, .Stats.SkillPts)
-
-        End If
-    
         If NumUsers > RecordUsuariosOnline Then
             Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Record de usuarios conectados simultaneamente. Hay " & NumUsers & " usuarios.", FontTypeNames.FONTTYPE_INFOBOLD))
             RecordUsuariosOnline = NumUsers
@@ -1529,7 +1514,6 @@ Sub ResetContadores(ByVal UserIndex As Integer)
     With UserList(UserIndex).Counters
         .TimeFight = 0
         .AGUACounter = 0
-        .AsignedSkills = 0
         .AttackCounter = 0
         .bPuedeMeditar = True
         .Ceguera = 0
@@ -1628,7 +1612,7 @@ Sub ResetBasicUserInfo(ByVal UserIndex As Integer)
             .def = 0
             .NPCsMuertos = 0
             .UsuariosMatados = 0
-            .SkillPts = 0
+            .ELU = 0
             .Gld = 0
             .UserAtributos(1) = 0
             .UserAtributos(2) = 0

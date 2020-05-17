@@ -130,8 +130,7 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
         query = query & "home_id = " & .Hogar & ", "
         query = query & "description = '" & .Desc & "', "
         query = query & "gold = " & .Stats.Gld & ", "
-        query = query & "free_skillpoints = " & .Stats.SkillPts & ", "
-        query = query & "assigned_skillpoints = " & .Counters.AsignedSkills & ", "
+        query = query & "elo = " & .Stats.ELO & ", "
         query = query & "pos_map = " & .Pos.Map & ", "
         query = query & "pos_x = " & .Pos.X & ", "
         query = query & "pos_y = " & .Pos.Y & ", "
@@ -301,8 +300,7 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
         query = query & "description = '" & .Desc & "', "
         query = query & "gold = " & .Stats.Gld & ", "
         query = query & "bank_gold = " & .Stats.Banco & ", "
-        query = query & "free_skillpoints = " & .Stats.SkillPts & ", "
-        query = query & "assigned_skillpoints = " & .Counters.AsignedSkills & ", "
+        query = query & "elo = " & .Stats.ELO & ", "
         query = query & "pet_amount = " & .NroMascotas & ", "
         query = query & "pos_map = " & .Pos.Map & ", "
         query = query & "pos_x = " & .Pos.X & ", "
@@ -581,8 +579,7 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
         .Desc = Database_RecordSet!description
         .Stats.Gld = Database_RecordSet!Gold
         .Stats.Banco = Database_RecordSet!bank_gold
-        .Stats.SkillPts = Database_RecordSet!free_skillpoints
-        .Counters.AsignedSkills = Database_RecordSet!assigned_skillpoints
+        .Stats.ELO = Database_RecordSet!ELO
         .NroMascotas = Database_RecordSet!pet_amount
         .Pos.Map = Database_RecordSet!pos_map
         .Pos.X = Database_RecordSet!pos_x
