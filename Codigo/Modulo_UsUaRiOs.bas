@@ -701,28 +701,25 @@ Public Sub CheckUserLevel(ByVal UserIndex As Integer, Optional ByVal PrintInCons
             
             .Stats.Exp = .Stats.Exp - .Stats.ELU
             
-            If .Stats.ELV < 20 Then
-                .Stats.ELU = .Stats.ELU * 1.1
-            ElseIf .Stats.ELV < 30 Then
-                .Stats.ELU = .Stats.ELU * 1.2
-            ElseIf .Stats.ELV < 40 Then
-                .Stats.ELU = .Stats.ELU * 1.3
-            ElseIf .Stats.ELV < 50 Then
-                .Stats.ELU = .Stats.ELU * 1.4
-            ElseIf .Stats.ELV < 60 Then
-                .Stats.ELU = .Stats.ELU * 1.5
-            ElseIf .Stats.ELV < 70 Then
-                .Stats.ELU = .Stats.ELU * 1.6
-            ElseIf .Stats.ELV < 80 Then
-                .Stats.ELU = .Stats.ELU * 1.7
-            ElseIf .Stats.ELV < 90 Then
-                .Stats.ELU = .Stats.ELU * 1.8
-            ElseIf .Stats.ELV < 100 Then
-                .Stats.ELU = .Stats.ELU * 1.9
-            ElseIf .Stats.ELV < 110 Then
-                .Stats.ELU = .Stats.ELU * 2
-            ElseIf .Stats.ELV < 120 Then
-                .Stats.ELU = .Stats.ELU * 2.1
+            If .Stats.ELV < 6 Then                  'Del 1 al 5 +50
+                .Stats.ELU = .Stats.ELU + 50
+            ElseIf .Stats.ELV < 10 Then             'Del 6 al 9 +100
+                .Stats.ELU = .Stats.ELU + 100
+            ElseIf .Stats.ELV < 15 Then             'Del 10 al 14 +250
+                .Stats.ELU = .Stats.ELU + 250
+            ElseIf .Stats.ELV < 20 Then             'Del 14 al 19 +300
+                .Stats.ELU = .Stats.ELU + 300
+            ElseIf .Stats.ELV < 23 Then             'Del 20 al 22 +500
+                .Stats.ELU = .Stats.ELU + 500
+            ElseIf .Stats.ELV < 25 Then             'Del 23 al 24 +1450
+                .Stats.ELU = .Stats.ELU + 1450
+            ElseIf .Stats.ELV < 26 Then             'Del 24 al 25 +1800
+                .Stats.ELU = .Stats.ELU + 1800
+            ElseIf .Stats.ELV < 25 Then             'Del 24 al 25 +1450
+                .Stats.ELU = .Stats.ELU + 1450
+            ElseIf .Stats.ELV < 27 Then             'Del 25 al 26 +2250
+                .Stats.ELU = .Stats.ELU + 2250
+                
             Else
                 .Stats.ELU = .Stats.ELU * 2.2
             End If

@@ -15237,8 +15237,8 @@ IndexAbierta=1214
 IndexCerrada=1215
 
 [OBJ1216] 'Puerta para negocio porque no tiene clave
-Name=Puerta doble de madera abierta Der
-GrhIndex=23971
+Name=Puerta doble de madera abierta
+GrhIndex=23972
 ObjType=6
 Agarrable=1
 Abierta=0
@@ -15247,8 +15247,8 @@ IndexAbierta=1216
 IndexCerrada=1217
 
 [OBJ1217] 'Puerta para negocio porque no tiene clave
-Name=Puerta doble de madera cerrada Der
-GrhIndex=23972
+Name=Puerta doble de madera cerrada
+GrhIndex=23971
 ObjType=6
 Abierta=1
 Agarrable=1
@@ -15257,8 +15257,8 @@ IndexAbierta=1216
 IndexCerrada=1217
 
 [OBJ1218] 'Puerta para negocio porque no tiene clave
-Name=Puerta doble de madera abierta Izq
-GrhIndex=23973
+Name=Puerta doble de madera abierta
+GrhIndex=23974
 ObjType=6
 Agarrable=1
 Abierta=0
@@ -15267,8 +15267,8 @@ IndexAbierta=1218
 IndexCerrada=1219
 
 [OBJ1219] 'Puerta para negocio porque no tiene clave
-Name=Puerta doble de madera cerrada Izq
-GrhIndex=23974
+Name=Puerta doble de madera cerrada
+GrhIndex=23973
 ObjType=6
 Abierta=1
 Agarrable=1
@@ -15277,7 +15277,7 @@ IndexAbierta=1218
 IndexCerrada=1219
 
 [OBJ1220] 'Puerta para negocio porque no tiene clave
-Name=Puerta doble de madera abierta Der
+Name=Puerta doble de madera abierta
 GrhIndex=23976
 ObjType=6
 Agarrable=1
@@ -15287,7 +15287,7 @@ IndexAbierta=1220
 IndexCerrada=1221
 
 [OBJ1221] 'Puerta para negocio porque no tiene clave
-Name=Puerta doble de madera cerrada Der
+Name=Puerta doble de madera cerrada
 GrhIndex=23975
 ObjType=6
 Abierta=1
@@ -15297,8 +15297,8 @@ IndexAbierta=1220
 IndexCerrada=1221
 
 [OBJ1222] 'Puerta para negocio porque no tiene clave
-Name=Puerta doble de madera abierta Izq
-GrhIndex=23978
+Name=Puerta doble de madera abierta
+GrhIndex=23977
 ObjType=6
 Agarrable=1
 Abierta=0
@@ -15307,8 +15307,8 @@ IndexAbierta=1222
 IndexCerrada=1223
 
 [OBJ1223] 'Puerta para negocio porque no tiene clave
-Name=Puerta doble de madera cerrada Izq
-GrhIndex=23977
+Name=Puerta doble de madera cerrada
+GrhIndex=23978
 ObjType=6
 Abierta=1
 Agarrable=1
@@ -15317,7 +15317,7 @@ IndexAbierta=1222
 IndexCerrada=1223
 
 [OBJ1224] 'Puerta para negocio porque no tiene clave
-Name=Puerta doble de madera abierta Izq
+Name=Puerta doble de madera abierta
 GrhIndex=1567
 ObjType=6
 Agarrable=1
@@ -15327,7 +15327,7 @@ IndexAbierta=1224
 IndexCerrada=1225
 
 [OBJ1225] 'Puerta para negocio porque no tiene clave
-Name=Puerta doble de madera cerrada Izq
+Name=Puerta doble de madera cerrada
 GrhIndex=1565
 ObjType=6
 Abierta=1
@@ -15337,7 +15337,7 @@ IndexAbierta=1224
 IndexCerrada=1225
 
 [OBJ1226] 'Puerta para negocio porque no tiene clave
-Name=Puerta doble de madera abierta Der
+Name=Puerta doble de madera abierta
 GrhIndex=1568
 ObjType=6
 Agarrable=1
@@ -15347,7 +15347,7 @@ IndexAbierta=1226
 IndexCerrada=1227
 
 [OBJ1227] 'Puerta para negocio porque no tiene clave
-Name=Puerta doble de madera cerrada Der
+Name=Puerta doble de madera cerrada
 GrhIndex=1566
 ObjType=6
 Abierta=1
