@@ -95,7 +95,7 @@ Public Sub MuereNpc(ByVal NpcIndex As Integer, ByVal UserIndex As Integer)
     '23/05/2010: ZaMa - El usuario pierde la pertenencia del npc.
     '13/07/2010: ZaMa - Optimizaciones de logica en la seleccion de pretoriano, y el posible cambio de alencion del usuario.
     '********************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
     Dim MiNPC As npc
 
@@ -131,7 +131,6 @@ Public Sub MuereNpc(ByVal NpcIndex As Integer, ByVal UserIndex As Integer)
             '¿El NPC explota al matarlo?
             '50% de probabilidad de que explote
             If Npclist(NpcIndex).flags.Explota = 1 And RandomNumber(1, 100) > 50 Then
-                Debug.Print "adasd"
                 Dim dano As Long
                 'El daño de la explosión sera el doble del minimo golpe
                 dano = MiNPC.Stats.MinHIT * 2
@@ -140,7 +139,7 @@ Public Sub MuereNpc(ByVal NpcIndex As Integer, ByVal UserIndex As Integer)
                            
                 Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(27, UserList(UserIndex).Pos.X, UserList(UserIndex).Pos.Y))
                 Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageCreateFX(UserList(UserIndex).Char.CharIndex, 27, 0))
-                Call WriteConsoleMsg(UserIndex, "¡La explosion de la criatura te ha quitado " & dano & " puntos de vida !", FontTypeNames.FONTTYPE_FIGHT)
+                Call WriteConsoleMsg(UserIndex, "¡La explosion de la criatura te ha quitado " & dano & " puntos de vida!", FontTypeNames.FONTTYPE_FIGHT)
             End If
         
             If MiNPC.flags.Snd3 > 0 Then
@@ -317,7 +316,7 @@ Public Sub MuereNpc(ByVal NpcIndex As Integer, ByVal UserIndex As Integer)
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
     Call LogError("Error en MuereNpc - Error: " & Err.Number & " - Desc: " & Err.description)
 
 End Sub
@@ -509,7 +508,7 @@ Public Sub QuitarNPC(ByVal NpcIndex As Integer)
     'Last Modification: 16/11/2009
     '16/11/2009: ZaMa - Now npcs lose their owner
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
     With Npclist(NpcIndex)
         .flags.NPCActive = False
@@ -546,7 +545,7 @@ Public Sub QuitarNPC(ByVal NpcIndex As Integer)
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
     Call LogError("Error en QuitarNPC")
 
 End Sub
@@ -558,7 +557,7 @@ Public Sub QuitarPet(ByVal UserIndex As Integer, ByVal NpcIndex As Integer)
     'Last Modification: 18/11/2009
     'Kills a pet
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
     Dim i        As Integer
 
@@ -587,7 +586,7 @@ Public Sub QuitarPet(ByVal UserIndex As Integer, ByVal NpcIndex As Integer)
     
     Exit Sub
 
-ErrHandler:
+Errhandler:
     Call LogError("Error en QuitarPet. Error: " & Err.Number & " Desc: " & Err.description & " NpcIndex: " & NpcIndex & " UserIndex: " & UserIndex & " PetIndex: " & PetIndex)
 
 End Sub
@@ -930,7 +929,7 @@ Function NextOpenNPC() As Integer
     '
     '***************************************************
 
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
     Dim LoopC As Long
       
@@ -943,7 +942,7 @@ Function NextOpenNPC() As Integer
     NextOpenNPC = LoopC
     Exit Function
 
-ErrHandler:
+Errhandler:
     Call LogError("Error en NextOpenNPC")
 
 End Function

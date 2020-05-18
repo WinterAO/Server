@@ -49,6 +49,13 @@
 '4 Repone Mana
 '5 Cura Envenenamiento
 
+##############################################
+#############TIPOS  DE MONTURAS###############
+##############################################
+
+'0 Normal
+'1 Acuatica
+'2 Dungeon
 
 ##############################################
 #############NRO DE OBJS LIBRES###############
@@ -15559,6 +15566,32 @@ MinSkill=50
 Name=Montura gran Rey Mono
 GrhIndex=29873
 ObjType=25
+NumRopaje=629
+Agarrable=0
+MaxDef=130
+MinDef=120
+NoSeCae=1
+Valor=0
+Crucial=0
+
+[OBJ1251]
+Name=Montura Acuatica
+GrhIndex=29873
+ObjType=25
+MontTipo=1
+NumRopaje=629
+Agarrable=0
+MaxDef=130
+MinDef=120
+NoSeCae=1
+Valor=0
+Crucial=0
+
+[OBJ1252]
+Name=Montura de Dungeon
+GrhIndex=29873
+ObjType=25
+MontTipo=2
 NumRopaje=629
 Agarrable=0
 MaxDef=130

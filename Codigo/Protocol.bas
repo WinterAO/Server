@@ -198,7 +198,7 @@ Private Enum ClientPacketID
     Drop                            'TI
     CastSpell                       'LH
     LeftClick                       'LC
-    DoubleClick                     'RC
+    AccionClick                     'RC
     Work                            'UK
     UseSpellMacro                   'UMH
     UseItem                         'USA
@@ -536,8 +536,8 @@ Public Function HandleIncomingData(ByVal UserIndex As Integer) As Boolean
         Case ClientPacketID.LeftClick               'LC
             Call HandleLeftClick(UserIndex)
         
-        Case ClientPacketID.DoubleClick             'RC
-            Call HandleDoubleClick(UserIndex)
+        Case ClientPacketID.AccionClick             'RC
+            Call HandleAccionClick(UserIndex)
         
         Case ClientPacketID.Work                    'UK
             Call HandleWork(UserIndex)
@@ -3004,11 +3004,11 @@ Private Sub HandleLeftClick(ByVal UserIndex As Integer)
 End Sub
 
 ''
-' Handles the "DoubleClick" message.
+' Handles the "AccionClick" message.
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleDoubleClick(ByVal UserIndex As Integer)
+Private Sub HandleAccionClick(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)

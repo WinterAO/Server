@@ -1130,6 +1130,8 @@ Public Type ObjData
     
     Upgrade As Integer
     
+    MontTipo As Byte 'Tipo de Montura
+    
 End Type
 
 Public Type obj
