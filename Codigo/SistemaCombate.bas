@@ -207,7 +207,7 @@ Public Function UserImpactoNpc(ByVal UserIndex As Integer, _
             MunicionObjIndex = UserList(UserIndex).Invent.MunicionEqpObjIndex
             'Tiene munición?
             If MunicionObjIndex <> 0 Then
-                Call WriteProyectil(UserIndex, UserList(UserIndex).Char.CharIndex, Npclist(NpcIndex).Char.CharIndex, ObjData(MunicionObjIndex).GrhIndex)
+                Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageProyectil(UserIndex, UserList(UserIndex).Char.CharIndex, Npclist(NpcIndex).Char.CharIndex, ObjData(UserList(UserIndex).Invent.MunicionEqpObjIndex).GrhIndex))
             End If
         Else
             PoderAtaque = PoderAtaqueArma(UserIndex)
@@ -1323,7 +1323,7 @@ Public Function UsuarioImpacto(ByVal AtacanteIndex As Integer, _
         If .Invent.EscudoEqpObjIndex > 0 Then
             UserPoderEvasionEscudo = PoderEvasionEscudo(VictimaIndex)
             UserPoderEvasion = UserPoderEvasion + UserPoderEvasionEscudo
-            Call WriteProyectil(AtacanteIndex, UserList(AtacanteIndex).Char.CharIndex, .Char.CharIndex, ObjData(UserList(AtacanteIndex).Invent.MunicionEqpObjIndex).GrhIndex)
+            Call SendData(SendTarget.ToPCArea, AtacanteIndex, PrepareMessageProyectil(AtacanteIndex, UserList(AtacanteIndex).Char.CharIndex, .Char.CharIndex, ObjData(UserList(AtacanteIndex).Invent.MunicionEqpObjIndex).GrhIndex))
         Else
             UserPoderEvasionEscudo = 0
 

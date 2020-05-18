@@ -10033,16 +10033,16 @@ Private Sub HandleGMPanel(ByVal UserIndex As Integer)
     '
     '***************************************************
     
-    Dim id As Byte
+    Dim ID As Byte
     
     With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
-        id = .incomingData.ReadByte
+        ID = .incomingData.ReadByte
         
         If .flags.Privilegios And PlayerType.User Then Exit Sub
         
-        Call WriteShowGMPanelForm(UserIndex, id)
+        Call WriteShowGMPanelForm(UserIndex, ID)
 
     End With
 
@@ -21033,7 +21033,7 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteShowGMPanelForm(ByVal UserIndex As Integer, ByVal id As Byte)
+Public Sub WriteShowGMPanelForm(ByVal UserIndex As Integer, ByVal ID As Byte)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -21045,7 +21045,7 @@ Public Sub WriteShowGMPanelForm(ByVal UserIndex As Integer, ByVal id As Byte)
     With UserList(UserIndex).outgoingData
     
         Call .WriteByte(ServerPacketID.ShowGMPanelForm)
-        Call .WriteByte(id)
+        Call .WriteByte(ID)
     
     End With
 
@@ -23487,24 +23487,19 @@ Errhandler:
 
 End Sub
 
-Public Sub WriteProyectil(ByVal UserIndex As Integer, ByVal CharSending As Integer, ByVal CharRecieved As Integer, ByVal GrhIndex As Integer)
+Public Function PrepareMessageProyectil(ByVal UserIndex As Integer, ByVal CharSending As Integer, ByVal CharRecieved As Integer, ByVal GrhIndex As Integer) As String
 '*************************************
 'Autor: Lorwik
 'Fecha:16/05/2020
 '*************************************
 
-    On Error GoTo Errhandler
-    With UserList(UserIndex)
-        .outgoingData.WriteByte (ServerPacketID.proyectil)
-        .outgoingData.WriteInteger (CharSending)
-        .outgoingData.WriteInteger (CharRecieved)
-        .outgoingData.WriteInteger (GrhIndex)
+    With auxiliarBuffer
+        .WriteByte (ServerPacketID.proyectil)
+        .WriteInteger (CharSending)
+        .WriteInteger (CharRecieved)
+        .WriteInteger (GrhIndex)
+        
+        PrepareMessageProyectil = .ReadASCIIStringFixed(.Length)
     End With
-    Exit Sub
- 
-Errhandler:
-    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(UserIndex)
-        Resume
-    End If
-End Sub
+
+End Function
