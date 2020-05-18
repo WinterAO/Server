@@ -66,8 +66,8 @@ Sub Accion(ByVal UserIndex As Integer, _
 
         With UserList(UserIndex)
 
-            If MapData(Map, X, Y).NpcIndex > 0 Then     'Acciones NPCs
-                tempIndex = MapData(Map, X, Y).NpcIndex
+            If MapData(Map, X, Y).NPCIndex > 0 Then     'Acciones NPCs
+                tempIndex = MapData(Map, X, Y).NPCIndex
                 
                 'Set the target NPC
                 .flags.TargetNPC = tempIndex
@@ -159,8 +159,11 @@ Sub Accion(ByVal UserIndex As Integer, _
                     
                 ElseIf Npclist(tempIndex).NPCtype = eNPCType.Entrenador Then
                 
+                    Call AccionParaEntrenador(UserIndex)
+                    
+                ElseIf Npclist(tempIndex).NPCtype = eNPCType.Quest Then
                 
-                    Call WriteTrainerCreatureList(UserIndex, .flags.TargetNPC)
+                    Call Quests.AccionParaQuest(UserIndex, tempIndex)
 
                 End If
 
@@ -466,3 +469,32 @@ Public Sub AccionParaSacerdote(ByVal UserIndex As Integer)
     End With
  
 End Sub
+
+Public Sub AccionParaEntrenador(ByVal UserIndex As Integer)
+'******************************
+'Autor: Lorwik
+'Last Modification: 18/05/2020
+'Refactorizo para que el Entrenador mande la lista para entrenar
+'******************************
+    With UserList(UserIndex)
+        'Dead users can't use pets
+        If .flags.Muerto = 1 Then
+            Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
+            Exit Sub
+    
+        End If
+            
+        'Make sure it's close enough
+        If Distancia(Npclist(.flags.TargetNPC).Pos, .Pos) > 10 Then
+            Call WriteConsoleMsg(UserIndex, "Estas demasiado lejos.", FontTypeNames.FONTTYPE_INFO)
+            Exit Sub
+    
+        End If
+            
+        'Make sure it's the trainer
+        If Npclist(.flags.TargetNPC).NPCtype <> eNPCType.Entrenador Then Exit Sub
+            
+        Call WriteTrainerCreatureList(UserIndex, .flags.TargetNPC)
+    End With
+End Sub
+

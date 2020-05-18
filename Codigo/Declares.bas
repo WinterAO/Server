@@ -506,7 +506,7 @@ Public Enum eNPCType
     Gobernador = 11
     WorldBoss = 12
     dummy = 13
-
+    Quest = 14
 End Enum
 
 Public Const MIN_APUNALAR   As Byte = 10
@@ -1143,7 +1143,7 @@ End Type
 
 Public Type tQuestNpc
 
-    NpcIndex As Integer
+    NPCIndex As Integer
     Amount As Integer
 
 End Type
@@ -1750,7 +1750,7 @@ End Type
 
 Public Type tCriaturasEntrenador
 
-    NpcIndex As Integer
+    NPCIndex As Integer
     NpcName As String
     tmpIndex As Integer
 
@@ -1865,7 +1865,7 @@ Public Type MapBlock
     Blocked As Byte
     Graphic(1 To 4) As Long
     UserIndex As Integer
-    NpcIndex As Integer
+    NPCIndex As Integer
     ObjInfo As obj
     TileExit As WorldPos
     Trigger As eTrigger

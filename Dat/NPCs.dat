@@ -19,6 +19,7 @@ TODOS LOS NPC CON RETARDO Y WORLDBOSS TIENEN QUE TENER PosOrig
 11 ====== Gobernador
 12 ====== WorldBoss
 13 ====== Dummys
+14 ====== Quest
 
 ##############################################
 ############## EFECTOS DE NPC ################
@@ -11249,7 +11250,7 @@ Comercia=0
 
 [NPC939]
 Name=Pele [Quest 4 Cementerio]
-NpcType=0
+NpcType=14
 Desc=Ayuda por favor!! Una horda de zombies y esqueletos estan acechando mi granja!! Por favor mata 10 zombies y 10 esqueletos!! Tendras una gran recompensa, escribe /QUEST.
 Head=101
 Heading=3
@@ -11266,7 +11267,7 @@ QuestNumber=4
 
 [NPC940]
 Name=Maradona [Quest 2 Banderbill]
-NpcType=0
+NpcType=14
 Desc=Se han reportado muchas muertes en los alrededores de la ciudad de Banderbill. La milicia ha hecho un llamado a la comunidad para intentar solucionar este problema. Escribe /QUEST.
 Head=101
 Heading=3
@@ -11283,7 +11284,7 @@ QuestNumber=2
 
 [NPC941]
 Name=Alfonsin [Quest 6 Banderbill]
-NpcType=0
+NpcType=14
 Desc=El clan de Asesinos y Bandidos no para de fastidiar a los ciudadanos de Winter por eso te pedimos que acabes con esta plaga de una vez por todas. Escribe /QUEST.
 Head=101
 Heading=3
@@ -11300,7 +11301,7 @@ QuestNumber=6
 
 [NPC942]
 Name=Charly Garcia [Quest 7 Arkhein]
-NpcType=0
+NpcType=14
 Desc=Necesitamos minerales para construir el anillo de bodas del primer ministro, tenes que matar 3 Etogniles de cada raza Bronce, Plata y Oro. Me ayudas? Escribe /QUEST.
 Head=101
 Heading=3
@@ -11317,7 +11318,7 @@ QuestNumber=7
 
 [NPC943]
 Name=Favaloro [Quest 8 Lindos]
-NpcType=0
+NpcType=14
 Desc=Venga a mis hijos que murieron en manos de los titanes, necesito que mates a todos ellos por mi, podrias? Escribe /QUEST.
 Head=101
 Heading=3
@@ -11334,7 +11335,7 @@ QuestNumber=8
 
 [NPC944]
 Name=Calamaro [Quest 9 Arghal]
-NpcType=0
+NpcType=14
 Desc=Alguien se fumo mi marihuana, necesito recuperarla! Escribe /QUEST.
 Head=101
 Heading=3
@@ -11351,7 +11352,7 @@ QuestNumber=9
 
 [NPC945]
 Name=Leon Gieco [Quest 10 Ciudad Abandonada]
-NpcType=0
+NpcType=14
 Desc=Tengo un buen premio, te estaba esperando hace mucho tiempo viajero, queres un buen desafio? Escribe /QUEST.
 Head=101
 Heading=3

@@ -6253,14 +6253,6 @@ Private Sub HandleTrainList(ByVal UserIndex As Integer)
         'Remove packet ID
         Call .incomingData.ReadByte
         
-        'Dead users can't use pets
-        If .flags.Muerto = 1 Then
-            'Call WriteConsoleMsg(UserIndex, "Estas muerto!!", FontTypeNames.FONTTYPE_INFO)
-            Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
-            Exit Sub
-
-        End If
-        
         'Validate target NPC
         If .flags.TargetNPC = 0 Then
             Call WriteConsoleMsg(UserIndex, "Primero tienes que seleccionar un personaje, haz click izquierdo sobre el.", FontTypeNames.FONTTYPE_INFO)
@@ -6268,17 +6260,7 @@ Private Sub HandleTrainList(ByVal UserIndex As Integer)
 
         End If
         
-        'Make sure it's close enough
-        If Distancia(Npclist(.flags.TargetNPC).Pos, .Pos) > 10 Then
-            Call WriteConsoleMsg(UserIndex, "Estas demasiado lejos.", FontTypeNames.FONTTYPE_INFO)
-            Exit Sub
-
-        End If
-        
-        'Make sure it's the trainer
-        If Npclist(.flags.TargetNPC).NPCtype <> eNPCType.Entrenador Then Exit Sub
-        
-        Call WriteTrainerCreatureList(UserIndex, .flags.TargetNPC)
+        Call AccionParaEntrenador(UserIndex)
 
     End With
 
