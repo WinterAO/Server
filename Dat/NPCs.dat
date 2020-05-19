@@ -265,7 +265,7 @@ BackUp=0
 [NPC119]
 Name=Sacerdote
 NpcType=1
-Desc=Hola, hijo mio! Soy el sacerdote de estas tierras. Si eres newbie te podre resucitar, solo necesitas tipear /RESUCITAR o hacer doble click sobre mi cabeza.
+Desc=Hola, hijo mio! Soy el sacerdote de estas tierras.
 Head=3
 Heading=3
 Body=49
