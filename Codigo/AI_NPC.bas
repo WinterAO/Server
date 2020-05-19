@@ -1437,10 +1437,7 @@ Public Sub SacerdoteHealUser(ByVal UserIndex As Integer)
 
         Call WriteConsoleMsg(UserIndex, "El sacerdote te ha curado!!", FontTypeNames.FONTTYPE_INFO)
 
-        'Si es newbie le sacamos todo, sino solo lo curamos. (Recox)
-        If EsNewbie(UserIndex) Then
-            Call SacerdoteHealEffectsAndRestoreMana(UserIndex)
-        End If
+        Call SacerdoteHealEffectsAndRestoreMana(UserIndex)
 
         Call WriteUpdateUserStats(UserIndex)
     End With
@@ -1464,10 +1461,7 @@ Public Sub SacerdoteResucitateUser(ByVal UserIndex As Integer)
     End With
 End Sub
 
-
 Private Sub SacerdoteHealEffectsAndRestoreMana(ByVal UserIndex As Integer)
-    Dim MensajeAyuda As String
-    MensajeAyuda = "Cuando dejes de ser newbie no lo hara mas el sacerdote y deberas comprar pociones o curarte con hechizos"
 
     With UserList(UserIndex)
         ' Sacamos la maldicion.

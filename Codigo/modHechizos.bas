@@ -1034,9 +1034,6 @@ Sub LanzarHechizo(ByVal spellIndex As Integer, ByVal UserIndex As Integer)
                     ElseIf .flags.TargetNPC > 0 Then
                         Call HandleHechizoNPC(UserIndex, spellIndex)
 
-                    Else
-                        Call WriteConsoleMsg(UserIndex, "Target invalido.", FontTypeNames.FONTTYPE_INFO)
-
                     End If
             
                 Case TargetType.uTerreno
