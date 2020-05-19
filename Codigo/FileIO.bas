@@ -1159,6 +1159,7 @@ Sub LoadOBJData()
                     .MinHIT = val(Leer.GetValue("OBJ" & Object, "MinHIT"))
                     .Real = val(Leer.GetValue("OBJ" & Object, "Real"))
                     .Caos = val(Leer.GetValue("OBJ" & Object, "Caos"))
+                    .MontTipo = val(Leer.GetValue("OBJ" & Object, "MontTipo"))
                 
                 Case eOBJType.otFlechas
                     .MaxHIT = val(Leer.GetValue("OBJ" & Object, "MaxHIT"))
@@ -1172,7 +1173,7 @@ Sub LoadOBJData()
                     .MinLevel = val(Leer.GetValue("OBJ" & Object, "MinLevel"))
                     .MaxHIT = val(Leer.GetValue("OBJ" & Object, "MaxHIT"))
                     .MinHIT = val(Leer.GetValue("OBJ" & Object, "MinHIT"))
-                    .MontTipo = val(Leer.GetValue("OBJ" & Object, "MinHIT"))
+                    .MontTipo = val(Leer.GetValue("OBJ" & Object, "MontTipo"))
 
                 Case eOBJType.otMinerales
                     .MinSkill = val(Leer.GetValue("OBJ" & Object, "MinSkill"))

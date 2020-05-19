@@ -515,7 +515,7 @@ Public Const MIN_APUNALAR   As Byte = 10
 
 ''
 ' Cantidad de skills
-Public Const NUMSKILLS      As Byte = 20
+Public Const NUMSKILLS      As Byte = 21
 
 ''
 ' Cantidad de Atributos
@@ -617,7 +617,6 @@ Public Enum eSkill
     Wrestling = 19
     Navegacion = 20
     Equitacion = 21
-
 End Enum
 
 Public Enum eMochilas
@@ -1143,7 +1142,7 @@ End Type
 
 Public Type tQuestNpc
 
-    NPCIndex As Integer
+    NpcIndex As Integer
     Amount As Integer
 
 End Type
@@ -1750,7 +1749,7 @@ End Type
 
 Public Type tCriaturasEntrenador
 
-    NPCIndex As Integer
+    NpcIndex As Integer
     NpcName As String
     tmpIndex As Integer
 
@@ -1865,7 +1864,7 @@ Public Type MapBlock
     Blocked As Byte
     Graphic(1 To 4) As Long
     UserIndex As Integer
-    NPCIndex As Integer
+    NpcIndex As Integer
     ObjInfo As obj
     TileExit As WorldPos
     Trigger As eTrigger

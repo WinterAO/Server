@@ -54,8 +54,14 @@
 ##############################################
 
 '0 Normal
-'1 Acuatica
-'2 Dungeon
+'1 Dungeon
+
+##############################################
+#############TIPOS  DE BARCAS#################
+##############################################
+
+'0 Normal
+'1 Montura Acuatica (pide skills en equitacion)
 
 ##############################################
 #############NRO DE OBJS LIBRES###############
@@ -74,7 +80,7 @@ usar primero los nros mas bajos.
 [INIT]
 'aca va el numero de OBJ mas alto, NO la cantidad de OBJs.
 'esto sirve para que los GMS puedan ver la lista completa de items para crear en una ventanita.
-NumOBJs=1250
+NumOBJs=1252
 
 
 [OBJ1]
@@ -15571,11 +15577,27 @@ Agarrable=0
 MaxDef=130
 MinDef=120
 NoSeCae=1
+MinSkill=80
 Valor=0
 Crucial=0
 
 [OBJ1251]
 Name=Montura Acuatica
+GrhIndex=29873
+ObjType=31
+MontTipo=1
+NumRopaje=629
+Agarrable=0
+MinHit=10
+MaxHit=25
+MinDef=5
+MaxDef=10
+Valor=24000
+Crucial=0
+MinSkill=100
+
+[OBJ1252]
+Name=Montura de Dungeon
 GrhIndex=29873
 ObjType=25
 MontTipo=1
@@ -15584,18 +15606,6 @@ Agarrable=0
 MaxDef=130
 MinDef=120
 NoSeCae=1
-Valor=0
-Crucial=0
-
-[OBJ1252]
-Name=Montura de Dungeon
-GrhIndex=29873
-ObjType=25
-MontTipo=2
-NumRopaje=629
-Agarrable=0
-MaxDef=130
-MinDef=120
-NoSeCae=1
+MinSkill=100
 Valor=0
 Crucial=0

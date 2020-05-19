@@ -192,13 +192,24 @@ Public Sub DoNavega(ByVal UserIndex As Integer, _
             Exit Sub
         End If
 
-        ModNave = ModNavegacion(.clase, UserIndex)
+        '¿Es una montura acuatica? Pedimo Skills en Equitacion
+        If Barco.MontTipo = 1 Then
+            If UserList(UserIndex).Stats.UserSkills(Equitacion) < Barco.MinSkill Then
+                Call WriteConsoleMsg(UserIndex, "Para usar esta montura necesitas " & Barco.MinSkill & " puntos en equitación.", FontTypeNames.FONTTYPE_INFO)
+                Exit Sub
+            End If
         
-        If .Stats.UserSkills(eSkill.Navegacion) / ModNave < Barco.MinSkill Then
-            Call WriteConsoleMsg(UserIndex, "No tienes suficientes conocimientos para usar este barco.", FontTypeNames.FONTTYPE_INFO)
-            Call WriteConsoleMsg(UserIndex, "Para usar este barco necesitas " & Barco.MinSkill * ModNave & " puntos en navegacion.", FontTypeNames.FONTTYPE_INFO)
-            Exit Sub
-
+        Else
+        
+            ModNave = ModNavegacion(.clase, UserIndex)
+            
+            If .Stats.UserSkills(eSkill.Navegacion) / ModNave < Barco.MinSkill Then
+                Call WriteConsoleMsg(UserIndex, "No tienes suficientes conocimientos para usar este barco.", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "Para usar este barco necesitas " & Barco.MinSkill * ModNave & " puntos en navegacion.", FontTypeNames.FONTTYPE_INFO)
+                Exit Sub
+    
+            End If
+        
         End If
         
         ' No estaba navegando
@@ -3175,18 +3186,26 @@ Public Sub DoEquita(ByVal UserIndex As Integer, _
     'Podemos usar monturas ahora
     '06/04/2020: FrankoH298 - Ahora hay un timer para poder montarte
     '***************************************************
-    'Dim ModEqui As Long
-
-    'ModEqui = ModEquitacion(UserList(UserIndex).clase)
-
-    ' Comento esto por que aun no implementamos en el frmSkills la posibilidad de agregar skills de equitacion
-    'If UserList(UserIndex).Stats.UserSkills(Equitacion) / ModEqui < Montura.MinSkill Then
-    '    Call WriteConsoleMsg(UserIndex, "Para usar esta montura necesitas " & Montura.MinSkill * ModEqui & " puntos en equitaciï¿½n.", FontTypeNames.FONTTYPE_INFO)
-    '    Exit Sub
-    'End If
 
     With UserList(UserIndex)
+    
+        If UserList(UserIndex).Stats.UserSkills(Equitacion) < Montura.MinSkill Then
+            Call WriteConsoleMsg(UserIndex, "Para usar esta montura necesitas " & Montura.MinSkill & " puntos en equitación.", FontTypeNames.FONTTYPE_INFO)
+            Exit Sub
+        End If
 
+        '¿Esta intentando usar una montura de tipo dungeon fuera de un dungeon?
+        If MapInfo(.Pos.Map).Zona <> "DUNGEON" And Montura.MontTipo = 1 Then
+            Call WriteConsoleMsg(UserIndex, "No puedes utilizar esta montura fuera de un dungeon.", FontTypeNames.FONTTYPE_INFO)
+            Exit Sub
+        End If
+
+        '¿Esta en un dungeon y la montura no es de tipo dungeon?
+        If MapInfo(.Pos.Map).Zona = "DUNGEON" And Montura.MontTipo <> 1 Then
+            Call WriteConsoleMsg(UserIndex, "No puedes utilizar esta montura en dungeon.", FontTypeNames.FONTTYPE_INFO)
+            Exit Sub
+        End If
+        
         If .flags.Muerto = 1 Then
             Call WriteConsoleMsg(UserIndex, "No puedes utilizar la montura mientras estas muerto !!", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
@@ -3255,21 +3274,10 @@ Public Sub UnmountMontura(ByVal UserIndex As Integer)
   
         ' Termina de equitar
         .flags.Equitando = 0
-        .Counters.MonturaCounter = 10
+        .Counters.MonturaCounter = 3
 
     End With
 End Sub
-
-Private Function ModEquitacion(ByVal UserClase As Byte) As Integer
-
-    Select Case UserClase
-        Case eClass.Cleric
-            ModEquitacion = 1
-        Case Else
-            ModEquitacion = 1.5
-    End Select
-
-End Function
 
 Private Sub SetVisibleStateForUserAfterNavigateOrEquitate(ByVal UserIndex As Integer)
 
