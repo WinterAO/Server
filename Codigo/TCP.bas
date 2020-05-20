@@ -1056,7 +1056,6 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
                 Call Cerrar_Usuario(NameIndex(Name))
             End If
             Exit Sub
-
         End If
     
         'Reseteamos los privilegios

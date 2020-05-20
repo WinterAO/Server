@@ -1987,6 +1987,7 @@ Sub BackUPnPc(ByVal NpcIndex As Integer, ByVal hFile As Integer)
         Print #hFile, "MaxHp=" & val(.Stats.MaxHp)
         Print #hFile, "MinHit=" & val(.Stats.MinHIT)
         Print #hFile, "MinHp=" & val(.Stats.MinHp)
+        Print #hFile, "ELV=" & val(.Stats.ELV)
         
         'Flags
         Print #hFile, "ReSpawn=" & val(.flags.Respawn)
@@ -2061,6 +2062,7 @@ Sub CargarNpcBackUp(ByVal NpcIndex As Integer, ByVal NpcNumber As Integer)
         .Stats.MinHIT = val(GetVar(npcfile, "NPC" & NpcNumber, "MinHIT"))
         .Stats.def = val(GetVar(npcfile, "NPC" & NpcNumber, "DEF"))
         .Stats.Alineacion = val(GetVar(npcfile, "NPC" & NpcNumber, "Alineacion"))
+        .Stats.ELV = val(GetVar(npcfile, "NPC" & NpcNumber, "ELV"))
         
         Dim LoopC As Integer
 

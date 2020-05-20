@@ -413,6 +413,8 @@ Private Sub LoadConstants()
     'Last Modify Date: 15/03/2011
     'Loads all constants and general parameters.
     '*****************************************************************
+    Dim i As Integer
+    
     On Error Resume Next
    
     LastBackup = Format(Now, "Short Time")
@@ -434,57 +436,11 @@ Private Sub LoadConstants()
         Call MkDir(CharPath)
     End If
     
-    ' Skills by level
-    LevelSkill(1).LevelValue = 3
-    LevelSkill(2).LevelValue = 5
-    LevelSkill(3).LevelValue = 7
-    LevelSkill(4).LevelValue = 10
-    LevelSkill(5).LevelValue = 13
-    LevelSkill(6).LevelValue = 15
-    LevelSkill(7).LevelValue = 17
-    LevelSkill(8).LevelValue = 20
-    LevelSkill(9).LevelValue = 23
-    LevelSkill(10).LevelValue = 25
-    LevelSkill(11).LevelValue = 27
-    LevelSkill(12).LevelValue = 30
-    LevelSkill(13).LevelValue = 33
-    LevelSkill(14).LevelValue = 35
-    LevelSkill(15).LevelValue = 37
-    LevelSkill(16).LevelValue = 40
-    LevelSkill(17).LevelValue = 43
-    LevelSkill(18).LevelValue = 45
-    LevelSkill(19).LevelValue = 47
-    LevelSkill(20).LevelValue = 50
-    LevelSkill(21).LevelValue = 53
-    LevelSkill(22).LevelValue = 55
-    LevelSkill(23).LevelValue = 57
-    LevelSkill(24).LevelValue = 60
-    LevelSkill(25).LevelValue = 63
-    LevelSkill(26).LevelValue = 65
-    LevelSkill(27).LevelValue = 67
-    LevelSkill(28).LevelValue = 70
-    LevelSkill(29).LevelValue = 73
-    LevelSkill(30).LevelValue = 75
-    LevelSkill(31).LevelValue = 77
-    LevelSkill(32).LevelValue = 80
-    LevelSkill(33).LevelValue = 83
-    LevelSkill(34).LevelValue = 85
-    LevelSkill(35).LevelValue = 87
-    LevelSkill(36).LevelValue = 90
-    LevelSkill(37).LevelValue = 93
-    LevelSkill(38).LevelValue = 95
-    LevelSkill(39).LevelValue = 97
-    LevelSkill(40).LevelValue = 100
-    LevelSkill(41).LevelValue = 100
-    LevelSkill(42).LevelValue = 100
-    LevelSkill(43).LevelValue = 100
-    LevelSkill(44).LevelValue = 100
-    LevelSkill(45).LevelValue = 100
-    LevelSkill(46).LevelValue = 100
-    LevelSkill(47).LevelValue = 100
-    LevelSkill(48).LevelValue = 100
-    LevelSkill(49).LevelValue = 100
-    LevelSkill(50).LevelValue = 100
+    'Lorwik: Nueva subida de Skills, subira de 2 en 2 hasta el lvl max.
+    LevelSkill(1).LevelValue = 2
+    For i = 2 To 50
+        LevelSkill(i).LevelValue = LevelSkill(i - 1).LevelValue + 2
+    Next i
     
     ' Races
     ListaRazas(eRaza.Humano) = "Humano"
@@ -1778,7 +1734,7 @@ Private Sub InicializarSonidos()
     SND_MINERO = 15
     SND_WARP = 3
     SND_PUERTA = 5
-    SND_NIVEL = 6
+    SND_NIVEL = 128
     SND_USERMUERTE = 11
     SND_IMPACTO = 10
     SND_IMPACTO2 = 12

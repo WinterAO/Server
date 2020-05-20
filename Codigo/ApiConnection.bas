@@ -38,16 +38,6 @@ Public Sub ApiEndpointSendLoginAccountEmail(ByVal Email As String)
     Call SendPOSTRequest(Endpoint, Parameters)
 End Sub
 
-Public Sub ApiEndpointSendResetPasswordAccountEmail(ByVal Email As String, ByVal NewPassword As String)
-    'Este endpoint envia un email para cambiar password al usuario
-
-    Endpoint = ApiUrlServer & "/api/v1/emails/resetAccountPassword"
-
-    Parameters = "newPassword=" & NewPassword & "&emailTo=" & Email
-
-    Call SendPOSTRequest(Endpoint, Parameters)
-End Sub
-
 Public Sub ApiEndpointSendUserConnectedMessageDiscord(ByVal UserName As String, ByVal Desc As String, ByVal EsCriminal As Boolean, ByVal clase As String)
     'Este endpoint envia un mensaje al chat avisando que alguien se conecto
 

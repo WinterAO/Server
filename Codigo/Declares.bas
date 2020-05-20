@@ -1688,7 +1688,8 @@ Public Type NPCStats
     MinHIT As Integer
     def As Integer
     defM As Integer
-
+    ELV As Integer
+    
 End Type
 
 Public Type NpcCounters

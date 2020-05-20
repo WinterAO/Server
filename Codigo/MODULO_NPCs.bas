@@ -1209,6 +1209,7 @@ Public Function OpenNPC(ByVal NpcNumber As Integer, _
             .def = val(Leer.GetValue("NPC" & NpcNumber, "DEF"))
             .defM = val(Leer.GetValue("NPC" & NpcNumber, "DEFm"))
             .Alineacion = val(Leer.GetValue("NPC" & NpcNumber, "Alineacion"))
+            .ELV = val(Leer.GetValue("NPC" & NpcNumber, "ELV"))
 
         End With
         

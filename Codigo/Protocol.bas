@@ -310,7 +310,6 @@ Private Enum ClientPacketID
     QuestListRequest
     QuestDetailsRequest
     QuestAbandon
-    CambiarContrasena
     FightSend
     FightAccept
     CloseGuild
@@ -422,9 +421,8 @@ Public Function HandleIncomingData(ByVal UserIndex As Integer) As Boolean
         If Not (packetID = ClientPacketID.LoginExistingChar _
                 Or packetID = ClientPacketID.LoginNewChar _
                 Or packetID = ClientPacketID.LoginExistingAccount _
-                Or packetID = ClientPacketID.DeleteChar _
-                Or packetID = ClientPacketID.CambiarContrasena) Then
-            
+                Or packetID = ClientPacketID.DeleteChar) Then
+             
             'Vierifico si el user esta logeado
             If Not .flags.UserLogged Then
                 Call CloseSocket(UserIndex)
@@ -868,9 +866,6 @@ Public Function HandleIncomingData(ByVal UserIndex As Integer) As Boolean
         
         Case ClientPacketID.QuestAbandon
             Call Quests.HandleQuestAbandon(UserIndex)
-        
-        Case ClientPacketID.CambiarContrasena
-            Call HandleCambiarContrasena(UserIndex)
 
         Case ClientPacketID.FightSend
             Call HandleFightSend(UserIndex)
@@ -22974,74 +22969,6 @@ With auxiliarBuffer
 End With
  
 End Function
-
-Public Sub HandleCambiarContrasena(ByVal UserIndex As Integer)
-    
-    'Verifico si llegan todos los datos
-    If UserList(UserIndex).incomingData.Length < 5 Then
-        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
-        Exit Sub
-    End If
-    
-    On Error GoTo Errhandler
-    
-    Dim Correo As String
-    Dim NuevaContrasena As String
-    
-    With UserList(UserIndex)
-        
-        'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
-        Dim buffer As New clsByteQueue
-        Call buffer.CopyBuffer(.incomingData)
-        
-        'Leemos el ID del paquete
-        Call buffer.ReadByte
-        
-        'Leemos los datos de la cuenta a modificar.
-        Correo = buffer.ReadASCIIString()
-        NuevaContrasena = buffer.ReadASCIIString()
-        
-        If ConexionAPI Then
-
-            'Correo = UserName es lo mismo para aca el Jopi le puso correo :)
-            If Not CuentaExiste(Correo) Then
-                Call WriteErrorMsg(UserIndex, "La cuenta no existe.")
-                Call CloseSocket(UserIndex)
-                Exit Sub
-
-            End If
-        
-            Call ApiEndpointSendResetPasswordAccountEmail(Correo, NuevaContrasena)
-
-            Call WriteErrorMsg(UserIndex, "Se ha enviado un correo electronico a: " & Correo & " donde debera confirmar el cambio de la password de su cuenta.")
-
-        Else
-        
-            Call WriteErrorMsg(UserIndex, "Esta funcion se encuentra deshabilitada actualmente, si sos el administrador del servidor necesitas habilitar la API hecha en Node.js (https://github.com/ao-libre/ao-api-server).")
-            
-        End If
-        
-        'If we got here then packet is complete, copy data back to original queue
-        'Por ultimo limpia el buffer nunca poner exit sub antes de limpiar el buffer porque explota
-        Call .incomingData.CopyBuffer(buffer)
-        Call CloseSocket(UserIndex)
-        
-    End With
-    
-Errhandler:
-    
-    Dim Error As Long: Error = Err.Number
-
-    Call CloseSocket(UserIndex)
-    
-    On Error GoTo 0
-
-    'Destroy auxiliar buffer
-    Set buffer = Nothing
-
-    If Error <> 0 Then Err.Raise Error
-
-End Sub
 
 Public Sub WriteUserInEvent(ByVal UserIndex As Integer)
     On Error GoTo Errhandler

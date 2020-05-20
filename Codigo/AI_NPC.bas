@@ -1468,27 +1468,23 @@ Private Sub SacerdoteHealEffectsAndRestoreMana(ByVal UserIndex As Integer)
         If .flags.Maldicion = 1 Then
             .flags.Maldicion = 0
             Call WriteConsoleMsg(UserIndex, "El sacerdote te ha curado de la maldicion.", FontTypeNames.FONTTYPE_INFO)
-            Call WriteConsoleMsg(UserIndex, MensajeAyuda, FontTypeNames.FONTTYPE_INFO)
         End If
  
         ' Sacamos la ceguera.
         If .flags.Ceguera = 1 Then
             .flags.Ceguera = 0
             Call WriteConsoleMsg(UserIndex, "El sacerdote te ha curado de la ceguera.", FontTypeNames.FONTTYPE_INFO)
-            Call WriteConsoleMsg(UserIndex, MensajeAyuda, FontTypeNames.FONTTYPE_INFO)
         End If
 
         ' Curamos su envenenamiento.
         If .flags.Envenenado = 1 Then
             .flags.Envenenado = 0
             Call WriteConsoleMsg(UserIndex, "El sacerdote te ha curado del envenenamiento.", FontTypeNames.FONTTYPE_INFO)
-            Call WriteConsoleMsg(UserIndex, MensajeAyuda, FontTypeNames.FONTTYPE_INFO)
         End If
 
         ' Restauramos su mana.
         .Stats.MinMAN = .Stats.MaxMAN
         Call WriteUpdateMana(UserIndex)
         Call WriteConsoleMsg(UserIndex, "El sacerdote te ha restaurado el mana completamente.", FontTypeNames.FONTTYPE_INFO)
-        Call WriteConsoleMsg(UserIndex, MensajeAyuda, FontTypeNames.FONTTYPE_INFO)
     End With
 End Sub
