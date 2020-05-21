@@ -1655,7 +1655,7 @@ Private Sub HandleLoginExistingChar(ByVal UserIndex As Integer)
     
         'If we got here then packet is complete, copy data back to original queue
         Call .incomingData.CopyBuffer(buffer)
-                    Debug.Print .AccountInfo.AccountPJ(SelectedID).Name
+
         If Not AsciiValidos(.AccountInfo.AccountPJ(SelectedID).Name) Then
             Call WriteErrorMsg(UserIndex, "Nombre invalido.")
             Call CloseUser(UserIndex)
@@ -1674,9 +1674,9 @@ Private Sub HandleLoginExistingChar(ByVal UserIndex As Integer)
         End If
     
         If BANCheck(.AccountInfo.AccountPJ(SelectedID).Name) Then
-            Call WriteErrorMsg(UserIndex, "Se te ha prohibido la entrada a Argentum Online debido a tu mal comportamiento. Puedes consultar el reglamento y el sistema de soporte desde www.argentumonline.org")
+            Call WriteErrorMsg(UserIndex, "Se te ha prohibido la entrada a WinterAO debido a tu mal comportamiento. Puedes consultar el reglamento y el sistema de soporte desde http://winterao.com.ar")
         ElseIf Not VersionOK(version) Then
-            Call WriteErrorMsg(UserIndex, "Esta version del juego es obsoleta, la version correcta es la " & ULTIMAVERSION & ". La misma se encuentra disponible en www.argentumonline.org")
+            Call WriteErrorMsg(UserIndex, "Esta version del juego es obsoleta, la version correcta es la " & ULTIMAVERSION & ". La misma se encuentra disponible en http://winterao.com.ar")
         Else
             Call ConnectUser(UserIndex, .AccountInfo.AccountPJ(SelectedID).Name, .AccountInfo.Hash)
         End If
@@ -14589,7 +14589,7 @@ Private Sub HandleChaosLegionKick(ByVal UserIndex As Integer)
             Else
 
                 If PersonajeExiste(UserName) Then
-                    Call KickUserChaosLegion(UserName, .Name)
+                    Call KickUserChaosLegion(UserName)
                     Call WriteConsoleMsg(UserIndex, UserName & " expulsado de las fuerzas del caos y prohibida la reenlistada.", FontTypeNames.FONTTYPE_INFO)
                 Else
                     Call WriteConsoleMsg(UserIndex, UserName & " inexistente.", FontTypeNames.FONTTYPE_INFO)
@@ -14681,7 +14681,7 @@ Private Sub HandleRoyalArmyKick(ByVal UserIndex As Integer)
             Else
 
                 If PersonajeExiste(UserName) Then
-                    Call KickUserRoyalArmy(UserName, .Name)
+                    Call KickUserRoyalArmy(UserName)
                     Call WriteConsoleMsg(UserIndex, UserName & " expulsado de las fuerzas reales y prohibida la reenlistada.", FontTypeNames.FONTTYPE_INFO)
                 Else
                     Call WriteConsoleMsg(UserIndex, UserName & " inexistente.", FontTypeNames.FONTTYPE_INFO)
