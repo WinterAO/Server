@@ -290,33 +290,24 @@ Public Sub Encarcelar(ByVal UserIndex As Integer, _
 
 End Sub
 
-Public Sub BorrarUsuario(ByVal UserIndex As Integer, ByVal UserName As String, ByVal AccountHash As String)
+Public Function BorrarUsuario(ByVal UserIndex As Integer, ByVal UserName As String) As Boolean
 
     '********************************************************************************
-    'Author: Recox
-    'Last Modification: 09/03/2020
-    '18/09/2018 CHOTS: Checks database too
-    '09/03/2020 Lorwik: Agregado chequeos PersonajeExiste y PersonajePerteneceCuenta
+    'Author: Lorwik
+    'Last Modification: 21/05/2020
     '********************************************************************************
     
     'Podria estar de mas, pero... Existe el personaje?
     If Not PersonajeExiste(UserName) Then
-        Call WriteErrorMsg(UserIndex, "El personaje no existe.")
-        Call CloseUser(UserIndex)
-        Exit Sub
-    End If
-
-    'IMPORTANTE! - El personaje pertenece a esta cuenta?
-    If Not PersonajePerteneceCuenta(UserName, AccountHash) Then
-        Call WriteErrorMsg(UserIndex, "Ha ocurrido un error, por favor inicie sesion nuevamente.")
-        
-        Call CloseUser(UserIndex)
-        Exit Sub
+        BorrarUsuario = False
+        Exit Function
     End If
     
     Call BorrarUsuarioDatabase(UserName)
+    
+    BorrarUsuario = True
 
-End Sub
+End Function
 
 Public Function BANCheck(ByVal Name As String) As Boolean
 

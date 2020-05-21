@@ -1555,7 +1555,7 @@ Private Sub HandleDeleteChar(ByVal UserIndex As Integer)
 'Last Modification: 07/01/20
 '
 '***************************************************
-    If UserList(UserIndex).incomingData.Length < 6 Then
+    If UserList(UserIndex).incomingData.Length < 2 Then
         Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
@@ -1572,18 +1572,26 @@ Private Sub HandleDeleteChar(ByVal UserIndex As Integer)
     'Remove packet ID
     Call buffer.ReadByte
 
-    Dim UserName    As String
-    Dim AccountHash As String
-    UserName = buffer.ReadASCIIString()
-    AccountHash = buffer.ReadASCIIString()
+    Dim PJSeleccionado As Byte
+    PJSeleccionado = buffer.ReadByte
     
     'If we got here then packet is complete, copy data back to original queue
     Call UserList(UserIndex).incomingData.CopyBuffer(buffer)
     
-    Call BorrarUsuario(UserIndex, UserName, AccountHash)
-
-    'Enviamos paquete para mostrar mensaje satisfactorio en el cliente
-    Call UserList(UserIndex).outgoingData.WriteByte(ServerPacketID.DeletedChar)
+    '¿Es un indice valido?
+    If PJSeleccionado < 1 Or PJSeleccionado > MAXPJACCOUNTS Then
+        Call WriteErrorMsg(UserIndex, "Error al borrar el PJ. Intentelo de nuevo o contacte con un Administrador.")
+        Exit Sub
+    End If
+    
+    'Mandamos a borrar el PJ
+    If BorrarUsuario(UserIndex, UserList(UserIndex).AccountInfo.AccountPJ(PJSeleccionado).Name) Then
+        'Si se pudo borrar enviamos paquete para mostrar mensaje satisfactorio en el cliente
+        Call UserList(UserIndex).outgoingData.WriteByte(ServerPacketID.DeletedChar)
+    Else
+        Call WriteErrorMsg(UserIndex, "Error al borrar el PJ. Intentelo de nuevo o contacte con un Administrador.")
+        Exit Sub
+    End If
     
     Exit Sub
     
@@ -16466,7 +16474,7 @@ Public Sub HandleTurnOffServer(ByVal UserIndex As Integer)
     'Last Modification: 12/24/06
     'Turns off the server
     '***************************************************
-    Dim Handle As Integer
+    Dim handle As Integer
     
     With UserList(UserIndex)
         'Remove Packet ID
@@ -16478,12 +16486,12 @@ Public Sub HandleTurnOffServer(ByVal UserIndex As Integer)
         Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("" & .Name & " VA A APAGAR EL SERVIDOR!!!", FontTypeNames.FONTTYPE_FIGHT))
         
         'Log
-        Handle = FreeFile
-        Open App.Path & "\logs\Main.log" For Append Shared As #Handle
+        handle = FreeFile
+        Open App.Path & "\logs\Main.log" For Append Shared As #handle
         
-        Print #Handle, Date & " " & time & " server apagado por " & .Name & ". "
+        Print #handle, Date & " " & time & " server apagado por " & .Name & ". "
         
-        Close #Handle
+        Close #handle
         
         Unload frmMain
 
@@ -22201,12 +22209,12 @@ Private Sub HandleLoginExistingAccount(ByVal UserIndex As Integer)
 
     Dim UserName As String
 
-    Dim password As String
+    Dim Password As String
 
     Dim version  As String
     
     UserName = buffer.ReadASCIIString()
-    password = buffer.ReadASCIIString()
+    Password = buffer.ReadASCIIString()
 
     'Convert version number to string
     version = CStr(buffer.ReadByte()) & "." & CStr(buffer.ReadByte()) & "." & CStr(buffer.ReadByte())
@@ -22214,7 +22222,7 @@ Private Sub HandleLoginExistingAccount(ByVal UserIndex As Integer)
     If Not VersionOK(version) Then
         Call WriteErrorMsg(UserIndex, "Esta version del juego es obsoleta, la version correcta es la " & ULTIMAVERSION & ". La misma se encuentra disponible en www.argentumonline.com.ar")
     Else
-        Call ConnectAccount(UserIndex, UserName, password)
+        Call ConnectAccount(UserIndex, UserName, Password)
 
     End If
 
