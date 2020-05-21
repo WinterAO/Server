@@ -729,7 +729,7 @@ End Sub
 
 Sub ConnectAccount(ByVal UserIndex As Integer, _
                    ByRef UserName As String, _
-                   ByRef password As String)
+                   ByRef Password As String)
 
 '*************************************************
 'Author: Juan Andres Dalmasso (CHOTS)
@@ -776,7 +776,7 @@ Sub ConnectAccount(ByVal UserIndex As Integer, _
     'Es el passwd valido?
     salt = GetAccountSalt(UserName) ' Obtenemos la Salt
 
-    If oSHA256.SHA256(password & salt) <> GetAccountPassword(UserName) Then
+    If oSHA256.SHA256(Password & salt) <> GetAccountPassword(UserName) Then
         Call WriteErrorMsg(UserIndex, "Password incorrecto.")
         Call CloseSocket(UserIndex)
         Exit Sub

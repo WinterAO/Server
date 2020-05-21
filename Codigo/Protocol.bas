@@ -1732,8 +1732,7 @@ Private Sub HandleLoginNewChar(ByVal UserIndex As Integer)
     Dim i As Byte
     
     UserName = buffer.ReadASCIIString()
-    AccountHash = buffer.ReadASCIIString()
-    
+
     'Convert version number to string
     version = CStr(buffer.ReadByte()) & "." & CStr(buffer.ReadByte()) & "." & CStr(buffer.ReadByte())
     
@@ -1752,17 +1751,13 @@ Private Sub HandleLoginNewChar(ByVal UserIndex As Integer)
     If PuedeCrearPersonajes = 0 Then
         Call WriteErrorMsg(UserIndex, "La creacion de personajes en este servidor se ha deshabilitado.")
         Call CloseUser(UserIndex)
-        
         Exit Sub
-
     End If
     
     If ServerSoloGMs <> 0 Then
         Call WriteErrorMsg(UserIndex, "Servidor restringido a administradores. Consulte la pagina oficial o el foro oficial para mas informacion.")
         Call CloseUser(UserIndex)
-        
         Exit Sub
-
     End If
     
     If aClon.MaxPersonajes(UserList(UserIndex).IP) Then
@@ -1771,6 +1766,8 @@ Private Sub HandleLoginNewChar(ByVal UserIndex As Integer)
         Exit Sub
     End If
     
+    AccountHash = UserList(UserIndex).AccountInfo.Hash
+
     If GetCountUserAccount(AccountHash) >= 10 Then
         Call WriteErrorMsg(UserIndex, "No puedes crear mas de 10 personajes.")
         Call CloseUser(UserIndex)
