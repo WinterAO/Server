@@ -295,7 +295,7 @@ Public Sub GameTimer()
 
                     If .Counters.IdleCount > IntervaloParaConexion Then
                         .Counters.IdleCount = 0
-                        Call CloseSocket(iUserIndex)
+                        Call CloseUser(iUserIndex)
 
                     End If
 
@@ -364,7 +364,7 @@ Public Sub PasarSegundo()
                         Call WriteConsoleMsg(i, "Gracias por jugar Argentum Online", FontTypeNames.FONTTYPE_INFO)
                         Call WriteDisconnect(i)
                         Call FlushBuffer(i)
-                        Call CloseSocket(i)
+                        Call CloseUser(i)
                     End If
 
                 End If

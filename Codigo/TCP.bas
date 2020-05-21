@@ -412,9 +412,6 @@ Sub ConnectNewUser(ByVal UserIndex As Integer, _
         .Genero = UserSexo
         .Hogar = eCiudad.cRamx
 
-        'CHOTS | Accounts
-        .AccountHash = AccountHash
-
         'Primero agregamos los items, ya que en caso de que el nivel
         'Inicial sea mayor al de un newbie, los items se borran automaticamente.
         '???????????????? INVENTARIO
@@ -732,7 +729,7 @@ End Sub
 
 Sub ConnectAccount(ByVal UserIndex As Integer, _
                    ByRef UserName As String, _
-                   ByRef Password As String)
+                   ByRef password As String)
 
 '*************************************************
 'Author: Juan Andres Dalmasso (CHOTS)
@@ -742,7 +739,7 @@ Sub ConnectAccount(ByVal UserIndex As Integer, _
 'SHA256
     Dim oSHA256 As CSHA256
 
-    Dim Salt    As String
+    Dim salt    As String
 
     Set oSHA256 = New CSHA256
 
@@ -752,24 +749,41 @@ Sub ConnectAccount(ByVal UserIndex As Integer, _
 
     End If
 
-    'Existe el personaje?
+    'Controlamos no pasar el maximo de usuarios
+    If NumUsers >= MaxUsers Then
+        Call WriteErrorMsg(UserIndex, "El servidor ha alcanzado el maximo de usuarios soportado, por favor vuelva a intertarlo mas tarde.")
+        Call CloseSocket(UserIndex)
+        Exit Sub
+
+    End If
+
+    '¿Existe la cuenta?
     If Not CuentaExiste(UserName) Then
-        Call WriteErrorMsg(UserIndex, "No existe la cuenta.")
+        Call WriteErrorMsg(UserIndex, "La cuenta no existe.")
+        Call CloseSocket(UserIndex)
+        Exit Sub
+
+    End If
+    
+    'Ya esta conectado el personaje?
+    If CheckForSameNameAccount(UserName) Then
+        Call WriteErrorMsg(UserIndex, "La cuenta ya esta conectada.")
+        Call CloseSocket(UserIndex)
         Exit Sub
     End If
         
     'Aca Guardamos y Hasheamos el password + Salt
     'Es el passwd valido?
-    Salt = GetAccountSalt(UserName) ' Obtenemos la Salt
+    salt = GetAccountSalt(UserName) ' Obtenemos la Salt
 
-    If oSHA256.SHA256(Password & Salt) <> GetAccountPassword(UserName) Then
+    If oSHA256.SHA256(password & salt) <> GetAccountPassword(UserName) Then
         Call WriteErrorMsg(UserIndex, "Password incorrecto.")
         Call CloseSocket(UserIndex)
         Exit Sub
     End If
 
     '¿La cuenta esta verificada?
-    If Not CuentaVerificadaDatabase(UserName) Then
+    If Not CuentaVerificada(UserName) Then
         Call WriteErrorMsg(UserIndex, "La cuenta aun no ha sido verificada, por favor revise su email.")
         Call CloseSocket(UserIndex)
         Exit Sub
@@ -782,7 +796,6 @@ Sub ConnectAccount(ByVal UserIndex As Integer, _
         'Pasamos UserName tambien como email, ya que son lo mismo.... :(
         Call ApiEndpointSendLoginAccountEmail(UserName)
     End If
-
 
     Call SaveAccountLastLoginDatabase(UserName, UserList(UserIndex).IP)
     Call LoginAccountDatabase(UserIndex, UserName)
@@ -808,48 +821,13 @@ Sub CloseSocket(ByVal UserIndex As Integer)
         If .ConnID <> -1 Then
             Call CloseSocketSL(UserIndex)
         End If
-
-        'Nuevo centinela - maTih.-
-        If .CentinelaUsuario.centinelaIndex <> 0 Then
-            Call modCentinela.UsuarioInActivo(UserIndex)
-        End If
-        
-        'mato los comercios seguros
-        If .ComUsu.DestUsu > 0 Then
-            
-            If UserList(.ComUsu.DestUsu).flags.UserLogged Then
-                
-                If UserList(.ComUsu.DestUsu).ComUsu.DestUsu = UserIndex Then
-                    Call WriteConsoleMsg(.ComUsu.DestUsu, "Comercio cancelado por el otro usuario", FontTypeNames.FONTTYPE_WARNING)
-                    Call FinComerciarUsu(.ComUsu.DestUsu)
-                End If
-
-            End If
-
-        End If
-            
-        ' Retos nVSn. Usuario cierra conexion.
-        If .flags.SlotReto > 0 Then
-            Call Retos.UserDieFight(UserIndex, 0, True)
-        End If
-
-        ' Desequipamos la montura justo antes de cerrar el socket
-        ' para prevenir que se la equipe durante el conteo de salida (WyroX)
-        If .flags.Equitando = 1 Then
-            Call UnmountMontura(UserIndex)
-        End If
             
         'Empty buffer for reuse
         Call .incomingData.ReadASCIIStringFixed(.incomingData.Length)
 
-        If .flags.UserLogged Then
-            If NumUsers > 0 Then NumUsers = NumUsers - 1
-            Call CloseUser(UserIndex)
-            
-        Else
-            Call ResetUserSlot(UserIndex)
-
-        End If
+        'Si llegamos aqui, sacamos al usuario de la cuenta y reseteamos todo
+        Call CloseAccount(UserIndex)
+        Call ResetUserSlot(UserIndex)
             
         Call LiberarSlot(UserIndex)
             
@@ -1015,7 +993,7 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
         'Controlamos no pasar el maximo de usuarios
         If NumUsers >= MaxUsers Then
             Call WriteErrorMsg(UserIndex, "El servidor ha alcanzado el maximo de usuarios soportado, por favor vuelva a intertarlo mas tarde.")
-            Call CloseSocket(UserIndex)
+            Call CloseUser(UserIndex)
             Exit Sub
 
         End If
@@ -1024,25 +1002,25 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
         If AllowMultiLogins = False Then
             If CheckForSameIP(UserIndex, .IP) = True Then
                 Call WriteErrorMsg(UserIndex, "No es posible usar mas de un personaje al mismo tiempo.")
-                Call CloseSocket(UserIndex)
+                Call CloseUser(UserIndex)
                 Exit Sub
 
             End If
 
         End If
     
-        'Existe el personaje?
+        'Existe el personaje? (Se comprueba aqui de nuevo por el CrearPJ)
         If Not PersonajeExiste(Name) Then
             Call WriteErrorMsg(UserIndex, "El personaje no existe.")
-            Call CloseSocket(UserIndex)
+            Call CloseUser(UserIndex)
             Exit Sub
 
         End If
     
-        'Es el passwd valido?
+        'El personaje pertenece a la cuenta
         If Not PersonajePerteneceCuenta(Name, AccountHash) Then
-            Call WriteErrorMsg(UserIndex, "Ha ocurrido un error, por favor inicie sesion nuevamente.")
-            Call CloseSocket(UserIndex)
+            Call WriteErrorMsg(UserIndex, "El personaje al que intentas acceder no pertenece a tu cuenta.")
+            Call CloseUser(UserIndex)
             Exit Sub
 
         End If
@@ -1092,7 +1070,7 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
         If ServerSoloGMs > 0 Then
             If (.flags.Privilegios And (PlayerType.Admin Or PlayerType.Dios Or PlayerType.SemiDios Or PlayerType.Consejero)) = 0 Then
                 Call WriteErrorMsg(UserIndex, "Servidor restringido a administradores. Por favor reintente en unos momentos.")
-                Call CloseSocket(UserIndex)
+                Call CloseUser(UserIndex)
                 Exit Sub
 
             End If
@@ -1107,7 +1085,7 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
 
         If Not ValidateChr(UserIndex) Then
             Call WriteErrorMsg(UserIndex, "Error en el personaje.")
-            Call CloseSocket(UserIndex)
+            Call CloseUser(UserIndex)
             Exit Sub
 
         End If
@@ -1156,7 +1134,7 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
             If Not MapaValido(Mapa) Then
             Debug.Print Mapa
                 Call WriteErrorMsg(UserIndex, "El PJ se encuenta en un mapa invalido.")
-                Call CloseSocket(UserIndex)
+                Call CloseUser(UserIndex)
                 Exit Sub
 
             End If
@@ -1245,7 +1223,7 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
 
                     End If
                 
-                    Call CloseSocket(MapData(Mapa, .Pos.X, .Pos.Y).UserIndex)
+                    Call CloseUser(MapData(Mapa, .Pos.X, .Pos.Y).UserIndex)
 
                 End If
 
@@ -1333,7 +1311,7 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
     
         If EnTesting And .Stats.ELV >= 18 Then
             Call WriteErrorMsg(UserIndex, "Servidor en Testing por unos minutos, conectese con PJs de nivel menor a 18. No se conecte con Pjs que puedan resultar importantes por ahora pues pueden arruinarse.")
-            Call CloseSocket(UserIndex)
+            Call CloseUser(UserIndex)
             Exit Sub
 
         End If
@@ -1587,7 +1565,6 @@ Sub ResetBasicUserInfo(ByVal UserIndex As Integer)
     With UserList(UserIndex)
         .Name = vbNullString
         .ID = 0
-        .AccountHash = vbNullString
         .Desc = vbNullString
         .DescRM = vbNullString
         .Pos.Map = 0
@@ -1834,9 +1811,6 @@ Sub ResetUserSlot(ByVal UserIndex As Integer)
 
     Dim i As Long
 
-    UserList(UserIndex).ConnIDValida = False
-    UserList(UserIndex).ConnID = -1
-
     Call LimpiarComercioSeguro(UserIndex)
     Call ResetFacciones(UserIndex)
     Call ResetContadores(UserIndex)
@@ -1888,6 +1862,37 @@ Sub CloseUser(ByVal UserIndex As Integer)
     Dim aN   As Integer
 
     With UserList(UserIndex)
+    
+        'Nuevo centinela - maTih.-
+        If .CentinelaUsuario.centinelaIndex <> 0 Then
+            Call modCentinela.UsuarioInActivo(UserIndex)
+        End If
+        
+        'mato los comercios seguros
+        If .ComUsu.DestUsu > 0 Then
+            
+            If UserList(.ComUsu.DestUsu).flags.UserLogged Then
+                
+                If UserList(.ComUsu.DestUsu).ComUsu.DestUsu = UserIndex Then
+                    Call WriteConsoleMsg(.ComUsu.DestUsu, "Comercio cancelado por el otro usuario", FontTypeNames.FONTTYPE_WARNING)
+                    Call FinComerciarUsu(.ComUsu.DestUsu)
+                End If
+
+            End If
+
+        End If
+            
+        ' Retos nVSn. Usuario cierra conexion.
+        If .flags.SlotReto > 0 Then
+            Call Retos.UserDieFight(UserIndex, 0, True)
+        End If
+
+        ' Desequipamos la montura justo antes de cerrar el socket
+        ' para prevenir que se la equipe durante el conteo de salida (WyroX)
+        If .flags.Equitando = 1 Then
+            Call UnmountMontura(UserIndex)
+        End If
+    
         aN = .flags.AtacadoPorNpc
 
         If aN > 0 Then
@@ -1917,6 +1922,7 @@ Sub CloseUser(ByVal UserIndex As Integer)
         .Char.loops = 0
         Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageCreateFX(.Char.CharIndex, 0, 0))
     
+        If NumUsers > 0 Then NumUsers = NumUsers - 1
         .flags.UserLogged = False
         .Counters.Saliendo = False
     
@@ -2048,7 +2054,7 @@ Public Sub EcharPjsNoPrivilegiados()
 
         If UserList(LoopC).flags.UserLogged And UserList(LoopC).ConnID >= 0 And UserList(LoopC).ConnIDValida Then
             If UserList(LoopC).flags.Privilegios And PlayerType.User Then
-                Call CloseSocket(LoopC)
+                Call CloseUser(LoopC)
 
             End If
 

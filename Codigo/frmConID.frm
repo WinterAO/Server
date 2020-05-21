@@ -173,7 +173,7 @@ Private Sub Command3_Click()
 
     For i = 1 To MaxUsers
 
-        If UserList(i).ConnID <> -1 And UserList(i).ConnIDValida And Not UserList(i).flags.UserLogged Then Call CloseSocket(i)
+        If UserList(i).ConnID <> -1 And UserList(i).ConnIDValida And Not UserList(i).flags.UserLogged Then Call CloseUser(i)
     Next i
 
 End Sub
