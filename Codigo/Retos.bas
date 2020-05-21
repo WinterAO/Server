@@ -146,26 +146,26 @@ Private Function FreeSlot() As Byte
 End Function
 
 Private Sub PasateInteger(ByVal SlotArena As Byte, ByRef Users() As String)
-10        On Error GoTo Error
+    On Error GoTo Error
 
-          ' Cuando se acepta un reto los UserId strings pasan a UserId integer
-          
-20        With Retos(SlotArena)
-              Dim LoopC As Integer
+    ' Cuando se acepta un reto los UserId strings pasan a UserId integer
+               
+    With Retos(SlotArena)
+        Dim LoopC As Integer
               
-30            ReDim .Users(LBound(Users()) To UBound(Users())) As tRetoUser
+        ReDim .Users(LBound(Users()) To UBound(Users())) As tRetoUser
               
-40            For LoopC = LBound(.Users()) To UBound(.Users())
-50                .Users(LoopC).Userindex = NameIndex(Users(LoopC))
+        For LoopC = LBound(.Users()) To UBound(.Users())
+            .Users(LoopC).Userindex = NameIndex(Users(LoopC))
                   
-60                If .Users(LoopC).Userindex > 0 Then
-80                    UserList(.Users(LoopC).Userindex).Stats.Gld = UserList(.Users(LoopC).Userindex).Stats.Gld - .RequiredGld
-90                    Call WriteUpdateGold(.Users(LoopC).Userindex)
-100               End If
+            If .Users(LoopC).Userindex > 0 Then
+                UserList(.Users(LoopC).Userindex).Stats.Gld = UserList(.Users(LoopC).Userindex).Stats.Gld - .RequiredGld
+                Call WriteUpdateGold(.Users(LoopC).Userindex)
+            End If
                   
-110           Next LoopC
-120       End With
-130   Exit Sub
+        Next LoopC
+    End With
+   Exit Sub
 
 Error:
 140       LogRetos "[" & Err.Number & "] " & Err.description & ") PROCEDIMIENTO : PasateInteger()"

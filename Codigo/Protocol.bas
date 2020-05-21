@@ -35,7 +35,7 @@ Option Explicit
 
 #If False Then
 
-    Dim Map, X, Y, n, Mapa, race, helmet, weapon, shield, color, Value, ErrHandler, punishments, Length, obj, index As Variant
+    Dim Map, X, Y, n, Mapa, race, helmet, weapon, shield, color, Value, Errhandler, punishments, Length, obj, index As Variant
 
 #End If
 
@@ -111,11 +111,9 @@ Private Enum ServerPacketID
     UpdateHungerAndThirst        ' EHYS
     Fame                         ' FAMA
     MiniStats                    ' MEST
-    LevelUp                      ' SUNI
     AddForumMsg                  ' FMSG
     ShowForumForm                ' MFOR
     SetInvisible                 ' NOVER
-    DiceRoll                     ' DADOS
     MeditateToggle               ' MEDOK
     BlindNoMore                  ' NSEGUE
     DumbNoMore                   ' NESTUP
@@ -170,157 +168,153 @@ Private Enum ServerPacketID
     EquitandoToggle
     InitCraftman
     EnviarListDeAmigos
+    proyectil
 End Enum
 
 Private Enum ClientPacketID
-
-    LoginExistingChar = 1     'OLOGIN
-    ThrowDices = 2            'TIRDAD
-    LoginNewChar = 3          'NLOGIN
-    Talk = 4                  ';
-    Yell = 5                  '-
-    Whisper = 6                 '\
-    Walk = 7                     'M
-    RequestPositionUpdate = 8    'RPU
-    Attack = 9                  'AT
-    PickUp = 10                   'AG
-    SafeToggle = 11              '/SEG & SEG  (SEG's behaviour has to be coded in the client)
-    ResuscitationSafeToggle = 12
-    RequestGuildLeaderInfo = 13   'GLINFO
-    RequestAtributes = 14         'ATR
-    RequestFame = 15              'FAMA
-    RequestSkills = 16            'ESKI
-    RequestMiniStats = 17         'FEST
-    CommerceEnd = 18             'FINCOM
-    UserCommerceEnd = 19         'FINCOMUSU
-    UserCommerceConfirm = 20
-    CommerceChat = 21
-    BankEnd = 22                'FINBAN
-    UserCommerceOk = 23           'COMUSUOK
-    UserCommerceReject = 24       'COMUSUNO
-    Drop = 25                   'TI
-    CastSpell = 26                'LH
-    LeftClick = 27               'LC
-    DoubleClick = 28             'RC
-    Work = 29                     'UK
-    UseSpellMacro = 30           'UMH
-    UseItem = 31              'USA
-    CraftBlacksmith = 32          'CNS
-    CraftCarpenter = 33           'CNC
-    WorkLeftClick = 34           'WLC
-    CreateNewGuild = 35           'CIG
-    sadasdA = 36
-    EquipItem = 37               'EQUI
-    ChangeHeading = 38           'CHEA
-    ModifySkills = 39             'SKSE
-    Train = 40                   'ENTR
-    CommerceBuy = 41              'COMP
-    BankExtractItem = 42          'RETI
-    CommerceSell = 43            'VEND
-    BankDeposit = 44              'DEPO
-    ForumPost = 45                'DEMSG
-    MoveSpell = 46               'DESPHE
-    MoveBank = 47
-    ClanCodexUpdate = 48         'DESCOD
-    UserCommerceOffer = 49        'OFRECER
-    GuildAcceptPeace = 50         'ACEPPEAT
-    GuildRejectAlliance = 51      'RECPALIA
-    GuildRejectPeace = 52        'RECPPEAT
-    GuildAcceptAlliance = 53      'ACEPALIA
-    GuildOfferPeace = 54          'PEACEOFF
-    GuildOfferAlliance = 55       'ALLIEOFF
-    GuildAllianceDetails = 56     'ALLIEDET
-    GuildPeaceDetails = 57        'PEACEDET
-    GuildRequestJoinerInfo = 58   'ENVCOMEN
-    GuildAlliancePropList = 59    'ENVALPRO
-    GuildPeacePropList = 60       'ENVPROPP
-    GuildDeclareWar = 61          'DECGUERR
-    GuildNewWebsite = 62          'NEWWEBSI
-    GuildAcceptNewMember = 63     'ACEPTARI
-    GuildRejectNewMember = 64     'RECHAZAR
-    GuildKickMember = 65         'ECHARCLA
-    GuildUpdateNews = 66          'ACTGNEWS
-    GuildMemberInfo = 67          '1HRINFO<
-    GuildOpenElections = 68       'ABREELEC
-    GuildRequestMembership = 69   'SOLICITUD
-    GuildRequestDetails = 70      'CLANDETAILS
-    Online = 71                  '/ONLINE
-    Quit = 72                     '/SALIR
-    GuildLeave = 73               '/SALIRCLAN
-    RequestAccountState = 74      '/BALANCE
-    PetStand = 75                 '/QUIETO
-    PetFollow = 76                '/ACOMPANAR
-    ReleasePet = 77              '/LIBERAR
-    TrainList = 78                '/ENTRENAR
-    Rest = 79                     '/DESCANSAR
-    Meditate = 80                '/MEDITAR
-    Resucitate = 81               '/RESUCITAR
-    Heal = 82                     '/CURAR
-    Help = 83                    '/AYUDA
-    RequestStats = 84             '/EST
-    CommerceStart = 85           '/COMERCIAR
-    BankStart = 86               '/BOVEDA
-    Enlist = 87                   '/ENLISTAR
-    Information = 88            '/INFORMACION
-    Reward = 89                   '/RECOMPENSA
-    RequestMOTD = 90              '/MOTD
-    UpTime = 91                   '/UPTIME
-    PartyLeave = 92               '/SALIRPARTY
-    PartyCreate = 93              '/CREARPARTY
-    PartyJoin = 94                '/PARTY
-    Inquiry = 95                  '/ENCUESTA ( with no params )
-    GuildMessage = 96             '/CMSG
-    PartyMessage = 97             '/PMSG
-    GuildOnline = 98              '/ONLINECLAN
-    PartyOnline = 99             '/ONLINEPARTY
-    CouncilMessage = 100           '/BMSG
-    RoleMasterRequest = 101     '/ROL
-    GMRequest = 102              '/GM
-    bugReport = 103              '/_BUG
-    ChangeDescription = 104      '/DESC
-    GuildVote = 105              '/VOTO
-    punishments = 106           '/PENAS
-    ChangePassword = 107         '/CONTRASENA
-    Gamble = 108                '/APOSTAR
-    InquiryVote = 109            '/ENCUESTA ( with parameters )
-    LeaveFaction = 110          '/RETIRAR ( with no arguments )
-    BankExtractGold = 111        '/RETIRAR ( with arguments )
-    BankDepositGold = 112        '/DEPOSITAR
-    Denounce = 113               '/DENUNCIAR
-    GuildFundate = 114          '/FUNDARCLAN
-    GuildFundation = 115
-    PartyKick = 116              '/ECHARPARTY
-    PartySetLeader = 117         '/PARTYLIDER
-    PartyAcceptMember = 118      '/ACCEPTPARTY
-    Ping = 119                  '/PING
-    RequestPartyForm = 120
-    ItemUpgrade = 121
-    GMCommands = 122
-    InitCrafting = 123
-    Home = 124
-    ShowGuildNews = 125
-    ShareNpc = 126               '/COMPARTIR
-    StopSharingNpc = 127
-    Consultation = 128
-    moveItem = 129
-    LoginExistingAccount = 130  'CHOTS | Accounts
-    LoginNewAccount = 131       'CHOTS | Accounts
-    CentinelReport = 132
-    Ecvc = 133
-    Acvc = 134
-    IrCvc = 135
-    DragAndDropHechizos = 136
-    Quest = 137                  '/QUEST
-    QuestAccept = 138
-    QuestListRequest = 139
-    QuestDetailsRequest = 140
-    QuestAbandon = 141
-    CambiarContrasena = 142
-    FightSend = 143
-    FightAccept = 144
-    CloseGuild = 145
-    Discord = 146
-    DeleteChar = 147
+    LoginExistingChar = 1           'OLOGIN
+    LoginNewChar                    'NLOGIN
+    Talk                            ';
+    Yell                            '-
+    Whisper                         '\
+    Walk                            'M
+    RequestPositionUpdate           'RPU
+    Attack                          'AT
+    PickUp                          'AG
+    SafeToggle                      '/SEG & SEG  (SEG's behaviour has to be coded in the client)
+    ResuscitationSafeToggle
+    RequestGuildLeaderInfo          'GLINFO
+    RequestAtributes                'ATR
+    RequestFame                     'FAMA
+    RequestSkills                   'ESKI
+    RequestMiniStats                'FEST
+    CommerceEnd                     'FINCOM
+    UserCommerceEnd                 'FINCOMUSU
+    UserCommerceConfirm
+    CommerceChat
+    BankEnd                         'FINBAN
+    UserCommerceOk                  'COMUSUOK
+    UserCommerceReject              'COMUSUNO
+    Drop                            'TI
+    CastSpell                       'LH
+    LeftClick                       'LC
+    AccionClick                     'RC
+    Work                            'UK
+    UseSpellMacro                   'UMH
+    UseItem                         'USA
+    CraftBlacksmith                 'CNS
+    CraftCarpenter                  'CNC
+    WorkLeftClick                   'WLC
+    CreateNewGuild                  'CIG
+    sadasdA
+    EquipItem                      'EQUI
+    ChangeHeading                  'CHEA
+    Train                          'ENTR
+    CommerceBuy                    'COMP
+    BankExtractItem                'RETI
+    CommerceSell                   'VEND
+    BankDeposit                    'DEPO
+    ForumPost                      'DEMSG
+    MoveSpell                      'DESPHE
+    MoveBank
+    ClanCodexUpdate               'DESCOD
+    UserCommerceOffer             'OFRECER
+    GuildAcceptPeace              'ACEPPEAT
+    GuildRejectAlliance           'RECPALIA
+    GuildRejectPeace              'RECPPEAT
+    GuildAcceptAlliance           'ACEPALIA
+    GuildOfferPeace               'PEACEOFF
+    GuildOfferAlliance            'ALLIEOFF
+    GuildAllianceDetails          'ALLIEDET
+    GuildPeaceDetails             'PEACEDET
+    GuildRequestJoinerInfo        'ENVCOMEN
+    GuildAlliancePropList         'ENVALPRO
+    GuildPeacePropList            'ENVPROPP
+    GuildDeclareWar               'DECGUERR
+    GuildNewWebsite               'NEWWEBSI
+    GuildAcceptNewMember          'ACEPTARI
+    GuildRejectNewMember          'RECHAZAR
+    GuildKickMember               'ECHARCLA
+    GuildUpdateNews               'ACTGNEWS
+    GuildMemberInfo               '1HRINFO<
+    GuildOpenElections            'ABREELEC
+    GuildRequestMembership        'SOLICITUD
+    GuildRequestDetails           'CLANDETAILS
+    Online                        '/ONLINE
+    Quit                          '/SALIR
+    GuildLeave                    '/SALIRCLAN
+    RequestAccountState           '/BALANCE
+    PetStand                      '/QUIETO
+    PetFollow                     '/ACOMPANAR
+    ReleasePet                    '/LIBERAR
+    TrainList                     '/ENTRENAR
+    Rest                          '/DESCANSAR
+    Meditate                      '/MEDITAR
+    Resucitate                    '/RESUCITAR
+    Heal                          '/CURAR
+    Help                          '/AYUDA
+    RequestStats                  '/EST
+    CommerceStart                 '/COMERCIAR
+    BankStart                     '/BOVEDA
+    Enlist                        '/ENLISTAR
+    Information                   '/INFORMACION
+    Reward                        '/RECOMPENSA
+    RequestMOTD                   '/MOTD
+    UpTime                        '/UPTIME
+    PartyLeave                    '/SALIRPARTY
+    PartyCreate                   '/CREARPARTY
+    PartyJoin                     '/PARTY
+    Inquiry                       '/ENCUESTA ( with no params )
+    GuildMessage                  '/CMSG
+    PartyMessage                  '/PMSG
+    GuildOnline                   '/ONLINECLAN
+    PartyOnline                   '/ONLINEPARTY
+    CouncilMessage                '/BMSG
+    RoleMasterRequest             '/ROL
+    GMRequest                     '/GM
+    bugReport                     '/_BUG
+    ChangeDescription             '/DESC
+    GuildVote                     '/VOTO
+    punishments                   '/PENAS
+    ChangePassword                '/CONTRASENA
+    Gamble                        '/APOSTAR
+    InquiryVote                   '/ENCUESTA ( with parameters )
+    LeaveFaction                  '/RETIRAR ( with no arguments )
+    BankExtractGold               '/RETIRAR ( with arguments )
+    BankDepositGold               '/DEPOSITAR
+    Denounce                      '/DENUNCIAR
+    GuildFundate                  '/FUNDARCLAN
+    GuildFundation
+    PartyKick                     '/ECHARPARTY
+    PartySetLeader                '/PARTYLIDER
+    PartyAcceptMember             '/ACCEPTPARTY
+    Ping                          '/PING
+    RequestPartyForm
+    ItemUpgrade
+    GMCommands
+    InitCrafting
+    Home
+    ShowGuildNews
+    ShareNpc                      '/COMPARTIR
+    StopSharingNpc
+    Consultation
+    moveItem
+    LoginExistingAccount      'CHOTS | Accounts
+    CentinelReport
+    Ecvc
+    Acvc
+    IrCvc
+    DragAndDropHechizos
+    Quest                       '/QUEST
+    QuestAccept
+    QuestListRequest
+    QuestDetailsRequest
+    QuestAbandon
+    FightSend
+    FightAccept
+    CloseGuild
+    Discord
+    DeleteChar
     CraftsmanCreate
     AddAmigos
     DelAmigos
@@ -370,7 +364,6 @@ Public Enum eEditOptions
     eo_Level
     eo_Class
     eo_Skills
-    eo_SkillPointsLeft
     eo_Nobleza
     eo_Asesino
     eo_Sex
@@ -396,7 +389,7 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Public Function HandleIncomingData(ByVal Userindex As Integer) As Boolean
+Public Function HandleIncomingData(ByVal UserIndex As Integer) As Boolean
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -405,7 +398,7 @@ Public Function HandleIncomingData(ByVal Userindex As Integer) As Boolean
     '***************************************************
     On Error Resume Next
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         
         'Contamos cuantos paquetes recibimos.
         .Counters.PacketsTick = .Counters.PacketsTick + 1
@@ -425,17 +418,14 @@ Public Function HandleIncomingData(ByVal Userindex As Integer) As Boolean
         Dim packetID As Long: packetID = CLng(.incomingData.PeekByte())
 
         'Verifico si el paquete necesita que el user este logeado
-        If Not (packetID = ClientPacketID.ThrowDices _
-                Or packetID = ClientPacketID.LoginExistingChar _
+        If Not (packetID = ClientPacketID.LoginExistingChar _
                 Or packetID = ClientPacketID.LoginNewChar _
-                Or packetID = ClientPacketID.LoginNewAccount _
                 Or packetID = ClientPacketID.LoginExistingAccount _
-                Or packetID = ClientPacketID.DeleteChar _
-                Or packetID = ClientPacketID.CambiarContrasena) Then
-            
+                Or packetID = ClientPacketID.DeleteChar) Then
+             
             'Vierifico si el user esta logeado
             If Not .flags.UserLogged Then
-                Call CloseSocket(Userindex)
+                Call CloseSocket(UserIndex)
                 Exit Function
             
                 'El usuario ya logueo. Reseteamos el tiempo AFK si el ID es valido.
@@ -449,7 +439,7 @@ Public Function HandleIncomingData(ByVal Userindex As Integer) As Boolean
             
             'Vierifico si el user esta logeado
             If .flags.UserLogged Then
-                Call CloseSocket(Userindex)
+                Call CloseSocket(UserIndex)
                 Exit Function
     
             End If
@@ -464,479 +454,467 @@ Public Function HandleIncomingData(ByVal Userindex As Integer) As Boolean
     Select Case packetID
         
         Case ClientPacketID.LoginExistingChar       'OLOGIN
-            Call HandleLoginExistingChar(Userindex)
-        
-        Case ClientPacketID.ThrowDices              'TIRDAD
-            Call HandleThrowDices(Userindex)
+            Call HandleLoginExistingChar(UserIndex)
         
         Case ClientPacketID.LoginNewChar            'NLOGIN
-            Call HandleLoginNewChar(Userindex)
+            Call HandleLoginNewChar(UserIndex)
 
         Case ClientPacketID.DeleteChar
-            Call HandleDeleteChar(Userindex)
+            Call HandleDeleteChar(UserIndex)
         
         Case ClientPacketID.Talk                    ';
-            Call HandleTalk(Userindex)
+            Call HandleTalk(UserIndex)
         
         Case ClientPacketID.Yell                    '-
-            Call HandleYell(Userindex)
+            Call HandleYell(UserIndex)
         
         Case ClientPacketID.Whisper                 '\
-            Call HandleWhisper(Userindex)
+            Call HandleWhisper(UserIndex)
         
         Case ClientPacketID.Walk                    'M
-            Call HandleWalk(Userindex)
+            Call HandleWalk(UserIndex)
         
         Case ClientPacketID.RequestPositionUpdate   'RPU
-            Call HandleRequestPositionUpdate(Userindex)
+            Call HandleRequestPositionUpdate(UserIndex)
         
         Case ClientPacketID.Attack                  'AT
-            Call HandleAttack(Userindex)
+            Call HandleAttack(UserIndex)
         
         Case ClientPacketID.PickUp                  'AG
-            Call HandlePickUp(Userindex)
+            Call HandlePickUp(UserIndex)
         
         Case ClientPacketID.SafeToggle              '/SEG & SEG  (SEG's behaviour has to be coded in the client)
-            Call HandleSafeToggle(Userindex)
+            Call HandleSafeToggle(UserIndex)
         
         Case ClientPacketID.ResuscitationSafeToggle
-            Call HandleResuscitationToggle(Userindex)
+            Call HandleResuscitationToggle(UserIndex)
         
         Case ClientPacketID.RequestGuildLeaderInfo  'GLINFO
-            Call HandleRequestGuildLeaderInfo(Userindex)
+            Call HandleRequestGuildLeaderInfo(UserIndex)
         
         Case ClientPacketID.RequestAtributes        'ATR
-            Call HandleRequestAtributes(Userindex)
+            Call HandleRequestAtributes(UserIndex)
         
         Case ClientPacketID.RequestFame             'FAMA
-            Call HandleRequestFame(Userindex)
+            Call HandleRequestFame(UserIndex)
         
         Case ClientPacketID.RequestSkills           'ESKI
-            Call HandleRequestSkills(Userindex)
+            Call HandleRequestSkills(UserIndex)
         
         Case ClientPacketID.RequestMiniStats        'FEST
-            Call HandleRequestMiniStats(Userindex)
+            Call HandleRequestMiniStats(UserIndex)
         
         Case ClientPacketID.CommerceEnd             'FINCOM
-            Call HandleCommerceEnd(Userindex)
+            Call HandleCommerceEnd(UserIndex)
             
         Case ClientPacketID.CommerceChat
-            Call HandleCommerceChat(Userindex)
+            Call HandleCommerceChat(UserIndex)
         
         Case ClientPacketID.UserCommerceEnd         'FINCOMUSU
-            Call HandleUserCommerceEnd(Userindex)
+            Call HandleUserCommerceEnd(UserIndex)
             
         Case ClientPacketID.UserCommerceConfirm
-            Call HandleUserCommerceConfirm(Userindex)
+            Call HandleUserCommerceConfirm(UserIndex)
         
         Case ClientPacketID.BankEnd                 'FINBAN
-            Call HandleBankEnd(Userindex)
+            Call HandleBankEnd(UserIndex)
         
         Case ClientPacketID.UserCommerceOk          'COMUSUOK
-            Call HandleUserCommerceOk(Userindex)
+            Call HandleUserCommerceOk(UserIndex)
         
         Case ClientPacketID.UserCommerceReject      'COMUSUNO
-            Call HandleUserCommerceReject(Userindex)
+            Call HandleUserCommerceReject(UserIndex)
         
         Case ClientPacketID.Drop                    'TI
-            Call HandleDrop(Userindex)
+            Call HandleDrop(UserIndex)
         
         Case ClientPacketID.CastSpell               'LH
-            Call HandleCastSpell(Userindex)
+            Call HandleCastSpell(UserIndex)
         
         Case ClientPacketID.LeftClick               'LC
-            Call HandleLeftClick(Userindex)
+            Call HandleLeftClick(UserIndex)
         
-        Case ClientPacketID.DoubleClick             'RC
-            Call HandleDoubleClick(Userindex)
+        Case ClientPacketID.AccionClick             'RC
+            Call HandleAccionClick(UserIndex)
         
         Case ClientPacketID.Work                    'UK
-            Call HandleWork(Userindex)
+            Call HandleWork(UserIndex)
         
         Case ClientPacketID.UseSpellMacro           'UMH
-            Call HandleUseSpellMacro(Userindex)
+            Call HandleUseSpellMacro(UserIndex)
         
         Case ClientPacketID.UseItem                 'USA
-            Call HandleUseItem(Userindex)
+            Call HandleUseItem(UserIndex)
         
         Case ClientPacketID.CraftBlacksmith         'CNS
-            Call HandleCraftBlacksmith(Userindex)
+            Call HandleCraftBlacksmith(UserIndex)
         
         Case ClientPacketID.CraftCarpenter          'CNC
-            Call HandleCraftCarpenter(Userindex)
+            Call HandleCraftCarpenter(UserIndex)
         
         Case ClientPacketID.WorkLeftClick           'WLC
-            Call HandleWorkLeftClick(Userindex)
+            Call HandleWorkLeftClick(UserIndex)
         
         Case ClientPacketID.CreateNewGuild          'CIG
-            Call HandleCreateNewGuild(Userindex)
+            Call HandleCreateNewGuild(UserIndex)
         
         Case ClientPacketID.EquipItem               'EQUI
-            Call HandleEquipItem(Userindex)
+            Call HandleEquipItem(UserIndex)
         
         Case ClientPacketID.ChangeHeading           'CHEA
-            Call HandleChangeHeading(Userindex)
-        
-        Case ClientPacketID.ModifySkills            'SKSE
-            Call HandleModifySkills(Userindex)
+            Call HandleChangeHeading(UserIndex)
         
         Case ClientPacketID.Train                   'ENTR
-            Call HandleTrain(Userindex)
+            Call HandleTrain(UserIndex)
         
         Case ClientPacketID.CommerceBuy             'COMP
-            Call HandleCommerceBuy(Userindex)
+            Call HandleCommerceBuy(UserIndex)
         
         Case ClientPacketID.BankExtractItem         'RETI
-            Call HandleBankExtractItem(Userindex)
+            Call HandleBankExtractItem(UserIndex)
         
         Case ClientPacketID.CommerceSell            'VEND
-            Call HandleCommerceSell(Userindex)
+            Call HandleCommerceSell(UserIndex)
         
         Case ClientPacketID.BankDeposit             'DEPO
-            Call HandleBankDeposit(Userindex)
+            Call HandleBankDeposit(UserIndex)
         
         Case ClientPacketID.ForumPost               'DEMSG
-            Call HandleForumPost(Userindex)
+            Call HandleForumPost(UserIndex)
         
         Case ClientPacketID.MoveSpell               'DESPHE
-            Call HandleMoveSpell(Userindex)
+            Call HandleMoveSpell(UserIndex)
             
         Case ClientPacketID.MoveBank
-            Call HandleMoveBank(Userindex)
+            Call HandleMoveBank(UserIndex)
         
         Case ClientPacketID.ClanCodexUpdate         'DESCOD
-            Call HandleClanCodexUpdate(Userindex)
+            Call HandleClanCodexUpdate(UserIndex)
         
         Case ClientPacketID.UserCommerceOffer       'OFRECER
-            Call HandleUserCommerceOffer(Userindex)
+            Call HandleUserCommerceOffer(UserIndex)
         
         Case ClientPacketID.GuildAcceptPeace        'ACEPPEAT
-            Call HandleGuildAcceptPeace(Userindex)
+            Call HandleGuildAcceptPeace(UserIndex)
         
         Case ClientPacketID.GuildRejectAlliance     'RECPALIA
-            Call HandleGuildRejectAlliance(Userindex)
+            Call HandleGuildRejectAlliance(UserIndex)
         
         Case ClientPacketID.GuildRejectPeace        'RECPPEAT
-            Call HandleGuildRejectPeace(Userindex)
+            Call HandleGuildRejectPeace(UserIndex)
         
         Case ClientPacketID.GuildAcceptAlliance     'ACEPALIA
-            Call HandleGuildAcceptAlliance(Userindex)
+            Call HandleGuildAcceptAlliance(UserIndex)
         
         Case ClientPacketID.GuildOfferPeace         'PEACEOFF
-            Call HandleGuildOfferPeace(Userindex)
+            Call HandleGuildOfferPeace(UserIndex)
         
         Case ClientPacketID.GuildOfferAlliance      'ALLIEOFF
-            Call HandleGuildOfferAlliance(Userindex)
+            Call HandleGuildOfferAlliance(UserIndex)
         
         Case ClientPacketID.GuildAllianceDetails    'ALLIEDET
-            Call HandleGuildAllianceDetails(Userindex)
+            Call HandleGuildAllianceDetails(UserIndex)
         
         Case ClientPacketID.GuildPeaceDetails       'PEACEDET
-            Call HandleGuildPeaceDetails(Userindex)
+            Call HandleGuildPeaceDetails(UserIndex)
         
         Case ClientPacketID.GuildRequestJoinerInfo  'ENVCOMEN
-            Call HandleGuildRequestJoinerInfo(Userindex)
+            Call HandleGuildRequestJoinerInfo(UserIndex)
         
         Case ClientPacketID.GuildAlliancePropList   'ENVALPRO
-            Call HandleGuildAlliancePropList(Userindex)
+            Call HandleGuildAlliancePropList(UserIndex)
         
         Case ClientPacketID.GuildPeacePropList      'ENVPROPP
-            Call HandleGuildPeacePropList(Userindex)
+            Call HandleGuildPeacePropList(UserIndex)
         
         Case ClientPacketID.GuildDeclareWar         'DECGUERR
-            Call HandleGuildDeclareWar(Userindex)
+            Call HandleGuildDeclareWar(UserIndex)
         
         Case ClientPacketID.GuildNewWebsite         'NEWWEBSI
-            Call HandleGuildNewWebsite(Userindex)
+            Call HandleGuildNewWebsite(UserIndex)
         
         Case ClientPacketID.GuildAcceptNewMember    'ACEPTARI
-            Call HandleGuildAcceptNewMember(Userindex)
+            Call HandleGuildAcceptNewMember(UserIndex)
         
         Case ClientPacketID.GuildRejectNewMember    'RECHAZAR
-            Call HandleGuildRejectNewMember(Userindex)
+            Call HandleGuildRejectNewMember(UserIndex)
         
         Case ClientPacketID.GuildKickMember         'ECHARCLA
-            Call HandleGuildKickMember(Userindex)
+            Call HandleGuildKickMember(UserIndex)
         
         Case ClientPacketID.GuildUpdateNews         'ACTGNEWS
-            Call HandleGuildUpdateNews(Userindex)
+            Call HandleGuildUpdateNews(UserIndex)
         
         Case ClientPacketID.GuildMemberInfo         '1HRINFO<
-            Call HandleGuildMemberInfo(Userindex)
+            Call HandleGuildMemberInfo(UserIndex)
         
         Case ClientPacketID.GuildOpenElections      'ABREELEC
-            Call HandleGuildOpenElections(Userindex)
+            Call HandleGuildOpenElections(UserIndex)
         
         Case ClientPacketID.GuildRequestMembership  'SOLICITUD
-            Call HandleGuildRequestMembership(Userindex)
+            Call HandleGuildRequestMembership(UserIndex)
         
         Case ClientPacketID.GuildRequestDetails     'CLANDETAILS
-            Call HandleGuildRequestDetails(Userindex)
+            Call HandleGuildRequestDetails(UserIndex)
                   
         Case ClientPacketID.Online                  '/ONLINE
-            Call HandleOnline(Userindex)
+            Call HandleOnline(UserIndex)
         
         Case ClientPacketID.Quit                    '/SALIR
-            Call HandleQuit(Userindex)
+            Call HandleQuit(UserIndex)
         
         Case ClientPacketID.GuildLeave              '/SALIRCLAN
-            Call HandleGuildLeave(Userindex)
+            Call HandleGuildLeave(UserIndex)
         
         Case ClientPacketID.RequestAccountState     '/BALANCE
-            Call HandleRequestAccountState(Userindex)
+            Call HandleRequestAccountState(UserIndex)
         
         Case ClientPacketID.PetStand                '/QUIETO
-            Call HandlePetStand(Userindex)
+            Call HandlePetStand(UserIndex)
         
         Case ClientPacketID.PetFollow               '/ACOMPANAR
-            Call HandlePetFollow(Userindex)
+            Call HandlePetFollow(UserIndex)
             
         Case ClientPacketID.ReleasePet              '/LIBERAR
-            Call HandleReleasePet(Userindex)
+            Call HandleReleasePet(UserIndex)
         
         Case ClientPacketID.TrainList               '/ENTRENAR
-            Call HandleTrainList(Userindex)
+            Call HandleTrainList(UserIndex)
         
         Case ClientPacketID.Rest                    '/DESCANSAR
-            Call HandleRest(Userindex)
+            Call HandleRest(UserIndex)
         
         Case ClientPacketID.Meditate                '/MEDITAR
-            Call HandleMeditate(Userindex)
+            Call HandleMeditate(UserIndex)
         
         Case ClientPacketID.Resucitate              '/RESUCITAR
-            Call HandleResucitate(Userindex)
+            Call HandleResucitate(UserIndex)
         
         Case ClientPacketID.Heal                    '/CURAR
-            Call HandleHeal(Userindex)
+            Call HandleHeal(UserIndex)
         
         Case ClientPacketID.Help                    '/AYUDA
-            Call HandleHelp(Userindex)
+            Call HandleHelp(UserIndex)
         
         Case ClientPacketID.RequestStats            '/EST
-            Call HandleRequestStats(Userindex)
+            Call HandleRequestStats(UserIndex)
         
         Case ClientPacketID.CommerceStart           '/COMERCIAR
-            Call HandleCommerceStart(Userindex)
+            Call HandleCommerceStart(UserIndex)
         
         Case ClientPacketID.BankStart               '/BOVEDA
-            Call HandleBankStart(Userindex)
+            Call HandleBankStart(UserIndex)
         
         Case ClientPacketID.Enlist                  '/ENLISTAR
-            Call HandleEnlist(Userindex)
+            Call HandleEnlist(UserIndex)
         
         Case ClientPacketID.Information             '/INFORMACION
-            Call HandleInformation(Userindex)
+            Call HandleInformation(UserIndex)
         
         Case ClientPacketID.Reward                  '/RECOMPENSA
-            Call HandleReward(Userindex)
+            Call HandleReward(UserIndex)
         
         Case ClientPacketID.RequestMOTD             '/MOTD
-            Call HandleRequestMOTD(Userindex)
+            Call HandleRequestMOTD(UserIndex)
         
         Case ClientPacketID.UpTime                  '/UPTIME
-            Call HandleUpTime(Userindex)
+            Call HandleUpTime(UserIndex)
         
         Case ClientPacketID.PartyLeave              '/SALIRPARTY
-            Call HandlePartyLeave(Userindex)
+            Call HandlePartyLeave(UserIndex)
         
         Case ClientPacketID.PartyCreate             '/CREARPARTY
-            Call HandlePartyCreate(Userindex)
+            Call HandlePartyCreate(UserIndex)
         
         Case ClientPacketID.PartyJoin               '/PARTY
-            Call HandlePartyJoin(Userindex)
+            Call HandlePartyJoin(UserIndex)
         
         Case ClientPacketID.Inquiry                 '/ENCUESTA ( with no params )
-            Call HandleInquiry(Userindex)
+            Call HandleInquiry(UserIndex)
         
         Case ClientPacketID.GuildMessage            '/CMSG
-            Call HandleGuildMessage(Userindex)
+            Call HandleGuildMessage(UserIndex)
         
         Case ClientPacketID.PartyMessage            '/PMSG
-            Call HandlePartyMessage(Userindex)
+            Call HandlePartyMessage(UserIndex)
         
         Case ClientPacketID.GuildOnline             '/ONLINECLAN
-            Call HandleGuildOnline(Userindex)
+            Call HandleGuildOnline(UserIndex)
         
         Case ClientPacketID.PartyOnline             '/ONLINEPARTY
-            Call HandlePartyOnline(Userindex)
+            Call HandlePartyOnline(UserIndex)
         
         Case ClientPacketID.CouncilMessage          '/BMSG
-            Call HandleCouncilMessage(Userindex)
+            Call HandleCouncilMessage(UserIndex)
         
         Case ClientPacketID.RoleMasterRequest       '/ROL
-            Call HandleRoleMasterRequest(Userindex)
+            Call HandleRoleMasterRequest(UserIndex)
         
         Case ClientPacketID.GMRequest               '/GM
-            Call HandleGMRequest(Userindex)
+            Call HandleGMRequest(UserIndex)
         
         Case ClientPacketID.bugReport               '/_BUG
-            Call HandleBugReport(Userindex)
+            Call HandleBugReport(UserIndex)
         
         Case ClientPacketID.ChangeDescription       '/DESC
-            Call HandleChangeDescription(Userindex)
+            Call HandleChangeDescription(UserIndex)
         
         Case ClientPacketID.GuildVote               '/VOTO
-            Call HandleGuildVote(Userindex)
+            Call HandleGuildVote(UserIndex)
         
         Case ClientPacketID.punishments             '/PENAS
-            Call HandlePunishments(Userindex)
+            Call HandlePunishments(UserIndex)
         
         Case ClientPacketID.ChangePassword          '/CONTRASENA
-            Call HandleChangePassword(Userindex)
+            Call HandleChangePassword(UserIndex)
         
         Case ClientPacketID.Gamble                  '/APOSTAR
-            Call HandleGamble(Userindex)
+            Call HandleGamble(UserIndex)
         
         Case ClientPacketID.InquiryVote             '/ENCUESTA ( with parameters )
-            Call HandleInquiryVote(Userindex)
+            Call HandleInquiryVote(UserIndex)
         
         Case ClientPacketID.LeaveFaction            '/RETIRAR ( with no arguments )
-            Call HandleLeaveFaction(Userindex)
+            Call HandleLeaveFaction(UserIndex)
         
         Case ClientPacketID.BankExtractGold         '/RETIRAR ( with arguments )
-            Call HandleBankExtractGold(Userindex)
+            Call HandleBankExtractGold(UserIndex)
         
         Case ClientPacketID.BankDepositGold         '/DEPOSITAR
-            Call HandleBankDepositGold(Userindex)
+            Call HandleBankDepositGold(UserIndex)
         
         Case ClientPacketID.Denounce                '/DENUNCIAR
-            Call HandleDenounce(Userindex)
+            Call HandleDenounce(UserIndex)
         
         Case ClientPacketID.GuildFundate            '/FUNDARCLAN
-            Call HandleGuildFundate(Userindex)
+            Call HandleGuildFundate(UserIndex)
             
         Case ClientPacketID.GuildFundation
-            Call HandleGuildFundation(Userindex)
+            Call HandleGuildFundation(UserIndex)
         
         Case ClientPacketID.PartyKick               '/ECHARPARTY
-            Call HandlePartyKick(Userindex)
+            Call HandlePartyKick(UserIndex)
         
         Case ClientPacketID.PartySetLeader          '/PARTYLIDER
-            Call HandlePartySetLeader(Userindex)
+            Call HandlePartySetLeader(UserIndex)
         
         Case ClientPacketID.PartyAcceptMember       '/ACCEPTPARTY
-            Call HandlePartyAcceptMember(Userindex)
+            Call HandlePartyAcceptMember(UserIndex)
         
         Case ClientPacketID.Ping                    '/PING
-            Call HandlePing(Userindex)
+            Call HandlePing(UserIndex)
             
         Case ClientPacketID.RequestPartyForm
-            Call HandlePartyForm(Userindex)
+            Call HandlePartyForm(UserIndex)
             
         Case ClientPacketID.ItemUpgrade
-            Call HandleItemUpgrade(Userindex)
+            Call HandleItemUpgrade(UserIndex)
         
         Case ClientPacketID.GMCommands              'GM Messages
-            Call HandleGMCommands(Userindex)
+            Call HandleGMCommands(UserIndex)
             
         Case ClientPacketID.InitCrafting
-            Call HandleInitCrafting(Userindex)
+            Call HandleInitCrafting(UserIndex)
         
         Case ClientPacketID.Home
-            Call HandleHome(Userindex)
+            Call HandleHome(UserIndex)
         
         Case ClientPacketID.ShowGuildNews
-            Call HandleShowGuildNews(Userindex)
+            Call HandleShowGuildNews(UserIndex)
             
         Case ClientPacketID.ShareNpc
-            Call HandleShareNpc(Userindex)
+            Call HandleShareNpc(UserIndex)
             
         Case ClientPacketID.StopSharingNpc
-            Call HandleStopSharingNpc(Userindex)
+            Call HandleStopSharingNpc(UserIndex)
             
         Case ClientPacketID.Consultation
-            Call HandleConsultation(Userindex)
+            Call HandleConsultation(UserIndex)
         
         Case ClientPacketID.moveItem
-            Call HandleMoveItem(Userindex)
+            Call HandleMoveItem(UserIndex)
 
         Case ClientPacketID.LoginExistingAccount
-            Call HandleLoginExistingAccount(Userindex)
-
-        Case ClientPacketID.LoginNewAccount
-            Call HandleLoginNewAccount(Userindex)
+            Call HandleLoginExistingAccount(UserIndex)
         
         Case ClientPacketID.CentinelReport
-            Call HandleCentinelReport(Userindex)
+            Call HandleCentinelReport(UserIndex)
             
         Case ClientPacketID.Ecvc
-            Call HandleEnviaCvc(Userindex)
+            Call HandleEnviaCvc(UserIndex)
 
         Case ClientPacketID.Acvc
-            Call HandleAceptarCvc(Userindex)
+            Call HandleAceptarCvc(UserIndex)
 
         Case ClientPacketID.IrCvc
-            Call HandleIrCvc(Userindex)
+            Call HandleIrCvc(UserIndex)
             
         Case ClientPacketID.DragAndDropHechizos
-            Call HandleDragAndDropHechizos(Userindex)
+            Call HandleDragAndDropHechizos(UserIndex)
   
         Case ClientPacketID.Quest
-            Call Quests.HandleQuest(Userindex)
+            Call Quests.HandleQuest(UserIndex)
             
         Case ClientPacketID.QuestAccept
-            Call Quests.HandleQuestAccept(Userindex)
+            Call Quests.HandleQuestAccept(UserIndex)
         
         Case ClientPacketID.QuestListRequest
-            Call Quests.HandleQuestListRequest(Userindex)
+            Call Quests.HandleQuestListRequest(UserIndex)
         
         Case ClientPacketID.QuestDetailsRequest
-            Call Quests.HandleQuestDetailsRequest(Userindex)
+            Call Quests.HandleQuestDetailsRequest(UserIndex)
         
         Case ClientPacketID.QuestAbandon
-            Call Quests.HandleQuestAbandon(Userindex)
-        
-        Case ClientPacketID.CambiarContrasena
-            Call HandleCambiarContrasena(Userindex)
+            Call Quests.HandleQuestAbandon(UserIndex)
 
         Case ClientPacketID.FightSend
-            Call HandleFightSend(Userindex)
+            Call HandleFightSend(UserIndex)
             
         Case ClientPacketID.FightAccept
-            Call HandleFightAccept(Userindex)
+            Call HandleFightAccept(UserIndex)
         
         Case ClientPacketID.CloseGuild
-            Call HandleCloseGuild(Userindex)
+            Call HandleCloseGuild(UserIndex)
         
         Case ClientPacketID.Discord                  '/Discord
-            Call HandleDiscord(Userindex)
+            Call HandleDiscord(UserIndex)
             
         Case ClientPacketID.CraftsmanCreate
-            Call HandleCraftsmanCreate(Userindex)
+            Call HandleCraftsmanCreate(UserIndex)
       
         Case ClientPacketID.AddAmigos
-            Call Amigos.HandleAddAmigo(Userindex)
+            Call Amigos.HandleAddAmigo(UserIndex)
 
         Case ClientPacketID.DelAmigos
-            Call Amigos.HandleDelAmigo(Userindex)
+            Call Amigos.HandleDelAmigo(UserIndex)
 
         Case ClientPacketID.OnAmigos
-            Call Amigos.HandleOnAmigo(Userindex)
+            Call Amigos.HandleOnAmigo(UserIndex)
 
         Case ClientPacketID.MsgAmigos
-            Call Amigos.HandleMsgAmigo(Userindex)
+            Call Amigos.HandleMsgAmigo(UserIndex)
             
         Case Else
             'ERROR : Abort!
-            Call CloseSocket(Userindex)
+            Call CloseSocket(UserIndex)
 
     End Select
     
     'Done with this packet, move on to next one or send everything if no more packets found
-    If UserList(Userindex).incomingData.Length > 0 And Err.Number = 0 Then
+    If UserList(UserIndex).incomingData.Length > 0 And Err.Number = 0 Then
         Err.Clear
         HandleIncomingData = True
     
-    ElseIf Err.Number <> 0 And Not Err.Number = UserList(Userindex).incomingData.NotEnoughDataErrCode Then
+    ElseIf Err.Number <> 0 And Not Err.Number = UserList(UserIndex).incomingData.NotEnoughDataErrCode Then
         'An error ocurred, log it and kick player.
-        Call LogError("Error: " & Err.Number & " [" & Err.description & "] " & " Source: " & Err.source & vbTab & " HelpFile: " & Err.HelpFile & vbTab & " HelpContext: " & Err.HelpContext & vbTab & " LastDllError: " & Err.LastDllError & vbTab & " - UserIndex: " & Userindex & " - producido al manejar el paquete: " & CStr(packetID))
-        Call CloseSocket(Userindex)
+        Call LogError("Error: " & Err.Number & " [" & Err.description & "] " & " Source: " & Err.source & vbTab & " HelpFile: " & Err.HelpFile & vbTab & " HelpContext: " & Err.HelpContext & vbTab & " LastDllError: " & Err.LastDllError & vbTab & " - UserIndex: " & UserIndex & " - producido al manejar el paquete: " & CStr(packetID))
+        Call CloseSocket(UserIndex)
 
         HandleIncomingData = False
     
     Else
         'Flush buffer - send everything that has been written
-        Call FlushBuffer(Userindex)
+        Call FlushBuffer(UserIndex)
 
         HandleIncomingData = False
 
@@ -944,7 +922,7 @@ Public Function HandleIncomingData(ByVal Userindex As Integer) As Boolean
 
 End Function
 
-Public Sub WriteMultiMessage(ByVal Userindex As Integer, _
+Public Sub WriteMultiMessage(ByVal UserIndex As Integer, _
                              ByVal MessageIndex As Integer, _
                              Optional ByVal Arg1 As Long, _
                              Optional ByVal Arg2 As Long, _
@@ -956,9 +934,9 @@ Public Sub WriteMultiMessage(ByVal Userindex As Integer, _
     '
     '***************************************************
 
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.MultiMessage)
         Call .WriteByte(MessageIndex)
         
@@ -1032,28 +1010,28 @@ Public Sub WriteMultiMessage(ByVal Userindex As Integer, _
 
     Exit Sub ''
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
 
 End Sub
 
-Private Sub HandleGMCommands(ByVal Userindex As Integer)
+Private Sub HandleGMCommands(ByVal UserIndex As Integer)
     '***************************************************
     'Author: Unknown
     'Last Modification: -
     '
     '***************************************************
 
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
     Dim Command As Byte
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
         Call .incomingData.ReadByte
     
         Command = .incomingData.PeekByte
@@ -1061,448 +1039,454 @@ Private Sub HandleGMCommands(ByVal Userindex As Integer)
         Select Case Command
 
             Case eGMCommands.GMMessage                '/GMSG
-                Call HandleGMMessage(Userindex)
+                Call HandleGMMessage(UserIndex)
         
             Case eGMCommands.showName                '/SHOWNAME
-                Call HandleShowName(Userindex)
+                Call HandleShowName(UserIndex)
         
             Case eGMCommands.OnlineRoyalArmy
-                Call HandleOnlineRoyalArmy(Userindex)
+                Call HandleOnlineRoyalArmy(UserIndex)
         
             Case eGMCommands.OnlineChaosLegion       '/ONLINECAOS
-                Call HandleOnlineChaosLegion(Userindex)
+                Call HandleOnlineChaosLegion(UserIndex)
         
             Case eGMCommands.GoNearby                '/IRCERCA
-                Call HandleGoNearby(Userindex)
+                Call HandleGoNearby(UserIndex)
         
             Case eGMCommands.comment                 '/REM
-                Call HandleComment(Userindex)
+                Call HandleComment(UserIndex)
         
             Case eGMCommands.serverTime              '/HORA
-                Call HandleServerTime(Userindex)
+                Call HandleServerTime(UserIndex)
         
             Case eGMCommands.Where                   '/DONDE
-                Call HandleWhere(Userindex)
+                Call HandleWhere(UserIndex)
         
             Case eGMCommands.CreaturesInMap          '/NENE
-                Call HandleCreaturesInMap(Userindex)
+                Call HandleCreaturesInMap(UserIndex)
         
             Case eGMCommands.WarpMeToTarget          '/TELEPLOC
-                Call HandleWarpMeToTarget(Userindex)
+                Call HandleWarpMeToTarget(UserIndex)
         
             Case eGMCommands.WarpChar                '/TELEP
-                Call HandleWarpChar(Userindex)
+                Call HandleWarpChar(UserIndex)
         
             Case eGMCommands.Silence                 '/SILENCIAR
-                Call HandleSilence(Userindex)
+                Call HandleSilence(UserIndex)
         
             Case eGMCommands.SOSShowList             '/SHOW SOS
-                Call HandleSOSShowList(Userindex)
+                Call HandleSOSShowList(UserIndex)
             
             Case eGMCommands.SOSRemove               'SOSDONE
-                Call HandleSOSRemove(Userindex)
+                Call HandleSOSRemove(UserIndex)
         
             Case eGMCommands.GoToChar                '/IRA
-                Call HandleGoToChar(Userindex)
+                Call HandleGoToChar(UserIndex)
         
             Case eGMCommands.invisible               '/INVISIBLE
-                Call HandleInvisible(Userindex)
+                Call HandleInvisible(UserIndex)
         
             Case eGMCommands.GMPanel                 '/PANELGM
-                Call HandleGMPanel(Userindex)
+                Call HandleGMPanel(UserIndex)
         
             Case eGMCommands.RequestUserList         'LISTUSU
-                Call HandleRequestUserList(Userindex)
+                Call HandleRequestUserList(UserIndex)
         
             Case eGMCommands.Working                 '/TRABAJANDO
-                Call HandleWorking(Userindex)
+                Call HandleWorking(UserIndex)
         
             Case eGMCommands.Hiding                  '/OCULTANDO
-                Call HandleHiding(Userindex)
+                Call HandleHiding(UserIndex)
         
             Case eGMCommands.Jail                    '/CARCEL
-                Call HandleJail(Userindex)
+                Call HandleJail(UserIndex)
         
             Case eGMCommands.KillNPC                 '/RMATA
-                Call HandleKillNPC(Userindex)
+                Call HandleKillNPC(UserIndex)
         
             Case eGMCommands.WarnUser                '/ADVERTENCIA
-                Call HandleWarnUser(Userindex)
+                Call HandleWarnUser(UserIndex)
         
             Case eGMCommands.EditChar                '/MOD
-                Call HandleEditChar(Userindex)
+                Call HandleEditChar(UserIndex)
         
             Case eGMCommands.RequestCharInfo         '/INFO
-                Call HandleRequestCharInfo(Userindex)
+                Call HandleRequestCharInfo(UserIndex)
         
             Case eGMCommands.RequestCharStats        '/STAT
-                Call HandleRequestCharStats(Userindex)
+                Call HandleRequestCharStats(UserIndex)
         
             Case eGMCommands.RequestCharGold         '/BAL
-                Call HandleRequestCharGold(Userindex)
+                Call HandleRequestCharGold(UserIndex)
         
             Case eGMCommands.RequestCharInventory    '/INV
-                Call HandleRequestCharInventory(Userindex)
+                Call HandleRequestCharInventory(UserIndex)
         
             Case eGMCommands.RequestCharBank         '/BOV
-                Call HandleRequestCharBank(Userindex)
+                Call HandleRequestCharBank(UserIndex)
         
             Case eGMCommands.RequestCharSkills       '/SKILLS
-                Call HandleRequestCharSkills(Userindex)
+                Call HandleRequestCharSkills(UserIndex)
         
             Case eGMCommands.ReviveChar              '/REVIVIR
-                Call HandleReviveChar(Userindex)
+                Call HandleReviveChar(UserIndex)
         
             Case eGMCommands.OnlineGM                '/ONLINEGM
-                Call HandleOnlineGM(Userindex)
+                Call HandleOnlineGM(UserIndex)
         
             Case eGMCommands.OnlineMap               '/ONLINEMAP
-                Call HandleOnlineMap(Userindex)
+                Call HandleOnlineMap(UserIndex)
         
             Case eGMCommands.Forgive                 '/PERDON
-                Call HandleForgive(Userindex)
+                Call HandleForgive(UserIndex)
         
             Case eGMCommands.Kick                    '/ECHAR
-                Call HandleKick(Userindex)
+                Call HandleKick(UserIndex)
         
             Case eGMCommands.Execute                 '/EJECUTAR
-                Call HandleExecute(Userindex)
+                Call HandleExecute(UserIndex)
         
             Case eGMCommands.BanChar                 '/BAN
-                Call HandleBanChar(Userindex)
+                Call HandleBanChar(UserIndex)
         
             Case eGMCommands.UnbanChar               '/UNBAN
-                Call HandleUnbanChar(Userindex)
+                Call HandleUnbanChar(UserIndex)
         
             Case eGMCommands.NPCFollow               '/SEGUIR
-                Call HandleNPCFollow(Userindex)
+                Call HandleNPCFollow(UserIndex)
         
             Case eGMCommands.SummonChar              '/SUM
-                Call HandleSummonChar(Userindex)
+                Call HandleSummonChar(UserIndex)
         
             Case eGMCommands.SpawnListRequest        '/CC
-                Call HandleSpawnListRequest(Userindex)
+                Call HandleSpawnListRequest(UserIndex)
         
             Case eGMCommands.SpawnCreature           'SPA
-                Call HandleSpawnCreature(Userindex)
+                Call HandleSpawnCreature(UserIndex)
         
             Case eGMCommands.ResetNPCInventory       '/RESETINV
-                Call HandleResetNPCInventory(Userindex)
+                Call HandleResetNPCInventory(UserIndex)
         
             Case eGMCommands.ServerMessage           '/RMSG
-                Call HandleServerMessage(Userindex)
+                Call HandleServerMessage(UserIndex)
         
             Case eGMCommands.MapMessage              '/MAPMSG
-                Call HandleMapMessage(Userindex)
+                Call HandleMapMessage(UserIndex)
             
             Case eGMCommands.NickToIP                '/NICK2IP
-                Call HandleNickToIP(Userindex)
+                Call HandleNickToIP(UserIndex)
         
             Case eGMCommands.IPToNick                '/IP2NICK
-                Call HandleIPToNick(Userindex)
+                Call HandleIPToNick(UserIndex)
         
             Case eGMCommands.GuildOnlineMembers      '/ONCLAN
-                Call HandleGuildOnlineMembers(Userindex)
+                Call HandleGuildOnlineMembers(UserIndex)
         
             Case eGMCommands.TeleportCreate          '/CT
-                Call HandleTeleportCreate(Userindex)
+                Call HandleTeleportCreate(UserIndex)
         
             Case eGMCommands.TeleportDestroy         '/DT
-                Call HandleTeleportDestroy(Userindex)
+                Call HandleTeleportDestroy(UserIndex)
         
             Case eGMCommands.RainToggle              '/LLUVIA
-                Call HandleRainToggle(Userindex)
+                Call HandleRainToggle(UserIndex)
         
             Case eGMCommands.SetCharDescription      '/SETDESC
-                Call HandleSetCharDescription(Userindex)
+                Call HandleSetCharDescription(UserIndex)
         
             Case eGMCommands.ForceMUSICToMap          '/FORCEMUSICMAP
-                Call HanldeForceMIDIToMap(Userindex)
+                Call HanldeForceMIDIToMap(UserIndex)
         
             Case eGMCommands.ForceWAVEToMap          '/FORCEWAVMAP
-                Call HandleForceWAVEToMap(Userindex)
+                Call HandleForceWAVEToMap(UserIndex)
         
             Case eGMCommands.RoyalArmyMessage        '/REALMSG
-                Call HandleRoyalArmyMessage(Userindex)
+                Call HandleRoyalArmyMessage(UserIndex)
         
             Case eGMCommands.ChaosLegionMessage      '/CAOSMSG
-                Call HandleChaosLegionMessage(Userindex)
+                Call HandleChaosLegionMessage(UserIndex)
         
             Case eGMCommands.CitizenMessage          '/CIUMSG
-                Call HandleCitizenMessage(Userindex)
+                Call HandleCitizenMessage(UserIndex)
         
             Case eGMCommands.CriminalMessage         '/CRIMSG
-                Call HandleCriminalMessage(Userindex)
+                Call HandleCriminalMessage(UserIndex)
         
             Case eGMCommands.TalkAsNPC               '/TALKAS
-                Call HandleTalkAsNPC(Userindex)
+                Call HandleTalkAsNPC(UserIndex)
         
             Case eGMCommands.DestroyAllItemsInArea   '/MASSDEST
-                Call HandleDestroyAllItemsInArea(Userindex)
+                Call HandleDestroyAllItemsInArea(UserIndex)
         
             Case eGMCommands.AcceptRoyalCouncilMember '/ACEPTCONSE
-                Call HandleAcceptRoyalCouncilMember(Userindex)
+                Call HandleAcceptRoyalCouncilMember(UserIndex)
         
             Case eGMCommands.AcceptChaosCouncilMember '/ACEPTCONSECAOS
-                Call HandleAcceptChaosCouncilMember(Userindex)
+                Call HandleAcceptChaosCouncilMember(UserIndex)
         
             Case eGMCommands.ItemsInTheFloor         '/PISO
-                Call HandleItemsInTheFloor(Userindex)
+                Call HandleItemsInTheFloor(UserIndex)
         
             Case eGMCommands.MakeDumb                '/ESTUPIDO
-                Call HandleMakeDumb(Userindex)
+                Call HandleMakeDumb(UserIndex)
         
             Case eGMCommands.MakeDumbNoMore          '/NOESTUPIDO
-                Call HandleMakeDumbNoMore(Userindex)
+                Call HandleMakeDumbNoMore(UserIndex)
         
             Case eGMCommands.DumpIPTables            '/DUMPSECURITY
-                Call HandleDumpIPTables(Userindex)
+                Call HandleDumpIPTables(UserIndex)
         
             Case eGMCommands.CouncilKick             '/KICKCONSE
-                Call HandleCouncilKick(Userindex)
+                Call HandleCouncilKick(UserIndex)
         
             Case eGMCommands.SetTrigger              '/TRIGGER
-                Call HandleSetTrigger(Userindex)
+                Call HandleSetTrigger(UserIndex)
         
             Case eGMCommands.AskTrigger              '/TRIGGER with no args
-                Call HandleAskTrigger(Userindex)
+                Call HandleAskTrigger(UserIndex)
         
             Case eGMCommands.BannedIPList            '/BANIPLIST
-                Call HandleBannedIPList(Userindex)
+                Call HandleBannedIPList(UserIndex)
         
             Case eGMCommands.BannedIPReload          '/BANIPRELOAD
-                Call HandleBannedIPReload(Userindex)
+                Call HandleBannedIPReload(UserIndex)
         
             Case eGMCommands.GuildMemberList         '/MIEMBROSCLAN
-                Call HandleGuildMemberList(Userindex)
+                Call HandleGuildMemberList(UserIndex)
         
             Case eGMCommands.GuildBan                '/BANCLAN
-                Call HandleGuildBan(Userindex)
+                Call HandleGuildBan(UserIndex)
         
             Case eGMCommands.BanIP                   '/BANIP
-                Call HandleBanIP(Userindex)
+                Call HandleBanIP(UserIndex)
         
             Case eGMCommands.UnbanIP                 '/UNBANIP
-                Call HandleUnbanIP(Userindex)
+                Call HandleUnbanIP(UserIndex)
         
             Case eGMCommands.CreateItem              '/CI
-                Call HandleCreateItem(Userindex)
+                Call HandleCreateItem(UserIndex)
         
             Case eGMCommands.DestroyItems            '/DEST
-                Call HandleDestroyItems(Userindex)
+                Call HandleDestroyItems(UserIndex)
         
             Case eGMCommands.ChaosLegionKick         '/NOCAOS
-                Call HandleChaosLegionKick(Userindex)
+                Call HandleChaosLegionKick(UserIndex)
         
             Case eGMCommands.RoyalArmyKick           '/NOREAL
-                Call HandleRoyalArmyKick(Userindex)
+                Call HandleRoyalArmyKick(UserIndex)
         
             Case eGMCommands.ForceMUSICAll            '/FORCEMUSIC
-                Call HandleForceMUSICAll(Userindex)
+                Call HandleForceMUSICAll(UserIndex)
         
             Case eGMCommands.ForceWAVEAll            '/FORCEWAV
-                Call HandleForceWAVEAll(Userindex)
+                Call HandleForceWAVEAll(UserIndex)
         
             Case eGMCommands.RemovePunishment        '/BORRARPENA
-                Call HandleRemovePunishment(Userindex)
+                Call HandleRemovePunishment(UserIndex)
         
             Case eGMCommands.TileBlockedToggle       '/BLOQ
-                Call HandleTileBlockedToggle(Userindex)
+                Call HandleTileBlockedToggle(UserIndex)
         
             Case eGMCommands.KillNPCNoRespawn        '/MATA
-                Call HandleKillNPCNoRespawn(Userindex)
+                Call HandleKillNPCNoRespawn(UserIndex)
         
             Case eGMCommands.KillAllNearbyNPCs       '/MASSKILL
-                Call HandleKillAllNearbyNPCs(Userindex)
+                Call HandleKillAllNearbyNPCs(UserIndex)
         
             Case eGMCommands.LastIP                  '/LASTIP
-                Call HandleLastIP(Userindex)
+                Call HandleLastIP(UserIndex)
         
             Case eGMCommands.ChangeMOTD              '/MOTDCAMBIA
-                Call HandleChangeMOTD(Userindex)
+                Call HandleChangeMOTD(UserIndex)
         
             Case eGMCommands.SetMOTD                 'ZMOTD
-                Call HandleSetMOTD(Userindex)
+                Call HandleSetMOTD(UserIndex)
         
             Case eGMCommands.SystemMessage           '/SMSG
-                Call HandleSystemMessage(Userindex)
+                Call HandleSystemMessage(UserIndex)
         
             Case eGMCommands.CreateNPC               '/ACC y /RACC
-                Call HandleCreateNPC(Userindex)
+                Call HandleCreateNPC(UserIndex)
         
             Case eGMCommands.ImperialArmour          '/AI1 - 4
-                Call HandleImperialArmour(Userindex)
+                Call HandleImperialArmour(UserIndex)
         
             Case eGMCommands.ChaosArmour             '/AC1 - 4
-                Call HandleChaosArmour(Userindex)
+                Call HandleChaosArmour(UserIndex)
         
             Case eGMCommands.NavigateToggle          '/NAVE
-                Call HandleNavigateToggle(Userindex)
+                Call HandleNavigateToggle(UserIndex)
         
             Case eGMCommands.ServerOpenToUsersToggle '/HABILITAR
-                Call HandleServerOpenToUsersToggle(Userindex)
+                Call HandleServerOpenToUsersToggle(UserIndex)
         
             Case eGMCommands.TurnOffServer           '/APAGAR
-                Call HandleTurnOffServer(Userindex)
+                Call HandleTurnOffServer(UserIndex)
         
             Case eGMCommands.TurnCriminal            '/CONDEN
-                Call HandleTurnCriminal(Userindex)
+                Call HandleTurnCriminal(UserIndex)
         
             Case eGMCommands.ResetFactions           '/RAJAR
-                Call HandleResetFactions(Userindex)
+                Call HandleResetFactions(UserIndex)
         
             Case eGMCommands.RemoveCharFromGuild     '/RAJARCLAN
-                Call HandleRemoveCharFromGuild(Userindex)
+                Call HandleRemoveCharFromGuild(UserIndex)
         
             Case eGMCommands.RequestCharMail         '/LASTEMAIL
-                Call HandleRequestCharMail(Userindex)
+                Call HandleRequestCharMail(UserIndex)
         
             Case eGMCommands.AlterPassword           '/APASS
-                Call HandleAlterPassword(Userindex)
+                Call HandleAlterPassword(UserIndex)
         
             Case eGMCommands.AlterMail               '/AEMAIL
-                Call HandleAlterMail(Userindex)
+                Call HandleAlterMail(UserIndex)
         
             Case eGMCommands.AlterName               '/ANAME
-                Call HandleAlterName(Userindex)
+                Call HandleAlterName(UserIndex)
         
             Case Declaraciones.eGMCommands.DoBackUp               '/DOBACKUP
-                Call HandleDoBackUp(Userindex)
+                Call HandleDoBackUp(UserIndex)
         
             Case eGMCommands.ShowGuildMessages       '/SHOWCMSG
-                Call HandleShowGuildMessages(Userindex)
+                Call HandleShowGuildMessages(UserIndex)
         
             Case eGMCommands.SaveMap                 '/GUARDAMAPA
-                Call HandleSaveMap(Userindex)
+                Call HandleSaveMap(UserIndex)
         
             Case eGMCommands.ChangeMapInfoPK         '/MODMAPINFO PK
-                Call HandleChangeMapInfoPK(Userindex)
+                Call HandleChangeMapInfoPK(UserIndex)
             
             Case eGMCommands.ChangeMapInfoBackup     '/MODMAPINFO BACKUP
-                Call HandleChangeMapInfoBackup(Userindex)
+                Call HandleChangeMapInfoBackup(UserIndex)
         
             Case eGMCommands.ChangeMapInfoRestricted '/MODMAPINFO RESTRINGIR
-                Call HandleChangeMapInfoRestricted(Userindex)
+                Call HandleChangeMapInfoRestricted(UserIndex)
         
             Case eGMCommands.ChangeMapInfoNoMagic    '/MODMAPINFO MAGIASINEFECTO
-                Call HandleChangeMapInfoNoMagic(Userindex)
+                Call HandleChangeMapInfoNoMagic(UserIndex)
         
             Case eGMCommands.ChangeMapInfoNoInvi     '/MODMAPINFO INVISINEFECTO
-                Call HandleChangeMapInfoNoInvi(Userindex)
+                Call HandleChangeMapInfoNoInvi(UserIndex)
         
             Case eGMCommands.ChangeMapInfoNoResu     '/MODMAPINFO RESUSINEFECTO
-                Call HandleChangeMapInfoNoResu(Userindex)
+                Call HandleChangeMapInfoNoResu(UserIndex)
         
             Case eGMCommands.ChangeMapInfoLand       '/MODMAPINFO TERRENO
-                Call HandleChangeMapInfoLand(Userindex)
+                Call HandleChangeMapInfoLand(UserIndex)
         
             Case eGMCommands.ChangeMapInfoZone       '/MODMAPINFO ZONA
-                Call HandleChangeMapInfoZone(Userindex)
+                Call HandleChangeMapInfoZone(UserIndex)
         
             Case eGMCommands.ChangeMapInfoStealNpc   '/MODMAPINFO ROBONPC
-                Call HandleChangeMapInfoStealNpc(Userindex)
+                Call HandleChangeMapInfoStealNpc(UserIndex)
             
             Case eGMCommands.ChangeMapInfoNoOcultar  '/MODMAPINFO OCULTARSINEFECTO
-                Call HandleChangeMapInfoNoOcultar(Userindex)
+                Call HandleChangeMapInfoNoOcultar(UserIndex)
             
             Case eGMCommands.ChangeMapInfoNoInvocar  '/MODMAPINFO INVOCARSINEFECTO
-                Call HandleChangeMapInfoNoInvocar(Userindex)
+                Call HandleChangeMapInfoNoInvocar(UserIndex)
             
             Case eGMCommands.SaveChars               '/GRABAR
-                Call HandleSaveChars(Userindex)
+                Call HandleSaveChars(UserIndex)
         
             Case eGMCommands.CleanSOS                '/BORRAR SOS
-                Call HandleCleanSOS(Userindex)
+                Call HandleCleanSOS(UserIndex)
         
             Case eGMCommands.ShowServerForm          '/SHOW INT
-                Call HandleShowServerForm(Userindex)
+                Call HandleShowServerForm(UserIndex)
         
             Case eGMCommands.night                   '/NOCHE
-                Call HandleNight(Userindex)
+                Call HandleNight(UserIndex)
         
             Case eGMCommands.KickAllChars            '/ECHARTODOSPJS
-                Call HandleKickAllChars(Userindex)
+                Call HandleKickAllChars(UserIndex)
         
             Case eGMCommands.ReloadNPCs              '/RELOADNPCS
-                Call HandleReloadNPCs(Userindex)
+                Call HandleReloadNPCs(UserIndex)
         
             Case eGMCommands.ReloadServerIni         '/RELOADSINI
-                Call HandleReloadServerIni(Userindex)
+                Call HandleReloadServerIni(UserIndex)
         
             Case eGMCommands.ReloadSpells            '/RELOADHECHIZOS
-                Call HandleReloadSpells(Userindex)
+                Call HandleReloadSpells(UserIndex)
         
             Case eGMCommands.ReloadObjects           '/RELOADOBJ
-                Call HandleReloadObjects(Userindex)
+                Call HandleReloadObjects(UserIndex)
         
             Case eGMCommands.Restart                 '/REINICIAR
-                Call HandleRestart(Userindex)
+                Call HandleRestart(UserIndex)
         
             Case eGMCommands.ResetAutoUpdate         '/AUTOUPDATE
-                Call HandleResetAutoUpdate(Userindex)
+                Call HandleResetAutoUpdate(UserIndex)
         
             Case eGMCommands.ChatColor               '/CHATCOLOR
-                Call HandleChatColor(Userindex)
+                Call HandleChatColor(UserIndex)
         
             Case eGMCommands.Ignored                 '/IGNORADO
-                Call HandleIgnored(Userindex)
+                Call HandleIgnored(UserIndex)
         
             Case eGMCommands.CheckSlot               '/SLOT
-                Call HandleCheckSlot(Userindex)
+                Call HandleCheckSlot(UserIndex)
         
             Case eGMCommands.SetIniVar               '/SETINIVAR LLAVE CLAVE VALOR
-                Call HandleSetIniVar(Userindex)
+                Call HandleSetIniVar(UserIndex)
             
             Case eGMCommands.CreatePretorianClan     '/CREARPRETORIANOS
-                Call HandleCreatePretorianClan(Userindex)
+                Call HandleCreatePretorianClan(UserIndex)
          
             Case eGMCommands.RemovePretorianClan     '/ELIMINARPRETORIANOS
-                Call HandleDeletePretorianClan(Userindex)
+                Call HandleDeletePretorianClan(UserIndex)
                 
             Case eGMCommands.EnableDenounces         '/DENUNCIAS
-                Call HandleEnableDenounces(Userindex)
+                Call HandleEnableDenounces(UserIndex)
             
             Case eGMCommands.ShowDenouncesList       '/SHOW DENUNCIAS
-                Call HandleShowDenouncesList(Userindex)
+                Call HandleShowDenouncesList(UserIndex)
         
             Case eGMCommands.SetDialog               '/SETDIALOG
-                Call HandleSetDialog(Userindex)
+                Call HandleSetDialog(UserIndex)
             
             Case eGMCommands.Impersonate             '/IMPERSONAR
-                Call HandleImpersonate(Userindex)
+                Call HandleImpersonate(UserIndex)
             
             Case eGMCommands.Imitate                 '/MIMETIZAR
-                Call HandleImitate(Userindex)
+                Call HandleImitate(UserIndex)
             
             Case eGMCommands.RecordAdd
-                Call HandleRecordAdd(Userindex)
+                Call HandleRecordAdd(UserIndex)
             
             Case eGMCommands.RecordAddObs
-                Call HandleRecordAddObs(Userindex)
+                Call HandleRecordAddObs(UserIndex)
             
             Case eGMCommands.RecordRemove
-                Call HandleRecordRemove(Userindex)
+                Call HandleRecordRemove(UserIndex)
             
             Case eGMCommands.RecordListRequest
-                Call HandleRecordListRequest(Userindex)
+                Call HandleRecordListRequest(UserIndex)
             
             Case eGMCommands.RecordDetailsRequest
-                Call HandleRecordDetailsRequest(Userindex)
+                Call HandleRecordDetailsRequest(UserIndex)
             
             Case eGMCommands.ExitDestroy
-                Call HandleExitDestroy(Userindex)
+                Call HandleExitDestroy(UserIndex)
 
             Case eGMCommands.ToggleCentinelActivated            '/CENTINELAACTIVADO
-                Call HandleToggleCentinelActivated(Userindex)
+                Call HandleToggleCentinelActivated(UserIndex)
         
             Case eGMCommands.SearchNpc                          '/BUSCAR
-                Call HandleSearchNpc(Userindex)
+                Call HandleSearchNpc(UserIndex)
            
             Case eGMCommands.SearchObj                          '/BUSCAR
-                Call HandleSearchObj(Userindex)
+                Call HandleSearchObj(UserIndex)
                                            
             Case eGMCommands.LimpiarMundo                       '/LIMPIARMUNDO
-                Call HandleLimpiarMundo(Userindex)
+                Call HandleLimpiarMundo(UserIndex)
+                
+            Case eGMCommands.EditGems                           '/EDITGEMS
+                Call HandleEditGems(UserIndex)
+                
+            Case eGMCommands.ConsultarGemas                     '/CONSULTARGEMS
+                Call HandleConsultarGemas(UserIndex)
                                            
         End Select
 
@@ -1510,7 +1494,7 @@ Private Sub HandleGMCommands(ByVal Userindex As Integer)
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
     Call LogError("Error en GmCommands. Error: " & Err.Number & " - " & Err.description & ". Paquete: " & Command)
 
 End Sub
@@ -1519,7 +1503,7 @@ End Sub
 ' Handles the "Home" message.
 '
 ' @param    userIndex The index of the user sending the message.
-Private Sub HandleHome(ByVal Userindex As Integer)
+Private Sub HandleHome(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Budi
@@ -1527,11 +1511,11 @@ Private Sub HandleHome(ByVal Userindex As Integer)
     'Last Modification: 05/06/10
     'Pato - 05/06/10: Add the Ucase$ to prevent problems.
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         Call .incomingData.ReadByte
 
         If .flags.TargetNpcTipo = eNPCType.Gobernador Then
-            Call setHome(Userindex, Npclist(.flags.TargetNPC).Ciudad, .flags.TargetNPC)
+            Call setHome(UserIndex, Npclist(.flags.TargetNPC).Ciudad, .flags.TargetNPC)
         Else
 
             If .flags.Muerto = 1 Then
@@ -1540,26 +1524,26 @@ Private Sub HandleHome(ByVal Userindex As Integer)
                 If (MapInfo(.Pos.Map).Restringir = eRestrict.restrict_no) And (.Counters.Pena = 0) Then
                     If .flags.Traveling = 0 Then
                         If Ciudades(.Hogar).Map <> .Pos.Map Then
-                            Call goHome(Userindex)
+                            Call goHome(UserIndex)
                         Else
-                            Call WriteConsoleMsg(Userindex, "Ya te encuentras en tu hogar.", FontTypeNames.FONTTYPE_INFO)
+                            Call WriteConsoleMsg(UserIndex, "Ya te encuentras en tu hogar.", FontTypeNames.FONTTYPE_INFO)
 
                         End If
 
                     Else
-                        Call WriteMultiMessage(Userindex, eMessages.CancelHome)
+                        Call WriteMultiMessage(UserIndex, eMessages.CancelHome)
                         .flags.Traveling = 0
                         .Counters.goHome = 0
 
                     End If
 
                 Else
-                    Call WriteConsoleMsg(Userindex, "No puedes usar este comando aqui.", FontTypeNames.FONTTYPE_FIGHT)
+                    Call WriteConsoleMsg(UserIndex, "No puedes usar este comando aqui.", FontTypeNames.FONTTYPE_FIGHT)
 
                 End If
 
             Else
-                Call WriteConsoleMsg(Userindex, "Debes estar muerto para utilizar este comando.", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "Debes estar muerto para utilizar este comando.", FontTypeNames.FONTTYPE_INFO)
 
             End If
 
@@ -1574,26 +1558,26 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleDeleteChar(ByVal Userindex As Integer)
+Private Sub HandleDeleteChar(ByVal UserIndex As Integer)
 
 '***************************************************
 'Author: Lucas Recoaro (Recox)
 'Last Modification: 07/01/20
 '
 '***************************************************
-    If UserList(Userindex).incomingData.Length < 6 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 6 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
     'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
     Dim buffer As clsByteQueue
     Set buffer = New clsByteQueue
 
-    Call buffer.CopyBuffer(UserList(Userindex).incomingData)
+    Call buffer.CopyBuffer(UserList(UserIndex).incomingData)
     
     'Remove packet ID
     Call buffer.ReadByte
@@ -1604,16 +1588,16 @@ Private Sub HandleDeleteChar(ByVal Userindex As Integer)
     AccountHash = buffer.ReadASCIIString()
     
     'If we got here then packet is complete, copy data back to original queue
-    Call UserList(Userindex).incomingData.CopyBuffer(buffer)
+    Call UserList(UserIndex).incomingData.CopyBuffer(buffer)
     
-    Call BorrarUsuario(Userindex, UserName, AccountHash)
+    Call BorrarUsuario(UserIndex, UserName, AccountHash)
 
     'Enviamos paquete para mostrar mensaje satisfactorio en el cliente
-    Call UserList(Userindex).outgoingData.WriteByte(ServerPacketID.DeletedChar)
+    Call UserList(UserIndex).outgoingData.WriteByte(ServerPacketID.DeletedChar)
     
     Exit Sub
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -1633,25 +1617,25 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleLoginExistingChar(ByVal Userindex As Integer)
+Private Sub HandleLoginExistingChar(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 6 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 6 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
     'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
     Dim buffer As clsByteQueue
     Set buffer = New clsByteQueue
-    Call buffer.CopyBuffer(UserList(Userindex).incomingData)
+    Call buffer.CopyBuffer(UserList(UserIndex).incomingData)
     
     'Remove packet ID
     Call buffer.ReadByte
@@ -1667,33 +1651,33 @@ Private Sub HandleLoginExistingChar(ByVal Userindex As Integer)
     version = CStr(buffer.ReadByte()) & "." & CStr(buffer.ReadByte()) & "." & CStr(buffer.ReadByte())
     
     'If we got here then packet is complete, copy data back to original queue
-    Call UserList(Userindex).incomingData.CopyBuffer(buffer)
+    Call UserList(UserIndex).incomingData.CopyBuffer(buffer)
                 
     If Not AsciiValidos(UserName) Then
-        Call WriteErrorMsg(Userindex, "Nombre invalido.")
-        Call CloseSocket(Userindex)
+        Call WriteErrorMsg(UserIndex, "Nombre invalido.")
+        Call CloseSocket(UserIndex)
         
         Exit Sub
 
     End If
     
     If Not PersonajeExiste(UserName) Then
-        Call WriteErrorMsg(Userindex, "El personaje no existe.")
-        Call CloseSocket(Userindex)
+        Call WriteErrorMsg(UserIndex, "El personaje no existe.")
+        Call CloseSocket(UserIndex)
         
         Exit Sub
 
     End If
 
     If BANCheck(UserName) Then
-        Call WriteErrorMsg(Userindex, "Se te ha prohibido la entrada a Argentum Online debido a tu mal comportamiento. Puedes consultar el reglamento y el sistema de soporte desde www.argentumonline.org")
+        Call WriteErrorMsg(UserIndex, "Se te ha prohibido la entrada a Argentum Online debido a tu mal comportamiento. Puedes consultar el reglamento y el sistema de soporte desde www.argentumonline.org")
     ElseIf Not VersionOK(version) Then
-        Call WriteErrorMsg(Userindex, "Esta version del juego es obsoleta, la version correcta es la " & ULTIMAVERSION & ". La misma se encuentra disponible en www.argentumonline.org")
+        Call WriteErrorMsg(UserIndex, "Esta version del juego es obsoleta, la version correcta es la " & ULTIMAVERSION & ". La misma se encuentra disponible en www.argentumonline.org")
     Else
-        Call ConnectUser(Userindex, UserName, AccountHash)
+        Call ConnectUser(UserIndex, UserName, AccountHash)
     End If
  
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -1709,56 +1693,29 @@ ErrHandler:
 End Sub
 
 ''
-' Handles the "ThrowDices" message.
-'
-' @param    userIndex The index of the user sending the message.
-
-Private Sub HandleThrowDices(ByVal Userindex As Integer)
-    '***************************************************
-    'Author: Juan Martin Sotuyo Dodero (Maraxus)
-    'Last Modification: 05/17/06
-    '
-    '***************************************************
-    'Remove packet ID
-    Call UserList(Userindex).incomingData.ReadByte
-    
-    With UserList(Userindex).Stats
-        .UserAtributos(eAtributos.Fuerza) = RandomNumber(DiceMinimum, DiceMaximum)
-        .UserAtributos(eAtributos.Agilidad) = RandomNumber(DiceMinimum, DiceMaximum)
-        .UserAtributos(eAtributos.Inteligencia) = RandomNumber(DiceMinimum, DiceMaximum)
-        .UserAtributos(eAtributos.Carisma) = RandomNumber(DiceMinimum, DiceMaximum)
-        .UserAtributos(eAtributos.Constitucion) = RandomNumber(DiceMinimum, DiceMaximum)
-
-    End With
-    
-    Call WriteDiceRoll(Userindex)
-
-End Sub
-
-''
 ' Handles the "LoginNewChar" message.
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleLoginNewChar(ByVal Userindex As Integer)
+Private Sub HandleLoginNewChar(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 15 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 15 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
     'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
     Dim buffer As clsByteQueue
     Set buffer = New clsByteQueue
-    Call buffer.CopyBuffer(UserList(Userindex).incomingData)
+    Call buffer.CopyBuffer(UserList(UserIndex).incomingData)
     
     'Remove packet ID
     Call buffer.ReadByte
@@ -1770,7 +1727,8 @@ Private Sub HandleLoginNewChar(ByVal Userindex As Integer)
     Dim gender      As eGenero
     Dim Class As eClass
     Dim Head As Integer
-
+    Dim i As Byte
+    
     UserName = buffer.ReadASCIIString()
     AccountHash = buffer.ReadASCIIString()
     
@@ -1782,41 +1740,49 @@ Private Sub HandleLoginNewChar(ByVal Userindex As Integer)
     Class = buffer.ReadByte()
     Head = buffer.ReadInteger
     
+    For i = 1 To NUMATRIBUTOS
+        UserList(UserIndex).Stats.UserAtributos(i) = buffer.ReadByte()
+    Next i
+    
     'If we got here then packet is complete, copy data back to original queue
-    Call UserList(Userindex).incomingData.CopyBuffer(buffer)
+    Call UserList(UserIndex).incomingData.CopyBuffer(buffer)
     
     If PuedeCrearPersonajes = 0 Then
-        Call WriteErrorMsg(Userindex, "La creacion de personajes en este servidor se ha deshabilitado.")
-        Call CloseSocket(Userindex)
+        Call WriteErrorMsg(UserIndex, "La creacion de personajes en este servidor se ha deshabilitado.")
+        Call CloseSocket(UserIndex)
         
         Exit Sub
 
     End If
     
     If ServerSoloGMs <> 0 Then
-        Call WriteErrorMsg(Userindex, "Servidor restringido a administradores. Consulte la pagina oficial o el foro oficial para mas informacion.")
-        Call CloseSocket(Userindex)
+        Call WriteErrorMsg(UserIndex, "Servidor restringido a administradores. Consulte la pagina oficial o el foro oficial para mas informacion.")
+        Call CloseSocket(UserIndex)
         
         Exit Sub
 
     End If
     
-    If aClon.MaxPersonajes(UserList(Userindex).IP) Then
-        Call WriteErrorMsg(Userindex, "Has creado demasiados personajes.")
-        Call CloseSocket(Userindex)
-        
+    If aClon.MaxPersonajes(UserList(UserIndex).IP) Then
+        Call WriteErrorMsg(UserIndex, "Has creado demasiados personajes.")
+        Call CloseSocket(UserIndex)
         Exit Sub
-
+    End If
+    
+    If GetCountUserAccount(AccountHash) >= 10 Then
+        Call WriteErrorMsg(UserIndex, "No puedes crear mas de 10 personajes.")
+        Call CloseSocket(UserIndex)
+        Exit Sub
     End If
                                         
     If Not VersionOK(version) Then
-        Call WriteErrorMsg(Userindex, "Esta version del juego es obsoleta, la version correcta es la " & ULTIMAVERSION & ". La misma se encuentra disponible en www.argentumonline.org")
+        Call WriteErrorMsg(UserIndex, "Esta version del juego es obsoleta, la version correcta es la " & ULTIMAVERSION & ". La misma se encuentra disponible en www.winterao.com.ar")
     Else
-        Call ConnectNewUser(Userindex, UserName, AccountHash, race, gender, Class, Head)
+        Call ConnectNewUser(UserIndex, UserName, AccountHash, race, gender, Class, Head)
 
     End If
   
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -1836,7 +1802,7 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleTalk(ByVal Userindex As Integer)
+Private Sub HandleTalk(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -1845,15 +1811,15 @@ Private Sub HandleTalk(ByVal Userindex As Integer)
     '23/09/2009: ZaMa - Now invisible admins can't send empty chat.
     '13/01/2010: ZaMa - Now hidden on boat pirats recover the proper boat body.
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
     
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -1880,19 +1846,19 @@ Private Sub HandleTalk(ByVal Userindex As Integer)
             .Counters.TiempoOculto = 0
             
             If .flags.Navegando = 1 Then
-                If .Clase = eClass.Pirat Then
+                If .clase = eClass.Pirat Then
                     ' Pierde la apariencia de fragata fantasmal
-                    Call ToggleBoatBody(Userindex)
-                    Call WriteConsoleMsg(Userindex, "Has recuperado tu apariencia normal!", FontTypeNames.FONTTYPE_INFO)
-                    Call ChangeUserChar(Userindex, .Char.body, .Char.Head, .Char.heading, NingunArma, NingunEscudo, NingunCasco)
+                    Call ToggleBoatBody(UserIndex)
+                    Call WriteConsoleMsg(UserIndex, "Has recuperado tu apariencia normal!", FontTypeNames.FONTTYPE_INFO)
+                    Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, NingunArma, NingunEscudo, NingunCasco)
 
                 End If
 
             Else
 
                 If .flags.invisible = 0 Then
-                    Call UsUaRiOs.SetInvisible(Userindex, UserList(Userindex).Char.CharIndex, False)
-                    Call WriteConsoleMsg(Userindex, "Has vuelto a ser visible!", FontTypeNames.FONTTYPE_INFO)
+                    Call UsUaRiOs.SetInvisible(UserIndex, UserList(UserIndex).Char.CharIndex, False)
+                    Call WriteConsoleMsg(UserIndex, "Has vuelto a ser visible!", FontTypeNames.FONTTYPE_INFO)
 
                 End If
 
@@ -1906,16 +1872,16 @@ Private Sub HandleTalk(ByVal Userindex As Integer)
             
             If Not (.flags.AdminInvisible = 1) Then
                 If .flags.Muerto = 1 Then
-                    Call SendData(SendTarget.ToDeadArea, Userindex, PrepareMessageChatOverHead(Chat, .Char.CharIndex, CHAT_COLOR_DEAD_CHAR))
+                    Call SendData(SendTarget.ToDeadArea, UserIndex, PrepareMessageChatOverHead(Chat, .Char.CharIndex, CHAT_COLOR_DEAD_CHAR))
                 Else
-                    Call SendData(SendTarget.ToPCArea, Userindex, PrepareMessageChatOverHead(Chat, .Char.CharIndex, .flags.ChatColor))
+                    Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead(Chat, .Char.CharIndex, .flags.ChatColor))
 
                 End If
 
             Else
 
                 If RTrim(Chat) <> "" Then
-                    Call SendData(SendTarget.ToPCArea, Userindex, PrepareMessageConsoleMsg("Gm> " & Chat, FontTypeNames.FONTTYPE_GM))
+                    Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageConsoleMsg("Gm> " & Chat, FontTypeNames.FONTTYPE_GM))
 
                 End If
 
@@ -1928,7 +1894,7 @@ Private Sub HandleTalk(ByVal Userindex As Integer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -1948,7 +1914,7 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleYell(ByVal Userindex As Integer)
+Private Sub HandleYell(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -1956,15 +1922,15 @@ Private Sub HandleYell(ByVal Userindex As Integer)
     '15/07/2009: ZaMa - Now invisible admins yell by console.
     '13/01/2010: ZaMa - Now hidden on boat pirats recover the proper boat body.
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
     
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -1991,19 +1957,19 @@ Private Sub HandleYell(ByVal Userindex As Integer)
             .Counters.TiempoOculto = 0
             
             If .flags.Navegando = 1 Then
-                If .Clase = eClass.Pirat Then
+                If .clase = eClass.Pirat Then
                     ' Pierde la apariencia de fragata fantasmal
-                    Call ToggleBoatBody(Userindex)
-                    Call WriteConsoleMsg(Userindex, "Has recuperado tu apariencia normal!", FontTypeNames.FONTTYPE_INFO)
-                    Call ChangeUserChar(Userindex, .Char.body, .Char.Head, .Char.heading, NingunArma, NingunEscudo, NingunCasco)
+                    Call ToggleBoatBody(UserIndex)
+                    Call WriteConsoleMsg(UserIndex, "Has recuperado tu apariencia normal!", FontTypeNames.FONTTYPE_INFO)
+                    Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, NingunArma, NingunEscudo, NingunCasco)
 
                 End If
 
             Else
 
                 If .flags.invisible = 0 Then
-                    Call UsUaRiOs.SetInvisible(Userindex, .Char.CharIndex, False)
-                    Call WriteConsoleMsg(Userindex, "Has vuelto a ser visible!", FontTypeNames.FONTTYPE_INFO)
+                    Call UsUaRiOs.SetInvisible(UserIndex, .Char.CharIndex, False)
+                    Call WriteConsoleMsg(UserIndex, "Has vuelto a ser visible!", FontTypeNames.FONTTYPE_INFO)
 
                 End If
 
@@ -2016,19 +1982,19 @@ Private Sub HandleYell(ByVal Userindex As Integer)
             Call Statistics.ParseChat(Chat)
                 
             If .flags.Privilegios And PlayerType.User Then
-                If UserList(Userindex).flags.Muerto = 1 Then
-                    Call SendData(SendTarget.ToDeadArea, Userindex, PrepareMessageChatOverHead(Chat, .Char.CharIndex, CHAT_COLOR_DEAD_CHAR))
+                If UserList(UserIndex).flags.Muerto = 1 Then
+                    Call SendData(SendTarget.ToDeadArea, UserIndex, PrepareMessageChatOverHead(Chat, .Char.CharIndex, CHAT_COLOR_DEAD_CHAR))
                 Else
-                    Call SendData(SendTarget.ToPCArea, Userindex, PrepareMessageChatOverHead(Chat, .Char.CharIndex, vbRed))
+                    Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead(Chat, .Char.CharIndex, vbRed))
 
                 End If
 
             Else
 
                 If Not (.flags.AdminInvisible = 1) Then
-                    Call SendData(SendTarget.ToPCArea, Userindex, PrepareMessageChatOverHead(Chat, .Char.CharIndex, CHAT_COLOR_GM_YELL))
+                    Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead(Chat, .Char.CharIndex, CHAT_COLOR_GM_YELL))
                 Else
-                    Call SendData(SendTarget.ToPCArea, Userindex, PrepareMessageConsoleMsg("Gm> " & Chat, FontTypeNames.FONTTYPE_GM))
+                    Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageConsoleMsg("Gm> " & Chat, FontTypeNames.FONTTYPE_GM))
 
                 End If
 
@@ -2041,7 +2007,7 @@ Private Sub HandleYell(ByVal Userindex As Integer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -2061,7 +2027,7 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleWhisper(ByVal Userindex As Integer)
+Private Sub HandleWhisper(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -2070,15 +2036,15 @@ Private Sub HandleWhisper(ByVal Userindex As Integer)
     '15/07/2009: ZaMa - Now invisible admins wisper by console.
     '03/12/2010: Enanoh - Agregue susurro a Admins en modo consulta y Los Dioses pueden susurrar en ciertos casos.
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 5 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 5 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -2105,7 +2071,7 @@ Private Sub HandleWhisper(ByVal Userindex As Integer)
         UserPriv = .flags.Privilegios
         
         If .flags.Muerto Then
-            Call WriteMultiMessage(Userindex, eMessages.UserMuerto)
+            Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
             'Call WriteConsoleMsg(UserIndex, "Estas muerto!! Los muertos no pueden comunicarse con el mundo de los vivos. ", FontTypeNames.FONTTYPE_INFO)
         Else
             ' Offline?
@@ -2115,10 +2081,10 @@ Private Sub HandleWhisper(ByVal Userindex As Integer)
 
                 ' Admin?
                 If EsGmChar(TargetName) Then
-                    Call WriteConsoleMsg(Userindex, "No puedes susurrarle a los Administradores.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "No puedes susurrarle a los Administradores.", FontTypeNames.FONTTYPE_INFO)
                     ' Whisperer admin? (Else say nothing)
                 ElseIf (UserPriv And (PlayerType.Dios Or PlayerType.Admin)) <> 0 Then
-                    Call WriteConsoleMsg(Userindex, "Usuario inexistente.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "Usuario inexistente.", FontTypeNames.FONTTYPE_INFO)
 
                 End If
                 
@@ -2131,24 +2097,24 @@ Private Sub HandleWhisper(ByVal Userindex As Integer)
                 If (TargetPriv And (PlayerType.Dios Or PlayerType.Admin)) <> 0 And (UserPriv And (PlayerType.User Or PlayerType.Consejero Or PlayerType.SemiDios)) <> 0 And Not .flags.EnConsulta Then
                     
                     ' No puede
-                    Call WriteConsoleMsg(Userindex, "No puedes susurrarle a los Administradores.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "No puedes susurrarle a los Administradores.", FontTypeNames.FONTTYPE_INFO)
 
                     ' Usuarios no pueden susurrar a semis o conses (Salvo en consulta)
                 ElseIf (UserPriv And PlayerType.User) <> 0 And (Not TargetPriv And PlayerType.User) <> 0 And Not .flags.EnConsulta Then
                     
                     ' No puede
-                    Call WriteConsoleMsg(Userindex, "No puedes susurrarle a los Administradores.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "No puedes susurrarle a los Administradores.", FontTypeNames.FONTTYPE_INFO)
                 
                     ' En rango? (Los dioses pueden susurrar a distancia)
-                ElseIf Not EstaPCarea(Userindex, TargetUserIndex) And (UserPriv And (PlayerType.Dios Or PlayerType.Admin)) = 0 Then
+                ElseIf Not EstaPCarea(UserIndex, TargetUserIndex) And (UserPriv And (PlayerType.Dios Or PlayerType.Admin)) = 0 Then
                     
                     ' No se puede susurrar a admins fuera de su rango
                     If (TargetPriv And (PlayerType.User)) = 0 And (UserPriv And (PlayerType.Dios Or PlayerType.Admin)) = 0 Then
-                        Call WriteConsoleMsg(Userindex, "No puedes susurrarle a los Administradores.", FontTypeNames.FONTTYPE_INFO)
+                        Call WriteConsoleMsg(UserIndex, "No puedes susurrarle a los Administradores.", FontTypeNames.FONTTYPE_INFO)
                     
                         ' Whisperer admin? (Else say nothing)
                     ElseIf (UserPriv And (PlayerType.Dios Or PlayerType.Admin)) <> 0 Then
-                        Call WriteConsoleMsg(Userindex, "Estas muy lejos del usuario.", FontTypeNames.FONTTYPE_INFO)
+                        Call WriteConsoleMsg(UserIndex, "Estas muy lejos del usuario.", FontTypeNames.FONTTYPE_INFO)
 
                     End If
 
@@ -2169,28 +2135,28 @@ Private Sub HandleWhisper(ByVal Userindex As Integer)
                         Call Statistics.ParseChat(Chat)
                         
                         ' Dios susurrando a distancia
-                        If Not EstaPCarea(Userindex, TargetUserIndex) And (UserPriv And (PlayerType.Dios Or PlayerType.Admin)) <> 0 Then
+                        If Not EstaPCarea(UserIndex, TargetUserIndex) And (UserPriv And (PlayerType.Dios Or PlayerType.Admin)) <> 0 Then
                             
-                            Call WriteConsoleMsg(Userindex, "Susurraste> " & Chat, FontTypeNames.FONTTYPE_GM)
+                            Call WriteConsoleMsg(UserIndex, "Susurraste> " & Chat, FontTypeNames.FONTTYPE_GM)
                             Call WriteConsoleMsg(TargetUserIndex, "Gm susurra> " & Chat, FontTypeNames.FONTTYPE_GM)
                             
                         ElseIf Not (.flags.AdminInvisible = 1) Then
-                            Call WriteChatOverHead(Userindex, Chat, .Char.CharIndex, vbBlue)
+                            Call WriteChatOverHead(UserIndex, Chat, .Char.CharIndex, vbBlue)
                             Call WriteChatOverHead(TargetUserIndex, Chat, .Char.CharIndex, vbBlue)
                             
                             '[CDT 17-02-2004]
                             If .flags.Privilegios And (PlayerType.User Or PlayerType.Consejero) Then
-                                Call SendData(SendTarget.ToAdminsAreaButConsejeros, Userindex, PrepareMessageChatOverHead("A " & UserList(TargetUserIndex).Name & "> " & Chat, .Char.CharIndex, vbYellow))
+                                Call SendData(SendTarget.ToAdminsAreaButConsejeros, UserIndex, PrepareMessageChatOverHead("A " & UserList(TargetUserIndex).Name & "> " & Chat, .Char.CharIndex, vbYellow))
 
                             End If
 
                         Else
-                            Call WriteConsoleMsg(Userindex, "Susurraste> " & Chat, FontTypeNames.FONTTYPE_GM)
+                            Call WriteConsoleMsg(UserIndex, "Susurraste> " & Chat, FontTypeNames.FONTTYPE_GM)
 
-                            If Userindex <> TargetUserIndex Then Call WriteConsoleMsg(TargetUserIndex, "Gm susurra> " & Chat, FontTypeNames.FONTTYPE_GM)
+                            If UserIndex <> TargetUserIndex Then Call WriteConsoleMsg(TargetUserIndex, "Gm susurra> " & Chat, FontTypeNames.FONTTYPE_GM)
                             
                             If .flags.Privilegios And (PlayerType.User Or PlayerType.Consejero) Then
-                                Call SendData(SendTarget.ToAdminsAreaButConsejeros, Userindex, PrepareMessageConsoleMsg("Gm dijo a " & UserList(TargetUserIndex).Name & "> " & Chat, FontTypeNames.FONTTYPE_GM))
+                                Call SendData(SendTarget.ToAdminsAreaButConsejeros, UserIndex, PrepareMessageConsoleMsg("Gm dijo a " & UserList(TargetUserIndex).Name & "> " & Chat, FontTypeNames.FONTTYPE_GM))
 
                             End If
 
@@ -2209,7 +2175,7 @@ Private Sub HandleWhisper(ByVal Userindex As Integer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -2229,7 +2195,7 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleWalk(ByVal Userindex As Integer)
+Private Sub HandleWalk(ByVal UserIndex As Integer)
 '***************************************************
 'Author: Juan Martin Sotuyo Dodero (Maraxus)
 'Last Modification: 12/01/2012 (Recox)
@@ -2237,8 +2203,8 @@ Private Sub HandleWalk(ByVal Userindex As Integer)
 '13/01/2010: ZaMa - Now hidden on boat pirats recover the proper boat body.
 '12/01/2020: Recox - TiempoDeWalk agregado para las monturas
 '***************************************************
-    If UserList(Userindex).incomingData.Length < 2 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 2 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
@@ -2249,7 +2215,7 @@ Private Sub HandleWalk(ByVal Userindex As Integer)
 
     Dim heading  As eHeading
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -2280,7 +2246,7 @@ Private Sub HandleWalk(ByVal Userindex As Integer)
                     
                     Call LogHackAttemp("Tramposo SH: " & .Name & " , " & dummy)
                     Call SendData(SendTarget.ToAdmins, 0, PrepareMessageConsoleMsg("Servidor> " & .Name & " ha sido echado por el servidor por posible uso de SH.", FontTypeNames.FONTTYPE_SERVER))
-                    Call CloseSocket(Userindex)
+                    Call CloseSocket(UserIndex)
                     
                     Exit Sub
                 Else
@@ -2298,11 +2264,11 @@ Private Sub HandleWalk(ByVal Userindex As Integer)
         .flags.TimesWalk = .flags.TimesWalk + 1
         
         'If exiting, cancel
-        Call CancelExit(Userindex)
+        Call CancelExit(UserIndex)
         
         'Esta usando el /HOGAR, no se puede mover
         If .flags.Traveling = 1 Then
-            Call WriteConsoleMsg(Userindex, "No puedes moverte mientras estas viajando a tu hogar con el comando /HOGAR.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "No puedes moverte mientras estas viajando a tu hogar con el comando /HOGAR.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
         End If
         
@@ -2313,20 +2279,20 @@ Private Sub HandleWalk(ByVal Userindex As Integer)
                 .Char.FX = 0
                 .Char.loops = 0
 
-                Call WriteConsoleMsg(Userindex, "Dejas de meditar.", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "Dejas de meditar.", FontTypeNames.FONTTYPE_INFO)
                 
-                Call SendData(SendTarget.ToPCArea, Userindex, PrepareMessageCreateFX(.Char.CharIndex, 0, 0))
-                Call MoveUserChar(Userindex, heading)
+                Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageCreateFX(.Char.CharIndex, 0, 0))
+                Call MoveUserChar(UserIndex, heading)
             Else
                 'Move user
-                Call MoveUserChar(Userindex, heading)
+                Call MoveUserChar(UserIndex, heading)
                 
                 'Stop resting if needed
                 If .flags.Descansar Then
                     .flags.Descansar = False
                     
-                    Call WriteRestOK(Userindex)
-                    Call WriteConsoleMsg(Userindex, "Has dejado de descansar.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteRestOK(UserIndex)
+                    Call WriteConsoleMsg(UserIndex, "Has dejado de descansar.", FontTypeNames.FONTTYPE_INFO)
 
                 End If
 
@@ -2337,7 +2303,7 @@ Private Sub HandleWalk(ByVal Userindex As Integer)
             If Not .flags.UltimoMensaje = 1 Then
                 .flags.UltimoMensaje = 1
                 
-                Call WriteConsoleMsg(Userindex, "No puedes moverte porque estas paralizado.", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "No puedes moverte porque estas paralizado.", FontTypeNames.FONTTYPE_INFO)
 
             End If
             
@@ -2347,16 +2313,16 @@ Private Sub HandleWalk(ByVal Userindex As Integer)
         
         'Can't move while hidden except he is a thief
         If .flags.Oculto = 1 And .flags.AdminInvisible = 0 Then
-            If .Clase <> eClass.Thief And .Clase <> eClass.Bandit Then
+            If .clase <> eClass.Thief And .clase <> eClass.Bandit Then
                 .flags.Oculto = 0
                 .Counters.TiempoOculto = 0
             
                 If .flags.Navegando = 1 Then
-                    If .Clase = eClass.Pirat Then
+                    If .clase = eClass.Pirat Then
                         ' Pierde la apariencia de fragata fantasmal
-                        Call ToggleBoatBody(Userindex)
-                        Call WriteConsoleMsg(Userindex, "Has recuperado tu apariencia normal!", FontTypeNames.FONTTYPE_INFO)
-                        Call ChangeUserChar(Userindex, .Char.body, .Char.Head, .Char.heading, NingunArma, NingunEscudo, NingunCasco)
+                        Call ToggleBoatBody(UserIndex)
+                        Call WriteConsoleMsg(UserIndex, "Has recuperado tu apariencia normal!", FontTypeNames.FONTTYPE_INFO)
+                        Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, NingunArma, NingunEscudo, NingunCasco)
 
                     End If
 
@@ -2364,8 +2330,8 @@ Private Sub HandleWalk(ByVal Userindex As Integer)
 
                     'If not under a spell effect, show char
                     If .flags.invisible = 0 Then
-                        Call WriteConsoleMsg(Userindex, "Has vuelto a ser visible.", FontTypeNames.FONTTYPE_INFO)
-                        Call UsUaRiOs.SetInvisible(Userindex, .Char.CharIndex, False)
+                        Call WriteConsoleMsg(UserIndex, "Has vuelto a ser visible.", FontTypeNames.FONTTYPE_INFO)
+                        Call UsUaRiOs.SetInvisible(UserIndex, .Char.CharIndex, False)
 
                     End If
 
@@ -2384,16 +2350,16 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleRequestPositionUpdate(ByVal Userindex As Integer)
+Private Sub HandleRequestPositionUpdate(ByVal UserIndex As Integer)
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
     'Remove packet ID
-    UserList(Userindex).incomingData.ReadByte
+    UserList(UserIndex).incomingData.ReadByte
     
-    Call WritePosUpdate(Userindex)
+    Call WritePosUpdate(UserIndex)
 
 End Sub
 
@@ -2402,7 +2368,7 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleAttack(ByVal Userindex As Integer)
+Private Sub HandleAttack(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -2412,14 +2378,14 @@ Private Sub HandleAttack(ByVal Userindex As Integer)
     '13/11/2009: ZaMa - Se cancela el estado no atacable al atcar.
     '13/01/2010: ZaMa - Now hidden on boat pirats recover the proper boat body.
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
         'If dead, can't attack
         If .flags.Muerto = 1 Then
             'Call WriteConsoleMsg(UserIndex, "Estas muerto!!", FontTypeNames.FONTTYPE_INFO)
-            Call WriteMultiMessage(Userindex, eMessages.UserMuerto)
+            Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
             Exit Sub
 
         End If
@@ -2432,7 +2398,7 @@ Private Sub HandleAttack(ByVal Userindex As Integer)
         'If equiped weapon is ranged, can't attack this way
         If .Invent.WeaponEqpObjIndex > 0 Then
             If ObjData(.Invent.WeaponEqpObjIndex).proyectil = 1 Then
-                Call WriteConsoleMsg(Userindex, "No puedes usar asi este arma.", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "No puedes usar asi este arma.", FontTypeNames.FONTTYPE_INFO)
                 Exit Sub
 
             End If
@@ -2440,13 +2406,13 @@ Private Sub HandleAttack(ByVal Userindex As Integer)
         End If
         
         'If exiting, cancel
-        Call CancelExit(Userindex)
+        Call CancelExit(UserIndex)
         
         'Play AttackAnim on Clients
-        Call SendData(SendTarget.ToPCAreaButIndex, Userindex, PrepareMessageCharacterAttackAnim(.Char.CharIndex))
+        Call SendData(SendTarget.ToPCAreaButIndex, UserIndex, PrepareMessageCharacterAttackAnim(.Char.CharIndex))
         
         'Attack!
-        Call UsuarioAtaca(Userindex)
+        Call UsuarioAtaca(UserIndex)
         
         'Now you can be atacked
         .flags.NoPuedeSerAtacado = False
@@ -2457,19 +2423,19 @@ Private Sub HandleAttack(ByVal Userindex As Integer)
             .Counters.TiempoOculto = 0
             
             If .flags.Navegando = 1 Then
-                If .Clase = eClass.Pirat Then
+                If .clase = eClass.Pirat Then
                     ' Pierde la apariencia de fragata fantasmal
-                    Call ToggleBoatBody(Userindex)
-                    Call WriteConsoleMsg(Userindex, "Has recuperado tu apariencia normal!", FontTypeNames.FONTTYPE_INFO)
-                    Call ChangeUserChar(Userindex, .Char.body, .Char.Head, .Char.heading, NingunArma, NingunEscudo, NingunCasco)
+                    Call ToggleBoatBody(UserIndex)
+                    Call WriteConsoleMsg(UserIndex, "Has recuperado tu apariencia normal!", FontTypeNames.FONTTYPE_INFO)
+                    Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, NingunArma, NingunEscudo, NingunCasco)
 
                 End If
 
             Else
 
                 If .flags.invisible = 0 Then
-                    Call UsUaRiOs.SetInvisible(Userindex, .Char.CharIndex, False)
-                    Call WriteConsoleMsg(Userindex, "Has vuelto a ser visible!", FontTypeNames.FONTTYPE_INFO)
+                    Call UsUaRiOs.SetInvisible(UserIndex, .Char.CharIndex, False)
+                    Call WriteConsoleMsg(UserIndex, "Has vuelto a ser visible!", FontTypeNames.FONTTYPE_INFO)
 
                 End If
 
@@ -2486,14 +2452,14 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandlePickUp(ByVal Userindex As Integer)
+Private Sub HandlePickUp(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 07/25/09
     '02/26/2006: Marco - Agregue un checkeo por si el usuario trata de agarrar un item mientras comercia.
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -2506,14 +2472,14 @@ Private Sub HandlePickUp(ByVal Userindex As Integer)
         'Lower rank administrators can't pick up items
         If .flags.Privilegios And PlayerType.Consejero Then
             If Not .flags.Privilegios And PlayerType.RoleMaster Then
-                Call WriteConsoleMsg(Userindex, "No puedes tomar ningUn objeto.", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "No puedes tomar ningUn objeto.", FontTypeNames.FONTTYPE_INFO)
                 Exit Sub
 
             End If
 
         End If
         
-        Call GetObj(Userindex)
+        Call GetObj(UserIndex)
 
     End With
 
@@ -2524,21 +2490,21 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleSafeToggle(ByVal Userindex As Integer)
+Private Sub HandleSafeToggle(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
         If .flags.Seguro Then
-            Call WriteMultiMessage(Userindex, eMessages.SafeModeOff) 'Call WriteSafeModeOff(UserIndex)
+            Call WriteMultiMessage(UserIndex, eMessages.SafeModeOff) 'Call WriteSafeModeOff(UserIndex)
         Else
-            Call WriteMultiMessage(Userindex, eMessages.SafeModeOn) 'Call WriteSafeModeOn(UserIndex)
+            Call WriteMultiMessage(UserIndex, eMessages.SafeModeOn) 'Call WriteSafeModeOn(UserIndex)
 
         End If
         
@@ -2553,21 +2519,21 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleResuscitationToggle(ByVal Userindex As Integer)
+Private Sub HandleResuscitationToggle(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Rapsodius
     'Creation Date: 10/10/07
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         Call .incomingData.ReadByte
         
         .flags.SeguroResu = Not .flags.SeguroResu
         
         If .flags.SeguroResu Then
-            Call WriteMultiMessage(Userindex, eMessages.ResuscitationSafeOn) 'Call WriteResuscitationSafeOn(UserIndex)
+            Call WriteMultiMessage(UserIndex, eMessages.ResuscitationSafeOn) 'Call WriteResuscitationSafeOn(UserIndex)
         Else
-            Call WriteMultiMessage(Userindex, eMessages.ResuscitationSafeOff) 'Call WriteResuscitationSafeOff(UserIndex)
+            Call WriteMultiMessage(UserIndex, eMessages.ResuscitationSafeOff) 'Call WriteResuscitationSafeOff(UserIndex)
 
         End If
 
@@ -2580,16 +2546,16 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleRequestGuildLeaderInfo(ByVal Userindex As Integer)
+Private Sub HandleRequestGuildLeaderInfo(ByVal UserIndex As Integer)
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
     'Remove packet ID
-    UserList(Userindex).incomingData.ReadByte
+    UserList(UserIndex).incomingData.ReadByte
     
-    Call modGuilds.SendGuildLeaderInfo(Userindex)
+    Call modGuilds.SendGuildLeaderInfo(UserIndex)
 
 End Sub
 
@@ -2598,16 +2564,16 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleRequestAtributes(ByVal Userindex As Integer)
+Private Sub HandleRequestAtributes(ByVal UserIndex As Integer)
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
     'Remove packet ID
-    Call UserList(Userindex).incomingData.ReadByte
+    Call UserList(UserIndex).incomingData.ReadByte
     
-    Call WriteAttributes(Userindex)
+    Call WriteAttributes(UserIndex)
 
 End Sub
 
@@ -2616,16 +2582,16 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleRequestFame(ByVal Userindex As Integer)
+Private Sub HandleRequestFame(ByVal UserIndex As Integer)
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
     'Remove packet ID
-    Call UserList(Userindex).incomingData.ReadByte
+    Call UserList(UserIndex).incomingData.ReadByte
     
-    Call EnviarFama(Userindex)
+    Call EnviarFama(UserIndex)
 
 End Sub
 
@@ -2634,16 +2600,16 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleRequestSkills(ByVal Userindex As Integer)
+Private Sub HandleRequestSkills(ByVal UserIndex As Integer)
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
     'Remove packet ID
-    Call UserList(Userindex).incomingData.ReadByte
+    Call UserList(UserIndex).incomingData.ReadByte
     
-    Call WriteSendSkills(Userindex)
+    Call WriteSendSkills(UserIndex)
 
 End Sub
 
@@ -2652,16 +2618,16 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleRequestMiniStats(ByVal Userindex As Integer)
+Private Sub HandleRequestMiniStats(ByVal UserIndex As Integer)
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
     'Remove packet ID
-    Call UserList(Userindex).incomingData.ReadByte
+    Call UserList(UserIndex).incomingData.ReadByte
     
-    Call WriteMiniStats(Userindex)
+    Call WriteMiniStats(UserIndex)
 
 End Sub
 
@@ -2670,18 +2636,18 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleCommerceEnd(ByVal Userindex As Integer)
+Private Sub HandleCommerceEnd(ByVal UserIndex As Integer)
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
     'Remove packet ID
-    Call UserList(Userindex).incomingData.ReadByte
+    Call UserList(UserIndex).incomingData.ReadByte
     
     'User quits commerce mode
-    UserList(Userindex).flags.Comerciando = False
-    Call WriteCommerceEnd(Userindex)
+    UserList(UserIndex).flags.Comerciando = False
+    Call WriteCommerceEnd(UserIndex)
 
 End Sub
 
@@ -2690,20 +2656,20 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleUserCommerceEnd(ByVal Userindex As Integer)
+Private Sub HandleUserCommerceEnd(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 11/03/2010
     '11/03/2010: ZaMa - Le avisa por consola al que cencela que dejo de comerciar.
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
         'Quits commerce mode with user
         If .ComUsu.DestUsu > 0 Then
-            If UserList(.ComUsu.DestUsu).ComUsu.DestUsu = Userindex Then
+            If UserList(.ComUsu.DestUsu).ComUsu.DestUsu = UserIndex Then
                 Call WriteConsoleMsg(.ComUsu.DestUsu, .Name & " ha dejado de comerciar con vos.", FontTypeNames.FONTTYPE_TALK)
                 Call FinComerciarUsu(.ComUsu.DestUsu)
 
@@ -2711,8 +2677,8 @@ Private Sub HandleUserCommerceEnd(ByVal Userindex As Integer)
 
         End If
         
-        Call FinComerciarUsu(Userindex)
-        Call WriteConsoleMsg(Userindex, "Has dejado de comerciar.", FontTypeNames.FONTTYPE_TALK)
+        Call FinComerciarUsu(UserIndex)
+        Call WriteConsoleMsg(UserIndex, "Has dejado de comerciar.", FontTypeNames.FONTTYPE_TALK)
 
     End With
 
@@ -2722,7 +2688,7 @@ End Sub
 ' Handles the "UserCommerceConfirm" message.
 '
 ' @param    userIndex The index of the user sending the message.
-Private Sub HandleUserCommerceConfirm(ByVal Userindex As Integer)
+Private Sub HandleUserCommerceConfirm(ByVal UserIndex As Integer)
     '***************************************************
     'Author: ZaMa
     'Last Modification: 14/12/2009
@@ -2730,34 +2696,34 @@ Private Sub HandleUserCommerceConfirm(ByVal Userindex As Integer)
     '***************************************************
     
     'Remove packet ID
-    Call UserList(Userindex).incomingData.ReadByte
+    Call UserList(UserIndex).incomingData.ReadByte
 
     'Validate the commerce
-    If PuedeSeguirComerciando(Userindex) Then
+    If PuedeSeguirComerciando(UserIndex) Then
         'Tell the other user the confirmation of the offer
-        Call WriteUserOfferConfirm(UserList(Userindex).ComUsu.DestUsu)
-        UserList(Userindex).ComUsu.Confirmo = True
+        Call WriteUserOfferConfirm(UserList(UserIndex).ComUsu.DestUsu)
+        UserList(UserIndex).ComUsu.Confirmo = True
 
     End If
     
 End Sub
 
-Private Sub HandleCommerceChat(ByVal Userindex As Integer)
+Private Sub HandleCommerceChat(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: ZaMa
     'Last Modification: 03/12/2009
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
     
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -2773,13 +2739,13 @@ Private Sub HandleCommerceChat(ByVal Userindex As Integer)
         Chat = buffer.ReadASCIIString()
         
         If LenB(Chat) <> 0 Then
-            If PuedeSeguirComerciando(Userindex) Then
+            If PuedeSeguirComerciando(UserIndex) Then
                 'Analize chat...
                 Call Statistics.ParseChat(Chat)
                 
-                Chat = UserList(Userindex).Name & "> " & Chat
-                Call WriteCommerceChat(Userindex, Chat, FontTypeNames.FONTTYPE_PARTY)
-                Call WriteCommerceChat(UserList(Userindex).ComUsu.DestUsu, Chat, FontTypeNames.FONTTYPE_PARTY)
+                Chat = UserList(UserIndex).Name & "> " & Chat
+                Call WriteCommerceChat(UserIndex, Chat, FontTypeNames.FONTTYPE_PARTY)
+                Call WriteCommerceChat(UserList(UserIndex).ComUsu.DestUsu, Chat, FontTypeNames.FONTTYPE_PARTY)
 
             End If
 
@@ -2790,7 +2756,7 @@ Private Sub HandleCommerceChat(ByVal Userindex As Integer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -2810,20 +2776,20 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleBankEnd(ByVal Userindex As Integer)
+Private Sub HandleBankEnd(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
         'User exits banking mode
         .flags.Comerciando = False
-        Call WriteBankEnd(Userindex)
+        Call WriteBankEnd(UserIndex)
 
     End With
 
@@ -2834,17 +2800,17 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleUserCommerceOk(ByVal Userindex As Integer)
+Private Sub HandleUserCommerceOk(ByVal UserIndex As Integer)
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
     'Remove packet ID
-    Call UserList(Userindex).incomingData.ReadByte
+    Call UserList(UserIndex).incomingData.ReadByte
     
     'Trade accepted
-    Call AceptarComercioUsu(Userindex)
+    Call AceptarComercioUsu(UserIndex)
 
 End Sub
 
@@ -2853,7 +2819,7 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleUserCommerceReject(ByVal Userindex As Integer)
+Private Sub HandleUserCommerceReject(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -2862,7 +2828,7 @@ Private Sub HandleUserCommerceReject(ByVal Userindex As Integer)
     '***************************************************
     Dim otherUser As Integer
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -2878,8 +2844,8 @@ Private Sub HandleUserCommerceReject(ByVal Userindex As Integer)
 
         End If
         
-        Call WriteConsoleMsg(Userindex, "Has rechazado la oferta del otro usuario.", FontTypeNames.FONTTYPE_TALK)
-        Call FinComerciarUsu(Userindex)
+        Call WriteConsoleMsg(UserIndex, "Has rechazado la oferta del otro usuario.", FontTypeNames.FONTTYPE_TALK)
+        Call FinComerciarUsu(UserIndex)
 
     End With
 
@@ -2890,15 +2856,15 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleDrop(ByVal Userindex As Integer)
+Private Sub HandleDrop(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 07/25/09
     '07/25/09: Marco - Agregue un checkeo para patear a los usuarios que tiran items mientras comercian.
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 4 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 4 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
@@ -2907,7 +2873,7 @@ Private Sub HandleDrop(ByVal Userindex As Integer)
 
     Dim Amount As Integer
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
 
@@ -2924,9 +2890,9 @@ Private Sub HandleDrop(ByVal Userindex As Integer)
         If Slot = FLAGORO Then
             If Amount > 10000 Then Exit Sub 'Don't drop too much gold
 
-            Call TirarOro(Amount, Userindex)
+            Call TirarOro(Amount, UserIndex)
             
-            Call WriteUpdateGold(Userindex)
+            Call WriteUpdateGold(UserIndex)
         Else
 
             'Only drop valid slots
@@ -2936,7 +2902,7 @@ Private Sub HandleDrop(ByVal Userindex As Integer)
 
                 End If
                 
-                Call DropObj(Userindex, Slot, Amount, .Pos.Map, .Pos.X, .Pos.Y)
+                Call DropObj(UserIndex, Slot, Amount, .Pos.Map, .Pos.X, .Pos.Y)
 
             End If
 
@@ -2951,30 +2917,30 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleCastSpell(ByVal Userindex As Integer)
+Private Sub HandleCastSpell(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '13/11/2009: ZaMa - Ahora los npcs pueden atacar al usuario si quizo castear un hechizo
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 2 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 2 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
-        Dim Spell As Byte
+        Dim spell As Byte
         
-        Spell = .incomingData.ReadByte()
+        spell = .incomingData.ReadByte()
         
         If .flags.Muerto = 1 Then
             'Call WriteConsoleMsg(UserIndex, "Estas muerto!!", FontTypeNames.FONTTYPE_INFO)
-            Call WriteMultiMessage(Userindex, eMessages.UserMuerto)
+            Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
             Exit Sub
 
         End If
@@ -2982,16 +2948,16 @@ Private Sub HandleCastSpell(ByVal Userindex As Integer)
         'Now you can be atacked
         .flags.NoPuedeSerAtacado = False
         
-        If Spell < 1 Then
+        If spell < 1 Then
             .flags.Hechizo = 0
             Exit Sub
-        ElseIf Spell > MAXUSERHECHIZOS Then
+        ElseIf spell > MAXUSERHECHIZOS Then
             .flags.Hechizo = 0
             Exit Sub
 
         End If
         
-        .flags.Hechizo = .Stats.UserHechizos(Spell)
+        .flags.Hechizo = .Stats.UserHechizos(spell)
 
     End With
 
@@ -3002,20 +2968,20 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleLeftClick(ByVal Userindex As Integer)
+Private Sub HandleLeftClick(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    With UserList(Userindex).incomingData
+    With UserList(UserIndex).incomingData
         'Remove packet ID
         Call .ReadByte
         
@@ -3026,31 +2992,31 @@ Private Sub HandleLeftClick(ByVal Userindex As Integer)
         X = .ReadByte()
         Y = .ReadByte()
         
-        Call LookatTile(Userindex, UserList(Userindex).Pos.Map, X, Y)
+        Call LookatTile(UserIndex, UserList(UserIndex).Pos.Map, X, Y)
 
     End With
 
 End Sub
 
 ''
-' Handles the "DoubleClick" message.
+' Handles the "AccionClick" message.
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleDoubleClick(ByVal Userindex As Integer)
+Private Sub HandleAccionClick(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    With UserList(Userindex).incomingData
+    With UserList(UserIndex).incomingData
         'Remove packet ID
         Call .ReadByte
         
@@ -3061,7 +3027,7 @@ Private Sub HandleDoubleClick(ByVal Userindex As Integer)
         X = .ReadByte()
         Y = .ReadByte()
         
-        Call Accion(Userindex, UserList(Userindex).Pos.Map, X, Y)
+        Call Accion(UserIndex, UserList(UserIndex).Pos.Map, X, Y)
 
     End With
 
@@ -3072,20 +3038,20 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleWork(ByVal Userindex As Integer)
+Private Sub HandleWork(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 13/01/2010 (ZaMa)
     '13/01/2010: ZaMa - El pirata se puede ocultar en barca
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 2 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 2 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -3093,37 +3059,37 @@ Private Sub HandleWork(ByVal Userindex As Integer)
         
         Skill = .incomingData.ReadByte()
         
-        If UserList(Userindex).flags.Muerto = 1 Then Exit Sub
+        If UserList(UserIndex).flags.Muerto = 1 Then Exit Sub
         
         'If exiting, cancel
-        Call CancelExit(Userindex)
+        Call CancelExit(UserIndex)
         
         Select Case Skill
         
             Case Robar, Magia, Domar
-                Call WriteMultiMessage(Userindex, eMessages.WorkRequestTarget, Skill)
+                Call WriteMultiMessage(UserIndex, eMessages.WorkRequestTarget, Skill)
                 
             Case Ocultarse
                 
                 ' Verifico si se peude ocultar en este mapa
                 If MapInfo(.Pos.Map).OcultarSinEfecto = 1 Then
-                    Call WriteConsoleMsg(Userindex, "Ocultarse no funciona aqui!", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "Ocultarse no funciona aqui!", FontTypeNames.FONTTYPE_INFO)
                     Exit Sub
 
                 End If
                 
                 If .flags.EnConsulta Then
-                    Call WriteConsoleMsg(Userindex, "No puedes ocultarte si estas en consulta.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "No puedes ocultarte si estas en consulta.", FontTypeNames.FONTTYPE_INFO)
                     Exit Sub
 
                 End If
             
                 If .flags.Navegando = 1 Then
-                    If .Clase <> eClass.Pirat Then
+                    If .clase <> eClass.Pirat Then
 
                         '[CDT 17-02-2004]
                         If Not .flags.UltimoMensaje = 3 Then
-                            Call WriteConsoleMsg(Userindex, "No puedes ocultarte si estas navegando.", FontTypeNames.FONTTYPE_INFO)
+                            Call WriteConsoleMsg(UserIndex, "No puedes ocultarte si estas navegando.", FontTypeNames.FONTTYPE_INFO)
                             .flags.UltimoMensaje = 3
 
                         End If
@@ -3139,7 +3105,7 @@ Private Sub HandleWork(ByVal Userindex As Integer)
 
                     '[CDT 17-02-2004]
                     If Not .flags.UltimoMensaje = 2 Then
-                        Call WriteConsoleMsg(Userindex, "Ya estas oculto.", FontTypeNames.FONTTYPE_INFO)
+                        Call WriteConsoleMsg(UserIndex, "Ya estas oculto.", FontTypeNames.FONTTYPE_INFO)
                         .flags.UltimoMensaje = 2
 
                     End If
@@ -3149,7 +3115,7 @@ Private Sub HandleWork(ByVal Userindex As Integer)
 
                 End If
                 
-                Call DoOcultarse(Userindex)
+                Call DoOcultarse(UserIndex)
                 
         End Select
         
@@ -3162,7 +3128,7 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleInitCrafting(ByVal Userindex As Integer)
+Private Sub HandleInitCrafting(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: ZaMa
@@ -3173,7 +3139,7 @@ Private Sub HandleInitCrafting(ByVal Userindex As Integer)
 
     Dim ItemsPorCiclo As Integer
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -3183,7 +3149,7 @@ Private Sub HandleInitCrafting(ByVal Userindex As Integer)
         If TotalItems > 0 Then
             
             .Construir.Cantidad = TotalItems
-            .Construir.PorCiclo = MinimoInt(MaxItemsConstruibles(Userindex), ItemsPorCiclo)
+            .Construir.PorCiclo = MinimoInt(MaxItemsConstruibles(UserIndex), ItemsPorCiclo)
 
         End If
 
@@ -3196,20 +3162,20 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleUseSpellMacro(ByVal Userindex As Integer)
+Private Sub HandleUseSpellMacro(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
-        Call SendData(SendTarget.ToAdmins, Userindex, PrepareMessageConsoleMsg(.Name & " fue expulsado por Anti-macro de hechizos.", FontTypeNames.FONTTYPE_FIGHT))
-        Call WriteErrorMsg(Userindex, "Has sido expulsado por usar macro de hechizos. Recomendamos leer el reglamento sobre el tema macros.")
-        Call CloseSocket(Userindex)
+        Call SendData(SendTarget.ToAdmins, UserIndex, PrepareMessageConsoleMsg(.Name & " fue expulsado por Anti-macro de hechizos.", FontTypeNames.FONTTYPE_FIGHT))
+        Call WriteErrorMsg(UserIndex, "Has sido expulsado por usar macro de hechizos. Recomendamos leer el reglamento sobre el tema macros.")
+        Call CloseSocket(UserIndex)
 
     End With
 
@@ -3220,20 +3186,20 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleUseItem(ByVal Userindex As Integer)
+Private Sub HandleUseItem(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 2 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 2 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -3252,7 +3218,7 @@ Private Sub HandleUseItem(ByVal Userindex As Integer)
 
         End If
         
-        Call UseInvItem(Userindex, Slot)
+        Call UseInvItem(UserIndex, Slot)
 
     End With
 
@@ -3263,20 +3229,20 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleCraftBlacksmith(ByVal Userindex As Integer)
+Private Sub HandleCraftBlacksmith(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    With UserList(Userindex).incomingData
+    With UserList(UserIndex).incomingData
         'Remove packet ID
         Call .ReadByte
         
@@ -3288,8 +3254,8 @@ Private Sub HandleCraftBlacksmith(ByVal Userindex As Integer)
         
         If ObjData(Item).SkHerreria = 0 Then Exit Sub
         
-        If Not IntervaloPermiteTrabajar(Userindex) Then Exit Sub
-        Call HerreroConstruirItem(Userindex, Item)
+        If Not IntervaloPermiteTrabajar(UserIndex) Then Exit Sub
+        Call HerreroConstruirItem(UserIndex, Item)
 
     End With
 
@@ -3300,20 +3266,20 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleCraftCarpenter(ByVal Userindex As Integer)
+Private Sub HandleCraftCarpenter(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    With UserList(Userindex).incomingData
+    With UserList(UserIndex).incomingData
         'Remove packet ID
         Call .ReadByte
         
@@ -3325,8 +3291,8 @@ Private Sub HandleCraftCarpenter(ByVal Userindex As Integer)
         
         If ObjData(Item).SkCarpinteria = 0 Then Exit Sub
         
-        If Not IntervaloPermiteTrabajar(Userindex) Then Exit Sub
-        Call CarpinteroConstruirItem(Userindex, Item)
+        If Not IntervaloPermiteTrabajar(UserIndex) Then Exit Sub
+        Call CarpinteroConstruirItem(UserIndex, Item)
 
     End With
 
@@ -3337,7 +3303,7 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleWorkLeftClick(ByVal Userindex As Integer)
+Private Sub HandleWorkLeftClick(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -3346,13 +3312,13 @@ Private Sub HandleWorkLeftClick(ByVal Userindex As Integer)
     '12/01/2010: ZaMa - Ahora se admiten armas arrojadizas (proyectiles sin municiones).
     '14/01/2010: ZaMa - Ya no se pierden municiones al atacar npcs con dueno.
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 4 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 4 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -3377,40 +3343,40 @@ Private Sub HandleWorkLeftClick(ByVal Userindex As Integer)
         
         If .flags.Muerto = 1 Or .flags.Descansar Or .flags.Meditando Or Not InMapBounds(.Pos.Map, X, Y) Then Exit Sub
 
-        If Not InRangoVision(Userindex, X, Y) Then
-            Call WritePosUpdate(Userindex)
+        If Not InRangoVision(UserIndex, X, Y) Then
+            Call WritePosUpdate(UserIndex)
             Exit Sub
 
         End If
         
         'If exiting, cancel
-        Call CancelExit(Userindex)
+        Call CancelExit(UserIndex)
         
         Select Case Skill
 
             Case eSkill.Proyectiles
                 
                 'Check attack interval
-                If Not IntervaloPermiteAtacar(Userindex, False) Then Exit Sub
+                If Not IntervaloPermiteAtacar(UserIndex, False) Then Exit Sub
 
                 'Check Magic interval
-                If Not IntervaloPermiteLanzarSpell(Userindex, False) Then Exit Sub
+                If Not IntervaloPermiteLanzarSpell(UserIndex, False) Then Exit Sub
 
                 'Check bow's interval
-                If Not IntervaloPermiteUsarArcos(Userindex) Then Exit Sub
+                If Not IntervaloPermiteUsarArcos(UserIndex) Then Exit Sub
                 
-                Call LanzarProyectil(Userindex, X, Y)
+                Call LanzarProyectil(UserIndex, X, Y)
                             
             Case eSkill.Magia
 
                 'Check the map allows spells to be casted.
                 If MapInfo(.Pos.Map).MagiaSinEfecto > 0 Then
-                    Call WriteConsoleMsg(Userindex, "Una fuerza oscura te impide canalizar tu energia.", FontTypeNames.FONTTYPE_FIGHT)
+                    Call WriteConsoleMsg(UserIndex, "Una fuerza oscura te impide canalizar tu energia.", FontTypeNames.FONTTYPE_FIGHT)
                     Exit Sub
                 End If
                 
                 'Target whatever is in that tile
-                Call LookatTile(Userindex, .Pos.Map, X, Y)
+                Call LookatTile(UserIndex, .Pos.Map, X, Y)
                 
                 'If it's outside range log it and exit
                 If Abs(.Pos.X - X) > RANGO_VISION_X Or Abs(.Pos.Y - Y) > RANGO_VISION_Y Then
@@ -3419,24 +3385,34 @@ Private Sub HandleWorkLeftClick(ByVal Userindex As Integer)
                 End If
                 
                 'Check bow's interval
-                If Not IntervaloPermiteUsarArcos(Userindex, False) Then Exit Sub
+                If Not IntervaloPermiteUsarArcos(UserIndex, False) Then Exit Sub
                 
                 'Check Spell-Hit interval
-                If Not IntervaloPermiteGolpeMagia(Userindex) Then
+                If Not IntervaloPermiteGolpeMagia(UserIndex) Then
 
                     'Check Magic interval
-                    If Not IntervaloPermiteLanzarSpell(Userindex) Then
+                    If Not IntervaloPermiteLanzarSpell(UserIndex) Then
                         Exit Sub
                     End If
 
                 End If
                 
+            '¿está el bot? (esto ya comprobó que sea de su grupo, ende no hay que volver acheckeaR)
+               If .flags.TargetBot <> 0 Then
+                      If .flags.Hechizo > 0 Then
+                        Call ModBOTS.ia_UserDamage(.flags.Hechizo, .flags.TargetBot, UserIndex)
+                        .flags.TargetBot = 0
+                        .flags.Hechizo = 0
+                        Exit Sub
+                      End If
+                End If
+                
                 'Check intervals and cast
                 If .flags.Hechizo > 0 Then
-                    Call LanzarHechizo(.flags.Hechizo, Userindex)
+                    Call LanzarHechizo(.flags.Hechizo, UserIndex)
                     .flags.Hechizo = 0
                 Else
-                    Call WriteConsoleMsg(Userindex, "Primero selecciona el hechizo que quieres lanzar!", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "Primero selecciona el hechizo que quieres lanzar!", FontTypeNames.FONTTYPE_INFO)
 
                 End If
             
@@ -3446,12 +3422,12 @@ Private Sub HandleWorkLeftClick(ByVal Userindex As Integer)
                 If WeaponIndex = 0 Then Exit Sub
                 
                 'Check interval
-                If Not IntervaloPermiteTrabajar(Userindex) Then Exit Sub
+                If Not IntervaloPermiteTrabajar(UserIndex) Then Exit Sub
                 
                 'Basado en la idea de Barrin
                 'Comentario por Barrin: jah, "basado", caradura ! ^^
                 If MapData(.Pos.Map, .Pos.X, .Pos.Y).Trigger = eTrigger.BAJOTECHO Or MapData(.Pos.Map, .Pos.X, .Pos.Y).Trigger = eTrigger.CASA Then
-                    Call WriteConsoleMsg(Userindex, "No puedes pescar desde donde te encuentras.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "No puedes pescar desde donde te encuentras.", FontTypeNames.FONTTYPE_INFO)
                     Exit Sub
 
                 End If
@@ -3461,35 +3437,35 @@ Private Sub HandleWorkLeftClick(ByVal Userindex As Integer)
                     Select Case WeaponIndex
 
                         Case CANA_PESCA, CANA_PESCA_NEWBIE
-                            Call DoPescar(Userindex)
+                            Call DoPescar(UserIndex)
                         
                         Case RED_PESCA
                             
                             DummyInt = MapData(.Pos.Map, X, Y).ObjInfo.ObjIndex
                 
                             If DummyInt = 0 Then
-                                Call WriteConsoleMsg(Userindex, "No hay un yacimiento de peces donde pescar.", FontTypeNames.FONTTYPE_INFO)
+                                Call WriteConsoleMsg(UserIndex, "No hay un yacimiento de peces donde pescar.", FontTypeNames.FONTTYPE_INFO)
                                 Exit Sub
 
                             End If
                             
                             If Abs(.Pos.X - X) + Abs(.Pos.Y - Y) > 2 Then
-                                Call WriteConsoleMsg(Userindex, "Estas demasiado lejos para pescar.", FontTypeNames.FONTTYPE_INFO)
+                                Call WriteConsoleMsg(UserIndex, "Estas demasiado lejos para pescar.", FontTypeNames.FONTTYPE_INFO)
                                 Exit Sub
 
                             End If
                             
                             If .Pos.X = X And .Pos.Y = Y Then
-                                Call WriteConsoleMsg(Userindex, "No puedes pescar desde alli.", FontTypeNames.FONTTYPE_INFO)
+                                Call WriteConsoleMsg(UserIndex, "No puedes pescar desde alli.", FontTypeNames.FONTTYPE_INFO)
                                 Exit Sub
 
                             End If
                             
                             'Hay un arbol normal donde clickeo?
                             If ObjData(DummyInt).OBJType = eOBJType.otYacimientoPez Then
-                                Call DoPescarRed(Userindex)
+                                Call DoPescarRed(UserIndex)
                             Else
-                                Call WriteConsoleMsg(Userindex, "No hay un yacimiento de peces donde pescar.", FontTypeNames.FONTTYPE_INFO)
+                                Call WriteConsoleMsg(UserIndex, "No hay un yacimiento de peces donde pescar.", FontTypeNames.FONTTYPE_INFO)
                                 Exit Sub
 
                             End If
@@ -3501,9 +3477,9 @@ Private Sub HandleWorkLeftClick(ByVal Userindex As Integer)
                     End Select
                     
                     'Play sound!
-                    Call SendData(SendTarget.ToPCArea, Userindex, PrepareMessagePlayWave(SND_PESCAR, .Pos.X, .Pos.Y))
+                    Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_PESCAR, .Pos.X, .Pos.Y))
                 Else
-                    Call WriteConsoleMsg(Userindex, "No hay agua donde pescar. Busca un lago, rio o mar.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "No hay agua donde pescar. Busca un lago, rio o mar.", FontTypeNames.FONTTYPE_INFO)
 
                 End If
             
@@ -3513,20 +3489,20 @@ Private Sub HandleWorkLeftClick(ByVal Userindex As Integer)
                 If MapInfo(.Pos.Map).Pk Then
                     
                     'Check interval
-                    If Not IntervaloPermiteTrabajar(Userindex) Then Exit Sub
+                    If Not IntervaloPermiteTrabajar(UserIndex) Then Exit Sub
                     
                     'Target whatever is in that tile
-                    Call LookatTile(Userindex, UserList(Userindex).Pos.Map, X, Y)
+                    Call LookatTile(UserIndex, UserList(UserIndex).Pos.Map, X, Y)
                     
                     tU = .flags.TargetUser
                     
-                    If tU > 0 And tU <> Userindex Then
+                    If tU > 0 And tU <> UserIndex Then
 
                         'Can't steal administrative players
                         If UserList(tU).flags.Privilegios And PlayerType.User Then
                             If UserList(tU).flags.Muerto = 0 Then
                                 If Abs(.Pos.X - X) + Abs(.Pos.Y - Y) > 2 Then
-                                    Call WriteConsoleMsg(Userindex, "Estas demasiado lejos.", FontTypeNames.FONTTYPE_INFO)
+                                    Call WriteConsoleMsg(UserIndex, "Estas demasiado lejos.", FontTypeNames.FONTTYPE_INFO)
                                     Exit Sub
 
                                 End If
@@ -3534,42 +3510,42 @@ Private Sub HandleWorkLeftClick(ByVal Userindex As Integer)
                                 '17/09/02
                                 'Check the trigger
                                 If MapData(UserList(tU).Pos.Map, X, Y).Trigger = eTrigger.ZONASEGURA Then
-                                    Call WriteConsoleMsg(Userindex, "No puedes robar aqui.", FontTypeNames.FONTTYPE_WARNING)
+                                    Call WriteConsoleMsg(UserIndex, "No puedes robar aqui.", FontTypeNames.FONTTYPE_WARNING)
                                     Exit Sub
 
                                 End If
                                  
                                 If MapData(.Pos.Map, .Pos.X, .Pos.Y).Trigger = eTrigger.ZONASEGURA Then
-                                    Call WriteConsoleMsg(Userindex, "No puedes robar aqui.", FontTypeNames.FONTTYPE_WARNING)
+                                    Call WriteConsoleMsg(UserIndex, "No puedes robar aqui.", FontTypeNames.FONTTYPE_WARNING)
                                     Exit Sub
 
                                 End If
                                  
-                                Call DoRobar(Userindex, tU)
+                                Call DoRobar(UserIndex, tU)
 
                             End If
 
                         End If
 
                     Else
-                        Call WriteConsoleMsg(Userindex, "No hay a quien robarle!", FontTypeNames.FONTTYPE_INFO)
+                        Call WriteConsoleMsg(UserIndex, "No hay a quien robarle!", FontTypeNames.FONTTYPE_INFO)
 
                     End If
 
                 Else
-                    Call WriteConsoleMsg(Userindex, "No puedes robar en zonas seguras!", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "No puedes robar en zonas seguras!", FontTypeNames.FONTTYPE_INFO)
 
                 End If
             
             Case eSkill.Talar
 
                 'Check interval
-                If Not IntervaloPermiteTrabajar(Userindex) Then Exit Sub
+                If Not IntervaloPermiteTrabajar(UserIndex) Then Exit Sub
                 
                 WeaponIndex = .Invent.WeaponEqpObjIndex
                 
                 If WeaponIndex = 0 Then
-                    Call WriteConsoleMsg(Userindex, "Deberias equiparte el hacha.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "Deberias equiparte el hacha.", FontTypeNames.FONTTYPE_INFO)
                     Exit Sub
 
                 End If
@@ -3584,14 +3560,14 @@ Private Sub HandleWorkLeftClick(ByVal Userindex As Integer)
                 
                 If DummyInt > 0 Then
                     If Abs(.Pos.X - X) + Abs(.Pos.Y - Y) > 2 Then
-                        Call WriteConsoleMsg(Userindex, "Estas demasiado lejos.", FontTypeNames.FONTTYPE_INFO)
+                        Call WriteConsoleMsg(UserIndex, "Estas demasiado lejos.", FontTypeNames.FONTTYPE_INFO)
                         Exit Sub
 
                     End If
                     
                     'Barrin 29/9/03
                     If .Pos.X = X And .Pos.Y = Y Then
-                        Call WriteConsoleMsg(Userindex, "No puedes talar desde alli.", FontTypeNames.FONTTYPE_INFO)
+                        Call WriteConsoleMsg(UserIndex, "No puedes talar desde alli.", FontTypeNames.FONTTYPE_INFO)
                         Exit Sub
 
                     End If
@@ -3599,10 +3575,10 @@ Private Sub HandleWorkLeftClick(ByVal Userindex As Integer)
                     'Hay un arbol normal donde clickeo?
                     If ObjData(DummyInt).OBJType = eOBJType.otArboles Then
                         If WeaponIndex = HACHA_LENADOR Or WeaponIndex = HACHA_LENADOR_NEWBIE Then
-                            Call SendData(SendTarget.ToPCArea, Userindex, PrepareMessagePlayWave(SND_TALAR, .Pos.X, .Pos.Y))
-                            Call DoTalar(Userindex)
+                            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_TALAR, .Pos.X, .Pos.Y))
+                            Call DoTalar(UserIndex)
                         Else
-                            Call WriteConsoleMsg(Userindex, "No puedes extraer lena de este arbol con este hacha.", FontTypeNames.FONTTYPE_INFO)
+                            Call WriteConsoleMsg(UserIndex, "No puedes extraer lena de este arbol con este hacha.", FontTypeNames.FONTTYPE_INFO)
 
                         End If
                         
@@ -3610,23 +3586,23 @@ Private Sub HandleWorkLeftClick(ByVal Userindex As Integer)
                     ElseIf ObjData(DummyInt).OBJType = eOBJType.otArbolElfico Then
                     
                         If WeaponIndex = HACHA_LENA_ELFICA Then
-                            Call SendData(SendTarget.ToPCArea, Userindex, PrepareMessagePlayWave(SND_TALAR, .Pos.X, .Pos.Y))
-                            Call DoTalar(Userindex, True)
+                            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_TALAR, .Pos.X, .Pos.Y))
+                            Call DoTalar(UserIndex, True)
                         Else
-                            Call WriteConsoleMsg(Userindex, "El hacha utilizado no es suficientemente poderosa.", FontTypeNames.FONTTYPE_INFO)
+                            Call WriteConsoleMsg(UserIndex, "El hacha utilizado no es suficientemente poderosa.", FontTypeNames.FONTTYPE_INFO)
 
                         End If
 
                     End If
 
                 Else
-                    Call WriteConsoleMsg(Userindex, "No hay ningUn arbol ahi.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "No hay ningUn arbol ahi.", FontTypeNames.FONTTYPE_INFO)
 
                 End If
             
             Case eSkill.Mineria
 
-                If Not IntervaloPermiteTrabajar(Userindex) Then Exit Sub
+                If Not IntervaloPermiteTrabajar(UserIndex) Then Exit Sub
                                 
                 WeaponIndex = .Invent.WeaponEqpObjIndex
                                 
@@ -3639,7 +3615,7 @@ Private Sub HandleWorkLeftClick(ByVal Userindex As Integer)
                 End If
                 
                 'Target whatever is in the tile
-                Call LookatTile(Userindex, .Pos.Map, X, Y)
+                Call LookatTile(UserIndex, .Pos.Map, X, Y)
                 
                 DummyInt = MapData(.Pos.Map, X, Y).ObjInfo.ObjIndex
                 
@@ -3647,21 +3623,21 @@ Private Sub HandleWorkLeftClick(ByVal Userindex As Integer)
 
                     'Check distance
                     If Abs(.Pos.X - X) + Abs(.Pos.Y - Y) > 2 Then
-                        Call WriteConsoleMsg(Userindex, "Estas demasiado lejos.", FontTypeNames.FONTTYPE_INFO)
+                        Call WriteConsoleMsg(UserIndex, "Estas demasiado lejos.", FontTypeNames.FONTTYPE_INFO)
                         Exit Sub
 
                     End If
                     
                     'Hay un yacimiento donde clickeo?
                     If ObjData(DummyInt).OBJType = eOBJType.otYacimiento Then
-                        Call DoMineria(Userindex)
+                        Call DoMineria(UserIndex)
                     Else
-                        Call WriteConsoleMsg(Userindex, "Ahi no hay ningUn yacimiento.", FontTypeNames.FONTTYPE_INFO)
+                        Call WriteConsoleMsg(UserIndex, "Ahi no hay ningUn yacimiento.", FontTypeNames.FONTTYPE_INFO)
 
                     End If
 
                 Else
-                    Call WriteConsoleMsg(Userindex, "Ahi no hay ningUn yacimiento.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "Ahi no hay ningUn yacimiento.", FontTypeNames.FONTTYPE_INFO)
 
                 End If
             
@@ -3671,38 +3647,38 @@ Private Sub HandleWorkLeftClick(ByVal Userindex As Integer)
                 'criaturas hostiles.
                 
                 'Target whatever is that tile
-                Call LookatTile(Userindex, .Pos.Map, X, Y)
+                Call LookatTile(UserIndex, .Pos.Map, X, Y)
                 tN = .flags.TargetNPC
                 
                 If tN > 0 Then
                     If Npclist(tN).flags.Domable > 0 Then
                         If Abs(.Pos.X - X) + Abs(.Pos.Y - Y) > 2 Then
-                            Call WriteConsoleMsg(Userindex, "Estas demasiado lejos.", FontTypeNames.FONTTYPE_INFO)
+                            Call WriteConsoleMsg(UserIndex, "Estas demasiado lejos.", FontTypeNames.FONTTYPE_INFO)
                             Exit Sub
 
                         End If
                         
                         If LenB(Npclist(tN).flags.AttackedBy) <> 0 Then
-                            Call WriteConsoleMsg(Userindex, "No puedes domar una criatura que esta luchando con un jugador.", FontTypeNames.FONTTYPE_INFO)
+                            Call WriteConsoleMsg(UserIndex, "No puedes domar una criatura que esta luchando con un jugador.", FontTypeNames.FONTTYPE_INFO)
                             Exit Sub
 
                         End If
                         
-                        Call DoDomar(Userindex, tN)
+                        Call DoDomar(UserIndex, tN)
                     Else
-                        Call WriteConsoleMsg(Userindex, "No puedes domar a esa criatura.", FontTypeNames.FONTTYPE_INFO)
+                        Call WriteConsoleMsg(UserIndex, "No puedes domar a esa criatura.", FontTypeNames.FONTTYPE_INFO)
 
                     End If
 
                 Else
-                    Call WriteConsoleMsg(Userindex, "No hay ninguna criatura alli!", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "No hay ninguna criatura alli!", FontTypeNames.FONTTYPE_INFO)
 
                 End If
             
             Case FundirMetal    'UGLY!!! This is a constant, not a skill!!
 
                 'Check interval
-                If Not IntervaloPermiteTrabajar(Userindex) Then Exit Sub
+                If Not IntervaloPermiteTrabajar(UserIndex) Then Exit Sub
                 
                 'Check there is a proper item there
                 If .flags.TargetObj > 0 Then
@@ -3717,50 +3693,50 @@ Private Sub HandleWorkLeftClick(ByVal Userindex As Integer)
                         ''chequeamos que no se zarpe duplicando oro
                         If .Invent.Object(.flags.TargetObjInvSlot).ObjIndex <> .flags.TargetObjInvIndex Then
                             If .Invent.Object(.flags.TargetObjInvSlot).ObjIndex = 0 Or .Invent.Object(.flags.TargetObjInvSlot).Amount = 0 Then
-                                Call WriteConsoleMsg(Userindex, "No tienes mas minerales.", FontTypeNames.FONTTYPE_INFO)
+                                Call WriteConsoleMsg(UserIndex, "No tienes mas minerales.", FontTypeNames.FONTTYPE_INFO)
                                 Exit Sub
 
                             End If
                             
                             ''FUISTE
-                            Call WriteErrorMsg(Userindex, "Has sido expulsado por el sistema anti cheats.")
-                            Call CloseSocket(Userindex)
+                            Call WriteErrorMsg(UserIndex, "Has sido expulsado por el sistema anti cheats.")
+                            Call CloseSocket(UserIndex)
                             Exit Sub
 
                         End If
 
                         If ObjData(.flags.TargetObjInvIndex).OBJType = eOBJType.otMinerales Then
-                            Call FundirMineral(Userindex)
+                            Call FundirMineral(UserIndex)
                         ElseIf ObjData(.flags.TargetObjInvIndex).OBJType = eOBJType.otWeapon Then
-                            Call FundirArmas(Userindex)
+                            Call FundirArmas(UserIndex)
 
                         End If
 
                     Else
-                        Call WriteConsoleMsg(Userindex, "Ahi no hay ninguna fragua.", FontTypeNames.FONTTYPE_INFO)
+                        Call WriteConsoleMsg(UserIndex, "Ahi no hay ninguna fragua.", FontTypeNames.FONTTYPE_INFO)
 
                     End If
 
                 Else
-                    Call WriteConsoleMsg(Userindex, "Ahi no hay ninguna fragua.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "Ahi no hay ninguna fragua.", FontTypeNames.FONTTYPE_INFO)
 
                 End If
             
             Case eSkill.Herreria
                 'Target wehatever is in that tile
-                Call LookatTile(Userindex, .Pos.Map, X, Y)
+                Call LookatTile(UserIndex, .Pos.Map, X, Y)
                 
                 If .flags.TargetObj > 0 Then
                     If ObjData(.flags.TargetObj).OBJType = eOBJType.otYunque Then
-                        Call EnivarArmasConstruibles(Userindex)
-                        Call EnivarArmadurasConstruibles(Userindex)
+                        Call EnivarArmasConstruibles(UserIndex)
+                        Call EnivarArmadurasConstruibles(UserIndex)
                     Else
-                        Call WriteConsoleMsg(Userindex, "Ahi no hay ningUn yunque.", FontTypeNames.FONTTYPE_INFO)
+                        Call WriteConsoleMsg(UserIndex, "Ahi no hay ningUn yunque.", FontTypeNames.FONTTYPE_INFO)
 
                     End If
 
                 Else
-                    Call WriteConsoleMsg(Userindex, "Ahi no hay ningUn yunque.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "Ahi no hay ningUn yunque.", FontTypeNames.FONTTYPE_INFO)
 
                 End If
 
@@ -3775,22 +3751,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleCreateNewGuild(ByVal Userindex As Integer)
+Private Sub HandleCreateNewGuild(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/11/09
     '05/11/09: Pato - Ahora se quitan los espacios del principio y del fin del nombre del clan
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 9 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 9 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -3816,15 +3792,15 @@ Private Sub HandleCreateNewGuild(ByVal Userindex As Integer)
         Site = buffer.ReadASCIIString()
         codex = Split(buffer.ReadASCIIString(), SEPARATOR)
         
-        If modGuilds.CrearNuevoClan(Userindex, Desc, GuildName, Site, codex, .FundandoGuildAlineacion, errorStr) Then
+        If modGuilds.CrearNuevoClan(UserIndex, Desc, GuildName, Site, codex, .FundandoGuildAlineacion, errorStr) Then
             Dim Message As String
             Message = .Name & " fundo el clan " & GuildName & " de alineacion " & modGuilds.GuildAlignment(.GuildIndex)
 
-            Call SendData(SendTarget.ToAll, Userindex, PrepareMessageConsoleMsg(Message, FontTypeNames.FONTTYPE_GUILD))
+            Call SendData(SendTarget.ToAll, UserIndex, PrepareMessageConsoleMsg(Message, FontTypeNames.FONTTYPE_GUILD))
             Call SendData(SendTarget.ToAll, 0, PrepareMessagePlayWave(44, NO_3D_SOUND, NO_3D_SOUND))
             
             'Update tag
-            Call RefreshCharStatus(Userindex)
+            Call RefreshCharStatus(UserIndex)
 
             'Aqui solo vamos a hacer un request a los endpoints de la aplicacion en Node.js
             'el repositorio para hacer funcionar esto, es este: https://github.com/ao-libre/ao-api-server
@@ -3833,7 +3809,7 @@ Private Sub HandleCreateNewGuild(ByVal Userindex As Integer)
                 Call ApiEndpointSendNewGuildCreatedMessageDiscord(Message, Desc, GuildName, Site)
             End If
         Else
-            Call WriteConsoleMsg(Userindex, errorStr, FontTypeNames.FONTTYPE_GUILD)
+            Call WriteConsoleMsg(UserIndex, errorStr, FontTypeNames.FONTTYPE_GUILD)
 
         End If
         
@@ -3842,7 +3818,7 @@ Private Sub HandleCreateNewGuild(ByVal Userindex As Integer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -3862,20 +3838,20 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleEquipItem(ByVal Userindex As Integer)
+Private Sub HandleEquipItem(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 2 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 2 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -3891,7 +3867,7 @@ Private Sub HandleEquipItem(ByVal Userindex As Integer)
         
         If .Invent.Object(itemSlot).ObjIndex = 0 Then Exit Sub
         
-        Call EquiparInvItem(Userindex, itemSlot)
+        Call EquiparInvItem(UserIndex, itemSlot)
 
     End With
 
@@ -3902,7 +3878,7 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleChangeHeading(ByVal Userindex As Integer)
+Private Sub HandleChangeHeading(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -3911,13 +3887,13 @@ Private Sub HandleChangeHeading(ByVal Userindex As Integer)
     ' 10/01/2008: Tavo - Se cancela la salida del juego si el user esta saliendo
     ' 06/28/2008: NicoNZ - Solo se puede cambiar si esta inmovilizado.
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 2 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 2 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -3957,88 +3933,9 @@ Private Sub HandleChangeHeading(ByVal Userindex As Integer)
         'Validate heading (VB won't say invalid cast if not a valid index like .Net languages would do... *sigh*)
         If heading > 0 And heading < 5 Then
             .Char.heading = heading
-            Call ChangeUserChar(Userindex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim)
+            Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim)
 
         End If
-
-    End With
-
-End Sub
-
-''
-' Handles the "ModifySkills" message.
-'
-' @param    userIndex The index of the user sending the message.
-
-Private Sub HandleModifySkills(ByVal Userindex As Integer)
-
-    '***************************************************
-    'Author: Juan Martin Sotuyo Dodero (Maraxus)
-    'Last Modification: 11/19/09
-    '11/19/09: Pato - Adapting to new skills system.
-    '***************************************************
-    If UserList(Userindex).incomingData.Length < 1 + NUMSKILLS Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
-        Exit Sub
-
-    End If
-    
-    With UserList(Userindex)
-        'Remove packet ID
-        Call .incomingData.ReadByte
-        
-        Dim i                      As Long
-
-        Dim Count                  As Integer
-
-        Dim points(1 To NUMSKILLS) As Byte
-        
-        'Codigo para prevenir el hackeo de los skills
-        For i = 1 To NUMSKILLS
-            points(i) = .incomingData.ReadByte()
-            
-            If points(i) < 0 Then
-                Call LogHackAttemp(.Name & " IP:" & .IP & " trato de hackear los skills.")
-                .Stats.SkillPts = 0
-                Call CloseSocket(Userindex)
-                Exit Sub
-
-            End If
-            
-            Count = Count + points(i)
-        Next i
-        
-        If Count > .Stats.SkillPts Then
-            Call LogHackAttemp(.Name & " IP:" & .IP & " trato de hackear los skills.")
-            Call CloseSocket(Userindex)
-            Exit Sub
-
-        End If
-        
-        .Counters.AsignedSkills = MinimoInt(10, .Counters.AsignedSkills + Count)
-        
-        With .Stats
-
-            For i = 1 To NUMSKILLS
-
-                If points(i) > 0 Then
-                    .SkillPts = .SkillPts - points(i)
-                    .UserSkills(i) = .UserSkills(i) + points(i)
-                    
-                    'Client should prevent this, but just in case...
-                    If .UserSkills(i) > 100 Then
-                        .SkillPts = .SkillPts + .UserSkills(i) - 100
-                        .UserSkills(i) = 100
-
-                    End If
-                    
-                    Call CheckEluSkill(Userindex, i, True)
-
-                End If
-
-            Next i
-
-        End With
 
     End With
 
@@ -4049,20 +3946,20 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleTrain(ByVal Userindex As Integer)
+Private Sub HandleTrain(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 2 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 2 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -4090,7 +3987,7 @@ Private Sub HandleTrain(ByVal Userindex As Integer)
             End If
 
         Else
-            Call SendData(SendTarget.ToPCArea, Userindex, PrepareMessageChatOverHead("No puedo traer mas criaturas, mata las existentes.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite))
+            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead("No puedo traer mas criaturas, mata las existentes.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite))
 
         End If
 
@@ -4103,20 +4000,20 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleCommerceBuy(ByVal Userindex As Integer)
+Private Sub HandleCommerceBuy(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 4 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 4 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -4130,7 +4027,7 @@ Private Sub HandleCommerceBuy(ByVal Userindex As Integer)
         'Dead people can't commerce...
         If .flags.Muerto = 1 Then
             'Call WriteConsoleMsg(UserIndex, "Estas muerto!!", FontTypeNames.FONTTYPE_INFO)
-            Call WriteMultiMessage(Userindex, eMessages.UserMuerto)
+            Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
             Exit Sub
 
         End If
@@ -4140,20 +4037,20 @@ Private Sub HandleCommerceBuy(ByVal Userindex As Integer)
             
         'El NPC puede comerciar?
         If Npclist(.flags.TargetNPC).Comercia = 0 Then
-            Call SendData(SendTarget.ToPCArea, Userindex, PrepareMessageChatOverHead("No tengo ningun interes en comerciar.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite))
+            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead("No tengo ningun interes en comerciar.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite))
             Exit Sub
 
         End If
         
         'Only if in commerce mode....
         If Not .flags.Comerciando Then
-            Call WriteConsoleMsg(Userindex, "No estas comerciando.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "No estas comerciando.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
 
         End If
         
         'User compra el item
-        Call Comercio(eModoComercio.Compra, Userindex, .flags.TargetNPC, Slot, Amount)
+        Call Comercio(eModoComercio.Compra, UserIndex, .flags.TargetNPC, Slot, Amount)
 
     End With
 
@@ -4164,20 +4061,20 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleBankExtractItem(ByVal Userindex As Integer)
+Private Sub HandleBankExtractItem(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 4 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 4 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -4191,7 +4088,7 @@ Private Sub HandleBankExtractItem(ByVal Userindex As Integer)
         'Dead people can't commerce
         If .flags.Muerto = 1 Then
             'Call WriteConsoleMsg(UserIndex, "Estas muerto!!", FontTypeNames.FONTTYPE_INFO)
-            Call WriteMultiMessage(Userindex, eMessages.UserMuerto)
+            Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
             Exit Sub
 
         End If
@@ -4206,7 +4103,7 @@ Private Sub HandleBankExtractItem(ByVal Userindex As Integer)
         End If
         
         'User retira el item del slot
-        Call UserRetiraItem(Userindex, Slot, Amount)
+        Call UserRetiraItem(UserIndex, Slot, Amount)
 
     End With
 
@@ -4217,20 +4114,20 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleCommerceSell(ByVal Userindex As Integer)
+Private Sub HandleCommerceSell(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 4 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 4 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -4244,7 +4141,7 @@ Private Sub HandleCommerceSell(ByVal Userindex As Integer)
         'Dead people can't commerce...
         If .flags.Muerto = 1 Then
             'Call WriteConsoleMsg(UserIndex, "Estas muerto!!", FontTypeNames.FONTTYPE_INFO)
-            Call WriteMultiMessage(Userindex, eMessages.UserMuerto)
+            Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
             Exit Sub
 
         End If
@@ -4254,13 +4151,13 @@ Private Sub HandleCommerceSell(ByVal Userindex As Integer)
         
         'El NPC puede comerciar?
         If Npclist(.flags.TargetNPC).Comercia = 0 Then
-            Call SendData(SendTarget.ToPCArea, Userindex, PrepareMessageChatOverHead("No tengo ningun interes en comerciar.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite))
+            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead("No tengo ningun interes en comerciar.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite))
             Exit Sub
 
         End If
         
         'User compra el item del slot
-        Call Comercio(eModoComercio.Venta, Userindex, .flags.TargetNPC, Slot, Amount)
+        Call Comercio(eModoComercio.Venta, UserIndex, .flags.TargetNPC, Slot, Amount)
 
     End With
 
@@ -4271,20 +4168,20 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleBankDeposit(ByVal Userindex As Integer)
+Private Sub HandleBankDeposit(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 4 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 4 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -4298,7 +4195,7 @@ Private Sub HandleBankDeposit(ByVal Userindex As Integer)
         'Dead people can't commerce...
         If .flags.Muerto = 1 Then
             'Call WriteConsoleMsg(UserIndex, "Estas muerto!!", FontTypeNames.FONTTYPE_INFO)
-            Call WriteMultiMessage(Userindex, eMessages.UserMuerto)
+            Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
             Exit Sub
 
         End If
@@ -4313,7 +4210,7 @@ Private Sub HandleBankDeposit(ByVal Userindex As Integer)
         End If
         
         'User deposita el item del slot rdata
-        Call UserDepositaItem(Userindex, Slot, Amount)
+        Call UserDepositaItem(UserIndex, Slot, Amount)
 
     End With
 
@@ -4324,22 +4221,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleForumPost(ByVal Userindex As Integer)
+Private Sub HandleForumPost(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 02/01/2010
     '02/01/2010: ZaMa - Implemento nuevo sistema de foros
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 6 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 6 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -4394,7 +4291,7 @@ Private Sub HandleForumPost(ByVal Userindex As Integer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -4414,20 +4311,20 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleMoveSpell(ByVal Userindex As Integer)
+Private Sub HandleMoveSpell(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    With UserList(Userindex).incomingData
+    With UserList(UserIndex).incomingData
         'Remove packet ID
         Call .ReadByte
         
@@ -4440,7 +4337,7 @@ Private Sub HandleMoveSpell(ByVal Userindex As Integer)
 
         End If
         
-        Call DesplazarHechizo(Userindex, Dir, .ReadByte())
+        Call DesplazarHechizo(UserIndex, Dir, .ReadByte())
 
     End With
 
@@ -4451,20 +4348,20 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleMoveBank(ByVal Userindex As Integer)
+Private Sub HandleMoveBank(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Torres Patricio (Pato)
     'Last Modification: 06/14/09
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    With UserList(Userindex).incomingData
+    With UserList(UserIndex).incomingData
         'Remove packet ID
         Call .ReadByte
         
@@ -4485,7 +4382,7 @@ Private Sub HandleMoveBank(ByVal Userindex As Integer)
 
     End With
         
-    With UserList(Userindex)
+    With UserList(UserIndex)
         TempItem.ObjIndex = .BancoInvent.Object(Slot).ObjIndex
         TempItem.Amount = .BancoInvent.Object(Slot).Amount
         
@@ -4494,16 +4391,16 @@ Private Sub HandleMoveBank(ByVal Userindex As Integer)
             .BancoInvent.Object(Slot - 1).ObjIndex = TempItem.ObjIndex
             .BancoInvent.Object(Slot - 1).Amount = TempItem.Amount
 
-            Call UpdateBanUserInv(False, Userindex, Slot - 1)
+            Call UpdateBanUserInv(False, UserIndex, Slot - 1)
         Else 'mover abajo
             .BancoInvent.Object(Slot) = .BancoInvent.Object(Slot + 1)
             .BancoInvent.Object(Slot + 1).ObjIndex = TempItem.ObjIndex
             .BancoInvent.Object(Slot + 1).Amount = TempItem.Amount
 
-            Call UpdateBanUserInv(False, Userindex, Slot + 1)
+            Call UpdateBanUserInv(False, UserIndex, Slot + 1)
         End If
 
-        Call UpdateBanUserInv(False, Userindex, Slot)
+        Call UpdateBanUserInv(False, UserIndex, Slot)
 
     End With
 
@@ -4514,22 +4411,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleClanCodexUpdate(ByVal Userindex As Integer)
+Private Sub HandleClanCodexUpdate(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 5 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 5 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -4554,7 +4451,7 @@ Private Sub HandleClanCodexUpdate(ByVal Userindex As Integer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -4574,20 +4471,20 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleUserCommerceOffer(ByVal Userindex As Integer)
+Private Sub HandleUserCommerceOffer(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 24/11/2009
     '24/11/2009: ZaMa - Nuevo sistema de comercio
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 7 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 7 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -4609,10 +4506,10 @@ Private Sub HandleUserCommerceOffer(ByVal Userindex As Integer)
         tUser = .ComUsu.DestUsu
         
         ' If he's already confirmed his offer, but now tries to change it, then he's cheating
-        If UserList(Userindex).ComUsu.Confirmo = True Then
+        If UserList(UserIndex).ComUsu.Confirmo = True Then
             
             ' Finish the trade
-            Call FinComerciarUsu(Userindex)
+            Call FinComerciarUsu(UserIndex)
         
             If tUser <= 0 Or tUser > MaxUsers Then
                 Call FinComerciarUsu(tUser)
@@ -4624,7 +4521,7 @@ Private Sub HandleUserCommerceOffer(ByVal Userindex As Integer)
         End If
         
         'If slot is invalid and it's not gold or it's not 0 (Substracting), then ignore it.
-        If ((Slot < 0 Or Slot > UserList(Userindex).CurrentInventorySlots) And Slot <> FLAGORO) Then Exit Sub
+        If ((Slot < 0 Or Slot > UserList(UserIndex).CurrentInventorySlots) And Slot <> FLAGORO) Then Exit Sub
         
         'If OfferSlot is invalid, then ignore it.
         If OfferSlot < 1 Or OfferSlot > MAX_OFFER_SLOTS + 1 Then Exit Sub
@@ -4637,7 +4534,7 @@ Private Sub HandleUserCommerceOffer(ByVal Userindex As Integer)
 
             ' Can't offer more than he has
             If Amount > .Stats.Gld - .ComUsu.GoldAmount Then
-                Call WriteCommerceChat(Userindex, "No tienes esa cantidad de oro para agregar a la oferta.", FontTypeNames.FONTTYPE_TALK)
+                Call WriteCommerceChat(UserIndex, "No tienes esa cantidad de oro para agregar a la oferta.", FontTypeNames.FONTTYPE_TALK)
                 Exit Sub
 
             End If
@@ -4656,9 +4553,9 @@ Private Sub HandleUserCommerceOffer(ByVal Userindex As Integer)
             If Slot <> 0 Then ObjIndex = .Invent.Object(Slot).ObjIndex
 
             ' Can't offer more than he has
-            If Not HasEnoughItems(Userindex, ObjIndex, TotalOfferItems(ObjIndex, Userindex) + Amount) Then
+            If Not HasEnoughItems(UserIndex, ObjIndex, TotalOfferItems(ObjIndex, UserIndex) + Amount) Then
                 
-                Call WriteCommerceChat(Userindex, "No tienes esa cantidad.", FontTypeNames.FONTTYPE_TALK)
+                Call WriteCommerceChat(UserIndex, "No tienes esa cantidad.", FontTypeNames.FONTTYPE_TALK)
                 Exit Sub
 
             End If
@@ -4672,7 +4569,7 @@ Private Sub HandleUserCommerceOffer(ByVal Userindex As Integer)
             End If
         
             If ItemNewbie(ObjIndex) Then
-                Call WriteCancelOfferItem(Userindex, OfferSlot)
+                Call WriteCancelOfferItem(UserIndex, OfferSlot)
                 Exit Sub
 
             End If
@@ -4680,7 +4577,7 @@ Private Sub HandleUserCommerceOffer(ByVal Userindex As Integer)
             'Don't allow to sell boats if they are equipped (you can't take them off in the water and causes trouble)
             If .flags.Navegando = 1 Then
                 If .Invent.BarcoSlot = Slot Then
-                    Call WriteCommerceChat(Userindex, "No puedes vender tu barco mientras lo estes usando.", FontTypeNames.FONTTYPE_TALK)
+                    Call WriteCommerceChat(UserIndex, "No puedes vender tu barco mientras lo estes usando.", FontTypeNames.FONTTYPE_TALK)
                     Exit Sub
 
                 End If
@@ -4689,14 +4586,14 @@ Private Sub HandleUserCommerceOffer(ByVal Userindex As Integer)
             
             If .flags.Equitando = 1 Then
                 If .Invent.MonturaEqpSlot = Slot Then
-                    Call WriteConsoleMsg(Userindex, "No podes vender tu montura mientras lo estes usando.", FontTypeNames.FONTTYPE_TALK)
+                    Call WriteConsoleMsg(UserIndex, "No podes vender tu montura mientras lo estes usando.", FontTypeNames.FONTTYPE_TALK)
                     Exit Sub
                 End If
             End If
 
             If .Invent.MochilaEqpSlot > 0 Then
                 If .Invent.MochilaEqpSlot = Slot Then
-                    Call WriteCommerceChat(Userindex, "No puedes vender tu mochila mientras la estes usando.", FontTypeNames.FONTTYPE_TALK)
+                    Call WriteCommerceChat(UserIndex, "No puedes vender tu alforja o mochila mientras la estes usando.", FontTypeNames.FONTTYPE_TALK)
                     Exit Sub
 
                 End If
@@ -4705,7 +4602,7 @@ Private Sub HandleUserCommerceOffer(ByVal Userindex As Integer)
 
         End If
         
-        Call AgregarOferta(Userindex, OfferSlot, ObjIndex, Amount, Slot = FLAGORO)
+        Call AgregarOferta(UserIndex, OfferSlot, ObjIndex, Amount, Slot = FLAGORO)
         Call EnviarOferta(tUser, OfferSlot)
 
     End With
@@ -4717,22 +4614,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleGuildAcceptPeace(ByVal Userindex As Integer)
+Private Sub HandleGuildAcceptPeace(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -4751,10 +4648,10 @@ Private Sub HandleGuildAcceptPeace(ByVal Userindex As Integer)
         
         Guild = buffer.ReadASCIIString()
         
-        otherClanIndex = modGuilds.r_AceptarPropuestaDePaz(Userindex, Guild, errorStr)
+        otherClanIndex = modGuilds.r_AceptarPropuestaDePaz(UserIndex, Guild, errorStr)
         
         If otherClanIndex = 0 Then
-            Call WriteConsoleMsg(Userindex, errorStr, FontTypeNames.FONTTYPE_GUILD)
+            Call WriteConsoleMsg(UserIndex, errorStr, FontTypeNames.FONTTYPE_GUILD)
         Else
             Call SendData(SendTarget.ToGuildMembers, .GuildIndex, PrepareMessageConsoleMsg("Tu clan ha firmado la paz con " & Guild & ".", FontTypeNames.FONTTYPE_GUILD))
             Call SendData(SendTarget.ToGuildMembers, otherClanIndex, PrepareMessageConsoleMsg("Tu clan ha firmado la paz con " & modGuilds.GuildName(.GuildIndex) & ".", FontTypeNames.FONTTYPE_GUILD))
@@ -4766,7 +4663,7 @@ Private Sub HandleGuildAcceptPeace(ByVal Userindex As Integer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -4786,22 +4683,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleGuildRejectAlliance(ByVal Userindex As Integer)
+Private Sub HandleGuildRejectAlliance(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -4820,10 +4717,10 @@ Private Sub HandleGuildRejectAlliance(ByVal Userindex As Integer)
         
         Guild = buffer.ReadASCIIString()
         
-        otherClanIndex = modGuilds.r_RechazarPropuestaDeAlianza(Userindex, Guild, errorStr)
+        otherClanIndex = modGuilds.r_RechazarPropuestaDeAlianza(UserIndex, Guild, errorStr)
         
         If otherClanIndex = 0 Then
-            Call WriteConsoleMsg(Userindex, errorStr, FontTypeNames.FONTTYPE_GUILD)
+            Call WriteConsoleMsg(UserIndex, errorStr, FontTypeNames.FONTTYPE_GUILD)
         Else
             Call SendData(SendTarget.ToGuildMembers, .GuildIndex, PrepareMessageConsoleMsg("Tu clan rechazado la propuesta de alianza de " & Guild, FontTypeNames.FONTTYPE_GUILD))
             Call SendData(SendTarget.ToGuildMembers, otherClanIndex, PrepareMessageConsoleMsg(modGuilds.GuildName(.GuildIndex) & " ha rechazado nuestra propuesta de alianza con su clan.", FontTypeNames.FONTTYPE_GUILD))
@@ -4835,7 +4732,7 @@ Private Sub HandleGuildRejectAlliance(ByVal Userindex As Integer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -4855,22 +4752,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleGuildRejectPeace(ByVal Userindex As Integer)
+Private Sub HandleGuildRejectPeace(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -4889,10 +4786,10 @@ Private Sub HandleGuildRejectPeace(ByVal Userindex As Integer)
         
         Guild = buffer.ReadASCIIString()
         
-        otherClanIndex = modGuilds.r_RechazarPropuestaDePaz(Userindex, Guild, errorStr)
+        otherClanIndex = modGuilds.r_RechazarPropuestaDePaz(UserIndex, Guild, errorStr)
         
         If otherClanIndex = 0 Then
-            Call WriteConsoleMsg(Userindex, errorStr, FontTypeNames.FONTTYPE_GUILD)
+            Call WriteConsoleMsg(UserIndex, errorStr, FontTypeNames.FONTTYPE_GUILD)
         Else
             Call SendData(SendTarget.ToGuildMembers, .GuildIndex, PrepareMessageConsoleMsg("Tu clan rechazado la propuesta de paz de " & Guild & ".", FontTypeNames.FONTTYPE_GUILD))
             Call SendData(SendTarget.ToGuildMembers, otherClanIndex, PrepareMessageConsoleMsg(modGuilds.GuildName(.GuildIndex) & " ha rechazado nuestra propuesta de paz con su clan.", FontTypeNames.FONTTYPE_GUILD))
@@ -4904,7 +4801,7 @@ Private Sub HandleGuildRejectPeace(ByVal Userindex As Integer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -4924,22 +4821,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleGuildAcceptAlliance(ByVal Userindex As Integer)
+Private Sub HandleGuildAcceptAlliance(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -4958,10 +4855,10 @@ Private Sub HandleGuildAcceptAlliance(ByVal Userindex As Integer)
         
         Guild = buffer.ReadASCIIString()
         
-        otherClanIndex = modGuilds.r_AceptarPropuestaDeAlianza(Userindex, Guild, errorStr)
+        otherClanIndex = modGuilds.r_AceptarPropuestaDeAlianza(UserIndex, Guild, errorStr)
         
         If otherClanIndex = 0 Then
-            Call WriteConsoleMsg(Userindex, errorStr, FontTypeNames.FONTTYPE_GUILD)
+            Call WriteConsoleMsg(UserIndex, errorStr, FontTypeNames.FONTTYPE_GUILD)
         Else
             Call SendData(SendTarget.ToGuildMembers, .GuildIndex, PrepareMessageConsoleMsg("Tu clan ha firmado la alianza con " & Guild & ".", FontTypeNames.FONTTYPE_GUILD))
             Call SendData(SendTarget.ToGuildMembers, otherClanIndex, PrepareMessageConsoleMsg("Tu clan ha firmado la paz con " & modGuilds.GuildName(.GuildIndex) & ".", FontTypeNames.FONTTYPE_GUILD))
@@ -4973,7 +4870,7 @@ Private Sub HandleGuildAcceptAlliance(ByVal Userindex As Integer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -4993,22 +4890,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleGuildOfferPeace(ByVal Userindex As Integer)
+Private Sub HandleGuildOfferPeace(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 5 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 5 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -5028,10 +4925,10 @@ Private Sub HandleGuildOfferPeace(ByVal Userindex As Integer)
         Guild = buffer.ReadASCIIString()
         proposal = buffer.ReadASCIIString()
         
-        If modGuilds.r_ClanGeneraPropuesta(Userindex, Guild, RELACIONES_GUILD.PAZ, proposal, errorStr) Then
-            Call WriteConsoleMsg(Userindex, "Propuesta de paz enviada.", FontTypeNames.FONTTYPE_GUILD)
+        If modGuilds.r_ClanGeneraPropuesta(UserIndex, Guild, RELACIONES_GUILD.PAZ, proposal, errorStr) Then
+            Call WriteConsoleMsg(UserIndex, "Propuesta de paz enviada.", FontTypeNames.FONTTYPE_GUILD)
         Else
-            Call WriteConsoleMsg(Userindex, errorStr, FontTypeNames.FONTTYPE_GUILD)
+            Call WriteConsoleMsg(UserIndex, errorStr, FontTypeNames.FONTTYPE_GUILD)
 
         End If
         
@@ -5040,7 +4937,7 @@ Private Sub HandleGuildOfferPeace(ByVal Userindex As Integer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -5060,22 +4957,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleGuildOfferAlliance(ByVal Userindex As Integer)
+Private Sub HandleGuildOfferAlliance(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 5 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 5 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -5095,10 +4992,10 @@ Private Sub HandleGuildOfferAlliance(ByVal Userindex As Integer)
         Guild = buffer.ReadASCIIString()
         proposal = buffer.ReadASCIIString()
         
-        If modGuilds.r_ClanGeneraPropuesta(Userindex, Guild, RELACIONES_GUILD.ALIADOS, proposal, errorStr) Then
-            Call WriteConsoleMsg(Userindex, "Propuesta de alianza enviada.", FontTypeNames.FONTTYPE_GUILD)
+        If modGuilds.r_ClanGeneraPropuesta(UserIndex, Guild, RELACIONES_GUILD.ALIADOS, proposal, errorStr) Then
+            Call WriteConsoleMsg(UserIndex, "Propuesta de alianza enviada.", FontTypeNames.FONTTYPE_GUILD)
         Else
-            Call WriteConsoleMsg(Userindex, errorStr, FontTypeNames.FONTTYPE_GUILD)
+            Call WriteConsoleMsg(UserIndex, errorStr, FontTypeNames.FONTTYPE_GUILD)
 
         End If
         
@@ -5107,7 +5004,7 @@ Private Sub HandleGuildOfferAlliance(ByVal Userindex As Integer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -5127,22 +5024,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleGuildAllianceDetails(ByVal Userindex As Integer)
+Private Sub HandleGuildAllianceDetails(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -5161,12 +5058,12 @@ Private Sub HandleGuildAllianceDetails(ByVal Userindex As Integer)
         
         Guild = buffer.ReadASCIIString()
         
-        details = modGuilds.r_VerPropuesta(Userindex, Guild, RELACIONES_GUILD.ALIADOS, errorStr)
+        details = modGuilds.r_VerPropuesta(UserIndex, Guild, RELACIONES_GUILD.ALIADOS, errorStr)
         
         If LenB(details) = 0 Then
-            Call WriteConsoleMsg(Userindex, errorStr, FontTypeNames.FONTTYPE_GUILD)
+            Call WriteConsoleMsg(UserIndex, errorStr, FontTypeNames.FONTTYPE_GUILD)
         Else
-            Call WriteOfferDetails(Userindex, details)
+            Call WriteOfferDetails(UserIndex, details)
 
         End If
         
@@ -5175,7 +5072,7 @@ Private Sub HandleGuildAllianceDetails(ByVal Userindex As Integer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -5195,22 +5092,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleGuildPeaceDetails(ByVal Userindex As Integer)
+Private Sub HandleGuildPeaceDetails(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -5229,12 +5126,12 @@ Private Sub HandleGuildPeaceDetails(ByVal Userindex As Integer)
         
         Guild = buffer.ReadASCIIString()
         
-        details = modGuilds.r_VerPropuesta(Userindex, Guild, RELACIONES_GUILD.PAZ, errorStr)
+        details = modGuilds.r_VerPropuesta(UserIndex, Guild, RELACIONES_GUILD.PAZ, errorStr)
         
         If LenB(details) = 0 Then
-            Call WriteConsoleMsg(Userindex, errorStr, FontTypeNames.FONTTYPE_GUILD)
+            Call WriteConsoleMsg(UserIndex, errorStr, FontTypeNames.FONTTYPE_GUILD)
         Else
-            Call WriteOfferDetails(Userindex, details)
+            Call WriteOfferDetails(UserIndex, details)
 
         End If
         
@@ -5243,7 +5140,7 @@ Private Sub HandleGuildPeaceDetails(ByVal Userindex As Integer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -5263,22 +5160,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleGuildRequestJoinerInfo(ByVal Userindex As Integer)
+Private Sub HandleGuildRequestJoinerInfo(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -5295,12 +5192,12 @@ Private Sub HandleGuildRequestJoinerInfo(ByVal Userindex As Integer)
         
         User = buffer.ReadASCIIString()
         
-        details = modGuilds.a_DetallesAspirante(Userindex, User)
+        details = modGuilds.a_DetallesAspirante(UserIndex, User)
         
         If LenB(details) = 0 Then
-            Call WriteConsoleMsg(Userindex, "El personaje no ha mandado solicitud, o no estas habilitado para verla.", FontTypeNames.FONTTYPE_GUILD)
+            Call WriteConsoleMsg(UserIndex, "El personaje no ha mandado solicitud, o no estas habilitado para verla.", FontTypeNames.FONTTYPE_GUILD)
         Else
-            Call WriteShowUserRequest(Userindex, details)
+            Call WriteShowUserRequest(UserIndex, details)
 
         End If
         
@@ -5309,7 +5206,7 @@ Private Sub HandleGuildRequestJoinerInfo(ByVal Userindex As Integer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -5329,16 +5226,16 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleGuildAlliancePropList(ByVal Userindex As Integer)
+Private Sub HandleGuildAlliancePropList(ByVal UserIndex As Integer)
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
     'Remove packet ID
-    Call UserList(Userindex).incomingData.ReadByte
+    Call UserList(UserIndex).incomingData.ReadByte
     
-    Call WriteAlianceProposalsList(Userindex, r_ListaDePropuestas(Userindex, RELACIONES_GUILD.ALIADOS))
+    Call WriteAlianceProposalsList(UserIndex, r_ListaDePropuestas(UserIndex, RELACIONES_GUILD.ALIADOS))
 
 End Sub
 
@@ -5347,16 +5244,16 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleGuildPeacePropList(ByVal Userindex As Integer)
+Private Sub HandleGuildPeacePropList(ByVal UserIndex As Integer)
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
     'Remove packet ID
-    Call UserList(Userindex).incomingData.ReadByte
+    Call UserList(UserIndex).incomingData.ReadByte
     
-    Call WritePeaceProposalsList(Userindex, r_ListaDePropuestas(Userindex, RELACIONES_GUILD.PAZ))
+    Call WritePeaceProposalsList(UserIndex, r_ListaDePropuestas(UserIndex, RELACIONES_GUILD.PAZ))
 
 End Sub
 
@@ -5365,22 +5262,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleGuildDeclareWar(ByVal Userindex As Integer)
+Private Sub HandleGuildDeclareWar(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -5399,10 +5296,10 @@ Private Sub HandleGuildDeclareWar(ByVal Userindex As Integer)
         
         Guild = buffer.ReadASCIIString()
         
-        otherGuildIndex = modGuilds.r_DeclararGuerra(Userindex, Guild, errorStr)
+        otherGuildIndex = modGuilds.r_DeclararGuerra(UserIndex, Guild, errorStr)
         
         If otherGuildIndex = 0 Then
-            Call WriteConsoleMsg(Userindex, errorStr, FontTypeNames.FONTTYPE_GUILD)
+            Call WriteConsoleMsg(UserIndex, errorStr, FontTypeNames.FONTTYPE_GUILD)
         Else
             'WAR shall be!
             Call SendData(SendTarget.ToGuildMembers, .GuildIndex, PrepareMessageConsoleMsg("TU CLAN HA ENTRADO EN GUERRA CON " & Guild & ".", FontTypeNames.FONTTYPE_GUILD))
@@ -5417,7 +5314,7 @@ Private Sub HandleGuildDeclareWar(ByVal Userindex As Integer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -5437,22 +5334,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleGuildNewWebsite(ByVal Userindex As Integer)
+Private Sub HandleGuildNewWebsite(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -5463,14 +5360,14 @@ Private Sub HandleGuildNewWebsite(ByVal Userindex As Integer)
         'Remove packet ID
         Call buffer.ReadByte
         
-        Call modGuilds.ActualizarWebSite(Userindex, buffer.ReadASCIIString())
+        Call modGuilds.ActualizarWebSite(UserIndex, buffer.ReadASCIIString())
         
         'If we got here then packet is complete, copy data back to original queue
         Call .incomingData.CopyBuffer(buffer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -5490,22 +5387,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleGuildAcceptNewMember(ByVal Userindex As Integer)
+Private Sub HandleGuildAcceptNewMember(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -5524,8 +5421,8 @@ Private Sub HandleGuildAcceptNewMember(ByVal Userindex As Integer)
         
         UserName = buffer.ReadASCIIString()
         
-        If Not modGuilds.a_AceptarAspirante(Userindex, UserName, errorStr) Then
-            Call WriteConsoleMsg(Userindex, errorStr, FontTypeNames.FONTTYPE_GUILD)
+        If Not modGuilds.a_AceptarAspirante(UserIndex, UserName, errorStr) Then
+            Call WriteConsoleMsg(UserIndex, errorStr, FontTypeNames.FONTTYPE_GUILD)
         Else
             tUser = NameIndex(UserName)
 
@@ -5545,7 +5442,7 @@ Private Sub HandleGuildAcceptNewMember(ByVal Userindex As Integer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -5565,7 +5462,7 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleGuildRejectNewMember(ByVal Userindex As Integer)
+Private Sub HandleGuildRejectNewMember(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -5573,15 +5470,15 @@ Private Sub HandleGuildRejectNewMember(ByVal Userindex As Integer)
     'Last Modification by: (liquid)
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 5 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 5 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -5603,8 +5500,8 @@ Private Sub HandleGuildRejectNewMember(ByVal Userindex As Integer)
         UserName = buffer.ReadASCIIString()
         Reason = buffer.ReadASCIIString()
         
-        If Not modGuilds.a_RechazarAspirante(Userindex, UserName, errorStr) Then
-            Call WriteConsoleMsg(Userindex, errorStr, FontTypeNames.FONTTYPE_GUILD)
+        If Not modGuilds.a_RechazarAspirante(UserIndex, UserName, errorStr) Then
+            Call WriteConsoleMsg(UserIndex, errorStr, FontTypeNames.FONTTYPE_GUILD)
         Else
             tUser = NameIndex(UserName)
             
@@ -5623,7 +5520,7 @@ Private Sub HandleGuildRejectNewMember(ByVal Userindex As Integer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -5643,22 +5540,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleGuildKickMember(ByVal Userindex As Integer)
+Private Sub HandleGuildKickMember(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -5675,13 +5572,13 @@ Private Sub HandleGuildKickMember(ByVal Userindex As Integer)
         
         UserName = buffer.ReadASCIIString()
         
-        GuildIndex = modGuilds.m_EcharMiembroDeClan(Userindex, UserName)
+        GuildIndex = modGuilds.m_EcharMiembroDeClan(UserIndex, UserName)
         
         If GuildIndex > 0 Then
             Call SendData(SendTarget.ToGuildMembers, GuildIndex, PrepareMessageConsoleMsg(UserName & " fue expulsado del clan.", FontTypeNames.FONTTYPE_GUILD))
             Call SendData(SendTarget.ToGuildMembers, GuildIndex, PrepareMessagePlayWave(45, NO_3D_SOUND, NO_3D_SOUND))
         Else
-            Call WriteConsoleMsg(Userindex, "No puedes expulsar ese personaje del clan.", FontTypeNames.FONTTYPE_GUILD)
+            Call WriteConsoleMsg(UserIndex, "No puedes expulsar ese personaje del clan.", FontTypeNames.FONTTYPE_GUILD)
 
         End If
         
@@ -5690,7 +5587,7 @@ Private Sub HandleGuildKickMember(ByVal Userindex As Integer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -5710,22 +5607,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleGuildUpdateNews(ByVal Userindex As Integer)
+Private Sub HandleGuildUpdateNews(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -5736,14 +5633,14 @@ Private Sub HandleGuildUpdateNews(ByVal Userindex As Integer)
         'Remove packet ID
         Call buffer.ReadByte
         
-        Call modGuilds.ActualizarNoticias(Userindex, buffer.ReadASCIIString())
+        Call modGuilds.ActualizarNoticias(UserIndex, buffer.ReadASCIIString())
         
         'If we got here then packet is complete, copy data back to original queue
         Call .incomingData.CopyBuffer(buffer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -5763,22 +5660,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleGuildMemberInfo(ByVal Userindex As Integer)
+Private Sub HandleGuildMemberInfo(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -5789,14 +5686,14 @@ Private Sub HandleGuildMemberInfo(ByVal Userindex As Integer)
         'Remove packet ID
         Call buffer.ReadByte
         
-        Call modGuilds.SendDetallesPersonaje(Userindex, buffer.ReadASCIIString())
+        Call modGuilds.SendDetallesPersonaje(UserIndex, buffer.ReadASCIIString())
         
         'If we got here then packet is complete, copy data back to original queue
         Call .incomingData.CopyBuffer(buffer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -5816,21 +5713,21 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleGuildOpenElections(ByVal Userindex As Integer)
+Private Sub HandleGuildOpenElections(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
         Dim Error As String
         
-        If Not modGuilds.v_AbrirElecciones(Userindex, Error) Then
-            Call WriteConsoleMsg(Userindex, Error, FontTypeNames.FONTTYPE_GUILD)
+        If Not modGuilds.v_AbrirElecciones(UserIndex, Error) Then
+            Call WriteConsoleMsg(UserIndex, Error, FontTypeNames.FONTTYPE_GUILD)
         Else
             Call SendData(SendTarget.ToGuildMembers, .GuildIndex, PrepareMessageConsoleMsg("Han comenzado las elecciones del clan! Puedes votar escribiendo /VOTO seguido del nombre del personaje, por ejemplo: /VOTO " & .Name, FontTypeNames.FONTTYPE_GUILD))
 
@@ -5845,22 +5742,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleGuildRequestMembership(ByVal Userindex As Integer)
+Private Sub HandleGuildRequestMembership(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 5 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 5 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -5880,10 +5777,10 @@ Private Sub HandleGuildRequestMembership(ByVal Userindex As Integer)
         Guild = buffer.ReadASCIIString()
         application = buffer.ReadASCIIString()
         
-        If Not modGuilds.a_NuevoAspirante(Userindex, Guild, application, errorStr) Then
-            Call WriteConsoleMsg(Userindex, errorStr, FontTypeNames.FONTTYPE_GUILD)
+        If Not modGuilds.a_NuevoAspirante(UserIndex, Guild, application, errorStr) Then
+            Call WriteConsoleMsg(UserIndex, errorStr, FontTypeNames.FONTTYPE_GUILD)
         Else
-            Call WriteConsoleMsg(Userindex, "Tu solicitud ha sido enviada. Espera prontas noticias del lider de " & Guild & ".", FontTypeNames.FONTTYPE_GUILD)
+            Call WriteConsoleMsg(UserIndex, "Tu solicitud ha sido enviada. Espera prontas noticias del lider de " & Guild & ".", FontTypeNames.FONTTYPE_GUILD)
 
         End If
         
@@ -5892,7 +5789,7 @@ Private Sub HandleGuildRequestMembership(ByVal Userindex As Integer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -5912,22 +5809,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleGuildRequestDetails(ByVal Userindex As Integer)
+Private Sub HandleGuildRequestDetails(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -5938,14 +5835,14 @@ Private Sub HandleGuildRequestDetails(ByVal Userindex As Integer)
         'Remove packet ID
         Call buffer.ReadByte
         
-        Call modGuilds.SendGuildDetails(Userindex, buffer.ReadASCIIString())
+        Call modGuilds.SendGuildDetails(UserIndex, buffer.ReadASCIIString())
         
         'If we got here then packet is complete, copy data back to original queue
         Call .incomingData.CopyBuffer(buffer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -5960,7 +5857,7 @@ ErrHandler:
 
 End Sub
 
-Private Sub WriteConsoleServerUpTimeMsg(ByVal Userindex As Integer)
+Private Sub WriteConsoleServerUpTimeMsg(ByVal UserIndex As Integer)
     Dim time As Long
     Dim UpTimeStr As String
     
@@ -5983,7 +5880,7 @@ Private Sub WriteConsoleServerUpTimeMsg(ByVal Userindex As Integer)
         UpTimeStr = time & " dias, " & UpTimeStr
     End If
 
-    Call WriteConsoleMsg(Userindex, "Tiempo del Server Online: " & UpTimeStr, FontTypeNames.FONTTYPE_INFO)
+    Call WriteConsoleMsg(UserIndex, "Tiempo del Server Online: " & UpTimeStr, FontTypeNames.FONTTYPE_INFO)
 End Sub
 
 ''
@@ -5991,7 +5888,7 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleOnline(ByVal Userindex As Integer)
+Private Sub HandleOnline(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -6002,7 +5899,7 @@ Private Sub HandleOnline(ByVal Userindex As Integer)
 
     Dim Count As Long
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
 
@@ -6023,12 +5920,12 @@ Private Sub HandleOnline(ByVal Userindex As Integer)
 
         Next i
         
-        Call WriteConsoleMsg(Userindex, UsersNamesOnlines, FontTypeNames.FONTTYPE_INFO)
-        Call WriteConsoleMsg(Userindex, "Numero de usuarios: " & CStr(Count), FontTypeNames.FONTTYPE_INFOBOLD)
+        Call WriteConsoleMsg(UserIndex, UsersNamesOnlines, FontTypeNames.FONTTYPE_INFO)
+        Call WriteConsoleMsg(UserIndex, "Numero de usuarios: " & CStr(Count), FontTypeNames.FONTTYPE_INFOBOLD)
 
     End With
 
-    Call WriteConsoleServerUpTimeMsg(Userindex)
+    Call WriteConsoleServerUpTimeMsg(UserIndex)
 
 End Sub
 
@@ -6037,7 +5934,7 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleQuit(ByVal Userindex As Integer)
+Private Sub HandleQuit(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -6049,12 +5946,12 @@ Private Sub HandleQuit(ByVal Userindex As Integer)
     '***************************************************
     Dim tUser        As Integer
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
 
         If .flags.Paralizado = 1 Then
-            Call WriteConsoleMsg(Userindex, "No puedes salir estando paralizado.", FontTypeNames.FONTTYPE_WARNING)
+            Call WriteConsoleMsg(UserIndex, "No puedes salir estando paralizado.", FontTypeNames.FONTTYPE_WARNING)
             Exit Sub
 
         End If
@@ -6064,7 +5961,7 @@ Private Sub HandleQuit(ByVal Userindex As Integer)
             tUser = .ComUsu.DestUsu
             
             If UserList(tUser).flags.UserLogged Then
-                If UserList(tUser).ComUsu.DestUsu = Userindex Then
+                If UserList(tUser).ComUsu.DestUsu = UserIndex Then
                     Call WriteConsoleMsg(tUser, "Comercio cancelado por el otro usuario.", FontTypeNames.FONTTYPE_WARNING)
                     Call FinComerciarUsu(tUser)
 
@@ -6072,12 +5969,12 @@ Private Sub HandleQuit(ByVal Userindex As Integer)
 
             End If
             
-            Call WriteConsoleMsg(Userindex, "Comercio cancelado.", FontTypeNames.FONTTYPE_WARNING)
-            Call FinComerciarUsu(Userindex)
+            Call WriteConsoleMsg(UserIndex, "Comercio cancelado.", FontTypeNames.FONTTYPE_WARNING)
+            Call FinComerciarUsu(UserIndex)
 
         End If
 
-        Call Cerrar_Usuario(Userindex)
+        Call Cerrar_Usuario(UserIndex)
 
     End With
 
@@ -6088,7 +5985,7 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleGuildLeave(ByVal Userindex As Integer)
+Private Sub HandleGuildLeave(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -6097,18 +5994,18 @@ Private Sub HandleGuildLeave(ByVal Userindex As Integer)
     '***************************************************
     Dim GuildIndex As Integer
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
         'obtengo el guildindex
-        GuildIndex = m_EcharMiembroDeClan(Userindex, .Name)
+        GuildIndex = m_EcharMiembroDeClan(UserIndex, .Name)
         
         If GuildIndex > 0 Then
-            Call WriteConsoleMsg(Userindex, "Dejas el clan.", FontTypeNames.FONTTYPE_GUILD)
+            Call WriteConsoleMsg(UserIndex, "Dejas el clan.", FontTypeNames.FONTTYPE_GUILD)
             Call SendData(SendTarget.ToGuildMembers, GuildIndex, PrepareMessageConsoleMsg(.Name & " deja el clan.", FontTypeNames.FONTTYPE_GUILD))
         Else
-            Call WriteConsoleMsg(Userindex, "Tu no puedes salir de este clan.", FontTypeNames.FONTTYPE_GUILD)
+            Call WriteConsoleMsg(UserIndex, "Tu no puedes salir de este clan.", FontTypeNames.FONTTYPE_GUILD)
 
         End If
 
@@ -6121,7 +6018,7 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleRequestAccountState(ByVal Userindex As Integer)
+Private Sub HandleRequestAccountState(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -6132,27 +6029,27 @@ Private Sub HandleRequestAccountState(ByVal Userindex As Integer)
 
     Dim Percentage As Integer
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
         'Dead people can't check their accounts
         If .flags.Muerto = 1 Then
             'Call WriteConsoleMsg(UserIndex, "Estas muerto!!", FontTypeNames.FONTTYPE_INFO)
-            Call WriteMultiMessage(Userindex, eMessages.UserMuerto)
+            Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
             Exit Sub
 
         End If
         
         'Validate target NPC
         If .flags.TargetNPC = 0 Then
-            Call WriteConsoleMsg(Userindex, "Primero tienes que seleccionar un personaje, haz click izquierdo sobre el.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Primero tienes que seleccionar un personaje, haz click izquierdo sobre el.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
 
         End If
         
         If Distancia(Npclist(.flags.TargetNPC).Pos, .Pos) > 3 Then
-            Call WriteConsoleMsg(Userindex, "Estas demasiado lejos del vendedor.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Estas demasiado lejos del vendedor.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
 
         End If
@@ -6160,7 +6057,7 @@ Private Sub HandleRequestAccountState(ByVal Userindex As Integer)
         Select Case Npclist(.flags.TargetNPC).NPCtype
 
             Case eNPCType.Banquero
-                Call WriteChatOverHead(Userindex, "Tienes " & .Stats.Banco & " monedas de oro en tu cuenta.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "Tienes " & .Stats.Banco & " monedas de oro en tu cuenta.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
             
             Case eNPCType.Timbero
 
@@ -6177,7 +6074,7 @@ Private Sub HandleRequestAccountState(ByVal Userindex As Integer)
 
                     End If
                     
-                    Call WriteConsoleMsg(Userindex, "Entradas: " & Apuestas.Ganancias & " Salida: " & Apuestas.Perdidas & " Ganancia Neta: " & earnings & " (" & Percentage & "%) Jugadas: " & Apuestas.Jugadas, FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "Entradas: " & Apuestas.Ganancias & " Salida: " & Apuestas.Perdidas & " Ganancia Neta: " & earnings & " (" & Percentage & "%) Jugadas: " & Apuestas.Jugadas, FontTypeNames.FONTTYPE_INFO)
 
                 End If
 
@@ -6192,46 +6089,46 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandlePetStand(ByVal Userindex As Integer)
+Private Sub HandlePetStand(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
         'Dead people can't use pets
         If .flags.Muerto = 1 Then
             'Call WriteConsoleMsg(UserIndex, "Estas muerto!!", FontTypeNames.FONTTYPE_INFO)
-            Call WriteMultiMessage(Userindex, eMessages.UserMuerto)
+            Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
             Exit Sub
 
         End If
         
         'Validate target NPC
         If .flags.TargetNPC = 0 Then
-            Call WriteConsoleMsg(Userindex, "Primero tienes que seleccionar un personaje, haz click izquierdo sobre el.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Primero tienes que seleccionar un personaje, haz click izquierdo sobre el.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
 
         End If
         
         'Make sure it's close enough
         If Distancia(Npclist(.flags.TargetNPC).Pos, .Pos) > 10 Then
-            Call WriteConsoleMsg(Userindex, "Estas demasiado lejos.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Estas demasiado lejos.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
 
         End If
         
         'Make sure it's his pet
-        If Npclist(.flags.TargetNPC).MaestroUser <> Userindex Then Exit Sub
+        If Npclist(.flags.TargetNPC).MaestroUser <> UserIndex Then Exit Sub
         
         'Do it!
         Npclist(.flags.TargetNPC).Movement = TipoAI.ESTATICO
         
-        Call Expresar(.flags.TargetNPC, Userindex)
+        Call Expresar(.flags.TargetNPC, UserIndex)
 
     End With
 
@@ -6242,46 +6139,46 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandlePetFollow(ByVal Userindex As Integer)
+Private Sub HandlePetFollow(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
         'Dead users can't use pets
         If .flags.Muerto = 1 Then
             'Call WriteConsoleMsg(UserIndex, "Estas muerto!!", FontTypeNames.FONTTYPE_INFO)
-            Call WriteMultiMessage(Userindex, eMessages.UserMuerto)
+            Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
             Exit Sub
 
         End If
         
         'Validate target NPC
         If .flags.TargetNPC = 0 Then
-            Call WriteConsoleMsg(Userindex, "Primero tienes que seleccionar un personaje, haz click izquierdo sobre el.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Primero tienes que seleccionar un personaje, haz click izquierdo sobre el.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
 
         End If
         
         'Make sure it's close enough
         If Distancia(Npclist(.flags.TargetNPC).Pos, .Pos) > 10 Then
-            Call WriteConsoleMsg(Userindex, "Estas demasiado lejos.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Estas demasiado lejos.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
 
         End If
         
         'Make usre it's the user's pet
-        If Npclist(.flags.TargetNPC).MaestroUser <> Userindex Then Exit Sub
+        If Npclist(.flags.TargetNPC).MaestroUser <> UserIndex Then Exit Sub
         
         'Do it
         Call FollowAmo(.flags.TargetNPC)
         
-        Call Expresar(.flags.TargetNPC, Userindex)
+        Call Expresar(.flags.TargetNPC, UserIndex)
 
     End With
 
@@ -6292,44 +6189,44 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleReleasePet(ByVal Userindex As Integer)
+Private Sub HandleReleasePet(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: ZaMa
     'Last Modification: 18/11/2009
     '
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
         'Dead users can't use pets
         If .flags.Muerto = 1 Then
             'Call WriteConsoleMsg(UserIndex, "Estas muerto!!", FontTypeNames.FONTTYPE_INFO)
-            Call WriteMultiMessage(Userindex, eMessages.UserMuerto)
+            Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
             Exit Sub
 
         End If
         
         'Validate target NPC
         If .flags.TargetNPC = 0 Then
-            Call WriteConsoleMsg(Userindex, "Primero tienes que seleccionar una mascota, haz click izquierdo sobre ella.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Primero tienes que seleccionar una mascota, haz click izquierdo sobre ella.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
 
         End If
         
         'Make usre it's the user's pet
-        If Npclist(.flags.TargetNPC).MaestroUser <> Userindex Then Exit Sub
+        If Npclist(.flags.TargetNPC).MaestroUser <> UserIndex Then Exit Sub
         
         'Make sure it's close enough
         If Distancia(Npclist(.flags.TargetNPC).Pos, .Pos) > 10 Then
-            Call WriteConsoleMsg(Userindex, "Estas demasiado lejos.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Estas demasiado lejos.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
 
         End If
         
         'Do it
-        Call QuitarPet(Userindex, .flags.TargetNPC)
+        Call QuitarPet(UserIndex, .flags.TargetNPC)
             
     End With
 
@@ -6340,43 +6237,25 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleTrainList(ByVal Userindex As Integer)
+Private Sub HandleTrainList(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
-        'Dead users can't use pets
-        If .flags.Muerto = 1 Then
-            'Call WriteConsoleMsg(UserIndex, "Estas muerto!!", FontTypeNames.FONTTYPE_INFO)
-            Call WriteMultiMessage(Userindex, eMessages.UserMuerto)
-            Exit Sub
-
-        End If
-        
         'Validate target NPC
         If .flags.TargetNPC = 0 Then
-            Call WriteConsoleMsg(Userindex, "Primero tienes que seleccionar un personaje, haz click izquierdo sobre el.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Primero tienes que seleccionar un personaje, haz click izquierdo sobre el.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
 
         End If
         
-        'Make sure it's close enough
-        If Distancia(Npclist(.flags.TargetNPC).Pos, .Pos) > 10 Then
-            Call WriteConsoleMsg(Userindex, "Estas demasiado lejos.", FontTypeNames.FONTTYPE_INFO)
-            Exit Sub
-
-        End If
-        
-        'Make sure it's the trainer
-        If Npclist(.flags.TargetNPC).NPCtype <> eNPCType.Entrenador Then Exit Sub
-        
-        Call WriteTrainerCreatureList(Userindex, .flags.TargetNPC)
+        Call AccionParaEntrenador(UserIndex)
 
     End With
 
@@ -6387,32 +6266,32 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleRest(ByVal Userindex As Integer)
+Private Sub HandleRest(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
         'Dead users can't use pets
         If .flags.Muerto = 1 Then
             'Call WriteConsoleMsg(UserIndex, "Estas muerto!! Solo puedes usar items cuando estas vivo.", FontTypeNames.FONTTYPE_INFO)
-            Call WriteMultiMessage(Userindex, eMessages.UserMuerto)
+            Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
             Exit Sub
 
         End If
         
         If HayOBJarea(.Pos, FOGATA) Then
-            Call WriteRestOK(Userindex)
+            Call WriteRestOK(UserIndex)
             
             If Not .flags.Descansar Then
-                Call WriteConsoleMsg(Userindex, "Te acomodas junto a la fogata y comienzas a descansar.", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "Te acomodas junto a la fogata y comienzas a descansar.", FontTypeNames.FONTTYPE_INFO)
             Else
-                Call WriteConsoleMsg(Userindex, "Te levantas.", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "Te levantas.", FontTypeNames.FONTTYPE_INFO)
 
             End If
             
@@ -6420,15 +6299,15 @@ Private Sub HandleRest(ByVal Userindex As Integer)
         Else
 
             If .flags.Descansar Then
-                Call WriteRestOK(Userindex)
-                Call WriteConsoleMsg(Userindex, "Te levantas.", FontTypeNames.FONTTYPE_INFO)
+                Call WriteRestOK(UserIndex)
+                Call WriteConsoleMsg(UserIndex, "Te levantas.", FontTypeNames.FONTTYPE_INFO)
                 
                 .flags.Descansar = False
                 Exit Sub
 
             End If
             
-            Call WriteConsoleMsg(Userindex, "No hay ninguna fogata junto a la cual descansar.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "No hay ninguna fogata junto a la cual descansar.", FontTypeNames.FONTTYPE_INFO)
 
         End If
 
@@ -6441,7 +6320,7 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleMeditate(ByVal Userindex As Integer)
+Private Sub HandleMeditate(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -6449,26 +6328,26 @@ Private Sub HandleMeditate(ByVal Userindex As Integer)
     'Arregle un bug que mandaba un index de la meditacion diferente
     'al que decia el server.
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
         'Dead users can't use pets
         If .flags.Muerto = 1 Then
             'Call WriteConsoleMsg(UserIndex, "Estas muerto!! Solo puedes meditar cuando estas vivo.", FontTypeNames.FONTTYPE_INFO)
-            Call WriteMultiMessage(Userindex, eMessages.UserMuerto)
+            Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
             Exit Sub
 
         End If
         
         If .flags.Equitando Then
-            Call WriteConsoleMsg(Userindex, "No puedes meditar mientras si estas montado.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "No puedes meditar mientras si estas montado.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
         End If
         
         'Can he meditate?
         If .Stats.MaxMAN = 0 Then
-            Call WriteConsoleMsg(Userindex, "Solo las clases magicas conocen el arte de la meditacion.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Solo las clases magicas conocen el arte de la meditacion.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
 
         End If
@@ -6476,15 +6355,15 @@ Private Sub HandleMeditate(ByVal Userindex As Integer)
         'Admins don't have to wait :D
         If Not .flags.Privilegios And PlayerType.User Then
             .Stats.MinMAN = .Stats.MaxMAN
-            Call WriteConsoleMsg(Userindex, "Mana restaurado.", FontTypeNames.FONTTYPE_VENENO)
-            Call WriteUpdateMana(Userindex)
+            Call WriteConsoleMsg(UserIndex, "Mana restaurado.", FontTypeNames.FONTTYPE_VENENO)
+            Call WriteUpdateMana(UserIndex)
             Exit Sub
 
         End If
         
-        Call WriteMeditateToggle(Userindex)
+        Call WriteMeditateToggle(UserIndex)
         
-        If .flags.Meditando Then Call WriteConsoleMsg(Userindex, "Dejas de meditar.", FontTypeNames.FONTTYPE_INFO)
+        If .flags.Meditando Then Call WriteConsoleMsg(UserIndex, "Dejas de meditar.", FontTypeNames.FONTTYPE_INFO)
         
         .flags.Meditando = Not .flags.Meditando
         
@@ -6492,7 +6371,7 @@ Private Sub HandleMeditate(ByVal Userindex As Integer)
         If .flags.Meditando Then
             .Counters.tInicioMeditar = GetTickCount() And &H7FFFFFFF
             
-            Call WriteConsoleMsg(Userindex, "Te estas concentrando. En " & Fix(TIEMPO_INICIOMEDITAR / 1000) & " segundos comenzaras a meditar.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Te estas concentrando. En " & Fix(TIEMPO_INICIOMEDITAR / 1000) & " segundos comenzaras a meditar.", FontTypeNames.FONTTYPE_INFO)
             
             .Char.loops = INFINITE_LOOPS
             
@@ -6514,13 +6393,13 @@ Private Sub HandleMeditate(ByVal Userindex As Integer)
 
             End If
             
-            Call SendData(SendTarget.ToPCArea, Userindex, PrepareMessageCreateFX(.Char.CharIndex, .Char.FX, INFINITE_LOOPS))
+            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageCreateFX(.Char.CharIndex, .Char.FX, INFINITE_LOOPS))
         Else
             .Counters.bPuedeMeditar = False
             
             .Char.FX = 0
             .Char.loops = 0
-            Call SendData(SendTarget.ToPCArea, Userindex, PrepareMessageCreateFX(.Char.CharIndex, 0, 0))
+            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageCreateFX(.Char.CharIndex, 0, 0))
 
         End If
 
@@ -6533,20 +6412,20 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleResucitate(ByVal Userindex As Integer)
+Private Sub HandleResucitate(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 07/01/20
     'Arreglo validacion de NPC para que funcione el comando. (Recox)
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
         'Se asegura que el target es un npc
         If .flags.TargetNPC = 0 Then
-            Call WriteConsoleMsg(Userindex, "Primero tienes que seleccionar un personaje, haz click izquierdo sobre el.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Primero tienes que seleccionar un personaje, haz click izquierdo sobre el.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
 
         End If
@@ -6556,12 +6435,12 @@ Private Sub HandleResucitate(ByVal Userindex As Integer)
         
         'Make sure it's close enough
         If Distancia(.Pos, Npclist(.flags.TargetNPC).Pos) > 5 Then
-            Call WriteConsoleMsg(Userindex, "El sacerdote no puede resucitarte debido a que estas demasiado lejos.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "El sacerdote no puede resucitarte debido a que estas demasiado lejos.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
 
         End If
 
-        Call SacerdoteResucitateUser(Userindex)
+        Call SacerdoteResucitateUser(UserIndex)
     End With
 
 End Sub
@@ -6571,7 +6450,7 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleConsultation(ByVal Userindex As String)
+Private Sub HandleConsultation(ByVal UserIndex As String)
     '***************************************************
     'Author: ZaMa
     'Last Modification: 01/05/2010
@@ -6582,28 +6461,28 @@ Private Sub HandleConsultation(ByVal Userindex As String)
     
     Dim UserConsulta As Integer
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
         ' Comando exclusivo para gms
-        If Not EsGm(Userindex) Then Exit Sub
+        If Not EsGm(UserIndex) Then Exit Sub
         
         UserConsulta = .flags.TargetUser
         
         'Se asegura que el target es un usuario
         If UserConsulta = 0 Then
-            Call WriteConsoleMsg(Userindex, "Primero tienes que seleccionar un usuario, haz click izquierdo sobre el.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Primero tienes que seleccionar un usuario, haz click izquierdo sobre el.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
 
         End If
         
         ' No podes ponerte a vos mismo en modo consulta.
-        If UserConsulta = Userindex Then Exit Sub
+        If UserConsulta = UserIndex Then Exit Sub
         
         ' No podes estra en consulta con otro gm
         If EsGm(UserConsulta) Then
-            Call WriteConsoleMsg(Userindex, "No puedes iniciar el modo consulta con otro administrador.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "No puedes iniciar el modo consulta con otro administrador.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
 
         End If
@@ -6614,7 +6493,7 @@ Private Sub HandleConsultation(ByVal Userindex As String)
         
         ' Si ya estaba en consulta, termina la consulta
         If UserList(UserConsulta).flags.EnConsulta Then
-            Call WriteConsoleMsg(Userindex, "Has terminado el modo consulta con " & UserName & ".", FontTypeNames.FONTTYPE_INFOBOLD)
+            Call WriteConsoleMsg(UserIndex, "Has terminado el modo consulta con " & UserName & ".", FontTypeNames.FONTTYPE_INFOBOLD)
             Call WriteConsoleMsg(UserConsulta, "Has terminado el modo consulta.", FontTypeNames.FONTTYPE_INFOBOLD)
             Call LogGM(.Name, "Termino consulta con " & UserName)
             
@@ -6622,7 +6501,7 @@ Private Sub HandleConsultation(ByVal Userindex As String)
         
             ' Sino la inicia
         Else
-            Call WriteConsoleMsg(Userindex, "Has iniciado el modo consulta con " & UserName & ".", FontTypeNames.FONTTYPE_INFOBOLD)
+            Call WriteConsoleMsg(UserIndex, "Has iniciado el modo consulta con " & UserName & ".", FontTypeNames.FONTTYPE_INFOBOLD)
             Call WriteConsoleMsg(UserConsulta, "Has iniciado el modo consulta.", FontTypeNames.FONTTYPE_INFOBOLD)
             Call LogGM(.Name, "Inicio consulta con " & UserName)
             
@@ -6658,20 +6537,20 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleHeal(ByVal Userindex As Integer)
+Private Sub HandleHeal(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
         'Se asegura que el target es un npc
         If .flags.TargetNPC = 0 Then
-            Call WriteConsoleMsg(Userindex, "Primero tienes que seleccionar un personaje, haz click izquierdo sobre el.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Primero tienes que seleccionar un personaje, haz click izquierdo sobre el.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
 
         End If
@@ -6679,12 +6558,12 @@ Private Sub HandleHeal(ByVal Userindex As Integer)
         If (Npclist(.flags.TargetNPC).NPCtype <> eNPCType.Revividor) Or .flags.Muerto <> 0 Then Exit Sub
         
         If Distancia(.Pos, Npclist(.flags.TargetNPC).Pos) > 10 Then
-            Call WriteConsoleMsg(Userindex, "El sacerdote no puede curarte debido a que estas demasiado lejos.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "El sacerdote no puede curarte debido a que estas demasiado lejos.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
 
         End If
         
-        Call SacerdoteHealUser(Userindex)
+        Call SacerdoteHealUser(UserIndex)
     End With
 
 End Sub
@@ -6694,16 +6573,16 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleRequestStats(ByVal Userindex As Integer)
+Private Sub HandleRequestStats(ByVal UserIndex As Integer)
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
     'Remove packet ID
-    Call UserList(Userindex).incomingData.ReadByte
+    Call UserList(UserIndex).incomingData.ReadByte
     
-    Call SendUserStatsTxt(Userindex, Userindex)
+    Call SendUserStatsTxt(UserIndex, UserIndex)
 
 End Sub
 
@@ -6712,16 +6591,16 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleHelp(ByVal Userindex As Integer)
+Private Sub HandleHelp(ByVal UserIndex As Integer)
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
     'Remove packet ID
-    Call UserList(Userindex).incomingData.ReadByte
+    Call UserList(UserIndex).incomingData.ReadByte
     
-    Call SendHelp(Userindex)
+    Call SendHelp(UserIndex)
 
 End Sub
 
@@ -6730,7 +6609,7 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleCommerceStart(ByVal Userindex As Integer)
+Private Sub HandleCommerceStart(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -6739,21 +6618,21 @@ Private Sub HandleCommerceStart(ByVal Userindex As Integer)
     '***************************************************
     Dim i As Integer
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
         'Dead people can't commerce
         If .flags.Muerto = 1 Then
             'Call WriteConsoleMsg(UserIndex, "Estas muerto!!", FontTypeNames.FONTTYPE_INFO)
-            Call WriteMultiMessage(Userindex, eMessages.UserMuerto)
+            Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
             Exit Sub
 
         End If
         
         'Is it already in commerce mode??
         If .flags.Comerciando Then
-            Call WriteConsoleMsg(Userindex, "Ya estas comerciando.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Ya estas comerciando.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
 
         End If
@@ -6765,7 +6644,7 @@ Private Sub HandleCommerceStart(ByVal Userindex As Integer)
             If Npclist(.flags.TargetNPC).Comercia = 0 Then
 
                 If LenB(Npclist(.flags.TargetNPC).Desc) <> 0 Then
-                    Call WriteChatOverHead(Userindex, "No tengo ningun interes en comerciar.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+                    Call WriteChatOverHead(UserIndex, "No tengo ningun interes en comerciar.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
                 End If
                 
                 Exit Sub
@@ -6773,48 +6652,48 @@ Private Sub HandleCommerceStart(ByVal Userindex As Integer)
             End If
             
             If Distancia(Npclist(.flags.TargetNPC).Pos, .Pos) > 3 Then
-                Call WriteConsoleMsg(Userindex, "Estas demasiado lejos del vendedor.", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "Estas demasiado lejos del vendedor.", FontTypeNames.FONTTYPE_INFO)
                 Exit Sub
 
             End If
             
             'Start commerce....
-            Call IniciarComercioNPC(Userindex)
+            Call IniciarComercioNPC(UserIndex)
             '[Alejo]
         ElseIf .flags.TargetUser > 0 Then
 
             'User commerce...
             'Can he commerce??
             If .flags.Privilegios And PlayerType.Consejero Then
-                Call WriteConsoleMsg(Userindex, "No puedes vender items.", FontTypeNames.FONTTYPE_WARNING)
+                Call WriteConsoleMsg(UserIndex, "No puedes vender items.", FontTypeNames.FONTTYPE_WARNING)
                 Exit Sub
 
             End If
             
             'Is the other one dead??
             If UserList(.flags.TargetUser).flags.Muerto = 1 Then
-                Call WriteConsoleMsg(Userindex, "No puedes comerciar con los muertos!!", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "No puedes comerciar con los muertos!!", FontTypeNames.FONTTYPE_INFO)
                 Exit Sub
 
             End If
             
             'Is it me??
-            If .flags.TargetUser = Userindex Then
-                Call WriteConsoleMsg(Userindex, "No puedes comerciar con vos mismo!!", FontTypeNames.FONTTYPE_INFO)
+            If .flags.TargetUser = UserIndex Then
+                Call WriteConsoleMsg(UserIndex, "No puedes comerciar con vos mismo!!", FontTypeNames.FONTTYPE_INFO)
                 Exit Sub
 
             End If
             
             'Check distance
             If Distancia(UserList(.flags.TargetUser).Pos, .Pos) > 3 Then
-                Call WriteConsoleMsg(Userindex, "Estas demasiado lejos del usuario.", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "Estas demasiado lejos del usuario.", FontTypeNames.FONTTYPE_INFO)
                 Exit Sub
 
             End If
             
             'Is he already trading?? is it with me or someone else??
-            If UserList(.flags.TargetUser).flags.Comerciando = True And UserList(.flags.TargetUser).ComUsu.DestUsu <> Userindex Then
-                Call WriteConsoleMsg(Userindex, "No puedes comerciar con el usuario en este momento.", FontTypeNames.FONTTYPE_INFO)
+            If UserList(.flags.TargetUser).flags.Comerciando = True And UserList(.flags.TargetUser).ComUsu.DestUsu <> UserIndex Then
+                Call WriteConsoleMsg(UserIndex, "No puedes comerciar con el usuario en este momento.", FontTypeNames.FONTTYPE_INFO)
                 Exit Sub
 
             End If
@@ -6834,9 +6713,9 @@ Private Sub HandleCommerceStart(ByVal Userindex As Integer)
             .ComUsu.Confirmo = False
             
             'Rutina para comerciar con otro usuario
-            Call IniciarComercioConUsuario(Userindex, .flags.TargetUser)
+            Call IniciarComercioConUsuario(UserIndex, .flags.TargetUser)
         Else
-            Call WriteConsoleMsg(Userindex, "Primero haz click izquierdo sobre el personaje.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Primero haz click izquierdo sobre el personaje.", FontTypeNames.FONTTYPE_INFO)
 
         End If
 
@@ -6849,27 +6728,27 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleBankStart(ByVal Userindex As Integer)
+Private Sub HandleBankStart(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
         'Dead people can't commerce
         If .flags.Muerto = 1 Then
             'Call WriteConsoleMsg(UserIndex, "Estas muerto!!", FontTypeNames.FONTTYPE_INFO)
-            Call WriteMultiMessage(Userindex, eMessages.UserMuerto)
+            Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
             Exit Sub
 
         End If
         
         If .flags.Comerciando Then
-            Call WriteConsoleMsg(Userindex, "Ya estas comerciando.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Ya estas comerciando.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
 
         End If
@@ -6877,19 +6756,19 @@ Private Sub HandleBankStart(ByVal Userindex As Integer)
         'Validate target NPC
         If .flags.TargetNPC > 0 Then
             If Distancia(Npclist(.flags.TargetNPC).Pos, .Pos) > 3 Then
-                Call WriteConsoleMsg(Userindex, "Estas demasiado lejos del vendedor.", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "Estas demasiado lejos del vendedor.", FontTypeNames.FONTTYPE_INFO)
                 Exit Sub
 
             End If
             
             'If it's the banker....
             If Npclist(.flags.TargetNPC).NPCtype = eNPCType.Banquero Then
-                Call IniciarDeposito(Userindex)
+                Call IniciarDeposito(UserIndex)
 
             End If
 
         Else
-            Call WriteConsoleMsg(Userindex, "Primero haz click izquierdo sobre el personaje.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Primero haz click izquierdo sobre el personaje.", FontTypeNames.FONTTYPE_INFO)
 
         End If
 
@@ -6902,20 +6781,20 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleEnlist(ByVal Userindex As Integer)
+Private Sub HandleEnlist(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
         'Validate target NPC
         If .flags.TargetNPC = 0 Then
-            Call WriteConsoleMsg(Userindex, "Primero tienes que seleccionar un personaje, haz click izquierdo sobre el.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Primero tienes que seleccionar un personaje, haz click izquierdo sobre el.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
 
         End If
@@ -6923,15 +6802,15 @@ Private Sub HandleEnlist(ByVal Userindex As Integer)
         If Npclist(.flags.TargetNPC).NPCtype <> eNPCType.Noble Or .flags.Muerto <> 0 Then Exit Sub
         
         If Distancia(.Pos, Npclist(.flags.TargetNPC).Pos) > 4 Then
-            Call WriteConsoleMsg(Userindex, "Debes acercarte mas.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Debes acercarte mas.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
 
         End If
         
         If Npclist(.flags.TargetNPC).flags.Faccion = 0 Then
-            Call EnlistarArmadaReal(Userindex)
+            Call EnlistarArmadaReal(UserIndex)
         Else
-            Call EnlistarCaos(Userindex)
+            Call EnlistarCaos(UserIndex)
 
         End If
 
@@ -6944,7 +6823,7 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleInformation(ByVal Userindex As Integer)
+Private Sub HandleInformation(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -6957,13 +6836,13 @@ Private Sub HandleInformation(ByVal Userindex As Integer)
 
     Dim Diferencia As Integer
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
         'Validate target NPC
         If .flags.TargetNPC = 0 Then
-            Call WriteConsoleMsg(Userindex, "Primero tienes que seleccionar un personaje, haz click izquierdo sobre el.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Primero tienes que seleccionar un personaje, haz click izquierdo sobre el.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
 
         End If
@@ -6971,7 +6850,7 @@ Private Sub HandleInformation(ByVal Userindex As Integer)
         If Npclist(.flags.TargetNPC).NPCtype <> eNPCType.Noble Or .flags.Muerto <> 0 Then Exit Sub
         
         If Distancia(.Pos, Npclist(.flags.TargetNPC).Pos) > 4 Then
-            Call WriteConsoleMsg(Userindex, "Estas demasiado lejos.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Estas demasiado lejos.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
 
         End If
@@ -6980,7 +6859,7 @@ Private Sub HandleInformation(ByVal Userindex As Integer)
         
         If Npclist(.flags.TargetNPC).flags.Faccion = 0 Then
             If .Faccion.ArmadaReal = 0 Then
-                Call WriteChatOverHead(Userindex, "No perteneces a las tropas reales!!", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "No perteneces a las tropas reales!!", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
                 Exit Sub
 
             End If
@@ -6989,16 +6868,16 @@ Private Sub HandleInformation(ByVal Userindex As Integer)
             Diferencia = NextRecom - Matados
             
             If Diferencia > 0 Then
-                Call WriteChatOverHead(Userindex, "Tu deber es combatir criminales, mata " & Diferencia & " criminales mas y te dare una recompensa.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "Tu deber es combatir criminales, mata " & Diferencia & " criminales mas y te dare una recompensa.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
             Else
-                Call WriteChatOverHead(Userindex, "Tu deber es combatir criminales, y ya has matado los suficientes como para merecerte una recompensa.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "Tu deber es combatir criminales, y ya has matado los suficientes como para merecerte una recompensa.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
 
             End If
 
         Else
 
             If .Faccion.FuerzasCaos = 0 Then
-                Call WriteChatOverHead(Userindex, "No perteneces a la legion oscura!!", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "No perteneces a la legion oscura!!", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
                 Exit Sub
 
             End If
@@ -7007,9 +6886,9 @@ Private Sub HandleInformation(ByVal Userindex As Integer)
             Diferencia = NextRecom - Matados
             
             If Diferencia > 0 Then
-                Call WriteChatOverHead(Userindex, "Tu deber es sembrar el caos y la desesperanza, mata " & Diferencia & " ciudadanos mas y te dare una recompensa.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "Tu deber es sembrar el caos y la desesperanza, mata " & Diferencia & " ciudadanos mas y te dare una recompensa.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
             Else
-                Call WriteChatOverHead(Userindex, "Tu deber es sembrar el caos y la desesperanza, y creo que estas en condiciones de merecer una recompensa.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "Tu deber es sembrar el caos y la desesperanza, y creo que estas en condiciones de merecer una recompensa.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
 
             End If
 
@@ -7024,20 +6903,20 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleReward(ByVal Userindex As Integer)
+Private Sub HandleReward(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
         'Validate target NPC
         If .flags.TargetNPC = 0 Then
-            Call WriteConsoleMsg(Userindex, "Primero tienes que seleccionar un personaje, haz click izquierdo sobre el.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Primero tienes que seleccionar un personaje, haz click izquierdo sobre el.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
 
         End If
@@ -7045,28 +6924,28 @@ Private Sub HandleReward(ByVal Userindex As Integer)
         If Npclist(.flags.TargetNPC).NPCtype <> eNPCType.Noble Or .flags.Muerto <> 0 Then Exit Sub
         
         If Distancia(.Pos, Npclist(.flags.TargetNPC).Pos) > 4 Then
-            Call WriteConsoleMsg(Userindex, "Estas demasiado lejos.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Estas demasiado lejos.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
 
         End If
         
         If Npclist(.flags.TargetNPC).flags.Faccion = 0 Then
             If .Faccion.ArmadaReal = 0 Then
-                Call WriteChatOverHead(Userindex, "No perteneces a las tropas reales!!", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "No perteneces a las tropas reales!!", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
                 Exit Sub
 
             End If
 
-            Call RecompensaArmadaReal(Userindex)
+            Call RecompensaArmadaReal(UserIndex)
         Else
 
             If .Faccion.FuerzasCaos = 0 Then
-                Call WriteChatOverHead(Userindex, "No perteneces a la legion oscura!!", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "No perteneces a la legion oscura!!", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
                 Exit Sub
 
             End If
 
-            Call RecompensaCaos(Userindex)
+            Call RecompensaCaos(UserIndex)
 
         End If
 
@@ -7079,16 +6958,16 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleRequestMOTD(ByVal Userindex As Integer)
+Private Sub HandleRequestMOTD(ByVal UserIndex As Integer)
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
     'Remove packet ID
-    Call UserList(Userindex).incomingData.ReadByte
+    Call UserList(UserIndex).incomingData.ReadByte
     
-    Call SendMOTD(Userindex)
+    Call SendMOTD(UserIndex)
 
 End Sub
 
@@ -7097,20 +6976,20 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleUpTime(ByVal Userindex As Integer)
+Private Sub HandleUpTime(ByVal UserIndex As Integer)
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 01/10/08
     '01/10/2008 - Marcos Martinez (ByVal) - Automatic restart removed from the server along with all their assignments and varibles
     '***************************************************
     'Remove packet ID
-    Call UserList(Userindex).incomingData.ReadByte
+    Call UserList(UserIndex).incomingData.ReadByte
     
     Dim time      As Long
 
     Dim UpTimeStr As String
     
-    Call WriteConsoleServerUpTimeMsg(Userindex)
+    Call WriteConsoleServerUpTimeMsg(UserIndex)
 End Sub
 
 ''
@@ -7118,16 +6997,16 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandlePartyLeave(ByVal Userindex As Integer)
+Private Sub HandlePartyLeave(ByVal UserIndex As Integer)
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
     'Remove packet ID
-    Call UserList(Userindex).incomingData.ReadByte
+    Call UserList(UserIndex).incomingData.ReadByte
     
-    Call mdParty.SalirDeParty(Userindex)
+    Call mdParty.SalirDeParty(UserIndex)
 
 End Sub
 
@@ -7136,18 +7015,18 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandlePartyCreate(ByVal Userindex As Integer)
+Private Sub HandlePartyCreate(ByVal UserIndex As Integer)
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
     'Remove packet ID
-    Call UserList(Userindex).incomingData.ReadByte
+    Call UserList(UserIndex).incomingData.ReadByte
     
-    If Not mdParty.PuedeCrearParty(Userindex) Then Exit Sub
+    If Not mdParty.PuedeCrearParty(UserIndex) Then Exit Sub
     
-    Call mdParty.CrearParty(Userindex)
+    Call mdParty.CrearParty(UserIndex)
 
 End Sub
 
@@ -7156,16 +7035,16 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandlePartyJoin(ByVal Userindex As Integer)
+Private Sub HandlePartyJoin(ByVal UserIndex As Integer)
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
     'Remove packet ID
-    Call UserList(Userindex).incomingData.ReadByte
+    Call UserList(UserIndex).incomingData.ReadByte
     
-    Call mdParty.SolicitarIngresoAParty(Userindex)
+    Call mdParty.SolicitarIngresoAParty(UserIndex)
 
 End Sub
 
@@ -7174,7 +7053,7 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleShareNpc(ByVal Userindex As Integer)
+Private Sub HandleShareNpc(ByVal UserIndex As Integer)
     '***************************************************
     'Author: ZaMa
     'Last Modification: 15/04/2010
@@ -7185,7 +7064,7 @@ Private Sub HandleShareNpc(ByVal Userindex As Integer)
 
     Dim SharingUserIndex As Integer
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -7196,18 +7075,18 @@ Private Sub HandleShareNpc(ByVal Userindex As Integer)
         
         ' Can't share with admins
         If EsGm(TargetUserIndex) Then
-            Call WriteConsoleMsg(Userindex, "No puedes compartir npcs con administradores!!", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "No puedes compartir npcs con administradores!!", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
 
         End If
         
         ' Pk or Caos?
-        If criminal(Userindex) Then
+        If criminal(UserIndex) Then
 
             ' Caos can only share with other caos
-            If esCaos(Userindex) Then
+            If esCaos(UserIndex) Then
                 If Not esCaos(TargetUserIndex) Then
-                    Call WriteConsoleMsg(Userindex, "Solo puedes compartir npcs con miembros de tu misma faccion!!", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "Solo puedes compartir npcs con miembros de tu misma faccion!!", FontTypeNames.FONTTYPE_INFO)
                     Exit Sub
 
                 End If
@@ -7223,7 +7102,7 @@ Private Sub HandleShareNpc(ByVal Userindex As Integer)
 
             ' Can't share
             If criminal(TargetUserIndex) Then
-                Call WriteConsoleMsg(Userindex, "No puedes compartir npcs con criminales!!", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "No puedes compartir npcs con criminales!!", FontTypeNames.FONTTYPE_INFO)
                 Exit Sub
 
             End If
@@ -7238,14 +7117,14 @@ Private Sub HandleShareNpc(ByVal Userindex As Integer)
         ' Aviso al usuario anterior que dejo de compartir
         If SharingUserIndex <> 0 Then
             Call WriteConsoleMsg(SharingUserIndex, .Name & " ha dejado de compartir sus npcs contigo.", FontTypeNames.FONTTYPE_INFO)
-            Call WriteConsoleMsg(Userindex, "Has dejado de compartir tus npcs con " & UserList(SharingUserIndex).Name & ".", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Has dejado de compartir tus npcs con " & UserList(SharingUserIndex).Name & ".", FontTypeNames.FONTTYPE_INFO)
 
         End If
         
         .flags.ShareNpcWith = TargetUserIndex
         
         Call WriteConsoleMsg(TargetUserIndex, .Name & " ahora comparte sus npcs contigo.", FontTypeNames.FONTTYPE_INFO)
-        Call WriteConsoleMsg(Userindex, "Ahora compartes tus npcs con " & UserList(TargetUserIndex).Name & ".", FontTypeNames.FONTTYPE_INFO)
+        Call WriteConsoleMsg(UserIndex, "Ahora compartes tus npcs con " & UserList(TargetUserIndex).Name & ".", FontTypeNames.FONTTYPE_INFO)
         
     End With
     
@@ -7256,7 +7135,7 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleStopSharingNpc(ByVal Userindex As Integer)
+Private Sub HandleStopSharingNpc(ByVal UserIndex As Integer)
     '***************************************************
     'Author: ZaMa
     'Last Modification: 15/04/2010
@@ -7265,7 +7144,7 @@ Private Sub HandleStopSharingNpc(ByVal Userindex As Integer)
     
     Dim SharingUserIndex As Integer
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -7290,16 +7169,16 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleInquiry(ByVal Userindex As Integer)
+Private Sub HandleInquiry(ByVal UserIndex As Integer)
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
     'Remove packet ID
-    Call UserList(Userindex).incomingData.ReadByte
+    Call UserList(UserIndex).incomingData.ReadByte
     
-    ConsultaPopular.SendInfoEncuesta (Userindex)
+    ConsultaPopular.SendInfoEncuesta (UserIndex)
 
 End Sub
 
@@ -7308,7 +7187,7 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleGuildMessage(ByVal Userindex As Integer)
+Private Sub HandleGuildMessage(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -7316,15 +7195,15 @@ Private Sub HandleGuildMessage(ByVal Userindex As Integer)
     '02/03/2009: ZaMa - Arreglado un indice mal pasado a la funcion de cartel de clanes overhead.
     '15/07/2009: ZaMa - Now invisible admins only speak by console
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -7346,7 +7225,7 @@ Private Sub HandleGuildMessage(ByVal Userindex As Integer)
             If .GuildIndex > 0 Then
                 Call SendData(SendTarget.ToDiosesYclan, .GuildIndex, PrepareMessageGuildChat(.Name & "> " & Chat))
                 
-                If Not (.flags.AdminInvisible = 1) Then Call SendData(SendTarget.ToClanArea, Userindex, PrepareMessageChatOverHead("< " & Chat & " >", .Char.CharIndex, vbYellow))
+                If Not (.flags.AdminInvisible = 1) Then Call SendData(SendTarget.ToClanArea, UserIndex, PrepareMessageChatOverHead("< " & Chat & " >", .Char.CharIndex, vbYellow))
 
             End If
 
@@ -7357,7 +7236,7 @@ Private Sub HandleGuildMessage(ByVal Userindex As Integer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -7377,22 +7256,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandlePartyMessage(ByVal Userindex As Integer)
+Private Sub HandlePartyMessage(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -7411,7 +7290,7 @@ Private Sub HandlePartyMessage(ByVal Userindex As Integer)
             'Analize chat...
             Call Statistics.ParseChat(Chat)
             
-            Call mdParty.BroadCastParty(Userindex, Chat)
+            Call mdParty.BroadCastParty(UserIndex, Chat)
 
             'TODO : Con la 0.12.1 se debe definir si esto vuelve o se borra (/CMSG overhead)
             'Call SendData(SendTarget.ToPartyArea, UserIndex, UserList(UserIndex).Pos.map, "||" & vbYellow & "Â°< " & mid$(rData, 7) & " >Â°" & CStr(UserList(UserIndex).Char.CharIndex))
@@ -7422,7 +7301,7 @@ Private Sub HandlePartyMessage(ByVal Userindex As Integer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -7442,7 +7321,7 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
  
-Private Sub HandleCentinelReport(ByVal Userindex As Integer)
+Private Sub HandleCentinelReport(ByVal UserIndex As Integer)
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 02/05/2012
@@ -7451,12 +7330,12 @@ Private Sub HandleCentinelReport(ByVal Userindex As Integer)
     
     Dim NotBuff As New clsByteQueue
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         Call NotBuff.CopyBuffer(.incomingData)
         
         Call NotBuff.ReadByte
                 
-        Call modCentinela.IngresaClave(Userindex, NotBuff.ReadASCIIString())
+        Call modCentinela.IngresaClave(UserIndex, NotBuff.ReadASCIIString())
         
         Call .incomingData.CopyBuffer(NotBuff)
         
@@ -7469,25 +7348,25 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleGuildOnline(ByVal Userindex As Integer)
+Private Sub HandleGuildOnline(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
         Dim onlineList As String
         
-        onlineList = modGuilds.m_ListaDeMiembrosOnline(Userindex, .GuildIndex)
+        onlineList = modGuilds.m_ListaDeMiembrosOnline(UserIndex, .GuildIndex)
         
         If .GuildIndex <> 0 Then
-            Call WriteConsoleMsg(Userindex, "Companeros de tu clan conectados: " & onlineList, FontTypeNames.FONTTYPE_GUILDMSG)
+            Call WriteConsoleMsg(UserIndex, "Companeros de tu clan conectados: " & onlineList, FontTypeNames.FONTTYPE_GUILDMSG)
         Else
-            Call WriteConsoleMsg(Userindex, "No pertences a ningUn clan.", FontTypeNames.FONTTYPE_GUILDMSG)
+            Call WriteConsoleMsg(UserIndex, "No pertences a ningUn clan.", FontTypeNames.FONTTYPE_GUILDMSG)
 
         End If
 
@@ -7500,16 +7379,16 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandlePartyOnline(ByVal Userindex As Integer)
+Private Sub HandlePartyOnline(ByVal UserIndex As Integer)
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
     'Remove packet ID
-    Call UserList(Userindex).incomingData.ReadByte
+    Call UserList(UserIndex).incomingData.ReadByte
     
-    Call mdParty.OnlineParty(Userindex)
+    Call mdParty.OnlineParty(UserIndex)
 
 End Sub
 
@@ -7518,22 +7397,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleCouncilMessage(ByVal Userindex As Integer)
+Private Sub HandleCouncilMessage(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -7553,9 +7432,9 @@ Private Sub HandleCouncilMessage(ByVal Userindex As Integer)
             Call Statistics.ParseChat(Chat)
             
             If .flags.Privilegios And PlayerType.RoyalCouncil Then
-                Call SendData(SendTarget.ToConsejo, Userindex, PrepareMessageConsoleMsg("(Consejero) " & .Name & "> " & Chat, FontTypeNames.FONTTYPE_CONSEJO))
+                Call SendData(SendTarget.ToConsejo, UserIndex, PrepareMessageConsoleMsg("(Consejero) " & .Name & "> " & Chat, FontTypeNames.FONTTYPE_CONSEJO))
             ElseIf .flags.Privilegios And PlayerType.ChaosCouncil Then
-                Call SendData(SendTarget.ToConsejoCaos, Userindex, PrepareMessageConsoleMsg("(Consejero) " & .Name & "> " & Chat, FontTypeNames.FONTTYPE_CONSEJOCAOS))
+                Call SendData(SendTarget.ToConsejoCaos, UserIndex, PrepareMessageConsoleMsg("(Consejero) " & .Name & "> " & Chat, FontTypeNames.FONTTYPE_CONSEJOCAOS))
 
             End If
 
@@ -7566,7 +7445,7 @@ Private Sub HandleCouncilMessage(ByVal Userindex As Integer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -7586,22 +7465,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleRoleMasterRequest(ByVal Userindex As Integer)
+Private Sub HandleRoleMasterRequest(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -7617,7 +7496,7 @@ Private Sub HandleRoleMasterRequest(ByVal Userindex As Integer)
         request = buffer.ReadASCIIString()
         
         If LenB(request) <> 0 Then
-            Call WriteConsoleMsg(Userindex, "Su solicitud ha sido enviada.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Su solicitud ha sido enviada.", FontTypeNames.FONTTYPE_INFO)
             Call SendData(SendTarget.ToRolesMasters, 0, PrepareMessageConsoleMsg(.Name & " PREGUNTA ROL: " & request, FontTypeNames.FONTTYPE_GUILDMSG))
 
         End If
@@ -7627,7 +7506,7 @@ Private Sub HandleRoleMasterRequest(ByVal Userindex As Integer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -7647,24 +7526,24 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleGMRequest(ByVal Userindex As Integer)
+Private Sub HandleGMRequest(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
         If Not Ayuda.Existe(.Name) Then
-            Call WriteConsoleMsg(Userindex, "El mensaje ha sido entregado, ahora solo debes esperar que se desocupe algun GM.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "El mensaje ha sido entregado, ahora solo debes esperar que se desocupe algun GM.", FontTypeNames.FONTTYPE_INFO)
             Call Ayuda.Push(.Name)
         Else
             Call Ayuda.Quitar(.Name)
             Call Ayuda.Push(.Name)
-            Call WriteConsoleMsg(Userindex, "Ya habias mandado un mensaje, tu mensaje ha sido movido al final de la cola de mensajes.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Ya habias mandado un mensaje, tu mensaje ha sido movido al final de la cola de mensajes.", FontTypeNames.FONTTYPE_INFO)
         End If
 
         Call SendData(SendTarget.ToAdmins, 0, PrepareMessageConsoleMsg(.Name + " ha solicitado la ayuda de algun GM con /GM. Podes usar el comando /SHOW SOS para ver quienes necesitan ayuda", FontTypeNames.FONTTYPE_INFO))
@@ -7677,22 +7556,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleBugReport(ByVal Userindex As Integer)
+Private Sub HandleBugReport(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -7722,7 +7601,7 @@ Private Sub HandleBugReport(ByVal Userindex As Integer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -7742,22 +7621,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleChangeDescription(ByVal Userindex As Integer)
+Private Sub HandleChangeDescription(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -7773,10 +7652,10 @@ Private Sub HandleChangeDescription(ByVal Userindex As Integer)
         description = buffer.ReadASCIIString()
 
         If Not AsciiValidos(description) Then
-            Call WriteConsoleMsg(Userindex, "La descripcion tiene caracteres invalidos.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "La descripcion tiene caracteres invalidos.", FontTypeNames.FONTTYPE_INFO)
         Else
             .Desc = Trim$(description)
-            Call WriteConsoleMsg(Userindex, "La descripcion ha cambiado.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "La descripcion ha cambiado.", FontTypeNames.FONTTYPE_INFO)
 
         End If
         
@@ -7785,7 +7664,7 @@ Private Sub HandleChangeDescription(ByVal Userindex As Integer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -7805,22 +7684,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleGuildVote(ByVal Userindex As Integer)
+Private Sub HandleGuildVote(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -7837,10 +7716,10 @@ Private Sub HandleGuildVote(ByVal Userindex As Integer)
         
         vote = buffer.ReadASCIIString()
         
-        If Not modGuilds.v_UsuarioVota(Userindex, vote, errorStr) Then
-            Call WriteConsoleMsg(Userindex, "Voto NO contabilizado: " & errorStr, FontTypeNames.FONTTYPE_GUILD)
+        If Not modGuilds.v_UsuarioVota(UserIndex, vote, errorStr) Then
+            Call WriteConsoleMsg(UserIndex, "Voto NO contabilizado: " & errorStr, FontTypeNames.FONTTYPE_GUILD)
         Else
-            Call WriteConsoleMsg(Userindex, "Voto contabilizado.", FontTypeNames.FONTTYPE_GUILD)
+            Call WriteConsoleMsg(UserIndex, "Voto contabilizado.", FontTypeNames.FONTTYPE_GUILD)
 
         End If
         
@@ -7849,7 +7728,7 @@ Private Sub HandleGuildVote(ByVal Userindex As Integer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -7869,19 +7748,19 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleShowGuildNews(ByVal Userindex As Integer)
+Private Sub HandleShowGuildNews(ByVal UserIndex As Integer)
     '***************************************************
     'Author: ZaMA
     'Last Modification: 05/17/06
     '
     '***************************************************
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         
         'Remove packet ID
         Call .incomingData.ReadByte
         
-        Call modGuilds.SendGuildNews(Userindex)
+        Call modGuilds.SendGuildNews(UserIndex)
 
     End With
 
@@ -7892,22 +7771,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandlePunishments(ByVal Userindex As Integer)
+Private Sub HandlePunishments(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 25/08/2009
     '25/08/2009: ZaMa - Now only admins can see other admins' punishment list
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -7945,22 +7824,22 @@ Private Sub HandlePunishments(ByVal Userindex As Integer)
 
             End If
             
-            If (EsAdmin(Name) Or EsDios(Name) Or EsSemiDios(Name) Or EsConsejero(Name) Or EsRolesMaster(Name)) And (UserList(Userindex).flags.Privilegios And PlayerType.User) Then
-                Call WriteConsoleMsg(Userindex, "No puedes ver las penas de los administradores.", FontTypeNames.FONTTYPE_INFO)
+            If (EsAdmin(Name) Or EsDios(Name) Or EsSemiDios(Name) Or EsConsejero(Name) Or EsRolesMaster(Name)) And (UserList(UserIndex).flags.Privilegios And PlayerType.User) Then
+                Call WriteConsoleMsg(UserIndex, "No puedes ver las penas de los administradores.", FontTypeNames.FONTTYPE_INFO)
             Else
 
                 If PersonajeExiste(Name) Then
                     Count = GetUserAmountOfPunishments(Name)
 
                     If Count = 0 Then
-                        Call WriteConsoleMsg(Userindex, "Sin prontuario..", FontTypeNames.FONTTYPE_INFO)
+                        Call WriteConsoleMsg(UserIndex, "Sin prontuario..", FontTypeNames.FONTTYPE_INFO)
                     Else
-                        Call SendUserPunishments(Userindex, Name, Count)
+                        Call SendUserPunishments(UserIndex, Name, Count)
 
                     End If
 
                 Else
-                    Call WriteConsoleMsg(Userindex, "Personaje """ & Name & """ inexistente.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "Personaje """ & Name & """ inexistente.", FontTypeNames.FONTTYPE_INFO)
 
                 End If
 
@@ -7973,7 +7852,7 @@ Private Sub HandlePunishments(ByVal Userindex As Integer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -7993,7 +7872,7 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleChangePassword(ByVal Userindex As Integer)
+Private Sub HandleChangePassword(ByVal UserIndex As Integer)
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Creation Date: 10/10/07
@@ -8005,15 +7884,15 @@ Private Sub HandleChangePassword(ByVal Userindex As Integer)
 
     Set oSHA256 = New CSHA256
 
-    If UserList(Userindex).incomingData.Length < 5 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 5 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -8035,7 +7914,7 @@ Private Sub HandleChangePassword(ByVal Userindex As Integer)
         Call buffer.ReadByte
        
         'Hasheamos el pass junto al Salt
-        oldSalt = GetUserSalt(UserList(Userindex).Name)
+        oldSalt = GetUserSalt(UserList(UserIndex).Name)
         oldPass = oSHA256.SHA256(buffer.ReadASCIIString() & oldSalt)
         
         'Asignamos un nuevo Salt y lo hasheamos junto al nuevo pass
@@ -8043,15 +7922,15 @@ Private Sub HandleChangePassword(ByVal Userindex As Integer)
         newPass = oSHA256.SHA256(buffer.ReadASCIIString() & Salt)
         
         If LenB(newPass) = 0 Then
-            Call WriteConsoleMsg(Userindex, "Debes especificar una contrasena nueva, intentalo de nuevo.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Debes especificar una contrasena nueva, intentalo de nuevo.", FontTypeNames.FONTTYPE_INFO)
         Else
-            storedPass = GetUserPassword(UserList(Userindex).Name)
+            storedPass = GetUserPassword(UserList(UserIndex).Name)
             
             If storedPass <> oldPass Then
-                Call WriteConsoleMsg(Userindex, "La contrasena actual proporcionada no es correcta. La contrasena no ha sido cambiada, intentalo de nuevo.", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "La contrasena actual proporcionada no es correcta. La contrasena no ha sido cambiada, intentalo de nuevo.", FontTypeNames.FONTTYPE_INFO)
             Else
-                Call StorePasswordSalt(UserList(Userindex).Name, newPass, Salt)
-                Call WriteConsoleMsg(Userindex, "La contrasena fue cambiada con exito.", FontTypeNames.FONTTYPE_INFO)
+                Call StorePasswordSalt(UserList(UserIndex).Name, newPass, Salt)
+                Call WriteConsoleMsg(UserIndex, "La contrasena fue cambiada con exito.", FontTypeNames.FONTTYPE_INFO)
 
             End If
 
@@ -8062,7 +7941,7 @@ Private Sub HandleChangePassword(ByVal Userindex As Integer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -8082,20 +7961,20 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleGamble(ByVal Userindex As Integer)
+Private Sub HandleGamble(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '10/07/2010: ZaMa - Now normal npcs don't answer if asked to gamble.
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -8108,15 +7987,15 @@ Private Sub HandleGamble(ByVal Userindex As Integer)
         ' Dead?
         If .flags.Muerto = 1 Then
             'Call WriteConsoleMsg(UserIndex, "Estas muerto!!", FontTypeNames.FONTTYPE_INFO)
-            Call WriteMultiMessage(Userindex, eMessages.UserMuerto)
+            Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
         
             'Validate target NPC
         ElseIf .flags.TargetNPC = 0 Then
-            Call WriteConsoleMsg(Userindex, "Primero tienes que seleccionar un personaje, haz click izquierdo sobre el.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Primero tienes que seleccionar un personaje, haz click izquierdo sobre el.", FontTypeNames.FONTTYPE_INFO)
         
             ' Validate Distance
         ElseIf Distancia(Npclist(.flags.TargetNPC).Pos, .Pos) > 10 Then
-            Call WriteConsoleMsg(Userindex, "Estas demasiado lejos.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Estas demasiado lejos.", FontTypeNames.FONTTYPE_INFO)
         
             ' Validate NpcType
         ElseIf Npclist(.flags.TargetNPC).NPCtype <> eNPCType.Timbero Then
@@ -8127,33 +8006,33 @@ Private Sub HandleGamble(ByVal Userindex As Integer)
             
             ' Normal npcs don't speak
             If TargetNpcType <> eNPCType.Comun And TargetNpcType <> eNPCType.DRAGON And TargetNpcType <> eNPCType.Pretoriano Then
-                Call WriteChatOverHead(Userindex, "No tengo ningUn interes en apostar.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "No tengo ningUn interes en apostar.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
 
             End If
             
             ' Validate amount
         ElseIf Amount < 1 Then
-            Call WriteChatOverHead(Userindex, "El minimo de apuesta es 1 moneda.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+            Call WriteChatOverHead(UserIndex, "El minimo de apuesta es 1 moneda.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
         
             ' Validate amount
         ElseIf Amount > 5000 Then
-            Call WriteChatOverHead(Userindex, "El maximo de apuesta es 5000 monedas.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+            Call WriteChatOverHead(UserIndex, "El maximo de apuesta es 5000 monedas.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
         
             ' Validate user gold
         ElseIf .Stats.Gld < Amount Then
-            Call WriteChatOverHead(Userindex, "No tienes esa cantidad.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+            Call WriteChatOverHead(UserIndex, "No tienes esa cantidad.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
         
         Else
 
             If RandomNumber(1, 100) <= 47 Then
                 .Stats.Gld = .Stats.Gld + Amount
-                Call WriteChatOverHead(Userindex, "Felicidades! Has ganado " & CStr(Amount) & " monedas de oro.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "Felicidades! Has ganado " & CStr(Amount) & " monedas de oro.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
                 
                 Apuestas.Perdidas = Apuestas.Perdidas + Amount
                 Call WriteVar(DatPath & "apuestas.dat", "Main", "Perdidas", CStr(Apuestas.Perdidas))
             Else
                 .Stats.Gld = .Stats.Gld - Amount
-                Call WriteChatOverHead(Userindex, "Lo siento, has perdido " & CStr(Amount) & " monedas de oro.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "Lo siento, has perdido " & CStr(Amount) & " monedas de oro.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
                 
                 Apuestas.Ganancias = Apuestas.Ganancias + Amount
                 Call WriteVar(DatPath & "apuestas.dat", "Main", "Ganancias", CStr(Apuestas.Ganancias))
@@ -8164,7 +8043,7 @@ Private Sub HandleGamble(ByVal Userindex As Integer)
             
             Call WriteVar(DatPath & "apuestas.dat", "Main", "Jugadas", CStr(Apuestas.Jugadas))
             
-            Call WriteUpdateGold(Userindex)
+            Call WriteUpdateGold(UserIndex)
 
         End If
 
@@ -8177,20 +8056,20 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleInquiryVote(ByVal Userindex As Integer)
+Private Sub HandleInquiryVote(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 2 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 2 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -8198,7 +8077,7 @@ Private Sub HandleInquiryVote(ByVal Userindex As Integer)
         
         opt = .incomingData.ReadByte()
         
-        Call WriteConsoleMsg(Userindex, ConsultaPopular.doVotar(Userindex, opt), FontTypeNames.FONTTYPE_GUILD)
+        Call WriteConsoleMsg(UserIndex, ConsultaPopular.doVotar(UserIndex, opt), FontTypeNames.FONTTYPE_GUILD)
 
     End With
 
@@ -8209,20 +8088,20 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleBankExtractGold(ByVal Userindex As Integer)
+Private Sub HandleBankExtractGold(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 5 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 5 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -8233,14 +8112,14 @@ Private Sub HandleBankExtractGold(ByVal Userindex As Integer)
         'Dead people can't leave a faction.. they can't talk...
         If .flags.Muerto = 1 Then
             'Call WriteConsoleMsg(UserIndex, "Estas muerto!!", FontTypeNames.FONTTYPE_INFO)
-            Call WriteMultiMessage(Userindex, eMessages.UserMuerto)
+            Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
             Exit Sub
 
         End If
         
         'Validate target NPC
         If .flags.TargetNPC = 0 Then
-            Call WriteConsoleMsg(Userindex, "Primero tienes que seleccionar un personaje, haz click izquierdo sobre el.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Primero tienes que seleccionar un personaje, haz click izquierdo sobre el.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
 
         End If
@@ -8248,7 +8127,7 @@ Private Sub HandleBankExtractGold(ByVal Userindex As Integer)
         If Npclist(.flags.TargetNPC).NPCtype <> eNPCType.Banquero Then Exit Sub
         
         If Distancia(.Pos, Npclist(.flags.TargetNPC).Pos) > 10 Then
-            Call WriteConsoleMsg(Userindex, "Estas demasiado lejos.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Estas demasiado lejos.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
 
         End If
@@ -8256,14 +8135,14 @@ Private Sub HandleBankExtractGold(ByVal Userindex As Integer)
         If Amount > 0 And Amount <= .Stats.Banco Then
             .Stats.Banco = .Stats.Banco - Amount
             .Stats.Gld = .Stats.Gld + Amount
-            Call WriteChatOverHead(Userindex, "Tenes " & .Stats.Banco & " monedas de oro en tu cuenta.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+            Call WriteChatOverHead(UserIndex, "Tenes " & .Stats.Banco & " monedas de oro en tu cuenta.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
         Else
-            Call WriteChatOverHead(Userindex, "No tienes esa cantidad.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+            Call WriteChatOverHead(UserIndex, "No tienes esa cantidad.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
 
         End If
         
-        Call WriteUpdateGold(Userindex)
-        Call WriteUpdateBankGold(Userindex)
+        Call WriteUpdateGold(UserIndex)
+        Call WriteUpdateBankGold(UserIndex)
 
     End With
 
@@ -8274,7 +8153,7 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleLeaveFaction(ByVal Userindex As Integer)
+Private Sub HandleLeaveFaction(ByVal UserIndex As Integer)
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 09/28/2010
@@ -8288,14 +8167,14 @@ Private Sub HandleLeaveFaction(ByVal Userindex As Integer)
 
     Dim NpcIndex    As Integer
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
         'Dead people can't leave a faction.. they can't talk...
         If .flags.Muerto = 1 Then
             'Call WriteConsoleMsg(UserIndex, "Estas muerto!!", FontTypeNames.FONTTYPE_INFO)
-            Call WriteMultiMessage(Userindex, eMessages.UserMuerto)
+            Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
             Exit Sub
 
         End If
@@ -8326,17 +8205,17 @@ Private Sub HandleLeaveFaction(ByVal Userindex As Integer)
 
             ' Si le pidio al demonio salir de la armada, este le responde.
             If TalkToDemon Then
-                Call WriteChatOverHead(Userindex, "Sal de aqui bufon!!!", Npclist(NpcIndex).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "Sal de aqui bufon!!!", Npclist(NpcIndex).Char.CharIndex, vbWhite)
             
             Else
 
                 ' Si le pidio al rey salir de la armada, le responde.
                 If TalkToKing Then
-                    Call WriteChatOverHead(Userindex, "Seras bienvenido a las fuerzas imperiales si deseas regresar.", Npclist(NpcIndex).Char.CharIndex, vbWhite)
+                    Call WriteChatOverHead(UserIndex, "Seras bienvenido a las fuerzas imperiales si deseas regresar.", Npclist(NpcIndex).Char.CharIndex, vbWhite)
 
                 End If
                 
-                Call ExpulsarFaccionReal(Userindex, False)
+                Call ExpulsarFaccionReal(UserIndex, False)
                 
             End If
         
@@ -8345,16 +8224,16 @@ Private Sub HandleLeaveFaction(ByVal Userindex As Integer)
 
             ' Si le pidio al rey salir del caos, le responde.
             If TalkToKing Then
-                Call WriteChatOverHead(Userindex, "Sal de aqui maldito criminal!!!", Npclist(NpcIndex).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "Sal de aqui maldito criminal!!!", Npclist(NpcIndex).Char.CharIndex, vbWhite)
             Else
 
                 ' Si le pidio al demonio salir del caos, este le responde.
                 If TalkToDemon Then
-                    Call WriteChatOverHead(Userindex, "Ya volveras arrastrandote.", Npclist(NpcIndex).Char.CharIndex, vbWhite)
+                    Call WriteChatOverHead(UserIndex, "Ya volveras arrastrandote.", Npclist(NpcIndex).Char.CharIndex, vbWhite)
 
                 End If
                 
-                Call ExpulsarFaccionCaos(Userindex, False)
+                Call ExpulsarFaccionCaos(UserIndex, False)
 
             End If
 
@@ -8363,14 +8242,14 @@ Private Sub HandleLeaveFaction(ByVal Userindex As Integer)
         
             ' Si le hablaba al rey o demonio, le repsonden ellos
             'Corregido, solo si son en efecto el rey o el demonio, no cualquier NPC (C4b3z0n)
-            If (TalkToDemon And criminal(Userindex)) Or (TalkToKing And Not criminal(Userindex)) Then 'Si se pueden unir a la faccion (status), son invitados
-                Call WriteChatOverHead(Userindex, "No perteneces a nuestra faccion. Si deseas unirte, di /ENLISTAR", Npclist(NpcIndex).Char.CharIndex, vbWhite)
-            ElseIf (TalkToDemon And Not criminal(Userindex)) Then
-                Call WriteChatOverHead(Userindex, "Sal de aqui bufon!!!", Npclist(NpcIndex).Char.CharIndex, vbWhite)
-            ElseIf (TalkToKing And criminal(Userindex)) Then
-                Call WriteChatOverHead(Userindex, "Sal de aqui maldito criminal!!!", Npclist(NpcIndex).Char.CharIndex, vbWhite)
+            If (TalkToDemon And criminal(UserIndex)) Or (TalkToKing And Not criminal(UserIndex)) Then 'Si se pueden unir a la faccion (status), son invitados
+                Call WriteChatOverHead(UserIndex, "No perteneces a nuestra faccion. Si deseas unirte, di /ENLISTAR", Npclist(NpcIndex).Char.CharIndex, vbWhite)
+            ElseIf (TalkToDemon And Not criminal(UserIndex)) Then
+                Call WriteChatOverHead(UserIndex, "Sal de aqui bufon!!!", Npclist(NpcIndex).Char.CharIndex, vbWhite)
+            ElseIf (TalkToKing And criminal(UserIndex)) Then
+                Call WriteChatOverHead(UserIndex, "Sal de aqui maldito criminal!!!", Npclist(NpcIndex).Char.CharIndex, vbWhite)
             Else
-                Call WriteConsoleMsg(Userindex, "No perteneces a ninguna faccion!", FontTypeNames.FONTTYPE_FIGHT)
+                Call WriteConsoleMsg(UserIndex, "No perteneces a ninguna faccion!", FontTypeNames.FONTTYPE_FIGHT)
 
             End If
         
@@ -8385,20 +8264,20 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleBankDepositGold(ByVal Userindex As Integer)
+Private Sub HandleBankDepositGold(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 5 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 5 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -8409,20 +8288,20 @@ Private Sub HandleBankDepositGold(ByVal Userindex As Integer)
         'Dead people can't leave a faction.. they can't talk...
         If .flags.Muerto = 1 Then
             'Call WriteConsoleMsg(UserIndex, "Estas muerto!!", FontTypeNames.FONTTYPE_INFO)
-            Call WriteMultiMessage(Userindex, eMessages.UserMuerto)
+            Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
             Exit Sub
 
         End If
         
         'Validate target NPC
         If .flags.TargetNPC = 0 Then
-            Call WriteConsoleMsg(Userindex, "Primero tienes que seleccionar un personaje, haz click izquierdo sobre el.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Primero tienes que seleccionar un personaje, haz click izquierdo sobre el.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
 
         End If
         
         If Distancia(Npclist(.flags.TargetNPC).Pos, .Pos) > 10 Then
-            Call WriteConsoleMsg(Userindex, "Estas demasiado lejos.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Estas demasiado lejos.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
 
         End If
@@ -8434,17 +8313,17 @@ Private Sub HandleBankDepositGold(ByVal Userindex As Integer)
         RemainingAmountToMaximumGold = 2147483647 - .Stats.Gld
 
         If .Stats.Banco >= 2147483647 And RemainingAmountToMaximumGold <= Amount Then
-            Call WriteChatOverHead(Userindex, "No puedes depositar el oro por que tendrias mas del maximo permitido (2147483647)", Npclist(.flags.TargetNPC).Char.CharIndex, vbRed)
+            Call WriteChatOverHead(UserIndex, "No puedes depositar el oro por que tendrias mas del maximo permitido (2147483647)", Npclist(.flags.TargetNPC).Char.CharIndex, vbRed)
 
         ElseIf Amount > 0 And Amount <= .Stats.Gld Then
             .Stats.Banco = .Stats.Banco + Amount
             .Stats.Gld = .Stats.Gld - Amount
-            Call WriteChatOverHead(Userindex, "Tenes " & .Stats.Banco & " monedas de oro en tu cuenta.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+            Call WriteChatOverHead(UserIndex, "Tenes " & .Stats.Banco & " monedas de oro en tu cuenta.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
             
-            Call WriteUpdateGold(Userindex)
-            Call WriteUpdateBankGold(Userindex)
+            Call WriteUpdateGold(UserIndex)
+            Call WriteUpdateBankGold(UserIndex)
         Else
-            Call WriteChatOverHead(Userindex, "No tenes esa cantidad.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+            Call WriteChatOverHead(UserIndex, "No tenes esa cantidad.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
 
         End If
 
@@ -8457,22 +8336,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleDenounce(ByVal Userindex As Integer)
+Private Sub HandleDenounce(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 14/11/2010
     '14/11/2010: ZaMa - Now denounces can be desactivated.
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -8499,7 +8378,7 @@ Private Sub HandleDenounce(ByVal Userindex As Integer)
             
             Call Denuncias.Push(msg, False)
             
-            Call WriteConsoleMsg(Userindex, "Denuncia enviada, espere..", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Denuncia enviada, espere..", FontTypeNames.FONTTYPE_INFO)
 
         End If
         
@@ -8508,7 +8387,7 @@ Private Sub HandleDenounce(ByVal Userindex As Integer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -8528,29 +8407,29 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleGuildFundate(ByVal Userindex As Integer)
+Private Sub HandleGuildFundate(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: ZaMa
     'Last Modification: 14/12/2009
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 1 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 1 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         Call .incomingData.ReadByte
         
         If HasFound(.Name) Then
-            Call WriteConsoleMsg(Userindex, "Ya has fundado un clan, no puedes fundar otro!", FontTypeNames.FONTTYPE_INFOBOLD)
+            Call WriteConsoleMsg(UserIndex, "Ya has fundado un clan, no puedes fundar otro!", FontTypeNames.FONTTYPE_INFOBOLD)
             Exit Sub
 
         End If
         
-        Call WriteShowGuildAlign(Userindex)
+        Call WriteShowGuildAlign(UserIndex)
 
     End With
 
@@ -8561,20 +8440,20 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleGuildFundation(ByVal Userindex As Integer)
+Private Sub HandleGuildFundation(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: ZaMa
     'Last Modification: 14/12/2009
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 2 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 2 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -8585,7 +8464,7 @@ Private Sub HandleGuildFundation(ByVal Userindex As Integer)
         clanType = .incomingData.ReadByte()
         
         If HasFound(.Name) Then
-            Call WriteConsoleMsg(Userindex, "Ya has fundado un clan, no puedes fundar otro!", FontTypeNames.FONTTYPE_INFOBOLD)
+            Call WriteConsoleMsg(UserIndex, "Ya has fundado un clan, no puedes fundar otro!", FontTypeNames.FONTTYPE_INFOBOLD)
             Call LogCheating("El usuario " & .Name & " ha intentado fundar un clan ya habiendo fundado otro desde la IP " & .IP)
             Exit Sub
 
@@ -8612,16 +8491,16 @@ Private Sub HandleGuildFundation(ByVal Userindex As Integer)
                 .FundandoGuildAlineacion = ALINEACION_CRIMINAL
 
             Case Else
-                Call WriteConsoleMsg(Userindex, "Alineacion invalida.", FontTypeNames.FONTTYPE_GUILD)
+                Call WriteConsoleMsg(UserIndex, "Alineacion invalida.", FontTypeNames.FONTTYPE_GUILD)
                 Exit Sub
 
         End Select
         
-        If modGuilds.PuedeFundarUnClan(Userindex, .FundandoGuildAlineacion, Error) Then
-            Call WriteShowGuildFundationForm(Userindex)
+        If modGuilds.PuedeFundarUnClan(UserIndex, .FundandoGuildAlineacion, Error) Then
+            Call WriteShowGuildFundationForm(UserIndex)
         Else
             .FundandoGuildAlineacion = 0
-            Call WriteConsoleMsg(Userindex, Error, FontTypeNames.FONTTYPE_GUILD)
+            Call WriteConsoleMsg(UserIndex, Error, FontTypeNames.FONTTYPE_GUILD)
 
         End If
 
@@ -8634,7 +8513,7 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandlePartyKick(ByVal Userindex As Integer)
+Private Sub HandlePartyKick(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -8642,15 +8521,15 @@ Private Sub HandlePartyKick(ByVal Userindex As Integer)
     'Last Modification by: Marco Vanotti (Marco)
     '- 05/05/09: Now it uses "UserPuedeEjecutarComandos" to check if the user can use party commands
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -8667,11 +8546,11 @@ Private Sub HandlePartyKick(ByVal Userindex As Integer)
         
         UserName = buffer.ReadASCIIString()
         
-        If UserPuedeEjecutarComandos(Userindex) Then
+        If UserPuedeEjecutarComandos(UserIndex) Then
             tUser = NameIndex(UserName)
             
             If tUser > 0 Then
-                Call mdParty.ExpulsarDeParty(Userindex, tUser)
+                Call mdParty.ExpulsarDeParty(UserIndex, tUser)
             Else
 
                 If InStr(UserName, "+") Then
@@ -8679,7 +8558,7 @@ Private Sub HandlePartyKick(ByVal Userindex As Integer)
 
                 End If
                 
-                Call WriteConsoleMsg(Userindex, LCase(UserName) & " no pertenece a tu party.", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, LCase(UserName) & " no pertenece a tu party.", FontTypeNames.FONTTYPE_INFO)
 
             End If
 
@@ -8690,7 +8569,7 @@ Private Sub HandlePartyKick(ByVal Userindex As Integer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -8710,7 +8589,7 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandlePartySetLeader(ByVal Userindex As Integer)
+Private Sub HandlePartySetLeader(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -8718,14 +8597,14 @@ Private Sub HandlePartySetLeader(ByVal Userindex As Integer)
     'Last Modification by: Marco Vanotti (MarKoxX)
     '- 05/05/09: Now it uses "UserPuedeEjecutarComandos" to check if the user can use party commands
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
     'On Error GoTo ErrHandler
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -8746,16 +8625,16 @@ Private Sub HandlePartySetLeader(ByVal Userindex As Integer)
         
         UserName = buffer.ReadASCIIString()
 
-        If UserPuedeEjecutarComandos(Userindex) Then
+        If UserPuedeEjecutarComandos(UserIndex) Then
             tUser = NameIndex(UserName)
 
             If tUser > 0 Then
 
                 'Don't allow users to spoof online GMs
                 If (UserDarPrivilegioLevel(UserName) And rank) <= (.flags.Privilegios And rank) Then
-                    Call mdParty.TransformarEnLider(Userindex, tUser)
+                    Call mdParty.TransformarEnLider(UserIndex, tUser)
                 Else
-                    Call WriteConsoleMsg(Userindex, LCase(UserList(tUser).Name) & " no pertenece a tu party.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, LCase(UserList(tUser).Name) & " no pertenece a tu party.", FontTypeNames.FONTTYPE_INFO)
 
                 End If
                 
@@ -8766,7 +8645,7 @@ Private Sub HandlePartySetLeader(ByVal Userindex As Integer)
 
                 End If
 
-                Call WriteConsoleMsg(Userindex, LCase(UserName) & " no pertenece a tu party.", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, LCase(UserName) & " no pertenece a tu party.", FontTypeNames.FONTTYPE_INFO)
 
             End If
 
@@ -8777,7 +8656,7 @@ Private Sub HandlePartySetLeader(ByVal Userindex As Integer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -8797,7 +8676,7 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandlePartyAcceptMember(ByVal Userindex As Integer)
+Private Sub HandlePartyAcceptMember(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -8805,15 +8684,15 @@ Private Sub HandlePartyAcceptMember(ByVal Userindex As Integer)
     'Last Modification by: Marco Vanotti (Marco)
     '- 05/05/09: Now it uses "UserPuedeEjecutarComandos" to check if the user can use party commands
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -8836,23 +8715,23 @@ Private Sub HandlePartyAcceptMember(ByVal Userindex As Integer)
         
         UserName = buffer.ReadASCIIString()
 
-        If UserList(Userindex).flags.Muerto Then
-            Call WriteConsoleMsg(Userindex, "Estas muerto!!", FontTypeNames.FONTTYPE_PARTY)
+        If UserList(UserIndex).flags.Muerto Then
+            Call WriteConsoleMsg(UserIndex, "Estas muerto!!", FontTypeNames.FONTTYPE_PARTY)
         Else
             bUserVivo = True
 
         End If
         
-        If mdParty.UserPuedeEjecutarComandos(Userindex) And bUserVivo Then
+        If mdParty.UserPuedeEjecutarComandos(UserIndex) And bUserVivo Then
             tUser = NameIndex(UserName)
 
             If tUser > 0 Then
 
                 'Validate administrative ranks - don't allow users to spoof online GMs
                 If (UserList(tUser).flags.Privilegios And rank) <= (.flags.Privilegios And rank) Then
-                    Call mdParty.AprobarIngresoAParty(Userindex, tUser)
+                    Call mdParty.AprobarIngresoAParty(UserIndex, tUser)
                 Else
-                    Call WriteConsoleMsg(Userindex, "No puedes incorporar a tu party a personajes de mayor jerarquia.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "No puedes incorporar a tu party a personajes de mayor jerarquia.", FontTypeNames.FONTTYPE_INFO)
 
                 End If
 
@@ -8865,9 +8744,9 @@ Private Sub HandlePartyAcceptMember(ByVal Userindex As Integer)
                 
                 'Don't allow users to spoof online GMs
                 If (UserDarPrivilegioLevel(UserName) And rank) <= (.flags.Privilegios And rank) Then
-                    Call WriteConsoleMsg(Userindex, LCase(UserName) & " no ha solicitado ingresar a tu party.", FontTypeNames.FONTTYPE_PARTY)
+                    Call WriteConsoleMsg(UserIndex, LCase(UserName) & " no ha solicitado ingresar a tu party.", FontTypeNames.FONTTYPE_PARTY)
                 Else
-                    Call WriteConsoleMsg(Userindex, "No puedes incorporar a tu party a personajes de mayor jerarquia.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "No puedes incorporar a tu party a personajes de mayor jerarquia.", FontTypeNames.FONTTYPE_INFO)
 
                 End If
 
@@ -8880,7 +8759,7 @@ Private Sub HandlePartyAcceptMember(ByVal Userindex As Integer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -8900,22 +8779,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleGuildMemberList(ByVal Userindex As Integer)
+Private Sub HandleGuildMemberList(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -8948,14 +8827,14 @@ Private Sub HandleGuildMemberList(ByVal Userindex As Integer)
             End If
             
             If Not FileExist(App.Path & "\guilds\" & Guild & "-members.mem") Then
-                Call WriteConsoleMsg(Userindex, "No existe el clan: " & Guild, FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "No existe el clan: " & Guild, FontTypeNames.FONTTYPE_INFO)
             Else
                 memberCount = val(GetVar(App.Path & "\Guilds\" & Guild & "-Members" & ".mem", "INIT", "NroMembers"))
                 
                 For i = 1 To memberCount
                     UserName = GetVar(App.Path & "\Guilds\" & Guild & "-Members" & ".mem", "Members", "Member" & i)
                     
-                    Call WriteConsoleMsg(Userindex, UserName & "<" & Guild & ">", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, UserName & "<" & Guild & ">", FontTypeNames.FONTTYPE_INFO)
                 Next i
 
             End If
@@ -8967,7 +8846,7 @@ Private Sub HandleGuildMemberList(ByVal Userindex As Integer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -8987,22 +8866,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleGMMessage(ByVal Userindex As Integer)
+Private Sub HandleGMMessage(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 01/08/07
     'Last Modification by: (liquid)
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -9035,7 +8914,7 @@ Private Sub HandleGMMessage(ByVal Userindex As Integer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -9055,21 +8934,21 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleShowName(ByVal Userindex As Integer)
+Private Sub HandleShowName(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
         If .flags.Privilegios And (PlayerType.Dios Or PlayerType.Admin Or PlayerType.RoleMaster) Then
             .showName = Not .showName 'Show / Hide the name
             
-            Call RefreshCharStatus(Userindex)
+            Call RefreshCharStatus(UserIndex)
 
         End If
 
@@ -9082,14 +8961,14 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleOnlineRoyalArmy(ByVal Userindex As Integer)
+Private Sub HandleOnlineRoyalArmy(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 28/05/2010
     '28/05/2010: ZaMa - Ahora solo dioses pueden ver otros dioses online.
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         .incomingData.ReadByte
         
@@ -9127,9 +9006,9 @@ Private Sub HandleOnlineRoyalArmy(ByVal Userindex As Integer)
     End With
     
     If Len(list) > 0 Then
-        Call WriteConsoleMsg(Userindex, "Reales conectados: " & Left$(list, Len(list) - 2), FontTypeNames.FONTTYPE_INFO)
+        Call WriteConsoleMsg(UserIndex, "Reales conectados: " & Left$(list, Len(list) - 2), FontTypeNames.FONTTYPE_INFO)
     Else
-        Call WriteConsoleMsg(Userindex, "No hay reales conectados.", FontTypeNames.FONTTYPE_INFO)
+        Call WriteConsoleMsg(UserIndex, "No hay reales conectados.", FontTypeNames.FONTTYPE_INFO)
 
     End If
 
@@ -9140,14 +9019,14 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleOnlineChaosLegion(ByVal Userindex As Integer)
+Private Sub HandleOnlineChaosLegion(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 28/05/2010
     '28/05/2010: ZaMa - Ahora solo dioses pueden ver otros dioses online.
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         .incomingData.ReadByte
         
@@ -9185,9 +9064,9 @@ Private Sub HandleOnlineChaosLegion(ByVal Userindex As Integer)
     End With
 
     If Len(list) > 0 Then
-        Call WriteConsoleMsg(Userindex, "Caos conectados: " & Left$(list, Len(list) - 2), FontTypeNames.FONTTYPE_INFO)
+        Call WriteConsoleMsg(UserIndex, "Caos conectados: " & Left$(list, Len(list) - 2), FontTypeNames.FONTTYPE_INFO)
     Else
-        Call WriteConsoleMsg(Userindex, "No hay Caos conectados.", FontTypeNames.FONTTYPE_INFO)
+        Call WriteConsoleMsg(UserIndex, "No hay Caos conectados.", FontTypeNames.FONTTYPE_INFO)
 
     End If
 
@@ -9198,22 +9077,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleGoNearby(ByVal Userindex As Integer)
+Private Sub HandleGoNearby(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 01/10/07
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -9246,16 +9125,16 @@ Private Sub HandleGoNearby(ByVal Userindex As Integer)
             'Si es dios o Admins no podemos salvo que nosotros tambien lo seamos
             If Not (EsDios(UserName) Or EsAdmin(UserName)) Or (.flags.Privilegios And (PlayerType.Dios Or PlayerType.Admin)) Then
                 If tIndex <= 0 Then 'existe el usuario destino?
-                    Call WriteConsoleMsg(Userindex, "Usuario offline.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "Usuario offline.", FontTypeNames.FONTTYPE_INFO)
                 Else
 
                     For i = 2 To 5 'esto for sirve ir cambiando la distancia destino
                         For X = UserList(tIndex).Pos.X - i To UserList(tIndex).Pos.X + i
                             For Y = UserList(tIndex).Pos.Y - i To UserList(tIndex).Pos.Y + i
 
-                                If MapData(UserList(tIndex).Pos.Map, X, Y).Userindex = 0 Then
+                                If MapData(UserList(tIndex).Pos.Map, X, Y).UserIndex = 0 Then
                                     If LegalPos(UserList(tIndex).Pos.Map, X, Y, True, True) Then
-                                        Call WarpUserChar(Userindex, UserList(tIndex).Pos.Map, X, Y, True)
+                                        Call WarpUserChar(UserIndex, UserList(tIndex).Pos.Map, X, Y, True)
                                         Call LogGM(.Name, "/IRCERCA " & UserName & " Mapa:" & UserList(tIndex).Pos.Map & " X:" & UserList(tIndex).Pos.X & " Y:" & UserList(tIndex).Pos.Y)
                                         Found = True
                                         Exit For
@@ -9274,7 +9153,7 @@ Private Sub HandleGoNearby(ByVal Userindex As Integer)
                     
                     'No space found??
                     If Not Found Then
-                        Call WriteConsoleMsg(Userindex, "Todos los lugares estan ocupados.", FontTypeNames.FONTTYPE_INFO)
+                        Call WriteConsoleMsg(UserIndex, "Todos los lugares estan ocupados.", FontTypeNames.FONTTYPE_INFO)
 
                     End If
 
@@ -9289,7 +9168,7 @@ Private Sub HandleGoNearby(ByVal Userindex As Integer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -9309,22 +9188,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleComment(ByVal Userindex As Integer)
+Private Sub HandleComment(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -9341,7 +9220,7 @@ Private Sub HandleComment(ByVal Userindex As Integer)
         
         If Not .flags.Privilegios And PlayerType.User Then
             Call LogGM(.Name, "Comentario: " & comment)
-            Call WriteConsoleMsg(Userindex, "Comentario salvado...", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Comentario salvado...", FontTypeNames.FONTTYPE_INFO)
 
         End If
         
@@ -9350,7 +9229,7 @@ Private Sub HandleComment(ByVal Userindex As Integer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -9370,14 +9249,14 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleServerTime(ByVal Userindex As Integer)
+Private Sub HandleServerTime(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 01/08/07
     'Last Modification by: (liquid)
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
     
@@ -9396,7 +9275,7 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleWhere(ByVal Userindex As Integer)
+Private Sub HandleWhere(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -9404,15 +9283,15 @@ Private Sub HandleWhere(ByVal Userindex As Integer)
     '07/06/2010: ZaMa - Ahora no se puede usar para saber si hay dioses/admins online.
     '18/11/2010: ZaMa - Obtengo los privs del charfile antes de mostrar la posicion de un usuario offline.
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -9445,16 +9324,16 @@ Private Sub HandleWhere(ByVal Userindex As Integer)
                     
                     If (CharPrivs And (PlayerType.User Or PlayerType.Consejero Or PlayerType.SemiDios)) <> 0 Or ((CharPrivs And (PlayerType.Dios Or PlayerType.Admin) <> 0) And (.flags.Privilegios And (PlayerType.Dios Or PlayerType.Admin)) <> 0) Then
                         miPos = GetUserPos(UserName)
-                        Call WriteConsoleMsg(Userindex, "Ubicacion  " & UserName & " (Offline): " & miPos & ".", FontTypeNames.FONTTYPE_INFO)
+                        Call WriteConsoleMsg(UserIndex, "Ubicacion  " & UserName & " (Offline): " & miPos & ".", FontTypeNames.FONTTYPE_INFO)
 
                     End If
 
                 Else
 
                     If Not (EsDios(UserName) Or EsAdmin(UserName)) Then
-                        Call WriteConsoleMsg(Userindex, "Usuario inexistente.", FontTypeNames.FONTTYPE_INFO)
+                        Call WriteConsoleMsg(UserIndex, "Usuario inexistente.", FontTypeNames.FONTTYPE_INFO)
                     ElseIf .flags.Privilegios And (PlayerType.Dios Or PlayerType.Admin) Then
-                        Call WriteConsoleMsg(Userindex, "Usuario inexistente.", FontTypeNames.FONTTYPE_INFO)
+                        Call WriteConsoleMsg(UserIndex, "Usuario inexistente.", FontTypeNames.FONTTYPE_INFO)
 
                     End If
 
@@ -9463,7 +9342,7 @@ Private Sub HandleWhere(ByVal Userindex As Integer)
             Else
 
                 If (UserList(tUser).flags.Privilegios And (PlayerType.User Or PlayerType.Consejero Or PlayerType.SemiDios)) <> 0 Or ((UserList(tUser).flags.Privilegios And (PlayerType.Dios Or PlayerType.Admin) <> 0) And (.flags.Privilegios And (PlayerType.Dios Or PlayerType.Admin)) <> 0) Then
-                    Call WriteConsoleMsg(Userindex, "Ubicacion  " & UserName & ": " & UserList(tUser).Pos.Map & ", " & UserList(tUser).Pos.X & ", " & UserList(tUser).Pos.Y & ".", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "Ubicacion  " & UserName & ": " & UserList(tUser).Pos.Map & ", " & UserList(tUser).Pos.X & ", " & UserList(tUser).Pos.Y & ".", FontTypeNames.FONTTYPE_INFO)
 
                 End If
 
@@ -9478,7 +9357,7 @@ Private Sub HandleWhere(ByVal Userindex As Integer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -9498,20 +9377,20 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleCreaturesInMap(ByVal Userindex As Integer)
+Private Sub HandleCreaturesInMap(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 30/07/06
     'Pablo (ToxicWaste): modificaciones generales para simplificar la visualizacion.
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -9610,26 +9489,26 @@ Private Sub HandleCreaturesInMap(ByVal Userindex As Integer)
 
             Next i
             
-            Call WriteConsoleMsg(Userindex, "Npcs Hostiles en mapa: ", FontTypeNames.FONTTYPE_WARNING)
+            Call WriteConsoleMsg(UserIndex, "Npcs Hostiles en mapa: ", FontTypeNames.FONTTYPE_WARNING)
 
             If NPCcount1 = 0 Then
-                Call WriteConsoleMsg(Userindex, "No hay NPCS Hostiles.", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "No hay NPCS Hostiles.", FontTypeNames.FONTTYPE_INFO)
             Else
 
                 For j = 0 To NPCcount1 - 1
-                    Call WriteConsoleMsg(Userindex, NPCcant1(j) & " " & List1(j), FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, NPCcant1(j) & " " & List1(j), FontTypeNames.FONTTYPE_INFO)
                 Next j
 
             End If
 
-            Call WriteConsoleMsg(Userindex, "Otros Npcs en mapa: ", FontTypeNames.FONTTYPE_WARNING)
+            Call WriteConsoleMsg(UserIndex, "Otros Npcs en mapa: ", FontTypeNames.FONTTYPE_WARNING)
 
             If NPCcount2 = 0 Then
-                Call WriteConsoleMsg(Userindex, "No hay mas NPCS.", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "No hay mas NPCS.", FontTypeNames.FONTTYPE_INFO)
             Else
 
                 For j = 0 To NPCcount2 - 1
-                    Call WriteConsoleMsg(Userindex, NPCcant2(j) & " " & List2(j), FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, NPCcant2(j) & " " & List2(j), FontTypeNames.FONTTYPE_INFO)
                 Next j
 
             End If
@@ -9647,14 +9526,14 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleWarpMeToTarget(ByVal Userindex As Integer)
+Private Sub HandleWarpMeToTarget(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 26/03/09
     '26/03/06: ZaMa - Chequeo que no se teletransporte donde haya un char o npc
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -9667,8 +9546,8 @@ Private Sub HandleWarpMeToTarget(ByVal Userindex As Integer)
         X = .flags.TargetX
         Y = .flags.TargetY
         
-        Call FindLegalPos(Userindex, .flags.TargetMap, X, Y)
-        Call WarpUserChar(Userindex, .flags.TargetMap, X, Y, True)
+        Call FindLegalPos(UserIndex, .flags.TargetMap, X, Y)
+        Call WarpUserChar(UserIndex, .flags.TargetMap, X, Y, True)
         Call LogGM(.Name, "/TELEPLOC a x:" & .flags.TargetX & " Y:" & .flags.TargetY & " Map:" & .Pos.Map)
 
     End With
@@ -9680,7 +9559,7 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleWarpChar(ByVal Userindex As Integer)
+Private Sub HandleWarpChar(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -9688,15 +9567,15 @@ Private Sub HandleWarpChar(ByVal Userindex As Integer)
     '26/03/2009: ZaMa - Chequeo que no se teletransporte a un tile donde haya un char o npc.
     '11/08/2019: Jopi - No registramos en los logs si te teletransportas a vos mismo.
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 7 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 7 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -9731,34 +9610,34 @@ Private Sub HandleWarpChar(ByVal Userindex As Integer)
                     End If
 
                 Else
-                    tUser = Userindex
+                    tUser = UserIndex
 
                 End If
             
                 If tUser <= 0 Then
                     If Not (EsDios(UserName) Or EsAdmin(UserName)) Then
-                        Call WriteConsoleMsg(Userindex, "Usuario offline.", FontTypeNames.FONTTYPE_INFO)
+                        Call WriteConsoleMsg(UserIndex, "Usuario offline.", FontTypeNames.FONTTYPE_INFO)
                     Else
-                        Call WriteConsoleMsg(Userindex, "No puedes transportar dioses o admins.", FontTypeNames.FONTTYPE_INFO)
+                        Call WriteConsoleMsg(UserIndex, "No puedes transportar dioses o admins.", FontTypeNames.FONTTYPE_INFO)
 
                     End If
                     
-                ElseIf Not ((UserList(tUser).flags.Privilegios And PlayerType.Dios) <> 0 Or (UserList(tUser).flags.Privilegios And PlayerType.Admin) <> 0) Or tUser = Userindex Then
+                ElseIf Not ((UserList(tUser).flags.Privilegios And PlayerType.Dios) <> 0 Or (UserList(tUser).flags.Privilegios And PlayerType.Admin) <> 0) Or tUser = UserIndex Then
                             
                     If InMapBounds(Map, X, Y) Then
                         Call FindLegalPos(tUser, Map, X, Y)
                         Call WarpUserChar(tUser, Map, X, Y, True, True)
                         
                         ' Agrego esto para no llenar consola de mensajes al hacer SHIFT + CLICK DERECHO
-                        If Userindex <> tUser Then
-                            Call WriteConsoleMsg(Userindex, UserList(tUser).Name & " transportado.", FontTypeNames.FONTTYPE_INFO)
+                        If UserIndex <> tUser Then
+                            Call WriteConsoleMsg(UserIndex, UserList(tUser).Name & " transportado.", FontTypeNames.FONTTYPE_INFO)
                             Call LogGM(.Name, "Transporto a " & UserList(tUser).Name & " hacia " & "Mapa" & Map & " X:" & X & " Y:" & Y)
 
                         End If
                     End If
 
                 Else
-                    Call WriteConsoleMsg(Userindex, "No puedes transportar dioses o admins.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "No puedes transportar dioses o admins.", FontTypeNames.FONTTYPE_INFO)
 
                 End If
 
@@ -9771,7 +9650,7 @@ Private Sub HandleWarpChar(ByVal Userindex As Integer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -9791,22 +9670,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleSilence(ByVal Userindex As Integer)
+Private Sub HandleSilence(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -9827,17 +9706,17 @@ Private Sub HandleSilence(ByVal Userindex As Integer)
             tUser = NameIndex(UserName)
         
             If tUser <= 0 Then
-                Call WriteConsoleMsg(Userindex, "Usuario offline.", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "Usuario offline.", FontTypeNames.FONTTYPE_INFO)
             Else
 
                 If UserList(tUser).flags.Silenciado = 0 Then
                     UserList(tUser).flags.Silenciado = 1
-                    Call WriteConsoleMsg(Userindex, "Usuario silenciado.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "Usuario silenciado.", FontTypeNames.FONTTYPE_INFO)
                     Call WriteShowMessageBox(tUser, "Estimado usuario, ud. ha sido silenciado por los administradores. Sus denuncias seran ignoradas por el servidor de aqui en mas. Utilice /GM para contactar un administrador.")
                     Call LogGM(.Name, "/silenciar " & UserList(tUser).Name)
                 Else
                     UserList(tUser).flags.Silenciado = 0
-                    Call WriteConsoleMsg(Userindex, "Usuario des silenciado.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "Usuario des silenciado.", FontTypeNames.FONTTYPE_INFO)
                     Call LogGM(.Name, "/DESsilenciar " & UserList(tUser).Name)
 
                 End If
@@ -9851,7 +9730,7 @@ Private Sub HandleSilence(ByVal Userindex As Integer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -9871,19 +9750,19 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleSOSShowList(ByVal Userindex As Integer)
+Private Sub HandleSOSShowList(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
         If .flags.Privilegios And PlayerType.User Then Exit Sub
-        Call WriteShowSOSForm(Userindex)
+        Call WriteShowSOSForm(UserIndex)
 
     End With
 
@@ -9894,22 +9773,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandlePartyForm(ByVal Userindex As Integer)
+Private Sub HandlePartyForm(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Budi
     'Last Modification: 11/26/09
     '
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
 
         If .PartyIndex > 0 Then
-            Call WriteShowPartyForm(Userindex)
+            Call WriteShowPartyForm(UserIndex)
             
         Else
-            Call WriteConsoleMsg(Userindex, "No perteneces a ningun grupo!", FontTypeNames.FONTTYPE_INFOBOLD)
+            Call WriteConsoleMsg(UserIndex, "No perteneces a ningun grupo!", FontTypeNames.FONTTYPE_INFOBOLD)
 
         End If
 
@@ -9922,14 +9801,14 @@ End Sub
 '
 ' @param    UserIndex The index of the user sending the message.
 
-Private Sub HandleItemUpgrade(ByVal Userindex As Integer)
+Private Sub HandleItemUpgrade(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Torres Patricio
     'Last Modification: 12/09/09
     '
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         Dim ItemIndex As Integer
         
@@ -9939,10 +9818,10 @@ Private Sub HandleItemUpgrade(ByVal Userindex As Integer)
         ItemIndex = .incomingData.ReadInteger()
         
         If ItemIndex <= 0 Then Exit Sub
-        If Not TieneObjetos(ItemIndex, 1, Userindex) Then Exit Sub
+        If Not TieneObjetos(ItemIndex, 1, UserIndex) Then Exit Sub
         
-        If Not IntervaloPermiteTrabajar(Userindex) Then Exit Sub
-        Call DoUpgrade(Userindex, ItemIndex)
+        If Not IntervaloPermiteTrabajar(UserIndex) Then Exit Sub
+        Call DoUpgrade(UserIndex, ItemIndex)
 
     End With
 
@@ -9953,22 +9832,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleSOSRemove(ByVal Userindex As Integer)
+Private Sub HandleSOSRemove(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -9990,7 +9869,7 @@ Private Sub HandleSOSRemove(ByVal Userindex As Integer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -10010,22 +9889,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleGoToChar(ByVal Userindex As Integer)
+Private Sub HandleGoToChar(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 26/03/2009
     '26/03/2009: ZaMa -  Chequeo que no se teletransporte a un tile donde haya un char o npc.
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -10052,13 +9931,13 @@ Private Sub HandleGoToChar(ByVal Userindex As Integer)
             'Si es dios o Admins no podemos salvo que nosotros tambien lo seamos
             If Not (EsDios(UserName) Or EsAdmin(UserName)) Or (.flags.Privilegios And (PlayerType.Dios Or PlayerType.Admin)) <> 0 Then
                 If tUser <= 0 Then
-                    Call WriteConsoleMsg(Userindex, "Usuario offline.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "Usuario offline.", FontTypeNames.FONTTYPE_INFO)
                 Else
                     X = UserList(tUser).Pos.X
                     Y = UserList(tUser).Pos.Y + 1
-                    Call FindLegalPos(Userindex, UserList(tUser).Pos.Map, X, Y)
+                    Call FindLegalPos(UserIndex, UserList(tUser).Pos.Map, X, Y)
                     
-                    Call WarpUserChar(Userindex, UserList(tUser).Pos.Map, X, Y, True)
+                    Call WarpUserChar(UserIndex, UserList(tUser).Pos.Map, X, Y, True)
                     
                     If .flags.AdminInvisible = 0 Then
                         Call WriteConsoleMsg(tUser, .Name & " se ha trasportado hacia donde te encuentras.", FontTypeNames.FONTTYPE_INFO)
@@ -10078,7 +9957,7 @@ Private Sub HandleGoToChar(ByVal Userindex As Integer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -10098,20 +9977,20 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleInvisible(ByVal Userindex As Integer)
+Private Sub HandleInvisible(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
         If .flags.Privilegios And PlayerType.User Then Exit Sub
         
-        Call DoAdminInvisible(Userindex)
+        Call DoAdminInvisible(UserIndex)
         Call LogGM(.Name, "/INVISIBLE")
 
     End With
@@ -10123,20 +10002,24 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleGMPanel(ByVal Userindex As Integer)
+Private Sub HandleGMPanel(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    With UserList(Userindex)
+    
+    Dim ID As Byte
+    
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
+        ID = .incomingData.ReadByte
         
         If .flags.Privilegios And PlayerType.User Then Exit Sub
         
-        Call WriteShowGMPanelForm(Userindex)
+        Call WriteShowGMPanelForm(UserIndex, ID)
 
     End With
 
@@ -10147,7 +10030,7 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleRequestUserList(ByVal Userindex As Integer)
+Private Sub HandleRequestUserList(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -10161,7 +10044,7 @@ Private Sub HandleRequestUserList(ByVal Userindex As Integer)
 
     Dim Count   As Long
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -10183,7 +10066,7 @@ Private Sub HandleRequestUserList(ByVal Userindex As Integer)
 
         Next i
         
-        If Count > 1 Then Call WriteUserNameList(Userindex, names(), Count - 1)
+        If Count > 1 Then Call WriteUserNameList(UserIndex, names(), Count - 1)
 
     End With
 
@@ -10194,7 +10077,7 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleWorking(ByVal Userindex As Integer)
+Private Sub HandleWorking(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -10204,7 +10087,7 @@ Private Sub HandleWorking(ByVal Userindex As Integer)
 
     Dim Users As String
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -10221,9 +10104,9 @@ Private Sub HandleWorking(ByVal Userindex As Integer)
         
         If LenB(Users) <> 0 Then
             Users = Right$(Users, Len(Users) - 2)
-            Call WriteConsoleMsg(Userindex, "Usuarios trabajando: " & Users, FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Usuarios trabajando: " & Users, FontTypeNames.FONTTYPE_INFO)
         Else
-            Call WriteConsoleMsg(Userindex, "No hay usuarios trabajando.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "No hay usuarios trabajando.", FontTypeNames.FONTTYPE_INFO)
 
         End If
 
@@ -10236,7 +10119,7 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleHiding(ByVal Userindex As Integer)
+Private Sub HandleHiding(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -10247,7 +10130,7 @@ Private Sub HandleHiding(ByVal Userindex As Integer)
 
     Dim Users As String
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -10264,9 +10147,9 @@ Private Sub HandleHiding(ByVal Userindex As Integer)
         
         If LenB(Users) <> 0 Then
             Users = Left$(Users, Len(Users) - 2)
-            Call WriteConsoleMsg(Userindex, "Usuarios ocultandose: " & Users, FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Usuarios ocultandose: " & Users, FontTypeNames.FONTTYPE_INFO)
         Else
-            Call WriteConsoleMsg(Userindex, "No hay usuarios ocultandose.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "No hay usuarios ocultandose.", FontTypeNames.FONTTYPE_INFO)
 
         End If
 
@@ -10279,7 +10162,7 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleJail(ByVal Userindex As Integer)
+Private Sub HandleJail(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -10288,15 +10171,15 @@ Private Sub HandleJail(ByVal Userindex As Integer)
     'Last Modification: 04/04/2020
     '4/4/2020: FrankoH298 - Ahora calcula bien el tiempo de carcel
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 6 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 6 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -10329,24 +10212,24 @@ Private Sub HandleJail(ByVal Userindex As Integer)
         '/carcel nick@motivo@<tiempo>
         If (Not .flags.Privilegios And PlayerType.RoleMaster) <> 0 And (Not .flags.Privilegios And PlayerType.User) <> 0 Then
             If LenB(UserName) = 0 Or LenB(Reason) = 0 Then
-                Call WriteConsoleMsg(Userindex, "Utilice /carcel nick@motivo@tiempo", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "Utilice /carcel nick@motivo@tiempo", FontTypeNames.FONTTYPE_INFO)
             Else
                 tUser = NameIndex(UserName)
                 
                 If tUser <= 0 Then
                     If (EsDios(UserName) Or EsAdmin(UserName)) Then
-                        Call WriteConsoleMsg(Userindex, "No puedes encarcelar a administradores.", FontTypeNames.FONTTYPE_INFO)
+                        Call WriteConsoleMsg(UserIndex, "No puedes encarcelar a administradores.", FontTypeNames.FONTTYPE_INFO)
                     Else
-                        Call WriteConsoleMsg(Userindex, "El usuario no esta online.", FontTypeNames.FONTTYPE_INFO)
+                        Call WriteConsoleMsg(UserIndex, "El usuario no esta online.", FontTypeNames.FONTTYPE_INFO)
 
                     End If
 
                 Else
 
                     If Not UserList(tUser).flags.Privilegios And PlayerType.User Then
-                        Call WriteConsoleMsg(Userindex, "No puedes encarcelar a administradores.", FontTypeNames.FONTTYPE_INFO)
+                        Call WriteConsoleMsg(UserIndex, "No puedes encarcelar a administradores.", FontTypeNames.FONTTYPE_INFO)
                     ElseIf jailTime > (60) Then
-                        Call WriteConsoleMsg(Userindex, "No puedes encarcelar por mas de 60 minutos.", FontTypeNames.FONTTYPE_INFO)
+                        Call WriteConsoleMsg(UserIndex, "No puedes encarcelar por mas de 60 minutos.", FontTypeNames.FONTTYPE_INFO)
                     Else
 
                         If (InStrB(UserName, "\") <> 0) Then
@@ -10381,7 +10264,7 @@ Private Sub HandleJail(ByVal Userindex As Integer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -10401,14 +10284,14 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleKillNPC(ByVal Userindex As Integer)
+Private Sub HandleKillNPC(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 04/22/08 (NicoNZ)
     '
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -10421,7 +10304,7 @@ Private Sub HandleKillNPC(ByVal Userindex As Integer)
         'Los consejeros no pueden RMATAr a nada en el mapa pretoriano
         If .flags.Privilegios And PlayerType.Consejero Then
             If .Pos.Map = MAPA_PRETORIANO Then
-                Call WriteConsoleMsg(Userindex, "Los consejeros no pueden usar este comando en el mapa pretoriano.", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "Los consejeros no pueden usar este comando en el mapa pretoriano.", FontTypeNames.FONTTYPE_INFO)
                 Exit Sub
 
             End If
@@ -10431,7 +10314,7 @@ Private Sub HandleKillNPC(ByVal Userindex As Integer)
         tNPC = .flags.TargetNPC
         
         If tNPC > 0 Then
-            Call WriteConsoleMsg(Userindex, "RMatas (con posible respawn) a: " & Npclist(tNPC).Name, FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "RMatas (con posible respawn) a: " & Npclist(tNPC).Name, FontTypeNames.FONTTYPE_INFO)
             
             auxNPC = Npclist(tNPC)
             Call QuitarNPC(tNPC)
@@ -10439,7 +10322,7 @@ Private Sub HandleKillNPC(ByVal Userindex As Integer)
             
             .flags.TargetNPC = 0
         Else
-            Call WriteConsoleMsg(Userindex, "Antes debes hacer click sobre el NPC.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Antes debes hacer click sobre el NPC.", FontTypeNames.FONTTYPE_INFO)
 
         End If
 
@@ -10452,22 +10335,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleWarnUser(ByVal Userindex As Integer)
+Private Sub HandleWarnUser(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 12/26/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 5 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 5 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -10491,12 +10374,12 @@ Private Sub HandleWarnUser(ByVal Userindex As Integer)
         
         If (Not .flags.Privilegios And PlayerType.RoleMaster) <> 0 And (Not .flags.Privilegios And PlayerType.User) <> 0 Then
             If LenB(UserName) = 0 Or LenB(Reason) = 0 Then
-                Call WriteConsoleMsg(Userindex, "Utilice /advertencia nick@motivo", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "Utilice /advertencia nick@motivo", FontTypeNames.FONTTYPE_INFO)
             Else
                 Privs = UserDarPrivilegioLevel(UserName)
                 
                 If Not Privs And PlayerType.User Then
-                    Call WriteConsoleMsg(Userindex, "No puedes advertir a administradores.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "No puedes advertir a administradores.", FontTypeNames.FONTTYPE_INFO)
                 Else
 
                     If (InStrB(UserName, "\") <> 0) Then
@@ -10513,7 +10396,7 @@ Private Sub HandleWarnUser(ByVal Userindex As Integer)
                         Count = GetUserAmountOfPunishments(UserName)
                         Call SaveUserPunishment(UserName, Count + 1, LCase$(.Name) & ": ADVERTENCIA por: " & LCase$(Reason) & " " & Date & " " & time)
 
-                        Call WriteConsoleMsg(Userindex, "Has advertido a " & UCase$(UserName) & ".", FontTypeNames.FONTTYPE_INFO)
+                        Call WriteConsoleMsg(UserIndex, "Has advertido a " & UCase$(UserName) & ".", FontTypeNames.FONTTYPE_INFO)
                         Call LogGM(.Name, " advirtio a " & UserName)
 
                     End If
@@ -10529,7 +10412,7 @@ Private Sub HandleWarnUser(ByVal Userindex As Integer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -10549,7 +10432,7 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleEditChar(ByVal Userindex As Integer)
+Private Sub HandleEditChar(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
@@ -10559,15 +10442,15 @@ Private Sub HandleEditChar(ByVal Userindex As Integer)
     '18/09/2010: ZaMa - Ahora se puede editar la vida del propio pj (cualquier rm o dios).
     '11/05/2019: Jopi - No registramos en los logs si te editas a vos mismo.
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 8 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 8 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -10582,7 +10465,7 @@ Private Sub HandleEditChar(ByVal Userindex As Integer)
 
         Dim tUser         As Integer
 
-        Dim opcion        As Byte
+        Dim Opcion        As Byte
 
         Dim Arg1          As String
 
@@ -10603,13 +10486,13 @@ Private Sub HandleEditChar(ByVal Userindex As Integer)
         UserName = Replace(buffer.ReadASCIIString(), "+", " ")
         
         If UCase$(UserName) = "YO" Then
-            tUser = Userindex
+            tUser = UserIndex
         Else
             tUser = NameIndex(UserName)
 
         End If
         
-        opcion = buffer.ReadByte()
+        Opcion = buffer.ReadByte()
         Arg1 = buffer.ReadASCIIString()
         Arg2 = buffer.ReadASCIIString()
         
@@ -10619,39 +10502,39 @@ Private Sub HandleEditChar(ByVal Userindex As Integer)
 
                 Case PlayerType.Consejero
                     ' Los RMs consejeros solo se pueden editar su head, body, level y vida
-                    valido = tUser = Userindex And (opcion = eEditOptions.eo_Body Or opcion = eEditOptions.eo_Head Or opcion = eEditOptions.eo_Level Or opcion = eEditOptions.eo_Vida)
+                    valido = tUser = UserIndex And (Opcion = eEditOptions.eo_Body Or Opcion = eEditOptions.eo_Head Or Opcion = eEditOptions.eo_Level Or Opcion = eEditOptions.eo_Vida)
                 
                 Case PlayerType.SemiDios
                     ' Los RMs solo se pueden editar su level o vida y el head y body de cualquiera
-                    valido = ((opcion = eEditOptions.eo_Level Or opcion = eEditOptions.eo_Vida) And tUser = Userindex) Or opcion = eEditOptions.eo_Body Or opcion = eEditOptions.eo_Head
+                    valido = ((Opcion = eEditOptions.eo_Level Or Opcion = eEditOptions.eo_Vida) And tUser = UserIndex) Or Opcion = eEditOptions.eo_Body Or Opcion = eEditOptions.eo_Head
                     
                 Case PlayerType.Dios
                     ' Los DRMs pueden aplicar los siguientes comandos sobre cualquiera
                     ' pero si quiere modificar el level o vida solo lo puede hacer sobre si mismo
-                    valido = ((opcion = eEditOptions.eo_Level Or opcion = eEditOptions.eo_Vida) And tUser = Userindex) Or opcion = eEditOptions.eo_Body Or opcion = eEditOptions.eo_Head Or opcion = eEditOptions.eo_CiticensKilled Or opcion = eEditOptions.eo_CriminalsKilled Or opcion = eEditOptions.eo_Class Or opcion = eEditOptions.eo_Skills Or opcion = eEditOptions.eo_addGold
+                    valido = ((Opcion = eEditOptions.eo_Level Or Opcion = eEditOptions.eo_Vida) And tUser = UserIndex) Or Opcion = eEditOptions.eo_Body Or Opcion = eEditOptions.eo_Head Or Opcion = eEditOptions.eo_CiticensKilled Or Opcion = eEditOptions.eo_CriminalsKilled Or Opcion = eEditOptions.eo_Class Or Opcion = eEditOptions.eo_Skills Or Opcion = eEditOptions.eo_addGold
 
             End Select
         
             'Si no es RM debe ser dios para poder usar este comando
         ElseIf .flags.Privilegios And (PlayerType.Admin Or PlayerType.Dios) Then
             
-            If opcion = eEditOptions.eo_Vida Then
+            If Opcion = eEditOptions.eo_Vida Then
                 '  Por ahora dejo para que los dioses no puedan editar la vida de otros
-                valido = (tUser = Userindex)
+                valido = (tUser = UserIndex)
             Else
                 valido = True
 
             End If
             
         ElseIf .flags.PrivEspecial Then
-            valido = (opcion = eEditOptions.eo_CiticensKilled) Or (opcion = eEditOptions.eo_CriminalsKilled)
+            valido = (Opcion = eEditOptions.eo_CiticensKilled) Or (Opcion = eEditOptions.eo_CriminalsKilled)
             
         End If
 
         'CHOTS | The user is not online and we are working with Database
         If tUser <= 0 Then
             valido = False
-            Call WriteConsoleMsg(Userindex, "El usuario esta offline.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "El usuario esta offline.", FontTypeNames.FONTTYPE_INFO)
 
             '@TODO call a method to edit the user using the database
         End If
@@ -10660,20 +10543,20 @@ Private Sub HandleEditChar(ByVal Userindex As Integer)
             UserCharPath = CharPath & UserName & ".chr"
 
             If tUser <= 0 And Not FileExist(UserCharPath) Then
-                Call WriteConsoleMsg(Userindex, "Estas intentando editar un usuario inexistente.", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "Estas intentando editar un usuario inexistente.", FontTypeNames.FONTTYPE_INFO)
                 Call LogGM(.Name, "Intento editar un usuario inexistente.")
             Else
                 'For making the Log
                 CommandString = "/MOD "
                 
-                Select Case opcion
+                Select Case Opcion
 
                     Case eEditOptions.eo_Gold
 
                         If val(Arg1) <= MAX_ORO_EDIT Then
                             If tUser <= 0 Then ' Esta offline?
                                 Call WriteVar(UserCharPath, "STATS", "GLD", val(Arg1))
-                                Call WriteConsoleMsg(Userindex, "Charfile Alterado: " & UserName, FontTypeNames.FONTTYPE_INFO)
+                                Call WriteConsoleMsg(UserIndex, "Charfile Alterado: " & UserName, FontTypeNames.FONTTYPE_INFO)
                             Else ' Online
                                 UserList(tUser).Stats.Gld = val(Arg1)
                                 Call WriteUpdateGold(tUser)
@@ -10681,7 +10564,7 @@ Private Sub HandleEditChar(ByVal Userindex As Integer)
                             End If
 
                         Else
-                            Call WriteConsoleMsg(Userindex, "No esta permitido utilizar valores mayores a " & MAX_ORO_EDIT & ". Su comando ha quedado en los logs del juego.", FontTypeNames.FONTTYPE_INFO)
+                            Call WriteConsoleMsg(UserIndex, "No esta permitido utilizar valores mayores a " & MAX_ORO_EDIT & ". Su comando ha quedado en los logs del juego.", FontTypeNames.FONTTYPE_INFO)
 
                         End If
                     
@@ -10698,7 +10581,7 @@ Private Sub HandleEditChar(ByVal Userindex As Integer)
                         If tUser <= 0 Then ' Offline
                             Var = GetVar(UserCharPath, "STATS", "EXP")
                             Call WriteVar(UserCharPath, "STATS", "EXP", Var + val(Arg1))
-                            Call WriteConsoleMsg(Userindex, "Charfile Alterado: " & UserName, FontTypeNames.FONTTYPE_INFO)
+                            Call WriteConsoleMsg(UserIndex, "Charfile Alterado: " & UserName, FontTypeNames.FONTTYPE_INFO)
                         Else ' Online
                             UserList(tUser).Stats.Exp = UserList(tUser).Stats.Exp + val(Arg1)
                             Call CheckUserLevel(tUser)
@@ -10713,7 +10596,7 @@ Private Sub HandleEditChar(ByVal Userindex As Integer)
 
                         If tUser <= 0 Then
                             Call WriteVar(UserCharPath, "INIT", "Body", Arg1)
-                            Call WriteConsoleMsg(Userindex, "Charfile Alterado: " & UserName, FontTypeNames.FONTTYPE_INFO)
+                            Call WriteConsoleMsg(UserIndex, "Charfile Alterado: " & UserName, FontTypeNames.FONTTYPE_INFO)
                         Else
                             Call ChangeUserChar(tUser, val(Arg1), UserList(tUser).Char.Head, UserList(tUser).Char.heading, UserList(tUser).Char.WeaponAnim, UserList(tUser).Char.ShieldAnim, UserList(tUser).Char.CascoAnim)
 
@@ -10726,7 +10609,7 @@ Private Sub HandleEditChar(ByVal Userindex As Integer)
 
                         If tUser <= 0 Then
                             Call WriteVar(UserCharPath, "INIT", "Head", Arg1)
-                            Call WriteConsoleMsg(Userindex, "Charfile Alterado: " & UserName, FontTypeNames.FONTTYPE_INFO)
+                            Call WriteConsoleMsg(UserIndex, "Charfile Alterado: " & UserName, FontTypeNames.FONTTYPE_INFO)
                         Else
                             Call ChangeUserChar(tUser, UserList(tUser).Char.body, val(Arg1), UserList(tUser).Char.heading, UserList(tUser).Char.WeaponAnim, UserList(tUser).Char.ShieldAnim, UserList(tUser).Char.CascoAnim)
 
@@ -10740,7 +10623,7 @@ Private Sub HandleEditChar(ByVal Userindex As Integer)
                         
                         If tUser <= 0 Then ' Offline
                             Call WriteVar(UserCharPath, "FACCIONES", "CrimMatados", Var)
-                            Call WriteConsoleMsg(Userindex, "Charfile Alterado: " & UserName, FontTypeNames.FONTTYPE_INFO)
+                            Call WriteConsoleMsg(UserIndex, "Charfile Alterado: " & UserName, FontTypeNames.FONTTYPE_INFO)
                         Else ' Online
                             UserList(tUser).Faccion.CriminalesMatados = Var
 
@@ -10754,7 +10637,7 @@ Private Sub HandleEditChar(ByVal Userindex As Integer)
                         
                         If tUser <= 0 Then ' Offline
                             Call WriteVar(UserCharPath, "FACCIONES", "CiudMatados", Var)
-                            Call WriteConsoleMsg(Userindex, "Charfile Alterado: " & UserName, FontTypeNames.FONTTYPE_INFO)
+                            Call WriteConsoleMsg(UserIndex, "Charfile Alterado: " & UserName, FontTypeNames.FONTTYPE_INFO)
                         Else ' Online
                             UserList(tUser).Faccion.CiudadanosMatados = Var
 
@@ -10767,7 +10650,7 @@ Private Sub HandleEditChar(ByVal Userindex As Integer)
 
                         If val(Arg1) > STAT_MAXELV Then
                             Arg1 = CStr(STAT_MAXELV)
-                            Call WriteConsoleMsg(Userindex, "No puedes tener un nivel superior a " & STAT_MAXELV & ".", FONTTYPE_INFO)
+                            Call WriteConsoleMsg(UserIndex, "No puedes tener un nivel superior a " & STAT_MAXELV & ".", FONTTYPE_INFO)
 
                         End If
                         
@@ -10801,7 +10684,7 @@ Private Sub HandleEditChar(ByVal Userindex As Integer)
                         
                         If tUser <= 0 Then ' Offline
                             Call WriteVar(UserCharPath, "STATS", "ELV", val(Arg1))
-                            Call WriteConsoleMsg(Userindex, "Charfile Alterado: " & UserName, FontTypeNames.FONTTYPE_INFO)
+                            Call WriteConsoleMsg(UserIndex, "Charfile Alterado: " & UserName, FontTypeNames.FONTTYPE_INFO)
                         Else ' Online
                             UserList(tUser).Stats.ELV = val(Arg1)
                             Call WriteUpdateUserStats(tUser)
@@ -10819,14 +10702,14 @@ Private Sub HandleEditChar(ByVal Userindex As Integer)
                         Next LoopC
                             
                         If LoopC > NUMCLASES Then
-                            Call WriteConsoleMsg(Userindex, "Clase desconocida. Intente nuevamente.", FontTypeNames.FONTTYPE_INFO)
+                            Call WriteConsoleMsg(UserIndex, "Clase desconocida. Intente nuevamente.", FontTypeNames.FONTTYPE_INFO)
                         Else
 
                             If tUser <= 0 Then ' Offline
                                 Call WriteVar(UserCharPath, "INIT", "Clase", LoopC)
-                                Call WriteConsoleMsg(Userindex, "Charfile Alterado: " & UserName, FontTypeNames.FONTTYPE_INFO)
+                                Call WriteConsoleMsg(UserIndex, "Charfile Alterado: " & UserName, FontTypeNames.FONTTYPE_INFO)
                             Else ' Online
-                                UserList(tUser).Clase = LoopC
+                                UserList(tUser).clase = LoopC
 
                             End If
 
@@ -10843,7 +10726,7 @@ Private Sub HandleEditChar(ByVal Userindex As Integer)
                         Next LoopC
                         
                         If LoopC > NUMSKILLS Then
-                            Call WriteConsoleMsg(Userindex, "Skill Inexistente!", FontTypeNames.FONTTYPE_INFO)
+                            Call WriteConsoleMsg(UserIndex, "Skill Inexistente!", FontTypeNames.FONTTYPE_INFO)
                         Else
 
                             If tUser <= 0 Then ' Offline
@@ -10857,7 +10740,7 @@ Private Sub HandleEditChar(ByVal Userindex As Integer)
 
                                 End If
     
-                                Call WriteConsoleMsg(Userindex, "Charfile Alterado: " & UserName, FontTypeNames.FONTTYPE_INFO)
+                                Call WriteConsoleMsg(UserIndex, "Charfile Alterado: " & UserName, FontTypeNames.FONTTYPE_INFO)
                             Else ' Online
                                 UserList(tUser).Stats.UserSkills(LoopC) = val(Arg2)
                                 Call CheckEluSkill(tUser, LoopC, True)
@@ -10869,25 +10752,12 @@ Private Sub HandleEditChar(ByVal Userindex As Integer)
                         ' Log it
                         CommandString = CommandString & "SKILLS "
                     
-                    Case eEditOptions.eo_SkillPointsLeft
-
-                        If tUser <= 0 Then ' Offline
-                            Call WriteVar(UserCharPath, "STATS", "SkillPtsLibres", Arg1)
-                            Call WriteConsoleMsg(Userindex, "Charfile Alterado: " & UserName, FontTypeNames.FONTTYPE_INFO)
-                        Else ' Online
-                            UserList(tUser).Stats.SkillPts = val(Arg1)
-
-                        End If
-                        
-                        ' Log it
-                        CommandString = CommandString & "SKILLSLIBRES "
-                    
                     Case eEditOptions.eo_Nobleza
                         Var = IIf(val(Arg1) > MAXREP, MAXREP, val(Arg1))
                         
                         If tUser <= 0 Then ' Offline
                             Call WriteVar(UserCharPath, "REP", "Nobles", Var)
-                            Call WriteConsoleMsg(Userindex, "Charfile Alterado: " & UserName, FontTypeNames.FONTTYPE_INFO)
+                            Call WriteConsoleMsg(UserIndex, "Charfile Alterado: " & UserName, FontTypeNames.FONTTYPE_INFO)
                         Else ' Online
                             UserList(tUser).Reputacion.NobleRep = Var
 
@@ -10901,7 +10771,7 @@ Private Sub HandleEditChar(ByVal Userindex As Integer)
                         
                         If tUser <= 0 Then ' Offline
                             Call WriteVar(UserCharPath, "REP", "Asesino", Var)
-                            Call WriteConsoleMsg(Userindex, "Charfile Alterado: " & UserName, FontTypeNames.FONTTYPE_INFO)
+                            Call WriteConsoleMsg(UserIndex, "Charfile Alterado: " & UserName, FontTypeNames.FONTTYPE_INFO)
                         Else ' Online
                             UserList(tUser).Reputacion.AsesinoRep = Var
 
@@ -10920,14 +10790,14 @@ Private Sub HandleEditChar(ByVal Userindex As Integer)
                         If Sex <> 0 Then ' Es Hombre o mujer?
                             If tUser <= 0 Then ' OffLine
                                 Call WriteVar(UserCharPath, "INIT", "Genero", Sex)
-                                Call WriteConsoleMsg(Userindex, "Charfile Alterado: " & UserName, FontTypeNames.FONTTYPE_INFO)
+                                Call WriteConsoleMsg(UserIndex, "Charfile Alterado: " & UserName, FontTypeNames.FONTTYPE_INFO)
                             Else ' Online
                                 UserList(tUser).Genero = Sex
 
                             End If
 
                         Else
-                            Call WriteConsoleMsg(Userindex, "Genero desconocido. Intente nuevamente.", FontTypeNames.FONTTYPE_INFO)
+                            Call WriteConsoleMsg(UserIndex, "Genero desconocido. Intente nuevamente.", FontTypeNames.FONTTYPE_INFO)
 
                         End If
                         
@@ -10936,41 +10806,41 @@ Private Sub HandleEditChar(ByVal Userindex As Integer)
                     
                     Case eEditOptions.eo_Raza
 
-                        Dim raza As Byte
+                        Dim Raza As Byte
                         
                         Arg1 = UCase$(Arg1)
 
                         Select Case Arg1
 
                             Case "HUMANO"
-                                raza = eRaza.Humano
+                                Raza = eRaza.Humano
 
                             Case "ELFO"
-                                raza = eRaza.Elfo
+                                Raza = eRaza.Elfo
 
                             Case "DROW"
-                                raza = eRaza.Drow
+                                Raza = eRaza.Drow
 
                             Case "ENANO"
-                                raza = eRaza.Enano
+                                Raza = eRaza.Enano
 
                             Case "GNOMO"
-                                raza = eRaza.Gnomo
+                                Raza = eRaza.Gnomo
 
                             Case Else
-                                raza = 0
+                                Raza = 0
 
                         End Select
                             
-                        If raza = 0 Then
-                            Call WriteConsoleMsg(Userindex, "Raza desconocida. Intente nuevamente.", FontTypeNames.FONTTYPE_INFO)
+                        If Raza = 0 Then
+                            Call WriteConsoleMsg(UserIndex, "Raza desconocida. Intente nuevamente.", FontTypeNames.FONTTYPE_INFO)
                         Else
 
                             If tUser <= 0 Then
-                                Call WriteVar(UserCharPath, "INIT", "Raza", raza)
-                                Call WriteConsoleMsg(Userindex, "Charfile Alterado: " & UserName, FontTypeNames.FONTTYPE_INFO)
+                                Call WriteVar(UserCharPath, "INIT", "Raza", Raza)
+                                Call WriteConsoleMsg(UserIndex, "Charfile Alterado: " & UserName, FontTypeNames.FONTTYPE_INFO)
                             Else
-                                UserList(tUser).raza = raza
+                                UserList(tUser).Raza = Raza
 
                             End If
 
@@ -10984,13 +10854,13 @@ Private Sub HandleEditChar(ByVal Userindex As Integer)
                         Dim bankGold As Long
                         
                         If Abs(Arg1) > MAX_ORO_EDIT Then
-                            Call WriteConsoleMsg(Userindex, "No esta permitido utilizar valores mayores a " & MAX_ORO_EDIT & ".", FontTypeNames.FONTTYPE_INFO)
+                            Call WriteConsoleMsg(UserIndex, "No esta permitido utilizar valores mayores a " & MAX_ORO_EDIT & ".", FontTypeNames.FONTTYPE_INFO)
                         Else
 
                             If tUser <= 0 Then
                                 bankGold = GetVar(UserCharPath, "STATS", "BANCO")
                                 Call WriteVar(UserCharPath, "STATS", "BANCO", IIf(bankGold + val(Arg1) <= 0, 0, bankGold + val(Arg1)))
-                                Call WriteConsoleMsg(Userindex, "Se le ha agregado " & Arg1 & " monedas de oro a " & UserName & ".", FONTTYPE_TALK)
+                                Call WriteConsoleMsg(UserIndex, "Se le ha agregado " & Arg1 & " monedas de oro a " & UserName & ".", FONTTYPE_TALK)
                             Else
                                 UserList(tUser).Stats.Banco = IIf(UserList(tUser).Stats.Banco + val(Arg1) <= 0, 0, UserList(tUser).Stats.Banco + val(Arg1))
                                 Call WriteConsoleMsg(tUser, STANDARD_BOUNTY_HUNTER_MESSAGE, FONTTYPE_TALK)
@@ -11006,7 +10876,7 @@ Private Sub HandleEditChar(ByVal Userindex As Integer)
                     
                         If val(Arg1) > MAX_VIDA_EDIT Then
                             Arg1 = CStr(MAX_VIDA_EDIT)
-                            Call WriteConsoleMsg(Userindex, "No puedes tener vida superior a " & MAX_VIDA_EDIT & ".", FONTTYPE_INFO)
+                            Call WriteConsoleMsg(UserIndex, "No puedes tener vida superior a " & MAX_VIDA_EDIT & ".", FONTTYPE_INFO)
 
                         End If
                         
@@ -11035,15 +10905,15 @@ Private Sub HandleEditChar(ByVal Userindex As Integer)
                             
                             If tUser <= 0 Then
                                 Call WriteVar(UserCharPath, "INIT", "POSITION", Map & "-" & X & "-" & Y)
-                                Call WriteConsoleMsg(Userindex, "Charfile Alterado: " & UserName, FontTypeNames.FONTTYPE_INFO)
+                                Call WriteConsoleMsg(UserIndex, "Charfile Alterado: " & UserName, FontTypeNames.FONTTYPE_INFO)
                             Else
                                 Call WarpUserChar(tUser, Map, X, Y, True, True)
-                                Call WriteConsoleMsg(Userindex, "Usuario teletransportado: " & UserName, FontTypeNames.FONTTYPE_INFO)
+                                Call WriteConsoleMsg(UserIndex, "Usuario teletransportado: " & UserName, FontTypeNames.FONTTYPE_INFO)
 
                             End If
 
                         Else
-                            Call WriteConsoleMsg(Userindex, "Posicion invalida", FONTTYPE_INFO)
+                            Call WriteConsoleMsg(UserIndex, "Posicion invalida", FONTTYPE_INFO)
 
                         End If
                         
@@ -11051,14 +10921,14 @@ Private Sub HandleEditChar(ByVal Userindex As Integer)
                         CommandString = CommandString & "POSS "
                         
                     Case Else
-                        Call WriteConsoleMsg(Userindex, "Comando no permitido.", FontTypeNames.FONTTYPE_INFO)
+                        Call WriteConsoleMsg(UserIndex, "Comando no permitido.", FontTypeNames.FONTTYPE_INFO)
                         CommandString = CommandString & "UNKOWN "
                         
                 End Select
                 
                 CommandString = CommandString & Arg1 & " " & Arg2
                 
-                If Userindex <> tUser Then
+                If UserIndex <> tUser Then
                     Call LogGM(.Name, CommandString & " " & UserName)
                 End If
                 
@@ -11071,7 +10941,7 @@ Private Sub HandleEditChar(ByVal Userindex As Integer)
         
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -11091,22 +10961,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleRequestCharInfo(ByVal Userindex As Integer)
+Private Sub HandleRequestCharInfo(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Fredy Horacio Treboux (liquid)
     'Last Modification: 01/08/07
     'Last Modification by: (liquid).. alto bug zapallo..
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -11131,9 +11001,9 @@ Private Sub HandleRequestCharInfo(ByVal Userindex As Integer)
 
                 'don't allow to retrieve administrator's info
                 If Not (EsDios(TargetName) Or EsAdmin(TargetName)) Then
-                    Call WriteConsoleMsg(Userindex, "Usuario offline, buscando...", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "Usuario offline, buscando...", FontTypeNames.FONTTYPE_INFO)
 
-                    Call SendUserStatsTxtDatabase(Userindex, TargetName)
+                    Call SendUserStatsTxtDatabase(UserIndex, TargetName)
 
                 End If
 
@@ -11141,7 +11011,7 @@ Private Sub HandleRequestCharInfo(ByVal Userindex As Integer)
 
                 'don't allow to retrieve administrator's info
                 If UserList(targetIndex).flags.Privilegios And (PlayerType.User Or PlayerType.Consejero Or PlayerType.SemiDios) Then
-                    Call SendUserStatsTxt(Userindex, targetIndex)
+                    Call SendUserStatsTxt(UserIndex, targetIndex)
 
                 End If
 
@@ -11154,7 +11024,7 @@ Private Sub HandleRequestCharInfo(ByVal Userindex As Integer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -11174,22 +11044,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleRequestCharStats(ByVal Userindex As Integer)
+Private Sub HandleRequestCharStats(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 07/06/2010
     '07/06/2010: ZaMa - Ahora no se puede usar para saber si hay dioses/admins online.
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -11221,21 +11091,21 @@ Private Sub HandleRequestCharStats(ByVal Userindex As Integer)
             
             If tUser <= 0 Then
                 If UserIsAdmin Or Not OtherUserIsAdmin Then
-                    Call WriteConsoleMsg(Userindex, "Usuario offline. Buscando... ", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "Usuario offline. Buscando... ", FontTypeNames.FONTTYPE_INFO)
 
-                    Call SendUserMiniStatsTxtFromDatabase(Userindex, UserName)
+                    Call SendUserMiniStatsTxtFromDatabase(UserIndex, UserName)
 
                 Else
-                    Call WriteConsoleMsg(Userindex, "No puedes ver los stats de un dios o admin.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "No puedes ver los stats de un dios o admin.", FontTypeNames.FONTTYPE_INFO)
 
                 End If
 
             Else
 
                 If UserIsAdmin Or Not OtherUserIsAdmin Then
-                    Call SendUserMiniStatsTxt(Userindex, tUser)
+                    Call SendUserMiniStatsTxt(UserIndex, tUser)
                 Else
-                    Call WriteConsoleMsg(Userindex, "No puedes ver los stats de un dios o admin.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "No puedes ver los stats de un dios o admin.", FontTypeNames.FONTTYPE_INFO)
 
                 End If
 
@@ -11248,7 +11118,7 @@ Private Sub HandleRequestCharStats(ByVal Userindex As Integer)
 
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -11268,22 +11138,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleRequestCharGold(ByVal Userindex As Integer)
+Private Sub HandleRequestCharGold(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 07/06/2010
     '07/06/2010: ZaMa - Ahora no se puede usar para saber si hay dioses/admins online.
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -11318,21 +11188,21 @@ Private Sub HandleRequestCharGold(ByVal Userindex As Integer)
             
             If tUser <= 0 Then
                 If UserIsAdmin Or Not OtherUserIsAdmin Then
-                    Call WriteConsoleMsg(Userindex, "Usuario offline. Buscando... ", FontTypeNames.FONTTYPE_TALK)
+                    Call WriteConsoleMsg(UserIndex, "Usuario offline. Buscando... ", FontTypeNames.FONTTYPE_TALK)
 
-                    Call SendUserOROTxtFromDatabase(Userindex, UserName)
+                    Call SendUserOROTxtFromDatabase(UserIndex, UserName)
 
                 Else
-                    Call WriteConsoleMsg(Userindex, "No puedes ver el oro de un dios o admin.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "No puedes ver el oro de un dios o admin.", FontTypeNames.FONTTYPE_INFO)
 
                 End If
 
             Else
 
                 If UserIsAdmin Or Not OtherUserIsAdmin Then
-                    Call WriteConsoleMsg(Userindex, "El usuario " & UserName & " tiene " & UserList(tUser).Stats.Banco & " en el banco.", FontTypeNames.FONTTYPE_TALK)
+                    Call WriteConsoleMsg(UserIndex, "El usuario " & UserName & " tiene " & UserList(tUser).Stats.Banco & " en el banco.", FontTypeNames.FONTTYPE_TALK)
                 Else
-                    Call WriteConsoleMsg(Userindex, "No puedes ver el oro de un dios o admin.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "No puedes ver el oro de un dios o admin.", FontTypeNames.FONTTYPE_INFO)
 
                 End If
 
@@ -11345,7 +11215,7 @@ Private Sub HandleRequestCharGold(ByVal Userindex As Integer)
 
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -11365,22 +11235,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleRequestCharInventory(ByVal Userindex As Integer)
+Private Sub HandleRequestCharInventory(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 07/06/2010
     '07/06/2010: ZaMa - Ahora no se puede usar para saber si hay dioses/admins online.
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -11414,21 +11284,21 @@ Private Sub HandleRequestCharInventory(ByVal Userindex As Integer)
             
             If tUser <= 0 Then
                 If UserIsAdmin Or Not OtherUserIsAdmin Then
-                    Call WriteConsoleMsg(Userindex, "Usuario offline. Buscando...", FontTypeNames.FONTTYPE_TALK)
+                    Call WriteConsoleMsg(UserIndex, "Usuario offline. Buscando...", FontTypeNames.FONTTYPE_TALK)
 
-                    Call SendUserInvTxtFromDatabase(Userindex, UserName)
+                    Call SendUserInvTxtFromDatabase(UserIndex, UserName)
 
                 Else
-                    Call WriteConsoleMsg(Userindex, "No puedes ver el inventario de un dios o admin.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "No puedes ver el inventario de un dios o admin.", FontTypeNames.FONTTYPE_INFO)
 
                 End If
 
             Else
 
                 If UserIsAdmin Or Not OtherUserIsAdmin Then
-                    Call SendUserInvTxt(Userindex, tUser)
+                    Call SendUserInvTxt(UserIndex, tUser)
                 Else
-                    Call WriteConsoleMsg(Userindex, "No puedes ver el inventario de un dios o admin.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "No puedes ver el inventario de un dios o admin.", FontTypeNames.FONTTYPE_INFO)
 
                 End If
 
@@ -11441,7 +11311,7 @@ Private Sub HandleRequestCharInventory(ByVal Userindex As Integer)
 
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -11461,22 +11331,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleRequestCharBank(ByVal Userindex As Integer)
+Private Sub HandleRequestCharBank(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 07/06/2010
     '07/06/2010: ZaMa - Ahora no se puede usar para saber si hay dioses/admins online.
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -11510,21 +11380,21 @@ Private Sub HandleRequestCharBank(ByVal Userindex As Integer)
             
             If tUser <= 0 Then
                 If UserIsAdmin Or Not OtherUserIsAdmin Then
-                    Call WriteConsoleMsg(Userindex, "Usuario offline. Buscando... ", FontTypeNames.FONTTYPE_TALK)
+                    Call WriteConsoleMsg(UserIndex, "Usuario offline. Buscando... ", FontTypeNames.FONTTYPE_TALK)
 
-                    Call SendUserBovedaTxtFromDatabase(Userindex, UserName)
+                    Call SendUserBovedaTxtFromDatabase(UserIndex, UserName)
 
                 Else
-                    Call WriteConsoleMsg(Userindex, "No puedes ver la boveda de un dios o admin.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "No puedes ver la boveda de un dios o admin.", FontTypeNames.FONTTYPE_INFO)
 
                 End If
 
             Else
 
                 If UserIsAdmin Or Not OtherUserIsAdmin Then
-                    Call SendUserBovedaTxt(Userindex, tUser)
+                    Call SendUserBovedaTxt(UserIndex, tUser)
                 Else
-                    Call WriteConsoleMsg(Userindex, "No puedes ver la boveda de un dios o admin.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "No puedes ver la boveda de un dios o admin.", FontTypeNames.FONTTYPE_INFO)
 
                 End If
 
@@ -11537,7 +11407,7 @@ Private Sub HandleRequestCharBank(ByVal Userindex As Integer)
 
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -11557,22 +11427,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleRequestCharSkills(ByVal Userindex As Integer)
+Private Sub HandleRequestCharSkills(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 12/29/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -11612,10 +11482,10 @@ Private Sub HandleRequestCharSkills(ByVal Userindex As Integer)
                     Message = Message & GetUserSkills(UserName)
                 Next LoopC
                 
-                Call WriteConsoleMsg(Userindex, Message & "CHAR> Libres: " & GetUserFreeSkills(UserName), FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, Message & "CHAR> Libres: " & GetUserFreeSkills(UserName), FontTypeNames.FONTTYPE_INFO)
 
             Else
-                Call SendUserSkillsTxt(Userindex, tUser)
+                Call SendUserSkillsTxt(UserIndex, tUser)
 
             End If
 
@@ -11626,7 +11496,7 @@ Private Sub HandleRequestCharSkills(ByVal Userindex As Integer)
 
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -11646,22 +11516,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleReviveChar(ByVal Userindex As Integer)
+Private Sub HandleReviveChar(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 11/03/2010
     '11/03/2010: ZaMa - Al revivir con el comando, si esta navegando le da cuerpo e barca.
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -11684,12 +11554,12 @@ Private Sub HandleReviveChar(ByVal Userindex As Integer)
             If UCase$(UserName) <> "YO" Then
                 tUser = NameIndex(UserName)
             Else
-                tUser = Userindex
+                tUser = UserIndex
 
             End If
             
             If tUser <= 0 Then
-                Call WriteConsoleMsg(Userindex, "Usuario offline.", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "Usuario offline.", FontTypeNames.FONTTYPE_INFO)
             Else
 
                 With UserList(tUser)
@@ -11714,9 +11584,9 @@ Private Sub HandleReviveChar(ByVal Userindex As Integer)
                         
                         Call ChangeUserChar(tUser, .Char.body, .OrigChar.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim)
                         
-                        Call WriteConsoleMsg(tUser, UserList(Userindex).Name & " te ha resucitado.", FontTypeNames.FONTTYPE_INFO)
+                        Call WriteConsoleMsg(tUser, UserList(UserIndex).Name & " te ha resucitado.", FontTypeNames.FONTTYPE_INFO)
                     Else
-                        Call WriteConsoleMsg(tUser, UserList(Userindex).Name & " te ha curado.", FontTypeNames.FONTTYPE_INFO)
+                        Call WriteConsoleMsg(tUser, UserList(UserIndex).Name & " te ha curado.", FontTypeNames.FONTTYPE_INFO)
 
                     End If
                     
@@ -11744,7 +11614,7 @@ Private Sub HandleReviveChar(ByVal Userindex As Integer)
 
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -11764,7 +11634,7 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleOnlineGM(ByVal Userindex As Integer)
+Private Sub HandleOnlineGM(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Fredy Horacio Treboux (liquid)
@@ -11777,7 +11647,7 @@ Private Sub HandleOnlineGM(ByVal Userindex As Integer)
 
     Dim priv As PlayerType
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -11798,9 +11668,9 @@ Private Sub HandleOnlineGM(ByVal Userindex As Integer)
         
         If LenB(list) <> 0 Then
             list = Left$(list, Len(list) - 2)
-            Call WriteConsoleMsg(Userindex, list & ".", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, list & ".", FontTypeNames.FONTTYPE_INFO)
         Else
-            Call WriteConsoleMsg(Userindex, "No hay GMs Online.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "No hay GMs Online.", FontTypeNames.FONTTYPE_INFO)
 
         End If
 
@@ -11813,14 +11683,14 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleOnlineMap(ByVal Userindex As Integer)
+Private Sub HandleOnlineMap(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 23/03/2009
     '23/03/2009: ZaMa - Ahora no requiere estar en el mapa, sino que por defecto se toma en el que esta, pero se puede especificar otro
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -11851,7 +11721,7 @@ Private Sub HandleOnlineMap(ByVal Userindex As Integer)
         
         If Len(list) > 2 Then list = Left$(list, Len(list) - 2)
         
-        Call WriteConsoleMsg(Userindex, "Usuarios en el mapa: " & list, FontTypeNames.FONTTYPE_INFO)
+        Call WriteConsoleMsg(UserIndex, "Usuarios en el mapa: " & list, FontTypeNames.FONTTYPE_INFO)
         Call LogGM(.Name, "/ONLINEMAP " & Map)
 
     End With
@@ -11863,22 +11733,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleForgive(ByVal Userindex As Integer)
+Private Sub HandleForgive(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 07/06/2010
     '07/06/2010: ZaMa - Ahora no se puede usar para saber si hay dioses/admins online.
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -11905,7 +11775,7 @@ Private Sub HandleForgive(ByVal Userindex As Integer)
                     Call LogGM(.Name, "Intento perdonar un personaje de nivel avanzado.")
                     
                     If Not (EsDios(UserName) Or EsAdmin(UserName)) Then
-                        Call WriteConsoleMsg(Userindex, "Solo se permite perdonar newbies.", FontTypeNames.FONTTYPE_INFO)
+                        Call WriteConsoleMsg(UserIndex, "Solo se permite perdonar newbies.", FontTypeNames.FONTTYPE_INFO)
 
                     End If
 
@@ -11920,7 +11790,7 @@ Private Sub HandleForgive(ByVal Userindex As Integer)
 
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -11940,22 +11810,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleKick(ByVal Userindex As Integer)
+Private Sub HandleKick(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 07/06/2010
     '07/06/2010: ZaMa - Ahora no se puede usar para saber si hay dioses/admins online.
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -11984,16 +11854,16 @@ Private Sub HandleKick(ByVal Userindex As Integer)
             
             If tUser <= 0 Then
                 If Not (EsDios(UserName) Or EsAdmin(UserName)) Or IsAdmin Then
-                    Call WriteConsoleMsg(Userindex, "El usuario no esta online.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "El usuario no esta online.", FontTypeNames.FONTTYPE_INFO)
                 Else
-                    Call WriteConsoleMsg(Userindex, "No puedes echar a alguien con jerarquia mayor a la tuya.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "No puedes echar a alguien con jerarquia mayor a la tuya.", FontTypeNames.FONTTYPE_INFO)
 
                 End If
 
             Else
 
                 If (UserList(tUser).flags.Privilegios And rank) > (.flags.Privilegios And rank) Then
-                    Call WriteConsoleMsg(Userindex, "No puedes echar a alguien con jerarquia mayor a la tuya.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "No puedes echar a alguien con jerarquia mayor a la tuya.", FontTypeNames.FONTTYPE_INFO)
                 Else
                     Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(.Name & " echo a " & UserName & ".", FontTypeNames.FONTTYPE_INFO))
                     Call CloseSocket(tUser)
@@ -12010,7 +11880,7 @@ Private Sub HandleKick(ByVal Userindex As Integer)
 
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -12030,22 +11900,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleExecute(ByVal Userindex As Integer)
+Private Sub HandleExecute(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 07/06/2010
     '07/06/2010: ZaMa - Ahora no se puede usar para saber si hay dioses/admins online.
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -12067,7 +11937,7 @@ Private Sub HandleExecute(ByVal Userindex As Integer)
             
             If tUser > 0 Then
                 If Not UserList(tUser).flags.Privilegios And PlayerType.User Then
-                    Call WriteConsoleMsg(Userindex, "Estas loco?? Como vas a pinatear un gm?? :@", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "Estas loco?? Como vas a pinatear un gm?? :@", FontTypeNames.FONTTYPE_INFO)
                 Else
                     Call UserDie(tUser)
                     Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(.Name & " ha ejecutado a " & UserName & ".", FontTypeNames.FONTTYPE_EJECUCION))
@@ -12078,9 +11948,9 @@ Private Sub HandleExecute(ByVal Userindex As Integer)
             Else
 
                 If Not (EsDios(UserName) Or EsAdmin(UserName)) Then
-                    Call WriteConsoleMsg(Userindex, "No esta online.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "No esta online.", FontTypeNames.FONTTYPE_INFO)
                 Else
-                    Call WriteConsoleMsg(Userindex, "Estas loco?? Como vas a pinatear un gm?? :@", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "Estas loco?? Como vas a pinatear un gm?? :@", FontTypeNames.FONTTYPE_INFO)
 
                 End If
 
@@ -12093,7 +11963,7 @@ Private Sub HandleExecute(ByVal Userindex As Integer)
 
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -12113,22 +11983,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleBanChar(ByVal Userindex As Integer)
+Private Sub HandleBanChar(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 12/29/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 5 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 5 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -12147,7 +12017,7 @@ Private Sub HandleBanChar(ByVal Userindex As Integer)
         Reason = buffer.ReadASCIIString()
         
         If (Not .flags.Privilegios And PlayerType.RoleMaster) <> 0 And (.flags.Privilegios And (PlayerType.Admin Or PlayerType.Dios Or PlayerType.SemiDios)) <> 0 Then
-            Call BanCharacter(Userindex, UserName, Reason)
+            Call BanCharacter(UserIndex, UserName, Reason)
 
         End If
         
@@ -12156,7 +12026,7 @@ Private Sub HandleBanChar(ByVal Userindex As Integer)
 
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -12176,22 +12046,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleUnbanChar(ByVal Userindex As Integer)
+Private Sub HandleUnbanChar(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 12/29/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -12220,7 +12090,7 @@ Private Sub HandleUnbanChar(ByVal Userindex As Integer)
             End If
             
             If Not PersonajeExiste(UserName) Then
-                Call WriteConsoleMsg(Userindex, "Charfile inexistente (no use +).", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "Charfile inexistente (no use +).", FontTypeNames.FONTTYPE_INFO)
             Else
 
                 If BANCheck(UserName) Then
@@ -12231,9 +12101,9 @@ Private Sub HandleUnbanChar(ByVal Userindex As Integer)
                     Call SaveUserPunishment(UserName, cantPenas + 1, LCase$(.Name) & ": UNBAN. " & Date & " " & time)
                 
                     Call LogGM(.Name, "/UNBAN a " & UserName)
-                    Call WriteConsoleMsg(Userindex, UserName & " unbanned.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, UserName & " unbanned.", FontTypeNames.FONTTYPE_INFO)
                 Else
-                    Call WriteConsoleMsg(Userindex, UserName & " no esta baneado. Imposible unbanear.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, UserName & " no esta baneado. Imposible unbanear.", FontTypeNames.FONTTYPE_INFO)
 
                 End If
 
@@ -12246,7 +12116,7 @@ Private Sub HandleUnbanChar(ByVal Userindex As Integer)
 
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -12266,14 +12136,14 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleNPCFollow(ByVal Userindex As Integer)
+Private Sub HandleNPCFollow(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 12/29/06
     '
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -12296,22 +12166,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleSummonChar(ByVal Userindex As Integer)
+Private Sub HandleSummonChar(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 26/03/2009
     '26/03/2009: ZaMa - Chequeo que no se teletransporte donde haya un char o npc
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -12337,9 +12207,9 @@ Private Sub HandleSummonChar(ByVal Userindex As Integer)
             
             If tUser <= 0 Then
                 If EsDios(UserName) Or EsAdmin(UserName) Then
-                    Call WriteConsoleMsg(Userindex, "No puedes invocar a dioses y admins.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "No puedes invocar a dioses y admins.", FontTypeNames.FONTTYPE_INFO)
                 Else
-                    Call WriteConsoleMsg(Userindex, "El jugador no esta online.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "El jugador no esta online.", FontTypeNames.FONTTYPE_INFO)
 
                 End If
                 
@@ -12353,7 +12223,7 @@ Private Sub HandleSummonChar(ByVal Userindex As Integer)
                     Call WarpUserChar(tUser, .Pos.Map, X, Y, True, True)
                     Call LogGM(.Name, "/SUM " & UserName & " Map:" & .Pos.Map & " X:" & .Pos.X & " Y:" & .Pos.Y)
                 Else
-                    Call WriteConsoleMsg(Userindex, "No puedes invocar a dioses y admins.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "No puedes invocar a dioses y admins.", FontTypeNames.FONTTYPE_INFO)
 
                 End If
 
@@ -12366,7 +12236,7 @@ Private Sub HandleSummonChar(ByVal Userindex As Integer)
 
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -12386,20 +12256,20 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleSpawnListRequest(ByVal Userindex As Integer)
+Private Sub HandleSpawnListRequest(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 12/29/06
     '
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
         If .flags.Privilegios And (PlayerType.User Or PlayerType.Consejero) Then Exit Sub
         
-        Call EnviarSpawnList(Userindex)
+        Call EnviarSpawnList(UserIndex)
 
     End With
 
@@ -12410,20 +12280,20 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleSpawnCreature(ByVal Userindex As Integer)
+Private Sub HandleSpawnCreature(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 12/29/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -12447,14 +12317,14 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleResetNPCInventory(ByVal Userindex As Integer)
+Private Sub HandleResetNPCInventory(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 12/29/06
     '
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -12473,22 +12343,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleServerMessage(ByVal Userindex As Integer)
+Private Sub HandleServerMessage(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 28/05/2010
     '28/05/2010: ZaMa - Ahora no dice el nombre del gm que lo dice.
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -12520,7 +12390,7 @@ Private Sub HandleServerMessage(ByVal Userindex As Integer)
 
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -12540,21 +12410,21 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleMapMessage(ByVal Userindex As Integer)
+Private Sub HandleMapMessage(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: ZaMa
     'Last Modification: 14/11/2010
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -12587,7 +12457,7 @@ Private Sub HandleMapMessage(ByVal Userindex As Integer)
 
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -12607,7 +12477,7 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleNickToIP(ByVal Userindex As Integer)
+Private Sub HandleNickToIP(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
@@ -12615,15 +12485,15 @@ Private Sub HandleNickToIP(ByVal Userindex As Integer)
     'Pablo (ToxicWaste): Agrego para que el /nick2ip tambien diga los nicks en esa ip por pedido de la DGM.
     '07/06/2010: ZaMa - Ahora no se puede usar para saber si hay dioses/admins online.
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -12659,7 +12529,7 @@ Private Sub HandleNickToIP(ByVal Userindex As Integer)
             
             If tUser > 0 Then
                 If UserList(tUser).flags.Privilegios And priv Then
-                    Call WriteConsoleMsg(Userindex, "El ip de " & UserName & " es " & UserList(tUser).IP, FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "El ip de " & UserName & " es " & UserList(tUser).IP, FontTypeNames.FONTTYPE_INFO)
 
                     Dim IP    As String
 
@@ -12685,14 +12555,14 @@ Private Sub HandleNickToIP(ByVal Userindex As Integer)
                     Next LoopC
 
                     If LenB(lista) <> 0 Then lista = Left$(lista, Len(lista) - 2)
-                    Call WriteConsoleMsg(Userindex, "Los personajes con ip " & IP & " son: " & lista, FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "Los personajes con ip " & IP & " son: " & lista, FontTypeNames.FONTTYPE_INFO)
 
                 End If
 
             Else
 
                 If Not (EsDios(UserName) Or EsAdmin(UserName)) Or IsAdmin Then
-                    Call WriteConsoleMsg(Userindex, "No hay ningUn personaje con ese nick.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "No hay ningUn personaje con ese nick.", FontTypeNames.FONTTYPE_INFO)
 
                 End If
 
@@ -12705,7 +12575,7 @@ Private Sub HandleNickToIP(ByVal Userindex As Integer)
 
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -12725,20 +12595,20 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleIPToNick(ByVal Userindex As Integer)
+Private Sub HandleIPToNick(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 12/29/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 5 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 5 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -12782,7 +12652,7 @@ Private Sub HandleIPToNick(ByVal Userindex As Integer)
         Next LoopC
         
         If LenB(lista) <> 0 Then lista = Left$(lista, Len(lista) - 2)
-        Call WriteConsoleMsg(Userindex, "Los personajes con ip " & IP & " son: " & lista, FontTypeNames.FONTTYPE_INFO)
+        Call WriteConsoleMsg(UserIndex, "Los personajes con ip " & IP & " son: " & lista, FontTypeNames.FONTTYPE_INFO)
 
     End With
 
@@ -12793,22 +12663,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleGuildOnlineMembers(ByVal Userindex As Integer)
+Private Sub HandleGuildOnlineMembers(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 12/29/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -12834,7 +12704,7 @@ Private Sub HandleGuildOnlineMembers(ByVal Userindex As Integer)
             tGuild = GuildIndex(GuildName)
             
             If tGuild > 0 Then
-                Call WriteConsoleMsg(Userindex, "Clan " & UCase(GuildName) & ": " & modGuilds.m_ListaDeMiembrosOnline(Userindex, tGuild), FontTypeNames.FONTTYPE_GUILDMSG)
+                Call WriteConsoleMsg(UserIndex, "Clan " & UCase(GuildName) & ": " & modGuilds.m_ListaDeMiembrosOnline(UserIndex, tGuild), FontTypeNames.FONTTYPE_GUILDMSG)
 
             End If
 
@@ -12845,7 +12715,7 @@ Private Sub HandleGuildOnlineMembers(ByVal Userindex As Integer)
 
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -12865,7 +12735,7 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleTeleportCreate(ByVal Userindex As Integer)
+Private Sub HandleTeleportCreate(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
@@ -12873,13 +12743,13 @@ Private Sub HandleTeleportCreate(ByVal Userindex As Integer)
     '15/11/2009: ZaMa - Ahora se crea un teleport con un radio especificado.
     '22/03/2010: ZaMa - Harcodeo los teleps y radios en el dat, para evitar mapas bugueados.
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 6 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 6 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -12909,12 +12779,12 @@ Private Sub HandleTeleportCreate(ByVal Userindex As Integer)
         If MapData(.Pos.Map, .Pos.X, .Pos.Y - 1).TileExit.Map > 0 Then Exit Sub
         
         If MapData(Mapa, X, Y).ObjInfo.ObjIndex > 0 Then
-            Call WriteConsoleMsg(Userindex, "Hay un objeto en el piso en ese lugar.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Hay un objeto en el piso en ese lugar.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
         End If
 
         If MapData(Mapa, X, Y).TileExit.Map > 0 Then
-            Call WriteConsoleMsg(Userindex, "No puedes crear un teleport que apunte a la entrada de otro.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "No puedes crear un teleport que apunte a la entrada de otro.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
 
         End If
@@ -12943,14 +12813,14 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleTeleportDestroy(ByVal Userindex As Integer)
+Private Sub HandleTeleportDestroy(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 12/29/06
     '
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         Dim Mapa As Integer
 
@@ -12976,7 +12846,7 @@ Private Sub HandleTeleportDestroy(ByVal Userindex As Integer)
             
             If ObjData(.ObjInfo.ObjIndex).OBJType = eOBJType.otTeleport And .TileExit.Map > 0 Then
                 
-                                Call LogGM(UserList(Userindex).Name, "/DT: " & Mapa & "," & X & "," & Y)
+                                Call LogGM(UserList(UserIndex).Name, "/DT: " & Mapa & "," & X & "," & Y)
                 
                 Call EraseObj(.ObjInfo.Amount, Mapa, X, Y)
                 
@@ -13002,14 +12872,14 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleExitDestroy(ByVal Userindex As Integer)
+Private Sub HandleExitDestroy(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Cucsifae
     'Last Modification: 30/9/18
     '
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         Dim Mapa As Integer
 
@@ -13039,7 +12909,7 @@ Private Sub HandleExitDestroy(ByVal Userindex As Integer)
 
             End If
 
-            Call LogGM(UserList(Userindex).Name, "/DE: " & Mapa & "," & X & "," & Y)
+            Call LogGM(UserList(UserIndex).Name, "/DE: " & Mapa & "," & X & "," & Y)
                 
             .TileExit.Map = 0
             .TileExit.X = 0
@@ -13056,14 +12926,14 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleRainToggle(ByVal Userindex As Integer)
+Private Sub HandleRainToggle(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 12/29/06
     '
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -13083,19 +12953,19 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleEnableDenounces(ByVal Userindex As Integer)
+Private Sub HandleEnableDenounces(ByVal UserIndex As Integer)
     '***************************************************
     'Author: ZaMa
     'Last Modification: 14/11/2010
     'Enables/Disables
     '***************************************************
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
     
         'Remove packet ID
         Call .incomingData.ReadByte
         
-        If Not EsGm(Userindex) Then Exit Sub
+        If Not EsGm(UserIndex) Then Exit Sub
         
         Dim Activado As Boolean
 
@@ -13108,7 +12978,7 @@ Private Sub HandleEnableDenounces(ByVal Userindex As Integer)
         
         Call LogGM(.Name, msg)
         
-        Call WriteConsoleMsg(Userindex, msg, FontTypeNames.FONTTYPE_INFO)
+        Call WriteConsoleMsg(UserIndex, msg, FontTypeNames.FONTTYPE_INFO)
 
     End With
 
@@ -13119,19 +12989,19 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleShowDenouncesList(ByVal Userindex As Integer)
+Private Sub HandleShowDenouncesList(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: ZaMa
     'Last Modification: 14/11/2010
     '
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
         If .flags.Privilegios And PlayerType.User Then Exit Sub
-        Call WriteShowDenounces(Userindex)
+        Call WriteShowDenounces(UserIndex)
 
     End With
 
@@ -13142,22 +13012,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleSetCharDescription(ByVal Userindex As Integer)
+Private Sub HandleSetCharDescription(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 12/29/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -13180,7 +13050,7 @@ Private Sub HandleSetCharDescription(ByVal Userindex As Integer)
             If tUser > 0 Then
                 UserList(tUser).DescRM = Desc
             Else
-                Call WriteConsoleMsg(Userindex, "Haz click sobre un personaje antes.", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "Haz click sobre un personaje antes.", FontTypeNames.FONTTYPE_INFO)
 
             End If
 
@@ -13191,7 +13061,7 @@ Private Sub HandleSetCharDescription(ByVal Userindex As Integer)
 
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -13211,20 +13081,20 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HanldeForceMIDIToMap(ByVal Userindex As Integer)
+Private Sub HanldeForceMIDIToMap(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 12/29/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 4 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 4 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -13264,20 +13134,20 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleForceWAVEToMap(ByVal Userindex As Integer)
+Private Sub HandleForceWAVEToMap(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 12/29/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 6 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 6 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -13319,22 +13189,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleRoyalArmyMessage(ByVal Userindex As Integer)
+Private Sub HandleRoyalArmyMessage(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 12/29/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -13360,7 +13230,7 @@ Private Sub HandleRoyalArmyMessage(ByVal Userindex As Integer)
 
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -13380,22 +13250,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleChaosLegionMessage(ByVal Userindex As Integer)
+Private Sub HandleChaosLegionMessage(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 12/29/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -13421,7 +13291,7 @@ Private Sub HandleChaosLegionMessage(ByVal Userindex As Integer)
 
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -13441,22 +13311,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleCitizenMessage(ByVal Userindex As Integer)
+Private Sub HandleCitizenMessage(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 12/29/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -13482,7 +13352,7 @@ Private Sub HandleCitizenMessage(ByVal Userindex As Integer)
 
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -13502,22 +13372,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleCriminalMessage(ByVal Userindex As Integer)
+Private Sub HandleCriminalMessage(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 12/29/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -13543,7 +13413,7 @@ Private Sub HandleCriminalMessage(ByVal Userindex As Integer)
 
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -13563,22 +13433,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleTalkAsNPC(ByVal Userindex As Integer)
+Private Sub HandleTalkAsNPC(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 12/29/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -13600,7 +13470,7 @@ Private Sub HandleTalkAsNPC(ByVal Userindex As Integer)
             If .flags.TargetNPC > 0 Then
                 Call SendData(SendTarget.ToNPCArea, .flags.TargetNPC, PrepareMessageChatOverHead(Message, Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite))
             Else
-                Call WriteConsoleMsg(Userindex, "Debes seleccionar el NPC por el que quieres hablar antes de usar este comando.", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "Debes seleccionar el NPC por el que quieres hablar antes de usar este comando.", FontTypeNames.FONTTYPE_INFO)
 
             End If
 
@@ -13611,7 +13481,7 @@ Private Sub HandleTalkAsNPC(ByVal Userindex As Integer)
 
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -13631,14 +13501,14 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleDestroyAllItemsInArea(ByVal Userindex As Integer)
+Private Sub HandleDestroyAllItemsInArea(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 12/30/06
     '
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -13668,7 +13538,7 @@ Private Sub HandleDestroyAllItemsInArea(ByVal Userindex As Integer)
             Next X
         Next Y
         
-        Call LogGM(UserList(Userindex).Name, "/MASSDEST")
+        Call LogGM(UserList(UserIndex).Name, "/MASSDEST")
 
     End With
 
@@ -13679,22 +13549,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleAcceptRoyalCouncilMember(ByVal Userindex As Integer)
+Private Sub HandleAcceptRoyalCouncilMember(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 12/30/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -13717,7 +13587,7 @@ Private Sub HandleAcceptRoyalCouncilMember(ByVal Userindex As Integer)
             tUser = NameIndex(UserName)
 
             If tUser <= 0 Then
-                Call WriteConsoleMsg(Userindex, "Usuario offline", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "Usuario offline", FontTypeNames.FONTTYPE_INFO)
             Else
                 Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(UserName & " fue aceptado en el honorable Consejo Real de Belleuve.", FontTypeNames.FONTTYPE_CONSEJO))
 
@@ -13739,7 +13609,7 @@ Private Sub HandleAcceptRoyalCouncilMember(ByVal Userindex As Integer)
 
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -13759,22 +13629,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleAcceptChaosCouncilMember(ByVal Userindex As Integer)
+Private Sub HandleAcceptChaosCouncilMember(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 12/30/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -13797,7 +13667,7 @@ Private Sub HandleAcceptChaosCouncilMember(ByVal Userindex As Integer)
             tUser = NameIndex(UserName)
 
             If tUser <= 0 Then
-                Call WriteConsoleMsg(Userindex, "Usuario offline", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "Usuario offline", FontTypeNames.FONTTYPE_INFO)
             Else
                 Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(UserName & " fue aceptado en el Concilio de las Sombras.", FontTypeNames.FONTTYPE_CONSEJO))
                 
@@ -13819,7 +13689,7 @@ Private Sub HandleAcceptChaosCouncilMember(ByVal Userindex As Integer)
 
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -13839,14 +13709,14 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleItemsInTheFloor(ByVal Userindex As Integer)
+Private Sub HandleItemsInTheFloor(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 12/30/06
     '
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -13866,7 +13736,7 @@ Private Sub HandleItemsInTheFloor(ByVal Userindex As Integer)
 
                 If tObj > 0 Then
                     If ObjData(tObj).OBJType <> eOBJType.otArboles Then
-                        Call WriteConsoleMsg(Userindex, "(" & X & "," & Y & ") " & ObjData(tObj).Name, FontTypeNames.FONTTYPE_INFO)
+                        Call WriteConsoleMsg(UserIndex, "(" & X & "," & Y & ") " & ObjData(tObj).Name, FontTypeNames.FONTTYPE_INFO)
 
                     End If
 
@@ -13884,22 +13754,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleMakeDumb(ByVal Userindex As Integer)
+Private Sub HandleMakeDumb(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 12/30/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -13921,7 +13791,7 @@ Private Sub HandleMakeDumb(ByVal Userindex As Integer)
 
             'para deteccion de aoice
             If tUser <= 0 Then
-                Call WriteConsoleMsg(Userindex, "Usuario offline.", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "Usuario offline.", FontTypeNames.FONTTYPE_INFO)
             Else
                 Call WriteDumb(tUser)
 
@@ -13934,7 +13804,7 @@ Private Sub HandleMakeDumb(ByVal Userindex As Integer)
 
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -13954,22 +13824,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleMakeDumbNoMore(ByVal Userindex As Integer)
+Private Sub HandleMakeDumbNoMore(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 12/30/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -13991,7 +13861,7 @@ Private Sub HandleMakeDumbNoMore(ByVal Userindex As Integer)
 
             'para deteccion de aoice
             If tUser <= 0 Then
-                Call WriteConsoleMsg(Userindex, "Usuario offline.", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "Usuario offline.", FontTypeNames.FONTTYPE_INFO)
             Else
                 Call WriteDumbNoMore(tUser)
 
@@ -14004,7 +13874,7 @@ Private Sub HandleMakeDumbNoMore(ByVal Userindex As Integer)
 
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -14024,14 +13894,14 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleDumpIPTables(ByVal Userindex As Integer)
+Private Sub HandleDumpIPTables(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 12/30/06
     '
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -14048,22 +13918,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleCouncilKick(ByVal Userindex As Integer)
+Private Sub HandleCouncilKick(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 12/30/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -14085,10 +13955,10 @@ Private Sub HandleCouncilKick(ByVal Userindex As Integer)
 
             If tUser <= 0 Then
                 If PersonajeExiste(UserName) Then
-                    Call WriteConsoleMsg(Userindex, "Usuario offline, echando de los consejos.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "Usuario offline, echando de los consejos.", FontTypeNames.FONTTYPE_INFO)
                     Call KickUserCouncils(UserName)
                 Else
-                    Call WriteConsoleMsg(Userindex, "No se encuentra el charfile " & CharPath & UserName, FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "No se encuentra el charfile " & CharPath & UserName, FontTypeNames.FONTTYPE_INFO)
 
                 End If
 
@@ -14125,7 +13995,7 @@ Private Sub HandleCouncilKick(ByVal Userindex As Integer)
 
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -14145,20 +14015,20 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleSetTrigger(ByVal Userindex As Integer)
+Private Sub HandleSetTrigger(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 12/30/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 2 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 2 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -14175,7 +14045,7 @@ Private Sub HandleSetTrigger(ByVal Userindex As Integer)
             tLog = "Trigger " & tTrigger & " en mapa " & .Pos.Map & " " & .Pos.X & "," & .Pos.Y
             
             Call LogGM(.Name, tLog)
-            Call WriteConsoleMsg(Userindex, tLog, FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, tLog, FontTypeNames.FONTTYPE_INFO)
 
         End If
 
@@ -14188,7 +14058,7 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleAskTrigger(ByVal Userindex As Integer)
+Private Sub HandleAskTrigger(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
@@ -14197,7 +14067,7 @@ Private Sub HandleAskTrigger(ByVal Userindex As Integer)
     '***************************************************
     Dim tTrigger As Byte
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -14207,7 +14077,7 @@ Private Sub HandleAskTrigger(ByVal Userindex As Integer)
         
         Call LogGM(.Name, "Miro el trigger en " & .Pos.Map & "," & .Pos.X & "," & .Pos.Y & ". Era " & tTrigger)
         
-        Call WriteConsoleMsg(Userindex, "Trigger " & tTrigger & " en mapa " & .Pos.Map & " " & .Pos.X & ", " & .Pos.Y, FontTypeNames.FONTTYPE_INFO)
+        Call WriteConsoleMsg(UserIndex, "Trigger " & tTrigger & " en mapa " & .Pos.Map & " " & .Pos.X & ", " & .Pos.Y, FontTypeNames.FONTTYPE_INFO)
 
     End With
 
@@ -14218,14 +14088,14 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleBannedIPList(ByVal Userindex As Integer)
+Private Sub HandleBannedIPList(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 12/30/06
     '
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -14243,7 +14113,7 @@ Private Sub HandleBannedIPList(ByVal Userindex As Integer)
         
         If LenB(lista) <> 0 Then lista = Left$(lista, Len(lista) - 2)
         
-        Call WriteConsoleMsg(Userindex, lista, FontTypeNames.FONTTYPE_INFO)
+        Call WriteConsoleMsg(UserIndex, lista, FontTypeNames.FONTTYPE_INFO)
 
     End With
 
@@ -14254,14 +14124,14 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleBannedIPReload(ByVal Userindex As Integer)
+Private Sub HandleBannedIPReload(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 12/30/06
     '
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -14279,22 +14149,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleGuildBan(ByVal Userindex As Integer)
+Private Sub HandleGuildBan(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 12/30/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -14325,7 +14195,7 @@ Private Sub HandleGuildBan(ByVal Userindex As Integer)
             tFile = App.Path & "\guilds\" & GuildName & "-members.mem"
             
             If Not FileExist(tFile) Then
-                Call WriteConsoleMsg(Userindex, "No existe el clan: " & GuildName, FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "No existe el clan: " & GuildName, FontTypeNames.FONTTYPE_INFO)
             Else
                 Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(.Name & " baneo al clan " & UCase$(GuildName), FontTypeNames.FONTTYPE_GUILD))
                 
@@ -14362,7 +14232,7 @@ Private Sub HandleGuildBan(ByVal Userindex As Integer)
 
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -14382,7 +14252,7 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleBanIP(ByVal Userindex As Integer)
+Private Sub HandleBanIP(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -14391,15 +14261,15 @@ Private Sub HandleBanIP(ByVal Userindex As Integer)
     'inifito al intentar banear una ip ya baneada. (NicoNZ)
     '07/02/09 Pato - Ahora no es posible saber si un gm esta o no online.
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 6 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 6 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -14438,7 +14308,7 @@ Private Sub HandleBanIP(ByVal Userindex As Integer)
                 Call LogGM(.Name, "/BanIP " & bannedIP & " por " & Reason)
                 
                 If BanIpBuscar(bannedIP) > 0 Then
-                    Call WriteConsoleMsg(Userindex, "La IP " & bannedIP & " ya se encuentra en la lista de bans.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "La IP " & bannedIP & " ya se encuentra en la lista de bans.", FontTypeNames.FONTTYPE_INFO)
                 Else
                     Call BanIpAgrega(bannedIP)
                     Call SendData(SendTarget.ToAdmins, 0, PrepareMessageConsoleMsg(.Name & " baneo la IP " & bannedIP & " por " & Reason, FontTypeNames.FONTTYPE_FIGHT))
@@ -14448,7 +14318,7 @@ Private Sub HandleBanIP(ByVal Userindex As Integer)
 
                         If UserList(i).ConnIDValida Then
                             If UserList(i).IP = bannedIP Then
-                                Call BanCharacter(Userindex, UserList(i).Name, "IP POR " & Reason)
+                                Call BanCharacter(UserIndex, UserList(i).Name, "IP POR " & Reason)
 
                             End If
 
@@ -14459,7 +14329,7 @@ Private Sub HandleBanIP(ByVal Userindex As Integer)
                 End If
 
             ElseIf tUser <= 0 Then
-                Call WriteConsoleMsg(Userindex, "El personaje no esta online.", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "El personaje no esta online.", FontTypeNames.FONTTYPE_INFO)
 
             End If
 
@@ -14470,7 +14340,7 @@ Private Sub HandleBanIP(ByVal Userindex As Integer)
 
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -14490,20 +14360,20 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleUnbanIP(ByVal Userindex As Integer)
+Private Sub HandleUnbanIP(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 12/30/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 5 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 5 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -14517,9 +14387,9 @@ Private Sub HandleUnbanIP(ByVal Userindex As Integer)
         If .flags.Privilegios And (PlayerType.User Or PlayerType.Consejero Or PlayerType.SemiDios Or PlayerType.RoleMaster) Then Exit Sub
         
         If BanIpQuita(bannedIP) Then
-            Call WriteConsoleMsg(Userindex, "La IP """ & bannedIP & """ se ha quitado de la lista de bans.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "La IP """ & bannedIP & """ se ha quitado de la lista de bans.", FontTypeNames.FONTTYPE_INFO)
         Else
-            Call WriteConsoleMsg(Userindex, "La IP """ & bannedIP & """ NO se encuentra en la lista de bans.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "La IP """ & bannedIP & """ NO se encuentra en la lista de bans.", FontTypeNames.FONTTYPE_INFO)
 
         End If
 
@@ -14532,7 +14402,7 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleCreateItem(ByVal Userindex As Integer)
+Private Sub HandleCreateItem(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
@@ -14540,15 +14410,15 @@ Private Sub HandleCreateItem(ByVal Userindex As Integer)
     'maTih.- : Ahora se puede elegir, la cantidad a crear.
     '***************************************************
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
     
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
         
         ' Recibo el ID del paquete
         Call .incomingData.ReadByte
@@ -14560,7 +14430,7 @@ Private Sub HandleCreateItem(ByVal Userindex As Integer)
         If .flags.Privilegios And (PlayerType.User Or PlayerType.Consejero Or PlayerType.SemiDios) Then Exit Sub
         
         ' Si hace mas de 10000, lo sacamos cagando.
-        If Cuantos > 10000 Then Call WriteConsoleMsg(Userindex, "Estas tratando de crear demasiado, como mucho podes crear 10.000 unidades.", FontTypeNames.FONTTYPE_TALK): Exit Sub
+        If Cuantos > 10000 Then Call WriteConsoleMsg(UserIndex, "Estas tratando de crear demasiado, como mucho podes crear 10.000 unidades.", FontTypeNames.FONTTYPE_TALK): Exit Sub
         
         ' El indice proporcionado supera la cantidad minima o total de items existentes en el juego?
         If tObj < 1 Or tObj > NumObjDatas Then Exit Sub
@@ -14580,18 +14450,18 @@ Private Sub HandleCreateItem(ByVal Userindex As Integer)
         '   1 = NO
         If ObjData(tObj).Agarrable = 0 Then
             ' Trato de meterlo en el inventario.
-            If MeterItemEnInventario(Userindex, Objeto) Then
-                Call WriteConsoleMsg(Userindex, "Has creado " & Objeto.Amount & " unidades de " & ObjData(tObj).Name & ".", FontTypeNames.FONTTYPE_INFO)
+            If MeterItemEnInventario(UserIndex, Objeto) Then
+                Call WriteConsoleMsg(UserIndex, "Has creado " & Objeto.Amount & " unidades de " & ObjData(tObj).Name & ".", FontTypeNames.FONTTYPE_INFO)
             Else
                 ' Si no hay espacio, lo tiro al piso.
                 Call TirarItemAlPiso(.Pos, Objeto)
-                Call WriteConsoleMsg(Userindex, "No tenes espacio en tu inventario para crear el item.", FontTypeNames.FONTTYPE_INFO)
-                Call WriteConsoleMsg(Userindex, "ATENCION: CREASTE [" & Cuantos & "] ITEMS, TIRE E INGRESE /DEST EN CONSOLA PARA DESTRUIR LOS QUE NO NECESITE!!", FontTypeNames.FONTTYPE_GUILD)
+                Call WriteConsoleMsg(UserIndex, "No tenes espacio en tu inventario para crear el item.", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "ATENCION: CREASTE [" & Cuantos & "] ITEMS, TIRE E INGRESE /DEST EN CONSOLA PARA DESTRUIR LOS QUE NO NECESITE!!", FontTypeNames.FONTTYPE_GUILD)
             End If
         Else
             ' Crear el item NO AGARRARBLE y tirarlo al piso.
             Call TirarItemAlPiso(.Pos, Objeto)
-            Call WriteConsoleMsg(Userindex, "ATENCION: CREASTE [" & Cuantos & "] ITEMS, TIRE E INGRESE /DEST EN CONSOLA PARA DESTRUIR LOS QUE NO NECESITE!!", FontTypeNames.FONTTYPE_GUILD)
+            Call WriteConsoleMsg(UserIndex, "ATENCION: CREASTE [" & Cuantos & "] ITEMS, TIRE E INGRESE /DEST EN CONSOLA PARA DESTRUIR LOS QUE NO NECESITE!!", FontTypeNames.FONTTYPE_GUILD)
         End If
         
         ' Lo registro en los logs.
@@ -14599,7 +14469,7 @@ Private Sub HandleCreateItem(ByVal Userindex As Integer)
         
     End With
     
-ErrHandler:
+Errhandler:
     If Err.Number <> 0 Then
         Call LogError("Error en HandleCreateItem " & Err.Number & " " & Err.description)
     End If
@@ -14610,14 +14480,14 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleDestroyItems(ByVal Userindex As Integer)
+Private Sub HandleDestroyItems(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 12/30/06
     '
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -14643,7 +14513,7 @@ Private Sub HandleDestroyItems(ByVal Userindex As Integer)
         
         If ObjData(ObjIndex).OBJType = eOBJType.otTeleport And MapData(Mapa, X, Y).TileExit.Map > 0 Then
             
-            Call WriteConsoleMsg(Userindex, "No puede destruir teleports asi. Utilice /DT.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "No puede destruir teleports asi. Utilice /DT.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
 
         End If
@@ -14659,22 +14529,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleChaosLegionKick(ByVal Userindex As Integer)
+Private Sub HandleChaosLegionKick(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 12/30/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -14710,15 +14580,15 @@ Private Sub HandleChaosLegionKick(ByVal Userindex As Integer)
             If tUser > 0 Then
                 Call ExpulsarFaccionCaos(tUser, True)
                 UserList(tUser).Faccion.Reenlistadas = 200
-                Call WriteConsoleMsg(Userindex, UserName & " expulsado de las fuerzas del caos y prohibida la reenlistada.", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, UserName & " expulsado de las fuerzas del caos y prohibida la reenlistada.", FontTypeNames.FONTTYPE_INFO)
                 Call WriteConsoleMsg(tUser, .Name & " te ha expulsado en forma definitiva de las fuerzas del caos.", FontTypeNames.FONTTYPE_FIGHT)
             Else
 
                 If PersonajeExiste(UserName) Then
                     Call KickUserChaosLegion(UserName, .Name)
-                    Call WriteConsoleMsg(Userindex, UserName & " expulsado de las fuerzas del caos y prohibida la reenlistada.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, UserName & " expulsado de las fuerzas del caos y prohibida la reenlistada.", FontTypeNames.FONTTYPE_INFO)
                 Else
-                    Call WriteConsoleMsg(Userindex, UserName & " inexistente.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, UserName & " inexistente.", FontTypeNames.FONTTYPE_INFO)
 
                 End If
 
@@ -14731,7 +14601,7 @@ Private Sub HandleChaosLegionKick(ByVal Userindex As Integer)
 
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -14751,22 +14621,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleRoyalArmyKick(ByVal Userindex As Integer)
+Private Sub HandleRoyalArmyKick(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 12/30/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -14802,15 +14672,15 @@ Private Sub HandleRoyalArmyKick(ByVal Userindex As Integer)
             If tUser > 0 Then
                 Call ExpulsarFaccionReal(tUser, True)
                 UserList(tUser).Faccion.Reenlistadas = 200
-                Call WriteConsoleMsg(Userindex, UserName & " expulsado de las fuerzas reales y prohibida la reenlistada.", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, UserName & " expulsado de las fuerzas reales y prohibida la reenlistada.", FontTypeNames.FONTTYPE_INFO)
                 Call WriteConsoleMsg(tUser, .Name & " te ha expulsado en forma definitiva de las fuerzas reales.", FontTypeNames.FONTTYPE_FIGHT)
             Else
 
                 If PersonajeExiste(UserName) Then
                     Call KickUserRoyalArmy(UserName, .Name)
-                    Call WriteConsoleMsg(Userindex, UserName & " expulsado de las fuerzas reales y prohibida la reenlistada.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, UserName & " expulsado de las fuerzas reales y prohibida la reenlistada.", FontTypeNames.FONTTYPE_INFO)
                 Else
-                    Call WriteConsoleMsg(Userindex, UserName & " inexistente.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, UserName & " inexistente.", FontTypeNames.FONTTYPE_INFO)
 
                 End If
 
@@ -14823,7 +14693,7 @@ Private Sub HandleRoyalArmyKick(ByVal Userindex As Integer)
 
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -14843,20 +14713,20 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleForceMUSICAll(ByVal Userindex As Integer)
+Private Sub HandleForceMUSICAll(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 12/30/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 2 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 2 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
 
@@ -14879,20 +14749,20 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleForceWAVEAll(ByVal Userindex As Integer)
+Private Sub HandleForceWAVEAll(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 12/30/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 2 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 2 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
 
@@ -14913,22 +14783,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleRemovePunishment(ByVal Userindex As Integer)
+Private Sub HandleRemovePunishment(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 1/05/07
     'Pablo (ToxicWaste): 1/05/07, You can now edit the punishment.
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 6 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 6 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -14951,7 +14821,7 @@ Private Sub HandleRemovePunishment(ByVal Userindex As Integer)
         
         If (Not .flags.Privilegios And PlayerType.RoleMaster) <> 0 And (.flags.Privilegios And (PlayerType.Admin Or PlayerType.Dios)) Then
             If LenB(UserName) = 0 Then
-                Call WriteConsoleMsg(Userindex, "Utilice /borrarpena Nick@NumeroDePena@NuevaPena", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "Utilice /borrarpena Nick@NumeroDePena@NuevaPena", FontTypeNames.FONTTYPE_INFO)
             Else
 
                 If (InStrB(UserName, "\") <> 0) Then
@@ -14968,7 +14838,7 @@ Private Sub HandleRemovePunishment(ByVal Userindex As Integer)
                     Call LogGM(.Name, " borro la pena: " & punishment & " de " & UserName & " y la cambio por: " & NewText)
 
                     Call AlterUserPunishment(UserName, punishment, LCase$(.Name) & ": <" & NewText & "> " & Date & " " & time)
-                    Call WriteConsoleMsg(Userindex, "Pena modificada.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "Pena modificada.", FontTypeNames.FONTTYPE_INFO)
 
                 End If
 
@@ -14981,7 +14851,7 @@ Private Sub HandleRemovePunishment(ByVal Userindex As Integer)
 
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -15001,14 +14871,14 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleTileBlockedToggle(ByVal Userindex As Integer)
+Private Sub HandleTileBlockedToggle(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 12/30/06
     '
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -15034,14 +14904,14 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleKillNPCNoRespawn(ByVal Userindex As Integer)
+Private Sub HandleKillNPCNoRespawn(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 12/30/06
     '
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -15061,14 +14931,14 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleKillAllNearbyNPCs(ByVal Userindex As Integer)
+Private Sub HandleKillAllNearbyNPCs(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 12/30/06
     '
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -15100,22 +14970,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleLastIP(ByVal Userindex As Integer)
+Private Sub HandleLastIP(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 12/30/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -15170,14 +15040,14 @@ Private Sub HandleLastIP(ByVal Userindex As Integer)
                 
                 If PersonajeExiste(UserName) Then
                     lista = "Las ultimas IPs con las que " & UserName & " se conecto son:" & vbCrLf & GetUserLastIps(UserName)
-                    Call WriteConsoleMsg(Userindex, lista, FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, lista, FontTypeNames.FONTTYPE_INFO)
                 Else
-                    Call WriteConsoleMsg(Userindex, "Charfile """ & UserName & """ inexistente.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "Charfile """ & UserName & """ inexistente.", FontTypeNames.FONTTYPE_INFO)
 
                 End If
 
             Else
-                Call WriteConsoleMsg(Userindex, UserName & " es de mayor jerarquia que vos.", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, UserName & " es de mayor jerarquia que vos.", FontTypeNames.FONTTYPE_INFO)
 
             End If
 
@@ -15188,7 +15058,7 @@ Private Sub HandleLastIP(ByVal Userindex As Integer)
 
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -15208,7 +15078,7 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Public Sub HandleChatColor(ByVal Userindex As Integer)
+Public Sub HandleChatColor(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Lucas Tavolaro Ortiz (Tavo)
@@ -15216,13 +15086,13 @@ Public Sub HandleChatColor(ByVal Userindex As Integer)
     'Last modified by: Juan Martin Sotuyo Dodero (Maraxus)
     'Change the user`s chat color
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 4 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 4 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -15244,14 +15114,14 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Public Sub HandleIgnored(ByVal Userindex As Integer)
+Public Sub HandleIgnored(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Lucas Tavolaro Ortiz (Tavo)
     'Last Modification: 12/23/06
     'Ignore the user
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -15269,7 +15139,7 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Public Sub HandleCheckSlot(ByVal Userindex As Integer)
+Public Sub HandleCheckSlot(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Pablo (ToxicWaste)
@@ -15277,15 +15147,15 @@ Public Sub HandleCheckSlot(ByVal Userindex As Integer)
     'Check one Users Slot in Particular from Inventory
     '07/06/2010: ZaMa - Ahora no se puede usar para saber si hay dioses/admins online.
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 4 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 4 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
 
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -15323,28 +15193,28 @@ Public Sub HandleCheckSlot(ByVal Userindex As Integer)
                 If UserIsAdmin Or Not OtherUserIsAdmin Then
                     If Slot > 0 And Slot <= UserList(tIndex).CurrentInventorySlots Then
                         If UserList(tIndex).Invent.Object(Slot).ObjIndex > 0 Then
-                            Call WriteConsoleMsg(Userindex, " Objeto " & Slot & ") " & ObjData(UserList(tIndex).Invent.Object(Slot).ObjIndex).Name & " Cantidad:" & UserList(tIndex).Invent.Object(Slot).Amount, FontTypeNames.FONTTYPE_INFO)
+                            Call WriteConsoleMsg(UserIndex, " Objeto " & Slot & ") " & ObjData(UserList(tIndex).Invent.Object(Slot).ObjIndex).Name & " Cantidad:" & UserList(tIndex).Invent.Object(Slot).Amount, FontTypeNames.FONTTYPE_INFO)
                         Else
-                            Call WriteConsoleMsg(Userindex, "No hay ningUn objeto en slot seleccionado.", FontTypeNames.FONTTYPE_INFO)
+                            Call WriteConsoleMsg(UserIndex, "No hay ningUn objeto en slot seleccionado.", FontTypeNames.FONTTYPE_INFO)
 
                         End If
 
                     Else
-                        Call WriteConsoleMsg(Userindex, "Slot Invalido.", FontTypeNames.FONTTYPE_TALK)
+                        Call WriteConsoleMsg(UserIndex, "Slot Invalido.", FontTypeNames.FONTTYPE_TALK)
 
                     End If
 
                 Else
-                    Call WriteConsoleMsg(Userindex, "No puedes ver slots de un dios o admin.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "No puedes ver slots de un dios o admin.", FontTypeNames.FONTTYPE_INFO)
 
                 End If
 
             Else
 
                 If UserIsAdmin Or Not OtherUserIsAdmin Then
-                    Call WriteConsoleMsg(Userindex, "Usuario offline.", FontTypeNames.FONTTYPE_TALK)
+                    Call WriteConsoleMsg(UserIndex, "Usuario offline.", FontTypeNames.FONTTYPE_TALK)
                 Else
-                    Call WriteConsoleMsg(Userindex, "No puedes ver slots de un dios o admin.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "No puedes ver slots de un dios o admin.", FontTypeNames.FONTTYPE_INFO)
 
                 End If
 
@@ -15357,7 +15227,7 @@ Public Sub HandleCheckSlot(ByVal Userindex As Integer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -15377,21 +15247,21 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Public Sub HandleResetAutoUpdate(ByVal Userindex As Integer)
+Public Sub HandleResetAutoUpdate(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Lucas Tavolaro Ortiz (Tavo)
     'Last Modification: 12/23/06
     'Reset the AutoUpdate
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
         If .flags.Privilegios And (PlayerType.User Or PlayerType.Consejero Or PlayerType.SemiDios) Then Exit Sub
         If UCase$(.Name) <> "MARAXUS" Then Exit Sub
         
-        Call WriteConsoleMsg(Userindex, "TID: " & CStr(ReiniciarAutoUpdate()), FontTypeNames.FONTTYPE_INFO)
+        Call WriteConsoleMsg(UserIndex, "TID: " & CStr(ReiniciarAutoUpdate()), FontTypeNames.FONTTYPE_INFO)
 
     End With
 
@@ -15402,14 +15272,14 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Public Sub HandleRestart(ByVal Userindex As Integer)
+Public Sub HandleRestart(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Lucas Tavolaro Ortiz (Tavo)
     'Last Modification: 12/23/06
     'Restart the game
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove Packet ID
         Call .incomingData.ReadByte
     
@@ -15430,14 +15300,14 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Public Sub HandleReloadObjects(ByVal Userindex As Integer)
+Public Sub HandleReloadObjects(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Lucas Tavolaro Ortiz (Tavo)
     'Last Modification: 12/23/06
     'Reload the objects
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove Packet ID
         Call .incomingData.ReadByte
         
@@ -15456,14 +15326,14 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Public Sub HandleReloadSpells(ByVal Userindex As Integer)
+Public Sub HandleReloadSpells(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Lucas Tavolaro Ortiz (Tavo)
     'Last Modification: 12/23/06
     'Reload the spells
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove Packet ID
         Call .incomingData.ReadByte
         
@@ -15482,14 +15352,14 @@ End Sub
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleReloadServerIni(ByVal Userindex As Integer)
+Public Sub HandleReloadServerIni(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Lucas Tavolaro Ortiz (Tavo)
     'Last Modification: 12/23/06
     'Reload the Server`s INI
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove Packet ID
         Call .incomingData.ReadByte
         
@@ -15499,7 +15369,7 @@ Public Sub HandleReloadServerIni(ByVal Userindex As Integer)
         
         Call LoadSini
         
-        Call WriteConsoleMsg(Userindex, "Server.ini actualizado correctamente", FontTypeNames.FONTTYPE_INFO)
+        Call WriteConsoleMsg(UserIndex, "Server.ini actualizado correctamente", FontTypeNames.FONTTYPE_INFO)
 
     End With
 
@@ -15510,14 +15380,14 @@ End Sub
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleReloadNPCs(ByVal Userindex As Integer)
+Public Sub HandleReloadNPCs(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Lucas Tavolaro Ortiz (Tavo)
     'Last Modification: 12/23/06
     'Reload the Server`s NPC
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove Packet ID
         Call .incomingData.ReadByte
         
@@ -15527,7 +15397,7 @@ Public Sub HandleReloadNPCs(ByVal Userindex As Integer)
     
         Call CargaNpcsDat
     
-        Call WriteConsoleMsg(Userindex, "Npcs.dat recargado.", FontTypeNames.FONTTYPE_INFO)
+        Call WriteConsoleMsg(UserIndex, "Npcs.dat recargado.", FontTypeNames.FONTTYPE_INFO)
 
     End With
 
@@ -15538,14 +15408,14 @@ End Sub
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleKickAllChars(ByVal Userindex As Integer)
+Public Sub HandleKickAllChars(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Lucas Tavolaro Ortiz (Tavo)
     'Last Modification: 12/23/06
     'Kick all the chars that are online
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove Packet ID
         Call .incomingData.ReadByte
         
@@ -15564,7 +15434,7 @@ End Sub
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleNight(ByVal Userindex As Integer)
+Public Sub HandleNight(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Lucas Tavolaro Ortiz (Tavo)
@@ -15572,7 +15442,7 @@ Public Sub HandleNight(ByVal Userindex As Integer)
     'Last modified by: Juan Martin Sotuyo Dodero (Maraxus)
     '
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove Packet ID
         Call .incomingData.ReadByte
         
@@ -15601,14 +15471,14 @@ End Sub
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleShowServerForm(ByVal Userindex As Integer)
+Public Sub HandleShowServerForm(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Lucas Tavolaro Ortiz (Tavo)
     'Last Modification: 12/23/06
     'Show the server form
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove Packet ID
         Call .incomingData.ReadByte
         
@@ -15626,14 +15496,14 @@ End Sub
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleCleanSOS(ByVal Userindex As Integer)
+Public Sub HandleCleanSOS(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Lucas Tavolaro Ortiz (Tavo)
     'Last Modification: 12/23/06
     'Clean the SOS
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove Packet ID
         Call .incomingData.ReadByte
         
@@ -15652,14 +15522,14 @@ End Sub
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleSaveChars(ByVal Userindex As Integer)
+Public Sub HandleSaveChars(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Lucas Tavolaro Ortiz (Tavo)
     'Last Modification: 12/23/06
     'Save the characters
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove Packet ID
         Call .incomingData.ReadByte
         
@@ -15679,7 +15549,7 @@ End Sub
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleChangeMapInfoBackup(ByVal Userindex As Integer)
+Public Sub HandleChangeMapInfoBackup(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Lucas Tavolaro Ortiz (Tavo)
@@ -15687,13 +15557,13 @@ Public Sub HandleChangeMapInfoBackup(ByVal Userindex As Integer)
     'Last modified by: Juan Martin Sotuyo Dodero (Maraxus)
     'Change the backup`s info of the map
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 2 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 2 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove Packet ID
         Call .incomingData.ReadByte
         
@@ -15716,7 +15586,7 @@ Public Sub HandleChangeMapInfoBackup(ByVal Userindex As Integer)
         'Change the boolean to string in a fast way
         Call WriteVar(App.Path & MapPath & "mapa" & .Pos.Map & ".dat", "Mapa" & .Pos.Map, "backup", MapInfo(.Pos.Map).BackUp)
         
-        Call WriteConsoleMsg(Userindex, "Mapa " & .Pos.Map & " Backup: " & MapInfo(.Pos.Map).BackUp, FontTypeNames.FONTTYPE_INFO)
+        Call WriteConsoleMsg(UserIndex, "Mapa " & .Pos.Map & " Backup: " & MapInfo(.Pos.Map).BackUp, FontTypeNames.FONTTYPE_INFO)
 
     End With
 
@@ -15727,7 +15597,7 @@ End Sub
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleChangeMapInfoPK(ByVal Userindex As Integer)
+Public Sub HandleChangeMapInfoPK(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Lucas Tavolaro Ortiz (Tavo)
@@ -15735,13 +15605,13 @@ Public Sub HandleChangeMapInfoPK(ByVal Userindex As Integer)
     'Last modified by: Juan Martin Sotuyo Dodero (Maraxus)
     'Change the pk`s info of the  map
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 2 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 2 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove Packet ID
         Call .incomingData.ReadByte
         
@@ -15758,7 +15628,7 @@ Public Sub HandleChangeMapInfoPK(ByVal Userindex As Integer)
         'Change the boolean to string in a fast way
         Call WriteVar(App.Path & MapPath & "mapa" & .Pos.Map & ".dat", "Mapa" & .Pos.Map, "Pk", IIf(isMapPk, "1", "0"))
 
-        Call WriteConsoleMsg(Userindex, "Mapa " & .Pos.Map & " PK: " & MapInfo(.Pos.Map).Pk, FontTypeNames.FONTTYPE_INFO)
+        Call WriteConsoleMsg(UserIndex, "Mapa " & .Pos.Map & " PK: " & MapInfo(.Pos.Map).Pk, FontTypeNames.FONTTYPE_INFO)
 
     End With
 
@@ -15769,24 +15639,24 @@ End Sub
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleChangeMapInfoRestricted(ByVal Userindex As Integer)
+Public Sub HandleChangeMapInfoRestricted(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Pablo (ToxicWaste)
     'Last Modification: 26/01/2007
     'Restringido -> Options: "NEWBIE", "NO", "ARMADA", "CAOS", "FACCION".
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
     Dim tStr As String
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -15803,12 +15673,12 @@ Public Sub HandleChangeMapInfoRestricted(ByVal Userindex As Integer)
             If tStr = "NEWBIE" Or tStr = "NO" Or tStr = "ARMADA" Or tStr = "CAOS" Or tStr = "FACCION" Then
                 Call LogGM(.Name, .Name & " ha cambiado la informacion sobre si es restringido el mapa.")
                 
-                MapInfo(UserList(Userindex).Pos.Map).Restringir = RestrictStringToByte(tStr)
+                MapInfo(UserList(UserIndex).Pos.Map).Restringir = RestrictStringToByte(tStr)
                 
-                Call WriteVar(App.Path & MapPath & "mapa" & UserList(Userindex).Pos.Map & ".dat", "Mapa" & UserList(Userindex).Pos.Map, "Restringir", tStr)
-                Call WriteConsoleMsg(Userindex, "Mapa " & .Pos.Map & " Restringido: " & RestrictByteToString(MapInfo(.Pos.Map).Restringir), FontTypeNames.FONTTYPE_INFO)
+                Call WriteVar(App.Path & MapPath & "mapa" & UserList(UserIndex).Pos.Map & ".dat", "Mapa" & UserList(UserIndex).Pos.Map, "Restringir", tStr)
+                Call WriteConsoleMsg(UserIndex, "Mapa " & .Pos.Map & " Restringido: " & RestrictByteToString(MapInfo(.Pos.Map).Restringir), FontTypeNames.FONTTYPE_INFO)
             Else
-                Call WriteConsoleMsg(Userindex, "Opciones para restringir: 'NEWBIE', 'NO', 'ARMADA', 'CAOS', 'FACCION'", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "Opciones para restringir: 'NEWBIE', 'NO', 'ARMADA', 'CAOS', 'FACCION'", FontTypeNames.FONTTYPE_INFO)
 
             End If
 
@@ -15819,7 +15689,7 @@ Public Sub HandleChangeMapInfoRestricted(ByVal Userindex As Integer)
 
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -15839,22 +15709,22 @@ End Sub
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleChangeMapInfoNoMagic(ByVal Userindex As Integer)
+Public Sub HandleChangeMapInfoNoMagic(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Pablo (ToxicWaste)
     'Last Modification: 26/01/2007
     'MagiaSinEfecto -> Options: "1" , "0".
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 2 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 2 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
     Dim nomagic As Boolean
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove Packet ID
         Call .incomingData.ReadByte
         
@@ -15862,9 +15732,9 @@ Public Sub HandleChangeMapInfoNoMagic(ByVal Userindex As Integer)
         
         If (.flags.Privilegios And (PlayerType.Admin Or PlayerType.Dios)) <> 0 Then
             Call LogGM(.Name, .Name & " ha cambiado la informacion sobre si esta permitido usar la magia el mapa.")
-            MapInfo(UserList(Userindex).Pos.Map).MagiaSinEfecto = nomagic
-            Call WriteVar(App.Path & MapPath & "mapa" & UserList(Userindex).Pos.Map & ".dat", "Mapa" & UserList(Userindex).Pos.Map, "MagiaSinEfecto", nomagic)
-            Call WriteConsoleMsg(Userindex, "Mapa " & .Pos.Map & " MagiaSinEfecto: " & MapInfo(.Pos.Map).MagiaSinEfecto, FontTypeNames.FONTTYPE_INFO)
+            MapInfo(UserList(UserIndex).Pos.Map).MagiaSinEfecto = nomagic
+            Call WriteVar(App.Path & MapPath & "mapa" & UserList(UserIndex).Pos.Map & ".dat", "Mapa" & UserList(UserIndex).Pos.Map, "MagiaSinEfecto", nomagic)
+            Call WriteConsoleMsg(UserIndex, "Mapa " & .Pos.Map & " MagiaSinEfecto: " & MapInfo(.Pos.Map).MagiaSinEfecto, FontTypeNames.FONTTYPE_INFO)
 
         End If
 
@@ -15877,22 +15747,22 @@ End Sub
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleChangeMapInfoNoInvi(ByVal Userindex As Integer)
+Public Sub HandleChangeMapInfoNoInvi(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Pablo (ToxicWaste)
     'Last Modification: 26/01/2007
     'InviSinEfecto -> Options: "1", "0"
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 2 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 2 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
     Dim noinvi As Boolean
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove Packet ID
         Call .incomingData.ReadByte
         
@@ -15900,9 +15770,9 @@ Public Sub HandleChangeMapInfoNoInvi(ByVal Userindex As Integer)
         
         If (.flags.Privilegios And (PlayerType.Admin Or PlayerType.Dios)) <> 0 Then
             Call LogGM(.Name, .Name & " ha cambiado la informacion sobre si esta permitido usar la invisibilidad en el mapa.")
-            MapInfo(UserList(Userindex).Pos.Map).InviSinEfecto = noinvi
-            Call WriteVar(App.Path & MapPath & "mapa" & UserList(Userindex).Pos.Map & ".dat", "Mapa" & UserList(Userindex).Pos.Map, "InviSinEfecto", noinvi)
-            Call WriteConsoleMsg(Userindex, "Mapa " & .Pos.Map & " InviSinEfecto: " & MapInfo(.Pos.Map).InviSinEfecto, FontTypeNames.FONTTYPE_INFO)
+            MapInfo(UserList(UserIndex).Pos.Map).InviSinEfecto = noinvi
+            Call WriteVar(App.Path & MapPath & "mapa" & UserList(UserIndex).Pos.Map & ".dat", "Mapa" & UserList(UserIndex).Pos.Map, "InviSinEfecto", noinvi)
+            Call WriteConsoleMsg(UserIndex, "Mapa " & .Pos.Map & " InviSinEfecto: " & MapInfo(.Pos.Map).InviSinEfecto, FontTypeNames.FONTTYPE_INFO)
 
         End If
 
@@ -15915,22 +15785,22 @@ End Sub
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleChangeMapInfoNoResu(ByVal Userindex As Integer)
+Public Sub HandleChangeMapInfoNoResu(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Pablo (ToxicWaste)
     'Last Modification: 26/01/2007
     'ResuSinEfecto -> Options: "1", "0"
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 2 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 2 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
     Dim noresu As Boolean
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove Packet ID
         Call .incomingData.ReadByte
         
@@ -15938,9 +15808,9 @@ Public Sub HandleChangeMapInfoNoResu(ByVal Userindex As Integer)
         
         If (.flags.Privilegios And (PlayerType.Admin Or PlayerType.Dios)) <> 0 Then
             Call LogGM(.Name, .Name & " ha cambiado la informacion sobre si esta permitido usar el resucitar en el mapa.")
-            MapInfo(UserList(Userindex).Pos.Map).ResuSinEfecto = noresu
-            Call WriteVar(App.Path & MapPath & "mapa" & UserList(Userindex).Pos.Map & ".dat", "Mapa" & UserList(Userindex).Pos.Map, "ResuSinEfecto", noresu)
-            Call WriteConsoleMsg(Userindex, "Mapa " & .Pos.Map & " ResuSinEfecto: " & MapInfo(.Pos.Map).ResuSinEfecto, FontTypeNames.FONTTYPE_INFO)
+            MapInfo(UserList(UserIndex).Pos.Map).ResuSinEfecto = noresu
+            Call WriteVar(App.Path & MapPath & "mapa" & UserList(UserIndex).Pos.Map & ".dat", "Mapa" & UserList(UserIndex).Pos.Map, "ResuSinEfecto", noresu)
+            Call WriteConsoleMsg(UserIndex, "Mapa " & .Pos.Map & " ResuSinEfecto: " & MapInfo(.Pos.Map).ResuSinEfecto, FontTypeNames.FONTTYPE_INFO)
 
         End If
 
@@ -15953,24 +15823,24 @@ End Sub
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleChangeMapInfoLand(ByVal Userindex As Integer)
+Public Sub HandleChangeMapInfoLand(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Pablo (ToxicWaste)
     'Last Modification: 26/01/2007
     'Terreno -> Opciones: "BOSQUE", "NIEVE", "DESIERTO", "CIUDAD", "CAMPO", "DUNGEON".
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
     Dim tStr As String
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -15987,13 +15857,13 @@ Public Sub HandleChangeMapInfoLand(ByVal Userindex As Integer)
             If tStr = "BOSQUE" Or tStr = "NIEVE" Or tStr = "DESIERTO" Or tStr = "CIUDAD" Or tStr = "CAMPO" Or tStr = "DUNGEON" Then
                 Call LogGM(.Name, .Name & " ha cambiado la informacion del terreno del mapa.")
                 
-                MapInfo(UserList(Userindex).Pos.Map).Terreno = TerrainStringToByte(tStr)
+                MapInfo(UserList(UserIndex).Pos.Map).Terreno = TerrainStringToByte(tStr)
                 
-                Call WriteVar(App.Path & MapPath & "mapa" & UserList(Userindex).Pos.Map & ".dat", "Mapa" & UserList(Userindex).Pos.Map, "Terreno", tStr)
-                Call WriteConsoleMsg(Userindex, "Mapa " & .Pos.Map & " Terreno: " & TerrainByteToString(MapInfo(.Pos.Map).Terreno), FontTypeNames.FONTTYPE_INFO)
+                Call WriteVar(App.Path & MapPath & "mapa" & UserList(UserIndex).Pos.Map & ".dat", "Mapa" & UserList(UserIndex).Pos.Map, "Terreno", tStr)
+                Call WriteConsoleMsg(UserIndex, "Mapa " & .Pos.Map & " Terreno: " & TerrainByteToString(MapInfo(.Pos.Map).Terreno), FontTypeNames.FONTTYPE_INFO)
             Else
-                Call WriteConsoleMsg(Userindex, "Opciones para terreno: 'BOSQUE', 'NIEVE', 'DESIERTO', 'CIUDAD', 'CAMPO', 'DUNGEON'", FontTypeNames.FONTTYPE_INFO)
-                Call WriteConsoleMsg(Userindex, "Igualmente, el Unico Util es 'NIEVE' ya que al ingresarlo, la gente muere de frio en el mapa.", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "Opciones para terreno: 'BOSQUE', 'NIEVE', 'DESIERTO', 'CIUDAD', 'CAMPO', 'DUNGEON'", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "Igualmente, el Unico Util es 'NIEVE' ya que al ingresarlo, la gente muere de frio en el mapa.", FontTypeNames.FONTTYPE_INFO)
 
             End If
 
@@ -16004,7 +15874,7 @@ Public Sub HandleChangeMapInfoLand(ByVal Userindex As Integer)
 
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -16024,24 +15894,24 @@ End Sub
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleChangeMapInfoZone(ByVal Userindex As Integer)
+Public Sub HandleChangeMapInfoZone(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Pablo (ToxicWaste)
     'Last Modification: 26/01/2007
     'Zona -> Opciones: "BOSQUE", "NIEVE", "DESIERTO", "CIUDAD", "CAMPO", "DUNGEON".
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
     Dim tStr As String
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -16057,12 +15927,12 @@ Public Sub HandleChangeMapInfoZone(ByVal Userindex As Integer)
         If (.flags.Privilegios And (PlayerType.Admin Or PlayerType.Dios)) <> 0 Then
             If tStr = "BOSQUE" Or tStr = "NIEVE" Or tStr = "DESIERTO" Or tStr = "CIUDAD" Or tStr = "CAMPO" Or tStr = "DUNGEON" Then
                 Call LogGM(.Name, .Name & " ha cambiado la informacion de la zona del mapa.")
-                MapInfo(UserList(Userindex).Pos.Map).Zona = tStr
-                Call WriteVar(App.Path & MapPath & "mapa" & UserList(Userindex).Pos.Map & ".dat", "Mapa" & UserList(Userindex).Pos.Map, "Zona", tStr)
-                Call WriteConsoleMsg(Userindex, "Mapa " & .Pos.Map & " Zona: " & MapInfo(.Pos.Map).Zona, FontTypeNames.FONTTYPE_INFO)
+                MapInfo(UserList(UserIndex).Pos.Map).Zona = tStr
+                Call WriteVar(App.Path & MapPath & "mapa" & UserList(UserIndex).Pos.Map & ".dat", "Mapa" & UserList(UserIndex).Pos.Map, "Zona", tStr)
+                Call WriteConsoleMsg(UserIndex, "Mapa " & .Pos.Map & " Zona: " & MapInfo(.Pos.Map).Zona, FontTypeNames.FONTTYPE_INFO)
             Else
-                Call WriteConsoleMsg(Userindex, "Opciones para terreno: 'BOSQUE', 'NIEVE', 'DESIERTO', 'CIUDAD', 'CAMPO', 'DUNGEON'", FontTypeNames.FONTTYPE_INFO)
-                Call WriteConsoleMsg(Userindex, "Igualmente, el Unico Util es 'DUNGEON' ya que al ingresarlo, NO se sentira el efecto de la lluvia en este mapa.", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "Opciones para terreno: 'BOSQUE', 'NIEVE', 'DESIERTO', 'CIUDAD', 'CAMPO', 'DUNGEON'", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "Igualmente, el Unico Util es 'DUNGEON' ya que al ingresarlo, NO se sentira el efecto de la lluvia en este mapa.", FontTypeNames.FONTTYPE_INFO)
 
             End If
 
@@ -16073,7 +15943,7 @@ Public Sub HandleChangeMapInfoZone(ByVal Userindex As Integer)
 
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -16093,22 +15963,22 @@ End Sub
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleChangeMapInfoStealNpc(ByVal Userindex As Integer)
+Public Sub HandleChangeMapInfoStealNpc(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: ZaMa
     'Last Modification: 25/07/2010
     'RoboNpcsPermitido -> Options: "1", "0"
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 2 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 2 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
     Dim RoboNpc As Byte
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove Packet ID
         Call .incomingData.ReadByte
         
@@ -16117,10 +15987,10 @@ Public Sub HandleChangeMapInfoStealNpc(ByVal Userindex As Integer)
         If (.flags.Privilegios And (PlayerType.Admin Or PlayerType.Dios)) <> 0 Then
             Call LogGM(.Name, .Name & " ha cambiado la informacion sobre si esta permitido robar npcs en el mapa.")
             
-            MapInfo(UserList(Userindex).Pos.Map).RoboNpcsPermitido = RoboNpc
+            MapInfo(UserList(UserIndex).Pos.Map).RoboNpcsPermitido = RoboNpc
             
-            Call WriteVar(App.Path & MapPath & "mapa" & UserList(Userindex).Pos.Map & ".dat", "Mapa" & UserList(Userindex).Pos.Map, "RoboNpcsPermitido", RoboNpc)
-            Call WriteConsoleMsg(Userindex, "Mapa " & .Pos.Map & " RoboNpcsPermitido: " & MapInfo(.Pos.Map).RoboNpcsPermitido, FontTypeNames.FONTTYPE_INFO)
+            Call WriteVar(App.Path & MapPath & "mapa" & UserList(UserIndex).Pos.Map & ".dat", "Mapa" & UserList(UserIndex).Pos.Map, "RoboNpcsPermitido", RoboNpc)
+            Call WriteConsoleMsg(UserIndex, "Mapa " & .Pos.Map & " RoboNpcsPermitido: " & MapInfo(.Pos.Map).RoboNpcsPermitido, FontTypeNames.FONTTYPE_INFO)
 
         End If
 
@@ -16133,15 +16003,15 @@ End Sub
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleChangeMapInfoNoOcultar(ByVal Userindex As Integer)
+Public Sub HandleChangeMapInfoNoOcultar(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: ZaMa
     'Last Modification: 18/09/2010
     'OcultarSinEfecto -> Options: "1", "0"
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 2 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 2 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
@@ -16150,7 +16020,7 @@ Public Sub HandleChangeMapInfoNoOcultar(ByVal Userindex As Integer)
 
     Dim Mapa      As Integer
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
     
         'Remove Packet ID
         Call .incomingData.ReadByte
@@ -16166,7 +16036,7 @@ Public Sub HandleChangeMapInfoNoOcultar(ByVal Userindex As Integer)
             MapInfo(Mapa).OcultarSinEfecto = NoOcultar
 
             Call WriteVar(App.Path & MapPath & "mapa" & Mapa & ".dat", "Mapa" & Mapa, "OcultarSinEfecto", NoOcultar)
-            Call WriteConsoleMsg(Userindex, "Mapa " & Mapa & " OcultarSinEfecto: " & NoOcultar, FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Mapa " & Mapa & " OcultarSinEfecto: " & NoOcultar, FontTypeNames.FONTTYPE_INFO)
 
         End If
         
@@ -16179,15 +16049,15 @@ End Sub
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleChangeMapInfoNoInvocar(ByVal Userindex As Integer)
+Public Sub HandleChangeMapInfoNoInvocar(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: ZaMa
     'Last Modification: 18/09/2010
     'InvocarSinEfecto -> Options: "1", "0"
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 2 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 2 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
@@ -16196,7 +16066,7 @@ Public Sub HandleChangeMapInfoNoInvocar(ByVal Userindex As Integer)
 
     Dim Mapa      As Integer
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
     
         'Remove Packet ID
         Call .incomingData.ReadByte
@@ -16212,7 +16082,7 @@ Public Sub HandleChangeMapInfoNoInvocar(ByVal Userindex As Integer)
             MapInfo(Mapa).InvocarSinEfecto = NoInvocar
 
             Call WriteVar(App.Path & MapPath & "mapa" & Mapa & ".dat", "Mapa" & Mapa, "InvocarSinEfecto", NoInvocar)
-            Call WriteConsoleMsg(Userindex, "Mapa " & Mapa & " InvocarSinEfecto: " & NoInvocar, FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Mapa " & Mapa & " InvocarSinEfecto: " & NoInvocar, FontTypeNames.FONTTYPE_INFO)
 
         End If
         
@@ -16225,14 +16095,14 @@ End Sub
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleSaveMap(ByVal Userindex As Integer)
+Public Sub HandleSaveMap(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Lucas Tavolaro Ortiz (Tavo)
     'Last Modification: 12/24/06
     'Saves the map
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove Packet ID
         Call .incomingData.ReadByte
         
@@ -16242,7 +16112,7 @@ Public Sub HandleSaveMap(ByVal Userindex As Integer)
         
         Call GrabarMapa(.Pos.Map, App.Path & "\WorldBackUp\Mapa" & .Pos.Map)
         
-        Call WriteConsoleMsg(Userindex, "Mapa Guardado.", FontTypeNames.FONTTYPE_INFO)
+        Call WriteConsoleMsg(UserIndex, "Mapa Guardado.", FontTypeNames.FONTTYPE_INFO)
 
     End With
 
@@ -16253,7 +16123,7 @@ End Sub
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleShowGuildMessages(ByVal Userindex As Integer)
+Public Sub HandleShowGuildMessages(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Lucas Tavolaro Ortiz (Tavo)
@@ -16261,15 +16131,15 @@ Public Sub HandleShowGuildMessages(ByVal Userindex As Integer)
     'Last modified by: Juan Martin Sotuyo Dodero (Maraxus)
     'Allows admins to read guild messages
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -16285,7 +16155,7 @@ Public Sub HandleShowGuildMessages(ByVal Userindex As Integer)
         Guild = buffer.ReadASCIIString()
         
         If (Not .flags.Privilegios And PlayerType.RoleMaster) <> 0 And (.flags.Privilegios And (PlayerType.Admin Or PlayerType.Dios)) Then
-            Call modGuilds.GMEscuchaClan(Userindex, Guild)
+            Call modGuilds.GMEscuchaClan(UserIndex, Guild)
 
         End If
         
@@ -16294,7 +16164,7 @@ Public Sub HandleShowGuildMessages(ByVal Userindex As Integer)
 
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -16314,14 +16184,14 @@ End Sub
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleDoBackUp(ByVal Userindex As Integer)
+Public Sub HandleDoBackUp(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Lucas Tavolaro Ortiz (Tavo)
     'Last Modification: 12/24/06
     'Show guilds messages
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove Packet ID
         Call .incomingData.ReadByte
         
@@ -16340,21 +16210,21 @@ End Sub
 '
 ' @param userIndex The index of the user sending the message
  
-Public Sub HandleToggleCentinelActivated(ByVal Userindex As Integer)
+Public Sub HandleToggleCentinelActivated(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Lucas Tavolaro Ortiz (Tavo)
     'Last Modification: 02/05/2012
     'Nuevo centinela (maTih.-)
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove Packet ID
         Call .incomingData.ReadByte
         
         'Solo para Admins y Dioses
         If Not EsAdmin(.Name) Or Not EsDios(.Name) Then Exit Sub
         
-        Call modCentinela.CambiarEstado(Userindex)
+        Call modCentinela.CambiarEstado(UserIndex)
         
     End With
 
@@ -16365,22 +16235,22 @@ End Sub
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleAlterName(ByVal Userindex As Integer)
+Public Sub HandleAlterName(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 12/26/06
     'Change user name
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 5 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 5 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -16405,29 +16275,29 @@ Public Sub HandleAlterName(ByVal Userindex As Integer)
         
         If (Not .flags.Privilegios And PlayerType.RoleMaster) <> 0 And (.flags.Privilegios And (PlayerType.Admin Or PlayerType.Dios)) Or .flags.PrivEspecial Then
             If LenB(UserName) = 0 Or LenB(newName) = 0 Then
-                Call WriteConsoleMsg(Userindex, "Usar: /ANAME origen@destino", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "Usar: /ANAME origen@destino", FontTypeNames.FONTTYPE_INFO)
             Else
                 changeNameUI = NameIndex(UserName)
                 
                 If changeNameUI > 0 Then
-                    Call WriteConsoleMsg(Userindex, "El Pj esta online, debe salir para hacer el cambio.", FontTypeNames.FONTTYPE_WARNING)
+                    Call WriteConsoleMsg(UserIndex, "El Pj esta online, debe salir para hacer el cambio.", FontTypeNames.FONTTYPE_WARNING)
                 Else
 
                     If Not PersonajeExiste(UserName) Then
-                        Call WriteConsoleMsg(Userindex, "El pj " & UserName & " es inexistente.", FontTypeNames.FONTTYPE_INFO)
+                        Call WriteConsoleMsg(UserIndex, "El pj " & UserName & " es inexistente.", FontTypeNames.FONTTYPE_INFO)
                     Else
 
                         If GetUserGuildIndex(UserName) > 0 Then
-                            Call WriteConsoleMsg(Userindex, "El pj " & UserName & " pertenece a un clan, debe salir del mismo con /salirclan para ser transferido.", FontTypeNames.FONTTYPE_INFO)
+                            Call WriteConsoleMsg(UserIndex, "El pj " & UserName & " pertenece a un clan, debe salir del mismo con /salirclan para ser transferido.", FontTypeNames.FONTTYPE_INFO)
                         Else
 
                             If Not PersonajeExiste(newName) Then
                                 Call CopyUser(UserName, newName)
 
-                                Call WriteConsoleMsg(Userindex, "Transferencia exitosa.", FontTypeNames.FONTTYPE_INFO)
+                                Call WriteConsoleMsg(UserIndex, "Transferencia exitosa.", FontTypeNames.FONTTYPE_INFO)
                                 Call LogGM(.Name, "Ha cambiado de nombre al usuario " & UserName & ". Ahora se llama " & newName)
                             Else
-                                Call WriteConsoleMsg(Userindex, "El nick solicitado ya existe.", FontTypeNames.FONTTYPE_INFO)
+                                Call WriteConsoleMsg(UserIndex, "El nick solicitado ya existe.", FontTypeNames.FONTTYPE_INFO)
 
                             End If
 
@@ -16446,7 +16316,7 @@ Public Sub HandleAlterName(ByVal Userindex As Integer)
 
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -16466,22 +16336,22 @@ End Sub
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleAlterMail(ByVal Userindex As Integer)
+Public Sub HandleAlterMail(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 12/26/06
     'Change user password
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 5 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 5 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -16501,14 +16371,14 @@ Public Sub HandleAlterMail(ByVal Userindex As Integer)
         
         If (Not .flags.Privilegios And PlayerType.RoleMaster) <> 0 And (.flags.Privilegios And (PlayerType.Admin Or PlayerType.Dios)) Then
             If LenB(UserName) = 0 Or LenB(newMail) = 0 Then
-                Call WriteConsoleMsg(Userindex, "usar /AEMAIL <pj>-<nuevomail>", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "usar /AEMAIL <pj>-<nuevomail>", FontTypeNames.FONTTYPE_INFO)
             Else
 
                 If Not PersonajeExiste(UserName) Then
-                    Call WriteConsoleMsg(Userindex, "No existe el charfile de" & UserName, FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "No existe el charfile de" & UserName, FontTypeNames.FONTTYPE_INFO)
                 Else
                     Call SaveUserEmail(UserName, newMail)
-                    Call WriteConsoleMsg(Userindex, "Email de " & UserName & " cambiado a: " & newMail, FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "Email de " & UserName & " cambiado a: " & newMail, FontTypeNames.FONTTYPE_INFO)
 
                 End If
                 
@@ -16523,7 +16393,7 @@ Public Sub HandleAlterMail(ByVal Userindex As Integer)
 
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -16543,22 +16413,22 @@ End Sub
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleAlterPassword(ByVal Userindex As Integer)
+Public Sub HandleAlterPassword(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 12/26/06
     'Change user password
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 5 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 5 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -16584,18 +16454,18 @@ Public Sub HandleAlterPassword(ByVal Userindex As Integer)
             Call LogGM(.Name, "Ha alterado la contrasena de " & UserName)
             
             If LenB(UserName) = 0 Or LenB(copyFrom) = 0 Then
-                Call WriteConsoleMsg(Userindex, "usar /APASS <pjsinpass>@<pjconpass>", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "usar /APASS <pjsinpass>@<pjconpass>", FontTypeNames.FONTTYPE_INFO)
             Else
 
                 If Not PersonajeExiste(UserName) Or Not PersonajeExiste(copyFrom) Then
-                    Call WriteConsoleMsg(Userindex, "Alguno de los PJs no existe " & UserName & "@" & copyFrom, FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "Alguno de los PJs no existe " & UserName & "@" & copyFrom, FontTypeNames.FONTTYPE_INFO)
                 Else
                     Password = GetUserPassword(copyFrom)
                     Salt = GetUserSalt(copyFrom)
 
                     Call StorePasswordSalt(UserName, Password, Salt)
                     
-                    Call WriteConsoleMsg(Userindex, "Password de " & UserName & " ha cambiado por la de " & copyFrom, FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "Password de " & UserName & " ha cambiado por la de " & copyFrom, FontTypeNames.FONTTYPE_INFO)
 
                 End If
 
@@ -16608,7 +16478,7 @@ Public Sub HandleAlterPassword(ByVal Userindex As Integer)
 
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -16628,7 +16498,7 @@ End Sub
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleCreateNPC(ByVal Userindex As Integer)
+Public Sub HandleCreateNPC(ByVal UserIndex As Integer)
 
     '**********************************************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -16637,13 +16507,13 @@ Public Sub HandleCreateNPC(ByVal Userindex As Integer)
     '11/05/2019: Jopi - Se arreglo la comprobacion de NPC's pretorianos.
     '11/05/2019: Jopi - Se combino HandleCreateNPCWithRespawn() con este procedimiento.
     '**********************************************************************************
-    If UserList(Userindex).incomingData.Length < 4 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 4 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         
         'Remove Packet ID
         Call .incomingData.ReadByte
@@ -16652,11 +16522,11 @@ Public Sub HandleCreateNPC(ByVal Userindex As Integer)
         Dim Respawn As Boolean: Respawn = .incomingData.ReadBoolean()
         
         'Nos fijamos que sea GM.
-        If Not EsGm(Userindex) Then Exit Sub
+        If Not EsGm(UserIndex) Then Exit Sub
         
         'Nos fijamos si es pretoriano.
         If Npclist(NpcIndex).NPCtype = eNPCType.Pretoriano Then
-            Call WriteConsoleMsg(Userindex, "No puedes sumonear miembros del clan pretoriano de esta forma, utiliza /CREARPRETORIANOS MAPA X Y.", FontTypeNames.FONTTYPE_WARNING)
+            Call WriteConsoleMsg(UserIndex, "No puedes sumonear miembros del clan pretoriano de esta forma, utiliza /CREARPRETORIANOS MAPA X Y.", FontTypeNames.FONTTYPE_WARNING)
             Exit Sub
 
         End If
@@ -16679,20 +16549,20 @@ End Sub
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleImperialArmour(ByVal Userindex As Integer)
+Public Sub HandleImperialArmour(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 12/24/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 4 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 4 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove Packet ID
         Call .incomingData.ReadByte
         
@@ -16730,20 +16600,20 @@ End Sub
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleChaosArmour(ByVal Userindex As Integer)
+Public Sub HandleChaosArmour(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 12/24/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 4 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 4 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove Packet ID
         Call .incomingData.ReadByte
         
@@ -16781,14 +16651,14 @@ End Sub
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleNavigateToggle(ByVal Userindex As Integer)
+Public Sub HandleNavigateToggle(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 01/12/07
     '
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove Packet ID
         Call .incomingData.ReadByte
         
@@ -16802,7 +16672,7 @@ Public Sub HandleNavigateToggle(ByVal Userindex As Integer)
         End If
         
         'Tell the client that we are navigating.
-        Call WriteNavigateToggle(Userindex)
+        Call WriteNavigateToggle(UserIndex)
 
     End With
 
@@ -16813,25 +16683,25 @@ End Sub
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleServerOpenToUsersToggle(ByVal Userindex As Integer)
+Public Sub HandleServerOpenToUsersToggle(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 12/24/06
     '
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove Packet ID
         Call .incomingData.ReadByte
         
         If .flags.Privilegios And (PlayerType.User Or PlayerType.Consejero Or PlayerType.SemiDios Or PlayerType.RoleMaster) Then Exit Sub
         
         If ServerSoloGMs > 0 Then
-            Call WriteConsoleMsg(Userindex, "Servidor habilitado para todos.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Servidor habilitado para todos.", FontTypeNames.FONTTYPE_INFO)
             ServerSoloGMs = 0
             frmMain.chkServerHabilitado.Value = vbUnchecked
         Else
-            Call WriteConsoleMsg(Userindex, "Servidor restringido a administradores.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Servidor restringido a administradores.", FontTypeNames.FONTTYPE_INFO)
             ServerSoloGMs = 1
             frmMain.chkServerHabilitado.Value = vbChecked
 
@@ -16846,7 +16716,7 @@ End Sub
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleTurnOffServer(ByVal Userindex As Integer)
+Public Sub HandleTurnOffServer(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -16855,7 +16725,7 @@ Public Sub HandleTurnOffServer(ByVal Userindex As Integer)
     '***************************************************
     Dim handle As Integer
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove Packet ID
         Call .incomingData.ReadByte
         
@@ -16883,22 +16753,22 @@ End Sub
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleTurnCriminal(ByVal Userindex As Integer)
+Public Sub HandleTurnCriminal(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 12/26/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -16929,7 +16799,7 @@ Public Sub HandleTurnCriminal(ByVal Userindex As Integer)
 
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -16949,22 +16819,22 @@ End Sub
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleResetFactions(ByVal Userindex As Integer)
+Public Sub HandleResetFactions(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 06/09/09
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -16995,7 +16865,7 @@ Public Sub HandleResetFactions(ByVal Userindex As Integer)
                 If PersonajeExiste(UserName) Then
                     Call ResetUserFacciones(UserName)
                 Else
-                    Call WriteConsoleMsg(Userindex, "El personaje " & UserName & " no existe.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "El personaje " & UserName & " no existe.", FontTypeNames.FONTTYPE_INFO)
 
                 End If
 
@@ -17008,7 +16878,7 @@ Public Sub HandleResetFactions(ByVal Userindex As Integer)
 
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -17028,22 +16898,22 @@ End Sub
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleRemoveCharFromGuild(ByVal Userindex As Integer)
+Public Sub HandleRemoveCharFromGuild(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 12/26/06
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -17063,12 +16933,12 @@ Public Sub HandleRemoveCharFromGuild(ByVal Userindex As Integer)
         If (Not .flags.Privilegios And PlayerType.RoleMaster) <> 0 And (.flags.Privilegios And (PlayerType.Admin Or PlayerType.Dios)) Then
             Call LogGM(.Name, "/RAJARCLAN " & UserName)
             
-            GuildIndex = modGuilds.m_EcharMiembroDeClan(Userindex, UserName)
+            GuildIndex = modGuilds.m_EcharMiembroDeClan(UserIndex, UserName)
             
             If GuildIndex = 0 Then
-                Call WriteConsoleMsg(Userindex, "No pertenece a ningUn clan o es fundador.", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "No pertenece a ningUn clan o es fundador.", FontTypeNames.FONTTYPE_INFO)
             Else
-                Call WriteConsoleMsg(Userindex, "Expulsado.", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "Expulsado.", FontTypeNames.FONTTYPE_INFO)
                 Call SendData(SendTarget.ToGuildMembers, GuildIndex, PrepareMessageConsoleMsg(UserName & " ha sido expulsado del clan por los administradores del servidor.", FontTypeNames.FONTTYPE_GUILD))
 
             End If
@@ -17080,7 +16950,7 @@ Public Sub HandleRemoveCharFromGuild(ByVal Userindex As Integer)
 
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -17100,22 +16970,22 @@ End Sub
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleRequestCharMail(ByVal Userindex As Integer)
+Public Sub HandleRequestCharMail(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 12/26/06
     'Request user mail
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -17136,7 +17006,7 @@ Public Sub HandleRequestCharMail(ByVal Userindex As Integer)
             If PersonajeExiste(UserName) Then
                 mail = GetUserEmail(UserName)
                 
-                Call WriteConsoleMsg(Userindex, "Last email de " & UserName & ":" & mail, FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "Last email de " & UserName & ":" & mail, FontTypeNames.FONTTYPE_INFO)
 
             End If
 
@@ -17147,7 +17017,7 @@ Public Sub HandleRequestCharMail(ByVal Userindex As Integer)
 
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -17167,22 +17037,22 @@ End Sub
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleSystemMessage(ByVal Userindex As Integer)
+Public Sub HandleSystemMessage(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Lucas Tavolaro Ortiz (Tavo)
     'Last Modification: 12/29/06
     'Send a message to all the users
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -17209,7 +17079,7 @@ Public Sub HandleSystemMessage(ByVal Userindex As Integer)
 
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -17229,7 +17099,7 @@ End Sub
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleSetMOTD(ByVal Userindex As Integer)
+Public Sub HandleSetMOTD(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Lucas Tavolaro Ortiz (Tavo)
@@ -17239,15 +17109,15 @@ Public Sub HandleSetMOTD(ByVal Userindex As Integer)
     '   - Fixed a bug that prevented from properly setting the new number of lines.
     '   - Fixed a bug that caused the player to be kicked.
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -17282,7 +17152,7 @@ Public Sub HandleSetMOTD(ByVal Userindex As Integer)
                 MOTD(LoopC).texto = auxiliaryString(LoopC - 1)
             Next LoopC
             
-            Call WriteConsoleMsg(Userindex, "Se ha cambiado el MOTD con exito.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Se ha cambiado el MOTD con exito.", FontTypeNames.FONTTYPE_INFO)
 
         End If
         
@@ -17291,7 +17161,7 @@ Public Sub HandleSetMOTD(ByVal Userindex As Integer)
 
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -17311,14 +17181,14 @@ End Sub
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleChangeMOTD(ByVal Userindex As Integer)
+Public Sub HandleChangeMOTD(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin sotuyo Dodero (Maraxus)
     'Last Modification: 12/29/06
     'Change the MOTD
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove Packet ID
         Call .incomingData.ReadByte
         
@@ -17343,7 +17213,7 @@ Public Sub HandleChangeMOTD(ByVal Userindex As Integer)
 
         End If
         
-        Call WriteShowMOTDEditionForm(Userindex, auxiliaryString)
+        Call WriteShowMOTDEditionForm(UserIndex, auxiliaryString)
 
     End With
 
@@ -17354,18 +17224,18 @@ End Sub
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandlePing(ByVal Userindex As Integer)
+Public Sub HandlePing(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Lucas Tavolaro Ortiz (Tavo)
     'Last Modification: 12/24/06
     'Show guilds messages
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove Packet ID
         Call .incomingData.ReadByte
         
-        Call WritePong(Userindex)
+        Call WritePong(UserIndex)
 
     End With
 
@@ -17376,22 +17246,22 @@ End Sub
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleSetIniVar(ByVal Userindex As Integer)
+Public Sub HandleSetIniVar(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Brian Chaia (BrianPr)
     'Last Modification: 01/23/10 (Marco)
     'Modify server.ini
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 6 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 6 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
 
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -17419,7 +17289,7 @@ Public Sub HandleSetIniVar(ByVal Userindex As Integer)
 
             'No podemos modificar [INIT]Dioses ni [Dioses]*
             If (UCase$(sLlave) = "INIT" And UCase$(sClave) = "DIOSES") Or UCase$(sLlave) = "DIOSES" Then
-                Call WriteConsoleMsg(Userindex, "No puedes modificar esa informacion desde aqui!", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "No puedes modificar esa informacion desde aqui!", FontTypeNames.FONTTYPE_INFO)
             Else
                 'Obtengo el valor segUn llave y clave
                 sTmp = GetVar(IniPath & "Server.ini", sLlave, sClave)
@@ -17428,9 +17298,9 @@ Public Sub HandleSetIniVar(ByVal Userindex As Integer)
                 If LenB(sTmp) Then
                     Call WriteVar(IniPath & "Server.ini", sLlave, sClave, sValor)
                     Call LogGM(.Name, "Modifico en server.ini (" & sLlave & " " & sClave & ") el valor " & sTmp & " por " & sValor)
-                    Call WriteConsoleMsg(Userindex, "Modifico " & sLlave & " " & sClave & " a " & sValor & ". Valor anterior " & sTmp, FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "Modifico " & sLlave & " " & sClave & " a " & sValor & ". Valor anterior " & sTmp, FontTypeNames.FONTTYPE_INFO)
                 Else
-                    Call WriteConsoleMsg(Userindex, "No existe la llave y/o clave", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "No existe la llave y/o clave", FontTypeNames.FONTTYPE_INFO)
 
                 End If
 
@@ -17443,7 +17313,7 @@ Public Sub HandleSetIniVar(ByVal Userindex As Integer)
 
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -17463,20 +17333,20 @@ End Sub
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleCreatePretorianClan(ByVal Userindex As Integer)
+Public Sub HandleCreatePretorianClan(ByVal UserIndex As Integer)
     '***************************************************
     'Author: ZaMa
     'Last Modification: 29/10/2010
     '***************************************************
 
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
     Dim Map   As Integer
     Dim X     As Byte
     Dim Y     As Byte
     Dim index As Long
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         
         'Remove packet ID
         Call .incomingData.ReadByte
@@ -17490,7 +17360,7 @@ Public Sub HandleCreatePretorianClan(ByVal Userindex As Integer)
         
         ' Valid pos?
         If Not InMapBounds(Map, X, Y) Then
-            Call WriteConsoleMsg(Userindex, "Posicion invalida.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Posicion invalida.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
 
         End If
@@ -17506,12 +17376,12 @@ Public Sub HandleCreatePretorianClan(ByVal Userindex As Integer)
         If Not ClanPretoriano(index).Active Then
             
             If Not ClanPretoriano(index).SpawnClan(Map, X, Y, index) Then
-                Call WriteConsoleMsg(Userindex, "La posicion no es apropiada para crear el clan", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "La posicion no es apropiada para crear el clan", FontTypeNames.FONTTYPE_INFO)
 
             End If
         
         Else
-            Call WriteConsoleMsg(Userindex, "El clan pretoriano se encuentra activo en el mapa " & ClanPretoriano(index).ClanMap & ". Utilice /EliminarPretorianos MAPA y reintente.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "El clan pretoriano se encuentra activo en el mapa " & ClanPretoriano(index).ClanMap & ". Utilice /EliminarPretorianos MAPA y reintente.", FontTypeNames.FONTTYPE_INFO)
 
         End If
     
@@ -17519,7 +17389,7 @@ Public Sub HandleCreatePretorianClan(ByVal Userindex As Integer)
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
     Call LogError("Error en HandleCreatePretorianClan. Error: " & Err.Number & " - " & Err.description)
 
 End Sub
@@ -17529,19 +17399,19 @@ End Sub
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleDeletePretorianClan(ByVal Userindex As Integer)
+Public Sub HandleDeletePretorianClan(ByVal UserIndex As Integer)
     '***************************************************
     'Author: ZaMa
     'Last Modification: 29/10/2010
     '***************************************************
 
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
     
     Dim Map   As Integer
 
     Dim index As Long
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         
         'Remove packet ID
         Call .incomingData.ReadByte
@@ -17553,7 +17423,7 @@ Public Sub HandleDeletePretorianClan(ByVal Userindex As Integer)
         
         ' Valid map?
         If Map < 1 Or Map > NumMaps Then
-            Call WriteConsoleMsg(Userindex, "Mapa invalido.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Mapa invalido.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
 
         End If
@@ -17573,7 +17443,7 @@ Public Sub HandleDeletePretorianClan(ByVal Userindex As Integer)
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
     Call LogError("Error en HandleDeletePretorianClan. Error: " & Err.Number & " - " & Err.description)
 
 End Sub
@@ -17584,28 +17454,28 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteLoggedMessage(ByVal Userindex As Integer)
+Public Sub WriteLoggedMessage(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "Logged" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
         Call .outgoingData.WriteByte(ServerPacketID.Logged)
     
-        Call .outgoingData.WriteByte(.Clase)
+        Call .outgoingData.WriteByte(.clase)
 
     End With
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -17618,22 +17488,22 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteRemoveAllDialogs(ByVal Userindex As Integer)
+Public Sub WriteRemoveAllDialogs(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "RemoveDialogs" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    Call UserList(Userindex).outgoingData.WriteByte(ServerPacketID.RemoveDialogs)
+    Call UserList(UserIndex).outgoingData.WriteByte(ServerPacketID.RemoveDialogs)
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -17647,22 +17517,22 @@ End Sub
 ' @param    CharIndex Character whose dialog will be removed.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteRemoveCharDialog(ByVal Userindex As Integer, ByVal CharIndex As Integer)
+Public Sub WriteRemoveCharDialog(ByVal UserIndex As Integer, ByVal CharIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "RemoveCharDialog" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    Call UserList(Userindex).outgoingData.WriteASCIIStringFixed(PrepareMessageRemoveCharDialog(CharIndex))
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageRemoveCharDialog(CharIndex))
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -17675,22 +17545,22 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteNavigateToggle(ByVal Userindex As Integer)
+Public Sub WriteNavigateToggle(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "NavigateToggle" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    Call UserList(Userindex).outgoingData.WriteByte(ServerPacketID.NavigateToggle)
+    Call UserList(UserIndex).outgoingData.WriteByte(ServerPacketID.NavigateToggle)
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -17703,22 +17573,22 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteDisconnect(ByVal Userindex As Integer)
+Public Sub WriteDisconnect(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "Disconnect" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    Call UserList(Userindex).outgoingData.WriteByte(ServerPacketID.Disconnect)
+    Call UserList(UserIndex).outgoingData.WriteByte(ServerPacketID.Disconnect)
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -17731,22 +17601,22 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteUserOfferConfirm(ByVal Userindex As Integer)
+Public Sub WriteUserOfferConfirm(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: ZaMa
     'Last Modification: 14/12/2009
     'Writes the "UserOfferConfirm" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    Call UserList(Userindex).outgoingData.WriteByte(ServerPacketID.UserOfferConfirm)
+    Call UserList(UserIndex).outgoingData.WriteByte(ServerPacketID.UserOfferConfirm)
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -17759,22 +17629,22 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteCommerceEnd(ByVal Userindex As Integer)
+Public Sub WriteCommerceEnd(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "CommerceEnd" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    Call UserList(Userindex).outgoingData.WriteByte(ServerPacketID.CommerceEnd)
+    Call UserList(UserIndex).outgoingData.WriteByte(ServerPacketID.CommerceEnd)
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -17787,22 +17657,22 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteBankEnd(ByVal Userindex As Integer)
+Public Sub WriteBankEnd(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "BankEnd" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    Call UserList(Userindex).outgoingData.WriteByte(ServerPacketID.BankEnd)
+    Call UserList(UserIndex).outgoingData.WriteByte(ServerPacketID.BankEnd)
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -17815,22 +17685,22 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteCommerceInit(ByVal Userindex As Integer)
+Public Sub WriteCommerceInit(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "CommerceInit" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    Call UserList(Userindex).outgoingData.WriteByte(ServerPacketID.CommerceInit)
+    Call UserList(UserIndex).outgoingData.WriteByte(ServerPacketID.CommerceInit)
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -17843,23 +17713,23 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteBankInit(ByVal Userindex As Integer)
+Public Sub WriteBankInit(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "BankInit" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    Call UserList(Userindex).outgoingData.WriteByte(ServerPacketID.BankInit)
-    Call UserList(Userindex).outgoingData.WriteLong(UserList(Userindex).Stats.Banco)
+    Call UserList(UserIndex).outgoingData.WriteByte(ServerPacketID.BankInit)
+    Call UserList(UserIndex).outgoingData.WriteLong(UserList(UserIndex).Stats.Banco)
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -17872,23 +17742,23 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteUserCommerceInit(ByVal Userindex As Integer)
+Public Sub WriteUserCommerceInit(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "UserCommerceInit" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    Call UserList(Userindex).outgoingData.WriteByte(ServerPacketID.UserCommerceInit)
-    Call UserList(Userindex).outgoingData.WriteASCIIString(UserList(Userindex).ComUsu.DestNick)
+    Call UserList(UserIndex).outgoingData.WriteByte(ServerPacketID.UserCommerceInit)
+    Call UserList(UserIndex).outgoingData.WriteASCIIString(UserList(UserIndex).ComUsu.DestNick)
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -17901,22 +17771,22 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteUserCommerceEnd(ByVal Userindex As Integer)
+Public Sub WriteUserCommerceEnd(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "UserCommerceEnd" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    Call UserList(Userindex).outgoingData.WriteByte(ServerPacketID.UserCommerceEnd)
+    Call UserList(UserIndex).outgoingData.WriteByte(ServerPacketID.UserCommerceEnd)
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -17929,27 +17799,27 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteUpdateSta(ByVal Userindex As Integer)
+Public Sub WriteUpdateSta(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "UpdateMana" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.UpdateSta)
-        Call .WriteInteger(UserList(Userindex).Stats.MinSta)
+        Call .WriteInteger(UserList(UserIndex).Stats.MinSta)
 
     End With
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -17962,27 +17832,27 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteUpdateMana(ByVal Userindex As Integer)
+Public Sub WriteUpdateMana(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "UpdateMana" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.UpdateMana)
-        Call .WriteInteger(UserList(Userindex).Stats.MinMAN)
+        Call .WriteInteger(UserList(UserIndex).Stats.MinMAN)
 
     End With
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -17995,27 +17865,27 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteUpdateHP(ByVal Userindex As Integer)
+Public Sub WriteUpdateHP(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "UpdateMana" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.UpdateHP)
-        Call .WriteInteger(UserList(Userindex).Stats.MinHp)
+        Call .WriteInteger(UserList(UserIndex).Stats.MinHp)
 
     End With
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -18028,27 +17898,27 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteUpdateGold(ByVal Userindex As Integer)
+Public Sub WriteUpdateGold(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "UpdateGold" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.UpdateGold)
-        Call .WriteLong(UserList(Userindex).Stats.Gld)
+        Call .WriteLong(UserList(UserIndex).Stats.Gld)
 
     End With
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -18061,27 +17931,27 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteUpdateBankGold(ByVal Userindex As Integer)
+Public Sub WriteUpdateBankGold(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: ZaMa
     'Last Modification: 14/12/2009
     'Writes the "UpdateBankGold" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.UpdateBankGold)
-        Call .WriteLong(UserList(Userindex).Stats.Banco)
+        Call .WriteLong(UserList(UserIndex).Stats.Banco)
 
     End With
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -18094,27 +17964,27 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteUpdateExp(ByVal Userindex As Integer)
+Public Sub WriteUpdateExp(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "UpdateExp" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.UpdateExp)
-        Call .WriteLong(UserList(Userindex).Stats.Exp)
+        Call .WriteLong(UserList(UserIndex).Stats.Exp)
 
     End With
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -18127,28 +17997,28 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteUpdateStrenghtAndDexterity(ByVal Userindex As Integer)
+Public Sub WriteUpdateStrenghtAndDexterity(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Budi
     'Last Modification: 11/26/09
     'Writes the "UpdateStrenghtAndDexterity" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.UpdateStrenghtAndDexterity)
-        Call .WriteByte(UserList(Userindex).Stats.UserAtributos(eAtributos.Fuerza))
-        Call .WriteByte(UserList(Userindex).Stats.UserAtributos(eAtributos.Agilidad))
+        Call .WriteByte(UserList(UserIndex).Stats.UserAtributos(eAtributos.Fuerza))
+        Call .WriteByte(UserList(UserIndex).Stats.UserAtributos(eAtributos.Agilidad))
 
     End With
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -18160,27 +18030,27 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteUpdateDexterity(ByVal Userindex As Integer)
+Public Sub WriteUpdateDexterity(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Budi
     'Last Modification: 11/26/09
     'Writes the "UpdateStrenghtAndDexterity" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.UpdateDexterity)
-        Call .WriteByte(UserList(Userindex).Stats.UserAtributos(eAtributos.Agilidad))
+        Call .WriteByte(UserList(UserIndex).Stats.UserAtributos(eAtributos.Agilidad))
 
     End With
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -18192,27 +18062,27 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteUpdateStrenght(ByVal Userindex As Integer)
+Public Sub WriteUpdateStrenght(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Budi
     'Last Modification: 11/26/09
     'Writes the "UpdateStrenghtAndDexterity" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.UpdateStrenght)
-        Call .WriteByte(UserList(Userindex).Stats.UserAtributos(eAtributos.Fuerza))
+        Call .WriteByte(UserList(UserIndex).Stats.UserAtributos(eAtributos.Fuerza))
 
     End With
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -18227,7 +18097,7 @@ End Sub
 ' @param    version The version of the map in the server to check if client is properly updated.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteChangeMap(ByVal Userindex As Integer, _
+Public Sub WriteChangeMap(ByVal UserIndex As Integer, _
                           ByVal Map As Integer, _
                           ByVal version As Integer)
 
@@ -18236,9 +18106,9 @@ Public Sub WriteChangeMap(ByVal Userindex As Integer, _
     'Last Modification: 05/17/06
     'Writes the "ChangeMap" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.ChangeMap)
         Call .WriteInteger(Map)
         Call .WriteASCIIString(MapInfo(Map).Name)
@@ -18248,10 +18118,10 @@ Public Sub WriteChangeMap(ByVal Userindex As Integer, _
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -18264,28 +18134,28 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WritePosUpdate(ByVal Userindex As Integer)
+Public Sub WritePosUpdate(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "PosUpdate" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.PosUpdate)
-        Call .WriteByte(UserList(Userindex).Pos.X)
-        Call .WriteByte(UserList(Userindex).Pos.Y)
+        Call .WriteByte(UserList(UserIndex).Pos.X)
+        Call .WriteByte(UserList(UserIndex).Pos.Y)
 
     End With
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -18301,7 +18171,7 @@ End Sub
 ' @param    Color The color to be used when displaying the chat.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteChatOverHead(ByVal Userindex As Integer, _
+Public Sub WriteChatOverHead(ByVal UserIndex As Integer, _
                              ByVal Chat As String, _
                              ByVal CharIndex As Integer, _
                              ByVal color As Long)
@@ -18311,15 +18181,15 @@ Public Sub WriteChatOverHead(ByVal Userindex As Integer, _
     'Last Modification: 05/17/06
     'Writes the "ChatOverHead" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    Call UserList(Userindex).outgoingData.WriteASCIIStringFixed(PrepareMessageChatOverHead(Chat, CharIndex, color))
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageChatOverHead(Chat, CharIndex, color))
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -18334,7 +18204,7 @@ End Sub
 ' @param    FontIndex Index of the FONTTYPE structure to use.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteConsoleMsg(ByVal Userindex As Integer, _
+Public Sub WriteConsoleMsg(ByVal UserIndex As Integer, _
                            ByVal Chat As String, _
                            ByVal FontIndex As FontTypeNames)
 
@@ -18343,40 +18213,40 @@ Public Sub WriteConsoleMsg(ByVal Userindex As Integer, _
     'Last Modification: 05/17/06
     'Writes the "ConsoleMsg" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    Call UserList(Userindex).outgoingData.WriteASCIIStringFixed(PrepareMessageConsoleMsg(Chat, FontIndex))
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageConsoleMsg(Chat, FontIndex))
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
 
 End Sub
-Public Sub WriteRenderMsg(ByVal Userindex As Integer, _
+Public Sub WriteRenderMsg(ByVal UserIndex As Integer, _
                            ByVal Chat As String, _
                            ByVal FontIndex As Integer)
 
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    Call UserList(Userindex).outgoingData.WriteASCIIStringFixed(PrepareRenderConsoleMsg(Chat, FontIndex))
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareRenderConsoleMsg(Chat, FontIndex))
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
 
 End Sub
 
-Public Sub WriteCommerceChat(ByVal Userindex As Integer, _
+Public Sub WriteCommerceChat(ByVal UserIndex As Integer, _
                              ByVal Chat As String, _
                              ByVal FontIndex As FontTypeNames)
 
@@ -18385,15 +18255,15 @@ Public Sub WriteCommerceChat(ByVal Userindex As Integer, _
     'Last Modification: 05/17/06
     'Writes the "ConsoleMsg" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    Call UserList(Userindex).outgoingData.WriteASCIIStringFixed(PrepareCommerceConsoleMsg(Chat, FontIndex))
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareCommerceConsoleMsg(Chat, FontIndex))
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -18407,22 +18277,22 @@ End Sub
 ' @param    Chat Text to be displayed over the char's head.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteGuildChat(ByVal Userindex As Integer, ByVal Chat As String)
+Public Sub WriteGuildChat(ByVal UserIndex As Integer, ByVal Chat As String)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "GuildChat" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    Call UserList(Userindex).outgoingData.WriteASCIIStringFixed(PrepareMessageGuildChat(Chat))
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageGuildChat(Chat))
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -18435,16 +18305,16 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @param    Message Text to be displayed in the message box.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
-Public Sub WriteShowMessageBox(ByVal Userindex As Integer, ByVal Message As String)
+Public Sub WriteShowMessageBox(ByVal UserIndex As Integer, ByVal Message As String)
 '***************************************************
 'Author: Juan Martin Sotuyo Dodero (Maraxus)
 'Last Modification: 05/17/06
 'Writes the "ShowMessageBox" message to the given user's outgoing data buffer
 '***************************************************
     
-        On Error GoTo ErrHandler
+        On Error GoTo Errhandler
 
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.ShowMessageBox)
         Call .WriteASCIIString(Message)
 
@@ -18452,10 +18322,10 @@ Public Sub WriteShowMessageBox(ByVal Userindex As Integer, ByVal Message As Stri
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -18468,27 +18338,27 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteUserIndexInServer(ByVal Userindex As Integer)
+Public Sub WriteUserIndexInServer(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "UserIndexInServer" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.UserIndexInServer)
-        Call .WriteInteger(Userindex)
+        Call .WriteInteger(UserIndex)
 
     End With
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -18501,27 +18371,27 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteUserCharIndexInServer(ByVal Userindex As Integer)
+Public Sub WriteUserCharIndexInServer(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "UserIndexInServer" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.UserCharIndexInServer)
-        Call .WriteInteger(UserList(Userindex).Char.CharIndex)
+        Call .WriteInteger(UserList(UserIndex).Char.CharIndex)
 
     End With
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -18546,9 +18416,10 @@ End Sub
 ' @param    name Name of the new character.
 ' @param    criminal Determines if the character is a criminal or not.
 ' @param    privileges Sets if the character is a normal one or any kind of administrative character.
+' @param    NoShadow establece si el cuerpo no emite sombra
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteCharacterCreate(ByVal Userindex As Integer, _
+Public Sub WriteCharacterCreate(ByVal UserIndex As Integer, _
                                 ByVal body As Integer, _
                                 ByVal Head As Integer, _
                                 ByVal heading As eHeading, _
@@ -18562,22 +18433,23 @@ Public Sub WriteCharacterCreate(ByVal Userindex As Integer, _
                                 ByVal helmet As Integer, _
                                 ByVal Name As String, _
                                 ByVal NickColor As Byte, _
-                                ByVal Privileges As Byte)
+                                ByVal Privileges As Byte, _
+                                Optional ByVal NoShadow As Byte = False)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "CharacterCreate" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    Call UserList(Userindex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterCreate(body, Head, heading, CharIndex, X, Y, weapon, shield, FX, FXLoops, helmet, Name, NickColor, Privileges))
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterCreate(body, Head, heading, CharIndex, X, Y, weapon, shield, FX, FXLoops, helmet, Name, NickColor, Privileges, NoShadow))
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -18591,22 +18463,22 @@ End Sub
 ' @param    CharIndex Character to be removed.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteCharacterRemove(ByVal Userindex As Integer, ByVal CharIndex As Integer)
+Public Sub WriteCharacterRemove(ByVal UserIndex As Integer, ByVal CharIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "CharacterRemove" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    Call UserList(Userindex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterRemove(CharIndex))
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterRemove(CharIndex))
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -18622,7 +18494,7 @@ End Sub
 ' @param    Y Y coord of the character's new position.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteCharacterMove(ByVal Userindex As Integer, _
+Public Sub WriteCharacterMove(ByVal UserIndex As Integer, _
                               ByVal CharIndex As Integer, _
                               ByVal X As Byte, _
                               ByVal Y As Byte)
@@ -18632,37 +18504,37 @@ Public Sub WriteCharacterMove(ByVal Userindex As Integer, _
     'Last Modification: 05/17/06
     'Writes the "CharacterMove" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    Call UserList(Userindex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterMove(CharIndex, X, Y))
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterMove(CharIndex, X, Y))
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
 
 End Sub
 
-Public Sub WriteForceCharMove(ByVal Userindex, ByVal Direccion As eHeading)
+Public Sub WriteForceCharMove(ByVal UserIndex, ByVal Direccion As eHeading)
 
     '***************************************************
     'Author: ZaMa
     'Last Modification: 26/03/2009
     'Writes the "ForceCharMove" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    Call UserList(Userindex).outgoingData.WriteASCIIStringFixed(PrepareMessageForceCharMove(Direccion))
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageForceCharMove(Direccion))
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -18684,7 +18556,7 @@ End Sub
 ' @param    helmet Helmet index of the new character.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteCharacterChange(ByVal Userindex As Integer, _
+Public Sub WriteCharacterChange(ByVal UserIndex As Integer, _
                                 ByVal body As Integer, _
                                 ByVal Head As Integer, _
                                 ByVal heading As eHeading, _
@@ -18700,15 +18572,15 @@ Public Sub WriteCharacterChange(ByVal Userindex As Integer, _
     'Last Modification: 05/17/06
     'Writes the "CharacterChange" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    Call UserList(Userindex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterChange(body, Head, heading, CharIndex, weapon, shield, FX, FXLoops, helmet))
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterChange(body, Head, heading, CharIndex, weapon, shield, FX, FXLoops, helmet))
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -18722,27 +18594,29 @@ End Sub
 ' @param    GrhIndex Grh of the object.
 ' @param    X X coord of the character's new position.
 ' @param    Y Y coord of the character's new position.
+' @param    Shadow establece si el objeto emite sombra
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteObjectCreate(ByVal Userindex As Integer, _
+Public Sub WriteObjectCreate(ByVal UserIndex As Integer, _
                              ByVal GrhIndex As Long, _
                              ByVal X As Byte, _
-                             ByVal Y As Byte)
+                             ByVal Y As Byte, _
+                             Optional ByVal Shadow As Byte = 0)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "ObjectCreate" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    Call UserList(Userindex).outgoingData.WriteASCIIStringFixed(PrepareMessageObjectCreate(GrhIndex, X, Y))
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageObjectCreate(GrhIndex, X, Y, Shadow))
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -18757,22 +18631,22 @@ End Sub
 ' @param    Y Y coord of the character's new position.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteObjectDelete(ByVal Userindex As Integer, ByVal X As Byte, ByVal Y As Byte)
+Public Sub WriteObjectDelete(ByVal UserIndex As Integer, ByVal X As Byte, ByVal Y As Byte)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "ObjectDelete" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    Call UserList(Userindex).outgoingData.WriteASCIIStringFixed(PrepareMessageObjectDelete(X, Y))
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageObjectDelete(X, Y))
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -18788,7 +18662,7 @@ End Sub
 ' @param    Blocked True if the position is blocked.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteBlockPosition(ByVal Userindex As Integer, _
+Public Sub WriteBlockPosition(ByVal UserIndex As Integer, _
                               ByVal X As Byte, _
                               ByVal Y As Byte, _
                               ByVal Blocked As Boolean)
@@ -18798,9 +18672,9 @@ Public Sub WriteBlockPosition(ByVal Userindex As Integer, _
     'Last Modification: 05/17/06
     'Writes the "BlockPosition" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.BlockPosition)
         Call .WriteByte(X)
         Call .WriteByte(Y)
@@ -18810,10 +18684,10 @@ Public Sub WriteBlockPosition(ByVal Userindex As Integer, _
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -18828,7 +18702,7 @@ End Sub
 ' @param    loops Number of repets for the midi.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WritePlayMusic(ByVal Userindex As Integer, _
+Public Sub WritePlayMusic(ByVal UserIndex As Integer, _
                          ByVal music As Integer, _
                          Optional ByVal loops As Integer = -1)
 
@@ -18837,15 +18711,15 @@ Public Sub WritePlayMusic(ByVal Userindex As Integer, _
     'Last Modification: 05/17/06
     'Writes the "PlayMidi" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    Call UserList(Userindex).outgoingData.WriteASCIIStringFixed(PrepareMessagePlayMusic(music, loops))
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessagePlayMusic(music, loops))
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -18861,7 +18735,7 @@ End Sub
 ' @param    Y The Y position in map coordinates from where the sound comes.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WritePlayWave(ByVal Userindex As Integer, _
+Public Sub WritePlayWave(ByVal UserIndex As Integer, _
                          ByVal wave As Byte, _
                          ByVal X As Byte, _
                          ByVal Y As Byte)
@@ -18872,15 +18746,15 @@ Public Sub WritePlayWave(ByVal Userindex As Integer, _
     'Last Modified by: Rapsodius
     'Added X and Y positions for 3D Sounds
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    Call UserList(Userindex).outgoingData.WriteASCIIStringFixed(PrepareMessagePlayWave(wave, X, Y))
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessagePlayWave(wave, X, Y))
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -18894,20 +18768,20 @@ End Sub
 ' @param    GuildList List of guilds to be sent.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteGuildList(ByVal Userindex As Integer, ByRef guildList() As String)
+Public Sub WriteGuildList(ByVal UserIndex As Integer, ByRef guildList() As String)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "GuildList" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
     Dim Tmp As String
 
     Dim i   As Long
     
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.guildList)
         
         ' Prepare guild name's list
@@ -18923,10 +18797,10 @@ Public Sub WriteGuildList(ByVal Userindex As Integer, ByRef guildList() As Strin
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -18939,28 +18813,28 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteAreaChanged(ByVal Userindex As Integer)
+Public Sub WriteAreaChanged(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "AreaChanged" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.AreaChanged)
-        Call .WriteByte(UserList(Userindex).Pos.X)
-        Call .WriteByte(UserList(Userindex).Pos.Y)
+        Call .WriteByte(UserList(UserIndex).Pos.X)
+        Call .WriteByte(UserList(UserIndex).Pos.Y)
 
     End With
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -18973,22 +18847,22 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WritePauseToggle(ByVal Userindex As Integer)
+Public Sub WritePauseToggle(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "PauseToggle" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    Call UserList(Userindex).outgoingData.WriteASCIIStringFixed(PrepareMessagePauseToggle())
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessagePauseToggle())
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -19001,22 +18875,22 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteRainToggle(ByVal Userindex As Integer)
+Public Sub WriteRainToggle(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "RainToggle" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    Call UserList(Userindex).outgoingData.WriteASCIIStringFixed(PrepareMessageRainToggle())
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageRainToggle())
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -19032,7 +18906,7 @@ End Sub
 ' @param    FXLoops Number of times the FX should be rendered.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteCreateFX(ByVal Userindex As Integer, _
+Public Sub WriteCreateFX(ByVal UserIndex As Integer, _
                          ByVal CharIndex As Integer, _
                          ByVal FX As Integer, _
                          ByVal FXLoops As Integer)
@@ -19042,15 +18916,15 @@ Public Sub WriteCreateFX(ByVal Userindex As Integer, _
     'Last Modification: 05/17/06
     'Writes the "CreateFX" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    Call UserList(Userindex).outgoingData.WriteASCIIStringFixed(PrepareMessageCreateFX(CharIndex, FX, FXLoops))
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCreateFX(CharIndex, FX, FXLoops))
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -19063,36 +18937,36 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteUpdateUserStats(ByVal Userindex As Integer)
+Public Sub WriteUpdateUserStats(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "UpdateUserStats" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.UpdateUserStats)
-        Call .WriteInteger(UserList(Userindex).Stats.MaxHp)
-        Call .WriteInteger(UserList(Userindex).Stats.MinHp)
-        Call .WriteInteger(UserList(Userindex).Stats.MaxMAN)
-        Call .WriteInteger(UserList(Userindex).Stats.MinMAN)
-        Call .WriteInteger(UserList(Userindex).Stats.MaxSta)
-        Call .WriteInteger(UserList(Userindex).Stats.MinSta)
-        Call .WriteLong(UserList(Userindex).Stats.Gld)
-        Call .WriteByte(UserList(Userindex).Stats.ELV)
-        Call .WriteLong(UserList(Userindex).Stats.ELU)
-        Call .WriteLong(UserList(Userindex).Stats.Exp)
+        Call .WriteInteger(UserList(UserIndex).Stats.MaxHp)
+        Call .WriteInteger(UserList(UserIndex).Stats.MinHp)
+        Call .WriteInteger(UserList(UserIndex).Stats.MaxMAN)
+        Call .WriteInteger(UserList(UserIndex).Stats.MinMAN)
+        Call .WriteInteger(UserList(UserIndex).Stats.MaxSta)
+        Call .WriteInteger(UserList(UserIndex).Stats.MinSta)
+        Call .WriteLong(UserList(UserIndex).Stats.Gld)
+        Call .WriteByte(UserList(UserIndex).Stats.ELV)
+        Call .WriteLong(UserList(UserIndex).Stats.ELU)
+        Call .WriteLong(UserList(UserIndex).Stats.Exp)
 
     End With
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -19106,7 +18980,7 @@ End Sub
 ' @param    slot Inventory slot which needs to be updated.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteChangeInventorySlot(ByVal Userindex As Integer, ByVal Slot As Byte)
+Public Sub WriteChangeInventorySlot(ByVal UserIndex As Integer, ByVal Slot As Byte)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -19114,9 +18988,9 @@ Public Sub WriteChangeInventorySlot(ByVal Userindex As Integer, ByVal Slot As By
     'Writes the "ChangeInventorySlot" message to the given user's outgoing data buffer
     '3/12/09: Budi - Ahora se envia MaxDef y MinDef en lugar de Def
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.ChangeInventorySlot)
         Call .WriteByte(Slot)
         
@@ -19124,7 +18998,7 @@ Public Sub WriteChangeInventorySlot(ByVal Userindex As Integer, ByVal Slot As By
 
         Dim obData   As ObjData
         
-        ObjIndex = UserList(Userindex).Invent.Object(Slot).ObjIndex
+        ObjIndex = UserList(UserIndex).Invent.Object(Slot).ObjIndex
         
         If ObjIndex > 0 Then
             obData = ObjData(ObjIndex)
@@ -19133,8 +19007,8 @@ Public Sub WriteChangeInventorySlot(ByVal Userindex As Integer, ByVal Slot As By
         
         Call .WriteInteger(ObjIndex)
         Call .WriteASCIIString(obData.Name)
-        Call .WriteInteger(UserList(Userindex).Invent.Object(Slot).Amount)
-        Call .WriteBoolean(UserList(Userindex).Invent.Object(Slot).Equipped)
+        Call .WriteInteger(UserList(UserIndex).Invent.Object(Slot).Amount)
+        Call .WriteBoolean(UserList(UserIndex).Invent.Object(Slot).Equipped)
         Call .WriteLong(obData.GrhIndex)
         Call .WriteByte(obData.OBJType)
         Call .WriteInteger(obData.MaxHIT)
@@ -19147,24 +19021,24 @@ Public Sub WriteChangeInventorySlot(ByVal Userindex As Integer, ByVal Slot As By
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
 
 End Sub
 
-Public Sub WriteAddSlots(ByVal Userindex As Integer, ByVal Mochila As eMochilas)
+Public Sub WriteAddSlots(ByVal UserIndex As Integer, ByVal Mochila As eMochilas)
 
     '***************************************************
     'Author: Budi
     'Last Modification: 01/12/09
     'Writes the "AddSlots" message to the given user's outgoing data buffer
     '***************************************************
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.AddSlots)
         Call .WriteByte(Mochila)
 
@@ -19179,7 +19053,7 @@ End Sub
 ' @param    slot Inventory slot which needs to be updated.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteChangeBankSlot(ByVal Userindex As Integer, ByVal Slot As Byte)
+Public Sub WriteChangeBankSlot(ByVal UserIndex As Integer, ByVal Slot As Byte)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -19187,9 +19061,9 @@ Public Sub WriteChangeBankSlot(ByVal Userindex As Integer, ByVal Slot As Byte)
     'Writes the "ChangeBankSlot" message to the given user's outgoing data buffer
     '12/03/09: Budi - Ahora se envia MaxDef y MinDef en lugar de solo Def
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.ChangeBankSlot)
         Call .WriteByte(Slot)
         
@@ -19197,7 +19071,7 @@ Public Sub WriteChangeBankSlot(ByVal Userindex As Integer, ByVal Slot As Byte)
 
         Dim obData   As ObjData
         
-        ObjIndex = UserList(Userindex).BancoInvent.Object(Slot).ObjIndex
+        ObjIndex = UserList(UserIndex).BancoInvent.Object(Slot).ObjIndex
         
         Call .WriteInteger(ObjIndex)
         
@@ -19207,7 +19081,7 @@ Public Sub WriteChangeBankSlot(ByVal Userindex As Integer, ByVal Slot As Byte)
         End If
         
         Call .WriteASCIIString(obData.Name)
-        Call .WriteInteger(UserList(Userindex).BancoInvent.Object(Slot).Amount)
+        Call .WriteInteger(UserList(UserIndex).BancoInvent.Object(Slot).Amount)
         Call .WriteLong(obData.GrhIndex)
         Call .WriteByte(obData.OBJType)
         Call .WriteInteger(obData.MaxHIT)
@@ -19220,10 +19094,10 @@ Public Sub WriteChangeBankSlot(ByVal Userindex As Integer, ByVal Slot As Byte)
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -19237,7 +19111,7 @@ End Sub
 ' @param    slot Spell slot to update.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteChangeSpellSlot(ByVal Userindex As Integer, ByVal Slot As Integer)
+Public Sub WriteChangeSpellSlot(ByVal UserIndex As Integer, ByVal Slot As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -19245,21 +19119,21 @@ Public Sub WriteChangeSpellSlot(ByVal Userindex As Integer, ByVal Slot As Intege
     'Writes the "ChangeSpellSlot" message to the given user's outgoing data buffer
     '27-08-2016: Shak@ Gracias a la optimizacion, enviamos menos datos :P
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.ChangeSpellSlot)
         Call .WriteByte(Slot)
-        Call .WriteInteger(UserList(Userindex).Stats.UserHechizos(Slot))
+        Call .WriteInteger(UserList(UserIndex).Stats.UserHechizos(Slot))
 
     End With
 
     Exit Sub
  
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -19272,31 +19146,31 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteAttributes(ByVal Userindex As Integer)
+Public Sub WriteAttributes(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "Atributes" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.Atributes)
-        Call .WriteByte(UserList(Userindex).Stats.UserAtributos(eAtributos.Fuerza))
-        Call .WriteByte(UserList(Userindex).Stats.UserAtributos(eAtributos.Agilidad))
-        Call .WriteByte(UserList(Userindex).Stats.UserAtributos(eAtributos.Inteligencia))
-        Call .WriteByte(UserList(Userindex).Stats.UserAtributos(eAtributos.Carisma))
-        Call .WriteByte(UserList(Userindex).Stats.UserAtributos(eAtributos.Constitucion))
+        Call .WriteByte(UserList(UserIndex).Stats.UserAtributos(eAtributos.Fuerza))
+        Call .WriteByte(UserList(UserIndex).Stats.UserAtributos(eAtributos.Agilidad))
+        Call .WriteByte(UserList(UserIndex).Stats.UserAtributos(eAtributos.Inteligencia))
+        Call .WriteByte(UserList(UserIndex).Stats.UserAtributos(eAtributos.Carisma))
+        Call .WriteByte(UserList(UserIndex).Stats.UserAtributos(eAtributos.Constitucion))
 
     End With
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -19309,14 +19183,14 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteBlacksmithWeapons(ByVal Userindex As Integer)
+Public Sub WriteBlacksmithWeapons(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 04/15/2008 (NicoNZ) Habia un error al fijarse los skills del personaje
     'Writes the "BlacksmithWeapons" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
     Dim i              As Long
     Dim obj            As ObjData
@@ -19325,13 +19199,13 @@ Public Sub WriteBlacksmithWeapons(ByVal Userindex As Integer)
     
     ReDim validIndexes(1 To UBound(ArmasHerrero()))
     
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.BlacksmithWeapons)
         
         For i = 1 To UBound(ArmasHerrero())
 
             ' Can the user create this object? If so add it to the list....
-            If ObjData(ArmasHerrero(i)).SkHerreria <= Round(UserList(Userindex).Stats.UserSkills(eSkill.Herreria) / ModHerreriA(UserList(Userindex).Clase), 0) Then
+            If ObjData(ArmasHerrero(i)).SkHerreria <= Round(UserList(UserIndex).Stats.UserSkills(eSkill.Herreria) / ModHerreriA(UserList(UserIndex).clase), 0) Then
                 Count = Count + 1
                 validIndexes(Count) = i
 
@@ -19358,10 +19232,10 @@ Public Sub WriteBlacksmithWeapons(ByVal Userindex As Integer)
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -19374,14 +19248,14 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteBlacksmithArmors(ByVal Userindex As Integer)
+Public Sub WriteBlacksmithArmors(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 04/15/2008 (NicoNZ) Habia un error al fijarse los skills del personaje
     'Writes the "BlacksmithArmors" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
     Dim i              As Long
     Dim obj            As ObjData
@@ -19390,13 +19264,13 @@ Public Sub WriteBlacksmithArmors(ByVal Userindex As Integer)
     
     ReDim validIndexes(1 To UBound(ArmadurasHerrero()))
     
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.BlacksmithArmors)
         
         For i = 1 To UBound(ArmadurasHerrero())
 
             ' Can the user create this object? If so add it to the list....
-            If ObjData(ArmadurasHerrero(i)).SkHerreria <= Round(UserList(Userindex).Stats.UserSkills(eSkill.Herreria) / ModHerreriA(UserList(Userindex).Clase), 0) Then
+            If ObjData(ArmadurasHerrero(i)).SkHerreria <= Round(UserList(UserIndex).Stats.UserSkills(eSkill.Herreria) / ModHerreriA(UserList(UserIndex).clase), 0) Then
                 Count = Count + 1
                 validIndexes(Count) = i
 
@@ -19423,10 +19297,10 @@ Public Sub WriteBlacksmithArmors(ByVal Userindex As Integer)
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -19439,14 +19313,14 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteInitCarpenting(ByVal Userindex As Integer)
+Public Sub WriteInitCarpenting(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "InitCarpenting" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
     Dim i              As Long
     Dim obj            As ObjData
@@ -19455,13 +19329,13 @@ Public Sub WriteInitCarpenting(ByVal Userindex As Integer)
     
     ReDim validIndexes(1 To UBound(ObjCarpintero()))
     
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.InitCarpenting)
 
         For i = 1 To UBound(ObjCarpintero())
 
             ' Can the user create this object? If so add it to the list....
-            If ObjData(ObjCarpintero(i)).SkCarpinteria <= UserList(Userindex).Stats.UserSkills(eSkill.Carpinteria) \ ModCarpinteria(UserList(Userindex).Clase) Then
+            If ObjData(ObjCarpintero(i)).SkCarpinteria <= UserList(UserIndex).Stats.UserSkills(eSkill.Carpinteria) \ ModCarpinteria(UserList(UserIndex).clase) Then
                 Count = Count + 1
                 validIndexes(Count) = i
 
@@ -19487,31 +19361,31 @@ Public Sub WriteInitCarpenting(ByVal Userindex As Integer)
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
 
 End Sub
 
-Public Sub WriteInitCraftsman(ByVal Userindex As Integer)
+Public Sub WriteInitCraftsman(ByVal UserIndex As Integer)
     '***************************************************
     'Author: WyroX
     'Last Modification: 27/01/2020
     'Writes the "InitCraftman" message to the given user's outgoing data buffer
     '***************************************************
 
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
     Dim i              As Long
     Dim j              As Long
     Dim obj            As ObjData
     Dim ObjRequired    As ObjData
 
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.InitCraftman)
         
         ' Write cost of crafting
@@ -19542,10 +19416,10 @@ Public Sub WriteInitCraftsman(ByVal Userindex As Integer)
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -19557,22 +19431,22 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteRestOK(ByVal Userindex As Integer)
+Public Sub WriteRestOK(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "RestOK" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    Call UserList(Userindex).outgoingData.WriteByte(ServerPacketID.RestOK)
+    Call UserList(UserIndex).outgoingData.WriteByte(ServerPacketID.RestOK)
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -19585,23 +19459,23 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @param    message The error message to be displayed.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
-Public Sub WriteErrorMsg(ByVal Userindex As Integer, ByVal Message As String)
+Public Sub WriteErrorMsg(ByVal UserIndex As Integer, ByVal Message As String)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "ErrorMsg" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    Call UserList(Userindex).outgoingData.WriteASCIIStringFixed(PrepareMessageErrorMsg(Message))
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageErrorMsg(Message))
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -19614,22 +19488,22 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteBlind(ByVal Userindex As Integer)
+Public Sub WriteBlind(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "Blind" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    Call UserList(Userindex).outgoingData.WriteByte(ServerPacketID.Blind)
+    Call UserList(UserIndex).outgoingData.WriteByte(ServerPacketID.Blind)
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -19642,22 +19516,22 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteDumb(ByVal Userindex As Integer)
+Public Sub WriteDumb(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "Dumb" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    Call UserList(Userindex).outgoingData.WriteByte(ServerPacketID.Dumb)
+    Call UserList(UserIndex).outgoingData.WriteByte(ServerPacketID.Dumb)
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -19671,16 +19545,16 @@ End Sub
 ' @param    objIndex Index of the signal to be displayed.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteShowSignal(ByVal Userindex As Integer, ByVal ObjIndex As Integer)
+Public Sub WriteShowSignal(ByVal UserIndex As Integer, ByVal ObjIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "ShowSignal" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.ShowSignal)
         Call .WriteASCIIString(ObjData(ObjIndex).texto)
         Call .WriteLong(ObjData(ObjIndex).GrhSecundario)
@@ -19689,10 +19563,10 @@ Public Sub WriteShowSignal(ByVal Userindex As Integer, ByVal ObjIndex As Integer
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -19708,7 +19582,7 @@ End Sub
 ' @param    price       The value the NPC asks for the object.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteChangeNPCInventorySlot(ByVal Userindex As Integer, _
+Public Sub WriteChangeNPCInventorySlot(ByVal UserIndex As Integer, _
                                        ByVal Slot As Byte, _
                                        ByRef obj As obj, _
                                        ByVal price As Single)
@@ -19720,7 +19594,7 @@ Public Sub WriteChangeNPCInventorySlot(ByVal Userindex As Integer, _
     'Writes the "ChangeNPCInventorySlot" message to the given user's outgoing data buffer
     '12/03/09: Budi - Ahora se envia MaxDef y MinDef en lugar de solo Def
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
     Dim ObjInfo As ObjData
     
@@ -19729,7 +19603,7 @@ Public Sub WriteChangeNPCInventorySlot(ByVal Userindex As Integer, _
 
     End If
     
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.ChangeNPCInventorySlot)
         Call .WriteByte(Slot)
         Call .WriteASCIIString(ObjInfo.Name)
@@ -19747,10 +19621,10 @@ Public Sub WriteChangeNPCInventorySlot(ByVal Userindex As Integer, _
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -19763,30 +19637,30 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteUpdateHungerAndThirst(ByVal Userindex As Integer)
+Public Sub WriteUpdateHungerAndThirst(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "UpdateHungerAndThirst" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.UpdateHungerAndThirst)
-        Call .WriteByte(UserList(Userindex).Stats.MaxAGU)
-        Call .WriteByte(UserList(Userindex).Stats.MinAGU)
-        Call .WriteByte(UserList(Userindex).Stats.MaxHam)
-        Call .WriteByte(UserList(Userindex).Stats.MinHam)
+        Call .WriteByte(UserList(UserIndex).Stats.MaxAGU)
+        Call .WriteByte(UserList(UserIndex).Stats.MinAGU)
+        Call .WriteByte(UserList(UserIndex).Stats.MaxHam)
+        Call .WriteByte(UserList(UserIndex).Stats.MinHam)
 
     End With
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -19799,34 +19673,34 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteFame(ByVal Userindex As Integer)
+Public Sub WriteFame(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "Fame" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.Fame)
         
-        Call .WriteLong(UserList(Userindex).Reputacion.AsesinoRep)
-        Call .WriteLong(UserList(Userindex).Reputacion.BandidoRep)
-        Call .WriteLong(UserList(Userindex).Reputacion.BurguesRep)
-        Call .WriteLong(UserList(Userindex).Reputacion.LadronesRep)
-        Call .WriteLong(UserList(Userindex).Reputacion.NobleRep)
-        Call .WriteLong(UserList(Userindex).Reputacion.PlebeRep)
-        Call .WriteLong(UserList(Userindex).Reputacion.Promedio)
+        Call .WriteLong(UserList(UserIndex).Reputacion.AsesinoRep)
+        Call .WriteLong(UserList(UserIndex).Reputacion.BandidoRep)
+        Call .WriteLong(UserList(UserIndex).Reputacion.BurguesRep)
+        Call .WriteLong(UserList(UserIndex).Reputacion.LadronesRep)
+        Call .WriteLong(UserList(UserIndex).Reputacion.NobleRep)
+        Call .WriteLong(UserList(UserIndex).Reputacion.PlebeRep)
+        Call .WriteLong(UserList(UserIndex).Reputacion.Promedio)
 
     End With
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -19839,70 +19713,37 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteMiniStats(ByVal Userindex As Integer)
+Public Sub WriteMiniStats(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "MiniStats" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.MiniStats)
         
-        Call .WriteLong(UserList(Userindex).Faccion.CiudadanosMatados)
-        Call .WriteLong(UserList(Userindex).Faccion.CriminalesMatados)
+        Call .WriteLong(UserList(UserIndex).Faccion.CiudadanosMatados)
+        Call .WriteLong(UserList(UserIndex).Faccion.CriminalesMatados)
         
         'TODO : Este valor es calculable, no deberia NI EXISTIR, ya sea en el servidor ni en el cliente!!!
-        Call .WriteLong(UserList(Userindex).Stats.UsuariosMatados)
+        Call .WriteLong(UserList(UserIndex).Stats.UsuariosMatados)
         
-        Call .WriteInteger(UserList(Userindex).Stats.NPCsMuertos)
+        Call .WriteInteger(UserList(UserIndex).Stats.NPCsMuertos)
         
-        Call .WriteByte(UserList(Userindex).Clase)
-        Call .WriteLong(UserList(Userindex).Counters.Pena)
+        Call .WriteByte(UserList(UserIndex).clase)
+        Call .WriteLong(UserList(UserIndex).Counters.Pena)
 
     End With
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
-        Resume
-
-    End If
-
-End Sub
-
-''
-' Writes the "LevelUp" message to the given user's outgoing data buffer.
-'
-' @param    skillPoints The number of free skill points the player has.
-' @remarks  The data is not actually sent until the buffer is properly flushed.
-
-Public Sub WriteLevelUp(ByVal Userindex As Integer, ByVal skillPoints As Integer)
-
-    '***************************************************
-    'Author: Juan Martin Sotuyo Dodero (Maraxus)
-    'Last Modification: 05/17/06
-    'Writes the "LevelUp" message to the given user's outgoing data buffer
-    '***************************************************
-    On Error GoTo ErrHandler
-
-    With UserList(Userindex).outgoingData
-        Call .WriteByte(ServerPacketID.LevelUp)
-        Call .WriteInteger(skillPoints)
-
-    End With
-
-    Exit Sub
-
-ErrHandler:
-
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -19916,7 +19757,7 @@ End Sub
 ' @param    message The message to be displayed.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteAddForumMsg(ByVal Userindex As Integer, _
+Public Sub WriteAddForumMsg(ByVal UserIndex As Integer, _
                             ByVal ForumType As eForumType, _
                             ByRef Title As String, _
                             ByRef Author As String, _
@@ -19928,9 +19769,9 @@ Public Sub WriteAddForumMsg(ByVal Userindex As Integer, _
     'Writes the "AddForumMsg" message to the given user's outgoing data buffer
     '02/01/2010: ZaMa - Now sends Author and forum type
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.AddForumMsg)
         Call .WriteByte(ForumType)
         Call .WriteASCIIString(Title)
@@ -19941,10 +19782,10 @@ Public Sub WriteAddForumMsg(ByVal Userindex As Integer, _
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -19957,30 +19798,30 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteShowForumForm(ByVal Userindex As Integer)
+Public Sub WriteShowForumForm(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "ShowForumForm" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
     Dim Visibilidad   As Byte
 
     Dim CanMakeSticky As Byte
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         Call .outgoingData.WriteByte(ServerPacketID.ShowForumForm)
         
         Visibilidad = eForumVisibility.ieGENERAL_MEMBER
         
-        If esCaos(Userindex) Or EsGm(Userindex) Then
+        If esCaos(UserIndex) Or EsGm(UserIndex) Then
             Visibilidad = Visibilidad Or eForumVisibility.ieCAOS_MEMBER
 
         End If
         
-        If esArmada(Userindex) Or EsGm(Userindex) Then
+        If esArmada(UserIndex) Or EsGm(UserIndex) Then
             Visibilidad = Visibilidad Or eForumVisibility.ieREAL_MEMBER
 
         End If
@@ -19988,7 +19829,7 @@ Public Sub WriteShowForumForm(ByVal Userindex As Integer)
         Call .outgoingData.WriteByte(Visibilidad)
         
         ' Pueden mandar sticky los gms o los del consejo de armada/caos
-        If EsGm(Userindex) Then
+        If EsGm(UserIndex) Then
             CanMakeSticky = 2
         ElseIf (.flags.Privilegios And PlayerType.ChaosCouncil) <> 0 Then
             CanMakeSticky = 1
@@ -20003,10 +19844,10 @@ Public Sub WriteShowForumForm(ByVal Userindex As Integer)
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -20021,7 +19862,7 @@ End Sub
 ' @param    invisible True if the char is no longer visible, False otherwise.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteSetInvisible(ByVal Userindex As Integer, _
+Public Sub WriteSetInvisible(ByVal UserIndex As Integer, _
                              ByVal CharIndex As Integer, _
                              ByVal invisible As Boolean)
 
@@ -20030,54 +19871,16 @@ Public Sub WriteSetInvisible(ByVal Userindex As Integer, _
     'Last Modification: 05/17/06
     'Writes the "SetInvisible" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    Call UserList(Userindex).outgoingData.WriteASCIIStringFixed(PrepareMessageSetInvisible(CharIndex, invisible, IIf(invisible, (IntervaloInvisible - UserList(Userindex).Counters.Invisibilidad), 0)))
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageSetInvisible(CharIndex, invisible, IIf(invisible, (IntervaloInvisible - UserList(UserIndex).Counters.Invisibilidad), 0)))
     
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
-        Resume
-
-    End If
-
-End Sub
-
-''
-' Writes the "DiceRoll" message to the given user's outgoing data buffer.
-'
-' @param    UserIndex User to which the message is intended.
-' @remarks  The data is not actually sent until the buffer is properly flushed.
-
-Public Sub WriteDiceRoll(ByVal Userindex As Integer)
-
-    '***************************************************
-    'Author: Juan Martin Sotuyo Dodero (Maraxus)
-    'Last Modification: 05/17/06
-    'Writes the "DiceRoll" message to the given user's outgoing data buffer
-    '***************************************************
-    On Error GoTo ErrHandler
-
-    With UserList(Userindex).outgoingData
-        Call .WriteByte(ServerPacketID.DiceRoll)
-        
-        Call .WriteByte(UserList(Userindex).Stats.UserAtributos(eAtributos.Fuerza))
-        Call .WriteByte(UserList(Userindex).Stats.UserAtributos(eAtributos.Agilidad))
-        Call .WriteByte(UserList(Userindex).Stats.UserAtributos(eAtributos.Inteligencia))
-        Call .WriteByte(UserList(Userindex).Stats.UserAtributos(eAtributos.Carisma))
-        Call .WriteByte(UserList(Userindex).Stats.UserAtributos(eAtributos.Constitucion))
-
-    End With
-
-    Exit Sub
-
-ErrHandler:
-
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -20090,22 +19893,22 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteMeditateToggle(ByVal Userindex As Integer)
+Public Sub WriteMeditateToggle(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "MeditateToggle" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    Call UserList(Userindex).outgoingData.WriteByte(ServerPacketID.MeditateToggle)
+    Call UserList(UserIndex).outgoingData.WriteByte(ServerPacketID.MeditateToggle)
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -20118,22 +19921,22 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteBlindNoMore(ByVal Userindex As Integer)
+Public Sub WriteBlindNoMore(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "BlindNoMore" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    Call UserList(Userindex).outgoingData.WriteByte(ServerPacketID.BlindNoMore)
+    Call UserList(UserIndex).outgoingData.WriteByte(ServerPacketID.BlindNoMore)
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -20146,22 +19949,22 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteDumbNoMore(ByVal Userindex As Integer)
+Public Sub WriteDumbNoMore(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "DumbNoMore" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    Call UserList(Userindex).outgoingData.WriteByte(ServerPacketID.DumbNoMore)
+    Call UserList(UserIndex).outgoingData.WriteByte(ServerPacketID.DumbNoMore)
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -20174,7 +19977,7 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteSendSkills(ByVal Userindex As Integer)
+Public Sub WriteSendSkills(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -20182,16 +19985,16 @@ Public Sub WriteSendSkills(ByVal Userindex As Integer)
     'Writes the "SendSkills" message to the given user's outgoing data buffer
     '11/19/09: Pato - Now send the percentage of progress of the skills.
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
     Dim i As Long
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
         Call .outgoingData.WriteByte(ServerPacketID.SendSkills)
-        Call .outgoingData.WriteByte(.Clase)
+        Call .outgoingData.WriteByte(.clase)
         
         For i = 1 To NUMSKILLS
-            Call .outgoingData.WriteByte(UserList(Userindex).Stats.UserSkills(i))
+            Call .outgoingData.WriteByte(UserList(UserIndex).Stats.UserSkills(i))
 
             If .Stats.UserSkills(i) < MAXSKILLPOINTS Then
                 Call .outgoingData.WriteByte(Int(.Stats.ExpSkills(i) * 100 / .Stats.EluSkills(i)))
@@ -20206,10 +20009,10 @@ Public Sub WriteSendSkills(ByVal Userindex As Integer)
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -20223,20 +20026,20 @@ End Sub
 ' @param    npcIndex The index of the requested trainer.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteTrainerCreatureList(ByVal Userindex As Integer, ByVal NpcIndex As Integer)
+Public Sub WriteTrainerCreatureList(ByVal UserIndex As Integer, ByVal NpcIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "TrainerCreatureList" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
     Dim i   As Long
 
     Dim str As String
     
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.TrainerCreatureList)
         
         For i = 1 To Npclist(NpcIndex).NroCriaturas
@@ -20251,10 +20054,10 @@ Public Sub WriteTrainerCreatureList(ByVal Userindex As Integer, ByVal NpcIndex A
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -20270,7 +20073,7 @@ End Sub
 ' @param    allies The list of the guild's allies.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteGuildNews(ByVal Userindex As Integer, _
+Public Sub WriteGuildNews(ByVal UserIndex As Integer, _
                           ByVal guildNews As String, _
                           ByRef enemies() As String, _
                           ByRef allies() As String)
@@ -20280,13 +20083,13 @@ Public Sub WriteGuildNews(ByVal Userindex As Integer, _
     'Last Modification: 05/17/06
     'Writes the "GuildNews" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
     Dim i   As Long
 
     Dim Tmp As String
     
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.guildNews)
         
         Call .WriteASCIIString(guildNews)
@@ -20315,10 +20118,10 @@ Public Sub WriteGuildNews(ByVal Userindex As Integer, _
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -20332,18 +20135,18 @@ End Sub
 ' @param    details Th details of the Peace proposition.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteOfferDetails(ByVal Userindex As Integer, ByVal details As String)
+Public Sub WriteOfferDetails(ByVal UserIndex As Integer, ByVal details As String)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "OfferDetails" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
     Dim i As Long
     
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.OfferDetails)
         
         Call .WriteASCIIString(details)
@@ -20352,10 +20155,10 @@ Public Sub WriteOfferDetails(ByVal Userindex As Integer, ByVal details As String
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -20369,20 +20172,20 @@ End Sub
 ' @param    guilds The list of guilds which propossed an alliance.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteAlianceProposalsList(ByVal Userindex As Integer, ByRef guilds() As String)
+Public Sub WriteAlianceProposalsList(ByVal UserIndex As Integer, ByRef guilds() As String)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "AlianceProposalsList" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
     Dim i   As Long
 
     Dim Tmp As String
     
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.AlianceProposalsList)
         
         ' Prepare guild's list
@@ -20398,10 +20201,10 @@ Public Sub WriteAlianceProposalsList(ByVal Userindex As Integer, ByRef guilds() 
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -20415,20 +20218,20 @@ End Sub
 ' @param    guilds The list of guilds which propossed peace.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WritePeaceProposalsList(ByVal Userindex As Integer, ByRef guilds() As String)
+Public Sub WritePeaceProposalsList(ByVal UserIndex As Integer, ByRef guilds() As String)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "PeaceProposalsList" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
     Dim i   As Long
 
     Dim Tmp As String
     
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.PeaceProposalsList)
                 
         ' Prepare guilds' list
@@ -20444,10 +20247,10 @@ Public Sub WritePeaceProposalsList(ByVal Userindex As Integer, ByRef guilds() As
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -20474,16 +20277,16 @@ End Sub
 ' @param    criminalsKilled The number of criminals killed by the requested char.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteCharacterInfo(ByVal Userindex As Integer, ByVal charName As String, ByVal race As eRaza, ByVal Class As eClass, ByVal gender As eGenero, ByVal level As Byte, ByVal Gold As Long, ByVal bank As Long, ByVal reputation As Long, ByVal previousPetitions As String, ByVal currentGuild As String, ByVal previousGuilds As String, ByVal RoyalArmy As Boolean, ByVal CaosLegion As Boolean, ByVal citicensKilled As Long, ByVal criminalsKilled As Long)
+Public Sub WriteCharacterInfo(ByVal UserIndex As Integer, ByVal charName As String, ByVal race As eRaza, ByVal Class As eClass, ByVal gender As eGenero, ByVal Level As Byte, ByVal Gold As Long, ByVal bank As Long, ByVal reputation As Long, ByVal previousPetitions As String, ByVal currentGuild As String, ByVal previousGuilds As String, ByVal RoyalArmy As Boolean, ByVal CaosLegion As Boolean, ByVal citicensKilled As Long, ByVal criminalsKilled As Long)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "CharacterInfo" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.CharacterInfo)
         
         Call .WriteASCIIString(charName)
@@ -20491,7 +20294,7 @@ Public Sub WriteCharacterInfo(ByVal Userindex As Integer, ByVal charName As Stri
         Call .WriteByte(Class)
         Call .WriteByte(gender)
         
-        Call .WriteByte(level)
+        Call .WriteByte(Level)
         Call .WriteLong(Gold)
         Call .WriteLong(bank)
         Call .WriteLong(reputation)
@@ -20510,10 +20313,10 @@ Public Sub WriteCharacterInfo(ByVal Userindex As Integer, ByVal charName As Stri
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -20530,7 +20333,7 @@ End Sub
 ' @param    joinRequests The list of chars which requested to join the clan.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteGuildLeaderInfo(ByVal Userindex As Integer, _
+Public Sub WriteGuildLeaderInfo(ByVal UserIndex As Integer, _
                                 ByRef guildList() As String, _
                                 ByRef MemberList() As String, _
                                 ByVal guildNews As String, _
@@ -20541,13 +20344,13 @@ Public Sub WriteGuildLeaderInfo(ByVal Userindex As Integer, _
     'Last Modification: 05/17/06
     'Writes the "GuildLeaderInfo" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
     Dim i   As Long
 
     Dim Tmp As String
     
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.GuildLeaderInfo)
         
         ' Prepare guild name's list
@@ -20588,10 +20391,10 @@ Public Sub WriteGuildLeaderInfo(ByVal Userindex As Integer, _
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -20606,7 +20409,7 @@ End Sub
 ' @param    memberList The list of the guild's members.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteGuildMemberInfo(ByVal Userindex As Integer, _
+Public Sub WriteGuildMemberInfo(ByVal UserIndex As Integer, _
                                 ByRef guildList() As String, _
                                 ByRef MemberList() As String)
 
@@ -20615,13 +20418,13 @@ Public Sub WriteGuildMemberInfo(ByVal Userindex As Integer, _
     'Last Modification: 21/02/2010
     'Writes the "GuildMemberInfo" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
     Dim i   As Long
 
     Dim Tmp As String
     
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.GuildMemberInfo)
         
         ' Prepare guild name's list
@@ -20648,10 +20451,10 @@ Public Sub WriteGuildMemberInfo(ByVal Userindex As Integer, _
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -20677,7 +20480,7 @@ End Sub
 ' @param    guildDesc The requested guild's description.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteGuildDetails(ByVal Userindex As Integer, _
+Public Sub WriteGuildDetails(ByVal UserIndex As Integer, _
                              ByVal GuildName As String, _
                              ByVal founder As String, _
                              ByVal foundationDate As String, _
@@ -20697,13 +20500,13 @@ Public Sub WriteGuildDetails(ByVal Userindex As Integer, _
     'Last Modification: 05/17/06
     'Writes the "GuildDetails" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
     Dim i    As Long
 
     Dim temp As String
     
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.GuildDetails)
         
         Call .WriteASCIIString(GuildName)
@@ -20736,10 +20539,10 @@ Public Sub WriteGuildDetails(ByVal Userindex As Integer, _
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -20752,22 +20555,22 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteShowGuildAlign(ByVal Userindex As Integer)
+Public Sub WriteShowGuildAlign(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: ZaMa
     'Last Modification: 14/12/2009
     'Writes the "ShowGuildAlign" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    Call UserList(Userindex).outgoingData.WriteByte(ServerPacketID.ShowGuildAlign)
+    Call UserList(UserIndex).outgoingData.WriteByte(ServerPacketID.ShowGuildAlign)
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -20780,22 +20583,22 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteShowGuildFundationForm(ByVal Userindex As Integer)
+Public Sub WriteShowGuildFundationForm(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "ShowGuildFundationForm" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    Call UserList(Userindex).outgoingData.WriteByte(ServerPacketID.ShowGuildFundationForm)
+    Call UserList(UserIndex).outgoingData.WriteByte(ServerPacketID.ShowGuildFundationForm)
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -20808,7 +20611,7 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteParalizeOK(ByVal Userindex As Integer)
+Public Sub WriteParalizeOK(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -20817,21 +20620,21 @@ Public Sub WriteParalizeOK(ByVal Userindex As Integer)
     'Writes the "ParalizeOK" message to the given user's outgoing data buffer
     'And updates user position
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.ParalizeOK)
-        Call .WriteInteger(IIf(UserList(Userindex).flags.Paralizado, UserList(Userindex).Counters.Paralisis, 0))
+        Call .WriteInteger(IIf(UserList(UserIndex).flags.Paralizado, UserList(UserIndex).Counters.Paralisis, 0))
     End With
     
-    Call WritePosUpdate(Userindex)
+    Call WritePosUpdate(UserIndex)
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -20845,16 +20648,16 @@ End Sub
 ' @param    details DEtails of the char's request.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteShowUserRequest(ByVal Userindex As Integer, ByVal details As String)
+Public Sub WriteShowUserRequest(ByVal UserIndex As Integer, ByVal details As String)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "ShowUserRequest" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.ShowUserRequest)
         
         Call .WriteASCIIString(details)
@@ -20863,10 +20666,10 @@ Public Sub WriteShowUserRequest(ByVal Userindex As Integer, ByVal details As Str
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -20881,7 +20684,7 @@ End Sub
 ' @param    amount The number of objects offered.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteChangeUserTradeSlot(ByVal Userindex As Integer, _
+Public Sub WriteChangeUserTradeSlot(ByVal UserIndex As Integer, _
                                     ByVal OfferSlot As Byte, _
                                     ByVal ObjIndex As Integer, _
                                     ByVal Amount As Long)
@@ -20893,9 +20696,9 @@ Public Sub WriteChangeUserTradeSlot(ByVal Userindex As Integer, _
     '25/11/2009: ZaMa - Now sends the specific offer slot to be modified.
     '12/03/09: Budi - Ahora se envia MaxDef y MinDef en lugar de solo Def
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.ChangeUserTradeSlot)
         
         Call .WriteByte(OfferSlot)
@@ -20927,10 +20730,10 @@ Public Sub WriteChangeUserTradeSlot(ByVal Userindex As Integer, _
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -20943,16 +20746,16 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteSendNight(ByVal Userindex As Integer, ByVal night As Boolean)
+Public Sub WriteSendNight(ByVal UserIndex As Integer, ByVal night As Boolean)
 
     '***************************************************
     'Author: Fredy Horacio Treboux (liquid)
     'Last Modification: 01/08/07
     'Writes the "SendNight" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.SendNight)
         Call .WriteBoolean(night)
 
@@ -20960,10 +20763,10 @@ Public Sub WriteSendNight(ByVal Userindex As Integer, ByVal night As Boolean)
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -20977,20 +20780,20 @@ End Sub
 ' @param    npcNames The names of the creatures that can be spawned.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteSpawnList(ByVal Userindex As Integer, ByRef npcNames() As String)
+Public Sub WriteSpawnList(ByVal UserIndex As Integer, ByRef npcNames() As String)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "SpawnList" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
     Dim i   As Long
 
     Dim Tmp As String
     
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.SpawnList)
         
         For i = LBound(npcNames()) To UBound(npcNames())
@@ -21005,10 +20808,10 @@ Public Sub WriteSpawnList(ByVal Userindex As Integer, ByRef npcNames() As String
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -21021,20 +20824,20 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteShowSOSForm(ByVal Userindex As Integer)
+Public Sub WriteShowSOSForm(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "ShowSOSForm" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
     Dim i   As Long
 
     Dim Tmp As String
     
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.ShowSOSForm)
         
         For i = 1 To Ayuda.Longitud
@@ -21049,10 +20852,10 @@ Public Sub WriteShowSOSForm(ByVal Userindex As Integer)
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -21065,20 +20868,20 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteShowDenounces(ByVal Userindex As Integer)
+Public Sub WriteShowDenounces(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: ZaMa
     'Last Modification: 14/11/2010
     'Writes the "ShowDenounces" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
     
     Dim DenounceIndex As Long
 
     Dim DenounceList  As String
     
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.ShowDenounces)
         
         For DenounceIndex = 1 To Denuncias.Longitud
@@ -21093,10 +20896,10 @@ Public Sub WriteShowDenounces(ByVal Userindex As Integer)
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -21109,14 +20912,14 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteShowPartyForm(ByVal Userindex As Integer)
+Public Sub WriteShowPartyForm(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Budi
     'Last Modification: 11/26/09
     'Writes the "ShowPartyForm" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
     Dim i                         As Long
 
@@ -21126,11 +20929,11 @@ Public Sub WriteShowPartyForm(ByVal Userindex As Integer)
 
     Dim members(PARTY_MAXMEMBERS) As Integer
     
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.ShowPartyForm)
         
-        PI = UserList(Userindex).PartyIndex
-        Call .WriteByte(CByte(Parties(PI).EsPartyLeader(Userindex)))
+        PI = UserList(UserIndex).PartyIndex
+        Call .WriteByte(CByte(Parties(PI).EsPartyLeader(UserIndex)))
         
         If PI > 0 Then
             Call Parties(PI).ObtenerMiembrosOnline(members())
@@ -21155,10 +20958,10 @@ Public Sub WriteShowPartyForm(ByVal Userindex As Integer)
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -21172,7 +20975,7 @@ End Sub
 ' @param    currentMOTD The current Message Of The Day.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteShowMOTDEditionForm(ByVal Userindex As Integer, _
+Public Sub WriteShowMOTDEditionForm(ByVal UserIndex As Integer, _
                                     ByVal currentMOTD As String)
 
     '***************************************************
@@ -21180,9 +20983,9 @@ Public Sub WriteShowMOTDEditionForm(ByVal Userindex As Integer, _
     'Last Modification: 05/17/06
     'Writes the "ShowMOTDEditionForm" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.ShowMOTDEditionForm)
         
         Call .WriteASCIIString(currentMOTD)
@@ -21191,10 +20994,10 @@ Public Sub WriteShowMOTDEditionForm(ByVal Userindex As Integer, _
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -21207,22 +21010,28 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteShowGMPanelForm(ByVal Userindex As Integer)
+Public Sub WriteShowGMPanelForm(ByVal UserIndex As Integer, ByVal ID As Byte)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "ShowGMPanelForm" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    Call UserList(Userindex).outgoingData.WriteByte(ServerPacketID.ShowGMPanelForm)
+    With UserList(UserIndex).outgoingData
+    
+        Call .WriteByte(ServerPacketID.ShowGMPanelForm)
+        Call .WriteByte(ID)
+    
+    End With
+
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -21237,7 +21046,7 @@ End Sub
 ' @param    Cant Number of names to send.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteUserNameList(ByVal Userindex As Integer, _
+Public Sub WriteUserNameList(ByVal UserIndex As Integer, _
                              ByRef userNamesList() As String, _
                              ByVal cant As Integer)
 
@@ -21246,13 +21055,13 @@ Public Sub WriteUserNameList(ByVal Userindex As Integer, _
     'Last Modification: 05/17/06 NIGO:
     'Writes the "UserNameList" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
     Dim i   As Long
 
     Dim Tmp As String
     
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.UserNameList)
         
         ' Prepare user's names list
@@ -21268,10 +21077,10 @@ Public Sub WriteUserNameList(ByVal Userindex As Integer, _
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -21284,22 +21093,22 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WritePong(ByVal Userindex As Integer)
+Public Sub WritePong(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
     'Writes the "Pong" message to the given user's outgoing data buffer
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    Call UserList(Userindex).outgoingData.WriteByte(ServerPacketID.Pong)
+    Call UserList(UserIndex).outgoingData.WriteByte(ServerPacketID.Pong)
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -21311,7 +21120,7 @@ End Sub
 '
 ' @param    UserIndex User whose outgoing data buffer will be flushed.
 
-Public Sub FlushBuffer(ByVal Userindex As Integer)
+Public Sub FlushBuffer(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -21320,7 +21129,7 @@ Public Sub FlushBuffer(ByVal Userindex As Integer)
     '***************************************************
     Dim sndData As String
     
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
 
         If .Length = 0 Then Exit Sub
         
@@ -21329,13 +21138,13 @@ Public Sub FlushBuffer(ByVal Userindex As Integer)
     End With
     
     ' Tratamos de enviar los datos.
-    Dim ret As Long: ret = WsApiEnviar(Userindex, sndData)
+    Dim ret As Long: ret = WsApiEnviar(UserIndex, sndData)
     
     ' Si recibimos un error como respuesta de la API, cerramos el socket.
     If ret <> 0 And ret <> WSAEWOULDBLOCK Then
         ' Close the socket avoiding any critical error
-        Call CloseSocketSL(Userindex)
-        Call Cerrar_Usuario(Userindex)
+        Call CloseSocketSL(UserIndex)
+        Call Cerrar_Usuario(UserIndex)
     End If
 
 End Sub
@@ -21733,7 +21542,7 @@ End Function
 
 Public Function PrepareMessageObjectCreate(ByVal GrhIndex As Long, _
                                            ByVal X As Byte, _
-                                           ByVal Y As Byte) As String
+                                           ByVal Y As Byte, ByVal Shadow As Byte) As String
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -21745,6 +21554,7 @@ Public Function PrepareMessageObjectCreate(ByVal GrhIndex As Long, _
         Call .WriteByte(X)
         Call .WriteByte(Y)
         Call .WriteLong(GrhIndex)
+        Call .WriteByte(Shadow)
         
         PrepareMessageObjectCreate = .ReadASCIIStringFixed(.Length)
 
@@ -21833,7 +21643,8 @@ Public Function PrepareMessageCharacterCreate(ByVal body As Integer, _
                                               ByVal helmet As Integer, _
                                               ByVal Name As String, _
                                               ByVal NickColor As Byte, _
-                                              ByVal Privileges As Byte) As String
+                                              ByVal Privileges As Byte, _
+                                              ByVal NoShadow As Byte) As String
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -21857,6 +21668,7 @@ Public Function PrepareMessageCharacterCreate(ByVal body As Integer, _
         Call .WriteASCIIString(Name)
         Call .WriteByte(NickColor)
         Call .WriteByte(Privileges)
+        Call .WriteByte(NoShadow)
         
         PrepareMessageCharacterCreate = .ReadASCIIStringFixed(.Length)
 
@@ -21986,7 +21798,7 @@ End Function
 ' @return   The formated message ready to be writen as is on outgoing buffers.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Function PrepareMessageUpdateTagAndStatus(ByVal Userindex As Integer, _
+Public Function PrepareMessageUpdateTagAndStatus(ByVal UserIndex As Integer, _
                                                  ByVal NickColor As Byte, _
                                                  ByRef Tag As String) As String
 
@@ -22000,7 +21812,7 @@ Public Function PrepareMessageUpdateTagAndStatus(ByVal Userindex As Integer, _
     With auxiliarBuffer
         Call .WriteByte(ServerPacketID.UpdateTagAndStatus)
         
-        Call .WriteInteger(UserList(Userindex).Char.CharIndex)
+        Call .WriteInteger(UserList(UserIndex).Char.CharIndex)
         Call .WriteByte(NickColor)
         Call .WriteASCIIString(Tag)
         
@@ -22038,23 +21850,23 @@ End Function
 '
 ' @param    UserIndex User to which the message is intended.
 
-Public Sub WriteStopWorking(ByVal Userindex As Integer)
+Public Sub WriteStopWorking(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: ZaMa
     'Last Modification: 21/02/2010
     '
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
     
-    Call UserList(Userindex).outgoingData.WriteByte(ServerPacketID.StopWorking)
+    Call UserList(UserIndex).outgoingData.WriteByte(ServerPacketID.StopWorking)
         
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -22067,16 +21879,16 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @param    Slot      The slot to cancel.
 
-Public Sub WriteCancelOfferItem(ByVal Userindex As Integer, ByVal Slot As Byte)
+Public Sub WriteCancelOfferItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
 
     '***************************************************
     'Author: Torres Patricio (Pato)
     'Last Modification: 05/03/2010
     '
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.CancelOfferItem)
         Call .WriteByte(Slot)
 
@@ -22084,10 +21896,10 @@ Public Sub WriteCancelOfferItem(ByVal Userindex As Integer, ByVal Slot As Byte)
     
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -22099,22 +21911,22 @@ End Sub
 '
 ' @param UserIndex The index of the user sending the message
 
-Public Sub HandleSetDialog(ByVal Userindex As Integer)
+Public Sub HandleSetDialog(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Amraphen
     'Last Modification: 18/11/2010
     '20/11/2010: ZaMa - Arreglo privilegios.
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 2 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 2 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -22144,7 +21956,7 @@ Public Sub HandleSetDialog(ByVal Userindex As Integer)
 
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -22164,14 +21976,14 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleImpersonate(ByVal Userindex As Integer)
+Private Sub HandleImpersonate(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: ZaMa
     'Last Modification: 20/11/2010
     '
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
     
         'Remove packet ID
         Call .incomingData.ReadByte
@@ -22186,10 +21998,10 @@ Private Sub HandleImpersonate(ByVal Userindex As Integer)
         If NpcIndex = 0 Then Exit Sub
         
         ' Copy head, body and desc
-        Call ImitateNpc(Userindex, NpcIndex)
+        Call ImitateNpc(UserIndex, NpcIndex)
         
         ' Teleports user to npc's coords
-        Call WarpUserChar(Userindex, Npclist(NpcIndex).Pos.Map, Npclist(NpcIndex).Pos.X, Npclist(NpcIndex).Pos.Y, False, True)
+        Call WarpUserChar(UserIndex, Npclist(NpcIndex).Pos.Map, Npclist(NpcIndex).Pos.X, Npclist(NpcIndex).Pos.Y, False, True)
         
         ' Log gm
         Call LogGM(.Name, "/IMPERSONAR con " & Npclist(NpcIndex).Name & " en mapa " & .Pos.Map)
@@ -22206,14 +22018,14 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleImitate(ByVal Userindex As Integer)
+Private Sub HandleImitate(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: ZaMa
     'Last Modification: 20/11/2010
     '
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
     
         'Remove packet ID
         Call .incomingData.ReadByte
@@ -22228,7 +22040,7 @@ Private Sub HandleImitate(ByVal Userindex As Integer)
         If NpcIndex = 0 Then Exit Sub
         
         ' Copy head, body and desc
-        Call ImitateNpc(Userindex, NpcIndex)
+        Call ImitateNpc(UserIndex, NpcIndex)
         Call LogGM(.Name, "/MIMETIZAR con " & Npclist(NpcIndex).Name & " en mapa " & .Pos.Map)
         
     End With
@@ -22240,22 +22052,22 @@ End Sub
 '
 ' @param UserIndex The index of the user sending the message
            
-Public Sub HandleRecordAdd(ByVal Userindex As Integer)
+Public Sub HandleRecordAdd(ByVal UserIndex As Integer)
 
     '**************************************************************
     'Author: Amraphen
     'Last Modify Date: 29/11/2010
     '
     '**************************************************************
-    If UserList(Userindex).incomingData.Length < 2 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 2 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -22277,13 +22089,13 @@ Public Sub HandleRecordAdd(ByVal Userindex As Integer)
 
             'Verificamos que exista el personaje
             If Not PersonajeExiste(UserName) Then
-                Call WriteShowMessageBox(Userindex, "El personaje no existe")
+                Call WriteShowMessageBox(UserIndex, "El personaje no existe")
             Else
                 'Agregamos el seguimiento
-                Call AddRecord(Userindex, UserName, Reason)
+                Call AddRecord(UserIndex, UserName, Reason)
                 
                 'Enviamos la nueva lista de personajes
-                Call WriteRecordList(Userindex)
+                Call WriteRecordList(UserIndex)
 
             End If
 
@@ -22293,7 +22105,7 @@ Public Sub HandleRecordAdd(ByVal Userindex As Integer)
 
     End With
         
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -22313,22 +22125,22 @@ End Sub
 '
 ' @param UserIndex The index of the user sending the message.
 
-Public Sub HandleRecordAddObs(ByVal Userindex As Integer)
+Public Sub HandleRecordAddObs(ByVal UserIndex As Integer)
 
     '**************************************************************
     'Author: Amraphen
     'Last Modify Date: 29/11/2010
     '
     '**************************************************************
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -22348,10 +22160,10 @@ Public Sub HandleRecordAddObs(ByVal Userindex As Integer)
         
         If Not (.flags.Privilegios And (PlayerType.User Or PlayerType.Consejero Or PlayerType.RoleMaster)) Then
             'Agregamos la observacion
-            Call AddObs(Userindex, RecordIndex, Obs)
+            Call AddObs(UserIndex, RecordIndex, Obs)
             
             'Actualizamos la informacion
-            Call WriteRecordDetails(Userindex, RecordIndex)
+            Call WriteRecordDetails(UserIndex, RecordIndex)
 
         End If
 
@@ -22359,7 +22171,7 @@ Public Sub HandleRecordAddObs(ByVal Userindex As Integer)
 
     End With
         
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -22379,7 +22191,7 @@ End Sub
 '
 ' @param UserIndex The index of the user sending the message.
 
-Public Sub HandleRecordRemove(ByVal Userindex As Integer)
+Public Sub HandleRecordRemove(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Amraphen
@@ -22388,7 +22200,7 @@ Public Sub HandleRecordRemove(ByVal Userindex As Integer)
     '***************************************************
     Dim RecordIndex As Integer
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
     
@@ -22399,10 +22211,10 @@ Public Sub HandleRecordRemove(ByVal Userindex As Integer)
         'Solo dioses pueden remover los seguimientos, los otros reciben una advertencia:
         If (.flags.Privilegios And PlayerType.Dios) Then
             Call RemoveRecord(RecordIndex)
-            Call WriteShowMessageBox(Userindex, "Se ha eliminado el seguimiento.")
-            Call WriteRecordList(Userindex)
+            Call WriteShowMessageBox(UserIndex, "Se ha eliminado el seguimiento.")
+            Call WriteRecordList(UserIndex)
         Else
-            Call WriteShowMessageBox(Userindex, "Solo los dioses pueden eliminar seguimientos.")
+            Call WriteShowMessageBox(UserIndex, "Solo los dioses pueden eliminar seguimientos.")
 
         End If
 
@@ -22415,20 +22227,20 @@ End Sub
 '
 ' @param UserIndex The index of the user sending the message.
             
-Public Sub HandleRecordListRequest(ByVal Userindex As Integer)
+Public Sub HandleRecordListRequest(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Amraphen
     'Last Modification: 29/11/2010
     '
     '***************************************************
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
 
         If .flags.Privilegios And (PlayerType.User Or PlayerType.Consejero Or PlayerType.RoleMaster) Then Exit Sub
 
-        Call WriteRecordList(Userindex)
+        Call WriteRecordList(UserIndex)
 
     End With
 
@@ -22440,7 +22252,7 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteRecordDetails(ByVal Userindex As Integer, ByVal RecordIndex As Integer)
+Public Sub WriteRecordDetails(ByVal UserIndex As Integer, ByVal RecordIndex As Integer)
 
     '***************************************************
     'Author: Amraphen
@@ -22455,9 +22267,9 @@ Public Sub WriteRecordDetails(ByVal Userindex As Integer, ByVal RecordIndex As I
 
     Dim TempDate As Date
 
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.RecordDetails)
         
         'Creador y motivo
@@ -22512,10 +22324,10 @@ Public Sub WriteRecordDetails(ByVal Userindex As Integer, ByVal RecordIndex As I
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -22528,7 +22340,7 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteRecordList(ByVal Userindex As Integer)
+Public Sub WriteRecordList(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Amraphen
@@ -22537,9 +22349,9 @@ Public Sub WriteRecordList(ByVal Userindex As Integer)
     '***************************************************
     Dim i As Long
 
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.RecordList)
         
         Call .WriteByte(NumRecords)
@@ -22552,10 +22364,10 @@ Public Sub WriteRecordList(ByVal Userindex As Integer)
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -22567,7 +22379,7 @@ End Sub
 '
 ' @param UserIndex The index of the user sending the message.
             
-Public Sub HandleRecordDetailsRequest(ByVal Userindex As Integer)
+Public Sub HandleRecordDetailsRequest(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Amraphen
@@ -22576,7 +22388,7 @@ Public Sub HandleRecordDetailsRequest(ByVal Userindex As Integer)
     '***************************************************
     Dim RecordIndex As Byte
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
@@ -22584,20 +22396,20 @@ Public Sub HandleRecordDetailsRequest(ByVal Userindex As Integer)
         
         If .flags.Privilegios And (PlayerType.User Or PlayerType.Consejero Or PlayerType.RoleMaster) Then Exit Sub
         
-        Call WriteRecordDetails(Userindex, RecordIndex)
+        Call WriteRecordDetails(UserIndex, RecordIndex)
 
     End With
 
 End Sub
 
-Public Sub HandleMoveItem(ByVal Userindex As Integer)
+Public Sub HandleMoveItem(ByVal UserIndex As Integer)
     '***************************************************
     'Author: Ignacio Mariano Tirabasso (Budi)
     'Last Modification: 01/01/2011
     '
     '***************************************************
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         Dim originalSlot As Byte
 
@@ -22609,7 +22421,7 @@ Public Sub HandleMoveItem(ByVal Userindex As Integer)
         newSlot = .incomingData.ReadByte
         Call .incomingData.ReadByte
     
-        Call InvUsuario.moveItem(Userindex, originalSlot, newSlot)
+        Call InvUsuario.moveItem(UserIndex, originalSlot, newSlot)
     
     End With
 
@@ -22620,26 +22432,26 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleLoginExistingAccount(ByVal Userindex As Integer)
+Private Sub HandleLoginExistingAccount(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Andres Dalmasso (CHOTS)
     'Last Modification: 12/10/2018
     '
     '***************************************************
-    If UserList(Userindex).incomingData.Length < 6 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 6 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
 
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
     'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
     Dim buffer As clsByteQueue
     Set buffer = New clsByteQueue
 
-    Call buffer.CopyBuffer(UserList(Userindex).incomingData)
+    Call buffer.CopyBuffer(UserList(UserIndex).incomingData)
     
     'Remove packet ID
     Call buffer.ReadByte
@@ -22654,8 +22466,8 @@ Private Sub HandleLoginExistingAccount(ByVal Userindex As Integer)
     Password = buffer.ReadASCIIString()
 
     If Not CuentaExiste(UserName) Then
-        Call WriteErrorMsg(Userindex, "La cuenta no existe.")
-        Call CloseSocket(Userindex)
+        Call WriteErrorMsg(UserIndex, "La cuenta no existe.")
+        Call CloseSocket(UserIndex)
         Exit Sub
 
     End If
@@ -22664,16 +22476,16 @@ Private Sub HandleLoginExistingAccount(ByVal Userindex As Integer)
     version = CStr(buffer.ReadByte()) & "." & CStr(buffer.ReadByte()) & "." & CStr(buffer.ReadByte())
 
     If Not VersionOK(version) Then
-        Call WriteErrorMsg(Userindex, "Esta version del juego es obsoleta, la version correcta es la " & ULTIMAVERSION & ". La misma se encuentra disponible en www.argentumonline.com.ar")
+        Call WriteErrorMsg(UserIndex, "Esta version del juego es obsoleta, la version correcta es la " & ULTIMAVERSION & ". La misma se encuentra disponible en www.argentumonline.com.ar")
     Else
-        Call ConnectAccount(Userindex, UserName, Password)
+        Call ConnectAccount(UserIndex, UserName, Password)
 
     End If
 
     'If we got here then packet is complete, copy data back to original queue
-    Call UserList(Userindex).incomingData.CopyBuffer(buffer)
+    Call UserList(UserIndex).incomingData.CopyBuffer(buffer)
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -22688,77 +22500,7 @@ ErrHandler:
 
 End Sub
 
-''
-' Handles the "LoginNewAccount" message.
-'
-' @param    userIndex The index of the user sending the message.
-
-Private Sub HandleLoginNewAccount(ByVal Userindex As Integer)
-
-    '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 10/05/2019
-    '
-    'CHOTS: Fix a bug reported by @juanmz
-    '***************************************************
-    If UserList(Userindex).incomingData.Length < 6 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
-        Exit Sub
-
-    End If
-
-    On Error GoTo ErrHandler
-
-    'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
-    Dim buffer As clsByteQueue
-    Set buffer = New clsByteQueue
-
-    Call buffer.CopyBuffer(UserList(Userindex).incomingData)
-    
-    'Remove packet ID
-    Call buffer.ReadByte
-
-    Dim UserName As String
-    Dim Password As String
-    Dim version  As String
-
-    UserName = buffer.ReadASCIIString()
-    Password = buffer.ReadASCIIString()
-
-    If CuentaExiste(UserName) Then
-        Call WriteErrorMsg(Userindex, "La cuenta ya existe.")
-        Call CloseSocket(Userindex)
-        Exit Sub
-    End If
-
-    'Convert version number to string
-    version = CStr(buffer.ReadByte()) & "." & CStr(buffer.ReadByte()) & "." & CStr(buffer.ReadByte())
-
-    If Not VersionOK(version) Then
-        Call WriteErrorMsg(Userindex, "Esta version del juego es obsoleta, la version correcta es la " & ULTIMAVERSION & ". La misma se encuentra disponible en www.argentumonline.com.ar")
-    Else
-        Call CreateNewAccount(Userindex, UserName, Password)
-    End If
-
-    'If we got here then packet is complete, copy data back to original queue
-    Call UserList(Userindex).incomingData.CopyBuffer(buffer)
-    
-ErrHandler:
-
-    Dim Error As Long
-
-    Error = Err.Number
-
-    On Error GoTo 0
-    
-    'Destroy auxiliar buffer
-    Set buffer = Nothing
-    
-    If Error <> 0 Then Err.Raise Error
-
-End Sub
-
-Public Sub WriteUserAccountLogged(ByVal Userindex As Integer, _
+Public Sub WriteUserAccountLogged(ByVal UserIndex As Integer, _
                                   ByVal UserName As String, _
                                   ByVal AccountHash As String, _
                                   ByVal NumberOfCharacters As Byte, _
@@ -22769,11 +22511,11 @@ Public Sub WriteUserAccountLogged(ByVal Userindex As Integer, _
 'Last Modification: 12/10/2018
 'Writes the "AccountLogged" message to the given user with the data of the account he just logged in
 '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
     Dim i As Long
 
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.AccountLogged)
         Call .WriteASCIIString(UserName)
         Call .WriteASCIIString(AccountHash)
@@ -22791,7 +22533,7 @@ Public Sub WriteUserAccountLogged(ByVal Userindex As Integer, _
                 Call .WriteByte(Characters(i).Class)
                 Call .WriteByte(Characters(i).race)
                 Call .WriteInteger(Characters(i).Map)
-                Call .WriteByte(Characters(i).level)
+                Call .WriteByte(Characters(i).Level)
                 Call .WriteLong(Characters(i).Gold)
                 Call .WriteBoolean(Characters(i).criminal)
                 Call .WriteBoolean(Characters(i).dead)
@@ -22804,17 +22546,17 @@ Public Sub WriteUserAccountLogged(ByVal Userindex As Integer, _
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
 
 End Sub
 
-Public Function PrepareMessagePalabrasMagicas(ByVal SpellIndex As Byte, _
+Public Function PrepareMessagePalabrasMagicas(ByVal spellIndex As Byte, _
                                               ByVal CharIndex As Integer) As String
 
     '***************************************************
@@ -22823,7 +22565,7 @@ Public Function PrepareMessagePalabrasMagicas(ByVal SpellIndex As Byte, _
     '***************************************************
     With auxiliarBuffer
         Call .WriteByte(ServerPacketID.PalabrasMagicas)
-        Call .WriteByte(SpellIndex)
+        Call .WriteByte(spellIndex)
         Call .WriteInteger(CharIndex)
      
         PrepareMessagePalabrasMagicas = .ReadASCIIStringFixed(.Length)
@@ -22867,14 +22609,14 @@ Public Function PrepareMessageFXtoMap(ByVal FxIndex As Integer, _
 
 End Function
 
-Public Function WriteSearchList(ByVal Userindex As Integer, _
+Public Function WriteSearchList(ByVal UserIndex As Integer, _
                                 ByVal Num As Integer, _
                                 ByVal Datos As String, _
                                 ByVal obj As Boolean) As String
  
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.SearchList)
         Call .WriteInteger(Num)
         Call .WriteBoolean(obj)
@@ -22882,10 +22624,10 @@ Public Function WriteSearchList(ByVal Userindex As Integer, _
 
     End With
  
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
 
         Resume
 
@@ -22893,11 +22635,11 @@ ErrHandler:
    
 End Function
  
-Public Sub HandleSearchNpc(ByVal Userindex As Integer)
+Public Sub HandleSearchNpc(ByVal UserIndex As Integer)
  
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         Dim buffer As New clsByteQueue
 
@@ -22916,14 +22658,19 @@ Public Sub HandleSearchNpc(ByVal Userindex As Integer)
         Dim tStr    As String
 
         UserNpc = buffer.ReadASCIIString()
-   
+        
+        Call .incomingData.CopyBuffer(buffer)
+        
+        ' Es Game-Master?
+        If .flags.Privilegios And (PlayerType.User Or PlayerType.Consejero Or PlayerType.SemiDios) Then Exit Sub
+        
         tStr = Tilde(UserNpc)
       
         For i = 1 To val(LeerNPCs.GetValue("INIT", "NumNPCs"))
             Name = LeerNPCs.GetValue("NPC" & i, "Name")
        
             If InStr(1, Tilde(Name), tStr) Then
-                Call WriteSearchList(Userindex, i, CStr(i & " - " & Name), False)
+                Call WriteSearchList(UserIndex, i, CStr(i & " - " & Name), False)
                 n = n + 1
 
             End If
@@ -22931,15 +22678,13 @@ Public Sub HandleSearchNpc(ByVal Userindex As Integer)
         Next i
    
         If n = 0 Then
-            Call WriteSearchList(Userindex, 0, "No hubo resultados de la busqueda.", False)
+            Call WriteSearchList(UserIndex, 0, "No hubo resultados de la busqueda.", False)
 
         End If
-   
-        Call .incomingData.CopyBuffer(buffer)
 
     End With
 
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -22953,11 +22698,11 @@ ErrHandler:
 
 End Sub
  
-Private Sub HandleSearchObj(ByVal Userindex As Integer)
+Private Sub HandleSearchObj(ByVal UserIndex As Integer)
        
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         Dim buffer As New clsByteQueue
 
@@ -22976,13 +22721,18 @@ Private Sub HandleSearchObj(ByVal Userindex As Integer)
         Dim tStr    As String
        
         UserObj = buffer.ReadASCIIString()
+        
+        Call .incomingData.CopyBuffer(buffer)
+        
+        ' Es Game-Master?
+        If .flags.Privilegios And (PlayerType.User Or PlayerType.Consejero Or PlayerType.SemiDios) Then Exit Sub
 
         tStr = Tilde(UserObj)
           
         For i = 1 To UBound(ObjData)
 
             If InStr(1, Tilde(ObjData(i).Name), tStr) Then
-                Call WriteSearchList(Userindex, i, CStr(i & " - " & ObjData(i).Name), True)
+                Call WriteSearchList(UserIndex, i, CStr(i & " - " & ObjData(i).Name), True)
                 n = n + 1
 
             End If
@@ -22990,15 +22740,13 @@ Private Sub HandleSearchObj(ByVal Userindex As Integer)
         Next
 
         If n = 0 Then
-            Call WriteSearchList(Userindex, 0, "No hubo resultados de la busqueda.", False)
+            Call WriteSearchList(UserIndex, 0, "No hubo resultados de la busqueda.", False)
 
         End If
-           
-        Call .incomingData.CopyBuffer(buffer)
                 
     End With
      
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -23012,46 +22760,46 @@ ErrHandler:
         
 End Sub
 
-Private Sub HandleEnviaCvc(ByVal Userindex As Integer)
+Private Sub HandleEnviaCvc(ByVal UserIndex As Integer)
 
     'Dim targetIndex As Integer
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
         .incomingData.ReadByte
 
         If .flags.TargetUser = 0 Then Exit Sub 'gdk: adonde mierda clickeas manko?
-        Call Mod_ClanvsClan.Enviar(Userindex, .flags.TargetUser)
+        Call Mod_ClanvsClan.Enviar(UserIndex, .flags.TargetUser)
 
     End With
 
 End Sub
 
-Private Sub HandleAceptarCvc(ByVal Userindex As Integer)
+Private Sub HandleAceptarCvc(ByVal UserIndex As Integer)
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
         .incomingData.ReadByte
 
         If .flags.TargetUser = 0 Then Exit Sub
-        Call Mod_ClanvsClan.Aceptar(Userindex, .flags.TargetUser)
+        Call Mod_ClanvsClan.Aceptar(UserIndex, .flags.TargetUser)
 
     End With
 
 End Sub
 
-Private Sub HandleIrCvc(ByVal Userindex As Integer)
+Private Sub HandleIrCvc(ByVal UserIndex As Integer)
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
         .incomingData.ReadByte
                 
-        Call Mod_ClanvsClan.ConectarCVC(Userindex, True)  'gdk: si le pones false bugeas toditus.
+        Call Mod_ClanvsClan.ConectarCVC(UserIndex, True)  'gdk: si le pones false bugeas toditus.
 
     End With
 
 End Sub
 
-Public Sub HandleDragAndDropHechizos(ByVal Userindex As Integer)
+Public Sub HandleDragAndDropHechizos(ByVal UserIndex As Integer)
  
-    With UserList(Userindex)
+    With UserList(UserIndex)
         
         Call .incomingData.ReadByte
         
@@ -23067,7 +22815,7 @@ Public Sub HandleDragAndDropHechizos(ByVal Userindex As Integer)
 
 End Sub
 
-Public Sub WriteQuestDetails(ByVal Userindex As Integer, _
+Public Sub WriteQuestDetails(ByVal UserIndex As Integer, _
                              ByVal QuestIndex As Integer, _
                              Optional QuestSlot As Byte = 0)
 
@@ -23077,9 +22825,9 @@ Public Sub WriteQuestDetails(ByVal Userindex As Integer, _
     '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
     Dim i As Integer
  
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         'ID del paquete
         Call .WriteByte(ServerPacketID.QuestDetails)
         
@@ -23103,7 +22851,7 @@ Public Sub WriteQuestDetails(ByVal Userindex As Integer, _
 
                 'Si es una quest ya empezada, entonces mandamos los NPCs que matï¿½.
                 If QuestSlot Then
-                    Call .WriteInteger(UserList(Userindex).QuestStats.Quests(QuestSlot).NPCsKilled(i))
+                    Call .WriteInteger(UserList(UserIndex).QuestStats.Quests(QuestSlot).NPCsKilled(i))
 
                 End If
 
@@ -23145,17 +22893,17 @@ Public Sub WriteQuestDetails(ByVal Userindex As Integer, _
 
     Exit Sub
  
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
 
 End Sub
  
-Public Sub WriteQuestListSend(ByVal Userindex As Integer)
+Public Sub WriteQuestListSend(ByVal UserIndex As Integer)
 
     '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
     'Envï¿½a el paquete QuestList y la informaciï¿½n correspondiente.
@@ -23167,9 +22915,9 @@ Public Sub WriteQuestListSend(ByVal Userindex As Integer)
 
     Dim tmpByte As Byte
  
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
  
-    With UserList(Userindex)
+    With UserList(UserIndex)
         .outgoingData.WriteByte ServerPacketID.QuestListSend
     
         For i = 1 To MAXUSERQUESTS
@@ -23195,10 +22943,10 @@ Public Sub WriteQuestListSend(ByVal Userindex As Integer)
 
     Exit Sub
  
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
 
     End If
@@ -23222,96 +22970,28 @@ End With
  
 End Function
 
-Public Sub HandleCambiarContrasena(ByVal Userindex As Integer)
+Public Sub WriteUserInEvent(ByVal UserIndex As Integer)
+    On Error GoTo Errhandler
     
-    'Verifico si llegan todos los datos
-    If UserList(Userindex).incomingData.Length < 5 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
-        Exit Sub
-    End If
-    
-    On Error GoTo ErrHandler
-    
-    Dim Correo As String
-    Dim NuevaContrasena As String
-    
-    With UserList(Userindex)
-        
-        'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
-        Dim buffer As New clsByteQueue
-        Call buffer.CopyBuffer(.incomingData)
-        
-        'Leemos el ID del paquete
-        Call buffer.ReadByte
-        
-        'Leemos los datos de la cuenta a modificar.
-        Correo = buffer.ReadASCIIString()
-        NuevaContrasena = buffer.ReadASCIIString()
-        
-        If ConexionAPI Then
-
-            'Correo = UserName es lo mismo para aca el Jopi le puso correo :)
-            If Not CuentaExiste(Correo) Then
-                Call WriteErrorMsg(Userindex, "La cuenta no existe.")
-                Call CloseSocket(Userindex)
-                Exit Sub
-
-            End If
-        
-            Call ApiEndpointSendResetPasswordAccountEmail(Correo, NuevaContrasena)
-
-            Call WriteErrorMsg(Userindex, "Se ha enviado un correo electronico a: " & Correo & " donde debera confirmar el cambio de la password de su cuenta.")
-
-        Else
-        
-            Call WriteErrorMsg(Userindex, "Esta funcion se encuentra deshabilitada actualmente, si sos el administrador del servidor necesitas habilitar la API hecha en Node.js (https://github.com/ao-libre/ao-api-server).")
-            
-        End If
-        
-        'If we got here then packet is complete, copy data back to original queue
-        'Por ultimo limpia el buffer nunca poner exit sub antes de limpiar el buffer porque explota
-        Call .incomingData.CopyBuffer(buffer)
-        Call CloseSocket(Userindex)
-        
-    End With
-    
-ErrHandler:
-    
-    Dim Error As Long: Error = Err.Number
-
-    Call CloseSocket(Userindex)
-    
-    On Error GoTo 0
-
-    'Destroy auxiliar buffer
-    Set buffer = Nothing
-
-    If Error <> 0 Then Err.Raise Error
-
-End Sub
-
-Public Sub WriteUserInEvent(ByVal Userindex As Integer)
-    On Error GoTo ErrHandler
-    
-    Call UserList(Userindex).outgoingData.WriteByte(ServerPacketID.UserInEvent)
+    Call UserList(UserIndex).outgoingData.WriteByte(ServerPacketID.UserInEvent)
     Exit Sub
 
-ErrHandler:
-        If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-            Call FlushBuffer(Userindex)
+Errhandler:
+        If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+            Call FlushBuffer(UserIndex)
             Resume
         End If
 End Sub
 
-Private Sub HandleFightSend(ByVal Userindex As Integer)
-    If UserList(Userindex).incomingData.Length < 5 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+Private Sub HandleFightSend(ByVal UserIndex As Integer)
+    If UserList(UserIndex).incomingData.Length < 5 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
     End If
     
-On Error GoTo ErrHandler
+On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue: Set buffer = New clsByteQueue
         Call buffer.CopyBuffer(.incomingData)
@@ -23329,14 +23009,14 @@ On Error GoTo ErrHandler
         If Len(ListUsers) >= 1 Then
             Users = Split(ListUsers, "-")
                       
-            Call Retos.SendFight(Userindex, GldRequired, Users)
+            Call Retos.SendFight(UserIndex, GldRequired, Users)
         End If
         
         'If we got here then packet is complete, copy data back to original queue
         Call .incomingData.CopyBuffer(buffer)
     End With
     
-ErrHandler:
+Errhandler:
     Dim Error As Long
     Error = Err.Number
 On Error GoTo 0
@@ -23348,15 +23028,15 @@ On Error GoTo 0
         Err.Raise Error
 End Sub
 
-Private Sub HandleFightAccept(ByVal Userindex As Integer)
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+Private Sub HandleFightAccept(ByVal UserIndex As Integer)
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
     End If
     
-On Error GoTo ErrHandler
+On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue: Set buffer = New clsByteQueue
         Call buffer.CopyBuffer(.incomingData)
@@ -23369,14 +23049,14 @@ On Error GoTo ErrHandler
         UserName = buffer.ReadASCIIString
         
         If Len(UserName) >= 1 Then
-            Call Retos.AcceptFight(Userindex, UserName)
+            Call Retos.AcceptFight(UserIndex, UserName)
         End If
         
         'If we got here then packet is complete, copy data back to original queue
         Call .incomingData.CopyBuffer(buffer)
     End With
     
-ErrHandler:
+Errhandler:
     Dim Error As Long
     Error = Err.Number
 On Error GoTo 0
@@ -23388,9 +23068,9 @@ On Error GoTo 0
         Err.Raise Error
 End Sub
 
-Private Sub HandleCloseGuild(ByVal Userindex As Integer)
+Private Sub HandleCloseGuild(ByVal UserIndex As Integer)
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
     
         Call .incomingData.ReadByte
         
@@ -23398,13 +23078,13 @@ Private Sub HandleCloseGuild(ByVal Userindex As Integer)
         Dim PreviousGuildIndex  As Integer
         
         If Not .GuildIndex >= 1 Then
-            Call WriteConsoleMsg(Userindex, "No perteneces a ningun clan.", FONTTYPE_GUILD)
+            Call WriteConsoleMsg(UserIndex, "No perteneces a ningun clan.", FONTTYPE_GUILD)
             Exit Sub
 
         End If
 
         If guilds(.GuildIndex).Fundador <> .Name Then
-            Call WriteConsoleMsg(Userindex, "No eres lider del clan.", FONTTYPE_GUILD)
+            Call WriteConsoleMsg(UserIndex, "No eres lider del clan.", FONTTYPE_GUILD)
             Exit Sub
 
         End If
@@ -23446,22 +23126,22 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleDiscord(ByVal Userindex As Integer)
+Private Sub HandleDiscord(ByVal UserIndex As Integer)
 '***************************************************
 'Author: Lucas Daniel Recoaro (Recox)
 'Last Modification: 14/07/19 (Recox)
 'Manda un mensaje al server para que el mismo lo envie al bot del discord (Recox)
 '***************************************************
 
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
     End If
     
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue
@@ -23485,10 +23165,10 @@ Private Sub HandleDiscord(ByVal Userindex As Integer)
             If ConexionAPI Then
                 
                                 Call ApiEndpointSendCustomCharacterMessageDiscord(Chat, .Name, .Desc)
-                Call WriteConsoleMsg(Userindex, "Link Discord: https://discord.gg/xbAuHcf - El bot de Discord recibio y envio lo siguiente: " & Chat, FontTypeNames.FONTTYPE_INFOBOLD)
+                Call WriteConsoleMsg(UserIndex, "Link Discord: https://discord.gg/xbAuHcf - El bot de Discord recibio y envio lo siguiente: " & Chat, FontTypeNames.FONTTYPE_INFOBOLD)
 
             Else
-                Call WriteConsoleMsg(Userindex, "(api - node.js)  El modulo para usar esta funcion no esta instalado en este servidor. http://www.github.com/ao-libre/ao-api-server para mas informacion / more info.", FontTypeNames.FONTTYPE_INFOBOLD)
+                Call WriteConsoleMsg(UserIndex, "(api - node.js)  El modulo para usar esta funcion no esta instalado en este servidor. http://www.github.com/ao-libre/ao-api-server para mas informacion / more info.", FontTypeNames.FONTTYPE_INFOBOLD)
 
             End If
         
@@ -23499,7 +23179,7 @@ Private Sub HandleDiscord(ByVal Userindex As Integer)
 
     End With
     
-ErrHandler:
+Errhandler:
 
     Dim Error As Long
 
@@ -23514,7 +23194,7 @@ ErrHandler:
 
 End Sub
 
-Public Sub HandleLimpiarMundo(ByVal Userindex As Integer)
+Public Sub HandleLimpiarMundo(ByVal UserIndex As Integer)
 '***************************************************
 'Author: Jopi
 'Last Modification: 11/01/2020
@@ -23522,15 +23202,96 @@ Public Sub HandleLimpiarMundo(ByVal Userindex As Integer)
 '***************************************************
     
     'Remove packet ID
-    Call UserList(Userindex).incomingData.ReadByte
+    Call UserList(UserIndex).incomingData.ReadByte
     
     'Me fijo si es GM
-    If Not EsGm(Userindex) Then Exit Sub
+    If Not EsGm(UserIndex) Then Exit Sub
     
     'Forzamos la ejecucion de la limpieza del mundo con cuenta regresiva.
     'Y de paso nos ahorramos en repetir codigo.
     counterSV.Limpieza = 6
     
+End Sub
+
+Public Sub HandleEditGems(ByVal UserIndex As Integer)
+'***************************************************
+'Author: Lorwik
+'Last Modification: 30/04/2020
+'Edita las gemas del usuario
+'***************************************************
+    
+    Dim UserName As String
+    Dim CantGems As Long
+    Dim Opcion As Byte
+    
+    With UserList(UserIndex)
+
+        'Remove packet ID
+        Call .incomingData.ReadByte
+        
+        UserName = .incomingData.ReadASCIIString
+        CantGems = .incomingData.ReadLong
+        Opcion = .incomingData.ReadByte
+        
+        'Me fijo si es Admin
+        If Not EsAdmin(UserList(UserIndex).Name) Then Exit Sub
+        
+        If UserName = "" Then
+            Call WriteConsoleMsg(UserIndex, "¡Faltan parametros!", FontTypeNames.FONTTYPE_INFO)
+            Exit Sub
+        End If
+        
+        If CantGems > 10000 Then
+            Call WriteConsoleMsg(UserIndex, "El valor de las Gemas no puede superar 10000", FontTypeNames.FONTTYPE_INFO)
+            Exit Sub
+        End If
+        
+        Select Case Opcion
+        
+            Case 0 'Editar las gemas
+                Call modDatabase.SaveAccountEditGemasDatabase(UserName, CantGems)
+                Call WriteConsoleMsg(UserIndex, "Se editaron " & CantGems & " Gemas Winter a la cuenta de " & UserName, FontTypeNames.FONTTYPE_INFO)
+            
+            Case 1 'Sumar las gemas
+                Call modDatabase.SaveAccountSumaGemasDatabase(UserName, CantGems)
+                Call WriteConsoleMsg(UserIndex, "Se sumaron " & CantGems & " Gemas Winter a la cuenta de " & UserName & ". Ahora tiene " & modDatabase.GetGemasDatabase(UserName) & " Gemas Winter. ", FontTypeNames.FONTTYPE_INFO)
+                
+            Case 2 'Restar las gemas
+                Call modDatabase.SaveAccountRestaGemasDatabase(UserName, CantGems)
+                Call WriteConsoleMsg(UserIndex, "Se restaron " & CantGems & " Gemas Winter a la cuenta de " & UserName & ". Ahora tiene " & modDatabase.GetGemasDatabase(UserName) & " Gemas Winter. ", FontTypeNames.FONTTYPE_INFO)
+                
+        End Select
+    End With
+    
+End Sub
+
+Public Sub HandleConsultarGemas(ByVal UserIndex As Integer)
+'***************************************************
+'Author: Lorwik
+'Last Modification: 30/04/2020
+'Consulta las gemas del usuario
+'***************************************************
+
+    Dim UserName As String
+    
+    With UserList(UserIndex)
+    
+        'Remove packet ID
+        Call .incomingData.ReadByte
+        
+        UserName = .incomingData.ReadASCIIString
+    
+        'Me fijo si es Admin
+        If Not EsAdmin(UserList(UserIndex).Name) Then Exit Sub
+        
+        If UserName = "" Then
+            Call WriteConsoleMsg(UserIndex, "¡Faltan parametros!", FontTypeNames.FONTTYPE_INFO)
+            Exit Sub
+        End If
+        
+        Call WriteConsoleMsg(UserIndex, UserName & " tiene " & modDatabase.GetGemasDatabase(UserName) & " Gemas Winter en su cuenta.", FontTypeNames.FONTTYPE_INFO)
+    
+    End With
 End Sub
 
 ''
@@ -23539,14 +23300,14 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteEquitandoToggle(ByVal Userindex As Integer)
+Public Sub WriteEquitandoToggle(ByVal UserIndex As Integer)
 '***************************************************
 'Author: Lorwik
 'Last Modification: 23/08/11
 'Writes the "EquitandoToggle" message to the given user's outgoing data buffer
 '***************************************************
-On Error GoTo ErrHandler
-    With UserList(Userindex)
+On Error GoTo Errhandler
+    With UserList(UserIndex)
         Call .outgoingData.WriteByte(ServerPacketID.EquitandoToggle)
         
         Call .outgoingData.WriteLong(.Counters.MonturaCounter)
@@ -23555,9 +23316,9 @@ On Error GoTo ErrHandler
 
     Exit Sub
 
-ErrHandler:
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+Errhandler:
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
     End If
 End Sub
@@ -23567,18 +23328,18 @@ End Sub
 '
 ' @param    UserIndex The index of the user sending the message.
 
-Private Sub HandleCraftsmanCreate(ByVal Userindex As Integer)
+Private Sub HandleCraftsmanCreate(ByVal UserIndex As Integer)
     '***************************************************
     'Author: WyroX
     'Last Modification: 27/01/2020
     '***************************************************
 
-    If UserList(Userindex).incomingData.Length < 3 Then
-        Err.Raise UserList(Userindex).incomingData.NotEnoughDataErrCode
+    If UserList(UserIndex).incomingData.Length < 3 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
     End If
 
-    With UserList(Userindex).incomingData
+    With UserList(UserIndex).incomingData
         'Remove packet ID
         Call .ReadByte
 
@@ -23587,50 +23348,67 @@ Private Sub HandleCraftsmanCreate(ByVal Userindex As Integer)
         Item = .ReadInteger()
         If Item < LBound(ObjArtesano) Or Item > UBound(ObjArtesano) Then Exit Sub
 
-        If UserList(Userindex).flags.Muerto = 1 Then
-            Call WriteMultiMessage(Userindex, eMessages.UserMuerto)
+        If UserList(UserIndex).flags.Muerto = 1 Then
+            Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
             Exit Sub
         End If
 
         'El target es un NPC valido?
-        If UserList(Userindex).flags.TargetNPC = 0 Then Exit Sub
+        If UserList(UserIndex).flags.TargetNPC = 0 Then Exit Sub
 
         'Es el artesano?
-        If Npclist(UserList(Userindex).flags.TargetNPC).NPCtype <> eNPCType.Artesano Then Exit Sub
+        If Npclist(UserList(UserIndex).flags.TargetNPC).NPCtype <> eNPCType.Artesano Then Exit Sub
 
         'Esta cerca?
-        If Distancia(Npclist(UserList(Userindex).flags.TargetNPC).Pos, UserList(Userindex).Pos) > 3 Then
-            Call WriteConsoleMsg(Userindex, "Estas demasiado lejos del artesano.", FontTypeNames.FONTTYPE_INFO)
+        If Distancia(Npclist(UserList(UserIndex).flags.TargetNPC).Pos, UserList(UserIndex).Pos) > 3 Then
+            Call WriteConsoleMsg(UserIndex, "Estas demasiado lejos del artesano.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
         End If
 
         'User retira el item del slot
-        Call ArtesanoConstruirItem(Userindex, Item)
+        Call ArtesanoConstruirItem(UserIndex, Item)
 
     End With
 End Sub
 
-Public Sub WriteCargarListaDeAmigos(ByVal Userindex As Integer, ByVal Slot As Byte)
+Public Sub WriteCargarListaDeAmigos(ByVal UserIndex As Integer, ByVal Slot As Byte)
 
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
     Dim i As Integer
 
-    With UserList(Userindex).outgoingData
+    With UserList(UserIndex).outgoingData
         
                 Call .WriteByte(ServerPacketID.EnviarListDeAmigos)
         Call .WriteByte(Slot)
-        Call .WriteASCIIString(UserList(Userindex).Amigos(Slot).Nombre)
+        Call .WriteASCIIString(UserList(UserIndex).Amigos(Slot).Nombre)
 
     End With
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
-    If Err.Number = UserList(Userindex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(Userindex)
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
         Resume
     End If
 
 End Sub
+
+Public Function PrepareMessageProyectil(ByVal UserIndex As Integer, ByVal CharSending As Integer, ByVal CharRecieved As Integer, ByVal GrhIndex As Integer) As String
+'*************************************
+'Autor: Lorwik
+'Fecha:16/05/2020
+'*************************************
+
+    With auxiliarBuffer
+        .WriteByte (ServerPacketID.proyectil)
+        .WriteInteger (CharSending)
+        .WriteInteger (CharRecieved)
+        .WriteInteger (GrhIndex)
+        
+        PrepareMessageProyectil = .ReadASCIIStringFixed(.Length)
+    End With
+
+End Function

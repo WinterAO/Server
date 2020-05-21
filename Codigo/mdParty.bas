@@ -72,7 +72,7 @@ Public ExponenteNivelParty             As Single
 '
 Public Type tPartyMember
 
-    Userindex As Integer
+    UserIndex As Integer
     Experiencia As Double
 
 End Type
@@ -100,7 +100,7 @@ Public Function NextParty() As Integer
 
 End Function
 
-Public Function PuedeCrearParty(ByVal Userindex As Integer) As Boolean
+Public Function PuedeCrearParty(ByVal UserIndex As Integer) As Boolean
     '***************************************************
     'Author: Unknown
     'Last Modification: 05/22/2010 (Marco)
@@ -109,22 +109,20 @@ Public Function PuedeCrearParty(ByVal Userindex As Integer) As Boolean
     
     PuedeCrearParty = True
     
-    If (UserList(Userindex).flags.Privilegios And PlayerType.User) = 0 Then
+    If (UserList(UserIndex).flags.Privilegios And PlayerType.User) = 0 Then
         'staff members aren't allowed to party anyone.
-        Call WriteConsoleMsg(Userindex, "Los miembros del staff no pueden crear partys!", FontTypeNames.FONTTYPE_PARTY)
+        Call WriteConsoleMsg(UserIndex, "Los miembros del staff no pueden crear partys!", FontTypeNames.FONTTYPE_PARTY)
         PuedeCrearParty = False
-    ElseIf CInt(UserList(Userindex).Stats.UserAtributos(eAtributos.Carisma)) * UserList(Userindex).Stats.UserSkills(eSkill.Liderazgo) < 100 Then
-        Call WriteConsoleMsg(Userindex, "Tu carisma y liderazgo no son suficientes para liderar una party.", FontTypeNames.FONTTYPE_PARTY)
-        PuedeCrearParty = False
-    ElseIf UserList(Userindex).flags.Muerto = 1 Then
-        Call WriteConsoleMsg(Userindex, "Estas muerto!!", FontTypeNames.FONTTYPE_PARTY)
+        
+    ElseIf UserList(UserIndex).flags.Muerto = 1 Then
+        Call WriteConsoleMsg(UserIndex, "Estas muerto!!", FontTypeNames.FONTTYPE_PARTY)
         PuedeCrearParty = False
 
     End If
 
 End Function
 
-Public Sub CrearParty(ByVal Userindex As Integer)
+Public Sub CrearParty(ByVal UserIndex As Integer)
     '***************************************************
     'Author: Unknown
     'Last Modification: -
@@ -133,7 +131,7 @@ Public Sub CrearParty(ByVal Userindex As Integer)
 
     Dim tInt As Integer
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         If .PartyIndex = 0 Then
             If .flags.Muerto = 0 Then
@@ -141,24 +139,24 @@ Public Sub CrearParty(ByVal Userindex As Integer)
                     tInt = mdParty.NextParty
 
                     If tInt = -1 Then
-                        Call WriteConsoleMsg(Userindex, "Por el momento no se pueden crear mas parties.", FontTypeNames.FONTTYPE_PARTY)
+                        Call WriteConsoleMsg(UserIndex, "Por el momento no se pueden crear mas parties.", FontTypeNames.FONTTYPE_PARTY)
                         Exit Sub
                     Else
                         Set Parties(tInt) = New clsParty
 
-                        If Not Parties(tInt).NuevoMiembro(Userindex) Then
-                            Call WriteConsoleMsg(Userindex, "La party esta llena, no puedes entrar.", FontTypeNames.FONTTYPE_PARTY)
+                        If Not Parties(tInt).NuevoMiembro(UserIndex) Then
+                            Call WriteConsoleMsg(UserIndex, "La party esta llena, no puedes entrar.", FontTypeNames.FONTTYPE_PARTY)
                             Set Parties(tInt) = Nothing
                             Exit Sub
                         Else
-                            Call WriteConsoleMsg(Userindex, "Has formado una party!", FontTypeNames.FONTTYPE_PARTY)
+                            Call WriteConsoleMsg(UserIndex, "Has formado una party!", FontTypeNames.FONTTYPE_PARTY)
                             .PartyIndex = tInt
                             .PartySolicitud = 0
 
-                            If Not Parties(tInt).HacerLeader(Userindex) Then
-                                Call WriteConsoleMsg(Userindex, "No puedes hacerte lider.", FontTypeNames.FONTTYPE_PARTY)
+                            If Not Parties(tInt).HacerLeader(UserIndex) Then
+                                Call WriteConsoleMsg(UserIndex, "No puedes hacerte lider.", FontTypeNames.FONTTYPE_PARTY)
                             Else
-                                Call WriteConsoleMsg(Userindex, "Te has convertido en lider de la party!", FontTypeNames.FONTTYPE_PARTY)
+                                Call WriteConsoleMsg(UserIndex, "Te has convertido en lider de la party!", FontTypeNames.FONTTYPE_PARTY)
 
                             End If
 
@@ -167,18 +165,18 @@ Public Sub CrearParty(ByVal Userindex As Integer)
                     End If
 
                 Else
-                    Call WriteConsoleMsg(Userindex, "No tienes suficientes puntos de liderazgo para liderar una party.", FontTypeNames.FONTTYPE_PARTY)
+                    Call WriteConsoleMsg(UserIndex, "No tienes suficientes puntos de liderazgo para liderar una party.", FontTypeNames.FONTTYPE_PARTY)
 
                 End If
 
             Else
                 'Call WriteConsoleMsg(UserIndex, "Estas muerto!!", FontTypeNames.FONTTYPE_PARTY)
-                Call WriteMultiMessage(Userindex, eMessages.UserMuerto)
+                Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
 
             End If
 
         Else
-            Call WriteConsoleMsg(Userindex, "Ya perteneces a una party.", FontTypeNames.FONTTYPE_PARTY)
+            Call WriteConsoleMsg(UserIndex, "Ya perteneces a una party.", FontTypeNames.FONTTYPE_PARTY)
 
         End If
 
@@ -186,7 +184,7 @@ Public Sub CrearParty(ByVal Userindex As Integer)
 
 End Sub
 
-Public Sub SolicitarIngresoAParty(ByVal Userindex As Integer)
+Public Sub SolicitarIngresoAParty(ByVal UserIndex As Integer)
     '***************************************************
     'Author: Unknown
     'Last Modification: 05/22/2010 (Marco)
@@ -200,18 +198,18 @@ Public Sub SolicitarIngresoAParty(ByVal Userindex As Integer)
 
     Dim PartyIndex      As Integer
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
     
         'staff members aren't allowed to party anyone
         If (.flags.Privilegios And PlayerType.User) = 0 Then
-            Call WriteConsoleMsg(Userindex, "Los miembros del staff no pueden unirse a partys!", FontTypeNames.FONTTYPE_PARTY)
+            Call WriteConsoleMsg(UserIndex, "Los miembros del staff no pueden unirse a partys!", FontTypeNames.FONTTYPE_PARTY)
             Exit Sub
 
         End If
         
         If .PartyIndex > 0 Then
             'si ya esta en una party
-            Call WriteConsoleMsg(Userindex, "Ya perteneces a una party, escribe /SALIRPARTY para abandonarla", FontTypeNames.FONTTYPE_PARTY)
+            Call WriteConsoleMsg(UserIndex, "Ya perteneces a una party, escribe /SALIRPARTY para abandonarla", FontTypeNames.FONTTYPE_PARTY)
             .PartySolicitud = 0
             Exit Sub
 
@@ -220,7 +218,7 @@ Public Sub SolicitarIngresoAParty(ByVal Userindex As Integer)
         ' Muerto?
         If .flags.Muerto = 1 Then
             'Call WriteConsoleMsg(UserIndex, "Estas muerto!!", FontTypeNames.FONTTYPE_INFO)
-            Call WriteMultiMessage(Userindex, eMessages.UserMuerto)
+            Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
             .PartySolicitud = 0
             Exit Sub
 
@@ -239,18 +237,18 @@ Public Sub SolicitarIngresoAParty(ByVal Userindex As Integer)
                 ' Es el lider?
                 If Parties(PartyIndex).EsPartyLeader(TargetUserIndex) Then
                     .PartySolicitud = PartyIndex
-                    Call WriteConsoleMsg(Userindex, "El lider decidira si te acepta en la party.", FontTypeNames.FONTTYPE_PARTY)
+                    Call WriteConsoleMsg(UserIndex, "El lider decidira si te acepta en la party.", FontTypeNames.FONTTYPE_PARTY)
                     Call WriteConsoleMsg(TargetUserIndex, .Name & " solicita ingresar a tu party.", FontTypeNames.FONTTYPE_PARTY)
                 
                     ' No es lider
                 Else
-                    Call WriteConsoleMsg(Userindex, UserList(TargetUserIndex).Name & " no es lider de la party.", FontTypeNames.FONTTYPE_PARTY)
+                    Call WriteConsoleMsg(UserIndex, UserList(TargetUserIndex).Name & " no es lider de la party.", FontTypeNames.FONTTYPE_PARTY)
 
                 End If
             
                 ' No tiene party
             Else
-                Call WriteConsoleMsg(Userindex, UserList(TargetUserIndex).Name & " no pertenece a ninguna party.", FontTypeNames.FONTTYPE_PARTY)
+                Call WriteConsoleMsg(UserIndex, UserList(TargetUserIndex).Name & " no pertenece a ninguna party.", FontTypeNames.FONTTYPE_PARTY)
                 .PartySolicitud = 0
                 Exit Sub
 
@@ -258,7 +256,7 @@ Public Sub SolicitarIngresoAParty(ByVal Userindex As Integer)
         
             ' Target invalido
         Else
-            Call WriteConsoleMsg(Userindex, "Para ingresar a una party debes hacer click sobre el fundador y luego escribir /PARTY", FontTypeNames.FONTTYPE_PARTY)
+            Call WriteConsoleMsg(UserIndex, "Para ingresar a una party debes hacer click sobre el fundador y luego escribir /PARTY", FontTypeNames.FONTTYPE_PARTY)
             .PartySolicitud = 0
 
         End If
@@ -267,7 +265,7 @@ Public Sub SolicitarIngresoAParty(ByVal Userindex As Integer)
 
 End Sub
 
-Public Sub SalirDeParty(ByVal Userindex As Integer)
+Public Sub SalirDeParty(ByVal UserIndex As Integer)
     '***************************************************
     'Author: Unknown
     'Last Modification: -
@@ -276,19 +274,19 @@ Public Sub SalirDeParty(ByVal Userindex As Integer)
 
     Dim PI As Integer
 
-    PI = UserList(Userindex).PartyIndex
+    PI = UserList(UserIndex).PartyIndex
 
     If PI > 0 Then
-        If Parties(PI).SaleMiembro(Userindex) Then
+        If Parties(PI).SaleMiembro(UserIndex) Then
             'sale el leader
             Set Parties(PI) = Nothing
         Else
-            UserList(Userindex).PartyIndex = 0
+            UserList(UserIndex).PartyIndex = 0
 
         End If
 
     Else
-        Call WriteConsoleMsg(Userindex, "No eres miembro de ninguna party.", FontTypeNames.FONTTYPE_INFO)
+        Call WriteConsoleMsg(UserIndex, "No eres miembro de ninguna party.", FontTypeNames.FONTTYPE_INFO)
 
     End If
 
@@ -428,7 +426,7 @@ Public Sub AprobarIngresoAParty(ByVal leader As Integer, ByVal NewMember As Inte
     
 End Sub
 
-Private Function IsPartyMember(ByVal Userindex As Integer, ByVal PartyIndex As Integer)
+Private Function IsPartyMember(ByVal UserIndex As Integer, ByVal PartyIndex As Integer)
 
     Dim MemberIndex As Integer
     
@@ -438,7 +436,7 @@ Private Function IsPartyMember(ByVal Userindex As Integer, ByVal PartyIndex As I
 
 End Function
 
-Public Sub BroadCastParty(ByVal Userindex As Integer, ByRef texto As String)
+Public Sub BroadCastParty(ByVal UserIndex As Integer, ByRef texto As String)
     '***************************************************
     'Author: Unknown
     'Last Modification: -
@@ -447,16 +445,16 @@ Public Sub BroadCastParty(ByVal Userindex As Integer, ByRef texto As String)
 
     Dim PI As Integer
     
-    PI = UserList(Userindex).PartyIndex
+    PI = UserList(UserIndex).PartyIndex
     
     If PI > 0 Then
-        Call Parties(PI).MandarMensajeAConsola(texto, UserList(Userindex).Name)
+        Call Parties(PI).MandarMensajeAConsola(texto, UserList(UserIndex).Name)
 
     End If
 
 End Sub
 
-Public Sub OnlineParty(ByVal Userindex As Integer)
+Public Sub OnlineParty(ByVal UserIndex As Integer)
 
     '*************************************************
     'Author: Unknown
@@ -471,7 +469,7 @@ Public Sub OnlineParty(ByVal Userindex As Integer)
 
     Dim MembersOnline(1 To PARTY_MAXMEMBERS) As Integer
 
-    PI = UserList(Userindex).PartyIndex
+    PI = UserList(UserIndex).PartyIndex
     
     If PI > 0 Then
         Call Parties(PI).ObtenerMiembrosOnline(MembersOnline())
@@ -487,7 +485,7 @@ Public Sub OnlineParty(ByVal Userindex As Integer)
         Next i
 
         Text = Text & ". Experiencia total: " & Parties(PI).ObtenerExperienciaTotal
-        Call WriteConsoleMsg(Userindex, Text, FontTypeNames.FONTTYPE_PARTY)
+        Call WriteConsoleMsg(UserIndex, Text, FontTypeNames.FONTTYPE_PARTY)
 
     End If
     
@@ -563,10 +561,10 @@ Public Sub ActualizaExperiencias()
 
 End Sub
 
-Public Sub ObtenerExito(ByVal Userindex As Integer, _
+Public Sub ObtenerExito(ByVal UserIndex As Integer, _
                         ByVal Exp As Long, _
-                        mapa As Integer, _
-                        x As Integer, _
+                        Mapa As Integer, _
+                        X As Integer, _
                         Y As Integer)
     '***************************************************
     'Author: Unknown
@@ -579,11 +577,11 @@ Public Sub ObtenerExito(ByVal Userindex As Integer, _
 
     End If
     
-    Call Parties(UserList(Userindex).PartyIndex).ObtenerExito(Exp, mapa, x, Y)
+    Call Parties(UserList(UserIndex).PartyIndex).ObtenerExito(Exp, Mapa, X, Y)
 
 End Sub
 
-Public Function CantMiembros(ByVal Userindex As Integer) As Integer
+Public Function CantMiembros(ByVal UserIndex As Integer) As Integer
     '***************************************************
     'Author: Unknown
     'Last Modification: -
@@ -592,8 +590,8 @@ Public Function CantMiembros(ByVal Userindex As Integer) As Integer
 
     CantMiembros = 0
 
-    If UserList(Userindex).PartyIndex > 0 Then
-        CantMiembros = Parties(UserList(Userindex).PartyIndex).CantMiembros
+    If UserList(UserIndex).PartyIndex > 0 Then
+        CantMiembros = Parties(UserList(UserIndex).PartyIndex).CantMiembros
 
     End If
 
@@ -604,15 +602,15 @@ End Function
 '
 ' @param UserInidex Specifies reference to user
 ' @remarks When a user level up and he is in a party, we call this sub to don't desestabilice the party exp formula
-Public Sub ActualizarSumaNivelesElevados(ByVal Userindex As Integer)
+Public Sub ActualizarSumaNivelesElevados(ByVal UserIndex As Integer)
 
     '*************************************************
     'Author: Marco Vanotti (MarKoxX)
     'Last modified: 28/10/08
     '
     '*************************************************
-    If UserList(Userindex).PartyIndex > 0 Then
-        Call Parties(UserList(Userindex).PartyIndex).UpdateSumaNivelesElevados(UserList(Userindex).Stats.ELV)
+    If UserList(UserIndex).PartyIndex > 0 Then
+        Call Parties(UserList(UserIndex).PartyIndex).UpdateSumaNivelesElevados(UserList(UserIndex).Stats.ELV)
 
     End If
 

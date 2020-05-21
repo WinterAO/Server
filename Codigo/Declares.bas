@@ -31,7 +31,7 @@ Option Explicit
 
 #If False Then
 
-    Dim Map, X, Y, body, Clase, race, Email, obj, Length As Variant
+    Dim Map, X, Y, body, clase, race, Email, obj, Length As Variant
 
 #End If
 
@@ -504,7 +504,9 @@ Public Enum eNPCType
     Artesano = 9
     Pretoriano = 10
     Gobernador = 11
-
+    WorldBoss = 12
+    dummy = 13
+    Quest = 14
 End Enum
 
 Public Const MIN_APUNALAR   As Byte = 10
@@ -513,7 +515,7 @@ Public Const MIN_APUNALAR   As Byte = 10
 
 ''
 ' Cantidad de skills
-Public Const NUMSKILLS      As Byte = 20
+Public Const NUMSKILLS      As Byte = 21
 
 ''
 ' Cantidad de Atributos
@@ -615,7 +617,6 @@ Public Enum eSkill
     Wrestling = 19
     Navegacion = 20
     Equitacion = 21
-
 End Enum
 
 Public Enum eMochilas
@@ -652,53 +653,47 @@ Public Const AumentoSTMago              As Byte = AumentoSTDef - 1
 Public Const AumentoSTTrabajador        As Byte = AumentoSTDef + 25
 
 'Sonidos
-Public Const SND_SWING                  As Byte = 2
+Public SND_SWING                        As Byte
 
-Public Const SND_TALAR                  As Byte = 13
+Public SND_TALAR                        As Byte
 
-Public Const SND_PESCAR                 As Byte = 14
+Public SND_PESCAR                       As Byte
 
-Public Const SND_MINERO                 As Byte = 15
+Public SND_MINERO                       As Byte
 
-Public Const SND_WARP                   As Byte = 3
+Public SND_WARP                         As Byte
 
-Public Const SND_PUERTA                 As Byte = 5
+Public SND_PUERTA                       As Byte
 
-Public Const SND_NIVEL                  As Byte = 6
+Public SND_NIVEL                        As Byte
 
-Public Const SND_USERMUERTE             As Byte = 11
+Public SND_USERMUERTE                   As Byte
 
-Public Const SND_IMPACTO                As Byte = 10
+Public SND_IMPACTO                      As Byte
 
-Public Const SND_IMPACTO2               As Byte = 12
+Public SND_IMPACTO2                     As Byte
 
-Public Const SND_LENADOR                As Byte = 13
+Public SND_LENADOR                      As Byte
 
-Public Const SND_FOGATA                 As Byte = 14
+Public SND_FOGATA                       As Byte
 
-Public Const SND_AVE                    As Byte = 21
+Public SND_AVE(1 To 3)                  As Byte
 
-Public Const SND_AVE2                   As Byte = 22
+Public SND_GRILLO(1 To 2)               As Byte
 
-Public Const SND_AVE3                   As Byte = 34
+Public SND_SACARARMA                    As Byte
 
-Public Const SND_GRILLO                 As Byte = 28
+Public SND_ESCUDO(1 To 4)               As Byte
 
-Public Const SND_GRILLO2                As Byte = 29
+Public SND_TRABAJO_HERRERO              As Byte
 
-Public Const SND_SACARARMA              As Byte = 25
+Public SND_TRABAJO_CARPINTERO           As Byte
 
-Public Const SND_ESCUDO                 As Byte = 37
+Public SND_BEBER                        As Byte
 
-Public Const SND_TRABAJO_HERRERO        As Byte = 41
+Public SND_RESUCITAR_SACERDOTE          As Byte
 
-Public Const SND_TRABAJO_CARPINTERO     As Byte = 42
-
-Public Const SND_BEBER                  As Byte = 46
-
-Public Const SND_RESUCITAR_SACERDOTE    As Byte = 213
-
-Public Const SND_CURAR_SACERDOTE        As Byte = 214
+Public SND_CURAR_SACERDOTE              As Byte
 
 ''
 ' Cantidad maxima de objetos por slot de inventario
@@ -940,7 +935,7 @@ End Type
 
 Public Type tPartyData
 
-    PIndex As Integer
+    pIndex As Integer
     RemXP As Double 'La exp. en el server se cuenta con Doubles
     TargetUser As Integer 'Para las invitaciones
 
@@ -1025,6 +1020,8 @@ Public Type ObjData
     
     Crucial As Byte
     Newbie As Integer
+    
+    Shadow As Byte
     
     'Puntos de Stamina que da
     MinSta As Integer ' Minimo puntos de stamina
@@ -1131,7 +1128,9 @@ Public Type ObjData
     NoLog As Byte 'es un objeto que esta prohibido loguear?
     
     Upgrade As Integer
-
+    
+    MontTipo As Byte 'Tipo de Montura
+    
 End Type
 
 Public Type obj
@@ -1309,6 +1308,7 @@ End Type
 Public Type UserStats
 
     Gld As Long 'Dinero
+
     Banco As Long
     
     MaxHp As Integer
@@ -1338,7 +1338,7 @@ Public Type UserStats
     UsuariosMatados As Long
     NPCsMuertos As Integer
     
-    SkillPts As Integer
+    ELO As Integer
     
     ExpSkills(1 To NUMSKILLS) As Long
     EluSkills(1 To NUMSKILLS) As Long
@@ -1455,6 +1455,8 @@ Public Type UserFlags
     ParalizedBy As String
     ParalizedByIndex As Integer
     ParalizedByNpcIndex As Integer
+    
+    TargetBot As Byte
 
 End Type
 
@@ -1511,7 +1513,6 @@ Public Type UserCounters
     failedUsageAttempts As Long
     
     goHome As Long
-    AsignedSkills As Byte
     
     PacketsTick As Byte
 
@@ -1557,7 +1558,7 @@ Public Type AccountUser
     Class As Byte
     race As Byte
     Map As Integer
-    level As Byte
+    Level As Byte
     Gold As Long
     criminal As Boolean
     dead As Boolean
@@ -1602,8 +1603,8 @@ Public Type User
     Desc As String ' Descripcion
     DescRM As String
     
-    Clase As eClass
-    raza As eRaza
+    clase As eClass
+    Raza As eRaza
     Genero As eGenero
     Email As String
     Hogar As eCiudad
@@ -1687,7 +1688,8 @@ Public Type NPCStats
     MinHIT As Integer
     def As Integer
     defM As Integer
-
+    ELV As Integer
+    
 End Type
 
 Public Type NpcCounters
@@ -1733,7 +1735,17 @@ Public Type NPCFlags
     Snd1 As Integer
     Snd2 As Integer
     Snd3 As Integer
-
+    
+    TiempoRetardoMin As Long
+    TiempoRetardoMax As Long
+    Explota As Byte
+    
+    LanzaMensaje As String
+    DijoMensaje As Boolean
+    
+    ActivoPotencia As Boolean
+    AumentaPotencia As Boolean
+    
 End Type
 
 Public Type tCriaturasEntrenador
@@ -1837,6 +1849,8 @@ Public Type npc
     
     'Para diferenciar entre clanes
     ClanIndex As Integer
+    
+    NoShadow As Byte
 
 End Type
 
@@ -1850,12 +1864,13 @@ Public Type MapBlock
 
     Blocked As Byte
     Graphic(1 To 4) As Long
-    Userindex As Integer
+    UserIndex As Integer
     NpcIndex As Integer
     ObjInfo As obj
     TileExit As WorldPos
     Trigger As eTrigger
     Particulas As Integer
+    BotIndex As Byte
     
 End Type
 
@@ -1953,6 +1968,8 @@ Public NumChars                           As Integer
 Public LastNPC                            As Integer
 
 Public NumNPCs                            As Integer
+
+Public TotalNPCDat                        As Integer
 
 Public NumFX                              As Integer
 
@@ -2299,6 +2316,8 @@ Public Enum eGMCommands
     SearchNpc               '/BUSCAR
     SearchObj               '/BUSCAR
     LimpiarMundo            '/LIMPIARMUNDO
+    EditGems                '/EDITGEMS
+    ConsultarGemas          '/CONSULTARGEMS
 End Enum
 
 Public Const MATRIX_INITIAL_MAP                     As Integer = 1
@@ -2426,4 +2445,13 @@ Public ApiNodeJsTaskId As Double
 
 Public NombreServidor As String
 
+'Lorwik> Sistema de retardo de Spawn de NPC
+Type tRetarded
+    Tiempo As Long
+    Mapa As Byte
+    X As Byte
+    Y As Byte
+    NPCNUM As Integer
+End Type
 
+Public RetardoSpawn(1 To MAXNPCS) As tRetarded

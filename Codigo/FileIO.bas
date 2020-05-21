@@ -460,7 +460,7 @@ Public Sub CargarHechizos()
     '
     '###################################################
 
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
     If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando Hechizos."
     
@@ -582,7 +582,7 @@ Public Sub CargarHechizos()
     
     Exit Sub
 
-ErrHandler:
+Errhandler:
     MsgBox "Error cargando hechizos.dat " & Err.Number & ": " & Err.description
  
 End Sub
@@ -642,8 +642,6 @@ Public Sub DoBackUp()
     'el repositorio para hacer funcionar esto, es este: https://github.com/ao-libre/ao-api-server
     'Si no tienen interes en usarlo pueden desactivarlo en el Server.ini
     If ConexionAPI Then
-        Call ApiEndpointBackupCharfiles
-        Call ApiEndpointBackupCuentas
         Call ApiEndpointBackupLogs
         Call ApiEndpointSendWorldSaveMessageDiscord
     End If
@@ -1034,7 +1032,7 @@ Sub LoadOBJData()
 
     'Call LogTarea("Sub LoadOBJData")
 
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
     If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando base de datos de los objetos."
     
@@ -1079,6 +1077,8 @@ Sub LoadOBJData()
             .OBJType = val(Leer.GetValue("OBJ" & Object, "ObjType"))
             
             .Newbie = val(Leer.GetValue("OBJ" & Object, "Newbie"))
+            
+            .Shadow = val(Leer.GetValue("OBJ" & Object, "Shadow"))
             
             Select Case .OBJType
 
@@ -1159,6 +1159,7 @@ Sub LoadOBJData()
                     .MinHIT = val(Leer.GetValue("OBJ" & Object, "MinHIT"))
                     .Real = val(Leer.GetValue("OBJ" & Object, "Real"))
                     .Caos = val(Leer.GetValue("OBJ" & Object, "Caos"))
+                    .MontTipo = val(Leer.GetValue("OBJ" & Object, "MontTipo"))
                 
                 Case eOBJType.otFlechas
                     .MaxHIT = val(Leer.GetValue("OBJ" & Object, "MaxHIT"))
@@ -1172,6 +1173,7 @@ Sub LoadOBJData()
                     .MinLevel = val(Leer.GetValue("OBJ" & Object, "MinLevel"))
                     .MaxHIT = val(Leer.GetValue("OBJ" & Object, "MaxHIT"))
                     .MinHIT = val(Leer.GetValue("OBJ" & Object, "MinHIT"))
+                    .MontTipo = val(Leer.GetValue("OBJ" & Object, "MontTipo"))
 
                 Case eOBJType.otMinerales
                     .MinSkill = val(Leer.GetValue("OBJ" & Object, "MinSkill"))
@@ -1333,271 +1335,8 @@ Sub LoadOBJData()
     If frmMain.Visible Then frmMain.txtStatus.Text = Date & " " & time & " - Se cargo base de datos de los objetos. Operacion Realizada con exito."
     
     Exit Sub
-ErrHandler:
+Errhandler:
     MsgBox "error cargando objetos " & Err.Number & ": " & Err.description
-
-End Sub
-
-Sub LoadUserStats(ByVal Userindex As Integer, ByRef UserFile As clsIniManager)
-
-    '*************************************************
-    'Author: Unknown
-    'Last modified: 11/19/2009
-    '11/19/2009: Pato - Load the EluSkills and ExpSkills
-    '*************************************************
-    Dim LoopC As Long
-
-    With UserList(Userindex)
-        With .Stats
-
-            For LoopC = 1 To NUMATRIBUTOS
-                .UserAtributos(LoopC) = CByte(UserFile.GetValue("ATRIBUTOS", "AT" & LoopC))
-                .UserAtributosBackUP(LoopC) = CByte(.UserAtributos(LoopC))
-            Next LoopC
-        
-            For LoopC = 1 To NUMSKILLS
-                .UserSkills(LoopC) = CByte(UserFile.GetValue("SKILLS", "SK" & LoopC))
-                .EluSkills(LoopC) = CLng(UserFile.GetValue("SKILLS", "ELUSK" & LoopC))
-                .ExpSkills(LoopC) = CLng(UserFile.GetValue("SKILLS", "EXPSK" & LoopC))
-            Next LoopC
-        
-            For LoopC = 1 To MAXUSERHECHIZOS
-                .UserHechizos(LoopC) = CInt(UserFile.GetValue("Hechizos", "H" & LoopC))
-            Next LoopC
-        
-            .Gld = CLng(UserFile.GetValue("STATS", "GLD"))
-            .Banco = CLng(UserFile.GetValue("STATS", "BANCO"))
-        
-            .MaxHp = CInt(UserFile.GetValue("STATS", "MaxHP"))
-            .MinHp = CInt(UserFile.GetValue("STATS", "MinHP"))
-        
-            .MinSta = CInt(UserFile.GetValue("STATS", "MinSTA"))
-            .MaxSta = CInt(UserFile.GetValue("STATS", "MaxSTA"))
-        
-            .MaxMAN = CInt(UserFile.GetValue("STATS", "MaxMAN"))
-            .MinMAN = CInt(UserFile.GetValue("STATS", "MinMAN"))
-        
-            .MaxHIT = CInt(UserFile.GetValue("STATS", "MaxHIT"))
-            .MinHIT = CInt(UserFile.GetValue("STATS", "MinHIT"))
-        
-            .MaxAGU = CByte(UserFile.GetValue("STATS", "MaxAGU"))
-            .MinAGU = CByte(UserFile.GetValue("STATS", "MinAGU"))
-        
-            .MaxHam = CByte(UserFile.GetValue("STATS", "MaxHAM"))
-            .MinHam = CByte(UserFile.GetValue("STATS", "MinHAM"))
-        
-            .SkillPts = CInt(UserFile.GetValue("STATS", "SkillPtsLibres"))
-        
-            .Exp = CDbl(UserFile.GetValue("STATS", "EXP"))
-            .ELU = CLng(UserFile.GetValue("STATS", "ELU"))
-            .ELV = CByte(UserFile.GetValue("STATS", "ELV"))
-        
-            .UsuariosMatados = CLng(UserFile.GetValue("MUERTES", "UserMuertes"))
-            .NPCsMuertos = CInt(UserFile.GetValue("MUERTES", "NpcsMuertes"))
-
-        End With
-    
-        With .flags
-
-            If CByte(UserFile.GetValue("CONSEJO", "PERTENECE")) Then .Privilegios = .Privilegios Or PlayerType.RoyalCouncil
-        
-            If CByte(UserFile.GetValue("CONSEJO", "PERTENECECAOS")) Then .Privilegios = .Privilegios Or PlayerType.ChaosCouncil
-
-        End With
-
-    End With
-
-End Sub
-
-Sub LoadUserReputacion(ByVal Userindex As Integer, ByRef UserFile As clsIniManager)
-    '***************************************************
-    'Author: Unknown
-    'Last Modification: Recox
-    'Recox - Castie todo a long para que sea el mismo tipo de dato que en Declares
-    '***************************************************
-
-    With UserList(Userindex).Reputacion
-        .AsesinoRep = CLng(UserFile.GetValue("REP", "Asesino"))
-        .BandidoRep = CLng(UserFile.GetValue("REP", "Bandido"))
-        .BurguesRep = CLng(UserFile.GetValue("REP", "Burguesia"))
-        .LadronesRep = CLng(UserFile.GetValue("REP", "Ladrones"))
-        .NobleRep = CLng(UserFile.GetValue("REP", "Nobles"))
-        .PlebeRep = CLng(UserFile.GetValue("REP", "Plebe"))
-        .Promedio = CLng(UserFile.GetValue("REP", "Promedio"))
-
-    End With
-    
-End Sub
-
-Sub LoadUserInit(ByVal Userindex As Integer, ByRef UserFile As clsIniManager)
-
-    '*************************************************
-    'Author: Unknown
-    'Last modified: 19/11/2019
-    'Loads the Users RECORDs
-    '23/01/2007 Pablo (ToxicWaste) - Agrego NivelIngreso, FechaIngreso, MatadosIngreso y NextRecompensa.
-    '23/01/2007 Pablo (ToxicWaste) - Quito CriminalesMatados de Stats porque era redundante.
-    '19/11/2019 Recox - Casteo todas las propiedades a su tipo de dato en Declares para evitar errores
-    '*************************************************
-    Dim LoopC As Long
-
-    Dim ln    As String
-    
-    With UserList(Userindex)
-        With .Faccion
-            .ArmadaReal = CByte(UserFile.GetValue("FACCIONES", "EjercitoReal"))
-            .FuerzasCaos = CByte(UserFile.GetValue("FACCIONES", "EjercitoCaos"))
-            .CiudadanosMatados = CLng(UserFile.GetValue("FACCIONES", "CiudMatados"))
-            .CriminalesMatados = CLng(UserFile.GetValue("FACCIONES", "CrimMatados"))
-            .RecibioArmaduraCaos = CByte(UserFile.GetValue("FACCIONES", "rArCaos"))
-            .RecibioArmaduraReal = CByte(UserFile.GetValue("FACCIONES", "rArReal"))
-            .RecibioExpInicialCaos = CByte(UserFile.GetValue("FACCIONES", "rExCaos"))
-            .RecibioExpInicialReal = CByte(UserFile.GetValue("FACCIONES", "rExReal"))
-            .RecompensasCaos = CLng(UserFile.GetValue("FACCIONES", "recCaos"))
-            .RecompensasReal = CLng(UserFile.GetValue("FACCIONES", "recReal"))
-            .Reenlistadas = CByte(UserFile.GetValue("FACCIONES", "Reenlistadas"))
-            .NivelIngreso = CInt(UserFile.GetValue("FACCIONES", "NivelIngreso"))
-            .FechaIngreso = UserFile.GetValue("FACCIONES", "FechaIngreso")
-            .MatadosIngreso = CInt(UserFile.GetValue("FACCIONES", "MatadosIngreso"))
-            .NextRecompensa = CInt(UserFile.GetValue("FACCIONES", "NextRecompensa"))
-
-        End With
-        
-        With .flags
-            .Muerto = CByte(UserFile.GetValue("FLAGS", "Muerto"))
-            .Escondido = CByte(UserFile.GetValue("FLAGS", "Escondido"))
-            
-            .Hambre = CByte(UserFile.GetValue("FLAGS", "Hambre"))
-            .Sed = CByte(UserFile.GetValue("FLAGS", "Sed"))
-            .Desnudo = CByte(UserFile.GetValue("FLAGS", "Desnudo"))
-            .Navegando = CByte(UserFile.GetValue("FLAGS", "Navegando"))
-            .Envenenado = CByte(UserFile.GetValue("FLAGS", "Envenenado"))
-            .Paralizado = CByte(UserFile.GetValue("FLAGS", "Paralizado"))
-            
-            'Matrix
-            .lastMap = val(UserFile.GetValue("FLAGS", "LastMap"))
-
-        End With
-
-        .Counters.Pena = CLng(UserFile.GetValue("COUNTERS", "Pena"))
-        .Counters.AsignedSkills = CByte(val(UserFile.GetValue("COUNTERS", "SkillsAsignados")))
-        
-        .Email = UserFile.GetValue("CONTACTO", "Email")
-        
-        'Cargando Amigos
-        If UserFile.KeyExists("AMIGOS") Then
-
-            For LoopC = 1 To MAXAMIGOS
-                                    
-                .Amigos(LoopC).Nombre = UserFile.GetValue("AMIGOS", "NOMBRE" & LoopC)
-                .Amigos(LoopC).Ignorado = CByte(UserFile.GetValue("AMIGOS", "IGNORADO" & LoopC))
-                                    
-            Next LoopC
-
-        Else ' Si no existe AMIGOS entonces se crean:
-
-            Dim i As Long
-            For i = 1 To MAXAMIGOS
-                
-                .Amigos(i).Nombre = vbNullString
-                .Amigos(i).Ignorado = 0
-                .Amigos(i).index = 0
-
-            Next i
-
-        End If
-
-        .AccountHash = CStr(UserFile.GetValue("INIT", "AccountHash"))
-        .Genero = CByte(UserFile.GetValue("INIT", "Genero"))
-        .Clase = CByte(UserFile.GetValue("INIT", "Clase"))
-        .raza = CByte(UserFile.GetValue("INIT", "Raza"))
-        .Hogar = CByte(UserFile.GetValue("INIT", "Hogar"))
-        .Char.heading = CInt(UserFile.GetValue("INIT", "Heading"))
-        
-        With .OrigChar
-            .Head = CInt(UserFile.GetValue("INIT", "Head"))
-            .body = CInt(UserFile.GetValue("INIT", "Body"))
-            .WeaponAnim = CInt(UserFile.GetValue("INIT", "Arma"))
-            .ShieldAnim = CInt(UserFile.GetValue("INIT", "Escudo"))
-            .CascoAnim = CInt(UserFile.GetValue("INIT", "Casco"))
-            .heading = eHeading.SOUTH
-
-        End With
-        
-        #If ConUpTime Then
-            .UpTime = CLng(UserFile.GetValue("INIT", "UpTime"))
-        #End If
-
-        .Desc = UserFile.GetValue("INIT", "Desc")
-        
-        .Pos.Map = CInt(ReadField(1, UserFile.GetValue("INIT", "Position"), 45))
-        .Pos.X = CInt(ReadField(2, UserFile.GetValue("INIT", "Position"), 45))
-        .Pos.Y = CInt(ReadField(3, UserFile.GetValue("INIT", "Position"), 45))
-        
-        .Invent.NroItems = CInt(UserFile.GetValue("Inventory", "CantidadItems"))
-        
-        .BancoInvent.NroItems = CInt(UserFile.GetValue("BancoInventory", "CantidadItems"))
-
-        'Lista de objetos del banco
-        For LoopC = 1 To MAX_BANCOINVENTORY_SLOTS
-            ln = UserFile.GetValue("BancoInventory", "Obj" & LoopC)
-            If (val(ReadField(1, ln, 45))) > NumObjDatas Then
-                .BancoInvent.Object(LoopC).ObjIndex = 0
-                .BancoInvent.Object(LoopC).Amount = 0
-            Else
-                .BancoInvent.Object(LoopC).ObjIndex = CInt(ReadField(1, ln, 45))
-                .BancoInvent.Object(LoopC).Amount = CInt(ReadField(2, ln, 45))
-            End If
-        Next LoopC
-        
-        'Lista de objetos
-        For LoopC = 1 To MAX_INVENTORY_SLOTS
-            ln = UserFile.GetValue("Inventory", "Obj" & LoopC)
-            If (val(ReadField(1, ln, 45))) > NumObjDatas Then
-                .Invent.Object(LoopC).ObjIndex = 0
-                .Invent.Object(LoopC).Amount = 0
-                .Invent.Object(LoopC).Equipped = 0
-            Else
-                .Invent.Object(LoopC).ObjIndex = val(ReadField(1, ln, 45))
-                .Invent.Object(LoopC).Amount = val(ReadField(2, ln, 45))
-                .Invent.Object(LoopC).Equipped = val(ReadField(3, ln, 45))
-            End If
-
-        Next LoopC
-        
-        .Invent.WeaponEqpSlot = CByte(UserFile.GetValue("Inventory", "WeaponEqpSlot"))
-        .Invent.ArmourEqpSlot = CByte(UserFile.GetValue("Inventory", "ArmourEqpSlot"))
-        .Invent.EscudoEqpSlot = CByte(UserFile.GetValue("Inventory", "EscudoEqpSlot"))
-        .Invent.CascoEqpSlot = CByte(UserFile.GetValue("Inventory", "CascoEqpSlot"))
-        .Invent.BarcoSlot = CByte(UserFile.GetValue("Inventory", "BarcoSlot"))
-        
-        'Si no existe MonturaEqpSlot, se agrega al charfile.
-        If Not UserFile.KeyExists("MonturaEqpSlot") Then
-            .Invent.MonturaEqpSlot = 0
-        Else
-            .Invent.MonturaEqpSlot = CByte(UserFile.GetValue("Inventory", "MonturaEqpSlot"))
-        End If
-        
-        .Invent.MunicionEqpSlot = CByte(UserFile.GetValue("Inventory", "MunicionSlot"))
-        .Invent.AnilloEqpSlot = CByte(UserFile.GetValue("Inventory", "AnilloSlot"))
-        .Invent.MochilaEqpSlot = CByte(UserFile.GetValue("Inventory", "MochilaSlot"))
-        
-        .NroMascotas = CInt(UserFile.GetValue("MASCOTAS", "NroMascotas"))
-
-        For LoopC = 1 To MAXMASCOTAS
-            .MascotasType(LoopC) = val(UserFile.GetValue("MASCOTAS", "MAS" & LoopC))
-        Next LoopC
-        
-        ln = UserFile.GetValue("Guild", "GUILDINDEX")
-
-        If IsNumeric(ln) Then
-            .GuildIndex = CInt(ln)
-        Else
-            .GuildIndex = 0
-
-        End If
-
-    End With
 
 End Sub
 
@@ -2195,296 +1934,7 @@ Sub WriteVar(ByVal File As String, _
     
 End Sub
 
-Sub SaveUserToCharfile(ByVal Userindex As Integer, Optional ByVal SaveTimeOnline As Boolean = True)
-    '*************************************************
-    'Author: Unknown
-    'Last modified: 10/10/2010 (Pato)
-    'Saves the Users RECORDs
-    '23/01/2007 Pablo (ToxicWaste) - Agrego NivelIngreso, FechaIngreso, MatadosIngreso y NextRecompensa.
-    '11/19/2009: Pato - Save the EluSkills and ExpSkills
-    '12/01/2010: ZaMa - Los druidas pierden la inmunidad de ser atacados cuando pierden el efecto del mimetismo.
-    '10/10/2010: Pato - Saco el WriteVar e implemento la clase clsIniManager
-    '18/09/2018: CHOTS - Nuevo nombre de la funcion, solo realiza el grabado
-    '19/11/2019: Recox - Cambie el casteo de muchas propiedades, para evitar y arreglar errores
-    '*************************************************
-
-    On Error GoTo ErrorHandler
-
-    Dim Manager  As clsIniManager
-
-    Dim Existe   As Boolean
-
-    Dim UserFile As String
-
-    With UserList(Userindex)
-
-        UserFile = CharPath & UCase$(.Name) & ".chr"
-    
-        Set Manager = New clsIniManager
-    
-        If FileExist(UserFile) Then
-            Call Manager.Initialize(UserFile)
-        
-            If FileExist(UserFile & ".bk") Then Call Kill(UserFile & ".bk")
-            Name UserFile As UserFile & ".bk"
-        
-            Existe = True
-
-        End If
-    
-        Dim LoopC As Long
-    
-        Call Manager.ChangeValue("FLAGS", "Muerto", CByte(.flags.Muerto))
-        Call Manager.ChangeValue("FLAGS", "Escondido", CByte(.flags.Escondido))
-        Call Manager.ChangeValue("FLAGS", "Hambre", CByte(.flags.Hambre))
-        Call Manager.ChangeValue("FLAGS", "Sed", CByte(.flags.Sed))
-        Call Manager.ChangeValue("FLAGS", "Desnudo", CByte(.flags.Desnudo))
-        Call Manager.ChangeValue("FLAGS", "Ban", CByte(.flags.Ban))
-        Call Manager.ChangeValue("FLAGS", "Navegando", CByte(.flags.Navegando))
-        Call Manager.ChangeValue("FLAGS", "Envenenado", CByte(.flags.Envenenado))
-        Call Manager.ChangeValue("FLAGS", "Paralizado", CByte(.flags.Paralizado))
-        'Matrix
-        Call Manager.ChangeValue("FLAGS", "LastMap", CInt(.flags.lastMap))
-    
-        Call Manager.ChangeValue("CONSEJO", "PERTENECE", IIf(.flags.Privilegios And PlayerType.RoyalCouncil, "1", "0"))
-        Call Manager.ChangeValue("CONSEJO", "PERTENECECAOS", IIf(.flags.Privilegios And PlayerType.ChaosCouncil, "1", "0"))
-    
-        For LoopC = 1 To MAXAMIGOS
-        Call Manager.ChangeValue("AMIGOS", "Nombre" & LoopC, .Amigos(LoopC).Nombre)
-        Call Manager.ChangeValue("AMIGOS", "IGNORADO" & LoopC, CStr(.Amigos(LoopC).Ignorado))
-        Next LoopC
-
-        Call Manager.ChangeValue("COUNTERS", "Pena", CLng(.Counters.Pena))
-        Call Manager.ChangeValue("COUNTERS", "SkillsAsignados", CByte(.Counters.AsignedSkills))
-    
-        Call Manager.ChangeValue("FACCIONES", "EjercitoReal", CByte(.Faccion.ArmadaReal))
-        Call Manager.ChangeValue("FACCIONES", "EjercitoCaos", CByte(.Faccion.FuerzasCaos))
-        Call Manager.ChangeValue("FACCIONES", "CiudMatados", CLng(.Faccion.CiudadanosMatados))
-        Call Manager.ChangeValue("FACCIONES", "CrimMatados", CLng(.Faccion.CriminalesMatados))
-        Call Manager.ChangeValue("FACCIONES", "rArCaos", CByte(.Faccion.RecibioArmaduraCaos))
-        Call Manager.ChangeValue("FACCIONES", "rArReal", CByte(.Faccion.RecibioArmaduraReal))
-        Call Manager.ChangeValue("FACCIONES", "rExCaos", CByte(.Faccion.RecibioExpInicialCaos))
-        Call Manager.ChangeValue("FACCIONES", "rExReal", CByte(.Faccion.RecibioExpInicialReal))
-        Call Manager.ChangeValue("FACCIONES", "recCaos", CLng(.Faccion.RecompensasCaos))
-        Call Manager.ChangeValue("FACCIONES", "recReal", CLng(.Faccion.RecompensasReal))
-        Call Manager.ChangeValue("FACCIONES", "Reenlistadas", CByte(.Faccion.Reenlistadas))
-        Call Manager.ChangeValue("FACCIONES", "NivelIngreso", CInt(.Faccion.NivelIngreso))
-        Call Manager.ChangeValue("FACCIONES", "FechaIngreso", CStr(.Faccion.FechaIngreso))
-        Call Manager.ChangeValue("FACCIONES", "MatadosIngreso", CInt(.Faccion.MatadosIngreso))
-        Call Manager.ChangeValue("FACCIONES", "NextRecompensa", CInt(.Faccion.NextRecompensa))
-    
-        'Fueron modificados los atributos del usuario?
-        If Not .flags.TomoPocion Then
-
-            For LoopC = 1 To UBound(.Stats.UserAtributos)
-                Call Manager.ChangeValue("ATRIBUTOS", "AT" & LoopC, CStr(.Stats.UserAtributos(LoopC)))
-            Next LoopC
-
-        Else
-
-            For LoopC = 1 To UBound(.Stats.UserAtributos)
-                '.Stats.UserAtributos(LoopC) = .Stats.UserAtributosBackUP(LoopC)
-                Call Manager.ChangeValue("ATRIBUTOS", "AT" & LoopC, CStr(.Stats.UserAtributosBackUP(LoopC)))
-            Next LoopC
-
-        End If
-    
-        For LoopC = 1 To UBound(.Stats.UserSkills)
-            Call Manager.ChangeValue("SKILLS", "SK" & LoopC, CStr(.Stats.UserSkills(LoopC)))
-            Call Manager.ChangeValue("SKILLS", "ELUSK" & LoopC, CStr(.Stats.EluSkills(LoopC)))
-            Call Manager.ChangeValue("SKILLS", "EXPSK" & LoopC, CStr(.Stats.ExpSkills(LoopC)))
-        Next LoopC
-    
-        Call Manager.ChangeValue("CONTACTO", "Email", CStr(.Email))
-    
-        Call Manager.ChangeValue("INIT", "AccountHash", CStr(.AccountHash))
-        Call Manager.ChangeValue("INIT", "Genero", CByte(.Genero))
-        Call Manager.ChangeValue("INIT", "Raza", CByte(.raza))
-        Call Manager.ChangeValue("INIT", "Hogar", CByte(.Hogar))
-        Call Manager.ChangeValue("INIT", "Clase", CByte(.Clase))
-        Call Manager.ChangeValue("INIT", "Desc", CStr(.Desc))
-    
-        Call Manager.ChangeValue("INIT", "Heading", CByte(.Char.heading))
-        Call Manager.ChangeValue("INIT", "Head", CInt(.OrigChar.Head))
-    
-        If .flags.Muerto = 0 Then
-            If .Char.body <> 0 Then
-                Call Manager.ChangeValue("INIT", "Body", CInt(.Char.body))
-
-            End If
-
-        End If
-    
-        Call Manager.ChangeValue("INIT", "Arma", CInt(.Char.WeaponAnim))
-        Call Manager.ChangeValue("INIT", "Escudo", CInt(.Char.ShieldAnim))
-        Call Manager.ChangeValue("INIT", "Casco", CInt(.Char.CascoAnim))
-    
-        #If ConUpTime Then
-    
-            If SaveTimeOnline Then
-
-                Dim TempDate As Date
-
-                TempDate = Now - .LogOnTime
-                .LogOnTime = Now
-                .UpTime = .UpTime + (Abs(Day(TempDate) - 30) * 24 * 3600) + Hour(TempDate) * 3600 + Minute(TempDate) * 60 + Second(TempDate)
-                Call Manager.ChangeValue("INIT", "UpTime", CLng(.UpTime))
-
-            End If
-
-        #End If
-    
-        'First time around?
-        If Manager.GetValue("INIT", "LastIP1") = vbNullString Then
-            Call Manager.ChangeValue("INIT", "LastIP1", .IP & " - " & Date & ":" & time)
-            'Is it a different ip from last time?
-        ElseIf .IP <> Left$(Manager.GetValue("INIT", "LastIP1"), InStr(1, Manager.GetValue("INIT", "LastIP1"), " ") - 1) Then
-
-            Dim i As Integer
-
-            For i = 5 To 2 Step -1
-                Call Manager.ChangeValue("INIT", "LastIP" & i, Manager.GetValue("INIT", "LastIP" & CStr(i - 1)))
-            Next i
-
-            Call Manager.ChangeValue("INIT", "LastIP1", .IP & " - " & Date & ":" & time)
-            'Same ip, just update the date
-        Else
-            Call Manager.ChangeValue("INIT", "LastIP1", .IP & " - " & Date & ":" & time)
-
-        End If
-    
-        Call Manager.ChangeValue("INIT", "Position", .Pos.Map & "-" & .Pos.X & "-" & .Pos.Y)
-    
-        Call Manager.ChangeValue("STATS", "GLD", CLng(.Stats.Gld))
-        Call Manager.ChangeValue("STATS", "BANCO", CLng(.Stats.Banco))
-    
-        Call Manager.ChangeValue("STATS", "MaxHP", CInt(.Stats.MaxHp))
-        Call Manager.ChangeValue("STATS", "MinHP", CInt(.Stats.MinHp))
-    
-        Call Manager.ChangeValue("STATS", "MaxSTA", CInt(.Stats.MaxSta))
-        Call Manager.ChangeValue("STATS", "MinSTA", CInt(.Stats.MinSta))
-    
-        Call Manager.ChangeValue("STATS", "MaxMAN", CInt(.Stats.MaxMAN))
-        Call Manager.ChangeValue("STATS", "MinMAN", CInt(.Stats.MinMAN))
-    
-        Call Manager.ChangeValue("STATS", "MaxHIT", CInt(.Stats.MaxHIT))
-        Call Manager.ChangeValue("STATS", "MinHIT", CInt(.Stats.MinHIT))
-    
-        Call Manager.ChangeValue("STATS", "MaxAGU", CByte(.Stats.MaxAGU))
-        Call Manager.ChangeValue("STATS", "MinAGU", CByte(.Stats.MinAGU))
-    
-        Call Manager.ChangeValue("STATS", "MaxHAM", CByte(.Stats.MaxHam))
-        Call Manager.ChangeValue("STATS", "MinHAM", CByte(.Stats.MinHam))
-    
-        Call Manager.ChangeValue("STATS", "SkillPtsLibres", CInt(.Stats.SkillPts))
-    
-        Call Manager.ChangeValue("STATS", "EXP", CDbl(.Stats.Exp))
-        Call Manager.ChangeValue("STATS", "ELV", CByte(.Stats.ELV))
-      
-        Call Manager.ChangeValue("STATS", "ELU", CLng(.Stats.ELU))
-    
-        Call Manager.ChangeValue("MUERTES", "UserMuertes", CLng(.Stats.UsuariosMatados))
-        Call Manager.ChangeValue("MUERTES", "NpcsMuertes", CInt(.Stats.NPCsMuertos))
-      
-        '[KEVIN]----------------------------------------------------------------------------
-        '*******************************************************************************************
-        Call Manager.ChangeValue("BancoInventory", "CantidadItems", CInt(.BancoInvent.NroItems))
-
-        For LoopC = 1 To MAX_BANCOINVENTORY_SLOTS
-            Call Manager.ChangeValue("BancoInventory", "Obj" & LoopC, .BancoInvent.Object(LoopC).ObjIndex & "-" & .BancoInvent.Object(LoopC).Amount)
-        Next LoopC
-
-        '*******************************************************************************************
-        '[/KEVIN]-----------
-      
-        'Save Inv
-        Call Manager.ChangeValue("Inventory", "CantidadItems", CInt(.Invent.NroItems))
-    
-        For LoopC = 1 To MAX_INVENTORY_SLOTS
-            Call Manager.ChangeValue("Inventory", "Obj" & LoopC, .Invent.Object(LoopC).ObjIndex & "-" & .Invent.Object(LoopC).Amount & "-" & .Invent.Object(LoopC).Equipped)
-        Next LoopC
-    
-        Call Manager.ChangeValue("Inventory", "WeaponEqpSlot", CByte(.Invent.WeaponEqpSlot))
-        Call Manager.ChangeValue("Inventory", "ArmourEqpSlot", CByte(.Invent.ArmourEqpSlot))
-        Call Manager.ChangeValue("Inventory", "CascoEqpSlot", CByte(.Invent.CascoEqpSlot))
-        Call Manager.ChangeValue("Inventory", "EscudoEqpSlot", CByte(.Invent.EscudoEqpSlot))
-        Call Manager.ChangeValue("Inventory", "BarcoSlot", CByte(.Invent.BarcoSlot))
-        Call Manager.ChangeValue("Inventory", "MonturaEqpSlot", CByte(.Invent.MonturaEqpSlot))
-        Call Manager.ChangeValue("Inventory", "MunicionSlot", CByte(.Invent.MunicionEqpSlot))
-        Call Manager.ChangeValue("Inventory", "AnilloSlot", CByte(.Invent.AnilloEqpSlot))
-        Call Manager.ChangeValue("Inventory", "MochilaSlot", CByte(.Invent.MochilaEqpSlot))
-    
-        'Reputacion
-        Call Manager.ChangeValue("REP", "Asesino", CLng(.Reputacion.AsesinoRep))
-        Call Manager.ChangeValue("REP", "Bandido", CLng(.Reputacion.BandidoRep))
-        Call Manager.ChangeValue("REP", "Burguesia", CLng(.Reputacion.BurguesRep))
-        Call Manager.ChangeValue("REP", "Ladrones", CLng(.Reputacion.LadronesRep))
-        Call Manager.ChangeValue("REP", "Nobles", CLng(.Reputacion.NobleRep))
-        Call Manager.ChangeValue("REP", "Plebe", CLng(.Reputacion.PlebeRep))
-        Call Manager.ChangeValue("REP", "Promedio", CLng(.Reputacion.Promedio))
-    
-        Dim cad As String
-    
-        For LoopC = 1 To MAXUSERHECHIZOS
-            cad = .Stats.UserHechizos(LoopC)
-            Call Manager.ChangeValue("HECHIZOS", "H" & LoopC, cad)
-        Next
-    
-        Dim NroMascotas As Long
-
-        NroMascotas = .NroMascotas
-    
-        For LoopC = 1 To MAXMASCOTAS
-
-            ' Mascota valida?
-            If .MascotasIndex(LoopC) > 0 Then
-
-                ' Nos aseguramos que la criatura no fue invocada
-                If Npclist(.MascotasIndex(LoopC)).Contadores.TiempoExistencia = 0 Then
-                    cad = .MascotasType(LoopC)
-                Else 'Si fue invocada no la guardamos
-                    cad = "0"
-                    NroMascotas = NroMascotas - 1
-
-                End If
-
-                Call Manager.ChangeValue("MASCOTAS", "MAS" & LoopC, cad)
-            Else
-                cad = .MascotasType(LoopC)
-                Call Manager.ChangeValue("MASCOTAS", "MAS" & LoopC, cad)
-
-            End If
-    
-        Next
-    
-        Call Manager.ChangeValue("MASCOTAS", "NroMascotas", CInt(NroMascotas))
-    
-        'Devuelve el head de muerto
-        If .flags.Muerto = 1 Then
-            .Char.Head = iCabezaMuerto
-
-        End If
-
-    End With
-
-    Call SaveQuestStats(Userindex, Manager)
-
-    Call Manager.DumpFile(UserFile)
-
-    Set Manager = Nothing
-
-    If Existe Then Call Kill(UserFile & ".bk")
-
-    Exit Sub
-
-ErrorHandler:
-    Call LogError("Error en SaveUserToCharfile: " & UserFile & " -- " & Err.Number & ": " & Err.description)
-
-    Set Manager = Nothing
-
-End Sub
-
-Function criminal(ByVal Userindex As Integer) As Boolean
+Function criminal(ByVal UserIndex As Integer) As Boolean
     '***************************************************
     'Author: Unknown
     'Last Modification: -
@@ -2493,7 +1943,7 @@ Function criminal(ByVal Userindex As Integer) As Boolean
 
     Dim L As Long
     
-    With UserList(Userindex).Reputacion
+    With UserList(UserIndex).Reputacion
         L = (-.AsesinoRep) + (-.BandidoRep) + .BurguesRep + (-.LadronesRep) + .NobleRep + .PlebeRep
         L = L / 6
         criminal = (L < 0)
@@ -2537,11 +1987,18 @@ Sub BackUPnPc(ByVal NpcIndex As Integer, ByVal hFile As Integer)
         Print #hFile, "MaxHp=" & val(.Stats.MaxHp)
         Print #hFile, "MinHit=" & val(.Stats.MinHIT)
         Print #hFile, "MinHp=" & val(.Stats.MinHp)
+        Print #hFile, "ELV=" & val(.Stats.ELV)
         
         'Flags
         Print #hFile, "ReSpawn=" & val(.flags.Respawn)
         Print #hFile, "BackUp=" & val(.flags.BackUp)
         Print #hFile, "Domable=" & val(.flags.Domable)
+        Print #hFile, "TiempoRetardoMin & "; val(.flags.TiempoRetardoMin)
+        Print #hFile, "TiempoRetardoMax" & val(.flags.TiempoRetardoMax)
+        Print #hFile, "Explota" & val(.flags.Explota)
+        
+        Print #hFile, "LanzaMensaje" & .flags.LanzaMensaje
+        Print #hFile, "AumentaPotencia" & val(.flags.AumentaPotencia)
         
         'Inventario
         Print #hFile, "NroItems=" & val(.Invent.NroItems)
@@ -2605,6 +2062,7 @@ Sub CargarNpcBackUp(ByVal NpcIndex As Integer, ByVal NpcNumber As Integer)
         .Stats.MinHIT = val(GetVar(npcfile, "NPC" & NpcNumber, "MinHIT"))
         .Stats.def = val(GetVar(npcfile, "NPC" & NpcNumber, "DEF"))
         .Stats.Alineacion = val(GetVar(npcfile, "NPC" & NpcNumber, "Alineacion"))
+        .Stats.ELV = val(GetVar(npcfile, "NPC" & NpcNumber, "ELV"))
         
         Dim LoopC As Integer
 
@@ -2641,6 +2099,14 @@ Sub CargarNpcBackUp(ByVal NpcIndex As Integer, ByVal NpcNumber As Integer)
         .flags.BackUp = val(GetVar(npcfile, "NPC" & NpcNumber, "BackUp"))
         .flags.Domable = val(GetVar(npcfile, "NPC" & NpcNumber, "Domable"))
         .flags.RespawnOrigPos = val(GetVar(npcfile, "NPC" & NpcNumber, "OrigPos"))
+        
+        .flags.TiempoRetardoMax = val(GetVar(npcfile, "NPC" & NpcNumber, "TiempoRetardoMax"))
+        .flags.TiempoRetardoMin = val(GetVar(npcfile, "NPC" & NpcNumber, "TiempoRetardoMin"))
+        .flags.Explota = val(GetVar(npcfile, "NPC" & NpcNumber, "Explota"))
+        
+        .flags.LanzaMensaje = GetVar(npcfile, "NPC" & NpcNumber, "LanzaMensaje")
+        .flags.AumentaPotencia = val(GetVar(npcfile, "NPC" & NpcNumber, "AumentaPotencia"))
+        
         
         'Tipo de items con los que comercia
         .TipoItems = val(GetVar(npcfile, "NPC" & NpcNumber, "TipoItems"))

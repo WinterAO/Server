@@ -1,0 +1,73 @@
+'***********Clases***********
+'Clerigo = 1
+'Mago = 2
+'Cazador = 3
+'****************************
+
+'*Razas - Cabezas*******
+'Humano = 1 - H: 1 / 40     - M: 70 - 89
+'Elfo = 2   - H: 101 / 122  - M: 170 - 188
+'Drow = 3   - H: 201 / 221  - M: 270 - 288
+'Gnomo = 3  - H: 401 / 416  - M: 470 - 484
+'Enano = 4  - H: 301 / 319  - M: 370 - 384
+'****************************
+
+'***********Genero***********
+'Hombre = 1
+'Mujer = 2
+'****************************
+
+'La propiedad "Viajante" indica si el bot esta parado o viaja
+'Un BOT no puede tener mas de 20 items!!!!
+
+[INIT]
+NumBOTs=3
+
+[BOT1]
+Name=Dacker
+Raza=1
+Genero=1
+Head=4
+Level=40
+Clase=1
+EsCriminal=0
+Minvida=200
+MaxVida=200
+MinMana=50
+MaxMana=200
+Viajante=0
+NROITEMS=2
+Drop1=12-1000
+Drop2=38-50
+
+[BOT2]
+Name=Perole
+Raza=2
+Genero=1
+Head=101
+Level=40
+Clase=1
+EsCriminal=1
+Minvida=100
+MaxVida=200
+MinMana=50
+MaxMana=200
+Viajante=0
+NROITEMS=1
+Drop1=12-1000
+
+[BOT3]
+Name=Kiwrol
+Raza=4
+Genero=1
+Head=301
+Level=30
+Clase=3
+EsCriminal=1
+Minvida=100
+MaxVida=200
+MinMana=50
+MaxMana=200
+Viajante=1
+NROITEMS=1
+Drop1=12-1000

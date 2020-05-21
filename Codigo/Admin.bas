@@ -260,7 +260,7 @@ Sub WorldSave()
 
 End Sub
 
-Public Sub Encarcelar(ByVal Userindex As Integer, _
+Public Sub Encarcelar(ByVal UserIndex As Integer, _
                       ByVal Minutos As Long, _
                       Optional ByVal GmName As String = vbNullString)
     '***************************************************
@@ -270,27 +270,27 @@ Public Sub Encarcelar(ByVal Userindex As Integer, _
     'Recox: Arreglado problema de tiempo en carcel
     '***************************************************
 
-    UserList(Userindex).Counters.Pena = Minutos * 60
+    UserList(UserIndex).Counters.Pena = Minutos * 60
     
-    Call WarpUserChar(Userindex, Prision.Map, Prision.X, Prision.Y, True)
+    Call WarpUserChar(UserIndex, Prision.Map, Prision.X, Prision.Y, True)
     
     If LenB(GmName) = 0 Then
-        Call WriteConsoleMsg(Userindex, "Has sido encarcelado, deberas permanecer en la carcel " & Minutos & " minutos.", FontTypeNames.FONTTYPE_INFO)
+        Call WriteConsoleMsg(UserIndex, "Has sido encarcelado, deberas permanecer en la carcel " & Minutos & " minutos.", FontTypeNames.FONTTYPE_INFO)
     Else
-        Call WriteConsoleMsg(Userindex, GmName & " te ha encarcelado, deberas permanecer en la carcel " & Minutos & " minutos.", FontTypeNames.FONTTYPE_INFO)
+        Call WriteConsoleMsg(UserIndex, GmName & " te ha encarcelado, deberas permanecer en la carcel " & Minutos & " minutos.", FontTypeNames.FONTTYPE_INFO)
 
     End If
 
-    If UserList(Userindex).flags.Traveling = 1 Then
-        UserList(Userindex).flags.Traveling = 0
-        UserList(Userindex).Counters.goHome = 0
-        Call WriteMultiMessage(Userindex, eMessages.CancelHome)
+    If UserList(UserIndex).flags.Traveling = 1 Then
+        UserList(UserIndex).flags.Traveling = 0
+        UserList(UserIndex).Counters.goHome = 0
+        Call WriteMultiMessage(UserIndex, eMessages.CancelHome)
 
     End If
 
 End Sub
 
-Public Sub BorrarUsuario(ByVal Userindex As Integer, ByVal UserName As String, ByVal AccountHash As String)
+Public Sub BorrarUsuario(ByVal UserIndex As Integer, ByVal UserName As String, ByVal AccountHash As String)
 
     '********************************************************************************
     'Author: Recox
@@ -301,16 +301,16 @@ Public Sub BorrarUsuario(ByVal Userindex As Integer, ByVal UserName As String, B
     
     'Podria estar de mas, pero... Existe el personaje?
     If Not PersonajeExiste(UserName) Then
-        Call WriteErrorMsg(Userindex, "El personaje no existe.")
-        Call CloseSocket(Userindex)
+        Call WriteErrorMsg(UserIndex, "El personaje no existe.")
+        Call CloseSocket(UserIndex)
         Exit Sub
     End If
 
     'IMPORTANTE! - El personaje pertenece a esta cuenta?
     If Not PersonajePerteneceCuenta(UserName, AccountHash) Then
-        Call WriteErrorMsg(Userindex, "Ha ocurrido un error, por favor inicie sesion nuevamente.")
+        Call WriteErrorMsg(UserIndex, "Ha ocurrido un error, por favor inicie sesion nuevamente.")
         
-        Call CloseSocket(Userindex)
+        Call CloseSocket(UserIndex)
         Exit Sub
     End If
     

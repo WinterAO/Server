@@ -66,8 +66,8 @@ Sub Accion(ByVal UserIndex As Integer, _
 
         With UserList(UserIndex)
 
-            If MapData(Map, X, Y).NpcIndex > 0 Then     'Acciones NPCs
-                tempIndex = MapData(Map, X, Y).NpcIndex
+            If MapData(Map, X, Y).NPCIndex > 0 Then     'Acciones NPCs
+                tempIndex = MapData(Map, X, Y).NPCIndex
                 
                 'Set the target NPC
                 .flags.TargetNPC = tempIndex
@@ -76,7 +76,6 @@ Sub Accion(ByVal UserIndex As Integer, _
 
                     'Esta el user muerto? Si es asi no puede comerciar
                     If .flags.Muerto = 1 Then
-                        'Call WriteConsoleMsg(UserIndex, "Estas muerto!!", FontTypeNames.FONTTYPE_INFO)
                         Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
                         Exit Sub
 
@@ -101,7 +100,6 @@ Sub Accion(ByVal UserIndex As Integer, _
 
                     'Esta el user muerto? Si es asi no puede comerciar
                     If .flags.Muerto = 1 Then
-                        'Call WriteConsoleMsg(UserIndex, "Estas muerto!!", FontTypeNames.FONTTYPE_INFO)
                         Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
                         Exit Sub
 
@@ -153,11 +151,19 @@ Sub Accion(ByVal UserIndex As Integer, _
                     End If
 
                     If Distancia(Npclist(tempIndex).Pos, .Pos) > 3 Then
-                        Call WriteConsoleMsg(UserIndex, "Estas demasiado lejos del artesano.", FontTypeNames.FONTTYPE_INFO)
+                        Call WriteConsoleMsg(UserIndex, "Estas demasiado lejos del entrenador.", FontTypeNames.FONTTYPE_INFO)
                         Exit Sub
                     End If
 
                     Call WriteInitCraftsman(UserIndex)
+                    
+                ElseIf Npclist(tempIndex).NPCtype = eNPCType.Entrenador Then
+                
+                    Call AccionParaEntrenador(UserIndex)
+                    
+                ElseIf Npclist(tempIndex).NPCtype = eNPCType.Quest Then
+                
+                    Call Quests.AccionParaQuest(UserIndex, tempIndex)
 
                 End If
 
@@ -281,7 +287,7 @@ Sub AccionParaPuerta(ByVal Map As Integer, _
                     
                     MapData(Map, X, Y).ObjInfo.ObjIndex = ObjData(MapData(Map, X, Y).ObjInfo.ObjIndex).IndexAbierta
                     
-                    Call modSendData.SendToAreaByPos(Map, X, Y, PrepareMessageObjectCreate(ObjData(MapData(Map, X, Y).ObjInfo.ObjIndex).GrhIndex, X, Y))
+                    Call modSendData.SendToAreaByPos(Map, X, Y, PrepareMessageObjectCreate(ObjData(MapData(Map, X, Y).ObjInfo.ObjIndex).GrhIndex, X, Y, ObjData(MapData(Map, X, Y).ObjInfo.ObjIndex).Shadow))
                     
                     'Desbloquea
                     MapData(Map, X, Y).Blocked = 0
@@ -303,7 +309,7 @@ Sub AccionParaPuerta(ByVal Map As Integer, _
                 'Cierra puerta
                 MapData(Map, X, Y).ObjInfo.ObjIndex = ObjData(MapData(Map, X, Y).ObjInfo.ObjIndex).IndexCerrada
                 
-                Call modSendData.SendToAreaByPos(Map, X, Y, PrepareMessageObjectCreate(ObjData(MapData(Map, X, Y).ObjInfo.ObjIndex).GrhIndex, X, Y))
+                Call modSendData.SendToAreaByPos(Map, X, Y, PrepareMessageObjectCreate(ObjData(MapData(Map, X, Y).ObjInfo.ObjIndex).GrhIndex, X, Y, ObjData(MapData(Map, X, Y).ObjInfo.ObjIndex).Shadow))
                                 
                 MapData(Map, X, Y).Blocked = 1
                 MapData(Map, X - 1, Y).Blocked = 1
@@ -388,7 +394,7 @@ Sub AccionParaRamita(ByVal Map As Integer, _
 
         End If
     
-        If MapData(Map, X, Y).trigger = eTrigger.ZONASEGURA Or MapInfo(Map).Pk = False Then
+        If MapData(Map, X, Y).Trigger = eTrigger.ZONASEGURA Or MapInfo(Map).Pk = False Then
             Call WriteConsoleMsg(UserIndex, "No puedes hacer fogatas en zona segura.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
 
@@ -463,3 +469,32 @@ Public Sub AccionParaSacerdote(ByVal UserIndex As Integer)
     End With
  
 End Sub
+
+Public Sub AccionParaEntrenador(ByVal UserIndex As Integer)
+'******************************
+'Autor: Lorwik
+'Last Modification: 18/05/2020
+'Refactorizo para que el Entrenador mande la lista para entrenar
+'******************************
+    With UserList(UserIndex)
+        'Dead users can't use pets
+        If .flags.Muerto = 1 Then
+            Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
+            Exit Sub
+    
+        End If
+            
+        'Make sure it's close enough
+        If Distancia(Npclist(.flags.TargetNPC).Pos, .Pos) > 10 Then
+            Call WriteConsoleMsg(UserIndex, "Estas demasiado lejos.", FontTypeNames.FONTTYPE_INFO)
+            Exit Sub
+    
+        End If
+            
+        'Make sure it's the trainer
+        If Npclist(.flags.TargetNPC).NPCtype <> eNPCType.Entrenador Then Exit Sub
+            
+        Call WriteTrainerCreatureList(UserIndex, .flags.TargetNPC)
+    End With
+End Sub
+
