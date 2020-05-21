@@ -460,29 +460,3 @@ ErrorHandler:
     Call LogDatabaseError("Error in GetUserEmail: " & UserName & ". " & Err.Number & " - " & Err.description)
 
 End Function
-
-Public Sub StorePasswordSalt(ByVal UserName As String, _
-                             ByVal password As String, _
-                             ByVal salt As String)
-
-    '***************************************************
-    'Autor: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 21/09/2018
-    'Saves the password and salt
-    '***************************************************
-
-    Call StorePasswordSaltDatabase(UserName, password, salt)
-
-End Sub
-
-Public Sub SaveUserEmail(ByVal UserName As String, ByVal Email As String)
-
-    '***************************************************
-    'Autor: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 21/09/2018
-    'Saves the email
-    '***************************************************
-
-    Call SaveUserEmailDatabase(UserName, Email)
-
-End Sub

@@ -276,7 +276,6 @@ Private Enum ClientPacketID
     ChangeDescription             '/DESC
     GuildVote                     '/VOTO
     punishments                   '/PENAS
-    ChangePassword                '/CONTRASENA
     Gamble                        '/APOSTAR
     InquiryVote                   '/ENCUESTA ( with parameters )
     LeaveFaction                  '/RETIRAR ( with no arguments )
@@ -764,9 +763,6 @@ Public Function HandleIncomingData(ByVal UserIndex As Integer) As Boolean
         
         Case ClientPacketID.punishments             '/PENAS
             Call HandlePunishments(UserIndex)
-        
-        Case ClientPacketID.ChangePassword          '/CONTRASENA
-            Call HandleChangePassword(UserIndex)
         
         Case ClientPacketID.Gamble                  '/APOSTAR
             Call HandleGamble(UserIndex)
@@ -1334,12 +1330,6 @@ Private Sub HandleGMCommands(ByVal UserIndex As Integer)
         
             Case eGMCommands.RequestCharMail         '/LASTEMAIL
                 Call HandleRequestCharMail(UserIndex)
-        
-            Case eGMCommands.AlterPassword           '/APASS
-                Call HandleAlterPassword(UserIndex)
-        
-            Case eGMCommands.AlterMail               '/AEMAIL
-                Call HandleAlterMail(UserIndex)
         
             Case eGMCommands.AlterName               '/ANAME
                 Call HandleAlterName(UserIndex)
@@ -7846,95 +7836,6 @@ Private Sub HandlePunishments(ByVal UserIndex As Integer)
                     Call WriteConsoleMsg(UserIndex, "Personaje """ & Name & """ inexistente.", FontTypeNames.FONTTYPE_INFO)
 
                 End If
-
-            End If
-
-        End If
-        
-        'If we got here then packet is complete, copy data back to original queue
-        Call .incomingData.CopyBuffer(buffer)
-
-    End With
-    
-Errhandler:
-
-    Dim Error As Long
-
-    Error = Err.Number
-
-    On Error GoTo 0
-    
-    'Destroy auxiliar buffer
-    Set buffer = Nothing
-    
-    If Error <> 0 Then Err.Raise Error
-
-End Sub
-
-''
-' Handles the "ChangePassword" message.
-'
-' @param    userIndex The index of the user sending the message.
-
-Private Sub HandleChangePassword(ByVal UserIndex As Integer)
-    '***************************************************
-    'Author: Juan Martin Sotuyo Dodero (Maraxus)
-    'Creation Date: 10/10/07
-    'Last Modified By: Rapsodius
-    '***************************************************
-
-    'SHA256
-    Dim oSHA256 As CSHA256
-
-    Set oSHA256 = New CSHA256
-
-    If UserList(UserIndex).incomingData.Length < 5 Then
-        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
-        Exit Sub
-
-    End If
-    
-    On Error GoTo Errhandler
-
-    With UserList(UserIndex)
-
-        'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
-        Dim buffer As clsByteQueue
-        Set buffer = New clsByteQueue
-
-        Call buffer.CopyBuffer(.incomingData)
-        
-        Dim oldSalt    As String
-
-        Dim salt       As String
-
-        Dim oldPass    As String
-
-        Dim newPass    As String
-
-        Dim storedPass As String
-        
-        'Remove packet ID
-        Call buffer.ReadByte
-       
-        'Hasheamos el pass junto al Salt
-        oldSalt = GetUserSalt(UserList(UserIndex).Name)
-        oldPass = oSHA256.SHA256(buffer.ReadASCIIString() & oldSalt)
-        
-        'Asignamos un nuevo Salt y lo hasheamos junto al nuevo pass
-        salt = RandomString(10)
-        newPass = oSHA256.SHA256(buffer.ReadASCIIString() & salt)
-        
-        If LenB(newPass) = 0 Then
-            Call WriteConsoleMsg(UserIndex, "Debes especificar una contrasena nueva, intentalo de nuevo.", FontTypeNames.FONTTYPE_INFO)
-        Else
-            storedPass = GetUserPassword(UserList(UserIndex).Name)
-            
-            If storedPass <> oldPass Then
-                Call WriteConsoleMsg(UserIndex, "La contrasena actual proporcionada no es correcta. La contrasena no ha sido cambiada, intentalo de nuevo.", FontTypeNames.FONTTYPE_INFO)
-            Else
-                Call StorePasswordSalt(UserList(UserIndex).Name, newPass, salt)
-                Call WriteConsoleMsg(UserIndex, "La contrasena fue cambiada con exito.", FontTypeNames.FONTTYPE_INFO)
 
             End If
 
@@ -16336,168 +16237,6 @@ Errhandler:
 End Sub
 
 ''
-' Handle the "AlterName" message
-'
-' @param userIndex The index of the user sending the message
-
-Public Sub HandleAlterMail(ByVal UserIndex As Integer)
-
-    '***************************************************
-    'Author: Juan Martin Sotuyo Dodero (Maraxus)
-    'Last Modification: 12/26/06
-    'Change user password
-    '***************************************************
-    If UserList(UserIndex).incomingData.Length < 5 Then
-        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
-        Exit Sub
-
-    End If
-    
-    On Error GoTo Errhandler
-
-    With UserList(UserIndex)
-
-        'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
-        Dim buffer As clsByteQueue
-        Set buffer = New clsByteQueue
-
-        Call buffer.CopyBuffer(.incomingData)
-        
-        'Remove packet ID
-        Call buffer.ReadByte
-        
-        Dim UserName As String
-
-        Dim newMail  As String
-        
-        UserName = buffer.ReadASCIIString()
-        newMail = buffer.ReadASCIIString()
-        
-        If (Not .flags.Privilegios And PlayerType.RoleMaster) <> 0 And (.flags.Privilegios And (PlayerType.Admin Or PlayerType.Dios)) Then
-            If LenB(UserName) = 0 Or LenB(newMail) = 0 Then
-                Call WriteConsoleMsg(UserIndex, "usar /AEMAIL <pj>-<nuevomail>", FontTypeNames.FONTTYPE_INFO)
-            Else
-
-                If Not PersonajeExiste(UserName) Then
-                    Call WriteConsoleMsg(UserIndex, "No existe el charfile de" & UserName, FontTypeNames.FONTTYPE_INFO)
-                Else
-                    Call SaveUserEmail(UserName, newMail)
-                    Call WriteConsoleMsg(UserIndex, "Email de " & UserName & " cambiado a: " & newMail, FontTypeNames.FONTTYPE_INFO)
-
-                End If
-                
-                Call LogGM(.Name, "Le ha cambiado el mail a " & UserName)
-
-            End If
-
-        End If
-        
-        'If we got here then packet is complete, copy data back to original queue
-        Call .incomingData.CopyBuffer(buffer)
-
-    End With
-
-Errhandler:
-
-    Dim Error As Long
-
-    Error = Err.Number
-
-    On Error GoTo 0
-    
-    'Destroy auxiliar buffer
-    Set buffer = Nothing
-    
-    If Error <> 0 Then Err.Raise Error
-
-End Sub
-
-''
-' Handle the "AlterPassword" message
-'
-' @param userIndex The index of the user sending the message
-
-Public Sub HandleAlterPassword(ByVal UserIndex As Integer)
-
-    '***************************************************
-    'Author: Juan Martin Sotuyo Dodero (Maraxus)
-    'Last Modification: 12/26/06
-    'Change user password
-    '***************************************************
-    If UserList(UserIndex).incomingData.Length < 5 Then
-        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
-        Exit Sub
-
-    End If
-    
-    On Error GoTo Errhandler
-
-    With UserList(UserIndex)
-
-        'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
-        Dim buffer As clsByteQueue
-        Set buffer = New clsByteQueue
-
-        Call buffer.CopyBuffer(.incomingData)
-        
-        'Remove packet ID
-        Call buffer.ReadByte
-        
-        Dim UserName As String
-
-        Dim copyFrom As String
-
-        Dim password As String
-
-        Dim salt     As String
-                
-        UserName = Replace(buffer.ReadASCIIString(), "+", " ")
-        copyFrom = Replace(buffer.ReadASCIIString(), "+", " ")
-        
-        If (Not .flags.Privilegios And PlayerType.RoleMaster) <> 0 And (.flags.Privilegios And (PlayerType.Admin Or PlayerType.Dios)) Then
-            Call LogGM(.Name, "Ha alterado la contrasena de " & UserName)
-            
-            If LenB(UserName) = 0 Or LenB(copyFrom) = 0 Then
-                Call WriteConsoleMsg(UserIndex, "usar /APASS <pjsinpass>@<pjconpass>", FontTypeNames.FONTTYPE_INFO)
-            Else
-
-                If Not PersonajeExiste(UserName) Or Not PersonajeExiste(copyFrom) Then
-                    Call WriteConsoleMsg(UserIndex, "Alguno de los PJs no existe " & UserName & "@" & copyFrom, FontTypeNames.FONTTYPE_INFO)
-                Else
-                    password = GetUserPassword(copyFrom)
-                    salt = GetUserSalt(copyFrom)
-
-                    Call StorePasswordSalt(UserName, password, salt)
-                    
-                    Call WriteConsoleMsg(UserIndex, "Password de " & UserName & " ha cambiado por la de " & copyFrom, FontTypeNames.FONTTYPE_INFO)
-
-                End If
-
-            End If
-
-        End If
-        
-        'If we got here then packet is complete, copy data back to original queue
-        Call .incomingData.CopyBuffer(buffer)
-
-    End With
-
-Errhandler:
-
-    Dim Error As Long
-
-    Error = Err.Number
-
-    On Error GoTo 0
-    
-    'Destroy auxiliar buffer
-    Set buffer = Nothing
-    
-    If Error <> 0 Then Err.Raise Error
-
-End Sub
-
-''
 ' Handle the "HandleCreateNPC" message
 '
 ' @param userIndex The index of the user sending the message
@@ -16727,7 +16466,7 @@ Public Sub HandleTurnOffServer(ByVal UserIndex As Integer)
     'Last Modification: 12/24/06
     'Turns off the server
     '***************************************************
-    Dim handle As Integer
+    Dim Handle As Integer
     
     With UserList(UserIndex)
         'Remove Packet ID
@@ -16739,12 +16478,12 @@ Public Sub HandleTurnOffServer(ByVal UserIndex As Integer)
         Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("" & .Name & " VA A APAGAR EL SERVIDOR!!!", FontTypeNames.FONTTYPE_FIGHT))
         
         'Log
-        handle = FreeFile
-        Open App.Path & "\logs\Main.log" For Append Shared As #handle
+        Handle = FreeFile
+        Open App.Path & "\logs\Main.log" For Append Shared As #Handle
         
-        Print #handle, Date & " " & time & " server apagado por " & .Name & ". "
+        Print #Handle, Date & " " & time & " server apagado por " & .Name & ". "
         
-        Close #handle
+        Close #Handle
         
         Unload frmMain
 

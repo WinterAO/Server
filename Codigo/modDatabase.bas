@@ -1137,61 +1137,6 @@ ErrorHandler:
 
 End Function
 
-Public Sub StorePasswordSaltDatabase(ByVal UserName As String, _
-                                     ByVal password As String, _
-                                     ByVal salt As String)
-
-    '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 10/10/2018
-    '***************************************************
-    On Error GoTo ErrorHandler
-
-    Dim query As String
-
-    Call Database_Connect
-
-    query = "UPDATE account SET "
-    query = query & "password = '" & password & "', "
-    query = query & "salt = '" & salt & "' "
-    query = query & "WHERE account_id = (SELECT account_id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "');"
-
-    Database_Connection.Execute (query)
-
-    Call Database_Close
-
-    Exit Sub
-ErrorHandler:
-    Call LogDatabaseError("Error in StorePasswordSaltDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
-
-End Sub
-
-Public Sub SaveUserEmailDatabase(ByVal UserName As String, ByVal Email As String)
-
-    '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 10/10/2018
-    '***************************************************
-    On Error GoTo ErrorHandler
-
-    Dim query As String
-
-    Call Database_Connect
-
-    query = "UPDATE account SET "
-    query = query & "username = '" & Email & "', """
-    query = query & "WHERE account_id = (SELECT account_id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "');"
-
-    Database_Connection.Execute (query)
-
-    Call Database_Close
-
-    Exit Sub
-ErrorHandler:
-    Call LogDatabaseError("Error in SaveUserEmailDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
-
-End Sub
-
 Public Sub SaveUserPunishment(ByVal UserName As String, _
                                       ByVal Number As Integer, _
                                       ByVal Reason As String)
