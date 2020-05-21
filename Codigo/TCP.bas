@@ -826,9 +826,12 @@ Sub CloseSocket(ByVal UserIndex As Integer)
         Call .incomingData.ReadASCIIStringFixed(.incomingData.Length)
 
         'Si llegamos aqui, sacamos al usuario de la cuenta y reseteamos todo
-        Call CloseAccount(UserIndex)
-        Call ResetUserSlot(UserIndex)
-            
+        If .flags.AccountLogged Then
+            Call CloseAccount(UserIndex)
+        Else
+            Call ResetUserSlot(UserIndex)
+        End If
+        
         Call LiberarSlot(UserIndex)
             
     End With
