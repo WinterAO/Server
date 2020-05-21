@@ -577,6 +577,18 @@ Sub CheckIdleUser()
 
         With UserList(iUserIndex)
 
+            'Conexion activa? y es una cuenta loggeada?
+            If .ConnID <> -1 And .flags.UserLogged = False And .flags.AccountLogged Then
+                'Actualiza el contador de inactividad
+                .Counters.IdleCount = .Counters.IdleCount + 1
+                
+                If .Counters.IdleCount >= IdleLimit Then
+                    Call WriteShowMessageBox(iUserIndex, "Has sido desconectado por inactividad.")
+                    Call CloseSocket(iUserIndex)
+                End If
+            End If
+            
+            
             'Conexion activa? y es un usuario loggeado?
             If .ConnID <> -1 And .flags.UserLogged Then
 
@@ -588,7 +600,7 @@ Sub CheckIdleUser()
                 
                 If Not EsGm(iUserIndex) Then
                     If .Counters.IdleCount >= IdleLimit Then
-                        Call WriteShowMessageBox(iUserIndex, "Demasiado tiempo inactivo. Has sido desconectado.")
+                        Call WriteShowMessageBox(iUserIndex, "Tu personaje ha sido desconectado por inactividad.")
 
                         'mato los comercios seguros
                         If .ComUsu.DestUsu > 0 Then

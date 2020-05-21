@@ -288,7 +288,16 @@ Public Sub GameTimer()
 
                         If .flags.Traveling <> 0 Then Call TravelingEffect(iUserIndex)
                     End If 'Muerto
+                
+                'Inactividad de cuentas
+                ElseIf .ConnIDValida And .flags.UserLogged = False And .flags.AccountLogged Then
+                    .Counters.IdleCount = .Counters.IdleCount + 1
 
+                    If .Counters.IdleCount > IntervaloParaConexion Then
+                        .Counters.IdleCount = 0
+                        Call CloseSocket(iUserIndex)
+
+                    End If
                 Else 'no esta logeado?
                     'Inactive players will be removed!
                     .Counters.IdleCount = .Counters.IdleCount + 1
