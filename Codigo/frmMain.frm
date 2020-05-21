@@ -29,6 +29,17 @@ Begin VB.Form frmMain
    ScaleWidth      =   10425
    StartUpPosition =   2  'CenterScreen
    WindowState     =   1  'Minimized
+   Begin VB.TextBox txtNumCuentas 
+      Alignment       =   2  'Center
+      BackColor       =   &H00C0FFFF&
+      Height          =   255
+      Left            =   9360
+      Locked          =   -1  'True
+      TabIndex        =   27
+      Text            =   "0"
+      Top             =   480
+      Width           =   975
+   End
    Begin VB.CommandButton cmdCommand3 
       Caption         =   "SpawnBOT"
       Height          =   360
@@ -40,12 +51,12 @@ Begin VB.Form frmMain
    Begin VB.TextBox txtRecordOnline 
       Alignment       =   2  'Center
       BackColor       =   &H00C0FFFF&
-      Height          =   315
-      Left            =   9240
+      Height          =   255
+      Left            =   2280
       Locked          =   -1  'True
       TabIndex        =   17
       Text            =   "0"
-      Top             =   240
+      Top             =   120
       Width           =   975
    End
    Begin VB.TextBox txtStatus 
@@ -97,12 +108,12 @@ Begin VB.Form frmMain
    Begin VB.TextBox txtNumUsers 
       Alignment       =   2  'Center
       BackColor       =   &H00C0FFFF&
-      Height          =   315
-      Left            =   2640
+      Height          =   255
+      Left            =   9360
       Locked          =   -1  'True
       TabIndex        =   11
       Text            =   "0"
-      Top             =   240
+      Top             =   120
       Width           =   975
    End
    Begin VB.CommandButton cmdSystray 
@@ -237,6 +248,28 @@ Begin VB.Form frmMain
          Width           =   4695
       End
    End
+   Begin VB.Label lblNumeroDe 
+      Appearance      =   0  'Flat
+      AutoSize        =   -1  'True
+      BackColor       =   &H00C0C0C0&
+      BackStyle       =   0  'Transparent
+      Caption         =   "Numero de cuentas conectadas"
+      BeginProperty Font 
+         Name            =   "Tahoma"
+         Size            =   8.25
+         Charset         =   0
+         Weight          =   700
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      ForeColor       =   &H00000000&
+      Height          =   195
+      Left            =   6360
+      TabIndex        =   26
+      Top             =   480
+      Width           =   2820
+   End
    Begin VB.Label lblLloviendoInfo 
       Appearance      =   0  'Flat
       BackColor       =   &H00000000&
@@ -341,9 +374,9 @@ Begin VB.Form frmMain
       EndProperty
       ForeColor       =   &H00000000&
       Height          =   195
-      Left            =   7080
+      Left            =   240
       TabIndex        =   18
-      Top             =   360
+      Top             =   120
       Width           =   1965
    End
    Begin VB.Label lblIpTitle 
@@ -403,9 +436,9 @@ Begin VB.Form frmMain
       EndProperty
       ForeColor       =   &H000040C0&
       Height          =   375
-      Left            =   4320
+      Left            =   8520
       TabIndex        =   5
-      Top             =   240
+      Top             =   3000
       Visible         =   0   'False
       Width           =   1695
    End
@@ -426,9 +459,9 @@ Begin VB.Form frmMain
       EndProperty
       ForeColor       =   &H00000000&
       Height          =   195
-      Left            =   120
+      Left            =   6720
       TabIndex        =   0
-      Top             =   360
+      Top             =   120
       Width           =   2460
    End
    Begin VB.Menu mnuPopUp 
@@ -544,6 +577,18 @@ Sub CheckIdleUser()
 
         With UserList(iUserIndex)
 
+            'Conexion activa? y es una cuenta loggeada?
+            If .ConnID <> -1 And .flags.UserLogged = False And .flags.AccountLogged Then
+                'Actualiza el contador de inactividad
+                .Counters.IdleCount = .Counters.IdleCount + 1
+                
+                If .Counters.IdleCount >= IdleLimit Then
+                    Call WriteShowMessageBox(iUserIndex, "Has sido desconectado por inactividad.")
+                    Call CloseSocket(iUserIndex)
+                End If
+            End If
+            
+            
             'Conexion activa? y es un usuario loggeado?
             If .ConnID <> -1 And .flags.UserLogged Then
 
@@ -555,7 +600,7 @@ Sub CheckIdleUser()
                 
                 If Not EsGm(iUserIndex) Then
                     If .Counters.IdleCount >= IdleLimit Then
-                        Call WriteShowMessageBox(iUserIndex, "Demasiado tiempo inactivo. Has sido desconectado.")
+                        Call WriteShowMessageBox(iUserIndex, "Tu personaje ha sido desconectado por inactividad.")
 
                         'mato los comercios seguros
                         If .ComUsu.DestUsu > 0 Then

@@ -288,14 +288,23 @@ Public Sub GameTimer()
 
                         If .flags.Traveling <> 0 Then Call TravelingEffect(iUserIndex)
                     End If 'Muerto
+                
+                'Inactividad de cuentas
+                ElseIf .ConnIDValida And .flags.UserLogged = False And .flags.AccountLogged Then
+                    .Counters.IdleCount = .Counters.IdleCount + 1
 
+                    If .Counters.IdleCount > IntervaloParaConexion Then
+                        .Counters.IdleCount = 0
+                        Call CloseSocket(iUserIndex)
+
+                    End If
                 Else 'no esta logeado?
                     'Inactive players will be removed!
                     .Counters.IdleCount = .Counters.IdleCount + 1
 
                     If .Counters.IdleCount > IntervaloParaConexion Then
                         .Counters.IdleCount = 0
-                        Call CloseSocket(iUserIndex)
+                        Call CloseUser(iUserIndex)
 
                     End If
 
@@ -364,7 +373,7 @@ Public Sub PasarSegundo()
                         Call WriteConsoleMsg(i, "Gracias por jugar Argentum Online", FontTypeNames.FONTTYPE_INFO)
                         Call WriteDisconnect(i)
                         Call FlushBuffer(i)
-                        Call CloseSocket(i)
+                        Call CloseUser(i)
                     End If
 
                 End If

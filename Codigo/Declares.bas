@@ -1356,6 +1356,7 @@ Public Type UserFlags
     Escondido As Byte 'Esta escondido?
     Comerciando As Boolean 'Esta comerciando?
     UserLogged As Boolean 'Esta online?
+    AccountLogged As Boolean '¿Esta conectado a la cuenta?
     Meditando As Boolean
     Descuento As String
     Hambre As Byte
@@ -1546,9 +1547,8 @@ Public Type tCrafting
 
 End Type
 
-'CHOTS | Accounts
-Public Type AccountUser
-
+Public Type AccountCharacters
+    ID As String
     Name As String
     body As Integer
     Head As Integer
@@ -1563,6 +1563,21 @@ Public Type AccountUser
     criminal As Boolean
     dead As Boolean
     gameMaster As Boolean
+End Type
+
+Public Const MAXPJACCOUNTS As Byte = 10
+
+Public Type AccountUser
+    ID As Long
+    UserName As String
+    password As String
+    salt As String
+    Hash As String
+    status As Boolean
+    Gemas As Long
+    
+    NumChars As Byte
+    AccountPJ(1 To MAXPJACCOUNTS) As AccountCharacters
 
 End Type
 
@@ -1588,8 +1603,9 @@ Public Type User
     RetoTemp As tUserRetoTemp
     
     Name As String
-    ID As Long 'CHOTS | Database ID
-    AccountHash As String 'CHOTS | Account ID
+    ID As Long 'Id del PJ logeado actualmente
+    
+    AccountInfo As AccountUser
     
     showName As Boolean 'Permite que los GMs oculten su nick con el comando /SHOWNAME
     
@@ -1959,6 +1975,8 @@ Public MaxYBorder                         As Byte
 'Numero de usuarios actual
 Public NumUsers                           As Integer
 
+Public NumCuentas                         As Integer
+
 Public LastUser                           As Integer
 
 Public LastChar                           As Integer
@@ -2266,8 +2284,6 @@ Public Enum eGMCommands
     ResetFactions           '/RAJAR
     RemoveCharFromGuild     '/RAJARCLAN
     RequestCharMail         '/LASTEMAIL
-    AlterPassword           '/APASS
-    AlterMail               '/AEMAIL
     AlterName               '/ANAME
     DoBackUp                '/DOBACKUP
     ShowGuildMessages       '/SHOWCMSG

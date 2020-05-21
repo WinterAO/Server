@@ -382,7 +382,7 @@ Private Sub cmdLoadWorldBackup_Click()
 
     Dim LoopC As Integer
     For LoopC = 1 To MaxUsers
-        Call CloseSocket(LoopC)
+        Call CloseUser(LoopC)
     Next
     
     LastUser = 0
@@ -495,9 +495,9 @@ Private Sub cmdUnbanAllIps_Click()
 
     If sENtrada = "estoy DE acuerdo" Then
         
-        n = BanIps.Count
+        n = BanIps.count
 
-        For i = 1 To BanIps.Count
+        For i = 1 To BanIps.count
             Call BanIpQuita(BanIps(i))
         Next i
         
@@ -514,7 +514,7 @@ End Sub
 
 Private Sub cmdWorldBackup_Click()
 
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
     Me.MousePointer = 11
     FrmStat.Show
@@ -524,19 +524,19 @@ Private Sub cmdWorldBackup_Click()
     
     Exit Sub
 
-ErrHandler:
+Errhandler:
     Call LogError("Error en WORLDSAVE")
 
 End Sub
 
 Private Sub cmdRecargarGuardiasPosOrig_Click()
 
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
     ReSpawnOrigPosNpcs
     Exit Sub
 
-ErrHandler:
+Errhandler:
     Call LogError("Error en cmdRecargarGuardiasPosOrig")
 
 End Sub

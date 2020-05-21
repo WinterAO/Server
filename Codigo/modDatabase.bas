@@ -40,7 +40,7 @@ Public Sub Database_Connect()
                                                "OPTION=3"
     End If
     
-    Debug.Print Database_Connection.ConnectionString
+    'Debug.Print Database_Connection.ConnectionString
     
     Database_Connection.CursorLocation = adUseClient
     Database_Connection.Open
@@ -120,7 +120,7 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
     With UserList(UserIndex)
         query = "INSERT INTO usuario SET "
         query = query & "name = '" & .Name & "', "
-        query = query & "account_id = (SELECT id FROM account WHERE hash = '" & .AccountHash & "'), "
+        query = query & "account_id = (SELECT id FROM account WHERE hash = '" & .AccountInfo.Hash & "'), "
         query = query & "level = " & .Stats.ELV & ", "
         query = query & "exp = " & .Stats.Exp & ", "
         query = query & "elu = " & .Stats.ELU & ", "
@@ -820,107 +820,6 @@ ErrorHandler:
 
 End Function
 
-Public Function CuentaExisteDatabase(ByVal UserName As String) As Boolean
-
-    '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 12/10/2018
-    '***************************************************
-    On Error GoTo ErrorHandler
-
-    Dim query As String
-
-    Call Database_Connect
-
-    query = "SELECT id FROM account WHERE UPPER(username) = '" & UCase$(UserName) & "';"
-
-    Set Database_RecordSet = Database_Connection.Execute(query)
-
-    If Database_RecordSet.BOF Or Database_RecordSet.EOF Then
-        CuentaExisteDatabase = False
-        Exit Function
-
-    End If
-
-    CuentaExisteDatabase = (Database_RecordSet.RecordCount > 0)
-    Set Database_RecordSet = Nothing
-    Call Database_Close
-
-    Exit Function
-
-ErrorHandler:
-    Call LogDatabaseError("Error in CuentaExisteDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
-
-End Function
-
-Public Function CuentaVerificadaDatabase(ByVal UserName As String) As Boolean
-
-    '***************************************************
-    'Author: Lorwik
-    'Last Modification: 15/05/2020
-    '***************************************************
-    On Error GoTo ErrorHandler
-
-    Dim query As String
-
-    Call Database_Connect
-
-    query = "SELECT status FROM account WHERE UPPER(username) = '" & UCase$(UserName) & "';"
-
-    Set Database_RecordSet = Database_Connection.Execute(query)
-
-    If Database_RecordSet.BOF Or Database_RecordSet.EOF Then
-       CuentaVerificadaDatabase = False
-        Exit Function
-
-    End If
-
-    CuentaVerificadaDatabase = CBool(Database_RecordSet!Status)
-
-    Set Database_RecordSet = Nothing
-    Call Database_Close
-
-    Exit Function
-
-ErrorHandler:
-    Call LogDatabaseError("Error in CuentaVerificadaDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
-
-End Function
-
-Public Function PersonajePerteneceCuentaDatabase(ByVal UserName As String, _
-                                                 ByVal AccountHash As String) As Boolean
-
-    '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 12/10/2018
-    '***************************************************
-    On Error GoTo ErrorHandler
-
-    Dim query As String
-
-    Call Database_Connect
-
-    query = "SELECT u.id FROM usuario u JOIN account a ON u.account_id = a.id WHERE UPPER(u.name) = '" & UCase$(UserName) & "' AND a.hash= '" & AccountHash & "';"
-
-    Set Database_RecordSet = Database_Connection.Execute(query)
-
-    If Database_RecordSet.BOF Or Database_RecordSet.EOF Then
-        PersonajePerteneceCuentaDatabase = False
-        Exit Function
-
-    End If
-
-    PersonajePerteneceCuentaDatabase = (Database_RecordSet.RecordCount > 0)
-    Set Database_RecordSet = Nothing
-    Call Database_Close
-
-    Exit Function
-
-ErrorHandler:
-    Call LogDatabaseError("Error in PersonajePerteneceCuentaDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
-
-End Function
-
 Public Function BANCheckDatabase(ByVal UserName As String) As Boolean
 
     '***************************************************
@@ -954,31 +853,6 @@ ErrorHandler:
     Call LogDatabaseError("Error in BANCheckDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
 
 End Function
-
-Public Sub BorrarUsuarioDatabase(ByVal UserName As String)
-
-    '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 10/10/2018
-    '***************************************************
-    On Error GoTo ErrorHandler
-
-    Dim query As String
-
-    Call Database_Connect
-
-    query = "UPDATE usuario SET name = '" & UCase$(UserName) & "_deleted', deleted = TRUE WHERE UPPER(name) = '" & UCase$(UserName) & "';"
-
-    Database_Connection.Execute (query)
-
-    Call Database_Close
-
-    Exit Sub
-
-ErrorHandler:
-    Call LogDatabaseError("Error in BorrarUsuarioDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
-
-End Sub
 
 Public Sub UnBanDatabase(ByVal UserName As String)
 
@@ -1122,7 +996,7 @@ ErrorHandler:
 
 End Function
 
-Public Sub SaveBanDatabase(ByVal UserName As String, _
+Public Sub SaveBan(ByVal UserName As String, _
                            ByVal Reason As String, _
                            ByVal BannedBy As String)
 
@@ -1136,7 +1010,7 @@ Public Sub SaveBanDatabase(ByVal UserName As String, _
 
     Dim cantPenas As Byte
 
-    cantPenas = GetUserAmountOfPunishmentsDatabase(UserName)
+    cantPenas = GetUserAmountOfPunishments(UserName)
 
     Call Database_Connect
 
@@ -1156,11 +1030,11 @@ Public Sub SaveBanDatabase(ByVal UserName As String, _
     Exit Sub
 
 ErrorHandler:
-    Call LogDatabaseError("Error in SaveBanDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Error in SaveBan: " & UserName & ". " & Err.Number & " - " & Err.description)
 
 End Sub
 
-Public Function GetUserAmountOfPunishmentsDatabase(ByVal UserName As String) As Integer
+Public Function GetUserAmountOfPunishments(ByVal UserName As String) As Integer
 
     '***************************************************
     'Author: Juan Andres Dalmasso (CHOTS)
@@ -1177,22 +1051,22 @@ Public Function GetUserAmountOfPunishmentsDatabase(ByVal UserName As String) As 
     Set Database_RecordSet = Database_Connection.Execute(query)
 
     If Database_RecordSet.BOF Or Database_RecordSet.EOF Then
-        GetUserAmountOfPunishmentsDatabase = 0
+        GetUserAmountOfPunishments = 0
         Exit Function
 
     End If
 
-    GetUserAmountOfPunishmentsDatabase = CInt(Database_RecordSet!punishments)
+    GetUserAmountOfPunishments = CInt(Database_RecordSet!punishments)
     Set Database_RecordSet = Nothing
     Call Database_Close
 
     Exit Function
 ErrorHandler:
-    Call LogDatabaseError("Error in GetUserAmountOfPunishmentsDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Error in GetUserAmountOfPunishments: " & UserName & ". " & Err.Number & " - " & Err.description)
 
 End Function
 
-Public Sub SendUserPunishmentsDatabase(ByVal UserIndex As Integer, _
+Public Sub SendUserPunishments(ByVal UserIndex As Integer, _
                                        ByVal UserName As String, _
                                        ByVal Count As Integer)
 
@@ -1227,11 +1101,11 @@ Public Sub SendUserPunishmentsDatabase(ByVal UserIndex As Integer, _
 
     Exit Sub
 ErrorHandler:
-    Call LogDatabaseError("Error in SendUserPunishmentsDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Error in SendUserPunishments: " & UserName & ". " & Err.Number & " - " & Err.description)
 
 End Sub
 
-Public Function GetUserPosDatabase(ByVal UserName As String) As String
+Public Function GetUserPos(ByVal UserName As String) As String
 
     '***************************************************
     'Author: Juan Andres Dalmasso (CHOTS)
@@ -1248,237 +1122,22 @@ Public Function GetUserPosDatabase(ByVal UserName As String) As String
     Set Database_RecordSet = Database_Connection.Execute(query)
 
     If Database_RecordSet.BOF Or Database_RecordSet.EOF Then
-        GetUserPosDatabase = vbNullString
+        GetUserPos = vbNullString
         Exit Function
 
     End If
 
-    GetUserPosDatabase = Database_RecordSet!pos_map & "-" & Database_RecordSet!pos_x & "-" & Database_RecordSet!pos_y
+    GetUserPos = Database_RecordSet!pos_map & "-" & Database_RecordSet!pos_x & "-" & Database_RecordSet!pos_y
     Set Database_RecordSet = Nothing
     Call Database_Close
 
     Exit Function
 ErrorHandler:
-    Call LogDatabaseError("Error in GetUserPosDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Error in GetUserPos: " & UserName & ". " & Err.Number & " - " & Err.description)
 
 End Function
 
-Public Function GetUserSaltDatabase(ByVal UserName As String) As String
-
-    '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 10/10/2018
-    '***************************************************
-    On Error GoTo ErrorHandler
-
-    Dim query As String
-
-    Call Database_Connect
-
-    query = "SELECT salt FROM account WHERE id = (SELECT account_id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "');"
-
-    Set Database_RecordSet = Database_Connection.Execute(query)
-
-    If Database_RecordSet.BOF Or Database_RecordSet.EOF Then
-        GetUserSaltDatabase = vbNullString
-        Exit Function
-
-    End If
-
-    GetUserSaltDatabase = Database_RecordSet!Salt
-    Set Database_RecordSet = Nothing
-    Call Database_Close
-
-    Exit Function
-ErrorHandler:
-    Call LogDatabaseError("Error in GetUserSaltDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
-
-End Function
-
-Public Function GetAccountSaltDatabase(ByVal AccountName As String) As String
-
-    '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 10/10/2018
-    '***************************************************
-    On Error GoTo ErrorHandler
-
-    Dim query As String
-
-    Call Database_Connect
-
-    query = "SELECT salt FROM account WHERE UPPER(username) = '" & UCase$(AccountName) & "';"
-
-    Set Database_RecordSet = Database_Connection.Execute(query)
-
-    If Database_RecordSet.BOF Or Database_RecordSet.EOF Then
-        GetAccountSaltDatabase = vbNullString
-        Exit Function
-
-    End If
-
-    GetAccountSaltDatabase = Database_RecordSet!Salt
-    Set Database_RecordSet = Nothing
-    Call Database_Close
-
-    Exit Function
-ErrorHandler:
-    Call LogDatabaseError("Error in GetAccountSaltDatabase: " & AccountName & ". " & Err.Number & " - " & Err.description)
-
-End Function
-
-Public Function GetAccountPasswordDatabase(ByVal AccountName As String) As String
-
-    '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 10/10/2018
-    '***************************************************
-    On Error GoTo ErrorHandler
-
-    Dim query As String
-
-    Call Database_Connect
-
-    query = "SELECT password FROM account WHERE UPPER(username) = '" & UCase$(AccountName) & "';"
-
-    Set Database_RecordSet = Database_Connection.Execute(query)
-
-    If Database_RecordSet.BOF Or Database_RecordSet.EOF Then
-        GetAccountPasswordDatabase = vbNullString
-        Exit Function
-
-    End If
-
-    GetAccountPasswordDatabase = Database_RecordSet!Password
-    Set Database_RecordSet = Nothing
-    Call Database_Close
-
-    Exit Function
-ErrorHandler:
-    Call LogDatabaseError("Error in GetAccountPasswordDatabase: " & AccountName & ". " & Err.Number & " - " & Err.description)
-
-End Function
-
-Public Function GetUserPasswordDatabase(ByVal UserName As String) As String
-
-    '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 10/10/2018
-    '***************************************************
-    On Error GoTo ErrorHandler
-
-    Dim query As String
-
-    Call Database_Connect
-
-    query = "SELECT password FROM account WHERE id = (SELECT account_id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "');"
-
-    Set Database_RecordSet = Database_Connection.Execute(query)
-
-    If Database_RecordSet.BOF Or Database_RecordSet.EOF Then
-        GetUserPasswordDatabase = vbNullString
-        Exit Function
-
-    End If
-
-    GetUserPasswordDatabase = Database_RecordSet!Password
-    Set Database_RecordSet = Nothing
-    Call Database_Close
-
-    Exit Function
-ErrorHandler:
-    Call LogDatabaseError("Error in GetUserPasswordDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
-
-End Function
-
-Public Function GetUserEmailDatabase(ByVal UserName As String) As String
-
-    '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 10/10/2018
-    '***************************************************
-    On Error GoTo ErrorHandler
-
-    Dim query As String
-
-    Call Database_Connect
-
-    query = "SELECT username FROM account WHERE id = (SELECT account_id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "');"
-
-    Set Database_RecordSet = Database_Connection.Execute(query)
-
-    If Database_RecordSet.BOF Or Database_RecordSet.EOF Then
-        GetUserEmailDatabase = vbNullString
-        Exit Function
-
-    End If
-
-    GetUserEmailDatabase = Database_RecordSet!UserName
-    Set Database_RecordSet = Nothing
-    Call Database_Close
-
-    Exit Function
-ErrorHandler:
-    Call LogDatabaseError("Error in GetUserEmailDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
-
-End Function
-
-Public Sub StorePasswordSaltDatabase(ByVal UserName As String, _
-                                     ByVal Password As String, _
-                                     ByVal Salt As String)
-
-    '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 10/10/2018
-    '***************************************************
-    On Error GoTo ErrorHandler
-
-    Dim query As String
-
-    Call Database_Connect
-
-    query = "UPDATE account SET "
-    query = query & "password = '" & Password & "', "
-    query = query & "salt = '" & Salt & "' "
-    query = query & "WHERE account_id = (SELECT account_id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "');"
-
-    Database_Connection.Execute (query)
-
-    Call Database_Close
-
-    Exit Sub
-ErrorHandler:
-    Call LogDatabaseError("Error in StorePasswordSaltDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
-
-End Sub
-
-Public Sub SaveUserEmailDatabase(ByVal UserName As String, ByVal Email As String)
-
-    '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 10/10/2018
-    '***************************************************
-    On Error GoTo ErrorHandler
-
-    Dim query As String
-
-    Call Database_Connect
-
-    query = "UPDATE account SET "
-    query = query & "username = '" & Email & "', """
-    query = query & "WHERE account_id = (SELECT account_id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "');"
-
-    Database_Connection.Execute (query)
-
-    Call Database_Close
-
-    Exit Sub
-ErrorHandler:
-    Call LogDatabaseError("Error in SaveUserEmailDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
-
-End Sub
-
-Public Sub SaveUserPunishmentDatabase(ByVal UserName As String, _
+Public Sub SaveUserPunishment(ByVal UserName As String, _
                                       ByVal Number As Integer, _
                                       ByVal Reason As String)
 
@@ -1503,11 +1162,11 @@ Public Sub SaveUserPunishmentDatabase(ByVal UserName As String, _
 
     Exit Sub
 ErrorHandler:
-    Call LogDatabaseError("Error in SaveUserPunishmentDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Error in SaveUserPunishment: " & UserName & ". " & Err.Number & " - " & Err.description)
 
 End Sub
 
-Public Sub AlterUserPunishmentDatabase(ByVal UserName As String, _
+Public Sub AlterUserPunishment(ByVal UserName As String, _
                                        ByVal Number As Integer, _
                                        ByVal Reason As String)
 
@@ -1531,11 +1190,11 @@ Public Sub AlterUserPunishmentDatabase(ByVal UserName As String, _
 
     Exit Sub
 ErrorHandler:
-    Call LogDatabaseError("Error in AlterUserPunishmentDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Error in AlterUserPunishment: " & UserName & ". " & Err.Number & " - " & Err.description)
 
 End Sub
 
-Public Sub ResetUserFaccionesDatabase(ByVal UserName As String)
+Public Sub ResetUserFacciones(ByVal UserName As String)
 
     '***************************************************
     'Author: Juan Andres Dalmasso (CHOTS)
@@ -1571,11 +1230,11 @@ Public Sub ResetUserFaccionesDatabase(ByVal UserName As String)
 
     Exit Sub
 ErrorHandler:
-    Call LogDatabaseError("Error in ResetUserFaccionesDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Error in ResetUserFacciones: " & UserName & ". " & Err.Number & " - " & Err.description)
 
 End Sub
 
-Public Sub KickUserCouncilsDatabase(ByVal UserName As String)
+Public Sub KickUserCouncils(ByVal UserName As String)
 
     '***************************************************
     'Author: Juan Andres Dalmasso (CHOTS)
@@ -1598,11 +1257,11 @@ Public Sub KickUserCouncilsDatabase(ByVal UserName As String)
 
     Exit Sub
 ErrorHandler:
-    Call LogDatabaseError("Error in KickUserCouncilsDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Error in KickUserCouncils: " & UserName & ". " & Err.Number & " - " & Err.description)
 
 End Sub
 
-Public Sub KickUserFaccionesDatabase(ByVal UserName As String)
+Public Sub KickUserFacciones(ByVal UserName As String)
 
     '***************************************************
     'Author: Juan Andres Dalmasso (CHOTS)
@@ -1625,11 +1284,11 @@ Public Sub KickUserFaccionesDatabase(ByVal UserName As String)
 
     Exit Sub
 ErrorHandler:
-    Call LogDatabaseError("Error in KickUserFaccionesDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Error in KickUserFacciones: " & UserName & ". " & Err.Number & " - " & Err.description)
 
 End Sub
 
-Public Sub KickUserChaosLegionDatabase(ByVal UserName As String)
+Public Sub KickUserChaosLegion(ByVal UserName As String)
 
     '***************************************************
     'Author: Juan Andres Dalmasso (CHOTS)
@@ -1652,11 +1311,11 @@ Public Sub KickUserChaosLegionDatabase(ByVal UserName As String)
 
     Exit Sub
 ErrorHandler:
-    Call LogDatabaseError("Error in KickUserChaosLegionDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Error in KickUserChaosLegion: " & UserName & ". " & Err.Number & " - " & Err.description)
 
 End Sub
 
-Public Sub KickUserRoyalArmyDatabase(ByVal UserName As String)
+Public Sub KickUserRoyalArmy(ByVal UserName As String)
 
     '***************************************************
     'Author: Juan Andres Dalmasso (CHOTS)
@@ -1679,11 +1338,11 @@ Public Sub KickUserRoyalArmyDatabase(ByVal UserName As String)
 
     Exit Sub
 ErrorHandler:
-    Call LogDatabaseError("Error in KickUserRoyalArmyDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Error in KickUserRoyalArmy: " & UserName & ". " & Err.Number & " - " & Err.description)
 
 End Sub
 
-Public Sub UpdateUserLoggedDatabase(ByVal UserName As String, ByVal Logged As Byte)
+Public Sub UpdateUserLogged(ByVal UserName As String, ByVal Logged As Byte)
 
     '***************************************************
     'Author: Juan Andres Dalmasso (CHOTS)
@@ -1705,11 +1364,11 @@ Public Sub UpdateUserLoggedDatabase(ByVal UserName As String, ByVal Logged As By
 
     Exit Sub
 ErrorHandler:
-    Call LogDatabaseError("Error in UpdateUserLoggedDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Error in UpdateUserLogged: " & UserName & ". " & Err.Number & " - " & Err.description)
 
 End Sub
 
-Public Function GetUserLastIpsDatabase(ByVal UserName As String) As String
+Public Function GetUserLastIps(ByVal UserName As String) As String
 
     '***************************************************
     'Author: Juan Andres Dalmasso (CHOTS)
@@ -1726,22 +1385,22 @@ Public Function GetUserLastIpsDatabase(ByVal UserName As String) As String
     Set Database_RecordSet = Database_Connection.Execute(query)
 
     If Database_RecordSet.BOF Or Database_RecordSet.EOF Then
-        GetUserLastIpsDatabase = vbNullString
+        GetUserLastIps = vbNullString
         Exit Function
 
     End If
 
-    GetUserLastIpsDatabase = Database_RecordSet!last_ip
+    GetUserLastIps = Database_RecordSet!last_ip
     Set Database_RecordSet = Nothing
     Call Database_Close
 
     Exit Function
 ErrorHandler:
-    Call LogDatabaseError("Error in GetUserLastIpsDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Error in GetUserLastIps: " & UserName & ". " & Err.Number & " - " & Err.description)
 
 End Function
 
-Public Function GetUserSkillsDatabase(ByVal UserName As String) As String
+Public Function GetUserSkills(ByVal UserName As String) As String
 
     '***************************************************
     'Author: Juan Andres Dalmasso (CHOTS)
@@ -1751,7 +1410,7 @@ Public Function GetUserSkillsDatabase(ByVal UserName As String) As String
 
     Dim query As String
 
-    GetUserSkillsDatabase = vbNullString
+    GetUserSkills = vbNullString
 
     Call Database_Connect
 
@@ -1764,7 +1423,7 @@ Public Function GetUserSkillsDatabase(ByVal UserName As String) As String
 
         While Not Database_RecordSet.EOF
 
-            GetUserSkillsDatabase = GetUserSkillsDatabase & "CHAR>" & SkillsNames(Database_RecordSet!Number) & " = " & Database_RecordSet!Value & vbCrLf
+            GetUserSkills = GetUserSkills & "CHAR>" & SkillsNames(Database_RecordSet!Number) & " = " & Database_RecordSet!Value & vbCrLf
 
             Database_RecordSet.MoveNext
         Wend
@@ -1777,11 +1436,11 @@ Public Function GetUserSkillsDatabase(ByVal UserName As String) As String
 
     Exit Function
 ErrorHandler:
-    Call LogDatabaseError("Error in GetUserSkillsDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Error in GetUserSkills: " & UserName & ". " & Err.Number & " - " & Err.description)
 
 End Function
 
-Public Function GetUserFreeSkillsDatabase(ByVal UserName As String) As Integer
+Public Function GetUserFreeSkills(ByVal UserName As String) As Integer
 
     '***************************************************
     'Author: Juan Andres Dalmasso (CHOTS)
@@ -1798,22 +1457,22 @@ Public Function GetUserFreeSkillsDatabase(ByVal UserName As String) As Integer
     Set Database_RecordSet = Database_Connection.Execute(query)
 
     If Database_RecordSet.BOF Or Database_RecordSet.EOF Then
-        GetUserFreeSkillsDatabase = 0
+        GetUserFreeSkills = 0
         Exit Function
 
     End If
 
-    GetUserFreeSkillsDatabase = CInt(Database_RecordSet!free_skillpoints)
+    GetUserFreeSkills = CInt(Database_RecordSet!free_skillpoints)
     Set Database_RecordSet = Nothing
     Call Database_Close
 
     Exit Function
 ErrorHandler:
-    Call LogDatabaseError("Error in GetUserFreeSkillsDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Error in GetUserFreeSkills: " & UserName & ". " & Err.Number & " - " & Err.description)
 
 End Function
 
-Public Sub SaveUserTrainingTimeDatabase(ByVal UserName As String, _
+Public Sub SaveUserTrainingTime(ByVal UserName As String, _
                                         ByVal trainingTime As Long)
 
     '***************************************************
@@ -1836,11 +1495,11 @@ Public Sub SaveUserTrainingTimeDatabase(ByVal UserName As String, _
 
     Exit Sub
 ErrorHandler:
-    Call LogDatabaseError("Error in SaveUserTrainingTimeDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Error in SaveUserTrainingTime: " & UserName & ". " & Err.Number & " - " & Err.description)
 
 End Sub
 
-Public Function GetUserTrainingTimeDatabase(ByVal UserName As String) As Long
+Public Function GetUserTrainingTime(ByVal UserName As String) As Long
 
     '***************************************************
     'Author: Juan Andres Dalmasso (CHOTS)
@@ -1857,54 +1516,22 @@ Public Function GetUserTrainingTimeDatabase(ByVal UserName As String) As Long
     Set Database_RecordSet = Database_Connection.Execute(query)
 
     If Database_RecordSet.BOF Or Database_RecordSet.EOF Then
-        GetUserTrainingTimeDatabase = 0
+        GetUserTrainingTime = 0
         Exit Function
 
     End If
 
-    GetUserTrainingTimeDatabase = CLng(Database_RecordSet!counter_training)
+    GetUserTrainingTime = CLng(Database_RecordSet!counter_training)
     Set Database_RecordSet = Nothing
     Call Database_Close
 
     Exit Function
 ErrorHandler:
-    Call LogDatabaseError("Error in GetUserTrainingTimeDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Error in GetUserTrainingTime: " & UserName & ". " & Err.Number & " - " & Err.description)
 
 End Function
 
-Public Function GetCountUserAccount(ByVal HashAccount As String) As Byte
-
-    '***************************************************
-    'Author: Lorwik
-    'Last Modification: 17/05/2020
-    '***************************************************
-    On Error GoTo ErrorHandler
-
-    Dim query As String
-
-    Call Database_Connect
-
-    query = "SELECT COUNT(*) FROM usuario WHERE deleted = 0 and account_id = (SELECT id FROM account WHERE hash = '" & HashAccount & "');"
-
-    Set Database_RecordSet = Database_Connection.Execute(query)
-
-    If Database_RecordSet.BOF Or Database_RecordSet.EOF Then
-        GetCountUserAccount = 0
-        Exit Function
-
-    End If
-
-    GetCountUserAccount = val(Database_RecordSet.Fields(0).Value)
-    Set Database_RecordSet = Nothing
-    Call Database_Close
-
-    Exit Function
-ErrorHandler:
-    Call LogDatabaseError("Error in GetUserTrainingTimeDatabase: " & HashAccount & ". " & Err.Number & " - " & Err.description)
-
-End Function
-
-Public Function UserBelongsToRoyalArmyDatabase(ByVal UserName As String) As Boolean
+Public Function UserBelongsToRoyalArmy(ByVal UserName As String) As Boolean
 
     '***************************************************
     'Author: Juan Andres Dalmasso (CHOTS)
@@ -1921,23 +1548,23 @@ Public Function UserBelongsToRoyalArmyDatabase(ByVal UserName As String) As Bool
     Set Database_RecordSet = Database_Connection.Execute(query)
 
     If Database_RecordSet.BOF Or Database_RecordSet.EOF Then
-        UserBelongsToRoyalArmyDatabase = False
+        UserBelongsToRoyalArmy = False
         Exit Function
 
     End If
 
-    UserBelongsToRoyalArmyDatabase = CBool(Database_RecordSet!pertenece_real)
+    UserBelongsToRoyalArmy = CBool(Database_RecordSet!pertenece_real)
     Set Database_RecordSet = Nothing
     Call Database_Close
 
     Exit Function
 
 ErrorHandler:
-    Call LogDatabaseError("Error in UserBelongsToRoyalArmyDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Error in UserBelongsToRoyalArmy: " & UserName & ". " & Err.Number & " - " & Err.description)
 
 End Function
 
-Public Function UserBelongsToChaosLegionDatabase(ByVal UserName As String) As Boolean
+Public Function UserBelongsToChaosLegion(ByVal UserName As String) As Boolean
 
     '***************************************************
     'Author: Juan Andres Dalmasso (CHOTS)
@@ -1954,23 +1581,23 @@ Public Function UserBelongsToChaosLegionDatabase(ByVal UserName As String) As Bo
     Set Database_RecordSet = Database_Connection.Execute(query)
 
     If Database_RecordSet.BOF Or Database_RecordSet.EOF Then
-        UserBelongsToChaosLegionDatabase = False
+        UserBelongsToChaosLegion = False
         Exit Function
 
     End If
 
-    UserBelongsToChaosLegionDatabase = CBool(Database_RecordSet!pertenece_caos)
+    UserBelongsToChaosLegion = CBool(Database_RecordSet!pertenece_caos)
     Set Database_RecordSet = Nothing
     Call Database_Close
 
     Exit Function
 
 ErrorHandler:
-    Call LogDatabaseError("Error in UserBelongsToChaosLegionDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Error in UserBelongsToChaosLegion: " & UserName & ". " & Err.Number & " - " & Err.description)
 
 End Function
 
-Public Function GetUserLevelDatabase(ByVal UserName As String) As Byte
+Public Function GetUserLevel(ByVal UserName As String) As Byte
 
     '***************************************************
     'Author: Juan Andres Dalmasso (CHOTS)
@@ -1987,23 +1614,23 @@ Public Function GetUserLevelDatabase(ByVal UserName As String) As Byte
     Set Database_RecordSet = Database_Connection.Execute(query)
 
     If Database_RecordSet.BOF Or Database_RecordSet.EOF Then
-        GetUserLevelDatabase = 0
+        GetUserLevel = 0
         Exit Function
 
     End If
 
-    GetUserLevelDatabase = CByte(Database_RecordSet!Level)
+    GetUserLevel = CByte(Database_RecordSet!Level)
     Set Database_RecordSet = Nothing
     Call Database_Close
 
     Exit Function
 
 ErrorHandler:
-    Call LogDatabaseError("Error in GetUserLevelDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Error in GetUserLevel: " & UserName & ". " & Err.Number & " - " & Err.description)
 
 End Function
 
-Public Function GetUserPromedioDatabase(ByVal UserName As String) As Long
+Public Function GetUserPromedio(ByVal UserName As String) As Long
 
     '***************************************************
     'Author: Juan Andres Dalmasso (CHOTS)
@@ -2020,23 +1647,23 @@ Public Function GetUserPromedioDatabase(ByVal UserName As String) As Long
     Set Database_RecordSet = Database_Connection.Execute(query)
 
     If Database_RecordSet.BOF Or Database_RecordSet.EOF Then
-        GetUserPromedioDatabase = 0
+        GetUserPromedio = 0
         Exit Function
 
     End If
 
-    GetUserPromedioDatabase = CLng(Database_RecordSet!rep_average)
+    GetUserPromedio = CLng(Database_RecordSet!rep_average)
     Set Database_RecordSet = Nothing
     Call Database_Close
 
     Exit Function
 
 ErrorHandler:
-    Call LogDatabaseError("Error in GetUserPromedioDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Error in GetUserPromedio: " & UserName & ". " & Err.Number & " - " & Err.description)
 
 End Function
 
-Public Function GetUserReenlistsDatabase(ByVal UserName As String) As Byte
+Public Function GetUserReenlists(ByVal UserName As String) As Byte
 
     '***************************************************
     'Author: Juan Andres Dalmasso (CHOTS)
@@ -2053,23 +1680,23 @@ Public Function GetUserReenlistsDatabase(ByVal UserName As String) As Byte
     Set Database_RecordSet = Database_Connection.Execute(query)
 
     If Database_RecordSet.BOF Or Database_RecordSet.EOF Then
-        GetUserReenlistsDatabase = 0
+        GetUserReenlists = 0
         Exit Function
 
     End If
 
-    GetUserReenlistsDatabase = CByte(Database_RecordSet!Reenlistadas)
+    GetUserReenlists = CByte(Database_RecordSet!Reenlistadas)
     Set Database_RecordSet = Nothing
     Call Database_Close
 
     Exit Function
 
 ErrorHandler:
-    Call LogDatabaseError("Error in GetUserReenlistsDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Error in GetUserReenlists: " & UserName & ". " & Err.Number & " - " & Err.description)
 
 End Function
 
-Public Sub SaveUserReenlistsDatabase(ByVal UserName As String, ByVal Reenlists As Byte)
+Public Sub SaveUserReenlists(ByVal UserName As String, ByVal Reenlists As Byte)
 
     '***************************************************
     'Author: Juan Andres Dalmasso (CHOTS)
@@ -2091,7 +1718,7 @@ Public Sub SaveUserReenlistsDatabase(ByVal UserName As String, ByVal Reenlists A
 
     Exit Sub
 ErrorHandler:
-    Call LogDatabaseError("Error in SaveUserReenlistsDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Error in SaveUserReenlists: " & UserName & ". " & Err.Number & " - " & Err.description)
 
 End Sub
 
@@ -2780,89 +2407,6 @@ ErrorHandler:
     Call LogDatabaseError("Error in GetUserPromedioDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
 
 End Function
-
-Public Sub LoginAccountDatabase(ByVal UserIndex As Integer, ByVal UserName As String)
-
-    '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 12/10/2018
-    '***************************************************
-    On Error GoTo ErrorHandler
-
-    Dim query              As String
-
-    Dim AccountId          As Integer
-
-    Dim AccountHash        As String
-
-    Dim NumberOfCharacters As Byte
-
-    Dim Characters()       As AccountUser
-
-    Call Database_Connect
-
-    query = "SELECT id, username, hash FROM account "
-    query = query & "WHERE UPPER(username) = '" & UCase$(UserName) & "';"
-
-    Set Database_RecordSet = Database_Connection.Execute(query)
-
-    If Database_RecordSet.BOF Or Database_RecordSet.EOF Then
-        Call WriteErrorMsg(UserIndex, "Error al cargar la cuenta.")
-        Call CloseSocket(UserIndex)
-        Exit Sub
-
-    End If
-
-    AccountId = CInt(Database_RecordSet!ID)
-    UserName = Database_RecordSet!UserName
-    AccountHash = Database_RecordSet!Hash
-
-    Set Database_RecordSet = Nothing
-
-    'Now the characters
-    query = "SELECT name, level, gold, body_id, head_id, weapon_id, shield_id, helmet_id, race_id, class_id, pos_map, rep_average, is_dead FROM usuario "
-    query = query & "WHERE account_id = " & AccountId & " AND deleted = FALSE;"
-
-    Set Database_RecordSet = Database_Connection.Execute(query)
-
-    NumberOfCharacters = 0
-
-    If Not Database_RecordSet.RecordCount = 0 Then
-        ReDim Characters(1 To Database_RecordSet.RecordCount) As AccountUser
-        Database_RecordSet.MoveFirst
-
-        While Not Database_RecordSet.EOF
-
-            NumberOfCharacters = NumberOfCharacters + 1
-            Characters(NumberOfCharacters).Name = Database_RecordSet!Name
-            Characters(NumberOfCharacters).body = Database_RecordSet!body_id
-            Characters(NumberOfCharacters).Head = Database_RecordSet!head_id
-            Characters(NumberOfCharacters).weapon = Database_RecordSet!weapon_id
-            Characters(NumberOfCharacters).shield = Database_RecordSet!shield_id
-            Characters(NumberOfCharacters).helmet = Database_RecordSet!helmet_id
-            Characters(NumberOfCharacters).Class = Database_RecordSet!class_id
-            Characters(NumberOfCharacters).race = Database_RecordSet!race_id
-            Characters(NumberOfCharacters).Map = Database_RecordSet!pos_map
-            Characters(NumberOfCharacters).Level = Database_RecordSet!Level
-            Characters(NumberOfCharacters).Gold = Database_RecordSet!Gold
-            Characters(NumberOfCharacters).criminal = (Database_RecordSet!rep_average < 0)
-            Characters(NumberOfCharacters).dead = Database_RecordSet!is_dead
-            Characters(NumberOfCharacters).gameMaster = EsGmChar(Database_RecordSet!Name)
-            Database_RecordSet.MoveNext
-        Wend
-
-    End If
-
-    Set Database_RecordSet = Nothing
-    Call Database_Close
-
-    Call WriteUserAccountLogged(UserIndex, UserName, AccountHash, NumberOfCharacters, Characters)
-
-    Exit Sub
-ErrorHandler:
-    Call LogDatabaseError("Error in LoginAccountDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
-
-End Sub
 
 Public Function SanitizeNullValue(ByVal Value As Variant, _
                                   ByVal defaultValue As Variant) As Variant

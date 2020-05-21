@@ -674,6 +674,17 @@ Sub MostrarNumUsers()
 
 End Sub
 
+Sub MostrarNumCuentas()
+    '***************************************************
+    'Author: Lorwik
+    'Last Modification: 21/05/2020
+    '
+    '***************************************************
+
+    frmMain.txtNumCuentas.Text = NumCuentas
+
+End Sub
+
 Function ValidInputNP(ByVal cad As String) As Boolean
     '***************************************************
     'Author: Unknown
@@ -741,6 +752,7 @@ Sub Restart()
     
     LastUser = 0
     NumUsers = 0
+    NumCuentas = 0
     
     Call FreeNPCs
     Call FreeCharIndexes

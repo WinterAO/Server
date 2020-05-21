@@ -123,7 +123,7 @@ Public Function BuscaSlotSock(ByVal S As Long) As Long
 
     On Error GoTo hayerror
     
-    If WSAPISock2Usr.Count <> 0 Then ' GSZAO
+    If WSAPISock2Usr.count <> 0 Then ' GSZAO
         BuscaSlotSock = WSAPISock2Usr.Item(CStr(S))
     Else
         BuscaSlotSock = -1
@@ -139,7 +139,7 @@ End Function
 Public Sub AgregaSlotSock(ByVal Sock As Long, ByVal Slot As Long)
     Debug.Print "AgregaSockSlot"
 
-    If WSAPISock2Usr.Count > MaxUsers Then
+    If WSAPISock2Usr.count > MaxUsers Then
         Call CloseSocket(Slot)
         Exit Sub
     End If
@@ -151,13 +151,13 @@ End Sub
 Public Sub BorraSlotSock(ByVal Sock As Long)
 
     Dim cant As Long
-        cant = WSAPISock2Usr.Count
+        cant = WSAPISock2Usr.count
 
     On Error Resume Next
 
     WSAPISock2Usr.Remove CStr(Sock)
 
-    Debug.Print "BorraSockSlot " & cant & " -> " & WSAPISock2Usr.Count
+    Debug.Print "BorraSockSlot " & cant & " -> " & WSAPISock2Usr.count
 
 End Sub
 
@@ -293,7 +293,7 @@ End Function
 
 Public Sub LogApiSock(ByVal str As String)
 
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
     Dim nfile As Integer
         nfile = FreeFile ' obtenemos un canal
@@ -304,7 +304,7 @@ Public Sub LogApiSock(ByVal str As String)
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
 End Sub
 
@@ -399,7 +399,7 @@ Public Sub EventoSockAccept(ByVal SockID As Long)
         UserList(NewIndex).IP = GetAscIP(sa.sin_addr)
 
         'Busca si esta banneada la ip
-        For i = 1 To BanIps.Count
+        For i = 1 To BanIps.count
 
             If BanIps.Item(i) = UserList(NewIndex).IP Then
                 Call WriteErrorMsg(NewIndex, "Su IP se encuentra bloqueada en este servidor.")

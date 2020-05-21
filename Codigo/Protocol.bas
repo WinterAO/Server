@@ -276,7 +276,6 @@ Private Enum ClientPacketID
     ChangeDescription             '/DESC
     GuildVote                     '/VOTO
     punishments                   '/PENAS
-    ChangePassword                '/CONTRASENA
     Gamble                        '/APOSTAR
     InquiryVote                   '/ENCUESTA ( with parameters )
     LeaveFaction                  '/RETIRAR ( with no arguments )
@@ -764,9 +763,6 @@ Public Function HandleIncomingData(ByVal UserIndex As Integer) As Boolean
         
         Case ClientPacketID.punishments             '/PENAS
             Call HandlePunishments(UserIndex)
-        
-        Case ClientPacketID.ChangePassword          '/CONTRASENA
-            Call HandleChangePassword(UserIndex)
         
         Case ClientPacketID.Gamble                  '/APOSTAR
             Call HandleGamble(UserIndex)
@@ -1335,12 +1331,6 @@ Private Sub HandleGMCommands(ByVal UserIndex As Integer)
             Case eGMCommands.RequestCharMail         '/LASTEMAIL
                 Call HandleRequestCharMail(UserIndex)
         
-            Case eGMCommands.AlterPassword           '/APASS
-                Call HandleAlterPassword(UserIndex)
-        
-            Case eGMCommands.AlterMail               '/AEMAIL
-                Call HandleAlterMail(UserIndex)
-        
             Case eGMCommands.AlterName               '/ANAME
                 Call HandleAlterName(UserIndex)
         
@@ -1565,7 +1555,7 @@ Private Sub HandleDeleteChar(ByVal UserIndex As Integer)
 'Last Modification: 07/01/20
 '
 '***************************************************
-    If UserList(UserIndex).incomingData.Length < 6 Then
+    If UserList(UserIndex).incomingData.Length < 2 Then
         Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
@@ -1582,18 +1572,26 @@ Private Sub HandleDeleteChar(ByVal UserIndex As Integer)
     'Remove packet ID
     Call buffer.ReadByte
 
-    Dim UserName    As String
-    Dim AccountHash As String
-    UserName = buffer.ReadASCIIString()
-    AccountHash = buffer.ReadASCIIString()
+    Dim PJSeleccionado As Byte
+    PJSeleccionado = buffer.ReadByte
     
     'If we got here then packet is complete, copy data back to original queue
     Call UserList(UserIndex).incomingData.CopyBuffer(buffer)
     
-    Call BorrarUsuario(UserIndex, UserName, AccountHash)
-
-    'Enviamos paquete para mostrar mensaje satisfactorio en el cliente
-    Call UserList(UserIndex).outgoingData.WriteByte(ServerPacketID.DeletedChar)
+    '¿Es un indice valido?
+    If PJSeleccionado < 1 Or PJSeleccionado > MAXPJACCOUNTS Then
+        Call WriteErrorMsg(UserIndex, "Error al borrar el PJ. Intentelo de nuevo o contacte con un Administrador.")
+        Exit Sub
+    End If
+    
+    'Mandamos a borrar el PJ
+    If BorrarUsuario(UserIndex, UserList(UserIndex).AccountInfo.AccountPJ(PJSeleccionado).Name) Then
+        'Si se pudo borrar enviamos paquete para mostrar mensaje satisfactorio en el cliente
+        Call UserList(UserIndex).outgoingData.WriteByte(ServerPacketID.DeletedChar)
+    Else
+        Call WriteErrorMsg(UserIndex, "Error al borrar el PJ. Intentelo de nuevo o contacte con un Administrador.")
+        Exit Sub
+    End If
     
     Exit Sub
     
@@ -1624,7 +1622,8 @@ Private Sub HandleLoginExistingChar(ByVal UserIndex As Integer)
     'Last Modification: 05/17/06
     '
     '***************************************************
-    If UserList(UserIndex).incomingData.Length < 6 Then
+    Debug.Print UserList(UserIndex).incomingData.Length
+    If UserList(UserIndex).incomingData.Length < 5 Then
         Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
 
@@ -1640,43 +1639,46 @@ Private Sub HandleLoginExistingChar(ByVal UserIndex As Integer)
     'Remove packet ID
     Call buffer.ReadByte
 
-    Dim UserName    As String
-    Dim AccountHash As String
+    Dim SelectedID    As Byte
     Dim version     As String
     
-    UserName = buffer.ReadASCIIString()
-    AccountHash = buffer.ReadASCIIString()
+    SelectedID = buffer.ReadByte
     
     'Convert version number to string
     version = CStr(buffer.ReadByte()) & "." & CStr(buffer.ReadByte()) & "." & CStr(buffer.ReadByte())
     
-    'If we got here then packet is complete, copy data back to original queue
-    Call UserList(UserIndex).incomingData.CopyBuffer(buffer)
-                
-    If Not AsciiValidos(UserName) Then
-        Call WriteErrorMsg(UserIndex, "Nombre invalido.")
-        Call CloseSocket(UserIndex)
-        
-        Exit Sub
-
-    End If
+    With UserList(UserIndex)
     
-    If Not PersonajeExiste(UserName) Then
-        Call WriteErrorMsg(UserIndex, "El personaje no existe.")
-        Call CloseSocket(UserIndex)
+    'Debug.Print .AccountInfo.hash
+    
+        'If we got here then packet is complete, copy data back to original queue
+        Call .incomingData.CopyBuffer(buffer)
+
+        If Not AsciiValidos(.AccountInfo.AccountPJ(SelectedID).Name) Then
+            Call WriteErrorMsg(UserIndex, "Nombre invalido.")
+            Call CloseUser(UserIndex)
+            
+            Exit Sub
+    
+        End If
         
-        Exit Sub
-
-    End If
-
-    If BANCheck(UserName) Then
-        Call WriteErrorMsg(UserIndex, "Se te ha prohibido la entrada a Argentum Online debido a tu mal comportamiento. Puedes consultar el reglamento y el sistema de soporte desde www.argentumonline.org")
-    ElseIf Not VersionOK(version) Then
-        Call WriteErrorMsg(UserIndex, "Esta version del juego es obsoleta, la version correcta es la " & ULTIMAVERSION & ". La misma se encuentra disponible en www.argentumonline.org")
-    Else
-        Call ConnectUser(UserIndex, UserName, AccountHash)
-    End If
- 
+        '¿El personaje existe?
+        If Not PersonajeExiste(.AccountInfo.AccountPJ(SelectedID).Name) Then
+            Call WriteErrorMsg(UserIndex, "El personaje no existe.")
+            Call CloseUser(UserIndex)
+            
+            Exit Sub
+    
+        End If
+    
+        If BANCheck(.AccountInfo.AccountPJ(SelectedID).Name) Then
+            Call WriteErrorMsg(UserIndex, "Se te ha prohibido la entrada a WinterAO debido a tu mal comportamiento. Puedes consultar el reglamento y el sistema de soporte desde http://winterao.com.ar")
+        ElseIf Not VersionOK(version) Then
+            Call WriteErrorMsg(UserIndex, "Esta version del juego es obsoleta, la version correcta es la " & ULTIMAVERSION & ". La misma se encuentra disponible en http://winterao.com.ar")
+        Else
+            Call ConnectUser(UserIndex, .AccountInfo.AccountPJ(SelectedID).Name, .AccountInfo.Hash)
+        End If
+    End With
 Errhandler:
 
     Dim Error As Long
@@ -1730,8 +1732,7 @@ Private Sub HandleLoginNewChar(ByVal UserIndex As Integer)
     Dim i As Byte
     
     UserName = buffer.ReadASCIIString()
-    AccountHash = buffer.ReadASCIIString()
-    
+
     'Convert version number to string
     version = CStr(buffer.ReadByte()) & "." & CStr(buffer.ReadByte()) & "." & CStr(buffer.ReadByte())
     
@@ -1749,29 +1750,27 @@ Private Sub HandleLoginNewChar(ByVal UserIndex As Integer)
     
     If PuedeCrearPersonajes = 0 Then
         Call WriteErrorMsg(UserIndex, "La creacion de personajes en este servidor se ha deshabilitado.")
-        Call CloseSocket(UserIndex)
-        
+        Call CloseUser(UserIndex)
         Exit Sub
-
     End If
     
     If ServerSoloGMs <> 0 Then
         Call WriteErrorMsg(UserIndex, "Servidor restringido a administradores. Consulte la pagina oficial o el foro oficial para mas informacion.")
-        Call CloseSocket(UserIndex)
-        
+        Call CloseUser(UserIndex)
         Exit Sub
-
     End If
     
     If aClon.MaxPersonajes(UserList(UserIndex).IP) Then
         Call WriteErrorMsg(UserIndex, "Has creado demasiados personajes.")
-        Call CloseSocket(UserIndex)
+        Call CloseUser(UserIndex)
         Exit Sub
     End If
     
+    AccountHash = UserList(UserIndex).AccountInfo.Hash
+
     If GetCountUserAccount(AccountHash) >= 10 Then
         Call WriteErrorMsg(UserIndex, "No puedes crear mas de 10 personajes.")
-        Call CloseSocket(UserIndex)
+        Call CloseUser(UserIndex)
         Exit Sub
     End If
                                         
@@ -2246,7 +2245,7 @@ Private Sub HandleWalk(ByVal UserIndex As Integer)
                     
                     Call LogHackAttemp("Tramposo SH: " & .Name & " , " & dummy)
                     Call SendData(SendTarget.ToAdmins, 0, PrepareMessageConsoleMsg("Servidor> " & .Name & " ha sido echado por el servidor por posible uso de SH.", FontTypeNames.FONTTYPE_SERVER))
-                    Call CloseSocket(UserIndex)
+                    Call CloseUser(UserIndex)
                     
                     Exit Sub
                 Else
@@ -3175,7 +3174,7 @@ Private Sub HandleUseSpellMacro(ByVal UserIndex As Integer)
         
         Call SendData(SendTarget.ToAdmins, UserIndex, PrepareMessageConsoleMsg(.Name & " fue expulsado por Anti-macro de hechizos.", FontTypeNames.FONTTYPE_FIGHT))
         Call WriteErrorMsg(UserIndex, "Has sido expulsado por usar macro de hechizos. Recomendamos leer el reglamento sobre el tema macros.")
-        Call CloseSocket(UserIndex)
+        Call CloseUser(UserIndex)
 
     End With
 
@@ -3700,7 +3699,7 @@ Private Sub HandleWorkLeftClick(ByVal UserIndex As Integer)
                             
                             ''FUISTE
                             Call WriteErrorMsg(UserIndex, "Has sido expulsado por el sistema anti cheats.")
-                            Call CloseSocket(UserIndex)
+                            Call CloseUser(UserIndex)
                             Exit Sub
 
                         End If
@@ -7868,95 +7867,6 @@ Errhandler:
 End Sub
 
 ''
-' Handles the "ChangePassword" message.
-'
-' @param    userIndex The index of the user sending the message.
-
-Private Sub HandleChangePassword(ByVal UserIndex As Integer)
-    '***************************************************
-    'Author: Juan Martin Sotuyo Dodero (Maraxus)
-    'Creation Date: 10/10/07
-    'Last Modified By: Rapsodius
-    '***************************************************
-
-    'SHA256
-    Dim oSHA256 As CSHA256
-
-    Set oSHA256 = New CSHA256
-
-    If UserList(UserIndex).incomingData.Length < 5 Then
-        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
-        Exit Sub
-
-    End If
-    
-    On Error GoTo Errhandler
-
-    With UserList(UserIndex)
-
-        'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
-        Dim buffer As clsByteQueue
-        Set buffer = New clsByteQueue
-
-        Call buffer.CopyBuffer(.incomingData)
-        
-        Dim oldSalt    As String
-
-        Dim Salt       As String
-
-        Dim oldPass    As String
-
-        Dim newPass    As String
-
-        Dim storedPass As String
-        
-        'Remove packet ID
-        Call buffer.ReadByte
-       
-        'Hasheamos el pass junto al Salt
-        oldSalt = GetUserSalt(UserList(UserIndex).Name)
-        oldPass = oSHA256.SHA256(buffer.ReadASCIIString() & oldSalt)
-        
-        'Asignamos un nuevo Salt y lo hasheamos junto al nuevo pass
-        Salt = RandomString(10)
-        newPass = oSHA256.SHA256(buffer.ReadASCIIString() & Salt)
-        
-        If LenB(newPass) = 0 Then
-            Call WriteConsoleMsg(UserIndex, "Debes especificar una contrasena nueva, intentalo de nuevo.", FontTypeNames.FONTTYPE_INFO)
-        Else
-            storedPass = GetUserPassword(UserList(UserIndex).Name)
-            
-            If storedPass <> oldPass Then
-                Call WriteConsoleMsg(UserIndex, "La contrasena actual proporcionada no es correcta. La contrasena no ha sido cambiada, intentalo de nuevo.", FontTypeNames.FONTTYPE_INFO)
-            Else
-                Call StorePasswordSalt(UserList(UserIndex).Name, newPass, Salt)
-                Call WriteConsoleMsg(UserIndex, "La contrasena fue cambiada con exito.", FontTypeNames.FONTTYPE_INFO)
-
-            End If
-
-        End If
-        
-        'If we got here then packet is complete, copy data back to original queue
-        Call .incomingData.CopyBuffer(buffer)
-
-    End With
-    
-Errhandler:
-
-    Dim Error As Long
-
-    Error = Err.Number
-
-    On Error GoTo 0
-    
-    'Destroy auxiliar buffer
-    Set buffer = Nothing
-    
-    If Error <> 0 Then Err.Raise Error
-
-End Sub
-
-''
 ' Handles the "Gamble" message.
 '
 ' @param    userIndex The index of the user sending the message.
@@ -11866,7 +11776,7 @@ Private Sub HandleKick(ByVal UserIndex As Integer)
                     Call WriteConsoleMsg(UserIndex, "No puedes echar a alguien con jerarquia mayor a la tuya.", FontTypeNames.FONTTYPE_INFO)
                 Else
                     Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(.Name & " echo a " & UserName & ".", FontTypeNames.FONTTYPE_INFO))
-                    Call CloseSocket(tUser)
+                    Call CloseUser(tUser)
                     Call LogGM(.Name, "Echo a " & UserName)
 
                 End If
@@ -14216,7 +14126,7 @@ Private Sub HandleGuildBan(ByVal UserIndex As Integer)
                     If tIndex > 0 Then
                         'esta online
                         UserList(tIndex).flags.Ban = 1
-                        Call CloseSocket(tIndex)
+                        Call CloseUser(tIndex)
 
                     End If
 
@@ -14585,7 +14495,7 @@ Private Sub HandleChaosLegionKick(ByVal UserIndex As Integer)
             Else
 
                 If PersonajeExiste(UserName) Then
-                    Call KickUserChaosLegion(UserName, .Name)
+                    Call KickUserChaosLegion(UserName)
                     Call WriteConsoleMsg(UserIndex, UserName & " expulsado de las fuerzas del caos y prohibida la reenlistada.", FontTypeNames.FONTTYPE_INFO)
                 Else
                     Call WriteConsoleMsg(UserIndex, UserName & " inexistente.", FontTypeNames.FONTTYPE_INFO)
@@ -14677,7 +14587,7 @@ Private Sub HandleRoyalArmyKick(ByVal UserIndex As Integer)
             Else
 
                 If PersonajeExiste(UserName) Then
-                    Call KickUserRoyalArmy(UserName, .Name)
+                    Call KickUserRoyalArmy(UserName)
                     Call WriteConsoleMsg(UserIndex, UserName & " expulsado de las fuerzas reales y prohibida la reenlistada.", FontTypeNames.FONTTYPE_INFO)
                 Else
                     Call WriteConsoleMsg(UserIndex, UserName & " inexistente.", FontTypeNames.FONTTYPE_INFO)
@@ -16304,168 +16214,6 @@ Public Sub HandleAlterName(ByVal UserIndex As Integer)
                         End If
 
                     End If
-
-                End If
-
-            End If
-
-        End If
-        
-        'If we got here then packet is complete, copy data back to original queue
-        Call .incomingData.CopyBuffer(buffer)
-
-    End With
-
-Errhandler:
-
-    Dim Error As Long
-
-    Error = Err.Number
-
-    On Error GoTo 0
-    
-    'Destroy auxiliar buffer
-    Set buffer = Nothing
-    
-    If Error <> 0 Then Err.Raise Error
-
-End Sub
-
-''
-' Handle the "AlterName" message
-'
-' @param userIndex The index of the user sending the message
-
-Public Sub HandleAlterMail(ByVal UserIndex As Integer)
-
-    '***************************************************
-    'Author: Juan Martin Sotuyo Dodero (Maraxus)
-    'Last Modification: 12/26/06
-    'Change user password
-    '***************************************************
-    If UserList(UserIndex).incomingData.Length < 5 Then
-        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
-        Exit Sub
-
-    End If
-    
-    On Error GoTo Errhandler
-
-    With UserList(UserIndex)
-
-        'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
-        Dim buffer As clsByteQueue
-        Set buffer = New clsByteQueue
-
-        Call buffer.CopyBuffer(.incomingData)
-        
-        'Remove packet ID
-        Call buffer.ReadByte
-        
-        Dim UserName As String
-
-        Dim newMail  As String
-        
-        UserName = buffer.ReadASCIIString()
-        newMail = buffer.ReadASCIIString()
-        
-        If (Not .flags.Privilegios And PlayerType.RoleMaster) <> 0 And (.flags.Privilegios And (PlayerType.Admin Or PlayerType.Dios)) Then
-            If LenB(UserName) = 0 Or LenB(newMail) = 0 Then
-                Call WriteConsoleMsg(UserIndex, "usar /AEMAIL <pj>-<nuevomail>", FontTypeNames.FONTTYPE_INFO)
-            Else
-
-                If Not PersonajeExiste(UserName) Then
-                    Call WriteConsoleMsg(UserIndex, "No existe el charfile de" & UserName, FontTypeNames.FONTTYPE_INFO)
-                Else
-                    Call SaveUserEmail(UserName, newMail)
-                    Call WriteConsoleMsg(UserIndex, "Email de " & UserName & " cambiado a: " & newMail, FontTypeNames.FONTTYPE_INFO)
-
-                End If
-                
-                Call LogGM(.Name, "Le ha cambiado el mail a " & UserName)
-
-            End If
-
-        End If
-        
-        'If we got here then packet is complete, copy data back to original queue
-        Call .incomingData.CopyBuffer(buffer)
-
-    End With
-
-Errhandler:
-
-    Dim Error As Long
-
-    Error = Err.Number
-
-    On Error GoTo 0
-    
-    'Destroy auxiliar buffer
-    Set buffer = Nothing
-    
-    If Error <> 0 Then Err.Raise Error
-
-End Sub
-
-''
-' Handle the "AlterPassword" message
-'
-' @param userIndex The index of the user sending the message
-
-Public Sub HandleAlterPassword(ByVal UserIndex As Integer)
-
-    '***************************************************
-    'Author: Juan Martin Sotuyo Dodero (Maraxus)
-    'Last Modification: 12/26/06
-    'Change user password
-    '***************************************************
-    If UserList(UserIndex).incomingData.Length < 5 Then
-        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
-        Exit Sub
-
-    End If
-    
-    On Error GoTo Errhandler
-
-    With UserList(UserIndex)
-
-        'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
-        Dim buffer As clsByteQueue
-        Set buffer = New clsByteQueue
-
-        Call buffer.CopyBuffer(.incomingData)
-        
-        'Remove packet ID
-        Call buffer.ReadByte
-        
-        Dim UserName As String
-
-        Dim copyFrom As String
-
-        Dim Password As String
-
-        Dim Salt     As String
-                
-        UserName = Replace(buffer.ReadASCIIString(), "+", " ")
-        copyFrom = Replace(buffer.ReadASCIIString(), "+", " ")
-        
-        If (Not .flags.Privilegios And PlayerType.RoleMaster) <> 0 And (.flags.Privilegios And (PlayerType.Admin Or PlayerType.Dios)) Then
-            Call LogGM(.Name, "Ha alterado la contrasena de " & UserName)
-            
-            If LenB(UserName) = 0 Or LenB(copyFrom) = 0 Then
-                Call WriteConsoleMsg(UserIndex, "usar /APASS <pjsinpass>@<pjconpass>", FontTypeNames.FONTTYPE_INFO)
-            Else
-
-                If Not PersonajeExiste(UserName) Or Not PersonajeExiste(copyFrom) Then
-                    Call WriteConsoleMsg(UserIndex, "Alguno de los PJs no existe " & UserName & "@" & copyFrom, FontTypeNames.FONTTYPE_INFO)
-                Else
-                    Password = GetUserPassword(copyFrom)
-                    Salt = GetUserSalt(copyFrom)
-
-                    Call StorePasswordSalt(UserName, Password, Salt)
-                    
-                    Call WriteConsoleMsg(UserIndex, "Password de " & UserName & " ha cambiado por la de " & copyFrom, FontTypeNames.FONTTYPE_INFO)
 
                 End If
 
@@ -22465,16 +22213,9 @@ Private Sub HandleLoginExistingAccount(ByVal UserIndex As Integer)
     UserName = buffer.ReadASCIIString()
     Password = buffer.ReadASCIIString()
 
-    If Not CuentaExiste(UserName) Then
-        Call WriteErrorMsg(UserIndex, "La cuenta no existe.")
-        Call CloseSocket(UserIndex)
-        Exit Sub
-
-    End If
-
     'Convert version number to string
     version = CStr(buffer.ReadByte()) & "." & CStr(buffer.ReadByte()) & "." & CStr(buffer.ReadByte())
-
+    
     If Not VersionOK(version) Then
         Call WriteErrorMsg(UserIndex, "Esta version del juego es obsoleta, la version correcta es la " & ULTIMAVERSION & ". La misma se encuentra disponible en www.argentumonline.com.ar")
     Else
@@ -22500,11 +22241,7 @@ Errhandler:
 
 End Sub
 
-Public Sub WriteUserAccountLogged(ByVal UserIndex As Integer, _
-                                  ByVal UserName As String, _
-                                  ByVal AccountHash As String, _
-                                  ByVal NumberOfCharacters As Byte, _
-                                  ByRef Characters() As AccountUser)
+Public Sub WriteUserAccountLogged(ByVal UserIndex As Integer)
 
 '***************************************************
 'Author: Juan Andres Dalmasso (CHOTS)
@@ -22515,29 +22252,29 @@ Public Sub WriteUserAccountLogged(ByVal UserIndex As Integer, _
 
     Dim i As Long
 
-    With UserList(UserIndex).outgoingData
-        Call .WriteByte(ServerPacketID.AccountLogged)
-        Call .WriteASCIIString(UserName)
-        Call .WriteASCIIString(AccountHash)
-        Call .WriteByte(NumberOfCharacters)
+    With UserList(UserIndex)
+        Call .outgoingData.WriteByte(ServerPacketID.AccountLogged)
+        Call .outgoingData.WriteASCIIString(.AccountInfo.UserName)
+        Call .outgoingData.WriteASCIIString(.AccountInfo.Hash)
+        Call .outgoingData.WriteByte(.AccountInfo.NumChars)
 
-        If NumberOfCharacters > 0 Then
+        If .AccountInfo.NumChars > 0 Then
 
-            For i = 1 To NumberOfCharacters
-                Call .WriteASCIIString(Characters(i).Name)
-                Call .WriteInteger(Characters(i).body)
-                Call .WriteInteger(Characters(i).Head)
-                Call .WriteInteger(Characters(i).weapon)
-                Call .WriteInteger(Characters(i).shield)
-                Call .WriteInteger(Characters(i).helmet)
-                Call .WriteByte(Characters(i).Class)
-                Call .WriteByte(Characters(i).race)
-                Call .WriteInteger(Characters(i).Map)
-                Call .WriteByte(Characters(i).Level)
-                Call .WriteLong(Characters(i).Gold)
-                Call .WriteBoolean(Characters(i).criminal)
-                Call .WriteBoolean(Characters(i).dead)
-                Call .WriteBoolean(Characters(i).gameMaster)
+            For i = 1 To .AccountInfo.NumChars
+                Call .outgoingData.WriteASCIIString(.AccountInfo.AccountPJ(i).Name)
+                Call .outgoingData.WriteInteger(.AccountInfo.AccountPJ(i).body)
+                Call .outgoingData.WriteInteger(.AccountInfo.AccountPJ(i).Head)
+                Call .outgoingData.WriteInteger(.AccountInfo.AccountPJ(i).weapon)
+                Call .outgoingData.WriteInteger(.AccountInfo.AccountPJ(i).shield)
+                Call .outgoingData.WriteInteger(.AccountInfo.AccountPJ(i).helmet)
+                Call .outgoingData.WriteByte(.AccountInfo.AccountPJ(i).Class)
+                Call .outgoingData.WriteByte(.AccountInfo.AccountPJ(i).race)
+                Call .outgoingData.WriteInteger(.AccountInfo.AccountPJ(i).Map)
+                Call .outgoingData.WriteByte(.AccountInfo.AccountPJ(i).Level)
+                Call .outgoingData.WriteLong(.AccountInfo.AccountPJ(i).Gold)
+                Call .outgoingData.WriteBoolean(.AccountInfo.AccountPJ(i).criminal)
+                Call .outgoingData.WriteBoolean(.AccountInfo.AccountPJ(i).dead)
+                Call .outgoingData.WriteBoolean(.AccountInfo.AccountPJ(i).gameMaster)
             Next i
 
         End If

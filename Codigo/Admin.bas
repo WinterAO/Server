@@ -290,33 +290,24 @@ Public Sub Encarcelar(ByVal UserIndex As Integer, _
 
 End Sub
 
-Public Sub BorrarUsuario(ByVal UserIndex As Integer, ByVal UserName As String, ByVal AccountHash As String)
+Public Function BorrarUsuario(ByVal UserIndex As Integer, ByVal UserName As String) As Boolean
 
     '********************************************************************************
-    'Author: Recox
-    'Last Modification: 09/03/2020
-    '18/09/2018 CHOTS: Checks database too
-    '09/03/2020 Lorwik: Agregado chequeos PersonajeExiste y PersonajePerteneceCuenta
+    'Author: Lorwik
+    'Last Modification: 21/05/2020
     '********************************************************************************
     
     'Podria estar de mas, pero... Existe el personaje?
     If Not PersonajeExiste(UserName) Then
-        Call WriteErrorMsg(UserIndex, "El personaje no existe.")
-        Call CloseSocket(UserIndex)
-        Exit Sub
-    End If
-
-    'IMPORTANTE! - El personaje pertenece a esta cuenta?
-    If Not PersonajePerteneceCuenta(UserName, AccountHash) Then
-        Call WriteErrorMsg(UserIndex, "Ha ocurrido un error, por favor inicie sesion nuevamente.")
-        
-        Call CloseSocket(UserIndex)
-        Exit Sub
+        BorrarUsuario = False
+        Exit Function
     End If
     
     Call BorrarUsuarioDatabase(UserName)
+    
+    BorrarUsuario = True
 
-End Sub
+End Function
 
 Public Function BANCheck(ByVal Name As String) As Boolean
 
@@ -350,18 +341,6 @@ Public Function CuentaExiste(ByVal UserName As String) As Boolean
     '***************************************************
 
     CuentaExiste = CuentaExisteDatabase(UserName)
-
-End Function
-
-Public Function PersonajePerteneceCuenta(ByVal UserName As String, _
-                                         ByVal AccountHash As String) As Boolean
-
-    '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 18/10/2018
-    '***************************************************
-
-    PersonajePerteneceCuenta = PersonajePerteneceCuentaDatabase(UserName, AccountHash)
 
 End Function
 
@@ -613,7 +592,7 @@ Public Sub BanCharacter(ByVal bannerUserIndex As Integer, _
                         If (UserPriv And rank) = (.flags.Privilegios And rank) Then
                             .flags.Ban = 1
                             Call SendData(SendTarget.ToAdmins, 0, PrepareMessageConsoleMsg(.Name & " banned by the server por bannear un Administrador.", FontTypeNames.FONTTYPE_FIGHT))
-                            Call CloseSocket(bannerUserIndex)
+                            Call CloseUser(bannerUserIndex)
 
                         End If
                         
@@ -643,7 +622,7 @@ Public Sub BanCharacter(ByVal bannerUserIndex As Integer, _
                 If (UserList(tUser).flags.Privilegios And rank) = (.flags.Privilegios And rank) Then
                     .flags.Ban = 1
                     Call SendData(SendTarget.ToAdmins, 0, PrepareMessageConsoleMsg(.Name & " banned by the server por bannear un Administrador.", FontTypeNames.FONTTYPE_FIGHT))
-                    Call CloseSocket(bannerUserIndex)
+                    Call CloseUser(bannerUserIndex)
 
                 End If
                 
@@ -651,7 +630,7 @@ Public Sub BanCharacter(ByVal bannerUserIndex As Integer, _
                 
                 Call SaveBan(UserName, Reason, .Name)
                 
-                Call CloseSocket(tUser)
+                Call CloseUser(tUser)
 
             End If
 
