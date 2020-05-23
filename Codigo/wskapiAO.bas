@@ -123,7 +123,7 @@ Public Function BuscaSlotSock(ByVal S As Long) As Long
 
     On Error GoTo hayerror
     
-    If WSAPISock2Usr.count <> 0 Then ' GSZAO
+    If WSAPISock2Usr.Count <> 0 Then ' GSZAO
         BuscaSlotSock = WSAPISock2Usr.Item(CStr(S))
     Else
         BuscaSlotSock = -1
@@ -139,7 +139,7 @@ End Function
 Public Sub AgregaSlotSock(ByVal Sock As Long, ByVal Slot As Long)
     Debug.Print "AgregaSockSlot"
 
-    If WSAPISock2Usr.count > MaxUsers Then
+    If WSAPISock2Usr.Count > MaxUsers Then
         Call CloseSocket(Slot)
         Exit Sub
     End If
@@ -151,13 +151,13 @@ End Sub
 Public Sub BorraSlotSock(ByVal Sock As Long)
 
     Dim cant As Long
-        cant = WSAPISock2Usr.count
+        cant = WSAPISock2Usr.Count
 
     On Error Resume Next
 
     WSAPISock2Usr.Remove CStr(Sock)
 
-    Debug.Print "BorraSockSlot " & cant & " -> " & WSAPISock2Usr.count
+    Debug.Print "BorraSockSlot " & cant & " -> " & WSAPISock2Usr.Count
 
 End Sub
 
@@ -216,6 +216,7 @@ Public Function WndProc(ByVal hWnd As Long, ByVal msg As Long, ByVal wParam As L
                             'desconectarse sin los 10segs. CREEME.
                             Call CloseSocketSL(n)
                             Call Cerrar_Usuario(n)
+                            Call CloseAccount(n)
                             Exit Function
 
                         End If
@@ -223,6 +224,7 @@ Public Function WndProc(ByVal hWnd As Long, ByVal msg As Long, ByVal wParam As L
                     ElseIf ret = 0 Then
                         Call CloseSocketSL(n)
                         Call Cerrar_Usuario(n)
+                        Call CloseAccount(n)
 
                     End If
                     
@@ -399,7 +401,7 @@ Public Sub EventoSockAccept(ByVal SockID As Long)
         UserList(NewIndex).IP = GetAscIP(sa.sin_addr)
 
         'Busca si esta banneada la ip
-        For i = 1 To BanIps.count
+        For i = 1 To BanIps.Count
 
             If BanIps.Item(i) = UserList(NewIndex).IP Then
                 Call WriteErrorMsg(NewIndex, "Su IP se encuentra bloqueada en este servidor.")
@@ -461,9 +463,10 @@ Public Sub EventoSockClose(ByVal Slot As Integer)
         Call modCentinela.UsuarioInActivo(Slot)
     End If
 
-    If UserList(Slot).flags.UserLogged Then
+    If UserList(Slot).flags.UserLogged Or UserList(Slot).flags.AccountLogged Then
         Call CloseSocketSL(Slot)
         Call Cerrar_Usuario(Slot)
+        Call CloseAccount(Slot)
     Else
         Call CloseSocket(Slot)
     End If

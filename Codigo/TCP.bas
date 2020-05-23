@@ -828,6 +828,11 @@ Sub CloseSocket(ByVal UserIndex As Integer)
         'Si llegamos aqui, sacamos al usuario de la cuenta y reseteamos todo
         If .flags.AccountLogged Then
             Call CloseAccount(UserIndex)
+            
+        ElseIf .flags.UserLogged Then 'Llego aqui estando logeado en un PJ?
+            Call CloseUser(UserIndex)
+            Call CloseAccount(UserIndex)
+            
         Else
             Call ResetUserSlot(UserIndex)
         End If

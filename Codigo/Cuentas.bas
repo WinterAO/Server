@@ -29,7 +29,7 @@ Public Sub LoginAccountDatabase(ByVal UserIndex As Integer, ByVal UserName As St
         'Guardo la información de la cuenta
         .AccountInfo.ID = CInt(Database_RecordSet!ID)
         .AccountInfo.UserName = Database_RecordSet!UserName
-        .AccountInfo.password = Database_RecordSet!password
+        .AccountInfo.Password = Database_RecordSet!Password
         .AccountInfo.salt = Database_RecordSet!salt
         .AccountInfo.Hash = Database_RecordSet!Hash
         .AccountInfo.Gemas = CLng(Database_RecordSet!Gemas)
@@ -105,7 +105,7 @@ Public Sub CloseAccount(ByVal UserIndex As Integer)
         'Guardo la información de la cuenta
         .AccountInfo.ID = 0
         .AccountInfo.UserName = vbNullString
-        .AccountInfo.password = vbNullString
+        .AccountInfo.Password = vbNullString
         .AccountInfo.salt = vbNullString
         .AccountInfo.Hash = vbNullString
         .AccountInfo.Gemas = 0
@@ -131,7 +131,6 @@ Public Sub CloseAccount(ByVal UserIndex As Integer)
         
         '¿Tiene algun personaje conectado?
         If .flags.UserLogged Then
-            If NumUsers > 0 Then NumUsers = NumUsers - 1
             Call CloseUser(UserIndex)
         End If
         
@@ -387,7 +386,7 @@ Public Function GetAccountPassword(ByVal AccountName As String) As String
 
     End If
 
-    GetAccountPassword = Database_RecordSet!password
+    GetAccountPassword = Database_RecordSet!Password
     Set Database_RecordSet = Nothing
     Call Database_Close
 
@@ -419,7 +418,7 @@ Public Function GetUserPassword(ByVal UserName As String) As String
 
     End If
 
-    GetUserPassword = Database_RecordSet!password
+    GetUserPassword = Database_RecordSet!Password
     Set Database_RecordSet = Nothing
     Call Database_Close
 

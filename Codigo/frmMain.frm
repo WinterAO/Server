@@ -1,13 +1,13 @@
 VERSION 5.00
 Object = "{48E59290-9880-11CF-9754-00AA00C00908}#1.0#0"; "MSINET.OCX"
 Begin VB.Form frmMain 
-   BackColor       =   &H00FFC0C0&
+   BackColor       =   &H00000000&
    BorderStyle     =   3  'Fixed Dialog
-   Caption         =   "Argentum Online"
-   ClientHeight    =   6975
+   Caption         =   "WinterAO Resurrection Server"
+   ClientHeight    =   6465
    ClientLeft      =   1950
    ClientTop       =   1515
-   ClientWidth     =   10425
+   ClientWidth     =   9885
    ControlBox      =   0   'False
    FillColor       =   &H00C0C0C0&
    BeginProperty Font 
@@ -25,44 +25,44 @@ Begin VB.Form frmMain
    MaxButton       =   0   'False
    MinButton       =   0   'False
    PaletteMode     =   1  'UseZOrder
-   ScaleHeight     =   6975
-   ScaleWidth      =   10425
+   ScaleHeight     =   6465
+   ScaleWidth      =   9885
    StartUpPosition =   2  'CenterScreen
    WindowState     =   1  'Minimized
    Begin VB.TextBox txtNumCuentas 
       Alignment       =   2  'Center
       BackColor       =   &H00C0FFFF&
       Height          =   255
-      Left            =   9360
+      Left            =   8040
       Locked          =   -1  'True
-      TabIndex        =   27
+      TabIndex        =   25
       Text            =   "0"
-      Top             =   480
+      Top             =   240
       Width           =   975
    End
    Begin VB.CommandButton cmdCommand3 
       Caption         =   "SpawnBOT"
       Height          =   360
       Left            =   5160
-      TabIndex        =   25
-      Top             =   6480
+      TabIndex        =   23
+      Top             =   6000
       Width           =   1110
    End
    Begin VB.TextBox txtRecordOnline 
       Alignment       =   2  'Center
       BackColor       =   &H00C0FFFF&
       Height          =   255
-      Left            =   2280
+      Left            =   8040
       Locked          =   -1  'True
-      TabIndex        =   17
+      TabIndex        =   16
       Text            =   "0"
-      Top             =   120
+      Top             =   960
       Width           =   975
    End
    Begin VB.TextBox txtStatus 
       BackColor       =   &H00400000&
       BeginProperty Font 
-         Name            =   "Comic Sans MS"
+         Name            =   "Tahoma"
          Size            =   12
          Charset         =   0
          Weight          =   700
@@ -71,17 +71,17 @@ Begin VB.Form frmMain
          Strikethrough   =   0   'False
       EndProperty
       ForeColor       =   &H0080FFFF&
-      Height          =   1575
-      Left            =   5280
+      Height          =   2055
+      Left            =   5160
       MultiLine       =   -1  'True
       TabIndex        =   15
       Text            =   "frmMain.frx":1042
-      Top             =   4800
-      Width           =   4935
+      Top             =   3840
+      Width           =   4575
    End
    Begin InetCtlsObjects.Inet Inet1 
-      Left            =   9600
-      Top             =   2640
+      Left            =   4200
+      Top             =   1680
       _ExtentX        =   1005
       _ExtentY        =   1005
       _Version        =   393216
@@ -93,37 +93,38 @@ Begin VB.Form frmMain
       Left            =   120
       Style           =   1  'Graphical
       TabIndex        =   13
-      Top             =   6480
+      Top             =   6000
       Width           =   4935
    End
    Begin VB.CheckBox chkServerHabilitado 
-      BackColor       =   &H00FFC0C0&
+      BackColor       =   &H00000000&
       Caption         =   "Server Habilitado Solo Gms"
+      ForeColor       =   &H00FFFFFF&
       Height          =   255
       Left            =   120
       TabIndex        =   12
-      Top             =   4440
+      Top             =   3960
       Width           =   2775
    End
    Begin VB.TextBox txtNumUsers 
       Alignment       =   2  'Center
       BackColor       =   &H00C0FFFF&
       Height          =   255
-      Left            =   9360
+      Left            =   8040
       Locked          =   -1  'True
       TabIndex        =   11
       Text            =   "0"
-      Top             =   120
+      Top             =   600
       Width           =   975
    End
    Begin VB.CommandButton cmdSystray 
-      BackColor       =   &H00FFC0C0&
+      BackColor       =   &H00E0E0E0&
       Caption         =   "Systray"
       Height          =   375
       Left            =   120
       Style           =   1  'Graphical
       TabIndex        =   9
-      Top             =   5880
+      Top             =   5400
       Width           =   1335
    End
    Begin VB.CommandButton cmdApagarServidor 
@@ -133,42 +134,43 @@ Begin VB.Form frmMain
       Left            =   1560
       Style           =   1  'Graphical
       TabIndex        =   8
-      Top             =   5880
+      Top             =   5400
       Width           =   3495
    End
    Begin VB.CommandButton cmdConfiguracion 
-      BackColor       =   &H00FFC0C0&
+      BackColor       =   &H00E0E0E0&
       Caption         =   "Configuracion General"
       Height          =   375
       Left            =   120
       Style           =   1  'Graphical
       TabIndex        =   7
-      Top             =   5400
+      Top             =   4920
       Width           =   4935
    End
    Begin VB.CommandButton cmdDump 
-      BackColor       =   &H00FFC0C0&
+      BackColor       =   &H00E0E0E0&
       Caption         =   "Crear Log Critico de Usuarios"
       Height          =   375
       Left            =   120
       Style           =   1  'Graphical
       TabIndex        =   6
-      Top             =   4920
+      Top             =   4440
       Width           =   4935
    End
    Begin VB.Timer AutoSave 
       Enabled         =   0   'False
       Interval        =   60000
       Left            =   360
-      Top             =   2160
+      Top             =   1680
    End
    Begin VB.Frame Frame1 
-      BackColor       =   &H00FFC0C0&
+      BackColor       =   &H00000000&
       Caption         =   "Mensajea todos los clientes (Solo testeo)"
+      ForeColor       =   &H00FFFFFF&
       Height          =   3615
       Left            =   120
       TabIndex        =   1
-      Top             =   720
+      Top             =   240
       Width           =   4935
       Begin VB.Timer GameTimer 
          Interval        =   40
@@ -202,7 +204,7 @@ Begin VB.Form frmMain
          Width           =   4695
       End
       Begin VB.CommandButton Command2 
-         BackColor       =   &H00FFC0C0&
+         BackColor       =   &H00E0E0E0&
          Caption         =   "Enviar por Consola"
          BeginProperty Font 
             Name            =   "Tahoma"
@@ -221,7 +223,7 @@ Begin VB.Form frmMain
          Width           =   2295
       End
       Begin VB.CommandButton Command1 
-         BackColor       =   &H00FFC0C0&
+         BackColor       =   &H00E0E0E0&
          Caption         =   "Enviar por Pop-Up"
          BeginProperty Font 
             Name            =   "Tahoma"
@@ -263,11 +265,11 @@ Begin VB.Form frmMain
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      ForeColor       =   &H00000000&
+      ForeColor       =   &H00FFFFFF&
       Height          =   195
-      Left            =   6360
-      TabIndex        =   26
-      Top             =   480
+      Left            =   5280
+      TabIndex        =   24
+      Top             =   240
       Width           =   2820
    End
    Begin VB.Label lblLloviendoInfo 
@@ -276,9 +278,9 @@ Begin VB.Form frmMain
       Caption         =   "Esta lloviendo? Cargando..."
       ForeColor       =   &H00FFFF80&
       Height          =   255
-      Left            =   5400
-      TabIndex        =   24
-      Top             =   4440
+      Left            =   5160
+      TabIndex        =   22
+      Top             =   3480
       Width           =   4455
    End
    Begin VB.Label lblRespawnNpcs 
@@ -287,9 +289,9 @@ Begin VB.Form frmMain
       Caption         =   "Tiempo restante para Respawn Npc : Cargando..."
       ForeColor       =   &H00E0E0E0&
       Height          =   255
-      Left            =   5400
-      TabIndex        =   23
-      Top             =   3720
+      Left            =   5160
+      TabIndex        =   21
+      Top             =   2760
       Width           =   4455
    End
    Begin VB.Label lblCharSave 
@@ -298,9 +300,9 @@ Begin VB.Form frmMain
       Caption         =   "Tiempo restante para Char Save : Cargando..."
       ForeColor       =   &H000080FF&
       Height          =   255
-      Left            =   5400
-      TabIndex        =   22
-      Top             =   3360
+      Left            =   5160
+      TabIndex        =   20
+      Top             =   2400
       Width           =   4455
    End
    Begin VB.Label lblWorldSave 
@@ -309,30 +311,10 @@ Begin VB.Form frmMain
       Caption         =   "Tiempo Restante para World Save: Cargando..."
       ForeColor       =   &H0080FF80&
       Height          =   255
-      Left            =   5400
-      TabIndex        =   21
-      Top             =   4080
+      Left            =   5160
+      TabIndex        =   19
+      Top             =   3120
       Width           =   4455
-   End
-   Begin VB.Label lblFooter 
-      Alignment       =   2  'Center
-      BackColor       =   &H80000007&
-      Caption         =   "http://www.ArgentumOnline.org"
-      BeginProperty Font 
-         Name            =   "Tahoma"
-         Size            =   11.25
-         Charset         =   0
-         Weight          =   700
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
-      ForeColor       =   &H00E0E0E0&
-      Height          =   375
-      Left            =   6360
-      TabIndex        =   20
-      Top             =   6480
-      Width           =   3975
    End
    Begin VB.Label lblIpHelpText 
       Appearance      =   0  'Flat
@@ -350,11 +332,11 @@ Begin VB.Form frmMain
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      ForeColor       =   &H00000000&
+      ForeColor       =   &H00FFFFFF&
       Height          =   225
-      Left            =   5400
-      TabIndex        =   19
-      Top             =   2880
+      Left            =   5280
+      TabIndex        =   18
+      Top             =   1920
       Width           =   2970
    End
    Begin VB.Label lblRecordOnline 
@@ -372,33 +354,12 @@ Begin VB.Form frmMain
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      ForeColor       =   &H00000000&
+      ForeColor       =   &H00FFFFFF&
       Height          =   195
-      Left            =   240
-      TabIndex        =   18
-      Top             =   120
+      Left            =   5880
+      TabIndex        =   17
+      Top             =   960
       Width           =   1965
-   End
-   Begin VB.Label lblIpTitle 
-      Alignment       =   2  'Center
-      BackStyle       =   0  'Transparent
-      BorderStyle     =   1  'Fixed Single
-      Caption         =   "IP:PUERTO - Comparti esta informacion a quien quieras que se conecte a tu servidor."
-      BeginProperty Font 
-         Name            =   "Comic Sans MS"
-         Size            =   14.25
-         Charset         =   0
-         Weight          =   700
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
-      ForeColor       =   &H00000080&
-      Height          =   1215
-      Left            =   5280
-      TabIndex        =   16
-      Top             =   840
-      Width           =   4695
    End
    Begin VB.Label lblIp 
       Alignment       =   2  'Center
@@ -406,7 +367,7 @@ Begin VB.Form frmMain
       BorderStyle     =   1  'Fixed Single
       Caption         =   "245.234.555.777:1234"
       BeginProperty Font 
-         Name            =   "Consolas"
+         Name            =   "Tahoma"
          Size            =   18
          Charset         =   0
          Weight          =   400
@@ -414,11 +375,11 @@ Begin VB.Form frmMain
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      Height          =   615
-      Left            =   5400
+      Height          =   495
+      Left            =   5280
       MousePointer    =   3  'I-Beam
       TabIndex        =   14
-      Top             =   2160
+      Top             =   1320
       Width           =   4335
    End
    Begin VB.Label Escuch 
@@ -436,9 +397,9 @@ Begin VB.Form frmMain
       EndProperty
       ForeColor       =   &H000040C0&
       Height          =   375
-      Left            =   8520
+      Left            =   8280
       TabIndex        =   5
-      Top             =   3000
+      Top             =   1920
       Visible         =   0   'False
       Width           =   1695
    End
@@ -457,11 +418,11 @@ Begin VB.Form frmMain
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      ForeColor       =   &H00000000&
+      ForeColor       =   &H00FFFFFF&
       Height          =   195
-      Left            =   6720
+      Left            =   5400
       TabIndex        =   0
-      Top             =   120
+      Top             =   600
       Width           =   2460
    End
    Begin VB.Menu mnuPopUp 
@@ -581,13 +542,12 @@ Sub CheckIdleUser()
             If .ConnID <> -1 And .flags.UserLogged = False And .flags.AccountLogged Then
                 'Actualiza el contador de inactividad
                 .Counters.IdleCount = .Counters.IdleCount + 1
-                
+
                 If .Counters.IdleCount >= IdleLimit Then
                     Call WriteShowMessageBox(iUserIndex, "Has sido desconectado por inactividad.")
                     Call CloseSocket(iUserIndex)
                 End If
             End If
-            
             
             'Conexion activa? y es un usuario loggeado?
             If .ConnID <> -1 And .flags.UserLogged Then
