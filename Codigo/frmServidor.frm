@@ -495,9 +495,9 @@ Private Sub cmdUnbanAllIps_Click()
 
     If sENtrada = "estoy DE acuerdo" Then
         
-        n = BanIps.count
+        n = BanIps.Count
 
-        For i = 1 To BanIps.count
+        For i = 1 To BanIps.Count
             Call BanIpQuita(BanIps(i))
         Next i
         

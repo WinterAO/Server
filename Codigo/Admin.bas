@@ -91,8 +91,6 @@ Public IntervaloLanzaHechizo             As Integer
 
 Public IntervaloNPCPuedeAtacar           As Integer
 
-Public IntervaloNPCAI                    As Integer
-
 Public IntervaloInvocacion               As Integer
 
 Public IntervaloOculto                   As Integer '[Nacho]

@@ -291,7 +291,7 @@ Public Sub GameTimer()
                 
                 'Inactividad de cuentas
                 ElseIf .ConnIDValida And .flags.UserLogged = False And .flags.AccountLogged Then
-                    .Counters.IdleCount = .Counters.IdleCount + 1
+                    '.Counters.IdleCount = .Counters.IdleCount + 1
                     
                     If .Counters.IdleCount > IntervaloParaConexion Then
                         .Counters.IdleCount = 0

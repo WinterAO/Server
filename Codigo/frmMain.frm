@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{48E59290-9880-11CF-9754-00AA00C00908}#1.0#0"; "MSINET.OCX"
+Object = "{48E59290-9880-11CF-9754-00AA00C00908}#1.0#0"; "MSINET.ocx"
 Begin VB.Form frmMain 
    BackColor       =   &H00000000&
    BorderStyle     =   3  'Fixed Dialog
@@ -178,7 +178,7 @@ Begin VB.Form frmMain
          Top             =   1440
       End
       Begin VB.Timer TIMER_AI 
-         Interval        =   340
+         Interval        =   500
          Left            =   1680
          Top             =   1440
       End
@@ -542,7 +542,7 @@ Sub CheckIdleUser()
             If .ConnID <> -1 And .flags.UserLogged = False And .flags.AccountLogged Then
                 'Actualiza el contador de inactividad
                 .Counters.IdleCount = .Counters.IdleCount + 1
-
+                
                 If .Counters.IdleCount >= IdleLimit Then
                     Call WriteShowMessageBox(iUserIndex, "Has sido desconectado por inactividad.")
                     Call CloseSocket(iUserIndex)
