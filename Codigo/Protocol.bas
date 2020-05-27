@@ -10740,8 +10740,10 @@ Private Sub HandleEditChar(ByVal UserIndex As Integer)
                                 Raza = eRaza.Gnomo
                                 
                             Case "ORCO"
-                                Raza = eRaza.orco
+                                Raza = eRaza.Orco
 
+                            Case "VAMPIRO"
+                                Raza = eRaza.Vampiro
                             Case Else
                                 Raza = 0
 

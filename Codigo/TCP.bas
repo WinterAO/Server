@@ -83,6 +83,9 @@ Sub DarCuerpo(ByVal UserIndex As Integer)
                     
                 Case eRaza.Orco
                     NewBody = 631
+                    
+                Case eRaza.Vampiro
+                    NewBody = 633
 
             End Select
 
@@ -107,6 +110,9 @@ Sub DarCuerpo(ByVal UserIndex As Integer)
                     
                 Case eRaza.Orco
                     NewBody = 632
+                    
+                Case eRaza.Vampiro
+                    NewBody = 634
 
             End Select
 
@@ -143,6 +149,9 @@ Private Function ValidarCabeza(ByVal UserRaza As Byte, _
                     
                 Case eRaza.Orco
                     ValidarCabeza = (Head >= ORCO_H_PRIMER_CABEZA And Head <= ORCO_H_ULTIMA_CABEZA)
+                    
+                Case eRaza.Vampiro
+                    ValidarCabeza = (Head >= VAMPIRO_H_PRIMER_CABEZA And Head <= VAMPIRO_H_ULTIMA_CABEZA)
 
             End Select
     
@@ -167,6 +176,10 @@ Private Function ValidarCabeza(ByVal UserRaza As Byte, _
                     
                 Case eRaza.Orco
                     ValidarCabeza = (Head >= ORCO_M_PRIMER_CABEZA And Head <= ORCO_M_ULTIMA_CABEZA)
+                    
+                Case eRaza.Vampiro
+                    ValidarCabeza = (Head >= VAMPIRO_M_PRIMER_CABEZA And Head <= VAMPIRO_M_ULTIMA_CABEZA)
+
 
             End Select
 
@@ -618,7 +631,7 @@ Private Sub AddItemsToNewUser(ByVal UserIndex As Integer, ByVal UserClase As eCl
                 .Invent.Object(Slot).ObjIndex = 463
             Case eRaza.Elfo
                 .Invent.Object(Slot).ObjIndex = 464
-            Case eRaza.Drow
+            Case eRaza.Drow, eRaza.Vampiro
                 .Invent.Object(Slot).ObjIndex = 465
             Case eRaza.Enano, eRaza.Gnomo
                 .Invent.Object(Slot).ObjIndex = 466

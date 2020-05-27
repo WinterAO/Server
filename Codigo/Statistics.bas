@@ -180,6 +180,9 @@ Public Sub StoreFrag(ByVal killer As Integer, ByVal victim As Integer)
             
         Case eRaza.Orco
             Raza = 6
+            
+        Case eRaza.Vampiro
+            Raza = 7
         
         Case Else
             Exit Sub
