@@ -10738,6 +10738,9 @@ Private Sub HandleEditChar(ByVal UserIndex As Integer)
 
                             Case "GNOMO"
                                 Raza = eRaza.Gnomo
+                                
+                            Case "ORCO"
+                                Raza = eRaza.orco
 
                             Case Else
                                 Raza = 0

@@ -212,6 +212,7 @@ Public Enum eRaza
     Drow
     Gnomo
     Enano
+    Orco
 
 End Enum
 
@@ -527,7 +528,7 @@ Public Const NUMCLASES      As Byte = 12
 
 ''
 ' Cantidad de Razas
-Public Const NUMRAZAS       As Byte = 5
+Public Const NUMRAZAS       As Byte = 6
 
 ''
 ' Valor maximo de cada skill
@@ -1570,7 +1571,7 @@ Public Const MAXPJACCOUNTS As Byte = 10
 Public Type AccountUser
     ID As Long
     UserName As String
-    password As String
+    Password As String
     salt As String
     Hash As String
     status As Boolean
@@ -2364,6 +2365,10 @@ Public Const GNOMO_H_PRIMER_CABEZA                  As Integer = 401
 
 Public Const GNOMO_H_ULTIMA_CABEZA                  As Integer = 416
 
+Public Const ORCO_H_PRIMER_CABEZA                  As Integer = 515
+
+Public Const ORCO_H_ULTIMA_CABEZA                  As Integer = 544
+
 '**************************************************
 Public Const HUMANO_M_PRIMER_CABEZA                 As Integer = 70
 
@@ -2384,6 +2389,10 @@ Public Const ENANO_M_ULTIMA_CABEZA                  As Integer = 384
 Public Const GNOMO_M_PRIMER_CABEZA                  As Integer = 470
 
 Public Const GNOMO_M_ULTIMA_CABEZA                  As Integer = 484
+
+Public Const ORCO_M_PRIMER_CABEZA                  As Integer = 545
+
+Public Const ORCO_M_ULTIMA_CABEZA                  As Integer = 573
 
 ' Por ahora la dejo constante.. SI se quisiera extender la propiedad de paralziar, se podria hacer
 ' una nueva variable en el dat.

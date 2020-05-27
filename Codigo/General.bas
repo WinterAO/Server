@@ -92,6 +92,9 @@ Public Function CuerpoDesnudo(ByVal Genero As eGenero, ByVal Raza As eRaza)
 
                     Case eRaza.Enano
                         CuerpoDesnudo = 53
+                        
+                    Case eRaza.Orco
+                        CuerpoDesnudo = 631
 
                 End Select
 
@@ -113,6 +116,9 @@ Public Function CuerpoDesnudo(ByVal Genero As eGenero, ByVal Raza As eRaza)
 
                     Case eRaza.Enano
                         CuerpoDesnudo = 60
+                        
+                    Case eRaza.Orco
+                        CuerpoDesnudo = 632
 
                 End Select
 
@@ -448,6 +454,7 @@ Private Sub LoadConstants()
     ListaRazas(eRaza.Drow) = "Drow"
     ListaRazas(eRaza.Gnomo) = "Gnomo"
     ListaRazas(eRaza.Enano) = "Enano"
+    ListaRazas(eRaza.Orco) = "Orco"
     
     ' Classes
     ListaClases(eClass.Mage) = "Mago"

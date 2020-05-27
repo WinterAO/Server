@@ -24,6 +24,11 @@ GnomoAgilidad=+3
 GnomoInteligencia=+4
 GnomoCarisma=+1
 GnomoConstitucion=0
+OrcoFuerza=5
+OrcoAgilidad=-2
+OrcoInteligencia=-5
+OrcoCarisma=-2
+OrcoConstitucion=3
 
 [MODEVASION]
 Guerrero=1
