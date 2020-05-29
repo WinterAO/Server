@@ -549,10 +549,10 @@ Public Const NUMCIUDADES    As Byte = 6
 '
 Public Enum eHeading
 
-    NORTH = 1
-    EAST = 2
-    SOUTH = 3
-    WEST = 4
+    SOUTH = 1
+    NORTH = 2
+    WEST = 3
+    EAST = 4
 
 End Enum
 
@@ -576,7 +576,7 @@ Public Const vlProleta     As Integer = 2
 '%%%%%%%%%% CONSTANTES DE INDICES %%%%%%%%%%%%%%%
 Public Const iCuerpoMuerto As Integer = 8
 
-Public Const iCabezaMuerto As Integer = 500
+Public Const iCabezaMuerto As Integer = 622
 
 Public Const iORO          As Byte = 12
 
@@ -2366,13 +2366,13 @@ Public Const GNOMO_H_PRIMER_CABEZA                  As Integer = 401
 
 Public Const GNOMO_H_ULTIMA_CABEZA                  As Integer = 416
 
-Public Const ORCO_H_PRIMER_CABEZA                   As Integer = 515
+Public Const ORCO_H_PRIMER_CABEZA                   As Integer = 501
 
-Public Const ORCO_H_ULTIMA_CABEZA                   As Integer = 544
+Public Const ORCO_H_ULTIMA_CABEZA                   As Integer = 530
 
-Public Const VAMPIRO_H_PRIMER_CABEZA                As Integer = 574
+Public Const VAMPIRO_H_PRIMER_CABEZA                As Integer = 623
 
-Public Const VAMPIRO_H_ULTIMA_CABEZA                As Integer = 583
+Public Const VAMPIRO_H_ULTIMA_CABEZA                As Integer = 631
 
 '**************************************************
 Public Const HUMANO_M_PRIMER_CABEZA                 As Integer = 70
@@ -2395,13 +2395,13 @@ Public Const GNOMO_M_PRIMER_CABEZA                  As Integer = 470
 
 Public Const GNOMO_M_ULTIMA_CABEZA                  As Integer = 484
 
-Public Const ORCO_M_PRIMER_CABEZA                   As Integer = 545
+Public Const ORCO_M_PRIMER_CABEZA                   As Integer = 570
 
-Public Const ORCO_M_ULTIMA_CABEZA                   As Integer = 573
+Public Const ORCO_M_ULTIMA_CABEZA                   As Integer = 599
 
-Public Const VAMPIRO_M_PRIMER_CABEZA                As Integer = 584
+Public Const VAMPIRO_M_PRIMER_CABEZA                As Integer = 632
 
-Public Const VAMPIRO_M_ULTIMA_CABEZA                As Integer = 591
+Public Const VAMPIRO_M_ULTIMA_CABEZA                As Integer = 640
 
 ' Por ahora la dejo constante.. SI se quisiera extender la propiedad de paralziar, se podria hacer
 ' una nueva variable en el dat.
