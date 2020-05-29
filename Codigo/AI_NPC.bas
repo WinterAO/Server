@@ -90,7 +90,7 @@ Private Sub GuardiasAI(ByVal NpcIndex As Integer, ByVal DelCaos As Boolean)
     
     With Npclist(NpcIndex)
 
-        For headingloop = eHeading.NORTH To eHeading.WEST
+        For headingloop = eHeading.SOUTH To eHeading.EAST
             nPos = .Pos
 
             If .flags.Inmovilizado = 0 Or headingloop = .Char.heading Then
@@ -192,7 +192,7 @@ Private Sub HostilMalvadoAI(ByVal NpcIndex As Integer)
     
     With Npclist(NpcIndex)
 
-        For headingloop = eHeading.NORTH To eHeading.WEST
+        For headingloop = eHeading.SOUTH To eHeading.EAST
             nPos = .Pos
 
             If .flags.Inmovilizado = 0 Or .Char.heading = headingloop Then
@@ -289,7 +289,7 @@ Private Sub HostilBuenoAI(ByVal NpcIndex As Integer)
     
     With Npclist(NpcIndex)
 
-        For headingloop = eHeading.NORTH To eHeading.WEST
+        For headingloop = eHeading.SOUTH To eHeading.EAST
             nPos = .Pos
 
             If .flags.Inmovilizado = 0 Or .Char.heading = headingloop Then
@@ -433,7 +433,7 @@ Private Sub IrUsuarioCercano(ByVal NpcIndex As Integer)
                                      'Existe el camino?
                                      If .PFINFO.NoPath Then 'Si no existe nos movemos al azar
                                          'Move randomly
-                                         Call MoveNPCChar(NpcIndex, RandomNumber(eHeading.NORTH, eHeading.WEST))
+                                         Call MoveNPCChar(NpcIndex, RandomNumber(eHeading.SOUTH, eHeading.EAST))
                                      End If
                                  Else
                                      If Not PathEnd(NpcIndex) Then
@@ -509,7 +509,7 @@ Private Sub IrUsuarioCercano(ByVal NpcIndex As Integer)
             'Si llega aca es que no hab�a ning�n usuario cercano vivo.
             'A bailar. Pablo (ToxicWaste)
             If RandomNumber(0, 10) = 0 Then
-                Call MoveNPCChar(NpcIndex, CByte(RandomNumber(eHeading.NORTH, eHeading.WEST)))
+                Call MoveNPCChar(NpcIndex, CByte(RandomNumber(eHeading.SOUTH, eHeading.EAST)))
 
             End If
             
@@ -1154,7 +1154,7 @@ Sub NPCAI(ByVal NpcIndex As Integer)
                 If .flags.Inmovilizado = 1 Then Exit Sub
                 If .NPCtype = eNPCType.GuardiaReal Then
                     If RandomNumber(1, 12) = 3 Then
-                        Call MoveNPCChar(NpcIndex, CByte(RandomNumber(eHeading.NORTH, eHeading.WEST)))
+                        Call MoveNPCChar(NpcIndex, CByte(RandomNumber(eHeading.SOUTH, eHeading.EAST)))
 
                     End If
                     
@@ -1163,7 +1163,7 @@ Sub NPCAI(ByVal NpcIndex As Integer)
                 ElseIf .NPCtype = eNPCType.Guardiascaos Then
 
                     If RandomNumber(1, 12) = 3 Then
-                        Call MoveNPCChar(NpcIndex, CByte(RandomNumber(eHeading.NORTH, eHeading.WEST)))
+                        Call MoveNPCChar(NpcIndex, CByte(RandomNumber(eHeading.SOUTH, eHeading.EAST)))
 
                     End If
                     
@@ -1172,7 +1172,7 @@ Sub NPCAI(ByVal NpcIndex As Integer)
                 Else
 
                     If RandomNumber(1, 12) = 3 Then
-                        Call MoveNPCChar(NpcIndex, CByte(RandomNumber(eHeading.NORTH, eHeading.WEST)))
+                        Call MoveNPCChar(NpcIndex, CByte(RandomNumber(eHeading.SOUTH, eHeading.EAST)))
 
                     End If
 
@@ -1196,7 +1196,7 @@ Sub NPCAI(ByVal NpcIndex As Integer)
                 Call SeguirAmo(NpcIndex)
 
                 If RandomNumber(1, 12) = 3 Then
-                    Call MoveNPCChar(NpcIndex, CByte(RandomNumber(eHeading.NORTH, eHeading.WEST)))
+                    Call MoveNPCChar(NpcIndex, CByte(RandomNumber(eHeading.SOUTH, eHeading.EAST)))
 
                 End If
             
@@ -1215,7 +1215,7 @@ Sub NPCAI(ByVal NpcIndex As Integer)
                     'Existe el camino?
                     If .PFINFO.NoPath Then 'Si no existe nos movemos al azar
                         'Move randomly
-                        Call MoveNPCChar(NpcIndex, RandomNumber(eHeading.NORTH, eHeading.WEST))
+                        Call MoveNPCChar(NpcIndex, RandomNumber(eHeading.SOUTH, eHeading.EAST))
 
                     End If
 

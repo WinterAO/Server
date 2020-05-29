@@ -212,6 +212,8 @@ Public Enum eRaza
     Drow
     Gnomo
     Enano
+    Orco
+    Vampiro
 
 End Enum
 
@@ -527,7 +529,7 @@ Public Const NUMCLASES      As Byte = 12
 
 ''
 ' Cantidad de Razas
-Public Const NUMRAZAS       As Byte = 5
+Public Const NUMRAZAS       As Byte = 7
 
 ''
 ' Valor maximo de cada skill
@@ -547,10 +549,10 @@ Public Const NUMCIUDADES    As Byte = 6
 '
 Public Enum eHeading
 
-    NORTH = 1
-    EAST = 2
-    SOUTH = 3
-    WEST = 4
+    SOUTH = 1
+    NORTH = 2
+    WEST = 3
+    EAST = 4
 
 End Enum
 
@@ -574,7 +576,7 @@ Public Const vlProleta     As Integer = 2
 '%%%%%%%%%% CONSTANTES DE INDICES %%%%%%%%%%%%%%%
 Public Const iCuerpoMuerto As Integer = 8
 
-Public Const iCabezaMuerto As Integer = 500
+Public Const iCabezaMuerto As Integer = 622
 
 Public Const iORO          As Byte = 12
 
@@ -1570,7 +1572,7 @@ Public Const MAXPJACCOUNTS As Byte = 10
 Public Type AccountUser
     ID As Long
     UserName As String
-    password As String
+    Password As String
     salt As String
     Hash As String
     status As Boolean
@@ -2364,6 +2366,14 @@ Public Const GNOMO_H_PRIMER_CABEZA                  As Integer = 401
 
 Public Const GNOMO_H_ULTIMA_CABEZA                  As Integer = 416
 
+Public Const ORCO_H_PRIMER_CABEZA                   As Integer = 501
+
+Public Const ORCO_H_ULTIMA_CABEZA                   As Integer = 530
+
+Public Const VAMPIRO_H_PRIMER_CABEZA                As Integer = 623
+
+Public Const VAMPIRO_H_ULTIMA_CABEZA                As Integer = 631
+
 '**************************************************
 Public Const HUMANO_M_PRIMER_CABEZA                 As Integer = 70
 
@@ -2384,6 +2394,14 @@ Public Const ENANO_M_ULTIMA_CABEZA                  As Integer = 384
 Public Const GNOMO_M_PRIMER_CABEZA                  As Integer = 470
 
 Public Const GNOMO_M_ULTIMA_CABEZA                  As Integer = 484
+
+Public Const ORCO_M_PRIMER_CABEZA                   As Integer = 570
+
+Public Const ORCO_M_ULTIMA_CABEZA                   As Integer = 599
+
+Public Const VAMPIRO_M_PRIMER_CABEZA                As Integer = 632
+
+Public Const VAMPIRO_M_ULTIMA_CABEZA                As Integer = 640
 
 ' Por ahora la dejo constante.. SI se quisiera extender la propiedad de paralziar, se podria hacer
 ' una nueva variable en el dat.

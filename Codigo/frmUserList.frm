@@ -169,14 +169,14 @@ End Sub
 
 Private Sub List1_Click()
 
-    Dim userindex As Integer
+    Dim UserIndex As Integer
 
     If List1.ListIndex <> -1 Then
-        userindex = List1.ItemData(List1.ListIndex)
+        UserIndex = List1.ItemData(List1.ListIndex)
 
-        If userindex > 0 And userindex <= MaxUsers Then
+        If UserIndex > 0 And UserIndex <= MaxUsers Then
 
-            With UserList(userindex)
+            With UserList(UserIndex)
                 Text1.Text = "UserLogged: " & .flags.UserLogged & vbCrLf
                 Text1.Text = Text1.Text & "IdleCount: " & .Counters.IdleCount & vbCrLf
                 Text1.Text = Text1.Text & "ConnId: " & .ConnID & vbCrLf

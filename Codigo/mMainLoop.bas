@@ -291,13 +291,13 @@ Public Sub GameTimer()
                 
                 'Inactividad de cuentas
                 ElseIf .ConnIDValida And .flags.UserLogged = False And .flags.AccountLogged Then
-                    .Counters.IdleCount = .Counters.IdleCount + 1
-
+                    '.Counters.IdleCount = .Counters.IdleCount + 1
+                    
                     If .Counters.IdleCount > IntervaloParaConexion Then
                         .Counters.IdleCount = 0
                         Call CloseSocket(iUserIndex)
-
                     End If
+                    
                 Else 'no esta logeado?
                     'Inactive players will be removed!
                     .Counters.IdleCount = .Counters.IdleCount + 1
@@ -370,7 +370,7 @@ Public Sub PasarSegundo()
                     .Counters.Salir = .Counters.Salir - 1
 
                     If .Counters.Salir <= 0 Then
-                        Call WriteConsoleMsg(i, "Gracias por jugar Argentum Online", FontTypeNames.FONTTYPE_INFO)
+                        Call WriteConsoleMsg(i, "Gracias por jugar WinterAO", FontTypeNames.FONTTYPE_INFO)
                         Call WriteDisconnect(i)
                         Call FlushBuffer(i)
                         Call CloseUser(i)

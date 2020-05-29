@@ -92,6 +92,12 @@ Public Function CuerpoDesnudo(ByVal Genero As eGenero, ByVal Raza As eRaza)
 
                     Case eRaza.Enano
                         CuerpoDesnudo = 53
+                        
+                    Case eRaza.Orco
+                        CuerpoDesnudo = 631
+                        
+                    Case eRaza.Vampiro
+                        CuerpoDesnudo = 633
 
                 End Select
 
@@ -113,6 +119,12 @@ Public Function CuerpoDesnudo(ByVal Genero As eGenero, ByVal Raza As eRaza)
 
                     Case eRaza.Enano
                         CuerpoDesnudo = 60
+                        
+                    Case eRaza.Orco
+                        CuerpoDesnudo = 632
+                        
+                    Case eRaza.Vampiro
+                        CuerpoDesnudo = 634
 
                 End Select
 
@@ -448,6 +460,8 @@ Private Sub LoadConstants()
     ListaRazas(eRaza.Drow) = "Drow"
     ListaRazas(eRaza.Gnomo) = "Gnomo"
     ListaRazas(eRaza.Enano) = "Enano"
+    ListaRazas(eRaza.Orco) = "Orco"
+    ListaRazas(eRaza.Vampiro) = "Vampiro"
     
     ' Classes
     ListaClases(eClass.Mage) = "Mago"
@@ -1765,6 +1779,7 @@ Private Sub InicializarSonidos()
     SND_TRABAJO_HERRERO = 41
     SND_TRABAJO_CARPINTERO = 42
     SND_BEBER = 135
-    SND_CURAR_SACERDOTE = 214
-
+    SND_RESUCITAR_SACERDOTE = 103
+    SND_CURAR_SACERDOTE = 104
+    
 End Sub

@@ -423,10 +423,12 @@ Public Function HandleIncomingData(ByVal UserIndex As Integer) As Boolean
                 Or packetID = ClientPacketID.DeleteChar) Then
              
             'Vierifico si el user esta logeado
-            If Not .flags.UserLogged Then
+            If Not .flags.AccountLogged Then
                 Call CloseSocket(UserIndex)
                 Exit Function
-            
+            ElseIf Not .flags.UserLogged Then
+                Call Cerrar_Usuario(UserIndex)
+                Exit Function
                 'El usuario ya logueo. Reseteamos el tiempo AFK si el ID es valido.
             ElseIf packetID <= LAST_CLIENT_PACKET_ID Then
                 .Counters.IdleCount = 0
@@ -10736,7 +10738,12 @@ Private Sub HandleEditChar(ByVal UserIndex As Integer)
 
                             Case "GNOMO"
                                 Raza = eRaza.Gnomo
+                                
+                            Case "ORCO"
+                                Raza = eRaza.Orco
 
+                            Case "VAMPIRO"
+                                Raza = eRaza.Vampiro
                             Case Else
                                 Raza = 0
 

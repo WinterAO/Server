@@ -80,6 +80,12 @@ Sub DarCuerpo(ByVal UserIndex As Integer)
 
                 Case eRaza.Gnomo
                     NewBody = 300
+                    
+                Case eRaza.Orco
+                    NewBody = 631
+                    
+                Case eRaza.Vampiro
+                    NewBody = 633
 
             End Select
 
@@ -101,6 +107,12 @@ Sub DarCuerpo(ByVal UserIndex As Integer)
 
                 Case eRaza.Enano
                     NewBody = 300
+                    
+                Case eRaza.Orco
+                    NewBody = 632
+                    
+                Case eRaza.Vampiro
+                    NewBody = 634
 
             End Select
 
@@ -134,6 +146,12 @@ Private Function ValidarCabeza(ByVal UserRaza As Byte, _
 
                 Case eRaza.Gnomo
                     ValidarCabeza = (Head >= GNOMO_H_PRIMER_CABEZA And Head <= GNOMO_H_ULTIMA_CABEZA)
+                    
+                Case eRaza.Orco
+                    ValidarCabeza = (Head >= ORCO_H_PRIMER_CABEZA And Head <= ORCO_H_ULTIMA_CABEZA)
+                    
+                Case eRaza.Vampiro
+                    ValidarCabeza = (Head >= VAMPIRO_H_PRIMER_CABEZA And Head <= VAMPIRO_H_ULTIMA_CABEZA)
 
             End Select
     
@@ -155,6 +173,13 @@ Private Function ValidarCabeza(ByVal UserRaza As Byte, _
 
                 Case eRaza.Gnomo
                     ValidarCabeza = (Head >= GNOMO_M_PRIMER_CABEZA And Head <= GNOMO_M_ULTIMA_CABEZA)
+                    
+                Case eRaza.Orco
+                    ValidarCabeza = (Head >= ORCO_M_PRIMER_CABEZA And Head <= ORCO_M_ULTIMA_CABEZA)
+                    
+                Case eRaza.Vampiro
+                    ValidarCabeza = (Head >= VAMPIRO_M_PRIMER_CABEZA And Head <= VAMPIRO_M_ULTIMA_CABEZA)
+
 
             End Select
 
@@ -602,11 +627,11 @@ Private Sub AddItemsToNewUser(ByVal UserIndex As Integer, ByVal UserClase As eCl
         ' Ropa (Newbie)
         Slot = Slot + 1
         Select Case UserRaza
-            Case eRaza.Humano
+            Case eRaza.Humano, eRaza.Orco
                 .Invent.Object(Slot).ObjIndex = 463
             Case eRaza.Elfo
                 .Invent.Object(Slot).ObjIndex = 464
-            Case eRaza.Drow
+            Case eRaza.Drow, eRaza.Vampiro
                 .Invent.Object(Slot).ObjIndex = 465
             Case eRaza.Enano, eRaza.Gnomo
                 .Invent.Object(Slot).ObjIndex = 466
@@ -828,6 +853,11 @@ Sub CloseSocket(ByVal UserIndex As Integer)
         'Si llegamos aqui, sacamos al usuario de la cuenta y reseteamos todo
         If .flags.AccountLogged Then
             Call CloseAccount(UserIndex)
+            
+        ElseIf .flags.UserLogged Then 'Llego aqui estando logeado en un PJ?
+            Call CloseUser(UserIndex)
+            Call CloseAccount(UserIndex)
+            
         Else
             Call ResetUserSlot(UserIndex)
         End If
