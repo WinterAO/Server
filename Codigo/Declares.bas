@@ -2452,10 +2452,6 @@ Public OroMultiplier        As Integer
 
 Public OficioMultiplier     As Integer
 
-Public DiceMinimum          As Integer
-
-Public DiceMaximum          As Integer
-
 Public DropItemsAlMorir     As Boolean
 
 Public ArtesaniaCosto       As Long

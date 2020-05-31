@@ -888,6 +888,7 @@ Sub CloseSocketSL(ByVal UserIndex As Integer)
     '***************************************************
 
     If UserList(UserIndex).ConnID <> -1 And UserList(UserIndex).ConnIDValida Then
+    
         Call BorraSlotSock(UserList(UserIndex).ConnID)
         Call WSApiCloseSocket(UserList(UserIndex).ConnID)
         UserList(UserIndex).ConnIDValida = False

@@ -131,7 +131,7 @@ Public Sub CloseAccount(ByVal UserIndex As Integer)
         
         '¿Tiene algun personaje conectado?
         If .flags.UserLogged Then
-            Call CloseUser(UserIndex)
+            Call Cerrar_Usuario(UserIndex)
         End If
         
         NumCuentas = NumCuentas - 1

@@ -1691,8 +1691,6 @@ Sub LoadSini()
     ExpMultiplier = val(Lector.GetValue("INIT", "ExpMulti"))
     OroMultiplier = val(Lector.GetValue("INIT", "OroMulti"))
     OficioMultiplier = val(Lector.GetValue("INIT", "OficioMulti"))
-    DiceMinimum = val(Lector.GetValue("INIT", "MinDados"))
-    DiceMaximum = val(Lector.GetValue("INIT", "MaxDados"))
     
     DropItemsAlMorir = CBool(Lector.GetValue("INIT", "DropItemsAlMorir"))
     

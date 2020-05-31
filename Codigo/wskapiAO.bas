@@ -149,7 +149,7 @@ Public Sub AgregaSlotSock(ByVal Sock As Long, ByVal Slot As Long)
 End Sub
 
 Public Sub BorraSlotSock(ByVal Sock As Long)
-
+'
     Dim cant As Long
         cant = WSAPISock2Usr.Count
 
@@ -238,9 +238,10 @@ Public Function WndProc(ByVal hWnd As Long, ByVal msg As Long, ByVal wParam As L
                     If S <> SockListen Then Call apiclosesocket(S)
                     
                     If n > 0 Then
-                        Call BorraSlotSock(S)
-                        UserList(n).ConnID = -1
-                        UserList(n).ConnIDValida = False
+                        Call SecurityIp.IpRestarConexion(GetLongIp(UserList(n).IP))
+                        'Call BorraSlotSock(S)
+                        'UserList(n).ConnID = -1
+                        'UserList(n).ConnIDValida = False
                         Call EventoSockClose(n)
                     End If
 
