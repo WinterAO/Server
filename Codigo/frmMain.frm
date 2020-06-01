@@ -178,7 +178,7 @@ Begin VB.Form frmMain
          Top             =   1440
       End
       Begin VB.Timer TIMER_AI 
-         Interval        =   500
+         Interval        =   350
          Left            =   1680
          Top             =   1440
       End

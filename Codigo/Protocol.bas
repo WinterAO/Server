@@ -10485,8 +10485,8 @@ Private Sub HandleEditChar(ByVal UserIndex As Integer)
                 
                     Case eEditOptions.eo_Experience
 
-                        If val(Arg1) > 20000000 Then
-                            Arg1 = 20000000
+                        If val(Arg1) > 5000000 Then
+                            Arg1 = 5000000
 
                         End If
                         

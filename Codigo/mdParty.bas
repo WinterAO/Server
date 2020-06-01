@@ -135,37 +135,31 @@ Public Sub CrearParty(ByVal UserIndex As Integer)
 
         If .PartyIndex = 0 Then
             If .flags.Muerto = 0 Then
-                If .Stats.UserSkills(eSkill.Liderazgo) >= 5 Then
-                    tInt = mdParty.NextParty
+                tInt = mdParty.NextParty
 
-                    If tInt = -1 Then
-                        Call WriteConsoleMsg(UserIndex, "Por el momento no se pueden crear mas parties.", FontTypeNames.FONTTYPE_PARTY)
+                If tInt = -1 Then
+                    Call WriteConsoleMsg(UserIndex, "Por el momento no se pueden crear mas parties.", FontTypeNames.FONTTYPE_PARTY)
+                    Exit Sub
+                Else
+                    Set Parties(tInt) = New clsParty
+
+                    If Not Parties(tInt).NuevoMiembro(UserIndex) Then
+                        Call WriteConsoleMsg(UserIndex, "La party esta llena, no puedes entrar.", FontTypeNames.FONTTYPE_PARTY)
+                        Set Parties(tInt) = Nothing
                         Exit Sub
                     Else
-                        Set Parties(tInt) = New clsParty
+                        Call WriteConsoleMsg(UserIndex, "Has formado una party!", FontTypeNames.FONTTYPE_PARTY)
+                        .PartyIndex = tInt
+                        .PartySolicitud = 0
 
-                        If Not Parties(tInt).NuevoMiembro(UserIndex) Then
-                            Call WriteConsoleMsg(UserIndex, "La party esta llena, no puedes entrar.", FontTypeNames.FONTTYPE_PARTY)
-                            Set Parties(tInt) = Nothing
-                            Exit Sub
+                        If Not Parties(tInt).HacerLeader(UserIndex) Then
+                            Call WriteConsoleMsg(UserIndex, "No puedes hacerte lider.", FontTypeNames.FONTTYPE_PARTY)
                         Else
-                            Call WriteConsoleMsg(UserIndex, "Has formado una party!", FontTypeNames.FONTTYPE_PARTY)
-                            .PartyIndex = tInt
-                            .PartySolicitud = 0
-
-                            If Not Parties(tInt).HacerLeader(UserIndex) Then
-                                Call WriteConsoleMsg(UserIndex, "No puedes hacerte lider.", FontTypeNames.FONTTYPE_PARTY)
-                            Else
-                                Call WriteConsoleMsg(UserIndex, "Te has convertido en lider de la party!", FontTypeNames.FONTTYPE_PARTY)
-
-                            End If
+                            Call WriteConsoleMsg(UserIndex, "Te has convertido en lider de la party!", FontTypeNames.FONTTYPE_PARTY)
 
                         End If
 
                     End If
-
-                Else
-                    Call WriteConsoleMsg(UserIndex, "No tienes suficientes puntos de liderazgo para liderar una party.", FontTypeNames.FONTTYPE_PARTY)
 
                 End If
 
