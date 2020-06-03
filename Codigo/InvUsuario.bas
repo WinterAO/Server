@@ -1363,7 +1363,7 @@ Private Function CheckRazaUsaRopa(ByVal UserIndex As Integer, _
     With UserList(UserIndex)
 
         'Verifica si la raza puede usar la ropa
-        If .Raza = eRaza.Humano Or .Raza = eRaza.Elfo Or .Raza = eRaza.Drow Then
+        If .Raza = eRaza.Humano Or .Raza = eRaza.Elfo Or .Raza = eRaza.Drow Or .Raza = eRaza.Orco Or .Raza = eRaza.Vampiro Then
             CheckRazaUsaRopa = (ObjData(ItemIndex).RazaEnana = 0)
         Else
             CheckRazaUsaRopa = (ObjData(ItemIndex).RazaEnana = 1)
