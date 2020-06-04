@@ -329,7 +329,6 @@ Public Enum eTrigger6
 
 End Enum
 
-'TODO : Reemplazar por un enum
 Public Const Bosque   As String = "BOSQUE"
 
 Public Const Nieve    As String = "NIEVE"

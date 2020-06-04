@@ -66,8 +66,8 @@ Sub Accion(ByVal UserIndex As Integer, _
 
         With UserList(UserIndex)
 
-            If MapData(Map, X, Y).NPCIndex > 0 Then     'Acciones NPCs
-                tempIndex = MapData(Map, X, Y).NPCIndex
+            If MapData(Map, X, Y).NpcIndex > 0 Then     'Acciones NPCs
+                tempIndex = MapData(Map, X, Y).NpcIndex
                 
                 'Set the target NPC
                 .flags.TargetNPC = tempIndex

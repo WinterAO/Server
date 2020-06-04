@@ -417,8 +417,8 @@ TipoItems=1000
 NROITEMS=0
 BackUp=1
 
-[NPC16] 'Carpintero
-Name=Carpintero
+[NPC16] 'Carpintera
+Name=Carpintera
 NpcType=0
 Desc=Trabajar la madera un arte que requiere practica y paciencia. Tengo todo tipo de herramientas que te podran ayudar.
 Head=74

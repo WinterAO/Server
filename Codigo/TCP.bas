@@ -768,7 +768,7 @@ Sub ConnectAccount(ByVal UserIndex As Integer, _
 
     Set oSHA256 = New CSHA256
 
-    If Not CheckMailString(UserName) Or LenB(UserName) = 0 Then
+    If LenB(UserName) > 24 Or LenB(UserName) = 0 Then
         Call WriteErrorMsg(UserIndex, "Nombre invalido.")
         Exit Sub
 

@@ -899,9 +899,9 @@ Public Sub EfectoFrio(ByVal UserIndex As Integer)
 
         If .Counters.Frio < IntervaloFrio Then
             .Counters.Frio = .Counters.Frio + 1
-        Else
+        Else '
 
-            If MapInfo(.Pos.Map).Terreno = eTerrain.terrain_nieve Then
+            If TerrainStringToByte(MapInfo(.Pos.Map).Terreno) = eTerrain.terrain_nieve Then
                 Call WriteConsoleMsg(UserIndex, "Estas muriendo de frio, abrigate o moriras!!", FontTypeNames.FONTTYPE_INFO)
                 modifi = Porcentaje(.Stats.MaxHp, 5)
                 .Stats.MinHp = .Stats.MinHp - modifi
