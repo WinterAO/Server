@@ -1678,7 +1678,7 @@ Private Sub HandleLoginExistingChar(ByVal UserIndex As Integer)
         ElseIf Not VersionOK(version) Then
             Call WriteErrorMsg(UserIndex, "Esta version del juego es obsoleta, la version correcta es la " & ULTIMAVERSION & ". La misma se encuentra disponible en http://winterao.com.ar")
         Else
-            Call ConnectUser(UserIndex, .AccountInfo.AccountPJ(SelectedID).Name, .AccountInfo.Hash)
+            Call ConnectUser(UserIndex, .AccountInfo.AccountPJ(SelectedID).Name)
         End If
     End With
 Errhandler:
@@ -1725,7 +1725,6 @@ Private Sub HandleLoginNewChar(ByVal UserIndex As Integer)
     Call buffer.ReadByte
 
     Dim UserName    As String
-    Dim AccountHash As String
     Dim version     As String
     Dim race        As eRaza
     Dim gender      As eGenero
@@ -1767,10 +1766,8 @@ Private Sub HandleLoginNewChar(ByVal UserIndex As Integer)
         Call CloseUser(UserIndex)
         Exit Sub
     End If
-    
-    AccountHash = UserList(UserIndex).AccountInfo.Hash
 
-    If GetCountUserAccount(AccountHash) >= 10 Then
+    If GetCountUserAccount(UserIndex) >= 10 Then
         Call WriteErrorMsg(UserIndex, "No puedes crear mas de 10 personajes.")
         Call CloseUser(UserIndex)
         Exit Sub
@@ -1779,7 +1776,7 @@ Private Sub HandleLoginNewChar(ByVal UserIndex As Integer)
     If Not VersionOK(version) Then
         Call WriteErrorMsg(UserIndex, "Esta version del juego es obsoleta, la version correcta es la " & ULTIMAVERSION & ". La misma se encuentra disponible en www.winterao.com.ar")
     Else
-        Call ConnectNewUser(UserIndex, UserName, AccountHash, race, gender, Class, Head)
+        Call ConnectNewUser(UserIndex, UserName, race, gender, Class, Head)
 
     End If
   
@@ -22262,7 +22259,6 @@ Public Sub WriteUserAccountLogged(ByVal UserIndex As Integer)
     With UserList(UserIndex)
         Call .outgoingData.WriteByte(ServerPacketID.AccountLogged)
         Call .outgoingData.WriteASCIIString(.AccountInfo.UserName)
-        Call .outgoingData.WriteASCIIString(.AccountInfo.Hash)
         Call .outgoingData.WriteByte(.AccountInfo.NumChars)
 
         If .AccountInfo.NumChars > 0 Then

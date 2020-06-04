@@ -1573,7 +1573,6 @@ Public Type AccountUser
     UserName As String
     Password As String
     salt As String
-    Hash As String
     status As Boolean
     Gemas As Long
     

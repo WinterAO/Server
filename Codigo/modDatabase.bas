@@ -120,7 +120,7 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
     With UserList(UserIndex)
         query = "INSERT INTO usuario SET "
         query = query & "name = '" & .Name & "', "
-        query = query & "account_id = (SELECT id FROM account WHERE hash = '" & .AccountInfo.Hash & "'), "
+        query = query & "account_id = " & .AccountInfo.ID & ", "
         query = query & "level = " & .Stats.ELV & ", "
         query = query & "exp = " & .Stats.Exp & ", "
         query = query & "elu = " & .Stats.ELU & ", "

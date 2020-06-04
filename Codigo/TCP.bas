@@ -337,7 +337,6 @@ End Function
 
 Sub ConnectNewUser(ByVal UserIndex As Integer, _
                    ByRef Name As String, _
-                   ByRef AccountHash As String, _
                    ByVal UserRaza As eRaza, _
                    ByVal UserSexo As eGenero, _
                    ByVal UserClase As eClass, _
@@ -472,7 +471,7 @@ Sub ConnectNewUser(ByVal UserIndex As Integer, _
     Call SaveUser(UserIndex)
   
     'Open User
-    Call ConnectUser(UserIndex, Name, AccountHash)
+    Call ConnectUser(UserIndex, Name)
 
     'Aqui solo vamos a hacer un request a los endpoints de la aplicacion en Node.js
     'el repositorio para hacer funcionar esto, es este: https://github.com/ao-libre/ao-api-server
@@ -987,8 +986,7 @@ Function ValidateChr(ByVal UserIndex As Integer) As Boolean
 End Function
 
 Sub ConnectUser(ByVal UserIndex As Integer, _
-                ByRef Name As String, _
-                ByRef AccountHash As String)
+                ByRef Name As String)
 
     '***************************************************
     'Autor: Unknown (orginal version)
@@ -1052,7 +1050,7 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
         End If
     
         'El personaje pertenece a la cuenta
-        If Not PersonajePerteneceCuenta(Name, AccountHash) Then
+        If Not PersonajePerteneceCuenta(UserIndex, Name) Then
             Call WriteErrorMsg(UserIndex, "El personaje al que intentas acceder no pertenece a tu cuenta.")
             Call CloseUser(UserIndex)
             Exit Sub

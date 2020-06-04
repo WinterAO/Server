@@ -12,7 +12,7 @@ Public Sub LoginAccountDatabase(ByVal UserIndex As Integer, ByVal UserName As St
 
     Call Database_Connect
 
-    query = "SELECT id, username, password, salt, hash, gemas, status FROM account "
+    query = "SELECT id, username, password, salt, gemas, status FROM account "
     query = query & "WHERE UPPER(username) = '" & UCase$(UserName) & "';"
 
     Set Database_RecordSet = Database_Connection.Execute(query)
@@ -31,7 +31,6 @@ Public Sub LoginAccountDatabase(ByVal UserIndex As Integer, ByVal UserName As St
         .AccountInfo.UserName = Database_RecordSet!UserName
         .AccountInfo.Password = Database_RecordSet!Password
         .AccountInfo.salt = Database_RecordSet!salt
-        .AccountInfo.Hash = Database_RecordSet!Hash
         .AccountInfo.Gemas = CLng(Database_RecordSet!Gemas)
         .AccountInfo.status = CBool(Database_RecordSet!status)
         
@@ -107,7 +106,6 @@ Public Sub CloseAccount(ByVal UserIndex As Integer)
         .AccountInfo.UserName = vbNullString
         .AccountInfo.Password = vbNullString
         .AccountInfo.salt = vbNullString
-        .AccountInfo.Hash = vbNullString
         .AccountInfo.Gemas = 0
         .AccountInfo.status = False
         
@@ -209,12 +207,15 @@ ErrorHandler:
 
 End Function
 
-Public Function PersonajePerteneceCuenta(ByVal UserName As String, _
-                                                 ByVal AccountHash As String) As Boolean
+Public Function PersonajePerteneceCuenta(ByVal UserIndex As Integer, ByVal UserName As String) As Boolean
 
     '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 12/10/2018
+    'Author: Lorwik
+    'Last Modification: 04/06/2020
+    'Descripcion: Comprobamos si el personaje pertenece a la cuenta, para ello
+    'hacemos una consulta buscando el nombre del personaje y el account_id de
+    'la persona que quieres entrar al personajeque le pasamos, si obtenemos 1 resultado
+    'el personaje pertenece a la cuenta
     '***************************************************
     On Error GoTo ErrorHandler
 
@@ -222,7 +223,7 @@ Public Function PersonajePerteneceCuenta(ByVal UserName As String, _
 
     Call Database_Connect
 
-    query = "SELECT u.id FROM usuario u JOIN account a ON u.account_id = a.id WHERE UPPER(u.name) = '" & UCase$(UserName) & "' AND a.hash= '" & AccountHash & "';"
+    query = "SELECT id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "' AND account_id = '" & UserList(UserIndex).AccountInfo.ID & "';"
 
     Set Database_RecordSet = Database_Connection.Execute(query)
 
@@ -243,11 +244,14 @@ ErrorHandler:
 
 End Function
 
-Public Function GetCountUserAccount(ByVal HashAccount As String) As Byte
+Public Function GetCountUserAccount(ByVal UserIndex As Integer) As Byte
 
     '***************************************************
     'Author: Lorwik
-    'Last Modification: 17/05/2020
+    'Last Modification: 04/06/2020
+    'Descripcion: Comprobamos la cantidad de personajes creados en la cuenta
+    'para ello hacemos una consulta en la que buscamos todos los personajes
+    'asociados al id de cuenta del UserIndex
     '***************************************************
     On Error GoTo ErrorHandler
 
@@ -255,7 +259,7 @@ Public Function GetCountUserAccount(ByVal HashAccount As String) As Byte
 
     Call Database_Connect
 
-    query = "SELECT COUNT(*) FROM usuario WHERE deleted = 0 and account_id = (SELECT id FROM account WHERE hash = '" & HashAccount & "');"
+    query = "SELECT COUNT(*) FROM usuario WHERE deleted = 0 and account_id = '" & UserList(UserIndex).AccountInfo.ID & "';"
 
     Set Database_RecordSet = Database_Connection.Execute(query)
 
@@ -271,7 +275,7 @@ Public Function GetCountUserAccount(ByVal HashAccount As String) As Byte
 
     Exit Function
 ErrorHandler:
-    Call LogDatabaseError("Error in GetUserTrainingTimeDatabase: " & HashAccount & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Error in GetUserTrainingTimeDatabase: UserIndex: " & UserIndex & " - Hash: " & UserList(UserIndex).AccountInfo.ID & ". " & Err.Number & " - " & Err.description)
 
 End Function
 
