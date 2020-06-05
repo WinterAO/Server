@@ -1204,6 +1204,11 @@ Sub LoadOBJData()
                     
                 Case eOBJType.otPergaminos
                     .MinLevel = val(Leer.GetValue("OBJ" & Object, "MinLevel"))
+                    
+                Case eOBJType.otManuales
+                    .IndiceSkill = val(Leer.GetValue("OBJ" & Object, "IndiceSkill"))
+                    .CuantosSkill = val(Leer.GetValue("OBJ" & Object, "CuantosSkill"))
+                    .SkNecesarios = val(Leer.GetValue("OBJ" & Object, "SkNecesarios"))
 
             End Select
             

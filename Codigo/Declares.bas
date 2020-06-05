@@ -1132,6 +1132,10 @@ Public Type ObjData
     
     MontTipo As Byte 'Tipo de Montura
     
+    IndiceSkill As Byte 'El indice del Skills
+    CuantosSkill As Byte 'Cantidad de Skills que va a sumar
+    SkNecesarios As Byte 'Cantidad de Skills que requiere para poder aprender el manual
+    
 End Type
 
 Public Type obj

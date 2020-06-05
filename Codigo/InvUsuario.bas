@@ -2069,34 +2069,28 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                 End If
                     
             Case eOBJType.otManuales
-            
-                Select Case ObjIndex
+                '¿Esta muerto?
+                If .flags.Muerto = 1 Then
+                    Call WriteConsoleMsg(UserIndex, "¡Estás muerto!", FontTypeNames.FONTTYPE_INFO)
+                    Exit Sub
+                End If
                 
-                    Case 1127   ' Manual de Liderazgo
-                        
-                        If .Stats.UserSkills(eSkill.Liderazgo) < 100 Then
-                            .Stats.UserSkills(eSkill.Liderazgo) = 100
-                            Call QuitarUserInvItem(UserIndex, Slot, 1)
-                            Call UpdateUserInv(False, UserIndex, Slot)
-                        End If
-                        
-                    Case 1128   ' Manual de Supervivencia
-                        
-                        If .Stats.UserSkills(eSkill.Supervivencia) < 100 Then
-                            .Stats.UserSkills(eSkill.Supervivencia) = 100
-                            Call QuitarUserInvItem(UserIndex, Slot, 1)
-                            Call UpdateUserInv(False, UserIndex, Slot)
-                        End If
-                        
-                    Case 1129   ' Manual de Navegacion
-                        
-                        If .Stats.UserSkills(eSkill.Navegacion) < 100 Then
-                            .Stats.UserSkills(eSkill.Navegacion) = 100
-                            Call QuitarUserInvItem(UserIndex, Slot, 1)
-                            Call UpdateUserInv(False, UserIndex, Slot)
-                        End If
-                        
-                End Select
+                If .Stats.UserSkills(obj.IndiceSkill) >= obj.CuantosSkill Then
+                    Call WriteConsoleMsg(UserIndex, "¡Tus conocimientos son superiores a los de este manual!", FontTypeNames.FONTTYPE_INFO)
+                    Exit Sub
+                End If
+                
+                If Not .Stats.UserSkills(obj.IndiceSkill) >= obj.SkNecesarios Then
+                    Call WriteConsoleMsg(UserIndex, "¡No llegas a comprender este manual, necesitas tener " & obj.SkNecesarios & " Skills para comprenderlo!", FontTypeNames.FONTTYPE_INFO)
+                    Exit Sub
+                End If
+                
+                .Stats.UserSkills(obj.IndiceSkill) = obj.CuantosSkill
+                Call WriteConsoleMsg(UserIndex, "¡Tus conocimientos en " & SkillsNames(obj.IndiceSkill) & " aumentaron en " & obj.CuantosSkill & " puntos!", FontTypeNames.FONTTYPE_INFOBOLD)
+                
+                'Quitamos el manual del inventario
+                Call QuitarUserInvItem(UserIndex, Slot, 1)
+                Call UpdateUserInv(False, UserIndex, Slot)
                     
             End Select
     

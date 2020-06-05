@@ -80,7 +80,7 @@ usar primero los nros mas bajos.
 [INIT]
 'aca va el numero de OBJ mas alto, NO la cantidad de OBJs.
 'esto sirve para que los GMS puedan ver la lista completa de items para crear en una ventanita.
-NumOBJs=1252
+NumOBJs=1253
 
 
 [OBJ1]
@@ -14110,25 +14110,34 @@ Crucial=0
 Valor=100000
 
 [OBJ1127]
-Name=Manual de Liderazgo
+Name=Manual de Liderazgo SUPREMO
 GrhIndex=538
 ObjType=35
 Agarrable=0
 Valor=100000
+IndiceSkills=16
+CuantosSkills=100
+SkNecesarios=0
 
 [OBJ1128]
-Name=Manual de Supervivencia
+Name=Manual de Supervivencia SUPREMO
 GrhIndex=538
 ObjType=35
 Agarrable=0
 Valor=20000
+IndiceSkills=8
+CuantosSkills=100
+SkNecesarios=0
 
 [OBJ1129]
-Name=Manual de Navegacion
+Name=Manual de Navegacion SUPREMO
 GrhIndex=538
 ObjType=35
 Agarrable=0
 Valor=90000
+IndiceSkills=20
+CuantosSkills=100
+SkNecesarios=0
 
 [OBJ1130]
 Name=Pez saltando
@@ -15609,3 +15618,13 @@ NoSeCae=1
 MinSkill=100
 Valor=0
 Crucial=0
+
+[OBJ1153]
+Name=Manual de Equitacion SUPREMO
+GrhIndex=538
+ObjType=35
+Agarrable=0
+Valor=90000
+IndiceSkills=21
+CuantosSkills=100
+SkNecesarios=0

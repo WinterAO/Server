@@ -498,6 +498,7 @@ Private Sub LoadConstants()
     SkillsNames(eSkill.Proyectiles) = "Combate a distancia"
     SkillsNames(eSkill.Wrestling) = "Combate sin armas"
     SkillsNames(eSkill.Navegacion) = "Navegacion"
+    SkillsNames(eSkill.Equitacion) = "Equitacion"
     
     ' Attributes
     ListaAtributos(eAtributos.Fuerza) = "Fuerza"
