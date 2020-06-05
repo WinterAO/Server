@@ -1708,6 +1708,7 @@ Private Sub HandleLoginNewChar(ByVal UserIndex As Integer)
     'Last Modification: 05/17/06
     '
     '***************************************************
+    Debug.Print UserList(UserIndex).incomingData.Length
     If UserList(UserIndex).incomingData.Length < 15 Then
         Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
@@ -1741,10 +1742,6 @@ Private Sub HandleLoginNewChar(ByVal UserIndex As Integer)
     gender = buffer.ReadByte()
     Class = buffer.ReadByte()
     Head = buffer.ReadInteger
-    
-    For i = 1 To NUMATRIBUTOS
-        UserList(UserIndex).Stats.UserAtributos(i) = buffer.ReadByte()
-    Next i
     
     'If we got here then packet is complete, copy data back to original queue
     Call UserList(UserIndex).incomingData.CopyBuffer(buffer)

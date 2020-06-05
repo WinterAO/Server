@@ -25,7 +25,7 @@ GnomoInteligencia=+4
 GnomoCarisma=+1
 GnomoConstitucion=0
 OrcoFuerza=4
-OrcoAgilidad=0
+OrcoAgilidad=1
 OrcoInteligencia=-3
 OrcoCarisma=0
 OrcoConstitucion=2
@@ -50,11 +50,11 @@ Druida=0.75
 Trabajador=0.8
 
 [MODATAQUEARMAS]
-Guerrero=1
+Guerrero=1.02
 Cazador=0.8
 Paladin=0.95
-Bandido=0.85
-Asesino=0.9
+Bandido=0.9
+Asesino=1.0
 Pirata=0.9
 Ladron=0.8
 Clerigo=0.85

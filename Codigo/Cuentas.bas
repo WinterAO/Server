@@ -12,7 +12,7 @@ Public Sub LoginAccountDatabase(ByVal UserIndex As Integer, ByVal UserName As St
 
     Call Database_Connect
 
-    query = "SELECT id, username, password, salt, gemas, status FROM account "
+    query = "SELECT id, username, email, password, salt, gemas, status FROM account "
     query = query & "WHERE UPPER(username) = '" & UCase$(UserName) & "';"
 
     Set Database_RecordSet = Database_Connection.Execute(query)
@@ -29,12 +29,14 @@ Public Sub LoginAccountDatabase(ByVal UserIndex As Integer, ByVal UserName As St
         'Guardo la información de la cuenta
         .AccountInfo.ID = CInt(Database_RecordSet!ID)
         .AccountInfo.UserName = Database_RecordSet!UserName
+        .AccountInfo.Email = Database_RecordSet!Email
         .AccountInfo.Password = Database_RecordSet!Password
         .AccountInfo.salt = Database_RecordSet!salt
         .AccountInfo.Gemas = CLng(Database_RecordSet!Gemas)
         .AccountInfo.status = CBool(Database_RecordSet!status)
         
         Set Database_RecordSet = Nothing
+        
     
         'Now the characters
         query = "SELECT id, name, level, gold, body_id, head_id, weapon_id, shield_id, helmet_id, race_id, class_id, pos_map, rep_average, is_dead FROM usuario "

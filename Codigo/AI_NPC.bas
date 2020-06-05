@@ -1427,8 +1427,7 @@ End Sub
 Public Sub SacerdoteHealUser(ByVal UserIndex As Integer)
 
     With UserList(UserIndex)
-
-        'Enviamos sonido de curar (Recox)
+    
         Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_CURAR_SACERDOTE, .Pos.X, .Pos.Y))
 
         .Stats.MinHp = .Stats.MaxHp
@@ -1447,16 +1446,12 @@ End Sub
 Public Sub SacerdoteResucitateUser(ByVal UserIndex As Integer)
     With UserList(UserIndex)
 
-        'Enviamos sonido de resucitacion (Recox)
         Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_RESUCITAR_SACERDOTE, .Pos.X, .Pos.Y))
         
         Call RevivirUsuario(UserIndex)
         Call WriteConsoleMsg(UserIndex, "Has sido resucitado!!", FontTypeNames.FONTTYPE_INFO)
 
-        'Si es newbie le sacamos todo, sino solo lo revivimos. (Recox)
-        If EsNewbie(UserIndex) Then
-            Call SacerdoteHealEffectsAndRestoreMana(UserIndex)
-        End If
+        Call SacerdoteHealEffectsAndRestoreMana(UserIndex)
 
     End With
 End Sub

@@ -356,28 +356,8 @@ Sub ConnectNewUser(ByVal UserIndex As Integer, _
     '03/12/2009: Budi - Optimizacion del codigo.
     '12/10/2018: CHOTS - Sistema de cuentas
     '*************************************************
-
-    Dim i As Byte
-    Dim Suma As Byte
-    
     With UserList(UserIndex)
-        
-        '¿Intentaron hackear los atributos?
-        For i = 1 To NUMATRIBUTOS
-            If .Stats.UserAtributos(i) > 18 Then
-                Call WriteErrorMsg(UserIndex, "Error en la asignacion de atributos, vuelva a asignarlos.")
-                Exit Sub
-            End If
-            
-            'Vamos sumando todos los atributos para luego comprobarlos
-            Suma = Suma + .Stats.UserAtributos(i)
-        Next i
-        
-        Debug.Print "asdasd: " & Suma
-        If Suma <> 70 Then
-            Call WriteErrorMsg(UserIndex, "Error en la asignacion de atributos, vuelva a asignarlos.")
-            Exit Sub
-        End If
+        Dim i As Byte
         
         If Not AsciiValidos(Name) Or LenB(Name) = 0 Then
             Call WriteErrorMsg(UserIndex, "Nombre invalido.")
@@ -399,13 +379,6 @@ Sub ConnectNewUser(ByVal UserIndex As Integer, _
         'Existe el personaje?
         If PersonajeExiste(Name) Then
             Call WriteErrorMsg(UserIndex, "Ya existe el personaje.")
-            Exit Sub
-
-        End If
-    
-        'Tiro los dados antes de llegar aca??
-        If .Stats.UserAtributos(eAtributos.Fuerza) = 0 Then
-            Call WriteErrorMsg(UserIndex, "Debe tirar los dados antes de poder crear un personaje.")
             Exit Sub
 
         End If
@@ -435,6 +408,11 @@ Sub ConnectNewUser(ByVal UserIndex As Integer, _
         .Raza = UserRaza
         .Genero = UserSexo
         .Hogar = eCiudad.cRamx
+        
+        'Nuevo sistema de atributos, todos parten de 18
+        For i = 1 To NUMATRIBUTOS
+            UserList(UserIndex).Stats.UserAtributos(i) = 18
+        Next i
 
         'Primero agregamos los items, ya que en caso de que el nivel
         'Inicial sea mayor al de un newbie, los items se borran automaticamente.

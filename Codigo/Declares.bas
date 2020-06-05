@@ -1572,6 +1572,7 @@ Public Type AccountUser
     ID As Long
     UserName As String
     Password As String
+    Email As String
     salt As String
     status As Boolean
     Gemas As Long
