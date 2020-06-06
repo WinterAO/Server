@@ -627,9 +627,6 @@ Private Sub AddItemsToNewUser(ByVal UserIndex As Integer, ByVal UserClase As eCl
             Case eClass.Hunter
                 ' Arco (Newbie)
                 .Invent.Object(Slot).ObjIndex = 859
-            Case eClass.Worker
-                ' Herramienta (Newbie)
-                .Invent.Object(Slot).ObjIndex = RandomNumber(561, 565)
             Case Else
                 ' Daga (Newbie)
                 .Invent.Object(Slot).ObjIndex = 460

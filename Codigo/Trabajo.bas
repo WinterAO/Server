@@ -29,9 +29,7 @@ Attribute VB_Name = "Trabajo"
 
 Option Explicit
 
-Private Const GASTO_ENERGIA_TRABAJADOR    As Byte = 2
-
-Private Const GASTO_ENERGIA_NO_TRABAJADOR As Byte = 6
+Private Const GASTO_ENERGIA As Byte = 6
 
 Public Sub DoPermanecerOculto(ByVal UserIndex As Integer)
 
@@ -739,31 +737,16 @@ Public Sub HerreroConstruirItem(ByVal UserIndex As Integer, ByVal ItemIndex As I
             End If
         
             'Sacamos energia
-            If .clase = eClass.Worker Then
-
-                'Chequeamos que tenga los puntos antes de sacarselos
-                If .Stats.MinSta >= GASTO_ENERGIA_TRABAJADOR Then
-                    .Stats.MinSta = .Stats.MinSta - GASTO_ENERGIA_TRABAJADOR
-                    Call WriteUpdateSta(UserIndex)
-                Else
-                    Call WriteConsoleMsg(UserIndex, "No tienes suficiente energia.", FontTypeNames.FONTTYPE_INFO)
-                    Exit Sub
-
-                End If
-
+            'Chequeamos que tenga los puntos antes de sacarselos
+            If .Stats.MinSta >= GASTO_ENERGIA Then
+                .Stats.MinSta = .Stats.MinSta - GASTO_ENERGIA
+                Call WriteUpdateSta(UserIndex)
             Else
-
-                'Chequeamos que tenga los puntos antes de sacarselos
-                If .Stats.MinSta >= GASTO_ENERGIA_NO_TRABAJADOR Then
-                    .Stats.MinSta = .Stats.MinSta - GASTO_ENERGIA_NO_TRABAJADOR
-                    Call WriteUpdateSta(UserIndex)
-                Else
-                    Call WriteConsoleMsg(UserIndex, "No tienes suficiente energia.", FontTypeNames.FONTTYPE_INFO)
-                    Exit Sub
-
-                End If
+                Call WriteConsoleMsg(UserIndex, "No tienes suficiente energia.", FontTypeNames.FONTTYPE_INFO)
+                Exit Sub
 
             End If
+
         
             Call HerreroQuitarMateriales(UserIndex, ItemIndex, CantidadItems)
             ' AGREGAR FX
@@ -921,29 +904,13 @@ Public Sub CarpinteroConstruirItem(ByVal UserIndex As Integer, ByVal ItemIndex A
             End If
            
             'Sacamos energia
-            If .clase = eClass.Worker Then
-
-                'Chequeamos que tenga los puntos antes de sacarselos
-                If .Stats.MinSta >= GASTO_ENERGIA_TRABAJADOR Then
-                    .Stats.MinSta = .Stats.MinSta - GASTO_ENERGIA_TRABAJADOR
-                    Call WriteUpdateSta(UserIndex)
-                Else
-                    Call WriteConsoleMsg(UserIndex, "No tienes suficiente energia.", FontTypeNames.FONTTYPE_INFO)
-                    Exit Sub
-
-                End If
-
+            'Chequeamos que tenga los puntos antes de sacarselos
+            If .Stats.MinSta >= GASTO_ENERGIA Then
+                .Stats.MinSta = .Stats.MinSta - GASTO_ENERGIA
+                Call WriteUpdateSta(UserIndex)
             Else
-
-                'Chequeamos que tenga los puntos antes de sacarselos
-                If .Stats.MinSta >= GASTO_ENERGIA_NO_TRABAJADOR Then
-                    .Stats.MinSta = .Stats.MinSta - GASTO_ENERGIA_NO_TRABAJADOR
-                    Call WriteUpdateSta(UserIndex)
-                Else
-                    Call WriteConsoleMsg(UserIndex, "No tienes suficiente energia.", FontTypeNames.FONTTYPE_INFO)
-                    Exit Sub
-
-                End If
+                Call WriteConsoleMsg(UserIndex, "No tienes suficiente energia.", FontTypeNames.FONTTYPE_INFO)
+                Exit Sub
 
             End If
             
@@ -1263,29 +1230,13 @@ Public Sub DoUpgrade(ByVal UserIndex As Integer, ByVal ItemIndex As Integer)
         End If
         
         'Sacamos energia
-        If .clase = eClass.Worker Then
-
-            'Chequeamos que tenga los puntos antes de sacarselos
-            If .Stats.MinSta >= GASTO_ENERGIA_TRABAJADOR Then
-                .Stats.MinSta = .Stats.MinSta - GASTO_ENERGIA_TRABAJADOR
-                Call WriteUpdateSta(UserIndex)
-            Else
-                Call WriteConsoleMsg(UserIndex, "No tienes suficiente energia.", FontTypeNames.FONTTYPE_INFO)
-                Exit Sub
-
-            End If
-
+        'Chequeamos que tenga los puntos antes de sacarselos
+        If .Stats.MinSta >= GASTO_ENERGIA Then
+            .Stats.MinSta = .Stats.MinSta - GASTO_ENERGIA
+            Call WriteUpdateSta(UserIndex)
         Else
-
-            'Chequeamos que tenga los puntos antes de sacarselos
-            If .Stats.MinSta >= GASTO_ENERGIA_NO_TRABAJADOR Then
-                .Stats.MinSta = .Stats.MinSta - GASTO_ENERGIA_NO_TRABAJADOR
-                Call WriteUpdateSta(UserIndex)
-            Else
-                Call WriteConsoleMsg(UserIndex, "No tienes suficiente energia.", FontTypeNames.FONTTYPE_INFO)
-                Exit Sub
-
-            End If
+            Call WriteConsoleMsg(UserIndex, "No tienes suficiente energia.", FontTypeNames.FONTTYPE_INFO)
+            Exit Sub
 
         End If
     
@@ -1392,22 +1343,12 @@ Function ModNavegacion(ByVal clase As eClass, ByVal UserIndex As Integer) As Sin
     '***************************************************
     'Autor: Unknown (orginal version)
     'Last Modification: 27/11/2009
-    '27/11/2009: ZaMa - A worker can navigate before only if it's an expert fisher
     '12/04/2010: ZaMa - Arreglo modificador de pescador, para que navegue con 60 skills.
     '***************************************************
     Select Case clase
 
         Case eClass.Pirat
             ModNavegacion = 1
-
-        Case eClass.Worker
-
-            If UserList(UserIndex).Stats.UserSkills(eSkill.pesca) = 100 Then
-                ModNavegacion = 1.71
-            Else
-                ModNavegacion = 2
-
-            End If
 
         Case Else
             ModNavegacion = 2
@@ -1423,15 +1364,7 @@ Function ModFundicion(ByVal clase As eClass) As Single
     '
     '***************************************************
 
-    Select Case clase
-
-        Case eClass.Worker
-            ModFundicion = 1
-
-        Case Else
-            ModFundicion = 3
-
-    End Select
+    ModFundicion = 3
 
 End Function
 
@@ -1442,15 +1375,8 @@ Function ModCarpinteria(ByVal clase As eClass) As Integer
     '
     '***************************************************
 
-    Select Case clase
+    ModCarpinteria = 3
 
-        Case eClass.Worker
-            ModCarpinteria = 1
-
-        Case Else
-            ModCarpinteria = 3
-
-    End Select
 
 End Function
 
@@ -1461,15 +1387,8 @@ Function ModHerreriA(ByVal clase As eClass) As Single
     'Last Modification: -
     '
     '***************************************************
-    Select Case clase
-
-        Case eClass.Worker
-            ModHerreriA = 1
-
-        Case Else
-            ModHerreriA = 4
-
-    End Select
+    
+    ModHerreriA = 4
 
 End Function
 
@@ -1856,12 +1775,7 @@ Public Sub DoPescar(ByVal UserIndex As Integer)
 
     With UserList(UserIndex)
 
-        If .clase = eClass.Worker Then
-            Call QuitarSta(UserIndex, EsfuerzoPescarPescador)
-        Else
-            Call QuitarSta(UserIndex, EsfuerzoPescarGeneral)
-
-        End If
+        Call QuitarSta(UserIndex, EsfuerzoPescar)
     
         Skill = .Stats.UserSkills(eSkill.pesca)
         Suerte = Int(-0.00125 * Skill * Skill - 0.3 * Skill + 49)
@@ -1871,15 +1785,10 @@ Public Sub DoPescar(ByVal UserIndex As Integer)
         If res <= DificultadPescar Then
 
             Dim MiObj As obj
-        
-            If .clase = eClass.Worker Then
-                MAXITEMS = MaxItemsExtraibles(.Stats.ELV)
             
-                CantidadItems = RandomNumber(1, MAXITEMS)
-            Else
-                CantidadItems = 1
-
-            End If
+            MAXITEMS = MaxItemsExtraibles(.Stats.ELV)
+            
+            CantidadItems = RandomNumber(1, MAXITEMS)
 
             CantidadItems = CantidadItems * OficioMultiplier
             
@@ -1947,23 +1856,14 @@ Public Sub DoPescarRed(ByVal UserIndex As Integer)
 
     Dim res           As Integer
 
-    Dim EsPescador    As Boolean
-
     Dim MAXITEMS      As Integer
 
     Dim CantidadItems As Integer
 
     With UserList(UserIndex)
     
-        If .clase = eClass.Worker Then
-            Call QuitarSta(UserIndex, EsfuerzoPescarPescador)
-            EsPescador = True
-        Else
-            Call QuitarSta(UserIndex, EsfuerzoPescarGeneral)
-            EsPescador = False
+        Call QuitarSta(UserIndex, EsfuerzoPescar)
 
-        End If
-        
         iSkill = .Stats.UserSkills(eSkill.pesca)
         
         ' m = (60-11)/(1-10)
@@ -1978,14 +1878,9 @@ Public Sub DoPescarRed(ByVal UserIndex As Integer)
             
                 Dim MiObj As obj
                 
-                If EsPescador Then
-                    MAXITEMS = MaxItemsExtraibles(.Stats.ELV)
-                    CantidadItems = RandomNumber(1, MAXITEMS)
-                Else
-                    CantidadItems = 1
-
-                End If
-
+                MAXITEMS = MaxItemsExtraibles(.Stats.ELV)
+                CantidadItems = RandomNumber(1, MAXITEMS)
+                    
                 CantidadItems = CantidadItems * OficioMultiplier
                 
                 MiObj.Amount = CantidadItems
@@ -2611,12 +2506,7 @@ Public Sub DoTalar(ByVal UserIndex As Integer, _
 
     With UserList(UserIndex)
 
-        If .clase = eClass.Worker Then
-            Call QuitarSta(UserIndex, EsfuerzoTalarLenador)
-        Else
-            Call QuitarSta(UserIndex, EsfuerzoTalarGeneral)
-
-        End If
+        Call QuitarSta(UserIndex, EsfuerzoTalar)
     
         Skill = .Stats.UserSkills(eSkill.Talar)
         Suerte = Int(-0.00125 * Skill * Skill - 0.3 * Skill + 49)
@@ -2627,14 +2517,9 @@ Public Sub DoTalar(ByVal UserIndex As Integer, _
 
             Dim MiObj As obj
         
-            If .clase = eClass.Worker Then
-                MAXITEMS = MaxItemsExtraibles(.Stats.ELV)
-            
-                CantidadItems = RandomNumber(1, MAXITEMS)
-            Else
-                CantidadItems = 1
-
-            End If
+            MAXITEMS = MaxItemsExtraibles(.Stats.ELV)
+        
+            CantidadItems = RandomNumber(1, MAXITEMS)
 
             CantidadItems = CantidadItems * OficioMultiplier
             
@@ -2711,13 +2596,8 @@ Public Sub DoMineria(ByVal UserIndex As Integer)
 
     With UserList(UserIndex)
 
-        If .clase = eClass.Worker Then
-            Call QuitarSta(UserIndex, EsfuerzoExcavarMinero)
-        Else
-            Call QuitarSta(UserIndex, EsfuerzoExcavarGeneral)
+        Call QuitarSta(UserIndex, EsfuerzoExcavar)
 
-        End If
-    
         Dim Skill As Integer
 
         Skill = .Stats.UserSkills(eSkill.Mineria)
@@ -2733,14 +2613,9 @@ Public Sub DoMineria(ByVal UserIndex As Integer)
         
             MiObj.ObjIndex = ObjData(.flags.TargetObj).MineralIndex
         
-            If .clase = eClass.Worker Then
-                MAXITEMS = MaxItemsExtraibles(.Stats.ELV)
+            MAXITEMS = MaxItemsExtraibles(.Stats.ELV)
             
-                CantidadItems = RandomNumber(1, MAXITEMS)
-            Else
-                CantidadItems = 1
-
-            End If
+            CantidadItems = RandomNumber(1, MAXITEMS)
 
             CantidadItems = CantidadItems * OficioMultiplier
 
@@ -3123,12 +2998,7 @@ Public Function MaxItemsConstruibles(ByVal UserIndex As Integer) As Integer
     
     With UserList(UserIndex)
 
-        If .clase = eClass.Worker Then
-            MaxItemsConstruibles = MaximoInt(1, CInt((.Stats.ELV - 2) * 0.2))
-        Else
-            MaxItemsConstruibles = 1
-
-        End If
+    MaxItemsConstruibles = MaximoInt(1, CInt((.Stats.ELV - 2) * 0.2))
 
     End With
 

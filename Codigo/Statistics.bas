@@ -31,7 +31,7 @@ End Type
 
 Private Type fragLvlRace
 
-    matrix(1 To 50, 1 To 7) As Long
+    matrix(1 To 50, 1 To NUMRAZAS) As Long
 
 End Type
 
@@ -43,9 +43,9 @@ End Type
 
 Private trainingInfo()                        As trainingData
 
-Private fragLvlRaceData(1 To 7)               As fragLvlRace
+Private fragLvlRaceData(1 To NUMRAZAS)        As fragLvlRace
 
-Private fragLvlLvlData(1 To 7)                As fragLvlLvl
+Private fragLvlLvlData(1 To 8)                As fragLvlLvl
 
 Private fragAlignmentLvlData(1 To 50, 1 To 4) As Long
 
@@ -155,6 +155,9 @@ Public Sub StoreFrag(ByVal killer As Integer, ByVal victim As Integer)
         
         Case eClass.Hunter
             clase = 7
+            
+        Case eClass.Brujo
+            clase = 8
         
         Case Else
             Exit Sub

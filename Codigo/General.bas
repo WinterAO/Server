@@ -474,7 +474,7 @@ Private Sub LoadConstants()
     ListaClases(eClass.Bandit) = "Bandido"
     ListaClases(eClass.Paladin) = "Paladin"
     ListaClases(eClass.Hunter) = "Cazador"
-    ListaClases(eClass.Worker) = "Trabajador"
+    ListaClases(eClass.Brujo) = "Brujo"
     ListaClases(eClass.Pirat) = "Pirata"
     
     ' Skills

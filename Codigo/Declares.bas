@@ -190,7 +190,7 @@ Public Enum eClass
     Bandit      'Bandido
     Paladin     'Paladin
     Hunter      'Cazador
-    Worker      'Trabajador
+    Brujo       'Brujo
     Pirat       'Pirata
 
 End Enum
@@ -385,17 +385,12 @@ End Enum
 Public Const MAXUSERHECHIZOS               As Byte = 35
 
 ' TODO: Y ESTO ? LO CONOCE GD ?
-Public Const EsfuerzoTalarGeneral          As Byte = 4
 
-Public Const EsfuerzoTalarLenador          As Byte = 2
+Public Const EsfuerzoTalar                 As Byte = 2
 
-Public Const EsfuerzoPescarPescador        As Byte = 1
+Public Const EsfuerzoPescar                As Byte = 3
 
-Public Const EsfuerzoPescarGeneral         As Byte = 3
-
-Public Const EsfuerzoExcavarMinero         As Byte = 2
-
-Public Const EsfuerzoExcavarGeneral        As Byte = 5
+Public Const EsfuerzoExcavar               As Byte = 3
 
 Public Const FX_TELEPORT_INDEX             As Integer = 1
 
@@ -651,7 +646,7 @@ Public Const AumentoSTLadron            As Byte = AumentoSTDef + 3
 
 Public Const AumentoSTMago              As Byte = AumentoSTDef - 1
 
-Public Const AumentoSTTrabajador        As Byte = AumentoSTDef + 25
+Public Const AumentoSTBrujo             As Byte = AumentoSTDef + 25
 
 'Sonidos
 Public SND_SWING                        As Byte

@@ -1993,8 +1993,8 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                 'Verifica si esta aproximado al agua antes de permitirle navegar
                 If .Stats.ELV < 25 Then
 
-                    ' Solo pirata y trabajador pueden navegar antes
-                    If .clase <> eClass.Worker And .clase <> eClass.Pirat Then
+                    ' Solo pirata puede navegar antes
+                    If .clase <> eClass.Pirat Then
                         Call WriteConsoleMsg(UserIndex, "Para recorrer los mares debes ser nivel 25 o superior.", FontTypeNames.FONTTYPE_INFO)
                         Exit Sub
                     Else
@@ -2002,7 +2002,7 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                         ' Pero a partir de 20
                         If .Stats.ELV < 20 Then
                             
-                            If .clase = eClass.Worker And .Stats.UserSkills(eSkill.pesca) <> 100 Then
+                            If .Stats.UserSkills(eSkill.pesca) <> 100 Then
                                 Call WriteConsoleMsg(UserIndex, "Para recorrer los mares debes ser nivel 20 y ademas tu skill en pesca debe ser 100.", FontTypeNames.FONTTYPE_INFO)
                             Else
                                 Call WriteConsoleMsg(UserIndex, "Para recorrer los mares debes ser nivel 20 o superior.", FontTypeNames.FONTTYPE_INFO)
@@ -2010,17 +2010,6 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                             End If
                             
                             Exit Sub
-                        Else
-
-                            ' Esta entre 20 y 25, si es trabajador necesita tener 100 en pesca
-                            If .clase = eClass.Worker Then
-                                If .Stats.UserSkills(eSkill.pesca) <> 100 Then
-                                    Call WriteConsoleMsg(UserIndex, "Para recorrer los mares debes ser nivel 20 o superior y ademas tu skill en pesca debe ser 100.", FontTypeNames.FONTTYPE_INFO)
-                                    Exit Sub
-
-                                End If
-
-                            End If
 
                         End If
 
