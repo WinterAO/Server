@@ -2263,7 +2263,7 @@ Public Function ObjEsRobable(ByVal VictimaIndex As Integer, _
 
     OI = UserList(VictimaIndex).Invent.Object(Slot).ObjIndex
 
-    ObjEsRobable = ObjData(OI).OBJType <> eOBJType.otLlaves And UserList(VictimaIndex).Invent.Object(Slot).Equipped = 0 And ObjData(OI).Real = 0 And ObjData(OI).Caos = 0 And ObjData(OI).OBJType <> eOBJType.otBarcos And Not ItemNewbie(OI)
+    ObjEsRobable = ObjData(OI).OBJType <> eOBJType.otLlaves And UserList(VictimaIndex).Invent.Object(Slot).Equipped = 0 And ObjData(OI).Real = 0 And ObjData(OI).Caos = 0 And ObjData(OI).OBJType <> eOBJType.otBarcos And ObjData(OI).OBJType <> eOBJType.otMonturas And ObjData(OI).NoRobable = 1 And Not ItemNewbie(OI)
 
 End Function
 

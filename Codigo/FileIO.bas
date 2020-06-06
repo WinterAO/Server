@@ -1323,6 +1323,8 @@ Sub LoadOBJData()
             
             .NoSeCae = val(Leer.GetValue("OBJ" & Object, "NoSeCae"))
             
+            .NoRobable = val(Leer.GetValue("OBJ" & Object, "NoRobable"))
+            
             .Upgrade = val(Leer.GetValue("OBJ" & Object, "Upgrade"))
             
             frmCargando.cargar.Value = frmCargando.cargar.Value + 1

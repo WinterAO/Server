@@ -31,7 +31,7 @@ End Type
 
 Private Type fragLvlRace
 
-    matrix(1 To 50, 1 To 5) As Long
+    matrix(1 To 50, 1 To 7) As Long
 
 End Type
 
@@ -207,9 +207,8 @@ Public Sub StoreFrag(ByVal killer As Integer, ByVal victim As Integer)
         End If
 
     End If
-    
     fragLvlRaceData(clase).matrix(UserList(killer).Stats.ELV, Raza) = fragLvlRaceData(clase).matrix(UserList(killer).Stats.ELV, Raza) + 1
-    
+    Debug.Print "Frag: " & fragLvlRaceData(clase).matrix(UserList(killer).Stats.ELV, Raza)
     fragLvlLvlData(clase).matrix(UserList(killer).Stats.ELV, UserList(victim).Stats.ELV) = fragLvlLvlData(clase).matrix(UserList(killer).Stats.ELV, UserList(victim).Stats.ELV) + 1
     
     fragAlignmentLvlData(UserList(killer).Stats.ELV, alignment) = fragAlignmentLvlData(UserList(killer).Stats.ELV, alignment) + 1

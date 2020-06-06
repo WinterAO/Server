@@ -5465,7 +5465,7 @@ MinDef=10
 MaxDef=20
 Valor=53000
 Crucial=0
-MinSkill=55
+MinSkill=45
 MaderaElfica=10000
 SkCarpinteria=65
 Upgrade=476
@@ -5482,7 +5482,7 @@ MinDef=15
 MaxDef=25
 Valor=87000
 Crucial=0
-MinSkill=65
+MinSkill=50
 MaderaElfica=15000
 SkCarpinteria=90
 
@@ -14115,8 +14115,8 @@ GrhIndex=538
 ObjType=35
 Agarrable=0
 Valor=100000
-IndiceSkills=16
-CuantosSkills=100
+IndiceSkill=16
+CuantosSkill=100
 SkNecesarios=0
 
 [OBJ1128]
@@ -14125,8 +14125,8 @@ GrhIndex=538
 ObjType=35
 Agarrable=0
 Valor=20000
-IndiceSkills=8
-CuantosSkills=100
+IndiceSkill=8
+CuantosSkill=100
 SkNecesarios=0
 
 [OBJ1129]
@@ -14135,8 +14135,8 @@ GrhIndex=538
 ObjType=35
 Agarrable=0
 Valor=90000
-IndiceSkills=20
-CuantosSkills=100
+IndiceSkill=20
+CuantosSkill=100
 SkNecesarios=0
 
 [OBJ1130]
@@ -14258,6 +14258,7 @@ ObjType=3
 NumRopaje=91
 Agarrable=0
 RazaEnana=1
+NoRobable=1
 MaxDef=50
 MinDef=55
 Valor=1000000
@@ -14274,6 +14275,7 @@ ObjType=2
 Agarrable=0
 Anim=101
 RazaEnanaAnim=65
+NoRobable=1
 MinHit=20
 MaxHit=25
 Apunala=0
@@ -15619,12 +15621,12 @@ MinSkill=100
 Valor=0
 Crucial=0
 
-[OBJ1153]
+[OBJ1253]
 Name=Manual de Equitacion SUPREMO
 GrhIndex=538
 ObjType=35
 Agarrable=0
 Valor=90000
-IndiceSkills=21
-CuantosSkills=100
+IndiceSkill=21
+CuantosSkill=100
 SkNecesarios=0

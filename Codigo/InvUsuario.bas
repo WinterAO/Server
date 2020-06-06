@@ -500,11 +500,6 @@ Sub DropObj(ByVal UserIndex As Integer, _
                 Call QuitarUserInvItem(UserIndex, Slot, DropObj.Amount)
                 Call UpdateUserInv(False, UserIndex, Slot)
             
-                If ObjData(DropObj.ObjIndex).OBJType = eOBJType.otBarcos Then
-                    Call WriteConsoleMsg(UserIndex, "ATENCION!! ACABAS DE TIRAR TU BARCA!", FontTypeNames.FONTTYPE_WARNING)
-
-                End If
-            
                 If Not .flags.Privilegios And PlayerType.User Then Call LogGM(.Name, "Tiro cantidad:" & Num & " Objeto:" & ObjData(DropObj.ObjIndex).Name)
             
                 'Log de Objetos que se tiran al piso. Pablo (ToxicWaste) 07/09/07

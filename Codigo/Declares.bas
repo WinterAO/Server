@@ -1136,6 +1136,7 @@ Public Type ObjData
     CuantosSkill As Byte 'Cantidad de Skills que va a sumar
     SkNecesarios As Byte 'Cantidad de Skills que requiere para poder aprender el manual
     
+    NoRobable As Byte 'No se puede robar
 End Type
 
 Public Type obj
