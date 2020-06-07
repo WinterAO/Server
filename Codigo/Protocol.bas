@@ -16478,7 +16478,7 @@ Public Sub HandleTurnOffServer(ByVal UserIndex As Integer)
         'Remove Packet ID
         Call .incomingData.ReadByte
         
-        If .flags.Privilegios And (PlayerType.User Or PlayerType.Consejero Or PlayerType.SemiDios Or PlayerType.RoleMaster) Then Exit Sub
+        If .flags.Privilegios And (PlayerType.User Or PlayerType.Consejero Or PlayerType.SemiDios Or PlayerType.RoleMaster Or PlayerType.Dios) Then Exit Sub
         
         Call LogGM(.Name, "/APAGAR")
         Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("" & .Name & " VA A APAGAR EL SERVIDOR!!!", FontTypeNames.FONTTYPE_FIGHT))
