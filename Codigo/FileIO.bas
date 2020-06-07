@@ -1745,9 +1745,6 @@ Sub LoadSini()
     ContadorAntiPiquete = val(Lector.GetValue("INIT", "ContadorAntiPiquete"))
     MinutosCarcelPiquete = val(Lector.GetValue("INIT", "MinutosCarcelPiquete"))
 
-    'Inventario Inicial
-    InventarioUsarConfiguracionPersonalizada = CBool(val(Lector.GetValue("INVENTARIO", "InventarioUsarConfiguracionPersonalizada")))
-
     'Atributos Iniciales
     EstadisticasInicialesUsarConfiguracionPersonalizada = CBool(val(Lector.GetValue("ESTADISTICASINICIALESPJ", "Activado")))
 

@@ -417,11 +417,7 @@ Sub ConnectNewUser(ByVal UserIndex As Integer, _
         'Primero agregamos los items, ya que en caso de que el nivel
         'Inicial sea mayor al de un newbie, los items se borran automaticamente.
         '???????????????? INVENTARIO
-        If InventarioUsarConfiguracionPersonalizada Then
-            Call AddItemsCustomToNewUser(UserIndex)
-        Else
-            Call AddItemsToNewUser(UserIndex, UserClase, UserRaza)
-        End If
+        Call AddItemsToNewUser(UserIndex, UserClase, UserRaza)
 
         '???????????????? ATRIBUTOS
         Call SetAttributesToNewUser(UserIndex, UserClase, UserRaza)
@@ -627,6 +623,12 @@ Private Sub AddItemsToNewUser(ByVal UserIndex As Integer, ByVal UserClase As eCl
             Case eClass.Hunter
                 ' Arco (Newbie)
                 .Invent.Object(Slot).ObjIndex = 859
+            Case eClass.Mage
+                ' Baston de Mago (Newbie)
+                .Invent.Object(Slot).ObjIndex = 862
+            Case eClass.Brujo
+                ' Baston de Brujo (Newbie)
+                .Invent.Object(Slot).ObjIndex = 4
             Case Else
                 ' Daga (Newbie)
                 .Invent.Object(Slot).ObjIndex = 460
@@ -678,26 +680,6 @@ Private Sub AddItemsToNewUser(ByVal UserIndex As Integer, ByVal UserClase As eCl
         Next i
 
      End With
-End Sub
-
-Private Sub AddItemsCustomToNewUser(ByVal UserIndex As Integer)
-'*************************************************
-'Author: Lucas Recoaro (Recox)
-'Last modified: 19/03/2019
-'Agrega items customizados al usuario recien creado
-'*************************************************
-    Dim CantidadItemsIniciales As Integer
-    Dim Slot As Long
-
-    Call CargarObjetosIniciales
-
-    With UserList(UserIndex)
-        For Slot = 1 To MAX_OBJ_INICIAL
-            .Invent.Object(Slot).ObjIndex = ItemsIniciales(Slot).ObjIndex
-            .Invent.Object(Slot).Amount = ItemsIniciales(Slot).Amount
-            .Invent.Object(Slot).Equipped = ItemsIniciales(Slot).Equipped
-        Next Slot
-    End With
 End Sub
 
 Private Sub CargarObjetosIniciales()

@@ -80,7 +80,7 @@ usar primero los nros mas bajos.
 [INIT]
 'aca va el numero de OBJ mas alto, NO la cantidad de OBJs.
 'esto sirve para que los GMS puedan ver la lista completa de items para crear en una ventanita.
-NumOBJs=1253
+NumOBJs=1248
 
 
 [OBJ1]
@@ -134,11 +134,27 @@ LingO=0
 SkHerreria=15
 
 [OBJ4]
-Name=Arbol
-GrhIndex=7000
-ObjType=4
-Agarrable=1
-Shadow=1
+Name=Baston de Brujo (Newbie)
+GrhIndex=959
+ObjType=2
+Agarrable=0
+Anim=9
+RazaEnanaAnim=61
+newbie=1
+MinHit=1
+MaxHit=3
+Crucial=0
+CP1=PIRATA
+CP2=CAZADOR
+CP3=PALADIN
+CP4=CLERIGO
+CP5=ASESINO
+CP6=LADRON
+CP7=BANDIDO
+CP8=GUERRERO
+CP9=BARDO
+CP10=DRUIDA
+CP11=MAGO
 
 [OBJ5]
 Name=Arbol
@@ -13934,26 +13950,46 @@ ObjType=4
 Agarrable=1
 Shadow=1
 
-[OBJ1114]
-Name=Arbol
-GrhIndex=30686
-ObjType=4
-Agarrable=1
-Shadow=1
+[OBJ1214]
+Name=Montura de Sanguijuela
+GrhIndex=29873
+ObjType=25
+NumRopaje=628
+Agarrable=0
+MaxDef=150
+MinDef=120
+NoSeCae=1
+Valor=0
+Crucial=0
+MinSkill=50
 
-[OBJ1115]
-Name=Arbol
-GrhIndex=30683
-ObjType=4
-Agarrable=1
-Shadow=1
+[OBJ1215]
+Name=Montura gran Rey Mono
+GrhIndex=29873
+ObjType=25
+NumRopaje=629
+Agarrable=0
+MaxDef=130
+MinDef=120
+NoSeCae=1
+MinSkill=80
+Valor=0
+Crucial=0
 
-[OBJ1116]
-Name=Arbol
-GrhIndex=30686
-ObjType=4
-Agarrable=1
-Shadow=1
+[OBJ1216]
+Name=Montura Acuatica
+GrhIndex=29873
+ObjType=31
+MontTipo=1
+NumRopaje=629
+Agarrable=0
+MinHit=10
+MaxHit=25
+MinDef=5
+MaxDef=10
+Valor=24000
+Crucial=0
+MinSkill=100
 
 [OBJ1117]
 Name=Baston Nudoso Especial
@@ -14043,19 +14079,29 @@ Log=1
 NoSeCae=1
 NoRobable=1
 
-[OBJ1121]
-Name=Arbol
-GrhIndex=30682
-ObjType=4
-Agarrable=1
-Shadow=1
+[OBJ1221]
+Name=Montura de Dungeon
+GrhIndex=29873
+ObjType=25
+MontTipo=1
+NumRopaje=629
+Agarrable=0
+MaxDef=130
+MinDef=120
+NoSeCae=1
+MinSkill=100
+Valor=0
+Crucial=0
 
-[OBJ1122]
-Name=Arbol
-GrhIndex=30681
-ObjType=4
-Agarrable=1
-Shadow=1
+[OBJ1222]
+Name=Manual de Equitacion SUPREMO
+GrhIndex=538
+ObjType=35
+Agarrable=0
+Valor=90000
+IndiceSkill=21
+CuantosSkill=100
+SkNecesarios=0
 
 [OBJ1123]
 Name=Vestimenta de Campeon (E/G)
@@ -15565,68 +15611,3 @@ Llave=0
 IndexAbierta=1247
 IndexCerrada=1248
 IndexCerradaLlave=8
-
-[OBJ1249]
-Name=Montura de Sanguijuela
-GrhIndex=29873
-ObjType=25
-NumRopaje=628
-Agarrable=0
-MaxDef=150
-MinDef=120
-NoSeCae=1
-Valor=0
-Crucial=0
-MinSkill=50
-
-[OBJ1250]
-Name=Montura gran Rey Mono
-GrhIndex=29873
-ObjType=25
-NumRopaje=629
-Agarrable=0
-MaxDef=130
-MinDef=120
-NoSeCae=1
-MinSkill=80
-Valor=0
-Crucial=0
-
-[OBJ1251]
-Name=Montura Acuatica
-GrhIndex=29873
-ObjType=31
-MontTipo=1
-NumRopaje=629
-Agarrable=0
-MinHit=10
-MaxHit=25
-MinDef=5
-MaxDef=10
-Valor=24000
-Crucial=0
-MinSkill=100
-
-[OBJ1252]
-Name=Montura de Dungeon
-GrhIndex=29873
-ObjType=25
-MontTipo=1
-NumRopaje=629
-Agarrable=0
-MaxDef=130
-MinDef=120
-NoSeCae=1
-MinSkill=100
-Valor=0
-Crucial=0
-
-[OBJ1253]
-Name=Manual de Equitacion SUPREMO
-GrhIndex=538
-ObjType=35
-Agarrable=0
-Valor=90000
-IndiceSkill=21
-CuantosSkill=100
-SkNecesarios=0
