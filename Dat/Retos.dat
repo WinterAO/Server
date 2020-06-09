@@ -1,27 +1,27 @@
 [ARENA1]
-Mapa=13
-X=11
-X2=31
-Y=88
-Y2=72
+Mapa=120
+X=25
+X2=37
+Y=29
+Y2=37
 
 [ARENA2]
-Mapa=13
-X=31
-X2=11
-Y=10
-Y2=26
+Mapa=120
+X=23
+X2=36
+Y=75
+Y2=84
 
 [ARENA3]
-Mapa=13
-X=30
-X2=12
+Mapa=120
+X=80
+X2=68
 Y=44
-Y2=57
+Y2=80
 
 [ARENA4]
-Mapa=13
+Mapa=120
 X=58
 X2=40
-Y=46
+Y=71
 Y2=59

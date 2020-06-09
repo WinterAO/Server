@@ -157,18 +157,35 @@ CP10=DRUIDA
 CP11=MAGO
 
 [OBJ5]
-Name=Arbol
-GrhIndex=7001
-ObjType=4
-Agarrable=1
-Shadow=1
+Name=Espada Larga (Newbie)
+GrhIndex=504
+ObjType=2
+Agarrable=0
+Anim=21
+RazaEnanaAnim=72
+newbie=1
+MinHit=1
+MaxHit=3
+Crucial=0
+CP1=MAGO
+CP2=DRUIDA
+CP3=PIRATA
+CP4=BARDO
 
 [OBJ6]
-Name=Arbol
-GrhIndex=7002
-ObjType=4
-Agarrable=1
-Shadow=1
+Name=Martillo de Guerra (Newbie)
+GrhIndex=708
+ObjType=2
+Agarrable=0
+Anim=28
+RazaEnanaAnim=77
+newbie=1
+MinHit=1
+MaxHit=3
+Crucial=0
+CP1=MAGO
+CP2=DRUIDA
+CP3=BARDO
 
 [OBJ7] 'Puerta para negocio porque no tiene clave
 Name=Puerta de madera abierta
@@ -577,40 +594,50 @@ MinDef=0
 Valor=80
 Crucial=1
 
-[OBJ46]'Nieve 1
-Name=Arbol
-GrhIndex=641
-ObjType=4
-Agarrable=1
-Shadow=1
+[OBJ46]
+Name=Mascara de Dali
+GrhIndex=13053
+ObjType=17
+Agarrable=0
+Anim=114
+MaxDef=0
+MinDef=0
 
-[OBJ47]'Nieve 2
-Name=Arbol
-GrhIndex=642
-ObjType=4
-Agarrable=1
-Shadow=1
+[OBJ47]
+Name=Mascara de Guy Fawkes
+GrhIndex=13054
+ObjType=17
+Agarrable=0
+Anim=125
+MaxDef=0
+MinDef=0
 
-[OBJ48]'Nieve 3
-Name=Arbol
-GrhIndex=641
-ObjType=4
-Agarrable=1
-Shadow=1
+[OBJ48]
+Name=Mascara de Pikachu
+GrhIndex=13081
+ObjType=17
+Agarrable=0
+Anim=42
+MaxDef=0
+MinDef=0
 
-[OBJ49]'Nieve 4
-Name=Arbol
-GrhIndex=644
-ObjType=4
-Agarrable=1
-Shadow=1
+[OBJ49]
+Name=Mascara de Charmander
+GrhIndex=13082
+ObjType=17
+Agarrable=0
+Anim=43
+MaxDef=0
+MinDef=0
 
-[OBJ50]'Nieve 5
-Name=Arbol
-GrhIndex=647
-ObjType=4
-Agarrable=1
-Shadow=1
+[OBJ50]
+Name=Mascara de Bulbasur
+GrhIndex=13083
+ObjType=17
+Agarrable=0
+Anim=44
+MaxDef=0
+MinDef=0
 
 
 '<--------------------------------CASAS ULLA-------------------------------->
@@ -1523,8 +1550,8 @@ GrhIndex=566
 ObjType=2
 Agarrable=0
 Anim=24
-MinHit=7
-MaxHit=20
+MinHit=12
+MaxHit=18
 Valor=5950
 Crucial=0
 CP1=MAGO
@@ -1567,11 +1594,11 @@ SkHerreria=85
 
 [OBJ131]
 Name=Casco de Hierro Completo
-GrhIndex=558
+GrhIndex=13079
 ObjType=17
 NumRopaje=2
 Agarrable=0
-Anim=6
+Anim=10
 MaxDef=20
 MinDef=10
 Valor=4550
@@ -1588,11 +1615,11 @@ SkHerreria=75
 
 [OBJ132]
 Name=Casco de Hierro
-GrhIndex=559
+GrhIndex=13080
 ObjType=17
 NumRopaje=2
 Agarrable=0
-Anim=1
+Anim=55
 MaxDef=8
 MinDef=3
 Valor=700
@@ -1752,61 +1779,77 @@ GrhIndex=669
 ObjType=19
 Agarrable=1
 
-[OBJ147] 
-Name=Arbol
-GrhIndex=7001
-ObjType=4
-Agarrable=1
-Shadow=1
+[OBJ147]
+Name=Mascara de Squirtle
+GrhIndex=13084
+ObjType=17
+Agarrable=0
+Anim=45
+MaxDef=0
+MinDef=0
 
-[OBJ148] 
-Name=Arbol de la Jungla
-GrhIndex=7002
-ObjType=4
-Agarrable=1
-Shadow=1
+[OBJ148]
+Name=Mascara de Tenebrosa
+GrhIndex=13085
+ObjType=17
+Agarrable=0
+Anim=46
+MaxDef=0
+MinDef=0
 
-[OBJ149] 
-Name=Arbol
-GrhIndex=7000
-ObjType=4
-Agarrable=1
-Shadow=1
+[OBJ149]
+Name=Mascara de Calabza
+GrhIndex=12999
+ObjType=17
+Agarrable=0
+Anim=32
+MaxDef=0
+MinDef=0
 
-[OBJ150] 
-Name=Arbol
-GrhIndex=7222
-ObjType=4
-Agarrable=1
-Shadow=1
+[OBJ150]
+Name=Gafas
+GrhIndex=13017
+ObjType=17
+Agarrable=0
+Anim=37
+MaxDef=0
+MinDef=0
 
-[OBJ151] 
-Name=Arbol
-GrhIndex=7223
-ObjType=4
-Agarrable=1
-Shadow=1
+[OBJ151]
+Name=Gafas Amarilla
+GrhIndex=13017
+ObjType=17
+Agarrable=0
+Anim=38
+MaxDef=0
+MinDef=0
 
-[OBJ152] 
-Name=Arbol
-GrhIndex=7224
-ObjType=4
-Agarrable=1
-Shadow=1
+[OBJ152]
+Name=Gafas Verde
+GrhIndex=13017
+ObjType=17
+Agarrable=0
+Anim=39
+MaxDef=0
+MinDef=0
 
-[OBJ153] 
-Name=Arbol
-GrhIndex=7225
-ObjType=4
-Agarrable=1
-Shadow=1
+[OBJ153]
+Name=Gafas Azul
+GrhIndex=13017
+ObjType=17
+Agarrable=0
+Anim=40
+MaxDef=0
+MinDef=0
 
-[OBJ154] 
-Name=Arbol
-GrhIndex=7226
-ObjType=4
-Agarrable=1
-Shadow=1
+[OBJ154]
+Name=Gafas Violeta
+GrhIndex=13017
+ObjType=17
+Agarrable=0
+Anim=41
+MaxDef=0
+MinDef=0
 
 [OBJ155]
 Name=Cama
@@ -4226,11 +4269,11 @@ SkHerreria=35
 
 [OBJ370]
 Name=Capucha de Cazador
-GrhIndex=467
+GrhIndex=13078
 ObjType=17
 NumRopaje=2
 Agarrable=0
-Anim=9
+Anim=138
 MaxDef=14
 MinDef=6
 Valor=4550
@@ -4392,11 +4435,11 @@ Crucial=1
 
 [OBJ383]
 Name=Sombrero Magico
-GrhIndex=18994
+GrhIndex=13073
 ObjType=17
 NumRopaje=2
 Agarrable=0
-Anim=7
+Anim=75
 MaxDef=1
 MinDef=1
 DefensaMagicaMin=7
@@ -4701,8 +4744,8 @@ ObjType=2
 Agarrable=0
 Anim=13
 RazaEnanaAnim=63
-MinHit=13
-MaxHit=20
+MinHit=16
+MaxHit=21
 Valor=36200
 Crucial=0
 CP1=MAGO
@@ -4741,11 +4784,11 @@ SkHerreria=20
 
 [OBJ405]
 Name=Casco de Plata
-GrhIndex=717
+GrhIndex=13067
 ObjType=17
 NumRopaje=2
 Agarrable=0
-Anim=8
+Anim=77
 MaxDef=25
 MinDef=20
 Valor=26100
@@ -8016,11 +8059,11 @@ SkCarpinteria=85
 
 [OBJ661]
 Name=Sombrero de Aprendiz
-GrhIndex=1013
+GrhIndex=13072
 ObjType=17
 NumRopaje=2
 Agarrable=0
-Anim=3
+Anim=19
 MaxDef=1
 MinDef=1
 DefensaMagicaMin=4
@@ -8041,11 +8084,11 @@ CP11=BRUJO
 
 [OBJ662]
 Name=Sombrero de Mago
-GrhIndex=1018
+GrhIndex=13033
 ObjType=17
 NumRopaje=2
 Agarrable=0
-Anim=4
+Anim=73
 MaxDef=1
 MinDef=1
 DefensaMagicaMin=10
@@ -8718,8 +8761,8 @@ Name=Anillo de Disolucion Magica
 GrhIndex=4902
 ObjType=18
 Agarrable=0
-DefensaMagicaMax=22
-DefensaMagicaMin=18
+DefensaMagicaMax=18
+DefensaMagicaMin=16
 Valor=43500
 Crucial=0
 CP1=MAGO
@@ -8788,11 +8831,13 @@ Agarrable=1
 Texto=Aqui yace el alma de Cronos, un dios que ha dado mucho por nuestro mundo. Descansa, hermano... el pueblo de Argentum jamas te olvidara!
 
 [OBJ704]
-Name=Arbol
-GrhIndex=30680
-ObjType=4
-Agarrable=1
-Shadow=1
+Name=Gorro de Jamaicano
+GrhIndex=13065
+ObjType=17
+Agarrable=0
+Anim=123
+MaxDef=0
+MinDef=0
 
 [OBJ705]
 Name=El Ojo del Demiurgo
@@ -9626,18 +9671,24 @@ ObjType=20
 Agarrable=1
 
 [OBJ825]
-Name=Arbol
-GrhIndex=1529
-ObjType=4
-Agarrable=1
-Shadow=1
+Name=Gafas 3D
+GrhIndex=13017
+ObjType=17
+Agarrable=0
+Anim=119
+MaxDef=0
+MinDef=0
 
 [OBJ826]
-Name=Arbol
-GrhIndex=1530
-ObjType=4
-Agarrable=1
-Shadow=1
+Name=Tunica de Akatsuki
+GrhIndex=3018
+ObjType=3
+NumRopaje=635
+Agarrable=0
+MaxDef=0
+MinDef=0
+Valor=0
+Crucial=1
 
 [OBJ827]
 Name=Arbol
@@ -12102,11 +12153,11 @@ Crucial=0
 
 [OBJ1001]
 Name=Casco de Aguila
-GrhIndex=20238
+GrhIndex=13077
 ObjType=17
 NumRopaje=2
 Agarrable=0
-Anim=14
+Anim=136
 MaxDef=5
 MinDef=1
 Valor=2500
@@ -12114,11 +12165,11 @@ Crucial=0
 
 [OBJ1002]
 Name=Casco de Lobo
-GrhIndex=20066
+GrhIndex=13074
 ObjType=17
 NumRopaje=2
 Agarrable=0
-Anim=11
+Anim=133
 MaxDef=7
 MinDef=3
 Valor=4200
@@ -12127,11 +12178,11 @@ CP1=MAGO
 
 [OBJ1003]
 Name=Casco de Oso
-GrhIndex=20067
+GrhIndex=13075
 ObjType=17
 NumRopaje=2
 Agarrable=0
-Anim=12
+Anim=134
 MaxDef=15
 MinDef=10
 DefensaMagicaMin=4
@@ -12152,11 +12203,11 @@ CP11=BRUJO
 
 [OBJ1004]
 Name=Casco de Tigre
-GrhIndex=20068
+GrhIndex=13076
 ObjType=17
 NumRopaje=2
 Agarrable=0
-Anim=13
+Anim=135
 MaxDef=15
 MinDef=10
 DefensaMagicaMin=8
@@ -12242,10 +12293,10 @@ CP10=CLERIGO
 
 [OBJ1010]
 Name=Sombrero Pirata
-GrhIndex=22034
+GrhIndex=13068
 ObjType=17
 Agarrable=0
-Anim=15
+Anim=130
 MaxDef=6
 MinDef=2
 DefensaMagicaMin=5
@@ -14377,7 +14428,7 @@ Log=1
 
 [OBJ1141]
 Name=Casco de Plata Completo
-GrhIndex=29126
+GrhIndex=13069
 ObjType=17
 NumRopaje=2
 Agarrable=0
@@ -14557,11 +14608,11 @@ SkHerreria=85
 
 [OBJ1151]
 Name=Sombrero espectral magico
-GrhIndex=29281
+GrhIndex=13071
 ObjType=17
 NumRopaje=2
 Agarrable=0
-Anim=22
+Anim=115
 MaxDef=30
 MinDef=20
 DefensaMagicaMin=20

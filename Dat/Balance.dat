@@ -61,7 +61,7 @@ Clerigo=0.85
 Bardo=0.7
 Mago=0.5
 Druida=0.65
-Brujo=0.8
+Brujo=0.5
 
 [MODATAQUEPROYECTILES]
 Guerrero=0.8
@@ -75,7 +75,7 @@ Clerigo=0.7
 Bardo=0.7
 Mago=0.5
 Druida=0.75
-Brujo=0.7
+Brujo=0.5
 
 [MODATAQUEWRESTLING]
 Guerrero=0.6
@@ -89,7 +89,7 @@ Clerigo=0.4
 Bardo=0.4
 Mago=0.3
 Druida=0.4
-Brujo=0.5
+Brujo=0.4
 
 [MODDANOARMAS]
 Guerrero=1.1
@@ -103,7 +103,7 @@ Clerigo=0.8
 Bardo=0.75
 Mago=0.5
 Druida=0.7
-Brujo=0.8
+Brujo=0.5
 
 [MODDANOPROYECTILES]
 Guerrero=0.9
@@ -117,7 +117,7 @@ Clerigo=0.7
 Bardo=0.7
 Mago=0.5
 Druida=0.75
-Brujo=0.7
+Brujo=0.5
 
 [MODDANOWRESTLING]
 Guerrero=0.4
@@ -159,7 +159,7 @@ Clerigo=8.5
 Bardo=8.5
 Mago=7.5
 Druida=8.5
-Brujo=9.5
+Brujo=8
 
 [DISTRIBUCION]
 La suma de los "E" debe ser siempre 100.

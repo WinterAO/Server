@@ -31,7 +31,7 @@ Option Explicit
 
 #If False Then
 
-    Dim X, Y, Map, K, Errhandler, obj, index, n, Email As Variant
+    Dim X, Y, Map, K, ErrHandler, obj, index, N, Email As Variant
 
 #End If
 
@@ -284,6 +284,9 @@ Sub Main()
     ChDrive App.Path
     Call LoadMotd
     Call BanIpCargar
+    
+    Call BanGlobalChatCargar
+    GlobalChatActive = True
     
     UltimoSlotLimpieza = -1
     
@@ -784,12 +787,12 @@ Sub Restart()
     If frmMain.Visible Then frmMain.txtStatus.Text = Date & " " & time & " servidor reiniciado correctamente. - Escuchando conexiones entrantes ..."
     
     'Log it
-    Dim n As Integer
+    Dim N As Integer
 
-    n = FreeFile
-    Open App.Path & "\logs\Main.log" For Append Shared As #n
-    Print #n, Date & " " & time & " servidor reiniciado."
-    Close #n
+    N = FreeFile
+    Open App.Path & "\logs\Main.log" For Append Shared As #N
+    Print #N, Date & " " & time & " servidor reiniciado."
+    Close #N
     
     'Ocultar
     
@@ -836,7 +839,7 @@ Public Sub EfectoLluvia(ByVal UserIndex As Integer)
     '
     '***************************************************
 
-    On Error GoTo Errhandler
+    On Error GoTo ErrHandler
 
     If UserList(UserIndex).flags.UserLogged Then
         If Intemperie(UserIndex) Then
@@ -852,7 +855,7 @@ Public Sub EfectoLluvia(ByVal UserIndex As Integer)
     End If
     
     Exit Sub
-Errhandler:
+ErrHandler:
     LogError ("Error en EfectoLluvia")
 
 End Sub
@@ -1306,7 +1309,7 @@ Public Sub EfectoVeneno(ByVal UserIndex As Integer)
     '
     '***************************************************
 
-    Dim n As Integer
+    Dim N As Integer
     
     With UserList(UserIndex)
 
@@ -1315,8 +1318,8 @@ Public Sub EfectoVeneno(ByVal UserIndex As Integer)
         Else
             Call WriteConsoleMsg(UserIndex, "Estas envenenado, si no te curas moriras.", FontTypeNames.FONTTYPE_VENENO)
             .Counters.Veneno = 0
-            n = RandomNumber(1, 5)
-            .Stats.MinHp = .Stats.MinHp - n
+            N = RandomNumber(1, 5)
+            .Stats.MinHp = .Stats.MinHp - N
 
             If .Stats.MinHp < 1 Then Call UserDie(UserIndex)
             Call WriteUpdateHP(UserIndex)
@@ -1783,4 +1786,127 @@ Private Sub InicializarSonidos()
     SND_RESUCITAR_SACERDOTE = 103
     SND_CURAR_SACERDOTE = 104
     
+End Sub
+
+Public Sub LogGlobal(ByVal str As String)
+'***************************************************
+'Autor: Lorwik
+'Fecha: 09/06/2020
+'Descripcion: Guardamos todo lo que se habla por el chat global
+'***************************************************
+
+    Dim nfile As Integer
+    
+    nfile = FreeFile ' obtenemos un canal
+    Open App.Path & "\logs\GlobalChat(" & Month(Date) & "-" & Year(Date) & ").log" For Append Shared As #nfile
+    
+        Print #nfile, Date & " " & time & " " & str
+        
+    Close #nfile
+
+End Sub
+
+Public Sub BanGlobalChatCargar()
+'***************************************************
+'Autor: Lorwik
+'Fecha: 09/06/2020
+'Descripcion: Carga la lista de baneados del chat global
+'***************************************************
+    Dim ArchN As Long
+    Dim Tmp As String
+    Dim ArchivoLog As String
+
+    ArchivoLog = App.Path & "\logs\BanGlobalChat.dat"
+
+    Set BanUsersChatGlobal = New Collection
+
+    ArchN = FreeFile()
+    Open ArchivoLog For Input As #ArchN
+
+    Do While Not EOF(ArchN)
+        Line Input #ArchN, Tmp
+        BanUsersChatGlobal.Add Tmp
+    Loop
+
+    Close #ArchN
+End Sub
+
+Public Sub BanGlobalChatAgregar(ByVal UserName As String)
+'***************************************************
+'Autor: Lorwik
+'Fecha: 09/06/2020
+'Descripcion: Agrega un nuevo baneado del chat global
+'***************************************************
+
+    BanUsersChatGlobal.Add UserName
+
+    Call BanGlobalChatGuardar
+End Sub
+
+Public Function BanGlobalChatBuscar(ByVal UserName As String) As Long
+'***************************************************
+'Autor: Lorwik
+'Fecha: 09/06/2020
+'Descripcion: Busca un usuario baneado del chat global de entre la lista
+'***************************************************
+
+    Dim Dale As Boolean
+    Dim LoopC As Long
+
+    Dale = True
+    LoopC = 1
+    Do While LoopC <= BanUsersChatGlobal.Count And Dale
+        Dale = (BanUsersChatGlobal.Item(LoopC) <> UserName)
+        LoopC = LoopC + 1
+    Loop
+
+    If Dale Then
+        BanGlobalChatBuscar = 0
+    Else
+        BanGlobalChatBuscar = LoopC - 1
+    End If
+End Function
+
+Public Function BanGlobalChatQuitar(ByVal UserName As String) As Boolean
+'***************************************************
+'Autor: Lorwik
+'Fecha: 09/06/2020
+'Descripcion: Elimina a un usuario baneado del chat global de la lista
+'***************************************************
+On Error Resume Next
+
+    Dim N As Long
+
+    N = BanGlobalChatBuscar(UserName)
+    If N > 0 Then
+        BanUsersChatGlobal.Remove N
+        BanGlobalChatGuardar
+        BanGlobalChatQuitar = True
+    Else
+        BanGlobalChatQuitar = False
+    End If
+
+End Function
+
+Public Sub BanGlobalChatGuardar()
+'***************************************************
+'Autor: Lorwik
+'Fecha: 09/06/2020
+'Descripcion: Guarda la lista de usuarios baneados del chat global
+'***************************************************
+
+    Dim ArchivoLog As String
+    Dim ArchN As Long
+    Dim LoopC As Long
+
+    ArchivoLog = App.Path & "\logs\BanGlobalChat.dat"
+
+    ArchN = FreeFile()
+    Open ArchivoLog For Output As #ArchN
+
+    For LoopC = 1 To BanUsersChatGlobal.Count
+        Print #ArchN, BanUsersChatGlobal.Item(LoopC)
+    Next LoopC
+
+    Close #ArchN
 End Sub

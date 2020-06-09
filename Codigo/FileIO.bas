@@ -129,7 +129,7 @@ Public MapDat As tMapDat
 
 #If False Then
 
-    Dim X, Y, n, Map, Mapa, Email, max, Value As Variant
+    Dim X, Y, N, Map, Mapa, Email, max, Value As Variant
 
 #End If
 
@@ -399,17 +399,17 @@ Public Function TxtDimension(ByVal Name As String) As Long
     '
     '***************************************************
 
-    Dim n As Integer, cad As String, Tam As Long
+    Dim N As Integer, cad As String, Tam As Long
 
-    n = FreeFile(1)
-    Open Name For Input As #n
+    N = FreeFile(1)
+    Open Name For Input As #N
     Tam = 0
 
-    Do While Not EOF(n)
+    Do While Not EOF(N)
         Tam = Tam + 1
-        Line Input #n, cad
+        Line Input #N, cad
     Loop
-    Close n
+    Close N
     TxtDimension = Tam
 
 End Function
@@ -424,16 +424,16 @@ Public Sub CargarForbidenWords()
 
     ReDim ForbidenNames(1 To TxtDimension(DatPath & "NombresInvalidos.txt"))
 
-    Dim n As Integer, i As Integer
+    Dim N As Integer, i As Integer
 
-    n = FreeFile(1)
-    Open DatPath & "NombresInvalidos.txt" For Input As #n
+    N = FreeFile(1)
+    Open DatPath & "NombresInvalidos.txt" For Input As #N
     
     For i = 1 To UBound(ForbidenNames)
-        Line Input #n, ForbidenNames(i)
+        Line Input #N, ForbidenNames(i)
     Next i
     
-    Close n
+    Close N
 
     If frmMain.Visible Then frmMain.txtStatus.Text = Date & " " & time & " - NombresInvalidos.txt han cargado con exito."
 
@@ -460,7 +460,7 @@ Public Sub CargarHechizos()
     '
     '###################################################
 
-    On Error GoTo Errhandler
+    On Error GoTo ErrHandler
 
     If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando Hechizos."
     
@@ -582,7 +582,7 @@ Public Sub CargarHechizos()
     
     Exit Sub
 
-Errhandler:
+ErrHandler:
     MsgBox "Error cargando hechizos.dat " & Err.Number & ": " & Err.description
  
 End Sub
@@ -854,13 +854,13 @@ Sub LoadArmasHerreria()
     
     If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando armas crafteables por Herreria."
     
-    Dim n As Integer, lc As Integer
+    Dim N As Integer, lc As Integer
     
-    n = val(GetVar(DatPath & "ArmasHerrero.dat", "INIT", "NumArmas"))
+    N = val(GetVar(DatPath & "ArmasHerrero.dat", "INIT", "NumArmas"))
     
-    ReDim Preserve ArmasHerrero(1 To n) As Integer
+    ReDim Preserve ArmasHerrero(1 To N) As Integer
     
-    For lc = 1 To n
+    For lc = 1 To N
         ArmasHerrero(lc) = val(GetVar(DatPath & "ArmasHerrero.dat", "Arma" & lc, "Index"))
     Next lc
     
@@ -877,13 +877,13 @@ Sub LoadArmadurasHerreria()
         
     If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando armaduras crafteables por Herreria."
 
-    Dim n As Integer, lc As Integer
+    Dim N As Integer, lc As Integer
     
-    n = val(GetVar(DatPath & "ArmadurasHerrero.dat", "INIT", "NumArmaduras"))
+    N = val(GetVar(DatPath & "ArmadurasHerrero.dat", "INIT", "NumArmaduras"))
     
-    ReDim Preserve ArmadurasHerrero(1 To n) As Integer
+    ReDim Preserve ArmadurasHerrero(1 To N) As Integer
     
-    For lc = 1 To n
+    For lc = 1 To N
         ArmadurasHerrero(lc) = val(GetVar(DatPath & "ArmadurasHerrero.dat", "Armadura" & lc, "Index"))
     Next lc
     
@@ -971,13 +971,13 @@ Sub LoadObjCarpintero()
     
     If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando los objetos crafteables via Carpinteria"
     
-    Dim n As Integer, lc As Integer
+    Dim N As Integer, lc As Integer
     
-    n = val(GetVar(DatPath & "ObjCarpintero.dat", "INIT", "NumObjs"))
+    N = val(GetVar(DatPath & "ObjCarpintero.dat", "INIT", "NumObjs"))
     
-    ReDim Preserve ObjCarpintero(1 To n) As Integer
+    ReDim Preserve ObjCarpintero(1 To N) As Integer
     
-    For lc = 1 To n
+    For lc = 1 To N
         ObjCarpintero(lc) = val(GetVar(DatPath & "ObjCarpintero.dat", "Obj" & lc, "Index"))
     Next lc
     
@@ -993,13 +993,13 @@ Sub LoadObjArtesano()
     
     If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando los objetos crafteables del Artesano"
     
-    Dim n As Integer, lc As Integer
+    Dim N As Integer, lc As Integer
     
-    n = val(GetVar(DatPath & "ObjArtesano.dat", "INIT", "NumObjs"))
+    N = val(GetVar(DatPath & "ObjArtesano.dat", "INIT", "NumObjs"))
     
-    ReDim Preserve ObjArtesano(1 To n) As Integer
+    ReDim Preserve ObjArtesano(1 To N) As Integer
     
-    For lc = 1 To n
+    For lc = 1 To N
         ObjArtesano(lc) = val(GetVar(DatPath & "ObjArtesano.dat", "Obj" & lc, "Index"))
     Next lc
     
@@ -1032,7 +1032,7 @@ Sub LoadOBJData()
 
     'Call LogTarea("Sub LoadOBJData")
 
-    On Error GoTo Errhandler
+    On Error GoTo ErrHandler
 
     If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando base de datos de los objetos."
     
@@ -1266,18 +1266,18 @@ Sub LoadOBJData()
             'CHECK: !!! Esto es provisorio hasta que los de Dateo cambien los valores de string a numerico
             Dim i As Integer
 
-            Dim n As Integer
+            Dim N As Integer
 
             Dim S As String
 
             For i = 1 To NUMCLASES
                 S = UCase$(Leer.GetValue("OBJ" & Object, "CP" & i))
-                n = 1
+                N = 1
 
-                Do While LenB(S) > 0 And UCase$(ListaClases(n)) <> S
-                    n = n + 1
+                Do While LenB(S) > 0 And UCase$(ListaClases(N)) <> S
+                    N = N + 1
                 Loop
-                .ClaseProhibida(i) = IIf(LenB(S) > 0, n, 0)
+                .ClaseProhibida(i) = IIf(LenB(S) > 0, N, 0)
             Next i
             
             .DefensaMagicaMax = val(Leer.GetValue("OBJ" & Object, "DefensaMagicaMax"))
@@ -1342,7 +1342,7 @@ Sub LoadOBJData()
     If frmMain.Visible Then frmMain.txtStatus.Text = Date & " " & time & " - Se cargo base de datos de los objetos. Operacion Realizada con exito."
     
     Exit Sub
-Errhandler:
+ErrHandler:
     MsgBox "error cargando objetos " & Err.Number & ": " & Err.description
 
 End Sub
@@ -1765,6 +1765,7 @@ Sub LoadSini()
     IntervaloUserPuedeCastear = val(Lector.GetValue("INTERVALOS", "IntervaloLanzaHechizo"))
     IntervaloUserPuedeTrabajar = val(Lector.GetValue("INTERVALOS", "IntervaloTrabajo"))
     IntervaloUserPuedeAtacar = val(Lector.GetValue("INTERVALOS", "IntervaloUserPuedeAtacar"))
+    INTERVALO_GLOBAL = val(Lector.GetValue("INTERVALOS", "IntervaloGlobal"))
     
     'TODO : Agregar estos intervalos al form!!!
     IntervaloMagiaGolpe = val(Lector.GetValue("INTERVALOS", "IntervaloMagiaGolpe"))
@@ -1775,6 +1776,7 @@ Sub LoadSini()
     IntervaloPuedeSerAtacado = val(Lector.GetValue("INTERVALOS", "IntervaloPuedeSerAtacado"))
     IntervaloAtacable = val(Lector.GetValue("INTERVALOS", "IntervaloAtacable"))
     IntervaloOwnedNpc = val(Lector.GetValue("INTERVALOS", "IntervaloOwnedNpc"))
+    
 
     MinutosWs = val(Lector.GetValue("INTERVALOS", "IntervaloWS"))
 

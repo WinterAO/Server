@@ -29,7 +29,7 @@ Attribute VB_Name = "TCP"
 
 #If False Then
 
-    Dim Errhandler, Length, index As Variant
+    Dim ErrHandler, Length, index As Variant
 
 #End If
 
@@ -37,7 +37,7 @@ Option Explicit
 
 #If False Then
 
-    Dim X, Y, n, Mapa, Email, Length As Variant
+    Dim X, Y, N, Mapa, Email, Length As Variant
     
 #End If
 
@@ -431,6 +431,10 @@ Sub ConnectNewUser(ByVal UserIndex As Integer, _
         .Char.Head = Head
     
         .OrigChar = .Char
+        
+        'De primeras podra hablar por global
+        .flags.Global = 1
+        .Counters.LastGlobalMsg = INTERVALO_GLOBAL
 
         #If ConUpTime Then
             .LogOnTime = Now
@@ -629,6 +633,12 @@ Private Sub AddItemsToNewUser(ByVal UserIndex As Integer, ByVal UserClase As eCl
             Case eClass.Brujo
                 ' Baston de Brujo (Newbie)
                 .Invent.Object(Slot).ObjIndex = 4
+            Case eClass.Paladin
+                ' Martillo de Guerra (Newbie)
+                .Invent.Object(Slot).ObjIndex = 5
+            Case eClass.Warrior
+                ' Espada Larga (Newbie)
+                .Invent.Object(Slot).ObjIndex = 6
             Case Else
                 ' Daga (Newbie)
                 .Invent.Object(Slot).ObjIndex = 460
@@ -791,7 +801,7 @@ Sub CloseSocket(ByVal UserIndex As Integer)
     '4/4/2020: FrankoH298 - Flusheamos el buffer antes de cerrar el socket.
     '
     '***************************************************
-    On Error GoTo Errhandler
+    On Error GoTo ErrHandler
     
     Call FlushBuffer(UserIndex)
     
@@ -824,7 +834,7 @@ Sub CloseSocket(ByVal UserIndex As Integer)
 
     Exit Sub
 
-Errhandler:
+ErrHandler:
 
     Call ResetUserSlot(UserIndex)
         
@@ -956,7 +966,7 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
     '24/07/2010: ZaMa - La posicion de comienzo es namehuak, como se habia definido inicialmente.
     '12/10/2019: CHOTS - Sistema de cuentas
     '***************************************************
-    Dim n    As Integer
+    Dim N    As Integer
 
     Dim tStr As String
 
@@ -1405,16 +1415,16 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
             Call ApiEndpointSendUserConnectedMessageDiscord(Name, .Desc, criminal(UserIndex), ListaClases(.clase))
         End If
 
-        n = FreeFile
-        Open App.Path & "\logs\numusers.log" For Output As n
-        Print #n, NumUsers
-        Close #n
+        N = FreeFile
+        Open App.Path & "\logs\numusers.log" For Output As N
+        Print #N, NumUsers
+        Close #N
     
-        n = FreeFile
+        N = FreeFile
         'Log
-        Open App.Path & "\logs\Connect.log" For Append Shared As #n
-        Print #n, .Name & " ha entrado al juego. UserIndex:" & UserIndex & " " & time & " " & Date
-        Close #n
+        Open App.Path & "\logs\Connect.log" For Append Shared As #N
+        Print #N, .Name & " ha entrado al juego. UserIndex:" & UserIndex & " " & time & " " & Date
+        Close #N
 
     End With
 
@@ -1710,6 +1720,7 @@ Sub ResetUserFlags(ByVal UserIndex As Integer)
         .ParalizedByIndex = 0
         .ParalizedByNpcIndex = 0
         .TargetBot = 0
+        .Global = 0
         
         If .OwnedNpc <> 0 Then
             Call PerdioNpc(UserIndex)
@@ -1838,9 +1849,9 @@ Sub CloseUser(ByVal UserIndex As Integer)
     '
     '***************************************************
 
-    On Error GoTo Errhandler
+    On Error GoTo ErrHandler
 
-    Dim n    As Integer
+    Dim N    As Integer
 
     Dim Map  As Integer
 
@@ -1979,16 +1990,16 @@ Sub CloseUser(ByVal UserIndex As Integer)
     
         Call MostrarNumUsers
     
-        n = FreeFile(1)
-        Open App.Path & "\logs\Connect.log" For Append Shared As #n
-        Print #n, Name & " ha dejado el juego. " & "User Index:" & UserIndex & " " & time & " " & Date
-        Close #n
+        N = FreeFile(1)
+        Open App.Path & "\logs\Connect.log" For Append Shared As #N
+        Print #N, Name & " ha dejado el juego. " & "User Index:" & UserIndex & " " & time & " " & Date
+        Close #N
 
     End With
 
     Exit Sub
 
-Errhandler:
+ErrHandler:
     Call LogError("Error en CloseUser. Numero " & Err.Number & " Descripcion: " & Err.description)
 
 End Sub
@@ -2000,7 +2011,7 @@ Sub ReloadSokcet()
     '
     '***************************************************
 
-    On Error GoTo Errhandler
+    On Error GoTo ErrHandler
 
     Call LogApiSock("ReloadSokcet() " & NumUsers & " " & LastUser & " " & MaxUsers)
     
@@ -2013,7 +2024,7 @@ Sub ReloadSokcet()
 
     Exit Sub
     
-Errhandler:
+ErrHandler:
     Call LogError("Error en CheckSocketState " & Err.Number & ": " & Err.description)
 
 End Sub

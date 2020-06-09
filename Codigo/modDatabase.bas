@@ -370,31 +370,32 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
         query = query & "matados_ingreso = " & .Faccion.MatadosIngreso & ", "
         query = query & "siguiente_recompensa = " & .Faccion.NextRecompensa & ", "
         query = query & "guild_index = " & .GuildIndex & " "
+        query = query & "global = " & .flags.Global & " "
         query = query & "WHERE id = " & .ID & ";"
         Call Database_Connection.Execute(query)
 
         'User attributes
-        query = "DELETE FROM attribute WHERE user_id = " & .ID & ";"
-        Call Database_Connection.Execute(query)
+        'query = "DELETE FROM attribute WHERE user_id = " & .ID & ";"
+        'Call Database_Connection.Execute(query)
 
-        query = "INSERT INTO attribute (user_id, number, value) VALUES "
+        'query = "INSERT INTO attribute (user_id, number, value) VALUES "
 
-        For LoopC = 1 To NUMATRIBUTOS
-            query = query & "("
-            query = query & .ID & ", "
-            query = query & LoopC & ", "
-            query = query & .Stats.UserAtributos(LoopC) & ")"
+        'For LoopC = 1 To NUMATRIBUTOS
+        '    query = query & "("
+        '    query = query & .ID & ", "
+        '    query = query & LoopC & ", "
+        '    query = query & .Stats.UserAtributos(LoopC) & ")"
 
-            If LoopC < NUMATRIBUTOS Then
-                query = query & ", "
-            Else
-                query = query & ";"
+        '    If LoopC < NUMATRIBUTOS Then
+        '        query = query & ", "
+        '    Else
+        '        query = query & ";"
 
-            End If
+        '    End If
 
-        Next LoopC
+        'Next LoopC
 
-        Call Database_Connection.Execute(query)
+        'Call Database_Connection.Execute(query)
 
         'User spells
         query = "DELETE FROM spell WHERE user_id = " & .ID & ";"
@@ -631,6 +632,7 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
         .flags.Navegando = Database_RecordSet!is_sailing
         .flags.Paralizado = Database_RecordSet!is_paralyzed
         .Counters.Pena = Database_RecordSet!counter_pena
+        .flags.Global = Database_RecordSet!Global
 
         If Database_RecordSet!pertenece_consejo_real Then
             .flags.Privilegios = .flags.Privilegios Or PlayerType.RoyalCouncil

@@ -1459,6 +1459,8 @@ Public Type UserFlags
     ParalizedByNpcIndex As Integer
     
     TargetBot As Byte
+    
+    Global As Integer 'Indica si el usuario puede usar el global
 
 End Type
 
@@ -1518,6 +1520,7 @@ Public Type UserCounters
     
     PacketsTick As Byte
 
+    LastGlobalMsg As Long
 End Type
 
 'Cosas faccionarias.
@@ -2335,6 +2338,8 @@ Public Enum eGMCommands
     LimpiarMundo            '/LIMPIARMUNDO
     EditGems                '/EDITGEMS
     ConsultarGemas          '/CONSULTARGEMS
+    SilenciarGlobal         '/SILENCIARGLOBAL
+    ToggleGlobal            '/TOGGLEGLOBAL
 End Enum
 
 Public Const MATRIX_INITIAL_MAP                     As Integer = 1
@@ -2371,7 +2376,7 @@ Public Const ORCO_H_ULTIMA_CABEZA                   As Integer = 530
 
 Public Const VAMPIRO_H_PRIMER_CABEZA                As Integer = 623
 
-Public Const VAMPIRO_H_ULTIMA_CABEZA                As Integer = 631
+Public Const VAMPIRO_H_ULTIMA_CABEZA                As Integer = 632
 
 '**************************************************
 Public Const HUMANO_M_PRIMER_CABEZA                 As Integer = 70
@@ -2398,9 +2403,9 @@ Public Const ORCO_M_PRIMER_CABEZA                   As Integer = 570
 
 Public Const ORCO_M_ULTIMA_CABEZA                   As Integer = 599
 
-Public Const VAMPIRO_M_PRIMER_CABEZA                As Integer = 632
+Public Const VAMPIRO_M_PRIMER_CABEZA                As Integer = 633
 
-Public Const VAMPIRO_M_ULTIMA_CABEZA                As Integer = 640
+Public Const VAMPIRO_M_ULTIMA_CABEZA                As Integer = 642
 
 ' Por ahora la dejo constante.. SI se quisiera extender la propiedad de paralziar, se podria hacer
 ' una nueva variable en el dat.
@@ -2482,3 +2487,8 @@ Type tRetarded
 End Type
 
 Public RetardoSpawn(1 To MAXNPCS) As tRetarded
+
+'CHAT GLOBAL
+Public Declare Function timeGetTime Lib "winmm.dll" () As Long
+Public BanUsersChatGlobal As Collection
+Public GlobalChatActive As Boolean
