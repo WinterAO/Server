@@ -9691,18 +9691,26 @@ Valor=0
 Crucial=1
 
 [OBJ827]
-Name=Arbol
-GrhIndex=1531
-ObjType=4
-Agarrable=1
-Shadow=1
+Name=Armadura de Staff
+GrhIndex=9498
+ObjType=3
+NumRopaje=636
+Agarrable=0
+MaxDef=0
+MinDef=0
+Valor=0
+Crucial=1
 
 [OBJ828]
-Name=Arbol
-GrhIndex=1532
-ObjType=4
-Agarrable=1
-Shadow=1
+Name=Armadura de Staff 2
+GrhIndex=9525
+ObjType=3
+NumRopaje=637
+Agarrable=0
+MaxDef=0
+MinDef=0
+Valor=0
+Crucial=1
 
 [OBJ829]
 Name=Arbol
