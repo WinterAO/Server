@@ -8343,7 +8343,7 @@ Private Sub HandleGuildFundate(ByVal UserIndex As Integer)
     With UserList(UserIndex)
         Call .incomingData.ReadByte
         
-        If EsGm(UserIndex) Then
+        If EsGm(UserIndex) Or EsRolesMaster(UserIndex) Then
             Call WriteConsoleMsg(UserIndex, "Los GM's no pueden fundar clanes.", FontTypeNames.FONTTYPE_INFOBOLD)
             Exit Sub
 
