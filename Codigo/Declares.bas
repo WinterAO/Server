@@ -77,6 +77,8 @@ Public Const INFINITE_LOOPS As Integer = -1
 
 Public Const FXSANGRE = 14
 
+Public Const FX_PASA_NIVEL = 51
+
 Public Const MAXAMIGOS As Byte = 50   'Cantidad Maxima de Amigos
 
 ''
@@ -1460,7 +1462,7 @@ Public Type UserFlags
     
     TargetBot As Byte
     
-    Global As Integer 'Indica si el usuario puede usar el global
+    Global As Byte 'Indica si el usuario puede usar el global
 
 End Type
 

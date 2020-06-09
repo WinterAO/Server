@@ -369,8 +369,8 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
         query = query & "nivel_ingreso = " & .Faccion.NivelIngreso & ", "
         query = query & "matados_ingreso = " & .Faccion.MatadosIngreso & ", "
         query = query & "siguiente_recompensa = " & .Faccion.NextRecompensa & ", "
-        query = query & "guild_index = " & .GuildIndex & " "
-        query = query & "global = " & .flags.Global & " "
+        query = query & "guild_index = " & .GuildIndex & ", "
+        query = query & "is_global = " & .flags.Global & " "
         query = query & "WHERE id = " & .ID & ";"
         Call Database_Connection.Execute(query)
 
@@ -632,7 +632,7 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
         .flags.Navegando = Database_RecordSet!is_sailing
         .flags.Paralizado = Database_RecordSet!is_paralyzed
         .Counters.Pena = Database_RecordSet!counter_pena
-        .flags.Global = Database_RecordSet!Global
+        .flags.Global = Database_RecordSet!is_global
 
         If Database_RecordSet!pertenece_consejo_real Then
             .flags.Privilegios = .flags.Privilegios Or PlayerType.RoyalCouncil
