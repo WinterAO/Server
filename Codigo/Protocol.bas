@@ -1596,6 +1596,10 @@ Private Sub HandleDeleteChar(ByVal UserIndex As Integer)
         Exit Sub
     End If
     
+    If GetUserGuildIndexDatabase(UserList(UserIndex).AccountInfo.AccountPJ(PJSeleccionado).Name) > 0 Then
+        Call WriteErrorMsg(UserIndex, "El personaje que intentas borrar pertenece a un clan. Debes salir del clan antes de borrar el personaje.")
+        Exit Sub
+    End If
     'Mandamos a borrar el PJ
     If BorrarUsuario(UserIndex, UserList(UserIndex).AccountInfo.AccountPJ(PJSeleccionado).Name) Then
         'Si se pudo borrar enviamos paquete para mostrar mensaje satisfactorio en el cliente
