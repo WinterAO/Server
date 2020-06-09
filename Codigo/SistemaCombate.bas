@@ -1323,7 +1323,8 @@ Public Function UsuarioImpacto(ByVal AtacanteIndex As Integer, _
         If .Invent.EscudoEqpObjIndex > 0 Then
             UserPoderEvasionEscudo = PoderEvasionEscudo(VictimaIndex)
             UserPoderEvasion = UserPoderEvasion + UserPoderEvasionEscudo
-            Call SendData(SendTarget.ToPCArea, AtacanteIndex, PrepareMessageProyectil(AtacanteIndex, UserList(AtacanteIndex).Char.CharIndex, .Char.CharIndex, ObjData(UserList(AtacanteIndex).Invent.MunicionEqpObjIndex).GrhIndex))
+            If UserList(AtacanteIndex).Invent.MunicionEqpObjIndex > 0 Then _
+                Call SendData(SendTarget.ToPCArea, AtacanteIndex, PrepareMessageProyectil(AtacanteIndex, UserList(AtacanteIndex).Char.CharIndex, .Char.CharIndex, ObjData(UserList(AtacanteIndex).Invent.MunicionEqpObjIndex).GrhIndex))
         Else
             UserPoderEvasionEscudo = 0
 
