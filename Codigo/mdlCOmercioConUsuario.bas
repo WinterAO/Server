@@ -59,7 +59,7 @@ Public Sub IniciarComercioConUsuario(ByVal Origen As Integer, ByVal Destino As I
     'Last Modification: 25/11/2009
     '
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
     
     'Si ambos pusieron /comerciar entonces
     If UserList(Origen).ComUsu.DestUsu = Destino And UserList(Destino).ComUsu.DestUsu = Origen Then
@@ -92,12 +92,12 @@ Public Sub IniciarComercioConUsuario(ByVal Origen As Integer, ByVal Destino As I
     End If
     
     Exit Sub
-ErrHandler:
+Errhandler:
     Call LogError("Error en IniciarComercioConUsuario: " & Err.description)
 
 End Sub
 
-Public Sub EnviarOferta(ByVal Userindex As Integer, ByVal OfferSlot As Byte)
+Public Sub EnviarOferta(ByVal UserIndex As Integer, ByVal OfferSlot As Byte)
 
     '***************************************************
     'Autor: Unkown
@@ -111,7 +111,7 @@ Public Sub EnviarOferta(ByVal Userindex As Integer, ByVal OfferSlot As Byte)
 
     Dim OtherUserIndex As Integer
     
-    OtherUserIndex = UserList(Userindex).ComUsu.DestUsu
+    OtherUserIndex = UserList(UserIndex).ComUsu.DestUsu
     
     With UserList(OtherUserIndex)
 
@@ -126,11 +126,11 @@ Public Sub EnviarOferta(ByVal Userindex As Integer, ByVal OfferSlot As Byte)
 
     End With
    
-    Call WriteChangeUserTradeSlot(Userindex, OfferSlot, ObjIndex, ObjAmount)
+    Call WriteChangeUserTradeSlot(UserIndex, OfferSlot, ObjIndex, ObjAmount)
 
 End Sub
 
-Public Sub FinComerciarUsu(ByVal Userindex As Integer)
+Public Sub FinComerciarUsu(ByVal UserIndex As Integer)
 
     '***************************************************
     'Autor: Unkown
@@ -139,10 +139,10 @@ Public Sub FinComerciarUsu(ByVal Userindex As Integer)
     '***************************************************
     Dim i As Long
     
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         If .ComUsu.DestUsu > 0 Then
-            Call WriteUserCommerceEnd(Userindex)
+            Call WriteUserCommerceEnd(UserIndex)
 
         End If
         
@@ -163,7 +163,7 @@ Public Sub FinComerciarUsu(ByVal Userindex As Integer)
 
 End Sub
 
-Public Sub AceptarComercioUsu(ByVal Userindex As Integer)
+Public Sub AceptarComercioUsu(ByVal UserIndex As Integer)
 
     '***************************************************
     'Autor: Unkown
@@ -177,9 +177,9 @@ Public Sub AceptarComercioUsu(ByVal Userindex As Integer)
 
     Dim OfferSlot     As Integer
 
-    UserList(Userindex).ComUsu.Acepto = True
+    UserList(UserIndex).ComUsu.Acepto = True
     
-    OtroUserIndex = UserList(Userindex).ComUsu.DestUsu
+    OtroUserIndex = UserList(UserIndex).ComUsu.DestUsu
     
     ' Acepto el otro?
     If UserList(OtroUserIndex).ComUsu.Acepto = False Then
@@ -189,28 +189,28 @@ Public Sub AceptarComercioUsu(ByVal Userindex As Integer)
     
     ' User valido?
     If OtroUserIndex <= 0 Or OtroUserIndex > MaxUsers Then
-        Call FinComerciarUsu(Userindex)
+        Call FinComerciarUsu(UserIndex)
         Exit Sub
 
     End If
     
     ' Aceptaron ambos, chequeo que tengan los items que ofertaron
-    If Not HasOfferedItems(Userindex) Then
+    If Not HasOfferedItems(UserIndex) Then
         
-        Call WriteConsoleMsg(Userindex, "El comercio se cancelo porque no posees los items que ofertaste!!!", FontTypeNames.FONTTYPE_WARNING)
-        Call WriteConsoleMsg(OtroUserIndex, "El comercio se cancelo porque " & UserList(Userindex).Name & " no posee los items que oferto!!!", FontTypeNames.FONTTYPE_WARNING)
+        Call WriteConsoleMsg(UserIndex, "El comercio se cancelo porque no posees los items que ofertaste!!!", FontTypeNames.FONTTYPE_WARNING)
+        Call WriteConsoleMsg(OtroUserIndex, "El comercio se cancelo porque " & UserList(UserIndex).Name & " no posee los items que oferto!!!", FontTypeNames.FONTTYPE_WARNING)
         
-        Call FinComerciarUsu(Userindex)
+        Call FinComerciarUsu(UserIndex)
         Call FinComerciarUsu(OtroUserIndex)
         
         Exit Sub
         
     ElseIf Not HasOfferedItems(OtroUserIndex) Then
         
-        Call WriteConsoleMsg(Userindex, "El comercio se cancelo porque " & UserList(OtroUserIndex).Name & " no posee los items que oferto!!!", FontTypeNames.FONTTYPE_WARNING)
+        Call WriteConsoleMsg(UserIndex, "El comercio se cancelo porque " & UserList(OtroUserIndex).Name & " no posee los items que oferto!!!", FontTypeNames.FONTTYPE_WARNING)
         Call WriteConsoleMsg(OtroUserIndex, "El comercio se cancelo porque no posees los items que ofertaste!!!", FontTypeNames.FONTTYPE_WARNING)
         
-        Call FinComerciarUsu(Userindex)
+        Call FinComerciarUsu(UserIndex)
         Call FinComerciarUsu(OtroUserIndex)
         
         Exit Sub
@@ -221,7 +221,7 @@ Public Sub AceptarComercioUsu(ByVal Userindex As Integer)
     For OfferSlot = 1 To MAX_OFFER_SLOTS + 1
         
         ' Items del 1er usuario
-        With UserList(Userindex)
+        With UserList(UserIndex)
 
             ' Le pasa el oro
             If OfferSlot = GOLD_OFFER_SLOT Then
@@ -231,7 +231,7 @@ Public Sub AceptarComercioUsu(ByVal Userindex As Integer)
                 ' Log
                 If .ComUsu.GoldAmount > MAX_ORO_LOGUEABLE Then Call LogDesarrollo(.Name & " solto oro en comercio seguro con " & UserList(OtroUserIndex).Name & ". Cantidad: " & .ComUsu.GoldAmount)
                 ' Update Usuario
-                Call WriteUpdateUserStats(Userindex)
+                Call WriteUpdateUserStats(UserIndex)
                 ' Se la doy al otro
                 UserList(OtroUserIndex).Stats.Gld = UserList(OtroUserIndex).Stats.Gld + .ComUsu.GoldAmount
                 ' Update Otro Usuario
@@ -248,7 +248,7 @@ Public Sub AceptarComercioUsu(ByVal Userindex As Integer)
 
                 End If
             
-                Call QuitarObjetos(TradingObj.ObjIndex, TradingObj.Amount, Userindex)
+                Call QuitarObjetos(TradingObj.ObjIndex, TradingObj.Amount, UserIndex)
                 
                 'Es un Objeto que tenemos que loguear? Pablo (ToxicWaste) 07/09/07
                 If ObjData(TradingObj.ObjIndex).Log = 1 Then
@@ -280,15 +280,15 @@ Public Sub AceptarComercioUsu(ByVal Userindex As Integer)
                 .Stats.Gld = .Stats.Gld - .ComUsu.GoldAmount
 
                 ' Log
-                If .ComUsu.GoldAmount > MAX_ORO_LOGUEABLE Then Call LogDesarrollo(.Name & " solto oro en comercio seguro con " & UserList(Userindex).Name & ". Cantidad: " & .ComUsu.GoldAmount)
+                If .ComUsu.GoldAmount > MAX_ORO_LOGUEABLE Then Call LogDesarrollo(.Name & " solto oro en comercio seguro con " & UserList(UserIndex).Name & ". Cantidad: " & .ComUsu.GoldAmount)
                 ' Update Usuario
                 Call WriteUpdateUserStats(OtroUserIndex)
                 'y se la doy al otro
-                UserList(Userindex).Stats.Gld = UserList(Userindex).Stats.Gld + .ComUsu.GoldAmount
+                UserList(UserIndex).Stats.Gld = UserList(UserIndex).Stats.Gld + .ComUsu.GoldAmount
 
-                If .ComUsu.GoldAmount > MAX_ORO_LOGUEABLE Then Call LogDesarrollo(UserList(Userindex).Name & " recibio oro en comercio seguro con " & .Name & ". Cantidad: " & .ComUsu.GoldAmount)
+                If .ComUsu.GoldAmount > MAX_ORO_LOGUEABLE Then Call LogDesarrollo(UserList(UserIndex).Name & " recibio oro en comercio seguro con " & .Name & ". Cantidad: " & .ComUsu.GoldAmount)
                 ' Update Otro Usuario
-                Call WriteUpdateUserStats(Userindex)
+                Call WriteUpdateUserStats(UserIndex)
                 
                 ' Le pasa la oferta de los slots con items
             ElseIf .ComUsu.Objeto(OfferSlot) > 0 Then
@@ -296,8 +296,8 @@ Public Sub AceptarComercioUsu(ByVal Userindex As Integer)
                 TradingObj.Amount = .ComUsu.cant(OfferSlot)
                                 
                 'Quita el objeto y se lo da al otro
-                If Not MeterItemEnInventario(Userindex, TradingObj) Then
-                    Call TirarItemAlPiso(UserList(Userindex).Pos, TradingObj)
+                If Not MeterItemEnInventario(UserIndex, TradingObj) Then
+                    Call TirarItemAlPiso(UserList(UserIndex).Pos, TradingObj)
 
                 End If
             
@@ -305,7 +305,7 @@ Public Sub AceptarComercioUsu(ByVal Userindex As Integer)
                 
                 'Es un Objeto que tenemos que loguear? Pablo (ToxicWaste) 07/09/07
                 If ObjData(TradingObj.ObjIndex).Log = 1 Then
-                    Call LogDesarrollo(.Name & " le paso en comercio seguro a " & UserList(Userindex).Name & " " & TradingObj.Amount & " " & ObjData(TradingObj.ObjIndex).Name)
+                    Call LogDesarrollo(.Name & " le paso en comercio seguro a " & UserList(UserIndex).Name & " " & TradingObj.Amount & " " & ObjData(TradingObj.ObjIndex).Name)
 
                 End If
             
@@ -314,7 +314,7 @@ Public Sub AceptarComercioUsu(ByVal Userindex As Integer)
 
                     'Si no es de los prohibidos de loguear, lo logueamos.
                     If ObjData(TradingObj.ObjIndex).NoLog <> 1 Then
-                        Call LogDesarrollo(.Name & " le paso en comercio seguro a " & UserList(Userindex).Name & " " & TradingObj.Amount & " " & ObjData(TradingObj.ObjIndex).Name)
+                        Call LogDesarrollo(.Name & " le paso en comercio seguro a " & UserList(UserIndex).Name & " " & TradingObj.Amount & " " & ObjData(TradingObj.ObjIndex).Name)
 
                     End If
 
@@ -327,12 +327,12 @@ Public Sub AceptarComercioUsu(ByVal Userindex As Integer)
     Next OfferSlot
 
     ' End Trade
-    Call FinComerciarUsu(Userindex)
+    Call FinComerciarUsu(UserIndex)
     Call FinComerciarUsu(OtroUserIndex)
     
 End Sub
 
-Public Sub AgregarOferta(ByVal Userindex As Integer, _
+Public Sub AgregarOferta(ByVal UserIndex As Integer, _
                          ByVal OfferSlot As Byte, _
                          ByVal ObjIndex As Integer, _
                          ByVal Amount As Long, _
@@ -343,9 +343,9 @@ Public Sub AgregarOferta(ByVal Userindex As Integer, _
     'Adds gold or items to the user's offer
     '***************************************************
 
-    If PuedeSeguirComerciando(Userindex) Then
+    If PuedeSeguirComerciando(UserIndex) Then
 
-        With UserList(Userindex).ComUsu
+        With UserList(UserIndex).ComUsu
 
             ' Si ya confirmo su oferta, no puede cambiarla!
             If Not .Confirmo Then
@@ -380,7 +380,7 @@ Public Sub AgregarOferta(ByVal Userindex As Integer, _
 
 End Sub
 
-Public Function PuedeSeguirComerciando(ByVal Userindex As Integer) As Boolean
+Public Function PuedeSeguirComerciando(ByVal UserIndex As Integer) As Boolean
 
     '***************************************************
     'Autor: ZaMa
@@ -391,7 +391,7 @@ Public Function PuedeSeguirComerciando(ByVal Userindex As Integer) As Boolean
 
     Dim ComercioInvalido As Boolean
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         ' Usuario valido?
         If .ComUsu.DestUsu <= 0 Or .ComUsu.DestUsu > MaxUsers Then
@@ -414,7 +414,7 @@ Public Function PuedeSeguirComerciando(ByVal Userindex As Integer) As Boolean
         If Not ComercioInvalido Then
 
             ' Se estan comerciando el uno al otro?
-            If UserList(OtroUserIndex).ComUsu.DestUsu <> Userindex Then
+            If UserList(OtroUserIndex).ComUsu.DestUsu <> UserIndex Then
                 ComercioInvalido = True
 
             End If
@@ -453,7 +453,7 @@ Public Function PuedeSeguirComerciando(ByVal Userindex As Integer) As Boolean
     
         ' Fin del comercio
         If ComercioInvalido = True Then
-            Call FinComerciarUsu(Userindex)
+            Call FinComerciarUsu(UserIndex)
         
             If OtroUserIndex > 0 And OtroUserIndex <= MaxUsers Then
                 Call FinComerciarUsu(OtroUserIndex)
@@ -470,7 +470,7 @@ Public Function PuedeSeguirComerciando(ByVal Userindex As Integer) As Boolean
 
 End Function
 
-Private Function HasOfferedItems(ByVal Userindex As Integer) As Boolean
+Private Function HasOfferedItems(ByVal UserIndex As Integer) As Boolean
     '***************************************************
     'Autor: ZaMa
     'Last Modification: 05/06/2010
@@ -487,7 +487,7 @@ Private Function HasOfferedItems(ByVal Userindex As Integer) As Boolean
     
     Dim ObjIndex                          As Integer
     
-    With UserList(Userindex).ComUsu
+    With UserList(UserIndex).ComUsu
         
         ' Agrupo los items que son iguales
         For Slot = 1 To MAX_OFFER_SLOTS
@@ -523,11 +523,11 @@ Private Function HasOfferedItems(ByVal Userindex As Integer) As Boolean
         ' Chequeo que tengan la cantidad en el inventario
         For Slot = 0 To SlotCount - 1
 
-            If Not HasEnoughItems(Userindex, OfferedItems(Slot).ObjIndex, OfferedItems(Slot).Amount) Then Exit Function
+            If Not HasEnoughItems(UserIndex, OfferedItems(Slot).ObjIndex, OfferedItems(Slot).Amount) Then Exit Function
         Next Slot
         
         ' Compruebo que tenga el oro que oferta
-        If UserList(Userindex).Stats.Gld < .GoldAmount Then Exit Function
+        If UserList(UserIndex).Stats.Gld < .GoldAmount Then Exit Function
         
     End With
     

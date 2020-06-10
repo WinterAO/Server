@@ -73,6 +73,16 @@ usar primero los nros mas bajos.
 (Todos usados)
 
 ##############################################
+############PARTICULAS O GRAFICOS#############
+##############################################
+
+Si se le pone la propiedad a un objeto "GrhIndex"
+este objeto se mostrara con un grafico. Si le ponemos
+"ParticulaIndex" se mostrara con una particula.
+
+(No poner particulas en objetos de inventario)
+
+##############################################
 ##############################################
 ##############################################
 
@@ -4682,7 +4692,7 @@ RazaEnanaAnim=58
 MinHit=5
 MaxHit=15
 StaffPower=2
-StaffDamageBonus=36
+StaffDamageBonus=37
 Valor=85500
 Crucial=0
 CP1=PIRATA
@@ -8040,7 +8050,7 @@ RazaEnanaAnim=62
 MinHit=1
 MaxHit=1
 StaffPower=2
-StaffDamageBonus=34
+StaffDamageBonus=33
 Valor=13000
 Crucial=0
 CP1=PIRATA
@@ -8091,7 +8101,7 @@ Agarrable=0
 Anim=73
 MaxDef=1
 MinDef=1
-DefensaMagicaMin=10
+DefensaMagicaMin=15
 DefensaMagicaMax=15
 Valor=25000
 Crucial=1
@@ -8718,8 +8728,8 @@ Name=Anillo de defensa Magica
 GrhIndex=4900
 ObjType=18
 Agarrable=0
-DefensaMagicaMax=6
-DefensaMagicaMin=4
+DefensaMagicaMax=5
+DefensaMagicaMin=5
 Valor=3500
 Crucial=0
 CP1=MAGO
@@ -8739,8 +8749,8 @@ Name=Anillo de Resistencia Magica
 GrhIndex=4901
 ObjType=18
 Agarrable=0
-DefensaMagicaMax=12
-DefensaMagicaMin=8
+DefensaMagicaMax=10
+DefensaMagicaMin=7
 Valor=9500
 Crucial=0
 CP1=MAGO
@@ -8761,8 +8771,8 @@ Name=Anillo de Disolucion Magica
 GrhIndex=4902
 ObjType=18
 Agarrable=0
-DefensaMagicaMax=18
-DefensaMagicaMin=16
+DefensaMagicaMax=20
+DefensaMagicaMin=17
 Valor=43500
 Crucial=0
 CP1=MAGO
@@ -12332,7 +12342,8 @@ Shadow=1
 
 [OBJ1012]
 Name=Teleport
-GrhIndex=669
+GrhIndex=0
+ParticulaIndex=34
 ObjType=19
 Agarrable=1
 Radio=0

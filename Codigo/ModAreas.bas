@@ -244,7 +244,7 @@ Public Sub CheckUpdateNeededUser(ByVal UserIndex As Integer, ByVal heading As By
                 If MapData(Map, X, Y).ObjInfo.ObjIndex Then
                     CurUser = MapData(Map, X, Y).ObjInfo.ObjIndex
                     If Not EsObjetoFijo(ObjData(CurUser).OBJType) Then
-                        Call WriteObjectCreate(UserIndex, ObjData(CurUser).GrhIndex, X, Y, ObjData(CurUser).Shadow)
+                        Call WriteObjectCreate(UserIndex, ObjData(CurUser).GrhIndex, ObjData(CurUser).ParticulaIndex, X, Y, ObjData(CurUser).Shadow)
 
                         If ObjData(CurUser).OBJType = eOBJType.otPuertas Then
                             Call Bloquear(False, UserIndex, X, Y, MapData(Map, X, Y).Blocked)

@@ -1927,9 +1927,10 @@ Sub HechizoPropNPC(ByVal spellIndex As Integer, _
 
             End If
 
-            If UserList(UserIndex).Invent.AnilloEqpObjIndex = LAUDELFICO Or UserList(UserIndex).Invent.AnilloEqpObjIndex = FLAUTAELFICA Then
-                dano = dano * 1.04  'laud magico de los bardos
-
+            If UserList(UserIndex).Invent.AnilloEqpObjIndex = LAUDELFICO Then
+                dano = dano * 1.02  'Laud magico de los bardos
+            ElseIf UserList(UserIndex).Invent.AnilloEqpObjIndex = FLAUTAELFICA Then
+                dano = dano * 1.04 'Flauta
             End If
     
             Call InfoHechizo(UserIndex)

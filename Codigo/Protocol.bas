@@ -10496,10 +10496,7 @@ Private Sub HandleEditChar(ByVal UserIndex As Integer)
                 
                     Case eEditOptions.eo_Experience
 
-                        If val(Arg1) > 5000000 Then
-                            Arg1 = 5000000
-
-                        End If
+                        If val(Arg1) > 5000000 Then Arg1 = 5000000
                         
                         If tUser <= 0 Then ' Offline
                             Var = GetVar(UserCharPath, "STATS", "EXP")
@@ -18365,6 +18362,7 @@ End Sub
 
 Public Sub WriteObjectCreate(ByVal UserIndex As Integer, _
                              ByVal GrhIndex As Long, _
+                             ByVal ParticulaIndex As Integer, _
                              ByVal X As Byte, _
                              ByVal Y As Byte, _
                              Optional ByVal Shadow As Byte = 0)
@@ -18376,7 +18374,7 @@ Public Sub WriteObjectCreate(ByVal UserIndex As Integer, _
     '***************************************************
     On Error GoTo Errhandler
 
-    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageObjectCreate(GrhIndex, X, Y, Shadow))
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageObjectCreate(GrhIndex, ParticulaIndex, X, Y, Shadow))
     Exit Sub
 
 Errhandler:
@@ -20472,6 +20470,7 @@ Public Sub WriteChangeUserTradeSlot(ByVal UserIndex As Integer, _
         Call .WriteLong(Amount)
         
         If ObjIndex > 0 Then
+        
             Call .WriteLong(ObjData(ObjIndex).GrhIndex)
             Call .WriteByte(ObjData(ObjIndex).OBJType)
             Call .WriteInteger(ObjData(ObjIndex).MaxHIT)
@@ -20480,8 +20479,10 @@ Public Sub WriteChangeUserTradeSlot(ByVal UserIndex As Integer, _
             Call .WriteInteger(ObjData(ObjIndex).MinDef)
             Call .WriteLong(SalePrice(ObjIndex))
             Call .WriteASCIIString(ObjData(ObjIndex).Name)
+            
         Else ' Borra el item
-            Call .WriteInteger(0)
+        
+            Call .WriteLong(0)
             Call .WriteByte(0)
             Call .WriteInteger(0)
             Call .WriteInteger(0)
@@ -21307,8 +21308,10 @@ End Function
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
 Public Function PrepareMessageObjectCreate(ByVal GrhIndex As Long, _
+                                           ByVal ParticulaIndex As Integer, _
                                            ByVal X As Byte, _
-                                           ByVal Y As Byte, ByVal Shadow As Byte) As String
+                                           ByVal Y As Byte, _
+                                           ByVal Shadow As Byte) As String
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -21320,6 +21323,7 @@ Public Function PrepareMessageObjectCreate(ByVal GrhIndex As Long, _
         Call .WriteByte(X)
         Call .WriteByte(Y)
         Call .WriteLong(GrhIndex)
+        Call .WriteInteger(ParticulaIndex)
         Call .WriteByte(Shadow)
         
         PrepareMessageObjectCreate = .ReadASCIIStringFixed(.Length)

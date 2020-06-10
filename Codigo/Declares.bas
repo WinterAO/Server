@@ -997,6 +997,8 @@ Public Type ObjData
     GrhIndex As Long ' Indice del grafico que representa el obj
     GrhSecundario As Long
     
+    ParticulaIndex As Integer
+    
     'Solo contenedores
     MAXITEMS As Integer
     Conte As Inventario
@@ -2378,7 +2380,7 @@ Public Const ORCO_H_ULTIMA_CABEZA                   As Integer = 530
 
 Public Const VAMPIRO_H_PRIMER_CABEZA                As Integer = 623
 
-Public Const VAMPIRO_H_ULTIMA_CABEZA                As Integer = 632
+Public Const VAMPIRO_H_ULTIMA_CABEZA                As Integer = 633
 
 '**************************************************
 Public Const HUMANO_M_PRIMER_CABEZA                 As Integer = 70
@@ -2405,9 +2407,9 @@ Public Const ORCO_M_PRIMER_CABEZA                   As Integer = 570
 
 Public Const ORCO_M_ULTIMA_CABEZA                   As Integer = 599
 
-Public Const VAMPIRO_M_PRIMER_CABEZA                As Integer = 633
+Public Const VAMPIRO_M_PRIMER_CABEZA                As Integer = 634
 
-Public Const VAMPIRO_M_ULTIMA_CABEZA                As Integer = 642
+Public Const VAMPIRO_M_ULTIMA_CABEZA                As Integer = 643
 
 ' Por ahora la dejo constante.. SI se quisiera extender la propiedad de paralziar, se podria hacer
 ' una nueva variable en el dat.

@@ -543,7 +543,7 @@ Sub EraseObj(ByVal Num As Integer, _
         If .ObjInfo.Amount <= 0 Then
             .ObjInfo.ObjIndex = 0
             .ObjInfo.Amount = 0
-        
+
             Call modSendData.SendToAreaByPos(Map, X, Y, PrepareMessageObjectDelete(X, Y))
 
         End If
@@ -571,7 +571,7 @@ Sub MakeObj(ByRef obj As obj, _
             Else
                 .ObjInfo = obj
                 
-                Call modSendData.SendToAreaByPos(Map, X, Y, PrepareMessageObjectCreate(ObjData(obj.ObjIndex).GrhIndex, X, Y, ObjData(obj.ObjIndex).Shadow))
+                Call modSendData.SendToAreaByPos(Map, X, Y, PrepareMessageObjectCreate(ObjData(obj.ObjIndex).GrhIndex, ObjData(obj.ObjIndex).ParticulaIndex, X, Y, ObjData(obj.ObjIndex).Shadow))
 
             End If
             

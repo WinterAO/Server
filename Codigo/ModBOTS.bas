@@ -17,7 +17,7 @@ Private IA_NUMCHAT As Byte
  
 'Constantes de intervalos.
  
-Private Const IA_SINT   As Integer = 2500    'Intervalo entre hechizo-hechizo.
+Private Const IA_SINT   As Integer = 2500   'Intervalo entre hechizo-hechizo.
 Private Const IA_SREMO  As Integer = 300    'Intervalo remo.
 Private Const IA_MOVINT As Integer = 250    'Intervalo caminta.
 Private Const IA_USEOBJ As Integer = 350    'Intervalo usar potas.
