@@ -3546,69 +3546,6 @@ Private Sub HandleWorkLeftClick(ByVal UserIndex As Integer)
 
                 End If
             
-            Case eSkill.Talar
-
-                'Check interval
-                If Not IntervaloPermiteTrabajar(UserIndex) Then Exit Sub
-                
-                WeaponIndex = .Invent.WeaponEqpObjIndex
-                
-                If WeaponIndex = 0 Then
-                    Call WriteConsoleMsg(UserIndex, "Deberias equiparte el hacha.", FontTypeNames.FONTTYPE_INFO)
-                    Exit Sub
-
-                End If
-                
-                If WeaponIndex <> HACHA_LENADOR And WeaponIndex <> HACHA_LENA_ELFICA And WeaponIndex <> HACHA_LENADOR_NEWBIE Then
-                    ' Podemos llegar aca si el user equipo el anillo dsp de la U y antes del click
-                    Exit Sub
-
-                End If
-                
-                DummyInt = MapData(.Pos.Map, X, Y).ObjInfo.ObjIndex
-                
-                If DummyInt > 0 Then
-                    If Abs(.Pos.X - X) + Abs(.Pos.Y - Y) > 2 Then
-                        Call WriteConsoleMsg(UserIndex, "Estas demasiado lejos.", FontTypeNames.FONTTYPE_INFO)
-                        Exit Sub
-
-                    End If
-                    
-                    'Barrin 29/9/03
-                    If .Pos.X = X And .Pos.Y = Y Then
-                        Call WriteConsoleMsg(UserIndex, "No puedes talar desde alli.", FontTypeNames.FONTTYPE_INFO)
-                        Exit Sub
-
-                    End If
-                    
-                    'Hay un arbol normal donde clickeo?
-                    If ObjData(DummyInt).OBJType = eOBJType.otArboles Then
-                        If WeaponIndex = HACHA_LENADOR Or WeaponIndex = HACHA_LENADOR_NEWBIE Then
-                            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_TALAR, .Pos.X, .Pos.Y))
-                            Call DoTalar(UserIndex)
-                        Else
-                            Call WriteConsoleMsg(UserIndex, "No puedes extraer lena de este arbol con este hacha.", FontTypeNames.FONTTYPE_INFO)
-
-                        End If
-                        
-                        ' Arbol Elfico?
-                    ElseIf ObjData(DummyInt).OBJType = eOBJType.otArbolElfico Then
-                    
-                        If WeaponIndex = HACHA_LENA_ELFICA Then
-                            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_TALAR, .Pos.X, .Pos.Y))
-                            Call DoTalar(UserIndex, True)
-                        Else
-                            Call WriteConsoleMsg(UserIndex, "El hacha utilizado no es suficientemente poderosa.", FontTypeNames.FONTTYPE_INFO)
-
-                        End If
-
-                    End If
-
-                Else
-                    Call WriteConsoleMsg(UserIndex, "No hay ningUn arbol ahi.", FontTypeNames.FONTTYPE_INFO)
-
-                End If
-            
             Case eSkill.Mineria
 
                 If Not IntervaloPermiteTrabajar(UserIndex) Then Exit Sub

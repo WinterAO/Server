@@ -37,6 +37,9 @@
 ' 33: botellas vacias
 ' 34: botellas llenas
 ' 35: Manuales
+' 36: Pasajes
+' 37: Mochilas
+' 38: YacimientoPez
 
 
 ##############################################
@@ -9723,18 +9726,26 @@ Valor=0
 Crucial=1
 
 [OBJ829]
-Name=Arbol
-GrhIndex=1533
-ObjType=4
+Name=Pasaje de Ramx a Shakoud
+GrhIndex=609
+ObjType=36
 Agarrable=1
-Shadow=1
+DesdeMap=13
+HastaMap=102
+HastaX=28
+HastaY=38
+CantidadSkill=40
 
 [OBJ830]
-Name=Arbol
-GrhIndex=1534
-ObjType=4
+Name=Pasaje de Ramx a Belleuve
+GrhIndex=609
+ObjType=36
 Agarrable=1
-Shadow=1
+DesdeMap=13
+HastaMap=55
+HastaX=43
+HastaY=74
+CantidadSkill=20
 
 [OBJ831]
 Name=Arbusto
@@ -12277,11 +12288,15 @@ Crucial=1
 HechizoIndex=46
 
 [OBJ1008]
-Name=Arbol elfico
-GrhIndex=18802
+Name=Pasaje de Ramx a Isla Zharkel
+GrhIndex=609
 ObjType=36
 Agarrable=1
-Shadow=1
+DesdeMap=13
+HastaMap=97
+HastaX=13
+HastaY=86
+CantidadSkill=60
 
 [OBJ1009]
 Name=Cuchillas
@@ -12936,11 +12951,15 @@ Valor=0
 Crucial=0
 
 [OBJ1058]
-Name=Arbol navidad
-GrhIndex=24155
-ObjType=4
+Name=Pasaje de Ramx a Haverwood
+GrhIndex=609
+ObjType=36
 Agarrable=1
-Shadow=1
+DesdeMap=13
+HastaMap=29
+HastaX=88
+HastaY=47
+CantidadSkill=60
 
 [OBJ1059]
 Name=Cuadro

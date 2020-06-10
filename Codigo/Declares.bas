@@ -505,6 +505,8 @@ Public Enum eNPCType
     WorldBoss = 12
     dummy = 13
     Quest = 14
+    Marinero = 15
+    
 End Enum
 
 Public Const MIN_APUNALAR   As Byte = 10
@@ -751,7 +753,7 @@ Public Enum eOBJType
     otBotellaVacia = 33
     otBotellaLlena = 34
     otManuales = 35
-    otArbolElfico = 36
+    otPasajes = 36
     otMochilas = 37
     otYacimientoPez = 38
     otCualquiera = 1000
@@ -1136,6 +1138,14 @@ Public Type ObjData
     SkNecesarios As Byte 'Cantidad de Skills que requiere para poder aprender el manual
     
     NoRobable As Byte 'No se puede robar
+    
+    'Pasajes
+    DesdeMap As Long
+    HastaMap As Long
+    HastaY As Byte
+    HastaX As Byte
+    NecesitaSkill As Byte
+    CantidadSkill As Byte
 End Type
 
 Public Type obj

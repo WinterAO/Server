@@ -919,9 +919,7 @@ Function EsUsable(ByVal ObjIndex As Integer)
     
     Select Case obj.OBJType
     
-         Case eOBJType.otArbolElfico, _
-              eOBJType.otArboles, _
-              eOBJType.otCarteles, _
+         Case eOBJType.otCarteles, _
               eOBJType.otForos, _
               eOBJType.otFragua, _
               eOBJType.otMuebles, _
@@ -2028,7 +2026,6 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
 
                 End If
 
-
             '<-------------> MONTURAS <----------->
             Case eOBJType.otMonturas
                 If ClasePuedeUsarItem(UserIndex, ObjIndex) Then
@@ -2051,6 +2048,58 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                 Else
                     Call WriteConsoleMsg(UserIndex, "Tu clase no puede usar este objeto.", FontTypeNames.FONTTYPE_INFO)
                 End If
+                    
+            Case eOBJType.otPasajes
+            
+                If .flags.Muerto = 1 Then
+                    'Call WriteConsoleMsg(UserIndex, "Estas muerto!! Solo podes usar items cuando estas vivo. ", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
+                    Exit Sub
+
+                End If
+
+                If .flags.TargetNpcTipo <> Marinero Then
+                    Call WriteConsoleMsg(UserIndex, "Primero debes hacer click sobre el marinero.", FontTypeNames.FONTTYPE_INFO)
+                    Exit Sub
+                End If
+                    
+                If Distancia(Npclist(.flags.TargetNPC).Pos, .Pos) > 3 Then
+                    Call WriteConsoleMsg(UserIndex, "¡Estas demasiado lejos!", FontTypeNames.FONTTYPE_INFO)
+                    Exit Sub
+                End If
+                    
+                If .Pos.Map <> obj.DesdeMap Then
+                    Call WriteConsoleMsg(UserIndex, "El pasaje no lo compraste aquí! Largate!", FontTypeNames.FONTTYPE_INFO)
+                    Exit Sub
+                End If
+                    
+                If Not MapaValido(obj.HastaMap) Then
+                    Call WriteConsoleMsg(UserIndex, "El pasaje lleva hacia un mapa que ya no esta disponible! Disculpa las molestias.", FontTypeNames.FONTTYPE_INFO)
+                    Exit Sub
+                End If
+                    
+                If .Stats.UserSkills(eSkill.Navegacion) < obj.CantidadSkill Then
+                    Call WriteConsoleMsg(UserIndex, "Debido a la peligrosidad del viaje no puedo llevarte. Necesitas " & obj.CantidadSkill & " skills para utilizar este pasaje. Consulta el manual del juego en http://winterao.com.ar/wiki/ para saber cómo conseguirlos.", FontTypeNames.FONTTYPE_INFO)
+                    Exit Sub
+                End If
+                    
+                If .Stats.ELV < 10 Then
+                    Call WriteConsoleMsg(UserIndex, "Debido a la peligrosidad del viaje, no puedo llevarte, necesitas ser nivel 10 como minimo.", FontTypeNames.FONTTYPE_INFO)
+                    Exit Sub
+                End If
+                    
+                Call WarpUserChar(UserIndex, obj.HastaMap, obj.HastaX, obj.HastaY, True)
+                Call WriteConsoleMsg(UserIndex, "Has viajado por varios días, te sientes exhausto!", FontTypeNames.FONTTYPE_CENTINELA)
+                
+                'Penalizador:
+                .Stats.MinAGU = 0
+                .Stats.MinHam = 0
+                .flags.Sed = 1
+                .flags.Hambre = 1
+                
+                Call WriteUpdateHungerAndThirst(UserIndex)
+                Call QuitarUserInvItem(UserIndex, Slot, 1)
+                Call UpdateUserInv(False, UserIndex, Slot)
                     
             Case eOBJType.otManuales
                 '¿Esta muerto?

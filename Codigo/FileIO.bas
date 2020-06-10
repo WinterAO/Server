@@ -1196,6 +1196,13 @@ Sub LoadOBJData()
                 Case eOBJType.otTeleport
                     .Radio = val(Leer.GetValue("OBJ" & Object, "Radio"))
                     
+                Case eOBJType.otPasajes
+                    .DesdeMap = val(Leer.GetValue("OBJ" & Object, "DesdeMap"))
+                    .HastaMap = val(Leer.GetValue("OBJ" & Object, "HastaMap"))
+                    .HastaX = val(Leer.GetValue("OBJ" & Object, "HastaX"))
+                    .HastaY = val(Leer.GetValue("OBJ" & Object, "HastaY"))
+                    .CantidadSkill = val(Leer.GetValue("OBJ" & Object, "CantidadSkill"))
+                    
                 Case eOBJType.otMochilas
                     .MochilaType = val(Leer.GetValue("OBJ" & Object, "MochilaType"))
                     .MinLevel = val(Leer.GetValue("OBJ" & Object, "MinLevel"))

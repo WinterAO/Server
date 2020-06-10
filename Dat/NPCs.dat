@@ -19,6 +19,8 @@ TODOS LOS NPC CON RETARDO Y WORLDBOSS TIENEN QUE TENER PosOrig
 11 ====== Gobernador
 12 ====== WorldBoss
 13 ====== Dummys
+14 ====== Quest
+15 ====== Marinero
 
 ##############################################
 ############## EFECTOS DE NPC ################
@@ -444,6 +446,27 @@ Obj8=479-1000 	'Arco Compuesto
 Obj9=664-1000 	'Arco Compuesto Reforzado
 BackUp=1
 
+[NPC17]
+Name=Marinero
+NpcType=15
+Desc=¡Subid a bordo grumetes! ¡El barco esta apunto de zarpar!
+Head=74
+Heading=1
+Body=1
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=1
+TipoItems=20
+NROITEMS=4
+Obj1=829-1000
+Obj2=830-1000
+Obj3=1008-1000
+Obj4=1058-1000
+BackUp=1
 
 ##############################################################
 ####################### HOSTILES #############################
