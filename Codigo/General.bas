@@ -31,7 +31,7 @@ Option Explicit
 
 #If False Then
 
-    Dim X, Y, Map, K, ErrHandler, obj, index, N, Email As Variant
+    Dim X, Y, Map, K, Errhandler, obj, index, n, Email As Variant
 
 #End If
 
@@ -282,6 +282,10 @@ Sub Main()
     
     ChDir App.Path
     ChDrive App.Path
+    
+    'Inicializamos la cabecera
+    Call IniciarCabecera
+    
     Call LoadMotd
     Call BanIpCargar
     
@@ -787,12 +791,12 @@ Sub Restart()
     If frmMain.Visible Then frmMain.txtStatus.Text = Date & " " & time & " servidor reiniciado correctamente. - Escuchando conexiones entrantes ..."
     
     'Log it
-    Dim N As Integer
+    Dim n As Integer
 
-    N = FreeFile
-    Open App.Path & "\logs\Main.log" For Append Shared As #N
-    Print #N, Date & " " & time & " servidor reiniciado."
-    Close #N
+    n = FreeFile
+    Open App.Path & "\logs\Main.log" For Append Shared As #n
+    Print #n, Date & " " & time & " servidor reiniciado."
+    Close #n
     
     'Ocultar
     
@@ -839,7 +843,7 @@ Public Sub EfectoLluvia(ByVal UserIndex As Integer)
     '
     '***************************************************
 
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
     If UserList(UserIndex).flags.UserLogged Then
         If Intemperie(UserIndex) Then
@@ -855,7 +859,7 @@ Public Sub EfectoLluvia(ByVal UserIndex As Integer)
     End If
     
     Exit Sub
-ErrHandler:
+Errhandler:
     LogError ("Error en EfectoLluvia")
 
 End Sub
@@ -1309,7 +1313,7 @@ Public Sub EfectoVeneno(ByVal UserIndex As Integer)
     '
     '***************************************************
 
-    Dim N As Integer
+    Dim n As Integer
     
     With UserList(UserIndex)
 
@@ -1318,8 +1322,8 @@ Public Sub EfectoVeneno(ByVal UserIndex As Integer)
         Else
             Call WriteConsoleMsg(UserIndex, "Estas envenenado, si no te curas moriras.", FontTypeNames.FONTTYPE_VENENO)
             .Counters.Veneno = 0
-            N = RandomNumber(1, 5)
-            .Stats.MinHp = .Stats.MinHp - N
+            n = RandomNumber(1, 5)
+            .Stats.MinHp = .Stats.MinHp - n
 
             If .Stats.MinHp < 1 Then Call UserDie(UserIndex)
             Call WriteUpdateHP(UserIndex)
@@ -1875,11 +1879,11 @@ Public Function BanGlobalChatQuitar(ByVal UserName As String) As Boolean
 '***************************************************
 On Error Resume Next
 
-    Dim N As Long
+    Dim n As Long
 
-    N = BanGlobalChatBuscar(UserName)
-    If N > 0 Then
-        BanUsersChatGlobal.Remove N
+    n = BanGlobalChatBuscar(UserName)
+    If n > 0 Then
+        BanUsersChatGlobal.Remove n
         BanGlobalChatGuardar
         BanGlobalChatQuitar = True
     Else

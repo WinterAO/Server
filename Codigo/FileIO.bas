@@ -133,6 +133,16 @@ Public MapDat As tMapDat
 
 #End If
 
+Public Sub IniciarCabecera()
+
+    With MiCabecera
+        .Desc = "WinterAO Resurrection mod Argentum Online by Noland Studios. http://winterao.com.ar"
+        .crc = Rnd * 245
+        .MagicWord = Rnd * 92
+    End With
+    
+End Sub
+
 Public Sub CargarSpawnList()
     '****************************************************************************************
     'Author: Unknown
@@ -1508,10 +1518,14 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
     Dim npcfile         As String
     Dim i               As Long
     Dim j               As Long
+    Dim LaCabecera      As tCabecera
     
     fh = FreeFile
     
     Open MAPFl & ".csm" For Binary Access Read As fh
+    
+        Get #fh, , LaCabecera
+    
         Get #fh, , MH
         Get #fh, , MapSize
         Get #fh, , MapDat
