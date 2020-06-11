@@ -4,10 +4,10 @@ Begin VB.Form frmMain
    BackColor       =   &H00000000&
    BorderStyle     =   3  'Fixed Dialog
    Caption         =   "WinterAO Resurrection Server"
-   ClientHeight    =   6465
+   ClientHeight    =   5895
    ClientLeft      =   1950
    ClientTop       =   1515
-   ClientWidth     =   9885
+   ClientWidth     =   9855
    ControlBox      =   0   'False
    FillColor       =   &H00C0C0C0&
    BeginProperty Font 
@@ -25,8 +25,8 @@ Begin VB.Form frmMain
    MaxButton       =   0   'False
    MinButton       =   0   'False
    PaletteMode     =   1  'UseZOrder
-   ScaleHeight     =   6465
-   ScaleWidth      =   9885
+   ScaleHeight     =   5895
+   ScaleWidth      =   9855
    StartUpPosition =   2  'CenterScreen
    WindowState     =   1  'Minimized
    Begin VB.TextBox txtNumCuentas 
@@ -43,9 +43,9 @@ Begin VB.Form frmMain
    Begin VB.CommandButton cmdCommand3 
       Caption         =   "SpawnBOT"
       Height          =   360
-      Left            =   5160
+      Left            =   6600
       TabIndex        =   23
-      Top             =   6000
+      Top             =   5400
       Width           =   1110
    End
    Begin VB.TextBox txtRecordOnline 
@@ -71,7 +71,7 @@ Begin VB.Form frmMain
          Strikethrough   =   0   'False
       EndProperty
       ForeColor       =   &H0080FFFF&
-      Height          =   2055
+      Height          =   975
       Left            =   5160
       MultiLine       =   -1  'True
       TabIndex        =   15
@@ -90,11 +90,11 @@ Begin VB.Form frmMain
       BackColor       =   &H008080FF&
       Caption         =   "Forzar Cierre del Servidor Sin Backup"
       Height          =   375
-      Left            =   120
+      Left            =   5160
       Style           =   1  'Graphical
       TabIndex        =   13
-      Top             =   6000
-      Width           =   4935
+      Top             =   4920
+      Width           =   4575
    End
    Begin VB.CheckBox chkServerHabilitado 
       BackColor       =   &H00000000&

@@ -1766,12 +1766,6 @@ Private Sub HandleLoginNewChar(ByVal UserIndex As Integer)
         Exit Sub
     End If
     
-    If ServerSoloGMs <> 0 Then
-        Call WriteErrorMsg(UserIndex, "Servidor restringido a administradores. Consulte la pagina oficial o el foro oficial para mas informacion.")
-        Call CloseUser(UserIndex)
-        Exit Sub
-    End If
-    
     If aClon.MaxPersonajes(UserList(UserIndex).IP) Then
         Call WriteErrorMsg(UserIndex, "Has creado demasiados personajes.")
         Call CloseUser(UserIndex)
@@ -10433,16 +10427,20 @@ Private Sub HandleEditChar(ByVal UserIndex As Integer)
                 
                     Case eEditOptions.eo_Experience
 
-                        If val(Arg1) > 5000000 Then Arg1 = 5000000
+                        If val(Arg1) <= MAX_EXP_EDIT Then
                         
-                        If tUser <= 0 Then ' Offline
-                            Var = GetVar(UserCharPath, "STATS", "EXP")
-                            Call WriteVar(UserCharPath, "STATS", "EXP", Var + val(Arg1))
-                            Call WriteConsoleMsg(UserIndex, "Charfile Alterado: " & UserName, FontTypeNames.FONTTYPE_INFO)
-                        Else ' Online
-                            UserList(tUser).Stats.Exp = UserList(tUser).Stats.Exp + val(Arg1)
-                            Call CheckUserLevel(tUser)
-                            Call WriteUpdateExp(tUser)
+                            If tUser <= 0 Then ' Offline
+                                Var = GetVar(UserCharPath, "STATS", "EXP")
+                                Call WriteVar(UserCharPath, "STATS", "EXP", Var + val(Arg1))
+                                Call WriteConsoleMsg(UserIndex, "Charfile Alterado: " & UserName, FontTypeNames.FONTTYPE_INFO)
+                            Else ' Online
+                                UserList(tUser).Stats.Exp = UserList(tUser).Stats.Exp + val(Arg1)
+                                Call CheckUserLevel(tUser)
+                                Call WriteUpdateExp(tUser)
+    
+                            End If
+                        Else
+                            Call WriteConsoleMsg(UserIndex, "No esta permitido utilizar valores mayores a " & MAX_EXP_EDIT & ". Su comando ha quedado en los logs del juego.", FontTypeNames.FONTTYPE_INFO)
 
                         End If
                         
@@ -22176,7 +22174,7 @@ Private Sub HandleLoginExistingAccount(ByVal UserIndex As Integer)
     version = CStr(buffer.ReadByte()) & "." & CStr(buffer.ReadByte()) & "." & CStr(buffer.ReadByte())
     
     If Not VersionOK(version) Then
-        Call WriteErrorMsg(UserIndex, "Esta version del juego es obsoleta, la version correcta es la " & ULTIMAVERSION & ". La misma se encuentra disponible en www.argentumonline.com.ar")
+        Call WriteErrorMsg(UserIndex, "Esta version del juego es obsoleta, la version correcta es la " & ULTIMAVERSION & ". La misma se encuentra disponible en http://winterao.com.ar")
     Else
         Call ConnectAccount(UserIndex, UserName, Password)
 

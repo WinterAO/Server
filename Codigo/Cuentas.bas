@@ -9,7 +9,8 @@ Public Sub LoginAccountDatabase(ByVal UserIndex As Integer, ByVal UserName As St
     On Error GoTo ErrorHandler
 
     Dim query              As String
-
+    Dim TieneGM            As Boolean
+    
     Call Database_Connect
 
     query = "SELECT id, username, email, password, salt, gemas, status FROM account "
@@ -69,9 +70,19 @@ Public Sub LoginAccountDatabase(ByVal UserIndex As Integer, ByVal UserName As St
                 .AccountInfo.AccountPJ(.AccountInfo.NumChars).criminal = (Database_RecordSet!rep_average < 0)
                 .AccountInfo.AccountPJ(.AccountInfo.NumChars).dead = Database_RecordSet!is_dead
                 .AccountInfo.AccountPJ(.AccountInfo.NumChars).gameMaster = EsGmChar(Database_RecordSet!Name)
+                
+                If .AccountInfo.AccountPJ(.AccountInfo.NumChars).gameMaster = True Then TieneGM = True
+                    
                 Database_RecordSet.MoveNext
             Wend
     
+        End If
+        
+        'Si el server esta restringido y no tiene GM no le dejamos entrar.
+        If ServerSoloGMs <> 0 And TieneGM = False Then
+            Call WriteErrorMsg(UserIndex, "El servidor se encuentra en estos momentos en mantenimiento. Intentelo mas tarde.")
+            Call CloseUser(UserIndex)
+            Exit Sub
         End If
     
         .flags.AccountLogged = True

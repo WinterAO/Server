@@ -29,7 +29,7 @@ Attribute VB_Name = "TCP"
 
 #If False Then
 
-    Dim ErrHandler, Length, index As Variant
+    Dim Errhandler, Length, index As Variant
 
 #End If
 
@@ -37,7 +37,7 @@ Option Explicit
 
 #If False Then
 
-    Dim X, Y, N, Mapa, Email, Length As Variant
+    Dim X, Y, n, Mapa, Email, Length As Variant
     
 #End If
 
@@ -801,7 +801,7 @@ Sub CloseSocket(ByVal UserIndex As Integer)
     '4/4/2020: FrankoH298 - Flusheamos el buffer antes de cerrar el socket.
     '
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
     
     Call FlushBuffer(UserIndex)
     
@@ -834,7 +834,7 @@ Sub CloseSocket(ByVal UserIndex As Integer)
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
 
     Call ResetUserSlot(UserIndex)
         
@@ -966,7 +966,7 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
     '24/07/2010: ZaMa - La posicion de comienzo es namehuak, como se habia definido inicialmente.
     '12/10/2019: CHOTS - Sistema de cuentas
     '***************************************************
-    Dim N    As Integer
+    Dim n    As Integer
 
     Dim tStr As String
 
@@ -1063,16 +1063,6 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
         'Add RM flag if needed
         If EsRolesMaster(Name) Then
             .flags.Privilegios = .flags.Privilegios Or PlayerType.RoleMaster
-
-        End If
-    
-        If ServerSoloGMs > 0 Then
-            If (.flags.Privilegios And (PlayerType.Admin Or PlayerType.Dios Or PlayerType.SemiDios Or PlayerType.Consejero)) = 0 Then
-                Call WriteErrorMsg(UserIndex, "Servidor restringido a administradores. Por favor reintente en unos momentos.")
-                Call CloseUser(UserIndex)
-                Exit Sub
-
-            End If
 
         End If
     
@@ -1415,16 +1405,16 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
             Call ApiEndpointSendUserConnectedMessageDiscord(Name, .Desc, criminal(UserIndex), ListaClases(.clase))
         End If
 
-        N = FreeFile
-        Open App.Path & "\logs\numusers.log" For Output As N
-        Print #N, NumUsers
-        Close #N
+        n = FreeFile
+        Open App.Path & "\logs\numusers.log" For Output As n
+        Print #n, NumUsers
+        Close #n
     
-        N = FreeFile
+        n = FreeFile
         'Log
-        Open App.Path & "\logs\Connect.log" For Append Shared As #N
-        Print #N, .Name & " ha entrado al juego. UserIndex:" & UserIndex & " " & time & " " & Date
-        Close #N
+        Open App.Path & "\logs\Connect.log" For Append Shared As #n
+        Print #n, .Name & " ha entrado al juego. UserIndex:" & UserIndex & " " & time & " " & Date
+        Close #n
 
     End With
 
@@ -1849,9 +1839,9 @@ Sub CloseUser(ByVal UserIndex As Integer)
     '
     '***************************************************
 
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
-    Dim N    As Integer
+    Dim n    As Integer
 
     Dim Map  As Integer
 
@@ -1990,16 +1980,16 @@ Sub CloseUser(ByVal UserIndex As Integer)
     
         Call MostrarNumUsers
     
-        N = FreeFile(1)
-        Open App.Path & "\logs\Connect.log" For Append Shared As #N
-        Print #N, Name & " ha dejado el juego. " & "User Index:" & UserIndex & " " & time & " " & Date
-        Close #N
+        n = FreeFile(1)
+        Open App.Path & "\logs\Connect.log" For Append Shared As #n
+        Print #n, Name & " ha dejado el juego. " & "User Index:" & UserIndex & " " & time & " " & Date
+        Close #n
 
     End With
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
     Call LogError("Error en CloseUser. Numero " & Err.Number & " Descripcion: " & Err.description)
 
 End Sub
@@ -2011,7 +2001,7 @@ Sub ReloadSokcet()
     '
     '***************************************************
 
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
     Call LogApiSock("ReloadSokcet() " & NumUsers & " " & LastUser & " " & MaxUsers)
     
@@ -2024,7 +2014,7 @@ Sub ReloadSokcet()
 
     Exit Sub
     
-ErrHandler:
+Errhandler:
     Call LogError("Error en CheckSocketState " & Err.Number & ": " & Err.description)
 
 End Sub

@@ -184,7 +184,7 @@ Public Function IPSecuritySuperaLimiteConexiones(ByVal IP As Long) As Boolean
             IPSecuritySuperaLimiteConexiones = False
         Else
             LogIP ("rechazamos conexion de " & IP & " iptableindex=" & IpTableIndex & ". Conexiones: " & MaxConTables(IpTableIndex + 1))
-            Debug.Print "rechaza conexion a " & IP
+            Debug.Print "rechaza conexion a " & IP & " Limite: " & LimiteConexionesPorIp
             IPSecuritySuperaLimiteConexiones = True
 
         End If
