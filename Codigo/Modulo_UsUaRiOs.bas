@@ -610,16 +610,16 @@ Public Sub MakeUserChar(ByVal toMap As Boolean, _
                             Else
                                 
                                 'Los GM no tienen clanes, tienen rangos
-                                If UserList(sndIndex).flags.Privilegios = PlayerType.Admin Then
+                                If .flags.Privilegios = PlayerType.Admin Then
                                         ClanTag = "Administrador"
                                         
-                                ElseIf UserList(sndIndex).flags.Privilegios = (PlayerType.Dios Or PlayerType.SemiDios) Then
+                                ElseIf .flags.Privilegios = (PlayerType.Dios Or PlayerType.SemiDios) Then
                                         ClanTag = "Game Master"
                                     
-                                ElseIf UserList(sndIndex).flags.Privilegios = PlayerType.Consejero Then
+                                ElseIf .flags.Privilegios = PlayerType.Consejero Then
                                         ClanTag = "Winter Staff"
                                         
-                                ElseIf UserList(sndIndex).flags.Privilegios = PlayerType.RoleMaster Then
+                                ElseIf .flags.Privilegios = PlayerType.RoleMaster Then
                                         ClanTag = "RoleMaster"
                                         
                                 End If

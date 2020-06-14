@@ -550,6 +550,7 @@ Public Function ia_Spawn(ByRef PosToSpawn As WorldPos) As Integer
      
     Dim ProximoBot  As Byte
     Dim PackageSend As String
+    Dim nPosToSpawn As WorldPos
      
     ProximoBot = IA_GetNextSlot
      
@@ -561,8 +562,11 @@ Public Function ia_Spawn(ByRef PosToSpawn As WorldPos) As Integer
         
         .Paralizado = False
         
+        Call ClosestLegalPos(PosToSpawn, nPosToSpawn, False, True, True)
+        Call BOT_FindLegalPos(ProximoBot, nPosToSpawn.Map, nPosToSpawn.X, nPosToSpawn.Y)
+        
         'Seteo la posición.
-        .Pos = PosToSpawn
+        .Pos = nPosToSpawn
         
         'Creo el char.
         ia_CreateChar ProximoBot
@@ -586,6 +590,66 @@ Public Function ia_Spawn(ByRef PosToSpawn As WorldPos) As Integer
     End With
  
 End Function
+ 
+Public Sub BOT_FindLegalPos(ByVal BotIndex As Integer, _
+                        ByVal Map As Integer, _
+                        ByRef X As Integer, _
+                        ByRef Y As Integer)
+    '***************************************************
+    'Autor: Lorwik
+    'Fecha: 14/06/2020
+    '***************************************************
+
+    If MapData(Map, X, Y).UserIndex <> 0 Or MapData(Map, X, Y).NpcIndex <> 0 Or MapData(Map, X, Y).BotIndex <> 0 Then
+                    
+        ' Se teletransporta a la misma pos a la que estaba
+        If MapData(Map, X, Y).BotIndex = BotIndex Then Exit Sub
+                            
+        Dim FoundPlace     As Boolean
+
+        Dim tX             As Long
+
+        Dim tY             As Long
+
+        Dim Rango          As Long
+
+        Dim OtherUserIndex As Integer
+    
+        For Rango = 1 To 5
+            For tY = Y - Rango To Y + Rango
+                For tX = X - Rango To X + Rango
+
+                    'Reviso que no haya User ni NPC
+                    If MapData(Map, tX, tY).UserIndex = 0 And MapData(Map, tX, tY).NpcIndex = 0 And MapData(Map, tX, tY).BotIndex = 0 Then
+                        
+                        If InMapBounds(Map, tX, tY) Then FoundPlace = True
+                        
+                        Exit For
+
+                    End If
+
+                Next tX
+        
+                If FoundPlace Then Exit For
+            Next tY
+            
+            If FoundPlace Then Exit For
+        Next Rango
+    
+        If FoundPlace Then 'Si encontramos un lugar, listo, nos quedamos ahi
+            X = tX
+            Y = tY
+            
+        Else 'Si no, probamos en una pos cercana aleatoria
+            
+            X = RandomNumber(tX - 3, tX + 3)
+            Y = RandomNumber(tY - 3, tX + Y)
+            
+        End If
+
+    End If
+
+End Sub
  
 Public Sub ia_Spells()
  

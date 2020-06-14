@@ -1003,7 +1003,7 @@ Public Sub FindLegalPos(ByVal UserIndex As Integer, _
     'Search for a Legal pos for the user who is being teleported.
     '***************************************************
 
-    If MapData(Map, X, Y).UserIndex <> 0 Or MapData(Map, X, Y).NpcIndex <> 0 Then
+    If MapData(Map, X, Y).UserIndex <> 0 Or MapData(Map, X, Y).NpcIndex <> 0 Or MapData(Map, X, Y).BotIndex <> 0 Then
                     
         ' Se teletransporta a la misma pos a la que estaba
         If MapData(Map, X, Y).UserIndex = UserIndex Then Exit Sub
@@ -1023,7 +1023,7 @@ Public Sub FindLegalPos(ByVal UserIndex As Integer, _
                 For tX = X - Rango To X + Rango
 
                     'Reviso que no haya User ni NPC
-                    If MapData(Map, tX, tY).UserIndex = 0 And MapData(Map, tX, tY).NpcIndex = 0 Then
+                    If MapData(Map, tX, tY).UserIndex = 0 And MapData(Map, tX, tY).NpcIndex = 0 Or MapData(Map, tX, tY).BotIndex = 0 Then
                         
                         If InMapBounds(Map, tX, tY) Then FoundPlace = True
                         
