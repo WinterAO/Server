@@ -14033,11 +14033,16 @@ CP10=CAZADOR
 CP11=BRUJO
 
 [OBJ1113]
-Name=Arbol
-GrhIndex=30685
-ObjType=4
-Agarrable=1
-Shadow=1
+Name=Casco de Unicornio
+GrhIndex=13079
+ObjType=17
+NumRopaje=2
+Agarrable=0
+Anim=139
+MaxDef=3
+MinDef=2
+Valor=0
+Crucial=0
 
 [OBJ1214]
 Name=Montura de Sanguijuela

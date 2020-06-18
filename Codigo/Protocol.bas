@@ -3403,7 +3403,7 @@ Private Sub HandleWorkLeftClick(ByVal UserIndex As Integer)
             '¿está el bot? (esto ya comprobó que sea de su grupo, ende no hay que volver acheckeaR)
                If .flags.TargetBot <> 0 Then
                       If .flags.Hechizo > 0 Then
-                        Call ModBOTS.ia_UserDamage(.flags.Hechizo, .flags.TargetBot, UserIndex)
+                        'Call ModBOTS.ia_UserDamage(.flags.Hechizo, .flags.TargetBot, UserIndex)
                         .flags.TargetBot = 0
                         .flags.Hechizo = 0
                         Exit Sub

@@ -93,7 +93,7 @@ Private Sub GuardiasAI(ByVal NpcIndex As Integer, ByVal DelCaos As Boolean)
         For headingloop = eHeading.SOUTH To eHeading.EAST
             nPos = .Pos
 
-            If .flags.Inmovilizado = 0 Or headingloop = .Char.heading Then
+            If .flags.Inmovilizado = 0 Or headingloop = .Char.Heading Then
                 Call HeadtoPos(headingloop, nPos)
 
                 If InMapBounds(nPos.Map, nPos.X, nPos.Y) Then
@@ -195,7 +195,7 @@ Private Sub HostilMalvadoAI(ByVal NpcIndex As Integer)
         For headingloop = eHeading.SOUTH To eHeading.EAST
             nPos = .Pos
 
-            If .flags.Inmovilizado = 0 Or .Char.heading = headingloop Then
+            If .flags.Inmovilizado = 0 Or .Char.Heading = headingloop Then
                 Call HeadtoPos(headingloop, nPos)
 
                 If InMapBounds(nPos.Map, nPos.X, nPos.Y) Then
@@ -292,7 +292,7 @@ Private Sub HostilBuenoAI(ByVal NpcIndex As Integer)
         For headingloop = eHeading.SOUTH To eHeading.EAST
             nPos = .Pos
 
-            If .flags.Inmovilizado = 0 Or .Char.heading = headingloop Then
+            If .flags.Inmovilizado = 0 Or .Char.Heading = headingloop Then
                 Call HeadtoPos(headingloop, nPos)
 
                 If InMapBounds(nPos.Map, nPos.X, nPos.Y) Then
@@ -360,7 +360,7 @@ Private Sub IrUsuarioCercano(ByVal NpcIndex As Integer)
 
         If .flags.Inmovilizado = 1 Then
 
-            Select Case .Char.heading
+            Select Case .Char.Heading
 
                 Case eHeading.NORTH
                     SignoNS = -1
@@ -547,7 +547,7 @@ Private Sub SeguirAgresor(ByVal NpcIndex As Integer)
 
         If .flags.Paralizado = 1 Or .flags.Inmovilizado = 1 Then
 
-            Select Case .Char.heading
+            Select Case .Char.Heading
 
                 Case eHeading.NORTH
                     SignoNS = -1
@@ -771,7 +771,7 @@ Private Sub PersigueCriminal(ByVal NpcIndex As Integer)
 
         If .flags.Inmovilizado = 1 Then
 
-            Select Case .Char.heading
+            Select Case .Char.Heading
 
                 Case eHeading.NORTH
                     SignoNS = -1
@@ -937,7 +937,7 @@ Private Sub AiNpcAtacaNpc(ByVal NpcIndex As Integer)
 
         If .flags.Inmovilizado = 1 Then
 
-            Select Case .Char.heading
+            Select Case .Char.Heading
 
                 Case eHeading.NORTH
                     SignoNS = -1
@@ -1298,18 +1298,18 @@ Function FollowPath(ByVal NpcIndex As Integer) As Boolean
     'Last Modification: -
     'Moves the npc.
     '***************************************************
-    Dim tmpPos   As WorldPos
+    Dim TmpPos   As WorldPos
 
     Dim tHeading As Byte
     
     With Npclist(NpcIndex)
-        tmpPos.Map = .Pos.Map
-        tmpPos.X = .PFINFO.Path(.PFINFO.CurPos).Y ' invert� las coordenadas
-        tmpPos.Y = .PFINFO.Path(.PFINFO.CurPos).X
+        TmpPos.Map = .Pos.Map
+        TmpPos.X = .PFINFO.Path(.PFINFO.CurPos).Y ' invert� las coordenadas
+        TmpPos.Y = .PFINFO.Path(.PFINFO.CurPos).X
         
         'Debug.Print "(" & tmpPos.X & "," & tmpPos.Y & ")"
         
-        tHeading = FindDirection(.Pos, tmpPos)
+        tHeading = FindDirection(.Pos, TmpPos)
         
         MoveNPCChar NpcIndex, tHeading
         

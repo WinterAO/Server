@@ -1228,8 +1228,8 @@ Public Sub UsuarioAtaca(ByVal UserIndex As Integer)
         
         If bot_Index <> 0 Then
            'Checkeo que esté invocado.
-           If ModBOTS.IA_Bot(bot_Index).Invocado Then
-                 ia_DamageHit bot_Index, UserIndex
+           If ModBOTS.BOTList(bot_Index).Invocado Then
+                 'ia_DamageHit bot_Index, UserIndex
            End If
         End If
         

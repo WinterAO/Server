@@ -60,7 +60,7 @@ NPCS PRETORIANOS
 ##############################################
 
 1) Los NPCs pretorianos se numeran a partir del 900 (NO CAMBIAR)
-2) Al crear un nuevo NPCS traten de asignar primero los numeros libres que se detallan arriba, intentando asignar pirmero los numeros mas bajos.
+2) A los NPCs Hostiles se les asigna 50 slots por Nivel.
 
 ##############################################
 ##############################################
@@ -132,11 +132,79 @@ Obj2=1203-1000 'Pocion Roja
 Obj3=166-1000 'Pocion Violeta
 BackUp=1
 
+[NPC4]
+Name=Quest 1
+NpcType=14
+Desc=Hola te doy la primera quest
+Head=77
+Heading=1
+Body=200
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Comercia=1
+TipoItems=11
+NROITEMS=0
+BackUp=1
+
+[NPC5]
+Name=Quest 2
+NpcType=14
+Desc=Hola te doy la segunda quest
+Head=77
+Heading=1
+Body=200
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Comercia=1
+TipoItems=11
+NROITEMS=0
+BackUp=1
+
+[NPC7]
+Name=Quest 3
+NpcType=14
+Desc=Hola te doy la tercera quest
+Head=77
+Heading=1
+Body=200
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Comercia=1
+TipoItems=11
+NROITEMS=0
+BackUp=1
+
+[NPC8]
+Name=Quest 4
+NpcType=14
+Desc=Hola te doy la cuarta quest
+Head=77
+Heading=1
+Body=200
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Comercia=1
+TipoItems=11
+NROITEMS=0
+BackUp=1
+
 ##############################################################
 ################ NPCS VENDEDORES DE RAMX #####################
 ##############################################################
 
-[NPC4]
+[NPC11]
 Name=Sacerdote
 NpcType=1
 Desc=Hola, hijo mio! Soy el sacerdote de este pueblo. Si estas herido o muerto, creo que yo podre ayudarte.
@@ -152,7 +220,7 @@ Alineacion=0
 Comercia=0
 BackUp=0
 
-[NPC5]
+[NPC12]
 Name=Banquera
 NpcType=4
 Desc=Hola, bienvenido a la sede de Ramx de la cadena de finanzas Goliath. Somos la cadena mas grande en Argentum, contamos con bancos en las ciudades mas importantes.
@@ -168,7 +236,7 @@ Alineacion=0
 Comercia=0
 BackUp=0
 
-[NPC6]
+[NPC13]
 Name=Banquero
 NpcType=4
 Desc=Hola, bienvenido a la sede de Ramx de la cadena de finanzas Goliath. Somos la cadena mas grande en Argentum, contamos con bancos en las ciudades mas importantes.
@@ -184,7 +252,7 @@ Alineacion=0
 Comercia=0
 BackUp=0
 
-[NPC7] 'Vende Pociones
+[NPC14] 'Vende Pociones
 Name=Lilith
 NpcType=0
 Desc=Mis pociones son las mejores de todas estas tierras, curan cualquier dolencia.
@@ -207,7 +275,7 @@ Obj5=166-1000 'Pocion Violeta
 Obj6=645-1000 'Pocion Negra
 BackUp=1
 
-[NPC8] 'Herrero
+[NPC15] 'Herrero
 Name=Herrero
 NpcType=0
 Desc=Bienvenido, rata de alcantarilla, soy el Herrero de Ramx... tengo algunas armas que pueden ayudarte en tus peligrosas aventuras.
@@ -243,7 +311,7 @@ Obj17=990-1000 	'Mazo del Juicio
 Obj18=403-1000 	'Espada de Plata
 BackUp=1
 
-[NPC9] 'Sastre Ramx
+[NPC16] 'Sastre Ramx
 Name=Sastre
 NpcType=0
 Desc=Hola forastero! Tengo los mejores harapos para todas las razas.
@@ -270,7 +338,7 @@ obj8=239-1000 'Tunica Roja
 obj9=873-1000 'Guantes de hurto
 BackUp=1
 
-[NPC10] 'Armaduras Ramx
+[NPC17] 'Armaduras Ramx
 Name=Armaduras
 Desc=Todo viaje esta lleno de peligros y no sabras que podria llegar a sucederte. Ven, y deja que te muestre las mejoras armaduras.
 Head=6
@@ -292,7 +360,7 @@ Obj4=1001-1000 'Casco de Aguila
 Obj5=1002-1000 'Casco de Lobo
 BackUp=1
 
-[NPC11] 'Provisiones Ramx
+[NPC18] 'Provisiones Ramx
 Name=Thorkis
 NpcType=0
 Desc=Todo viaje requiere de provisiones, y justo hoy he recibido un nuevo cargamento de la mejor comida y bebida que pudieras probar.
@@ -329,7 +397,7 @@ Obj18=161-10000
 Obj19=622-10000
 BackUp=1
 
-[NPC12] 'VendeMagia Ramx
+[NPC19] 'VendeMagia Ramx
 Name=Mago
 NpcType=0
 Desc=Bienvenido a mi tienda... Vendemos hechizos desde hace mas de 100 decadas! Tengo algunos hechizos que podrian interesarte.
@@ -361,7 +429,7 @@ Obj13=531-1000 'Descarga Electrica
 Obj14=205-1000 'Proyectil magico
 BackUp=1
 
-[NPC13] 'Pescador Ramx
+[NPC20] 'Pescador Ramx
 Name=Pescador
 NpcType=0
 Desc=La pesca es mas que un oficial ¡Es un estilo de vida!. Tengo todo tipo de utilidades para que atrapes el pez mas grande! 
@@ -382,7 +450,7 @@ Obj2=139-1000 'Pescado
 Obj3=543-1000 'Red de Pesca
 BackUp=1
 
-[NPC14] 'Minero
+[NPC21] 'Minero
 Name=Minero
 NpcType=0
 Desc=Amigo, esas minas pueden ser peligrosas, y esos minerales no son faciles de extraer. Tengo herramientas que te podrian interesantes.
@@ -401,7 +469,7 @@ NROITEMS=1
 Obj1=187-1000 'Piquete de Minero
 BackUp=1
 
-[NPC15] 'Mercader
+[NPC22] 'Mercader
 Name=Mercader
 NpcType=0
 Desc=Hola buen amigo, pertenezco al gremio de mercaderes de Winter y viajamos por todas las ciudades comprando y vendiendo todo tipo de mercancia.
@@ -419,7 +487,7 @@ TipoItems=1000
 NROITEMS=0
 BackUp=1
 
-[NPC16] 'Carpintera
+[NPC23] 'Carpintera
 Name=Carpintera
 NpcType=0
 Desc=Trabajar la madera un arte que requiere practica y paciencia. Tengo todo tipo de herramientas que te podran ayudar.
@@ -446,7 +514,7 @@ Obj8=479-1000 	'Arco Compuesto
 Obj9=664-1000 	'Arco Compuesto Reforzado
 BackUp=1
 
-[NPC17]
+[NPC24]
 Name=Marinero
 NpcType=15
 Desc=¡Subid a bordo grumetes! ¡El barco esta apunto de zarpar!
@@ -491,7 +559,7 @@ Domable=400
 Alineacion=2
 Comercia=0
 GiveEXP=30
-GiveGLD=11
+GiveGLD=25
 MinHP=25
 MaxHP=25
 MaxHIT=14
@@ -606,8 +674,8 @@ Hostile=1
 Domable=400
 Alineacion=2
 Comercia=0
-GiveEXP=30
-GiveGLD=11
+GiveEXP=40
+GiveGLD=40
 MinHP=25
 MaxHP=25
 MaxHIT=14
@@ -718,8 +786,8 @@ Hostile=1
 Domable=400
 Alineacion=2
 Comercia=0
-GiveEXP=30
-GiveGLD=11
+GiveEXP=40
+GiveGLD=40
 MinHP=25
 MaxHP=25
 MaxHIT=14
@@ -956,11 +1024,41 @@ SND2=103
 BackUp=0
 NROITEMS=0
 
+[NPC517]
+Name=Gallo envenenado
+NpcType=0
+Head=0
+Heading=3
+Body=5
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=0
+Hostile=1
+Domable=450
+Alineacion=2
+Comercia=0
+GiveEXP=20
+GiveGLD=25
+MinHP=20
+MaxHP=20
+MaxHIT=11
+MinHIT=8
+envenena=1
+ELV=5
+DEF=0
+PoderAtaque=5
+PoderEvasion=5
+SND3=67
+BackUp=0
+NROITEMS=1
+Drop1=26-1 'Pollo
+
 ##################
 ####LEVEL 10######
 ##################
 
-[NPC517]
+[NPC551]
 Name=Javali
 NpcType=0
 Head=0
@@ -988,7 +1086,7 @@ SND2=103
 BackUp=0
 NROITEMS=0
 
-[NPC518]
+[NPC552
 Name=Mono
 NpcType=0
 Head=0
@@ -1015,7 +1113,7 @@ PoderEvasion=30
 BackUp=0
 NROITEMS=0
 
-[NPC519]
+[NPC553]
 Name=Jefe Mono
 NpcType=0
 Head=0
@@ -1042,7 +1140,7 @@ PoderEvasion=30
 BackUp=0
 NROITEMS=0
 
-[NPC520]
+[NPC554]
 Name=Rata
 NpcType=0
 Head=0
@@ -1069,7 +1167,7 @@ PoderEvasion=30
 BackUp=0
 NROITEMS=0
 
-[NPC521]
+[NPC555]
 Name=Sapo
 NpcType=0
 Head=0
@@ -1096,7 +1194,7 @@ PoderEvasion=30
 BackUp=0
 NROITEMS=0
 
-[NPC522]
+[NPC556]
 Name=Cisne
 NpcType=0
 Head=0
@@ -1123,7 +1221,7 @@ PoderEvasion=30
 BackUp=0
 NROITEMS=0
 
-[NPC523]
+[NPC557]
 Name=Tortuga
 NpcType=0
 Head=0
@@ -1152,7 +1250,7 @@ NROITEMS=3
 Drop1=404-1 'Escudo de Tortuga
 Drop2=38-20 'Pociones Rojas
 
-[NPC524]
+[NPC558]
 Name=Tortuga Gigante
 NpcType=0
 Head=0
@@ -1181,11 +1279,41 @@ NROITEMS=2
 Drop1=404-1 'Escudo de Tortuga
 Drop2=38-20 'Pociones Rojas
 
+[NPC559]
+Name=Cria de Lobo
+NpcType=0
+Head=0
+Heading=3
+Body=10
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=0
+Hostile=1
+Domable=1250
+Alineacion=2
+Comercia=0
+GiveEXP=55
+GiveGLD=55
+MinHP=75
+MaxHP=75
+MaxHIT=75
+MinHIT=55
+ELV=10
+DEF=8
+PoderAtaque=80
+PoderEvasion=25
+Snd1=35
+Snd2=9
+BackUp=0
+NROITEMS=1
+Drop1=27-3 'Chuleta
+
 ##################
 ####LEVEL 15######
 ##################
 
-[NPC525]
+[NPC600]
 Name=Sapo venenoso
 NpcType=0
 Head=0
@@ -1213,7 +1341,7 @@ PoderEvasion=50
 BackUp=0
 NROITEMS=0
 
-[NPC526]
+[NPC601]
 Name=Araña gigante
 NpcType=0
 Head=0
@@ -1240,7 +1368,7 @@ PoderEvasion=50
 BackUp=0
 NROITEMS=0
 
-[NPC527]
+[NPC602]
 Name=Hormiga Gigante
 NpcType=0
 Head=0
@@ -1267,7 +1395,7 @@ PoderEvasion=50
 BackUp=0
 NROITEMS=0
 
-[NPC528]
+[NPC603]
 Name=Contrabandista
 NpcType=0
 Head=2
@@ -1295,7 +1423,7 @@ Snd3=157
 BackUp=0
 NROITEMS=0
 
-[NPC529]
+[NPC604]
 Name=Contrabandista
 NpcType=0
 Head=201
@@ -1323,7 +1451,7 @@ Snd3=155
 BackUp=0
 NROITEMS=0
 
-[NPC530]
+[NPC605]
 Name=Exclavo Contrabandista
 NpcType=0
 Head=201
@@ -1351,7 +1479,7 @@ Snd3=155
 BackUp=0
 NROITEMS=0
 
-[NPC531]
+[NPC606]
 Name=Osezno
 NpcType=0
 Head=0
@@ -1380,7 +1508,7 @@ NROITEMS=5
 Drop1=415-1 'Piel Oso Pardo
 Drop2=38-100 'Pociones Rojas
 
-[NPC532]
+[NPC607]
 Name=Cocodrilo Joven
 NpcType=0
 Head=0
@@ -1406,11 +1534,42 @@ PoderAtaque=64
 PoderEvasion=60
 BackUp=0
 
+[NPC608]
+Name=Unicornio
+NpcType=0
+Head=0
+Heading=3
+Body=183
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=200
+MinHP=500
+MaxHP=500
+MaxHIT=7
+MinHIT=5
+DEF=0
+PoderAtaque=10
+PoderEvasion=10
+BackUp=0
+Explota=1
+NROITEMS=5
+Drop1=12-50 'Oro
+Drop2=12-80 'Oro
+Drop3=12-150 'Oro
+Drop4=37-50 'Pocion Azul
+Drop5=12-5000 'Oro
+
 ##################
 ####LEVEL 20######
 ##################
 
-[NPC533]
+[NPC650]
 Name=Cocodrilo
 NpcType=0
 Head=0
@@ -1440,7 +1599,7 @@ BackUp=0
 NROITEMS=1
 Drop1=27-3 'Chuleta
 
-[NPC534]
+[NPC651]
 Name=Rata Gigante
 NpcType=0
 Head=0
@@ -1470,7 +1629,7 @@ BackUp=0
 NROITEMS=1
 Drop1=27-3 'Chuleta
 
-[NPC535]
+[NPC652]
 Name=Lobo
 NpcType=0
 Head=0
@@ -1501,7 +1660,7 @@ NROITEMS=2
 Drop1=414-1 'Piel de Lobo
 Drop2=27-3 'Chuleta
 
-[NPC536]
+[NPC653]
 Name=Zorro
 NpcType=0
 Head=0
@@ -1532,7 +1691,7 @@ NROITEMS=2
 Drop1=414-1 'Piel de Lobo
 Drop2=27-3 'Chuleta
 
-[NPC537]
+[NPC654]
 Name=Cria de Tigre
 NpcType=0
 Head=0
@@ -1560,7 +1719,7 @@ NROITEMS=2
 Drop1=414-20 'Piel de Tigre (le pongo de lobo mientras, cambiar!!)
 Drop2=27-23 'Chuleta
 
-[NPC538]
+[NPC655]
 Name=Tigre
 NpcType=0
 Head=0
@@ -1588,7 +1747,7 @@ NROITEMS=2
 Drop1=414-20 'Piel de Tigre (le pongo de lobo mientras, cambiar!!)
 Drop2=27-23 'Chuleta
 
-[NPC539]
+[NPC656]
 Name=Oso
 NpcType=0
 Head=0
@@ -1621,7 +1780,7 @@ Drop2=38-100 'Pociones Rojas
 ####LEVEL 25######
 ##################
 
-[NPC540]
+[NPC700]
 Name=Oso Pardo
 NpcType=0
 Head=0
@@ -1650,7 +1809,7 @@ NROITEMS=2
 Drop1=415-1 'Piel Oso Pardo
 Drop2=38-100 'Pociones Rojas
 
-[NPC541]
+[NPC701]
 Name=Aracnido Gigante
 NpcType=0
 Head=0
@@ -1680,7 +1839,7 @@ NROITEMS=2
 Drop1=12-175 'Oro
 Drop2=38-30 ' Pociones Rojas
 
-[NPC542] 
+[NPC702] 
 Name=Orco
 NpcType=0
 Head=0
@@ -1709,7 +1868,7 @@ NROITEMS=2
 Drop1=12-114 'Oro
 Drop2=3-1 'Hacha
 
-[NPC543]
+[NPC703]
 Name=Basilisco
 NpcType=0
 Head= (AUN NO TIENE GRAFICO)
@@ -1739,7 +1898,7 @@ BackUp=0
 ####LEVEL 30######
 ##################
 
-[NPC544]
+[NPC750]
 Name=Gorila
 NpcType=0
 Head=0
@@ -1771,7 +1930,7 @@ NROITEMS=2
 Drop1=38-300 'Pocion Roja
 Drop2=37-500 'Pocion Azul
 
-[NPC545] 
+[NPC751] 
 Name=Minotauro
 NpcType=0
 Head=0
@@ -1800,7 +1959,7 @@ Nroitems=1
 BackUp=0
 NROITEMS=0
 
-[NPC546]
+[NPC752]
 Name=Tortuga Milenaria
 NpcType=0
 Head=0

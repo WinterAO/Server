@@ -218,7 +218,6 @@ Public Function WndProc(ByVal hWnd As Long, ByVal msg As Long, ByVal wParam As L
                             Call CloseSocketSL(n)
                             Call Cerrar_Usuario(n)
                             Call CloseAccount(n)
-                            Call SecurityIp.IpRestarConexion(GetLongIp(UserList(n).IP))
                             Exit Function
 
                         End If
@@ -227,7 +226,7 @@ Public Function WndProc(ByVal hWnd As Long, ByVal msg As Long, ByVal wParam As L
                         Call CloseSocketSL(n)
                         Call Cerrar_Usuario(n)
                         Call CloseAccount(n)
-                        Call SecurityIp.IpRestarConexion(GetLongIp(UserList(n).IP))
+                        'Call SecurityIp.IpRestarConexion(GetLongIp(UserList(n).IP))
                     End If
                     
                     ReDim Preserve Tmp(ret - 1) As Byte
@@ -240,7 +239,7 @@ Public Function WndProc(ByVal hWnd As Long, ByVal msg As Long, ByVal wParam As L
                     If S <> SockListen Then Call apiclosesocket(S)
                     Debug.Print "FD_CLOSE"
                     If n > 0 Then
-                        Call SecurityIp.IpRestarConexion(GetLongIp(UserList(n).IP))
+                        'Call SecurityIp.IpRestarConexion(GetLongIp(UserList(n).IP))
                         'Call BorraSlotSock(S)
                         'UserList(n).ConnID = -1
                         'UserList(n).ConnIDValida = False

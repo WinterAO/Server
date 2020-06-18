@@ -859,7 +859,7 @@ Function CheckForSameNameAccount(ByVal Name As String) As Boolean
             'ESTE BUG EN ALKON PRODUJO QUE EL SERVIDOR ESTE CAIDO DURANTE 3 DIAS. ATENTOS.
             
             If UCase$(UserList(LoopC).AccountInfo.UserName) = UCase$(Name) Then
-            Debug.Print "adasdasdasdasd"
+            
                 CheckForSameNameAccount = True
                 Exit Function
 
@@ -1267,24 +1267,24 @@ Sub LookatTile(ByVal UserIndex As Integer, _
                     
                     'Target del BOT
                     If .TargetBot <> 0 Then
-                        If IA_Bot(.TargetBot).Invocado Then
+                        If BOTList(.TargetBot).Invocado Then
                             
                             'Aqui le damos informacion sobre el estado de salud del bot.
                             SupervivenciaSkill = UserList(UserIndex).Stats.UserSkills(eSkill.Supervivencia)
                             If SupervivenciaSkill <= 10 Then
                                 Stat = Stat + " (Dudoso) "
                             Else
-                                If IA_Bot(.TargetBot).minVida < (IA_Bot(.TargetBot).maxVida * 0.05) Then
+                                If BOTList(.TargetBot).minVida < (BOTList(.TargetBot).maxVida * 0.05) Then
                                     Stat = Stat & " Muerto)"
-                                ElseIf IA_Bot(.TargetBot).minVida < (IA_Bot(.TargetBot).maxVida * 0.1) Then
+                                ElseIf BOTList(.TargetBot).minVida < (BOTList(.TargetBot).maxVida * 0.1) Then
                                     Stat = Stat & " Casi muerto)"
-                                ElseIf IA_Bot(.TargetBot).minVida < (IA_Bot(.TargetBot).maxVida * 0.25) Then
+                                ElseIf BOTList(.TargetBot).minVida < (BOTList(.TargetBot).maxVida * 0.25) Then
                                     Stat = Stat & " Muy Malherido)"
-                                ElseIf IA_Bot(.TargetBot).minVida < (IA_Bot(.TargetBot).maxVida * 0.5) Then
+                                ElseIf BOTList(.TargetBot).minVida < (BOTList(.TargetBot).maxVida * 0.5) Then
                                     Stat = Stat & " Malherido)"
-                                ElseIf IA_Bot(.TargetBot).minVida < (IA_Bot(.TargetBot).maxVida * 0.75) Then
+                                ElseIf BOTList(.TargetBot).minVida < (BOTList(.TargetBot).maxVida * 0.75) Then
                                     Stat = Stat & " Herido)"
-                                ElseIf IA_Bot(.TargetBot).minVida < (IA_Bot(.TargetBot).maxVida) Then
+                                ElseIf BOTList(.TargetBot).minVida < (BOTList(.TargetBot).maxVida) Then
                                     Stat = Stat & " Levemente Herido)"
                                 Else
                                     Stat = Stat & " Intacto)"
@@ -1293,7 +1293,7 @@ Sub LookatTile(ByVal UserIndex As Integer, _
                             
                             Dim tmp_Font  As FontTypeNames
                                
-                            If IA_Bot(.TargetBot).EsCriminal Then
+                            If BOTList(.TargetBot).EsCriminal Then
                                 tmp_Font = FontTypeNames.FONTTYPE_FIGHT
                                 Stat = Stat & " <Renegado>"
                             Else
@@ -1301,7 +1301,7 @@ Sub LookatTile(ByVal UserIndex As Integer, _
                                 Stat = Stat & " <Ciudadano>"
                             End If
                                
-                            Call WriteConsoleMsg(UserIndex, IA_Bot(.TargetBot).Name & " (" & ListaClases(IA_Bot(.TargetBot).clase) & " " & ListaRazas(IA_Bot(.TargetBot).Raza) & " Nivel: " & IA_Bot(.TargetBot).Level & " | " & Stat, tmp_Font)
+                            Call WriteConsoleMsg(UserIndex, BOTList(.TargetBot).Name & " (" & ListaClases(BOTList(.TargetBot).clase) & " " & ListaRazas(BOTList(.TargetBot).Raza) & " Nivel: " & BOTList(.TargetBot).Level & " | " & Stat, tmp_Font)
                         End If
                         .TargetBot = 0
                     End If

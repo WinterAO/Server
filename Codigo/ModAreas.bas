@@ -117,14 +117,14 @@ End Sub
 '************************************************************************************
 '* AgregarNpc: agrega el npc al mapa, notificando a los usuarios dentro de su area. *
 '************************************************************************************
-Public Sub AgregarNpc(ByVal NpcIndex As Integer)
+Public Sub AgregarNpc(ByVal NPCIndex As Integer)
 
-    With Npclist(NpcIndex)
+    With Npclist(NPCIndex)
         .AreasInfo.AreaPerteneceX = -1
         .AreasInfo.AreaPerteneceY = -1
     End With
 
-    Call CheckUpdateNeededNpc(NpcIndex, USER_NUEVO)
+    Call CheckUpdateNeededNpc(NPCIndex, USER_NUEVO)
     
 End Sub
 
@@ -148,7 +148,7 @@ End Sub
 '* CheckUpdateNeededUser: Comprueba si es necesario modificar el area del usuario,                             *
 '                         de ser asi, le envia todos los datos nuevos y avisa a los demas usuarios de la zona. *
 '***************************************************************************************************************
-Public Sub CheckUpdateNeededUser(ByVal UserIndex As Integer, ByVal heading As Byte, Optional ByVal ButIndex As Boolean = False, Optional verInvis As Byte = 0)
+Public Sub CheckUpdateNeededUser(ByVal UserIndex As Integer, ByVal Heading As Byte, Optional ByVal ButIndex As Boolean = False, Optional verInvis As Byte = 0)
 
     Dim botI As Integer
 
@@ -162,7 +162,7 @@ Public Sub CheckUpdateNeededUser(ByVal UserIndex As Integer, ByVal heading As By
         Dim MinX As Integer, MaxX As Integer, MinY As Integer, MaxY As Integer, X As Integer, Y As Integer, CurUser As Long, Map As Long
 
         ' Calculamos segun la direccion del usuario el area nueva que tenemos que mandarle
-        Call CalcularNuevaArea(.Pos.X, .Pos.Y, heading, MinX, MaxX, MinY, MaxY)
+        Call CalcularNuevaArea(.Pos.X, .Pos.Y, Heading, MinX, MaxX, MinY, MaxY)
 
         ' Avisamos al cliente para que borre todo lo que esta fuera del area
         Call WriteAreaChanged(UserIndex)
@@ -216,7 +216,7 @@ Public Sub CheckUpdateNeededUser(ByVal UserIndex As Integer, ByVal heading As By
                         End If
                         
                     '... excepto que nos hayamos warpeado al mapa y ButIndex = false
-                    ElseIf heading = USER_NUEVO And Not ButIndex Then
+                    ElseIf Heading = USER_NUEVO And Not ButIndex Then
                         Call MakeUserChar(False, UserIndex, UserIndex, Map, X, Y)
                         
                         If .flags.AdminInvisible = 1 Or .flags.Navegando = 0 And (.flags.invisible Or .flags.Oculto) Then
@@ -230,14 +230,14 @@ Public Sub CheckUpdateNeededUser(ByVal UserIndex As Integer, ByVal heading As By
                 botI = MapData(Map, X, Y).BotIndex
                 
                 If (botI <> 0) Then
-                    If (IA_Bot(botI).Invocado = True) Then
+                    If (BOTList(botI).Invocado = True) Then
                         Call ModBOTS.ia_EnviarChar(UserIndex, botI)
                     End If
                 End If
 
                 '<<< Npc >>>
-                If MapData(Map, X, Y).NpcIndex Then
-                    Call MakeNPCChar(False, UserIndex, MapData(Map, X, Y).NpcIndex, Map, X, Y)
+                If MapData(Map, X, Y).NPCIndex Then
+                    Call MakeNPCChar(False, UserIndex, MapData(Map, X, Y).NPCIndex, Map, X, Y)
                 End If
 
                 'Objs
@@ -266,8 +266,8 @@ End Sub
 '***************************************************************************************************************
 '* CheckUpdateNeededNpc: comprueba si el NPC cambio de area y le avisa a todos los usuarios que sea necesario. *
 '***************************************************************************************************************
-Public Sub CheckUpdateNeededNpc(ByVal NpcIndex As Integer, ByVal heading As Byte)
-    With Npclist(NpcIndex)
+Public Sub CheckUpdateNeededNpc(ByVal NPCIndex As Integer, ByVal Heading As Byte)
+    With Npclist(NPCIndex)
 
         ' Comprobamos si cambio de area
         If .AreasInfo.AreaPerteneceX = .Pos.X \ AREAS_X And _
@@ -277,7 +277,7 @@ Public Sub CheckUpdateNeededNpc(ByVal NpcIndex As Integer, ByVal heading As Byte
         Dim MinX As Integer, MaxX As Integer, MinY As Integer, MaxY As Integer, X As Integer, Y As Integer, UserIndex As Long
 
         ' Calculamos el area nueva segun la direccion del NPC
-        Call CalcularNuevaArea(.Pos.X, .Pos.Y, heading, MinX, MaxX, MinY, MaxY)
+        Call CalcularNuevaArea(.Pos.X, .Pos.Y, Heading, MinX, MaxX, MinY, MaxY)
 
         ' Si no hay usuarios en el mapa ahorramos tiempo y salimos
         If MapInfo(.Pos.Map).NumUsers <> 0 Then
@@ -286,7 +286,7 @@ Public Sub CheckUpdateNeededNpc(ByVal NpcIndex As Integer, ByVal heading As Byte
                 For Y = MinY To MaxY
                     ' Si hay un usuario le enviamos el NPC
                     If MapData(.Pos.Map, X, Y).UserIndex Then _
-                        Call MakeNPCChar(False, MapData(.Pos.Map, X, Y).UserIndex, NpcIndex, .Pos.Map, .Pos.X, .Pos.Y)
+                        Call MakeNPCChar(False, MapData(.Pos.Map, X, Y).UserIndex, NPCIndex, .Pos.Map, .Pos.X, .Pos.Y)
                 Next Y
             Next X
         
@@ -301,7 +301,7 @@ End Sub
 '**************************************************************************************************************************
 '* CalcularNuevaArea: segun la posicion actual y la direccion dada, se calcula el area en tiles que debe ser actualizada. *
 '**************************************************************************************************************************
-Private Sub CalcularNuevaArea(ByVal X As Integer, ByVal Y As Integer, ByVal heading As Byte, ByRef MinX As Integer, ByRef MaxX As Integer, ByRef MinY As Integer, ByRef MaxY As Integer)
+Private Sub CalcularNuevaArea(ByVal X As Integer, ByVal Y As Integer, ByVal Heading As Byte, ByRef MinX As Integer, ByRef MaxX As Integer, ByRef MinY As Integer, ByRef MaxY As Integer)
 
     Dim AreaX As Integer, AreaY As Integer
     Dim MinAreaX As Integer, MaxAreaX As Integer, MinAreaY As Integer, MaxAreaY As Integer
@@ -311,7 +311,7 @@ Private Sub CalcularNuevaArea(ByVal X As Integer, ByVal Y As Integer, ByVal head
     AreaY = Y \ AREAS_Y
 
     ' Calculamos el conjunto de areas nuevas
-    Select Case heading
+    Select Case Heading
         Case eHeading.NORTH
             ' 3 areas nuevas arriba
             MinAreaX = AreaX - 1
@@ -373,9 +373,9 @@ End Function
 '*****************************************************************************************
 '* EstanMismoAreaNPC: devuelve verdadero si el usuario esta en el mismo area que el NPC. *
 '*****************************************************************************************
-Public Function EstanMismoAreaNPC(ByVal NpcIndex As Integer, ByVal UserIndex As Integer) As Boolean
-    EstanMismoAreaNPC = Abs(UserList(UserIndex).AreasInfo.AreaPerteneceX - Npclist(NpcIndex).AreasInfo.AreaPerteneceX) <= 1 And _
-                        Abs(UserList(UserIndex).AreasInfo.AreaPerteneceY - Npclist(NpcIndex).AreasInfo.AreaPerteneceY) <= 1
+Public Function EstanMismoAreaNPC(ByVal NPCIndex As Integer, ByVal UserIndex As Integer) As Boolean
+    EstanMismoAreaNPC = Abs(UserList(UserIndex).AreasInfo.AreaPerteneceX - Npclist(NPCIndex).AreasInfo.AreaPerteneceX) <= 1 And _
+                        Abs(UserList(UserIndex).AreasInfo.AreaPerteneceY - Npclist(NPCIndex).AreasInfo.AreaPerteneceY) <= 1
 End Function
 
 '**********************************************************************************************

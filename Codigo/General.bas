@@ -353,8 +353,6 @@ Sub Main()
     'Bots
     frmCargando.Label1(2).Caption = "Cargando Bots"
     Call ModBOTS.CargarBOTs
-    Call ModBOTS.CargarMensajesBOTS
-    Call ModBOTS.ia_Spells
     
     ' Mapas
     If BootDelBackUp Then

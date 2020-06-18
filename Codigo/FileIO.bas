@@ -1078,10 +1078,6 @@ Sub LoadOBJData()
             '07/09/07
             
             .GrhIndex = val(Leer.GetValue("OBJ" & Object, "GrhIndex"))
-
-            If .GrhIndex = 0 Then
-                .GrhIndex = .GrhIndex
-            End If
             
             .ParticulaIndex = val(Leer.GetValue("OBJ" & Object, "ParticulaIndex"))
             
