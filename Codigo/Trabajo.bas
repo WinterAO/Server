@@ -1630,7 +1630,7 @@ Sub DoAdminInvisible(ByVal UserIndex As Integer)
             Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(tempData)
             
             'Le mandamos el mensaje para que borre el personaje a los clientes que esten cerca
-            Call SendData(SendTarget.ToPCAreaButIndex, UserIndex, PrepareMessageCharacterRemove(.Char.CharIndex))
+            Call SendData(SendTarget.ToPCAreaButIndex, UserIndex, PrepareMessageCharacterRemove(.Char.CharIndex, False))
             
         Else
             .flags.AdminInvisible = 0

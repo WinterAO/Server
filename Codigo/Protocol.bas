@@ -18161,7 +18161,7 @@ End Sub
 ' @param    CharIndex Character to be removed.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteCharacterRemove(ByVal UserIndex As Integer, ByVal CharIndex As Integer)
+Public Sub WriteCharacterRemove(ByVal UserIndex As Integer, ByVal CharIndex As Integer, Optional ByVal Desaparece As Boolean = False)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -18170,7 +18170,7 @@ Public Sub WriteCharacterRemove(ByVal UserIndex As Integer, ByVal CharIndex As I
     '***************************************************
     On Error GoTo Errhandler
 
-    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterRemove(CharIndex))
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterRemove(CharIndex, Desaparece))
     Exit Sub
 
 Errhandler:
@@ -21274,7 +21274,7 @@ End Function
 ' @return   The formated message ready to be writen as is on outgoing buffers.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Function PrepareMessageCharacterRemove(ByVal CharIndex As Integer) As String
+Public Function PrepareMessageCharacterRemove(ByVal CharIndex As Integer, Optional ByVal Desaparece As Boolean = False) As String
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -21284,6 +21284,7 @@ Public Function PrepareMessageCharacterRemove(ByVal CharIndex As Integer) As Str
     With auxiliarBuffer
         Call .WriteByte(ServerPacketID.CharacterRemove)
         Call .WriteInteger(CharIndex)
+        Call .WriteBoolean(Desaparece)
         
         PrepareMessageCharacterRemove = .ReadASCIIStringFixed(.Length)
 

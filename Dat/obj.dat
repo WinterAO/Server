@@ -9666,10 +9666,13 @@ ObjType=20
 Agarrable=1
 
 [OBJ822]
-Name=Estalagmitas
-GrhIndex=1526
-ObjType=20
+Name=Cartel Shakoud Belleuve
+GrhIndex=467
+VGrande=501
+ObjType=8
 Agarrable=1
+Texto=Al Norte Shakoud. Al Este Belleuve
+Shadow=1
 
 [OBJ823]
 Name=Estalagmitas
