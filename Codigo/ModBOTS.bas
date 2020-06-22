@@ -533,7 +533,7 @@ Sub ia_CreateChar(ByVal ProximoBot As Byte)
             tmp_Color = eNickColor.ieCiudadano
         End If
         
-        PackageToSend = PrepareMessageCharacterCreate(.body, .Head, eHeading.SOUTH, .CharIndex, BotList(ProximoBot).Pos.X, BotList(ProximoBot).Pos.Y, .WeaponAnim, .ShieldAnim, 0, 0, .CascoAnim, BotList(ProximoBot).Name, tmp_Color, 0, 0)
+        PackageToSend = PrepareMessageCharacterCreate(.body, .Head, eHeading.SOUTH, .CharIndex, BotList(ProximoBot).Pos.X, BotList(ProximoBot).Pos.Y, .WeaponAnim, .ShieldAnim, 0, 0, .CascoAnim, BotList(ProximoBot).Name, tmp_Color, 0, 0, 0, 0)
         
         'Actualizo el area.
         ia_SendToBotArea ProximoBot, PackageToSend
@@ -899,13 +899,13 @@ Sub ia_MoveViajante(ByVal BotIndex As Byte, ByVal Direccion As eHeading)
          
          If HabiaAgua Then
             'Si hay agua cambio el cuerpo.
-            ia_SendToBotArea BotIndex, PrepareMessageCharacterChange(395, 0, Direccion, .Char.CharIndex, 0, 0, 0, 0, 0)
+            ia_SendToBotArea BotIndex, PrepareMessageCharacterChange(395, 0, Direccion, .Char.CharIndex, 0, 0, 0, 0, 0, NingunAura, NingunAura)
             .Navegando = True
          Else
             'No habia agua, y... estaba navegando?
             If .Navegando Then
                'cambio el body y demas.
-               ia_SendToBotArea BotIndex, PrepareMessageCharacterChange(.Char.body, .Char.Head, Direccion, .Char.CharIndex, .Char.WeaponAnim, .Char.ShieldAnim, 0, 0, .Char.CascoAnim)
+               ia_SendToBotArea BotIndex, PrepareMessageCharacterChange(.Char.body, .Char.Head, Direccion, .Char.CharIndex, .Char.WeaponAnim, .Char.ShieldAnim, 0, 0, .Char.CascoAnim, NingunAura, NingunAura)
                .Navegando = False
             End If
         End If
@@ -1108,7 +1108,7 @@ Sub ia_ActionViajante(ByVal BotIndex As Byte)
             'Move:p
             ia_MoveViajante BotIndex, RutaDir
             'Set el heading.
-            .Char.Heading = RutaDir
+            .Char.heading = RutaDir
          End If
          
      
@@ -1123,7 +1123,7 @@ Sub ia_ActionViajante(ByVal BotIndex As Byte)
                 .Pos.Map = MapData(.Pos.Map, .Pos.X, .Pos.Y).TileExit.Map
                 
                 'Por si no tiene heading.
-                If Not .Char.Heading <> 0 Then .Char.Heading = eHeading.SOUTH
+                If Not .Char.heading <> 0 Then .Char.heading = eHeading.SOUTH
                 
                 'Nueva X?
                 If MapData(.Pos.Map, .Pos.X, .Pos.Y).TileExit.X <> 0 Then
@@ -1147,7 +1147,7 @@ Sub ia_ActionViajante(ByVal BotIndex As Byte)
                    tmp_Color = eNickColor.ieCiudadano
                 End If
                 
-                ia_SendToBotArea BotIndex, PrepareMessageCharacterCreate(.Char.body, .Char.Head, .Char.Heading, .Char.CharIndex, .Pos.X, .Pos.Y, .Char.WeaponAnim, .Char.ShieldAnim, 0, 0, .Char.CascoAnim, .Name, tmp_Color, 0, 0)
+                ia_SendToBotArea BotIndex, PrepareMessageCharacterCreate(.Char.body, .Char.Head, .Char.heading, .Char.CharIndex, .Pos.X, .Pos.Y, .Char.WeaponAnim, .Char.ShieldAnim, 0, 0, .Char.CascoAnim, .Name, tmp_Color, 0, 0, 0, 0)
             End If
          End If
          
@@ -1424,8 +1424,8 @@ On Error GoTo Errhandler        '< maTih XD
                     'Acierta el golpe?
                     If ia_AciertaGolpe(pIndex) Then
                        'Antes que nada cambiamos el heading, si es válido.
-                       If newBotHeading <> 0 And newBotHeading <> .Char.Heading Then
-                          ia_SendToBotArea BotIndex, PrepareMessageCharacterChange(.Char.body, .Char.Head, newBotHeading, .Char.CharIndex, .Char.WeaponAnim, .Char.ShieldAnim, 0, 0, .Char.CascoAnim)
+                       If newBotHeading <> 0 And newBotHeading <> .Char.heading Then
+                          ia_SendToBotArea BotIndex, PrepareMessageCharacterChange(.Char.body, .Char.Head, newBotHeading, .Char.CharIndex, .Char.WeaponAnim, .Char.ShieldAnim, 0, 0, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
                        End If
                        
                        'Calcula el golpe
@@ -1647,7 +1647,7 @@ Sub ia_EnviarChar(ByVal UserIndex As Integer, ByVal BotIndex As Byte)
                    tmp_Color = eNickColor.ieCiudadano
                 End If
                 
-                Call Protocol.WriteCharacterCreate(UserIndex, .body, .Head, eHeading.SOUTH, .CharIndex, BotList(BotIndex).Pos.X, BotList(BotIndex).Pos.Y, .WeaponAnim, .ShieldAnim, 0, 0, .CascoAnim, BotList(BotIndex).Name, tmp_Color, 0)
+                Call Protocol.WriteCharacterCreate(UserIndex, .body, .Head, eHeading.SOUTH, .CharIndex, BotList(BotIndex).Pos.X, BotList(BotIndex).Pos.Y, .WeaponAnim, .ShieldAnim, 0, 0, .CascoAnim, BotList(BotIndex).Name, tmp_Color, 0, NingunAura, NingunAura)
         End With
  
 End Sub
@@ -1944,7 +1944,7 @@ Sub IA_EraseChar(ByVal BotIndex As Byte, Optional ByVal killedbyUSER As Boolean 
              .FX = 0
              .loops = 0
              .Head = 0
-             .Heading = 0
+             .heading = 0
              .ShieldAnim = 0
              .WeaponAnim = 0
         End With

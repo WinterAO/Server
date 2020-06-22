@@ -311,6 +311,8 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
         query = query & "weapon_id = " & .Char.WeaponAnim & ", "
         query = query & "helmet_id = " & .Char.CascoAnim & ", "
         query = query & "shield_id = " & .Char.ShieldAnim & ", "
+        query = query & "aura_id = " & .Char.AuraAnim & ", "
+        query = query & "aura_color = " & .Char.AuraColor & ", "
         query = query & "heading = " & .Char.heading & ", "
         query = query & "items_amount = " & .Invent.NroItems & ", "
         query = query & "slot_armour = " & .Invent.ArmourEqpSlot & ", "
@@ -592,6 +594,8 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
         .OrigChar.CascoAnim = Database_RecordSet!helmet_id
         .OrigChar.ShieldAnim = Database_RecordSet!shield_id
         .OrigChar.heading = Database_RecordSet!heading
+        .OrigChar.AuraAnim = Database_RecordSet!Aura_id
+        .OrigChar.AuraColor = Database_RecordSet!Aura_color
         .Invent.NroItems = Database_RecordSet!items_amount
         .Invent.ArmourEqpSlot = SanitizeNullValue(Database_RecordSet!slot_armour, 0)
         .Invent.WeaponEqpSlot = SanitizeNullValue(Database_RecordSet!slot_weapon, 0)

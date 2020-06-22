@@ -1234,6 +1234,8 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
                 .Char.ShieldAnim = NingunEscudo
                 .Char.WeaponAnim = NingunArma
                 .Char.CascoAnim = NingunCasco
+                .Char.AuraAnim = NingunAura
+                .Char.AuraColor = NingunAura
 
             End If
         
@@ -1538,7 +1540,8 @@ Sub ResetCharInfo(ByVal UserIndex As Integer)
         .loops = 0
         .ShieldAnim = 0
         .WeaponAnim = 0
-
+        .AuraAnim = 0
+        .AuraColor = 0
     End With
 
 End Sub

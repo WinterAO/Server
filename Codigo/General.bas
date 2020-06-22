@@ -164,7 +164,7 @@ Function HayAgua(ByVal Map As Integer, ByVal X As Integer, ByVal Y As Integer) A
     '
     '*******************************************
 
-    If Map > 0 And Map < NumMaps + 1 And X > 0 And X < 101 And Y > 0 And Y < 101 Then
+    If Map > 0 And Map < NumMaps + 1 And X > XMinMapSize And X < XMaxMapSize + 1 And Y > YMinMapSize And Y < YMaxMapSize + 1 Then
 
         With MapData(Map, X, Y)
 
@@ -1055,6 +1055,8 @@ Public Sub EfectoMimetismo(ByVal UserIndex As Integer)
                     .Char.ShieldAnim = NingunEscudo
                     .Char.WeaponAnim = NingunArma
                     .Char.CascoAnim = NingunCasco
+                    .Char.AuraAnim = NingunAura
+                    .Char.AuraColor = NingunAura
 
                 End If
 
@@ -1064,11 +1066,13 @@ Public Sub EfectoMimetismo(ByVal UserIndex As Integer)
                 .Char.CascoAnim = .CharMimetizado.CascoAnim
                 .Char.ShieldAnim = .CharMimetizado.ShieldAnim
                 .Char.WeaponAnim = .CharMimetizado.WeaponAnim
+                .Char.AuraAnim = .CharMimetizado.AuraAnim
+                .Char.AuraColor = .CharMimetizado.AuraColor
 
             End If
             
             With .Char
-                Call ChangeUserChar(UserIndex, .body, .Head, .heading, .WeaponAnim, .ShieldAnim, .CascoAnim)
+                Call ChangeUserChar(UserIndex, .body, .Head, .heading, .WeaponAnim, .ShieldAnim, .CascoAnim, .AuraAnim, .AuraColor)
 
             End With
             
@@ -1570,6 +1574,8 @@ Sub SaveUser(ByVal UserIndex As Integer, Optional ByVal SaveTimeOnline As Boolea
             .Char.CascoAnim = .CharMimetizado.CascoAnim
             .Char.ShieldAnim = .CharMimetizado.ShieldAnim
             .Char.WeaponAnim = .CharMimetizado.WeaponAnim
+            .Char.AuraAnim = .CharMimetizado.AuraAnim
+            .Char.AuraColor = .CharMimetizado.AuraColor
             .Counters.Mimetismo = 0
             .flags.Mimetizado = 0
             ' Se fue el efecto del mimetismo, puede ser atacado por npcs

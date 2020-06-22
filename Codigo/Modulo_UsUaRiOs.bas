@@ -133,7 +133,7 @@ Public Sub RevivirUsuario(ByVal UserIndex As Integer)
 
         End If
         
-        Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim)
+        Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
         Call WriteUpdateUserStats(UserIndex)
 
     End With
@@ -319,7 +319,9 @@ Public Sub ChangeUserChar(ByVal UserIndex As Integer, _
                           ByVal heading As Byte, _
                           ByVal Arma As Integer, _
                           ByVal Escudo As Integer, _
-                          ByVal Casco As Integer)
+                          ByVal Casco As Integer, _
+                          ByVal AuraAnim As Long, _
+                          ByVal AuraColor As Long)
 
     '***************************************************
     'Author: Unknown
@@ -334,7 +336,7 @@ Public Sub ChangeUserChar(ByVal UserIndex As Integer, _
         .ShieldAnim = Escudo
         .CascoAnim = Casco
         
-        Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageCharacterChange(body, Head, heading, .CharIndex, Arma, Escudo, .FX, .loops, Casco))
+        Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageCharacterChange(body, Head, heading, .CharIndex, Arma, Escudo, .FX, .loops, Casco, AuraAnim, AuraColor))
         Call SendData(SendTarget.ToPCAreaButIndex, UserIndex, PrepareMessageHeadingChange(heading, .CharIndex))
 
     End With
@@ -414,10 +416,10 @@ Public Sub EraseUserChar(ByVal UserIndex As Integer, ByVal IsAdminInvisible As B
         
         ' Si esta invisible, solo el sabe de su propia existencia, es innecesario borrarlo en los demas clientes
         If IsAdminInvisible Then
-            Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterRemove(.Char.CharIndex, False))
+            Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterRemove(.Char.CharIndex))
         Else
             'Le mandamos el mensaje para que borre el personaje a los clientes que esten cerca
-            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageCharacterRemove(.Char.CharIndex, True))
+            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageCharacterRemove(.Char.CharIndex))
 
         End If
         
@@ -491,7 +493,7 @@ Public Sub RefreshCharStatus(ByVal UserIndex As Integer)
 
             End If
             
-            Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim)
+            Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
 
         End If
         
@@ -635,7 +637,7 @@ Public Sub MakeUserChar(ByVal toMap As Boolean, _
 
                 End If
             
-                Call WriteCharacterCreate(sndIndex, .Char.body, .Char.Head, .Char.heading, .Char.CharIndex, X, Y, .Char.WeaponAnim, .Char.ShieldAnim, .Char.FX, 999, .Char.CascoAnim, UserName, NickColor, Privileges)
+                Call WriteCharacterCreate(sndIndex, .Char.body, .Char.Head, .Char.heading, .Char.CharIndex, X, Y, .Char.WeaponAnim, .Char.ShieldAnim, .Char.FX, 999, .Char.CascoAnim, UserName, NickColor, Privileges, .Char.AuraAnim, .Char.AuraColor)
             Else
                 'Hide the name and clan - set privs as normal user
                 Call AgregarUser(UserIndex, .Pos.Map, ButIndex)
@@ -1909,6 +1911,8 @@ Public Sub UserDie(ByVal UserIndex As Integer, Optional ByVal AttackerIndex As I
             .Char.CascoAnim = .CharMimetizado.CascoAnim
             .Char.ShieldAnim = .CharMimetizado.ShieldAnim
             .Char.WeaponAnim = .CharMimetizado.WeaponAnim
+            .Char.AuraAnim = .CharMimetizado.AuraAnim
+            .Char.AuraColor = .CharMimetizado.AuraColor
             .Counters.Mimetismo = 0
             .flags.Mimetizado = 0
             ' Puede ser atacado por npcs (cuando resucite)
@@ -1932,6 +1936,9 @@ Public Sub UserDie(ByVal UserIndex As Integer, Optional ByVal AttackerIndex As I
             .Char.ShieldAnim = NingunEscudo
             .Char.WeaponAnim = NingunArma
             .Char.CascoAnim = NingunCasco
+            .Char.AuraAnim = NingunAura
+            .Char.AuraColor = NingunAura
+            
         Else
             .Char.body = iFragataFantasmal
 
@@ -1952,7 +1959,7 @@ Public Sub UserDie(ByVal UserIndex As Integer, Optional ByVal AttackerIndex As I
         .NroMascotas = 0
         
         '<< Actualizamos clientes >>
-        Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, NingunArma, NingunEscudo, NingunCasco)
+        Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, NingunArma, NingunEscudo, NingunCasco, NingunAura, NingunAura)
         Call WriteUpdateUserStats(UserIndex)
         Call WriteUpdateStrenghtAndDexterity(UserIndex)
 
@@ -2482,7 +2489,7 @@ Sub Cerrar_Usuario(ByVal UserIndex As Integer)
                             ' Pierde la apariencia de fragata fantasmal
                             Call ToggleBoatBody(UserIndex)
                             Call WriteConsoleMsg(UserIndex, "Has recuperado tu apariencia normal!", FontTypeNames.FONTTYPE_INFO)
-                            Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, NingunArma, NingunEscudo, NingunCasco)
+                            Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, NingunArma, NingunEscudo, NingunCasco, NingunAura, NingunAura)
                             HiddenPirat = True
 
                         End If

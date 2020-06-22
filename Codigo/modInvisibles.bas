@@ -30,7 +30,7 @@ Public Sub PonerInvisible(ByVal UserIndex As Integer, ByVal estado As Boolean)
             ' clientes un Borrar Char
             UserList(UserIndex).flags.invisible = 1
             '        'Call SendData(SendTarget.ToMap, 0, UserList(UserIndex).Pos.Map, "NOVER" & UserList(UserIndex).Char.CharIndex & ",1")
-            Call SendData(SendTarget.toMap, UserList(UserIndex).Pos.Map, PrepareMessageCharacterRemove(UserList(UserIndex).Char.CharIndex, False))
+            Call SendData(SendTarget.toMap, UserList(UserIndex).Pos.Map, PrepareMessageCharacterRemove(UserList(UserIndex).Char.CharIndex))
         Else
         
         End If

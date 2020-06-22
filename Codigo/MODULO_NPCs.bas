@@ -770,9 +770,9 @@ Public Sub MakeNPCChar(ByVal toMap As Boolean, _
     If Not toMap Then
         'En caso de que sea hostil no mostramos el nombre, si es un npc no hostil o un WorldBoss mostramos nombre. (Recox)
         If Not Npclist(NpcIndex).Hostile = 1 Or Npclist(NpcIndex).NPCtype = WorldBoss Then
-            Call WriteCharacterCreate(sndIndex, Npclist(NpcIndex).Char.body, Npclist(NpcIndex).Char.Head, Npclist(NpcIndex).Char.heading, Npclist(NpcIndex).Char.CharIndex, X, Y, 0, 0, 0, 0, 0, Npclist(NpcIndex).Name, color, 0, Npclist(NpcIndex).NoShadow)
+            Call WriteCharacterCreate(sndIndex, Npclist(NpcIndex).Char.body, Npclist(NpcIndex).Char.Head, Npclist(NpcIndex).Char.heading, Npclist(NpcIndex).Char.CharIndex, X, Y, 0, 0, 0, 0, 0, Npclist(NpcIndex).Name, color, 0, NingunAura, NingunAura, Npclist(NpcIndex).NoShadow)
         Else
-            Call WriteCharacterCreate(sndIndex, Npclist(NpcIndex).Char.body, Npclist(NpcIndex).Char.Head, Npclist(NpcIndex).Char.heading, Npclist(NpcIndex).Char.CharIndex, X, Y, 0, 0, 0, 0, 0, vbNullString, 0, 0, Npclist(NpcIndex).NoShadow)
+            Call WriteCharacterCreate(sndIndex, Npclist(NpcIndex).Char.body, Npclist(NpcIndex).Char.Head, Npclist(NpcIndex).Char.heading, Npclist(NpcIndex).Char.CharIndex, X, Y, 0, 0, 0, 0, 0, vbNullString, 0, 0, NingunAura, NingunAura, Npclist(NpcIndex).NoShadow)
         End If
 
     Else
@@ -799,7 +799,7 @@ Public Sub ChangeNPCChar(ByVal NpcIndex As Integer, _
             .Head = Head
             .heading = heading
             
-            Call SendData(SendTarget.ToNPCArea, NpcIndex, PrepareMessageCharacterChange(body, Head, heading, .CharIndex, 0, 0, 0, 0, 0))
+            Call SendData(SendTarget.ToNPCArea, NpcIndex, PrepareMessageCharacterChange(body, Head, heading, .CharIndex, 0, 0, 0, 0, 0, NingunAura, NingunAura))
 
         End With
 
@@ -830,7 +830,7 @@ Private Sub EraseNPCChar(ByVal NpcIndex As Integer)
     MapData(Npclist(NpcIndex).Pos.Map, Npclist(NpcIndex).Pos.X, Npclist(NpcIndex).Pos.Y).NpcIndex = 0
 
     'Actualizamos los clientes
-    Call SendData(SendTarget.ToNPCArea, NpcIndex, PrepareMessageCharacterRemove(Npclist(NpcIndex).Char.CharIndex, True))
+    Call SendData(SendTarget.ToNPCArea, NpcIndex, PrepareMessageCharacterRemove(Npclist(NpcIndex).Char.CharIndex))
 
     'Update la lista npc
     Npclist(NpcIndex).Char.CharIndex = 0

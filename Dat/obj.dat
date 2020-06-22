@@ -4735,6 +4735,7 @@ SkHerreria=30
 
 [OBJ402]
 Name=Espada Mata Dragones
+Aura=13202-16777215
 GrhIndex=716
 ObjType=2
 Agarrable=0
@@ -14414,6 +14415,7 @@ SkHerreria=100
 [OBJ1138]
 Name=Espada Argentum
 GrhIndex=18997
+Aura=13118-16777215
 ObjType=2
 Agarrable=0
 Anim=101

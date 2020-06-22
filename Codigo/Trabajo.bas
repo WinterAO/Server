@@ -64,7 +64,7 @@ Public Sub DoPermanecerOculto(ByVal UserIndex As Integer)
                     ' Pierde la apariencia de fragata fantasmal
                     Call ToggleBoatBody(UserIndex)
                     Call WriteConsoleMsg(UserIndex, "Has recuperado tu apariencia normal!", FontTypeNames.FONTTYPE_INFO)
-                    Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, NingunArma, NingunEscudo, NingunCasco)
+                    Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, NingunArma, NingunEscudo, NingunCasco, NingunAura, NingunAura)
 
                 End If
 
@@ -139,7 +139,7 @@ Public Sub DoOcultarse(ByVal UserIndex As Integer)
                 ' Le cambiamos el body a galeon fantasmal
                 .Char.body = iFragataFantasmal
                 ' Actualizamos clientes
-                Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, NingunArma, NingunEscudo, NingunCasco)
+                Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, NingunArma, NingunEscudo, NingunCasco, NingunAura, NingunAura)
 
             End If
             
@@ -228,7 +228,9 @@ Public Sub DoNavega(ByVal UserIndex As Integer, _
                 .Char.ShieldAnim = NingunEscudo
                 .Char.WeaponAnim = NingunArma
                 .Char.CascoAnim = NingunCasco
-
+                .Char.AuraAnim = NingunAura
+                .Char.AuraColor = NingunAura
+                
             End If
             
             ' Comienza a navegar
@@ -257,6 +259,8 @@ Public Sub DoNavega(ByVal UserIndex As Integer, _
                 .Char.ShieldAnim = NingunEscudo
                 .Char.WeaponAnim = NingunArma
                 .Char.CascoAnim = NingunCasco
+                .Char.AuraAnim = NingunAura
+                .Char.AuraColor = NingunAura
 
             End If
             
@@ -266,7 +270,7 @@ Public Sub DoNavega(ByVal UserIndex As Integer, _
         End If
         
         ' Actualizo clientes
-        Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim)
+        Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
 
     End With
     
@@ -1630,7 +1634,7 @@ Sub DoAdminInvisible(ByVal UserIndex As Integer)
             Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(tempData)
             
             'Le mandamos el mensaje para que borre el personaje a los clientes que esten cerca
-            Call SendData(SendTarget.ToPCAreaButIndex, UserIndex, PrepareMessageCharacterRemove(.Char.CharIndex, False))
+            Call SendData(SendTarget.ToPCAreaButIndex, UserIndex, PrepareMessageCharacterRemove(.Char.CharIndex))
             
         Else
             .flags.AdminInvisible = 0
@@ -1639,7 +1643,7 @@ Sub DoAdminInvisible(ByVal UserIndex As Integer)
             .Counters.TiempoOculto = 0
             
             ' Solo el admin sabe que se hace visible
-            tempData = PrepareMessageCharacterChange(.Char.body, .Char.Head, .Char.heading, .Char.CharIndex, .Char.WeaponAnim, .Char.ShieldAnim, .Char.FX, .Char.loops, .Char.CascoAnim)
+            tempData = PrepareMessageCharacterChange(.Char.body, .Char.Head, .Char.heading, .Char.CharIndex, .Char.WeaponAnim, .Char.ShieldAnim, .Char.FX, .Char.loops, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
             Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(tempData)
             
             tempData = PrepareMessageSetInvisible(.Char.CharIndex, False)
@@ -3039,7 +3043,7 @@ Public Sub ImitateNpc(ByVal UserIndex As Integer, ByVal NpcIndex As Integer)
             .Char.body = Npclist(NpcIndex).Char.body
             .Char.Head = Npclist(NpcIndex).Char.Head
             
-            Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim)
+            Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
 
         End If
     
@@ -3114,7 +3118,7 @@ Public Sub DoEquita(ByVal UserIndex As Integer, _
                 Call WriteEquitandoToggle(UserIndex)
 
                 'Mostramos solo el casco de los items equipados por que los demas items quedan mal en el render, solo es un tema visual (Recox)
-                Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, NingunArma, NingunEscudo, .Char.CascoAnim)
+                Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, NingunArma, NingunEscudo, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
             Else
                 Call WriteConsoleMsg(UserIndex, "Debe esperar " & .Counters.MonturaCounter & " segundos para volver a usar tu montura", FontTypeNames.FONTTYPE_INFO)
             End If
@@ -3140,7 +3144,7 @@ Public Sub UnmountMontura(ByVal UserIndex As Integer)
 
         ' Seteamos el equipo que tiene y lo mostramos en el render.
         Call SetEquipmentOnCharAfterNavigateOrEquitate(UserIndex)
-        Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim)
+        Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
   
         ' Termina de equitar
         .flags.Equitando = 0

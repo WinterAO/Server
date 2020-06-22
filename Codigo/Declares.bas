@@ -259,6 +259,8 @@ Public Const NingunCasco             As Integer = 2
 
 Public Const NingunArma              As Integer = 2
 
+Public Const NingunAura              As Integer = 0
+
 Public Const EspadaMataDragonesIndex As Integer = 402
 
 Public Const LAUDMAGICO              As Integer = 696
@@ -283,11 +285,11 @@ Public Const MAXMASCOTASENTRENADOR   As Byte = 7
 
 Public Enum FXIDs
 
-    FXWARP = 1
     FXMEDITARCHICO = 4
     FXMEDITARMEDIANO = 5
     FXMEDITARGRANDE = 6
     FXMEDITARXGRANDE = 16
+    FXWARP = 25
     FXMEDITARXXGRANDE = 34
 
 End Enum
@@ -394,7 +396,7 @@ Public Const EsfuerzoPescar                As Byte = 3
 
 Public Const EsfuerzoExcavar               As Byte = 3
 
-Public Const FX_TELEPORT_INDEX             As Integer = 1
+Public Const FX_TELEPORT_INDEX             As Integer = 25
 
 Public Const PORCENTAJE_MATERIALES_UPGRADE As Single = 0.85
 
@@ -982,6 +984,8 @@ Public Type Char
     
     heading As eHeading
 
+    AuraAnim As Long
+    AuraColor As Long
 End Type
 
 Public Type CraftingItem
@@ -1142,12 +1146,16 @@ Public Type ObjData
     NoRobable As Byte 'No se puede robar
     
     'Pasajes
-    DesdeMap As Long
-    HastaMap As Long
+    DesdeMap As Integer
+    HastaMap As Integer
     HastaY As Byte
     HastaX As Byte
     NecesitaSkill As Byte
     CantidadSkill As Byte
+    
+    'Auras
+    GrhAura As Long
+    AuraColor As Long
 End Type
 
 Public Type obj

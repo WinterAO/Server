@@ -1337,6 +1337,12 @@ Sub LoadOBJData()
             
             .NoSeCae = val(Leer.GetValue("OBJ" & Object, "NoSeCae"))
             
+            'Auras
+            Dim Aura As String
+            Aura = Leer.GetValue("OBJ" & Object, "Aura")
+            .GrhAura = val(ReadField(1, Aura, Asc("-")))
+            .AuraColor = val(ReadField(2, Aura, Asc("-")))
+            
             .NoRobable = val(Leer.GetValue("OBJ" & Object, "NoRobable"))
             
             .Upgrade = val(Leer.GetValue("OBJ" & Object, "Upgrade"))

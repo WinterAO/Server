@@ -1853,7 +1853,7 @@ Private Sub HandleTalk(ByVal UserIndex As Integer)
                     ' Pierde la apariencia de fragata fantasmal
                     Call ToggleBoatBody(UserIndex)
                     Call WriteConsoleMsg(UserIndex, "Has recuperado tu apariencia normal!", FontTypeNames.FONTTYPE_INFO)
-                    Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, NingunArma, NingunEscudo, NingunCasco)
+                    Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, NingunArma, NingunEscudo, NingunCasco, NingunAura, NingunAura)
 
                 End If
 
@@ -1964,7 +1964,7 @@ Private Sub HandleYell(ByVal UserIndex As Integer)
                     ' Pierde la apariencia de fragata fantasmal
                     Call ToggleBoatBody(UserIndex)
                     Call WriteConsoleMsg(UserIndex, "Has recuperado tu apariencia normal!", FontTypeNames.FONTTYPE_INFO)
-                    Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, NingunArma, NingunEscudo, NingunCasco)
+                    Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, NingunArma, NingunEscudo, NingunCasco, NingunAura, NingunAura)
 
                 End If
 
@@ -2325,7 +2325,7 @@ Private Sub HandleWalk(ByVal UserIndex As Integer)
                         ' Pierde la apariencia de fragata fantasmal
                         Call ToggleBoatBody(UserIndex)
                         Call WriteConsoleMsg(UserIndex, "Has recuperado tu apariencia normal!", FontTypeNames.FONTTYPE_INFO)
-                        Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, NingunArma, NingunEscudo, NingunCasco)
+                        Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, NingunArma, NingunEscudo, NingunCasco, NingunAura, NingunAura)
 
                     End If
 
@@ -2430,7 +2430,7 @@ Private Sub HandleAttack(ByVal UserIndex As Integer)
                     ' Pierde la apariencia de fragata fantasmal
                     Call ToggleBoatBody(UserIndex)
                     Call WriteConsoleMsg(UserIndex, "Has recuperado tu apariencia normal!", FontTypeNames.FONTTYPE_INFO)
-                    Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, NingunArma, NingunEscudo, NingunCasco)
+                    Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, NingunArma, NingunEscudo, NingunCasco, NingunAura, NingunAura)
 
                 End If
 
@@ -3873,7 +3873,7 @@ Private Sub HandleChangeHeading(ByVal UserIndex As Integer)
         'Validate heading (VB won't say invalid cast if not a valid index like .Net languages would do... *sigh*)
         If heading > 0 And heading < 5 Then
             .Char.heading = heading
-            Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim)
+            Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
 
         End If
 
@@ -10453,7 +10453,7 @@ Private Sub HandleEditChar(ByVal UserIndex As Integer)
                             Call WriteVar(UserCharPath, "INIT", "Body", Arg1)
                             Call WriteConsoleMsg(UserIndex, "Charfile Alterado: " & UserName, FontTypeNames.FONTTYPE_INFO)
                         Else
-                            Call ChangeUserChar(tUser, val(Arg1), UserList(tUser).Char.Head, UserList(tUser).Char.heading, UserList(tUser).Char.WeaponAnim, UserList(tUser).Char.ShieldAnim, UserList(tUser).Char.CascoAnim)
+                            Call ChangeUserChar(tUser, val(Arg1), UserList(tUser).Char.Head, UserList(tUser).Char.heading, UserList(tUser).Char.WeaponAnim, UserList(tUser).Char.ShieldAnim, UserList(tUser).Char.CascoAnim, UserList(tUser).Char.AuraAnim, UserList(tUser).Char.AuraColor)
 
                         End If
                         
@@ -10466,7 +10466,7 @@ Private Sub HandleEditChar(ByVal UserIndex As Integer)
                             Call WriteVar(UserCharPath, "INIT", "Head", Arg1)
                             Call WriteConsoleMsg(UserIndex, "Charfile Alterado: " & UserName, FontTypeNames.FONTTYPE_INFO)
                         Else
-                            Call ChangeUserChar(tUser, UserList(tUser).Char.body, val(Arg1), UserList(tUser).Char.heading, UserList(tUser).Char.WeaponAnim, UserList(tUser).Char.ShieldAnim, UserList(tUser).Char.CascoAnim)
+                            Call ChangeUserChar(tUser, UserList(tUser).Char.body, val(Arg1), UserList(tUser).Char.heading, UserList(tUser).Char.WeaponAnim, UserList(tUser).Char.ShieldAnim, UserList(tUser).Char.CascoAnim, UserList(tUser).Char.AuraAnim, UserList(tUser).Char.AuraColor)
 
                         End If
                         
@@ -11442,7 +11442,7 @@ Private Sub HandleReviveChar(ByVal UserIndex As Integer)
 
                         End If
                         
-                        Call ChangeUserChar(tUser, .Char.body, .OrigChar.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim)
+                        Call ChangeUserChar(tUser, .Char.body, .OrigChar.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
                         
                         Call WriteConsoleMsg(tUser, UserList(UserIndex).Name & " te ha resucitado.", FontTypeNames.FONTTYPE_INFO)
                     Else
@@ -18132,6 +18132,8 @@ Public Sub WriteCharacterCreate(ByVal UserIndex As Integer, _
                                 ByVal Name As String, _
                                 ByVal NickColor As Byte, _
                                 ByVal Privileges As Byte, _
+                                ByVal GrhAura As Long, _
+                                ByVal AuraColor As Long, _
                                 Optional ByVal NoShadow As Byte = False)
 
     '***************************************************
@@ -18141,7 +18143,7 @@ Public Sub WriteCharacterCreate(ByVal UserIndex As Integer, _
     '***************************************************
     On Error GoTo Errhandler
 
-    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterCreate(body, Head, heading, CharIndex, X, Y, weapon, shield, FX, FXLoops, helmet, Name, NickColor, Privileges, NoShadow))
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterCreate(body, Head, heading, CharIndex, X, Y, weapon, shield, FX, FXLoops, helmet, Name, NickColor, Privileges, GrhAura, AuraColor, NoShadow))
     Exit Sub
 
 Errhandler:
@@ -18161,7 +18163,7 @@ End Sub
 ' @param    CharIndex Character to be removed.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteCharacterRemove(ByVal UserIndex As Integer, ByVal CharIndex As Integer, Optional ByVal Desaparece As Boolean = False)
+Public Sub WriteCharacterRemove(ByVal UserIndex As Integer, ByVal CharIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -18170,7 +18172,7 @@ Public Sub WriteCharacterRemove(ByVal UserIndex As Integer, ByVal CharIndex As I
     '***************************************************
     On Error GoTo Errhandler
 
-    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterRemove(CharIndex, Desaparece))
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterRemove(CharIndex))
     Exit Sub
 
 Errhandler:
@@ -18263,7 +18265,9 @@ Public Sub WriteCharacterChange(ByVal UserIndex As Integer, _
                                 ByVal shield As Integer, _
                                 ByVal FX As Integer, _
                                 ByVal FXLoops As Integer, _
-                                ByVal helmet As Integer)
+                                ByVal helmet As Integer, _
+                                ByVal AuraAnim As Long, _
+                                ByVal AuraColor As Long)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -18272,7 +18276,7 @@ Public Sub WriteCharacterChange(ByVal UserIndex As Integer, _
     '***************************************************
     On Error GoTo Errhandler
 
-    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterChange(body, Head, heading, CharIndex, weapon, shield, FX, FXLoops, helmet))
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterChange(body, Head, heading, CharIndex, weapon, shield, FX, FXLoops, helmet, AuraAnim, AuraColor))
     Exit Sub
 
 Errhandler:
@@ -21274,7 +21278,7 @@ End Function
 ' @return   The formated message ready to be writen as is on outgoing buffers.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Function PrepareMessageCharacterRemove(ByVal CharIndex As Integer, Optional ByVal Desaparece As Boolean = False) As String
+Public Function PrepareMessageCharacterRemove(ByVal CharIndex As Integer) As String
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -21284,7 +21288,6 @@ Public Function PrepareMessageCharacterRemove(ByVal CharIndex As Integer, Option
     With auxiliarBuffer
         Call .WriteByte(ServerPacketID.CharacterRemove)
         Call .WriteInteger(CharIndex)
-        Call .WriteBoolean(Desaparece)
         
         PrepareMessageCharacterRemove = .ReadASCIIStringFixed(.Length)
 
@@ -21350,6 +21353,8 @@ Public Function PrepareMessageCharacterCreate(ByVal body As Integer, _
                                               ByVal Name As String, _
                                               ByVal NickColor As Byte, _
                                               ByVal Privileges As Byte, _
+                                              ByVal GrhAura As Long, _
+                                              ByVal AuraColor As Long, _
                                               ByVal NoShadow As Byte) As String
 
     '***************************************************
@@ -21374,6 +21379,8 @@ Public Function PrepareMessageCharacterCreate(ByVal body As Integer, _
         Call .WriteASCIIString(Name)
         Call .WriteByte(NickColor)
         Call .WriteByte(Privileges)
+        Call .WriteLong(GrhAura)
+        Call .WriteLong(AuraColor)
         Call .WriteByte(NoShadow)
         
         PrepareMessageCharacterCreate = .ReadASCIIStringFixed(.Length)
@@ -21405,7 +21412,9 @@ Public Function PrepareMessageCharacterChange(ByVal body As Integer, _
                                               ByVal shield As Integer, _
                                               ByVal FX As Integer, _
                                               ByVal FXLoops As Integer, _
-                                              ByVal helmet As Integer) As String
+                                              ByVal helmet As Integer, _
+                                              ByVal AuraAnim As Long, _
+                                              ByVal AuraColor As Long) As String
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -21423,6 +21432,8 @@ Public Function PrepareMessageCharacterChange(ByVal body As Integer, _
         Call .WriteInteger(helmet)
         Call .WriteInteger(FX)
         Call .WriteInteger(FXLoops)
+        Call .WriteLong(AuraAnim)
+        Call .WriteLong(AuraColor)
         
         PrepareMessageCharacterChange = .ReadASCIIStringFixed(.Length)
 
