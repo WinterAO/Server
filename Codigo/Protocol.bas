@@ -17238,6 +17238,40 @@ Errhandler:
 End Sub
 
 ''
+' Writes the "MessageCreateDamage" message to the given user's outgoing data buffer.
+'
+' @param    UserIndex User to which the message is intended.
+' @param    CharIndex Character whose dialog will be removed.
+' @remarks  The data is not actually sent until the buffer is properly flushed.
+
+Public Sub WriteMessageCreateDamage(ByVal UserIndex As Integer, ByVal dano As Long, ByVal Damage_Type As Byte)
+
+    '***************************************************
+    'Author: Lorwik
+    'Fecha: 22/06/2020
+    'Writes the "MessageCreateDamage" message to the given user's outgoing data buffer
+    '***************************************************
+    On Error GoTo Errhandler
+    
+    With UserList(UserIndex)
+    
+        Call .outgoingData.WriteASCIIStringFixed(PrepareMessageCreateDamage(.Pos.X, .Pos.Y, dano, Damage_Type))
+    
+    End With
+    
+    Exit Sub
+
+Errhandler:
+
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
+        Resume
+
+    End If
+
+End Sub
+
+''
 ' Writes the "NavigateToggle" message to the given user's outgoing data buffer.
 '
 ' @param    UserIndex User to which the message is intended.

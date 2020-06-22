@@ -1809,7 +1809,7 @@ Public Sub DoPescar(ByVal UserIndex As Integer)
             Call WriteConsoleMsg(UserIndex, "Has pescado un lindo pez!", FontTypeNames.FONTTYPE_INFO)
             
             'Renderizo el dano en render.
-            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageCreateDamage(.Pos.X, .Pos.Y, MiObj.Amount, DAMAGE_TRABAJO))
+            Call WriteMessageCreateDamage(UserIndex, MiObj.Amount, DAMAGE_TRABAJO)
             
             Call SubirSkill(UserIndex, eSkill.pesca, True)
         Else
@@ -2541,7 +2541,7 @@ Public Sub DoTalar(ByVal UserIndex As Integer, _
             Call WriteConsoleMsg(UserIndex, "Has conseguido algo de lena!", FontTypeNames.FONTTYPE_INFO)
             
             'Renderizo el dano en render.
-            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageCreateDamage(.Pos.X, .Pos.Y, MiObj.Amount, DAMAGE_TRABAJO))
+            Call WriteMessageCreateDamage(UserIndex, MiObj.Amount, DAMAGE_TRABAJO)
             
             Call SubirSkill(UserIndex, eSkill.Talar, True)
         Else
@@ -2631,6 +2631,7 @@ Public Sub DoMineria(ByVal UserIndex As Integer)
             
             'Renderizo el dano en render.
             Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageCreateDamage(.Pos.X, .Pos.Y, MiObj.Amount, DAMAGE_TRABAJO))
+            Call WriteMessageCreateDamage(UserIndex, MiObj.Amount, DAMAGE_TRABAJO)
             
             Call SubirSkill(UserIndex, eSkill.Mineria, True)
         Else
@@ -2749,7 +2750,7 @@ Public Sub DoMeditar(ByVal UserIndex As Integer)
             If .Stats.MinMAN > .Stats.MaxMAN Then .Stats.MinMAN = .Stats.MaxMAN
             
             'Renderizo el dano en render.
-            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageCreateDamage(.Pos.X, .Pos.Y, cant, DAMAGE_TRABAJO))
+            Call WriteMessageCreateDamage(UserIndex, cant, DAMAGE_TRABAJO)
             
             Call WriteUpdateMana(UserIndex)
             Call SubirSkill(UserIndex, eSkill.Meditar, True)
