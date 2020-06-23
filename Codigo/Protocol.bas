@@ -21075,7 +21075,7 @@ End Function
 ' @return   The formated message ready to be writen as is on outgoing buffers.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Function PrepareMessagePlayWave(ByVal wave As Byte, _
+Public Function PrepareMessagePlayWave(ByVal wave As Integer, _
                                        ByVal X As Byte, _
                                        ByVal Y As Byte) As String
 
@@ -21087,7 +21087,7 @@ Public Function PrepareMessagePlayWave(ByVal wave As Byte, _
     '***************************************************
     With auxiliarBuffer
         Call .WriteByte(ServerPacketID.PlayWave)
-        Call .WriteByte(wave)
+        Call .WriteInteger(wave)
         Call .WriteByte(X)
         Call .WriteByte(Y)
         

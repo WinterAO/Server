@@ -93,7 +93,7 @@ este objeto se mostrara con un grafico. Si le ponemos
 [INIT]
 'aca va el numero de OBJ mas alto, NO la cantidad de OBJs.
 'esto sirve para que los GMS puedan ver la lista completa de items para crear en una ventanita.
-NumOBJs=1248
+NumOBJs=1250
 
 
 [OBJ1]
@@ -8195,13 +8195,12 @@ MaderaElfica=500
 SkCarpinteria=100
 
 [OBJ666]
-Name=Objetos Voodoo Satanicos
-GrhIndex=740
-VGrande=740
-ObjType=8
+Name=Piel de gato
+GrhIndex=717
+ObjType=30
 Agarrable=0
+Valor=0
 Crucial=0
-Texto=OAAAAAAAAAAAAAA!!! :-D
 
 [OBJ667]
 Name=Cota de Mallas (E/G)
@@ -15710,3 +15709,19 @@ Llave=0
 IndexAbierta=1247
 IndexCerrada=1248
 IndexCerradaLlave=8
+
+[OBJ1249]
+Name=Veneno de serpiente
+GrhIndex=5738
+ObjType=30
+Agarrable=0
+Valor=0
+Crucial=0
+
+[OBJ1250]
+Name=Fragmento de arma
+GrhIndex=17937
+ObjType=30
+Agarrable=0
+Valor=0
+Crucial=0
