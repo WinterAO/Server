@@ -283,6 +283,10 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
     Dim UserId As Integer
 
     Dim LoopC  As Byte
+    
+    Dim tmpStr As String
+    
+    Dim j      As Integer
 
     Call Database_Connect
 
@@ -376,19 +380,25 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
         query = query & "WHERE id = " & .ID & ";"
         Call Database_Connection.Execute(query)
 
-        'User attributes
-        'query = "DELETE FROM attribute WHERE user_id = " & .ID & ";"
+        'User quest
+        'query = "DELETE FROM quest WHERE user_id = " & .ID & ";"
         'Call Database_Connection.Execute(query)
 
-        'query = "INSERT INTO attribute (user_id, number, value) VALUES "
+        'query = "INSERT INTO quest (id, user_id, estado, completado, npcs) VALUES "
 
-        'For LoopC = 1 To NUMATRIBUTOS
+        'For LoopC = 1 To MAXUSERQUESTS
         '    query = query & "("
+        '    query = query & .QuestStats.Quests(LoopC).QuestIndex & ", "
         '    query = query & .ID & ", "
-        '    query = query & LoopC & ", "
-        '    query = query & .Stats.UserAtributos(LoopC) & ")"
+        '    query = query & .QuestStats.QuestsDone(LoopC) & ", "
+            
+        '    For j = 1 To QuestList(.QuestStats.Quests(LoopC).QuestIndex).RequiredNPCs
+        '        tmpStr = tmpStr & "-" & .QuestStats.Quests(LoopC).NPCsKilled(j)
+        '    Next j
+                    
+        '    query = query & tmpStr & ")"
 
-        '    If LoopC < NUMATRIBUTOS Then
+        '    If LoopC < MAXUSERQUESTS Then
         '        query = query & ", "
         '    Else
         '        query = query & ";"
@@ -784,9 +794,82 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
 
     End With
 
+    Call Database_Close
+    
     Exit Sub
 
+ErrorHandler:
+    Call LogDatabaseError("Unable to LOAD User from Mysql Database: " & UserList(UserIndex).Name & ". " & Err.Number & " - " & Err.description)
+
+End Sub
+
+Public Sub LoadQuestStats(ByVal UserIndex As Integer)
+
+    '*************************************************
+    'Autor: Lorwik
+    'Fecha: 23/06/2020
+    'Carga las quest del usuario desde la base de datos
+    '*************************************************
+
+    On Error GoTo ErrorHandler
+
+    Dim query       As String
+    Dim Fields()    As String
+    Dim Completado  As Integer
+    Dim Count       As Integer
+    Dim j           As Integer
+    
+    Call Database_Connect
+
+    With UserList(UserIndex).QuestStats
+
+        query = "SELECT * FROM quest WHERE user_id = " & UserList(UserIndex).ID & ";"
+        Set Database_RecordSet = Database_Connection.Execute(query)
+    
+        
+        If Not Database_RecordSet.RecordCount = 0 Then
+            Database_RecordSet.MoveFirst
+    
+            While Not Database_RecordSet.EOF
+    
+                If Not Count > MAXUSERQUESTS Then
+                    .Quests(Count).QuestIndex = val(Database_RecordSet!ID)
+        
+                    If QuestList(.Quests(Count).QuestIndex).RequiredNPCs Then
+                        ReDim .Quests(Count).NPCsKilled(1 To QuestList(.Quests(Count).QuestIndex).RequiredNPCs)
+        
+                        Fields = Split(Database_RecordSet!NPCs, "-")
+        
+                        For j = 1 To QuestList(.Quests(Count).QuestIndex).RequiredNPCs
+                           .Quests(Count).NPCsKilled(j) = val(Fields(j))
+                        Next j
+        
+                    End If
+                         
+                    Completado = val(Database_RecordSet!Completado)
+                         
+                    If Completado = 1 Then
+                        .NumQuestsDone = .NumQuestsDone + 1
+                            
+                        ReDim .QuestsDone(1 To .NumQuestsDone)
+                        .QuestsDone(Count) = 1
+                    End If
+                        
+                    Count = Count + 1
+                        
+                    Database_RecordSet.MoveNext
+                        
+                End If
+            Wend
+                
+        End If
+
+    End With
+    Set Database_RecordSet = Nothing
+
     Call Database_Close
+    
+    Exit Sub
 
 ErrorHandler:
     Call LogDatabaseError("Unable to LOAD User from Mysql Database: " & UserList(UserIndex).Name & ". " & Err.Number & " - " & Err.description)

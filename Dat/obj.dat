@@ -14176,7 +14176,7 @@ Log=1
 NoSeCae=1
 NoRobable=1
 
-[OBJ1221]
+[OBJ1121]
 Name=Montura de Dungeon
 GrhIndex=29873
 ObjType=25
@@ -14190,7 +14190,7 @@ MinSkill=100
 Valor=0
 Crucial=0
 
-[OBJ1222]
+[OBJ1122]
 Name=Manual de Equitacion SUPREMO
 GrhIndex=538
 ObjType=35
@@ -15571,8 +15571,8 @@ ObjType=6
 Agarrable=1
 Abierta=0
 Llave=0
-IndexAbierta=1230
-IndexCerrada=1231
+IndexAbierta=1232
+IndexCerrada=1233
 
 [OBJ1233] 'Puerta para negocio porque no tiene clave
 Name=Puerta de hobbit cerrada
@@ -15581,8 +15581,8 @@ ObjType=6
 Abierta=1
 Agarrable=1
 Llave=0
-IndexAbierta=1230
-IndexCerrada=1231
+IndexAbierta=1232
+IndexCerrada=1233
 
 [OBJ1234]
 Name=Cartel Pociones

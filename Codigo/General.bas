@@ -1610,6 +1610,8 @@ Sub LoadUser(ByVal UserIndex As Integer)
     On Error GoTo ErrorHandler
 
     Call LoadUserFromDatabase(UserIndex)
+    
+    Call LoadQuestStats(UserIndex)
 
     With UserList(UserIndex)
 

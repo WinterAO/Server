@@ -70,18 +70,18 @@ Public Sub HandleQuestAccept(ByVal UserIndex As Integer)
     'Maneja el evento de aceptar una quest.
     'Last modified: 31/01/2010 by Amraphen
     '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-    Dim NPCIndex  As Integer
+    Dim NpcIndex  As Integer
 
     Dim QuestSlot As Byte
  
     Call UserList(UserIndex).incomingData.ReadByte
  
-    NPCIndex = UserList(UserIndex).flags.TargetNPC
+    NpcIndex = UserList(UserIndex).flags.TargetNPC
     
-    If NPCIndex = 0 Then Exit Sub
+    If NpcIndex = 0 Then Exit Sub
     
     'Esta el personaje en la distancia correcta?
-    If Distancia(UserList(UserIndex).Pos, Npclist(NPCIndex).Pos) > 5 Then
+    If Distancia(UserList(UserIndex).Pos, Npclist(NpcIndex).Pos) > 5 Then
         Call WriteConsoleMsg(UserIndex, "Estas demasiado lejos.", FontTypeNames.FONTTYPE_INFO)
         Exit Sub
 
@@ -91,7 +91,7 @@ Public Sub HandleQuestAccept(ByVal UserIndex As Integer)
     
     'Agregamos la quest.
     With UserList(UserIndex).QuestStats.Quests(QuestSlot)
-        .QuestIndex = Npclist(NPCIndex).QuestNumber
+        .QuestIndex = Npclist(NpcIndex).QuestNumber
         
         If QuestList(.QuestIndex).RequiredNPCs Then ReDim .NPCsKilled(1 To QuestList(.QuestIndex).RequiredNPCs)
         Call WriteConsoleMsg(UserIndex, "Has aceptado la mision " & Chr(34) & QuestList(.QuestIndex).Nombre & Chr(34) & ".", FontTypeNames.FONTTYPE_INFO)
@@ -112,9 +112,9 @@ Public Sub FinishQuest(ByVal UserIndex As Integer, _
 
     Dim InvSlotsLibres As Byte
 
-    Dim NPCIndex       As Integer
+    Dim NpcIndex       As Integer
  
-    NPCIndex = UserList(UserIndex).flags.TargetNPC
+    NpcIndex = UserList(UserIndex).flags.TargetNPC
     
     With QuestList(QuestIndex)
 
@@ -124,7 +124,7 @@ Public Sub FinishQuest(ByVal UserIndex As Integer, _
             For i = 1 To .RequiredOBJs
 
                 If TieneObjetos(.RequiredOBJ(i).ObjIndex, .RequiredOBJ(i).Amount, UserIndex) = False Then
-                    Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead("No has conseguido todos los objetos que te he pedido.", Npclist(NPCIndex).Char.CharIndex, vbWhite))
+                    Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead("No has conseguido todos los objetos que te he pedido.", Npclist(NpcIndex).Char.CharIndex, vbWhite))
                     Exit Sub
 
                 End If
@@ -139,7 +139,7 @@ Public Sub FinishQuest(ByVal UserIndex As Integer, _
             For i = 1 To .RequiredNPCs
 
                 If .RequiredNPC(i).Amount > UserList(UserIndex).QuestStats.Quests(QuestSlot).NPCsKilled(i) Then
-                    Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead("No has matado todas las criaturas que te he pedido.", Npclist(NPCIndex).Char.CharIndex, vbWhite))
+                    Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead("No has matado todas las criaturas que te he pedido.", Npclist(NpcIndex).Char.CharIndex, vbWhite))
                     Exit Sub
 
                 End If
@@ -159,7 +159,7 @@ Public Sub FinishQuest(ByVal UserIndex As Integer, _
             
             'Nos fijamos si entra
             If InvSlotsLibres < .RewardOBJs Then
-                Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead("No tienes suficiente espacio en el inventario para recibir la recompensa. Vuelve cuando hayas hecho mas espacio.", Npclist(NPCIndex).Char.CharIndex, vbWhite))
+                Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead("No tienes suficiente espacio en el inventario para recibir la recompensa. Vuelve cuando hayas hecho mas espacio.", Npclist(NpcIndex).Char.CharIndex, vbWhite))
                 Exit Sub
 
             End If
@@ -325,18 +325,18 @@ Public Sub HandleQuest(ByVal UserIndex As Integer)
     'Lorwik: Paso todo el chequeo y la accion a otro sub refractorio
     '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
     
-    Dim NPCIndex As Integer
+    Dim NpcIndex As Integer
 
     'Leemos el paquete
     Call UserList(UserIndex).incomingData.ReadByte
  
-    NPCIndex = UserList(UserIndex).flags.TargetNPC
+    NpcIndex = UserList(UserIndex).flags.TargetNPC
     
-    Call AccionParaQuest(UserIndex, NPCIndex)
+    Call AccionParaQuest(UserIndex, NpcIndex)
 
 End Sub
 
-Public Sub AccionParaQuest(ByVal UserIndex As Integer, ByVal NPCIndex As Integer)
+Public Sub AccionParaQuest(ByVal UserIndex As Integer, ByVal NpcIndex As Integer)
 '****************************************
 'Autor: Lorwik
 'Fecha: 18/05/2020
@@ -344,9 +344,9 @@ Public Sub AccionParaQuest(ByVal UserIndex As Integer, ByVal NPCIndex As Integer
 '****************************************
     Dim tmpByte  As Byte
 
-    If NPCIndex = 0 Then Exit Sub
+    If NpcIndex = 0 Then Exit Sub
     
-    With Npclist(NPCIndex)
+    With Npclist(NpcIndex)
         'Esta el personaje en la distancia correcta?
         If Distancia(UserList(UserIndex).Pos, .Pos) > 5 Then
             Call WriteConsoleMsg(UserIndex, "Estas demasiado lejos.", FontTypeNames.FONTTYPE_INFO)
@@ -460,7 +460,7 @@ Public Sub LoadQuests()
                 For j = 1 To .RequiredNPCs
                     tmpStr = Reader.GetValue("QUEST" & i, "RequiredNPC" & j)
                     
-                    .RequiredNPC(j).NPCIndex = val(ReadField(1, tmpStr, 45))
+                    .RequiredNPC(j).NpcIndex = val(ReadField(1, tmpStr, 45))
                     .RequiredNPC(j).Amount = val(ReadField(2, tmpStr, 45))
                 Next j
 
@@ -495,78 +495,6 @@ Public Sub LoadQuests()
 ErrorHandler:
     MsgBox "Error cargando el archivo QUESTS.DAT.", vbOKOnly + vbCritical
 
-End Sub
- 
-Public Sub LoadQuestStats(ByVal UserIndex As Integer, ByRef UserFile As clsIniManager)
-
-    '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-    'Carga las QuestStats del usuario.
-    'Last modified: 28/01/2010 by Amraphen
-    '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-    Dim i           As Integer
-
-    Dim j           As Integer
-
-    Dim tmpStr      As String
-
-    Dim Fields()    As String
- 
-    For i = 1 To MAXUSERQUESTS
-
-        With UserList(UserIndex).QuestStats.Quests(i)
-            tmpStr = UserFile.GetValue("QUESTS", "Q" & i)
-            
-            ' Para evitar modificar TODOS los charfiles
-            If tmpStr = vbNullString Then
-                .QuestIndex = 0
-
-            Else
-                Fields = Split(tmpStr, "-")
-
-                .QuestIndex = val(Fields(0))
-
-                If .QuestIndex Then
-                    If QuestList(.QuestIndex).RequiredNPCs Then
-                        ReDim .NPCsKilled(1 To QuestList(.QuestIndex).RequiredNPCs)
-
-                        For j = 1 To QuestList(.QuestIndex).RequiredNPCs
-                            .NPCsKilled(j) = val(Fields(j))
-                        Next j
-
-                    End If
-
-                End If
-
-            End If
-
-        End With
-
-    Next i
-    
-    With UserList(UserIndex).QuestStats
-        tmpStr = UserFile.GetValue("QUESTS", "QuestsDone")
-        
-        If tmpStr = vbNullString Then
-            .NumQuestsDone = 0
-        
-        Else
-            Fields = Split(tmpStr, "-")
-
-            .NumQuestsDone = val(Fields(0))
-
-            If .NumQuestsDone Then
-                ReDim .QuestsDone(1 To .NumQuestsDone)
-
-                For i = 1 To .NumQuestsDone
-                    .QuestsDone(i) = val(Fields(i))
-                Next i
-
-            End If
-
-        End If
-
-    End With
-                   
 End Sub
  
 Public Sub SaveQuestStats(ByVal UserIndex As Integer, ByRef UserFile As clsIniManager)

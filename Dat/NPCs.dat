@@ -134,7 +134,7 @@ BackUp=1
 
 [NPC4]
 Name=Mark
-NpcType=0
+NpcType=14
 Desc=Hola aventurero ¿Puedes ayudarme? ¡Los gallos corren peligro!
 Head=101
 Heading=1
@@ -151,7 +151,7 @@ QuestNumber=1
 
 [NPC5]
 Name=Willdon
-NpcType=0
+NpcType=14
 Desc=¡La gente habla de una criatura legendaria! ¿Quieres oir mas?
 Head=101
 Heading=1
@@ -168,7 +168,7 @@ QuestNumber=4
 
 [NPC6]
 Name=Selenna
-NpcType=0
+NpcType=14
 Desc=¡Esos malditos gatos, me estan volviendo loco!
 Head=71
 Heading=1
@@ -185,7 +185,7 @@ QuestNumber=2
 
 [NPC7]
 Name=Wilson
-NpcType=0
+NpcType=14
 Desc=¡Huid! ¡Huid! ¡Que vienen los orcos!
 Head=100
 Heading=1
