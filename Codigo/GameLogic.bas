@@ -108,7 +108,8 @@ Public Sub DoTileEvents(ByVal UserIndex As Integer, _
             If .TileExit.Map > 0 And .TileExit.Map <= NumMaps Then
             
                 If UserList(UserIndex).Stats.ELV < MapInfo(.TileExit.Map).lvlMinimo Then
-                    Call WriteConsoleMsg(UserIndex, "Para entrar a este mapa necesitas ser nivel " & MapInfo(.TileExit.Map).lvlMinimo & ".", FontTypeNames.FONTTYPE_INFO)
+                
+                    Call WriteConsoleMsg(UserIndex, "Percibes un gran peligro más allá donde vas y no te atreves a continuar. Sientes que al nivel " & MapInfo(.TileExit.Map).lvlMinimo & " estarás preparado para afrontar el peligro.", FontTypeNames.FONTTYPE_INFO)
                     Call ClosestStablePos(UserList(UserIndex).Pos, nPos)
             
                     If nPos.X <> 0 And nPos.Y <> 0 Then
@@ -290,12 +291,12 @@ Public Sub DoTileEvents(ByVal UserIndex As Integer, _
                         Call WarpUserChar(UserIndex, DestPos.Map, DestPos.X, DestPos.Y, FxFlag)
                     Else
                         Call ClosestLegalPos(DestPos, nPos)
-
+    
                         If nPos.X <> 0 And nPos.Y <> 0 Then
                             Call WarpUserChar(UserIndex, nPos.Map, nPos.X, nPos.Y, FxFlag)
-
+    
                         End If
-
+    
                     End If
 
                 End If
@@ -1267,24 +1268,24 @@ Sub LookatTile(ByVal UserIndex As Integer, _
                     
                     'Target del BOT
                     If .TargetBot <> 0 Then
-                        If BOTList(.TargetBot).Invocado Then
+                        If BotList(.TargetBot).Invocado Then
                             
                             'Aqui le damos informacion sobre el estado de salud del bot.
                             SupervivenciaSkill = UserList(UserIndex).Stats.UserSkills(eSkill.Supervivencia)
                             If SupervivenciaSkill <= 10 Then
                                 Stat = Stat + " (Dudoso) "
                             Else
-                                If BOTList(.TargetBot).minVida < (BOTList(.TargetBot).maxVida * 0.05) Then
+                                If BotList(.TargetBot).minVida < (BotList(.TargetBot).maxVida * 0.05) Then
                                     Stat = Stat & " Muerto)"
-                                ElseIf BOTList(.TargetBot).minVida < (BOTList(.TargetBot).maxVida * 0.1) Then
+                                ElseIf BotList(.TargetBot).minVida < (BotList(.TargetBot).maxVida * 0.1) Then
                                     Stat = Stat & " Casi muerto)"
-                                ElseIf BOTList(.TargetBot).minVida < (BOTList(.TargetBot).maxVida * 0.25) Then
+                                ElseIf BotList(.TargetBot).minVida < (BotList(.TargetBot).maxVida * 0.25) Then
                                     Stat = Stat & " Muy Malherido)"
-                                ElseIf BOTList(.TargetBot).minVida < (BOTList(.TargetBot).maxVida * 0.5) Then
+                                ElseIf BotList(.TargetBot).minVida < (BotList(.TargetBot).maxVida * 0.5) Then
                                     Stat = Stat & " Malherido)"
-                                ElseIf BOTList(.TargetBot).minVida < (BOTList(.TargetBot).maxVida * 0.75) Then
+                                ElseIf BotList(.TargetBot).minVida < (BotList(.TargetBot).maxVida * 0.75) Then
                                     Stat = Stat & " Herido)"
-                                ElseIf BOTList(.TargetBot).minVida < (BOTList(.TargetBot).maxVida) Then
+                                ElseIf BotList(.TargetBot).minVida < (BotList(.TargetBot).maxVida) Then
                                     Stat = Stat & " Levemente Herido)"
                                 Else
                                     Stat = Stat & " Intacto)"
@@ -1293,7 +1294,7 @@ Sub LookatTile(ByVal UserIndex As Integer, _
                             
                             Dim tmp_Font  As FontTypeNames
                                
-                            If BOTList(.TargetBot).EsCriminal Then
+                            If BotList(.TargetBot).EsCriminal Then
                                 tmp_Font = FontTypeNames.FONTTYPE_FIGHT
                                 Stat = Stat & " <Renegado>"
                             Else
@@ -1301,7 +1302,7 @@ Sub LookatTile(ByVal UserIndex As Integer, _
                                 Stat = Stat & " <Ciudadano>"
                             End If
                                
-                            Call WriteConsoleMsg(UserIndex, BOTList(.TargetBot).Name & " (" & ListaClases(BOTList(.TargetBot).clase) & " " & ListaRazas(BOTList(.TargetBot).Raza) & " Nivel: " & BOTList(.TargetBot).Level & " | " & Stat, tmp_Font)
+                            Call WriteConsoleMsg(UserIndex, BotList(.TargetBot).Name & " (" & ListaClases(BotList(.TargetBot).clase) & " " & ListaRazas(BotList(.TargetBot).Raza) & " Nivel: " & BotList(.TargetBot).Level & " | " & Stat, tmp_Font)
                         End If
                         .TargetBot = 0
                     End If

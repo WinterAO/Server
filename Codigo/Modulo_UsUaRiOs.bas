@@ -1668,11 +1668,11 @@ Sub SubirSkill(ByVal UserIndex As Integer, _
                     .UserSkills(Skill) = .UserSkills(Skill) + 1
                     Call WriteConsoleMsg(UserIndex, "Has mejorado tu skill " & SkillsNames(Skill) & " en un punto! Ahora tienes " & .UserSkills(Skill) & " pts.", FontTypeNames.FONTTYPE_INFO)
                     
-                    .Exp = .Exp + 50
+                    .Exp = .Exp + 5
 
                     If .Exp > MAXEXP Then .Exp = MAXEXP
                     
-                    Call WriteConsoleMsg(UserIndex, "Has ganado 50 puntos de experiencia!", FontTypeNames.FONTTYPE_FIGHT)
+                    Call WriteConsoleMsg(UserIndex, "Has ganado 5 puntos de experiencia!", FontTypeNames.FONTTYPE_FIGHT)
                     
                     Call WriteUpdateExp(UserIndex)
                     Call CheckUserLevel(UserIndex)

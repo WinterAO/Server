@@ -122,6 +122,9 @@ Public Sub CloseAccount(ByVal UserIndex As Integer)
         .AccountInfo.Gemas = 0
         .AccountInfo.status = False
         
+        'Reseteo la IP
+        .IP = vbNullString
+        
         For i = 1 To .AccountInfo.NumChars
             .AccountInfo.AccountPJ(.AccountInfo.NumChars).ID = 0
             .AccountInfo.AccountPJ(.AccountInfo.NumChars).Name = vbNullString

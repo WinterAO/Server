@@ -1,6 +1,6 @@
 Attribute VB_Name = "AI"
 'Argentum Online 0.12.2
-'Copyright (C) 2002 M�rquez Pablo Ignacio
+'Copyright (C) 2002 M?rquez Pablo Ignacio
 '
 'This program is free software; you can redistribute it and/or modify
 'it under the terms of the Affero General Public License;
@@ -22,10 +22,10 @@ Attribute VB_Name = "AI"
 'You can contact me at:
 'morgolock@speedy.com.ar
 'www.geocities.com/gmorgolock
-'Calle 3 n�mero 983 piso 7 dto A
+'Calle 3 n?mero 983 piso 7 dto A
 'La Plata - Pcia, Buenos Aires - Republica Argentina
-'C�digo Postal 1900
-'Pablo Ignacio M�rquez
+'C?digo Postal 1900
+'Pablo Ignacio M?rquez
 
 Option Explicit
 
@@ -60,17 +60,17 @@ Private Const VISION_EXTRA         As Byte = 2
 Public Const RANGO_VISION_NPC_X    As Byte = RANGO_VISION_X + VISION_EXTRA
 Public Const RANGO_VISION_NPC_Y    As Byte = RANGO_VISION_Y + VISION_EXTRA
 
-'?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�
-'?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�
-'?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�
+'????????????????????????????????????????????????????????
+'????????????????????????????????????????????????????????
+'????????????????????????????????????????????????????????
 '                        Modulo AI_NPC
-'?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�
-'?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�
-'?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�
+'????????????????????????????????????????????????????????
+'????????????????????????????????????????????????????????
+'????????????????????????????????????????????????????????
 'AI de los NPC
-'?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�
-'?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�
-'?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�
+'????????????????????????????????????????????????????????
+'????????????????????????????????????????????????????????
+'????????????????????????????????????????????????????????
 
 Private Sub GuardiasAI(ByVal NpcIndex As Integer, ByVal DelCaos As Boolean)
 
@@ -93,7 +93,7 @@ Private Sub GuardiasAI(ByVal NpcIndex As Integer, ByVal DelCaos As Boolean)
         For headingloop = eHeading.SOUTH To eHeading.EAST
             nPos = .Pos
 
-            If .flags.Inmovilizado = 0 Or headingloop = .Char.Heading Then
+            If .flags.Inmovilizado = 0 Or headingloop = .Char.heading Then
                 Call HeadtoPos(headingloop, nPos)
 
                 If InMapBounds(nPos.Map, nPos.X, nPos.Y) Then
@@ -105,7 +105,7 @@ Private Sub GuardiasAI(ByVal NpcIndex As Integer, ByVal DelCaos As Boolean)
                         
                         If UserList(UI).flags.Muerto = 0 And UserList(UI).flags.AdminPerseguible And Not UserProtected Then
 
-                            '�ES CRIMINAL?
+                            '?ES CRIMINAL?
                             If Not DelCaos Then
                                 If criminal(UI) Then
                                     If NpcAtacaUser(NpcIndex, UI) Then
@@ -195,7 +195,7 @@ Private Sub HostilMalvadoAI(ByVal NpcIndex As Integer)
         For headingloop = eHeading.SOUTH To eHeading.EAST
             nPos = .Pos
 
-            If .flags.Inmovilizado = 0 Or .Char.Heading = headingloop Then
+            If .flags.Inmovilizado = 0 Or .Char.heading = headingloop Then
                 Call HeadtoPos(headingloop, nPos)
 
                 If InMapBounds(nPos.Map, nPos.X, nPos.Y) Then
@@ -292,7 +292,7 @@ Private Sub HostilBuenoAI(ByVal NpcIndex As Integer)
         For headingloop = eHeading.SOUTH To eHeading.EAST
             nPos = .Pos
 
-            If .flags.Inmovilizado = 0 Or .Char.Heading = headingloop Then
+            If .flags.Inmovilizado = 0 Or .Char.heading = headingloop Then
                 Call HeadtoPos(headingloop, nPos)
 
                 If InMapBounds(nPos.Map, nPos.X, nPos.Y) Then
@@ -360,7 +360,7 @@ Private Sub IrUsuarioCercano(ByVal NpcIndex As Integer)
 
         If .flags.Inmovilizado = 1 Then
 
-            Select Case .Char.Heading
+            Select Case .Char.heading
 
                 Case eHeading.NORTH
                     SignoNS = -1
@@ -506,7 +506,7 @@ Private Sub IrUsuarioCercano(ByVal NpcIndex As Integer)
 
             Next i
             
-            'Si llega aca es que no hab�a ning�n usuario cercano vivo.
+            'Si llega aca es que no hab?a ning?n usuario cercano vivo.
             'A bailar. Pablo (ToxicWaste)
             If RandomNumber(0, 10) = 0 Then
                 Call MoveNPCChar(NpcIndex, CByte(RandomNumber(eHeading.SOUTH, eHeading.EAST)))
@@ -531,7 +531,7 @@ Private Sub SeguirAgresor(ByVal NpcIndex As Integer)
     'Author: Unknown
     'Last Modify by: Marco Vanotti (MarKoxX)
     'Last Modify Date: 08/16/2008
-    '08/16/2008: MarKoxX - Now pets that do mel� attacks have to be near the enemy to attack.
+    '08/16/2008: MarKoxX - Now pets that do mel? attacks have to be near the enemy to attack.
     '**************************************************************
     Dim tHeading As Byte
 
@@ -547,7 +547,7 @@ Private Sub SeguirAgresor(ByVal NpcIndex As Integer)
 
         If .flags.Paralizado = 1 Or .flags.Inmovilizado = 1 Then
 
-            Select Case .Char.Heading
+            Select Case .Char.heading
 
                 Case eHeading.NORTH
                     SignoNS = -1
@@ -771,7 +771,7 @@ Private Sub PersigueCriminal(ByVal NpcIndex As Integer)
 
         If .flags.Inmovilizado = 1 Then
 
-            Select Case .Char.Heading
+            Select Case .Char.heading
 
                 Case eHeading.NORTH
                     SignoNS = -1
@@ -937,7 +937,7 @@ Private Sub AiNpcAtacaNpc(ByVal NpcIndex As Integer)
 
         If .flags.Inmovilizado = 1 Then
 
-            Select Case .Char.Heading
+            Select Case .Char.heading
 
                 Case eHeading.NORTH
                     SignoNS = -1
@@ -1116,7 +1116,7 @@ Sub NPCAI(ByVal NpcIndex As Integer)
     'Author: Unknown
     'Last Modify by: ZaMa
     'Last Modify Date: 15/11/2009
-    '08/16/2008: MarKoxX - Now pets that do mel� attacks have to be near the enemy to attack.
+    '08/16/2008: MarKoxX - Now pets that do mel? attacks have to be near the enemy to attack.
     '15/11/2009: ZaMa - Implementacion de npc objetos ai.
     '**************************************************************
     On Error GoTo ErrorHandler
@@ -1127,7 +1127,7 @@ Sub NPCAI(ByVal NpcIndex As Integer)
         If .MaestroUser = 0 Then
 
             'Busca a alguien para atacar
-            '�Es un guardia?
+            '?Es un guardia?
             If .NPCtype = eNPCType.GuardiaReal Then
                 Call GuardiasAI(NpcIndex, False)
             ElseIf .NPCtype = eNPCType.Guardiascaos Then
@@ -1298,18 +1298,18 @@ Function FollowPath(ByVal NpcIndex As Integer) As Boolean
     'Last Modification: -
     'Moves the npc.
     '***************************************************
-    Dim TmpPos   As WorldPos
+    Dim tmpPos   As WorldPos
 
     Dim tHeading As Byte
     
     With Npclist(NpcIndex)
-        TmpPos.Map = .Pos.Map
-        TmpPos.X = .PFINFO.Path(.PFINFO.CurPos).Y ' invert� las coordenadas
-        TmpPos.Y = .PFINFO.Path(.PFINFO.CurPos).X
+        tmpPos.Map = .Pos.Map
+        tmpPos.X = .PFINFO.Path(.PFINFO.CurPos).Y ' invert? las coordenadas
+        tmpPos.Y = .PFINFO.Path(.PFINFO.CurPos).X
         
         'Debug.Print "(" & tmpPos.X & "," & tmpPos.Y & ")"
         
-        tHeading = FindDirection(.Pos, TmpPos)
+        tHeading = FindDirection(.Pos, tmpPos)
         
         MoveNPCChar NpcIndex, tHeading
         
@@ -1427,7 +1427,8 @@ End Sub
 Public Sub SacerdoteHealUser(ByVal UserIndex As Integer)
 
     With UserList(UserIndex)
-    
+
+        'Enviamos sonido de curar (Recox)
         Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_CURAR_SACERDOTE, .Pos.X, .Pos.Y))
 
         .Stats.MinHp = .Stats.MaxHp
@@ -1446,12 +1447,16 @@ End Sub
 Public Sub SacerdoteResucitateUser(ByVal UserIndex As Integer)
     With UserList(UserIndex)
 
+        'Enviamos sonido de resucitacion (Recox)
         Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_RESUCITAR_SACERDOTE, .Pos.X, .Pos.Y))
         
         Call RevivirUsuario(UserIndex)
         Call WriteConsoleMsg(UserIndex, "Has sido resucitado!!", FontTypeNames.FONTTYPE_INFO)
 
-        Call SacerdoteHealEffectsAndRestoreMana(UserIndex)
+        'Si es newbie le sacamos todo, sino solo lo revivimos. (Recox)
+        If EsNewbie(UserIndex) Then
+            Call SacerdoteHealEffectsAndRestoreMana(UserIndex)
+        End If
 
     End With
 End Sub
@@ -1483,3 +1488,4 @@ Private Sub SacerdoteHealEffectsAndRestoreMana(ByVal UserIndex As Integer)
         Call WriteConsoleMsg(UserIndex, "El sacerdote te ha restaurado el mana completamente.", FontTypeNames.FONTTYPE_INFO)
     End With
 End Sub
+

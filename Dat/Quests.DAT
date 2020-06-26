@@ -21,10 +21,10 @@ RewardOBJs=0
 [QUEST2]
 Nombre=Murcielagos vs Gatos
 Desc=La población de murcielagos y gatos se ha disparado este años y estan trayendo muchos problemas, debemos dismunuir la población como sea. Mata 15 murcielagos y 10 gatos savajes, y si me traes 5 pieles de gato podre hacerte una bonita vestimenta.
-RequiredLevel=2
+RequiredLevel=1
 
 RequiredNPCs=2
-RequiredNPC1=517-10
+RequiredNPC1=560-10
 RequiredNPC2=504-15
 
 RequiredOBJs=1
@@ -38,11 +38,11 @@ RewardOBJs=0
 [QUEST3]
 Nombre=¡Invasión de orcos!
 Desc=¡Los orcos nos invaden! ¿Puedes ayudarnos? Acaba con 10 orcos y 15 de sus sucias mascotas, ademas si me traes 5 fragmentos de sus armas podre construirte una buena herramienta para tus aventuras.
-RequiredLevel=5
+RequiredLevel=1
  
-RequiredOBJs=2
-RequiredOBJ1=559-10
-RequiredOBJ2=609-10
+RequiredNPCs=2
+RequiredNPC1=559-10
+RequiredNPC2=609-10
 
 RequiredOBJs=1
 RequiredOBJ1=1250-5
@@ -57,7 +57,7 @@ RewardOBJ1=238-1
 [QUEST4]
 Nombre=La criatura sagrada
 Desc=Cuenta la leyenda que en estas tierras habita una criatura legendaria, ¡un unicornio!. Aquellos aventureros que tomen su vida encontraran la gloria ademas de grandes recompensas. Quizas no lo encuentres, quizas si. Pero si lo encuentras y lo derrotas, te estare esperando con una gran recompensa.
-RequiredLevel=15
+RequiredLevel=1
  
 RequiredNPCs=1
 RequiredNPC1=608-1

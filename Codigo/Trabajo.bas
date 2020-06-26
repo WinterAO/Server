@@ -2290,7 +2290,7 @@ Public Sub DoApunalar(ByVal UserIndex As Integer, _
     Select Case UserList(UserIndex).clase
 
         Case eClass.Assasin
-            Suerte = Int(((0.00003 * Skill - 0.002) * Skill + 0.098) * Skill + 4.25)
+            Suerte = Int(((0.00004 * Skill - 0.002) * Skill + 0.098) * Skill + 4.25)
     
         Case eClass.Cleric, eClass.Paladin, eClass.Pirat
             Suerte = Int(((0.000003 * Skill + 0.0006) * Skill + 0.0107) * Skill + 4.93)

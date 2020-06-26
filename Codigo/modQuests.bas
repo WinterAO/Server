@@ -87,6 +87,13 @@ Public Sub HandleQuestAccept(ByVal UserIndex As Integer)
 
     End If
     
+    'Esta el user muerto?
+    If UserList(UserIndex).flags.Muerto = 1 Then
+        Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
+        Exit Sub
+
+    End If
+                    
     QuestSlot = FreeQuestSlot(UserIndex)
     
     'Agregamos la quest.
@@ -118,6 +125,13 @@ Public Sub FinishQuest(ByVal UserIndex As Integer, _
     
     With QuestList(QuestIndex)
 
+        'Esta el user muerto?
+        If UserList(UserIndex).flags.Muerto = 1 Then
+            Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
+            Exit Sub
+    
+        End If
+    
         'Comprobamos que tenga los objetos.
         If .RequiredOBJs > 0 Then
 
@@ -347,6 +361,14 @@ Public Sub AccionParaQuest(ByVal UserIndex As Integer, ByVal NpcIndex As Integer
     If NpcIndex = 0 Then Exit Sub
     
     With Npclist(NpcIndex)
+    
+        'Esta el user muerto?
+        If UserList(UserIndex).flags.Muerto = 1 Then
+            Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
+            Exit Sub
+    
+        End If
+    
         'Esta el personaje en la distancia correcta?
         If Distancia(UserList(UserIndex).Pos, .Pos) > 5 Then
             Call WriteConsoleMsg(UserIndex, "Estas demasiado lejos.", FontTypeNames.FONTTYPE_INFO)

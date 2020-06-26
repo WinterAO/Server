@@ -588,17 +588,6 @@ Private Sub AddItemsToNewUser(ByVal UserIndex As Integer, ByVal UserClase As eCl
             .Invent.Object(Slot).ObjIndex = 856
             .Invent.Object(Slot).Amount = 200
 
-        Else
-            'Pociones amarillas (Newbie)
-            Slot = Slot + 1
-            .Invent.Object(Slot).ObjIndex = 855
-            .Invent.Object(Slot).Amount = 100
-
-            'Pociones verdes (Newbie)
-            Slot = Slot + 1
-            .Invent.Object(Slot).ObjIndex = 858
-            .Invent.Object(Slot).Amount = 50
-
         End If
 
         ' Ropa (Newbie)
@@ -627,6 +616,9 @@ Private Sub AddItemsToNewUser(ByVal UserIndex As Integer, ByVal UserClase As eCl
             Case eClass.Hunter
                 ' Arco (Newbie)
                 .Invent.Object(Slot).ObjIndex = 859
+                .Invent.Object(Slot).Amount = 1
+                Slot = Slot + 1
+                .Invent.Object(Slot).ObjIndex = 460
             Case eClass.Mage
                 ' Baston de Mago (Newbie)
                 .Invent.Object(Slot).ObjIndex = 862
@@ -657,7 +649,7 @@ Private Sub AddItemsToNewUser(ByVal UserIndex As Integer, ByVal UserClase As eCl
         If UserClase = eClass.Hunter Then
             Slot = Slot + 1
             .Invent.Object(Slot).ObjIndex = 860
-            .Invent.Object(Slot).Amount = 150
+            .Invent.Object(Slot).Amount = 1500
 
             ' Equipo flechas
             .Invent.Object(Slot).Equipped = 1
@@ -1562,7 +1554,6 @@ Sub ResetBasicUserInfo(ByVal UserIndex As Integer)
         .Pos.Map = 0
         .Pos.X = 0
         .Pos.Y = 0
-        .IP = vbNullString
         .clase = 0
         .Email = vbNullString
         .Genero = 0
