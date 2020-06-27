@@ -613,7 +613,7 @@ Private Sub AddItemsToNewUser(ByVal UserIndex As Integer, ByVal UserClase As eCl
         'Arma (Newbie)
         Slot = Slot + 1
         Select Case UserClase
-            Case eClass.Hunter
+            Case eClass.Hunter, eClass.Thief
                 ' Arco (Newbie)
                 .Invent.Object(Slot).ObjIndex = 859
                 .Invent.Object(Slot).Amount = 1
@@ -649,7 +649,7 @@ Private Sub AddItemsToNewUser(ByVal UserIndex As Integer, ByVal UserClase As eCl
         If UserClase = eClass.Hunter Then
             Slot = Slot + 1
             .Invent.Object(Slot).ObjIndex = 860
-            .Invent.Object(Slot).Amount = 1500
+            .Invent.Object(Slot).Amount = 500
 
             ' Equipo flechas
             .Invent.Object(Slot).Equipped = 1
