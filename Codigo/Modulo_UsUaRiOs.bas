@@ -720,101 +720,13 @@ Public Sub CheckUserLevel(ByVal UserIndex As Integer, Optional ByVal PrintInCons
             
             .Stats.Exp = .Stats.Exp - .Stats.ELU
             
-            If .Stats.ELV < 6 Then                  'Del 1 al 5 +50
-                .Stats.ELU = .Stats.ELU + 50
-                
-            ElseIf .Stats.ELV < 10 Then             'Del 6 al 9 +100
-                .Stats.ELU = .Stats.ELU + 100
-                
-            ElseIf .Stats.ELV < 15 Then             'Del 10 al 14 +250
-                .Stats.ELU = .Stats.ELU + 250
-                
-            ElseIf .Stats.ELV < 20 Then             'Del 14 al 19 +300
-                .Stats.ELU = .Stats.ELU + 300
-                
-            ElseIf .Stats.ELV < 23 Then             'Del 20 al 22 +500
-                .Stats.ELU = .Stats.ELU + 500
-                
-            ElseIf .Stats.ELV < 25 Then             'Del 23 al 24 +1450
-                .Stats.ELU = .Stats.ELU + 1450
-                
-            ElseIf .Stats.ELV < 26 Then             'Del 24 al 25 +1800
-                .Stats.ELU = .Stats.ELU + 1800
-                
-            ElseIf .Stats.ELV < 27 Then             'Del 25 al 26 +2250
-                .Stats.ELU = .Stats.ELU + 2250
-                
-            ElseIf .Stats.ELV < 28 Then             'Del 26 al 27 +2850
-                .Stats.ELU = .Stats.ELU + 2850
-                
-            ElseIf .Stats.ELV < 29 Then             'Del 27 al 28 +3500
-                .Stats.ELU = .Stats.ELU + 3500
-                
-            ElseIf .Stats.ELV < 30 Then             'Del 28 al 29 +4250
-                .Stats.ELU = .Stats.ELU + 4250
-                
-            ElseIf .Stats.ELV < 31 Then             'Del 29 al 30 +5500
-                .Stats.ELU = .Stats.ELU + 5500
-                
-            ElseIf .Stats.ELV < 32 Then             'Del 30 al 31 +7500
-                .Stats.ELU = .Stats.ELU + 7500
-                
-            ElseIf .Stats.ELV < 33 Then             'Del 31 al 32 +7750
-                .Stats.ELU = .Stats.ELU + 7750
-                
-            ElseIf .Stats.ELV < 34 Then             'Del 32 al 33 +11250
-                .Stats.ELU = .Stats.ELU + 11250
-                
-            ElseIf .Stats.ELV < 35 Then             'Del 33 al 34 +12500
-                .Stats.ELU = .Stats.ELU + 12500
-                
-            ElseIf .Stats.ELV < 36 Then             'Del 34 al 35 +16500
-                .Stats.ELU = .Stats.ELU + 16500
-                
-            ElseIf .Stats.ELV < 37 Then             'Del 35 al 36 +21000
-                .Stats.ELU = .Stats.ELU + 21000
-                
-            ElseIf .Stats.ELV < 38 Then             'Del 36 al 37 +26000
-                .Stats.ELU = .Stats.ELU + 26000
-                
-            ElseIf .Stats.ELV < 39 Then             'Del 37 al 38 +30000
-                .Stats.ELU = .Stats.ELU + 30000
-                
-            ElseIf .Stats.ELV < 40 Then             'Del 38 al 39 +40000
-                .Stats.ELU = .Stats.ELU + 40000
-                
-            ElseIf .Stats.ELV < 41 Then             'Del 39 al 40 +50000
-                .Stats.ELU = .Stats.ELU + 50000
-                
-            ElseIf .Stats.ELV < 42 Then             'Del 40 al 41 +65000
-                .Stats.ELU = .Stats.ELU + 65000
-                
-            ElseIf .Stats.ELV < 43 Then             'Del 41 al 42 +77000
-                .Stats.ELU = .Stats.ELU + 77000
-                
-            ElseIf .Stats.ELV < 44 Then             'Del 42 al 43 +98000
-                .Stats.ELU = .Stats.ELU + 98000
-                
-            ElseIf .Stats.ELV < 45 Then             'Del 43 al 44 +125000
-                .Stats.ELU = .Stats.ELU + 125000
-                
-            ElseIf .Stats.ELV < 46 Then             'Del 44 al 45 +150000
-                .Stats.ELU = .Stats.ELU + 150000
-                
-            ElseIf .Stats.ELV < 47 Then             'Del 45 al 46 +190000
-                .Stats.ELU = .Stats.ELU + 190000
-                
-            ElseIf .Stats.ELV < 48 Then             'Del 46 al 47 +245000
-                .Stats.ELU = .Stats.ELU + 245000
-                
-            ElseIf .Stats.ELV < 49 Then             'Del 48 al 49 +300000
-                .Stats.ELU = .Stats.ELU + 300000
-                
-            ElseIf .Stats.ELV < 50 Then             'Del 49 al 50 +500000
-                .Stats.ELU = .Stats.ELU + 500000
-                
+            If EXP_X_LVL(.Stats.ELV) > 0 Then
+                .Stats.ELU = EXP_X_LVL(.Stats.ELV)
+
             Else
-                .Stats.ELU = .Stats.ELU * 2.2
+                .Stats.ELU = EXP_X_LVL(STAT_MAXELV)
+                Call LogError("Error en CheckUserLevel: Falta la experiencia en la tabla de experiencia para el nivel " & .Stats.ELV)
+                
             End If
             
             'Calculo subida de vida

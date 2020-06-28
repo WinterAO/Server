@@ -560,7 +560,13 @@ Private Sub SetAttributesToNewUser(ByVal UserIndex As Integer, ByVal UserClase A
         .Stats.Gld = 0
     
         .Stats.Exp = 0
-        .Stats.ELU = 150
+        If Not EXP_X_LVL(1) > 0 Then
+            .Stats.ELU = EXP_X_LVL(1)
+        Else
+            .Stats.ELU = 200
+            Call LogError("Error en SetAttributesToNewUser: Falta la experiencia en la tabla de experiencia para el nivel 1")
+        End If
+        
         .Stats.ELV = 1
     End With
 

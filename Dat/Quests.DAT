@@ -3,11 +3,11 @@ NumQuests=4
 
 [QUEST1]
 Nombre=Gallos Envenenados
-Desc=Una plaga de serpientes esta envenenando y matando a los gallos. Mata 10 serpientes y 10 gallos envenenados, ademas traeme 5 muestras de veneno.
+Desc=Las serpientes se han multiplicado envenenando inclusive a las gallinas, acaba con 10 viboras y 10 gallinas envenenadas y te daré una recompensa. Ademas, si me traes 5 venenos de vibora podre elaborar una poción.
 RequiredLevel=1
  
 RequiredNPCs=2
-RequiredNPC1=500-10
+RequiredNPC1=519-10
 RequiredNPC2=517-10
 
 RequiredOBJs=1
@@ -20,7 +20,7 @@ RewardOBJs=0
  
 [QUEST2]
 Nombre=Murcielagos vs Gatos
-Desc=La población de murcielagos y gatos se ha disparado este años y estan trayendo muchos problemas, debemos dismunuir la población como sea. Mata 15 murcielagos y 10 gatos savajes, y si me traes 5 pieles de gato podre hacerte una bonita vestimenta.
+Desc=Mi nombre es Ormerk, soy un Brujo. Necesito que acabes con 15 murciélagos y 10 gatos, además necesito 5 pelajes de gato. Cuándo acabes vuelve que te daré una recompensa.
 RequiredLevel=1
 
 RequiredNPCs=2
@@ -37,7 +37,7 @@ RewardOBJs=0
  
 [QUEST3]
 Nombre=¡Invasión de orcos!
-Desc=¡Los orcos nos invaden! ¿Puedes ayudarnos? Acaba con 10 orcos y 15 de sus sucias mascotas, ademas si me traes 5 fragmentos de sus armas podre construirte una buena herramienta para tus aventuras.
+Desc=Muchas gracias, mi me llaman Lerd, en su momento fui un gran guerrero, actualmente me volví viejo y dócil. Sólo debes acabar con 10 Lobos, 10 Orcos y traerme fragmentos de arma rota. No es fácil pero sé que podrás, te recompensaré.
 RequiredLevel=1
  
 RequiredNPCs=2
@@ -56,7 +56,7 @@ RewardOBJ1=238-1
 
 [QUEST4]
 Nombre=La criatura sagrada
-Desc=Cuenta la leyenda que en estas tierras habita una criatura legendaria, ¡un unicornio!. Aquellos aventureros que tomen su vida encontraran la gloria ademas de grandes recompensas. Quizas no lo encuentres, quizas si. Pero si lo encuentras y lo derrotas, te estare esperando con una gran recompensa.
+Desc=Solo debes acabar con el Unicornio, pero ten cuidado, no es tarea fácil, más de uno lo ha intentado y ha fracasado.
 RequiredLevel=1
  
 RequiredNPCs=1

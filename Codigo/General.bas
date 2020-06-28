@@ -369,6 +369,9 @@ Sub Main()
     'Arenas de Retos
     Call LoadArenas
     
+    'Cargamos la experiencia requerida para cada nivel
+    Call CargarExpXLVL
+    
     ' Home distance
     Call generateMatrix(MATRIX_INITIAL_MAP)
     
@@ -1919,4 +1922,29 @@ Public Sub BanGlobalChatGuardar()
     Next LoopC
 
     Close #ArchN
+End Sub
+
+Public Sub CargarExpXLVL()
+'****************************************
+'Autor: Lorwik
+'Fecha: 27/06/2020
+'Descripción: Cargamos en un Array la exp requerida para subir de nivel
+'****************************************
+
+    Dim LoopC As Long
+    Dim Leer As New clsIniManager
+    
+    If Not FileExist(App.Path & "\Dat\exp_por_nivel.dat", vbNormal) Then
+        MsgBox ("No se ha encontrado el archivo '\Dat\exp_por_nivel.dat'")
+        End
+    End If
+    
+    Call Leer.Initialize(App.Path & "\Dat\exp_por_nivel.dat")
+  
+    For LoopC = 1 To STAT_MAXELV
+    
+         EXP_X_LVL(LoopC) = CLng(Leer.GetValue("INIT", "Nivel" & LoopC))
+          
+    Next LoopC
+  
 End Sub
