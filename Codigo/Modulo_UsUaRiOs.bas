@@ -928,6 +928,9 @@ Public Sub CheckUserLevel(ByVal UserIndex As Integer, Optional ByVal PrintInCons
                 End If
 
             End If
+            
+            'Guardamos los datos del usuario.
+            Call SaveUser(UserIndex, True)
 
         Loop
         
@@ -947,9 +950,6 @@ Public Sub CheckUserLevel(ByVal UserIndex As Integer, Optional ByVal PrintInCons
         End If
         
     End With
-    
-    'Guardamos los datos del usuario.
-    Call SaveUser(UserIndex, True)
     
     Call WriteUpdateUserStats(UserIndex)
     

@@ -11,7 +11,9 @@ Public Sub LoginAccountDatabase(ByVal UserIndex As Integer, ByVal UserName As St
     Dim query              As String
     Dim TieneGM            As Boolean
     
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "SELECT id, username, email, password, salt, gemas, status FROM account "
     query = query & "WHERE UPPER(username) = '" & UCase$(UserName) & "';"
@@ -91,7 +93,10 @@ Public Sub LoginAccountDatabase(ByVal UserIndex As Integer, ByVal UserName As St
     End With
 
     Set Database_RecordSet = Nothing
+    
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
     
     Call WriteUserAccountLogged(UserIndex)
 
@@ -166,7 +171,9 @@ Public Function CuentaExisteDatabase(ByVal UserName As String) As Boolean
 
     Dim query As String
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "SELECT id FROM account WHERE UPPER(username) = '" & UCase$(UserName) & "';"
 
@@ -180,7 +187,10 @@ Public Function CuentaExisteDatabase(ByVal UserName As String) As Boolean
 
     CuentaExisteDatabase = (Database_RecordSet.RecordCount > 0)
     Set Database_RecordSet = Nothing
+    
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Function
 
@@ -199,7 +209,9 @@ Public Function CuentaVerificada(ByVal UserName As String) As Boolean
 
     Dim query As String
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "SELECT status FROM account WHERE UPPER(username) = '" & UCase$(UserName) & "';"
 
@@ -214,7 +226,10 @@ Public Function CuentaVerificada(ByVal UserName As String) As Boolean
     CuentaVerificada = CBool(Database_RecordSet!status)
 
     Set Database_RecordSet = Nothing
+    
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Function
 
@@ -237,7 +252,9 @@ Public Function PersonajePerteneceCuenta(ByVal UserIndex As Integer, ByVal UserN
 
     Dim query As String
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "SELECT id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "' AND account_id = '" & UserList(UserIndex).AccountInfo.ID & "';"
 
@@ -251,7 +268,10 @@ Public Function PersonajePerteneceCuenta(ByVal UserIndex As Integer, ByVal UserN
 
     PersonajePerteneceCuenta = (Database_RecordSet.RecordCount > 0)
     Set Database_RecordSet = Nothing
+    
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Function
 
@@ -273,7 +293,9 @@ Public Function GetCountUserAccount(ByVal UserIndex As Integer) As Byte
 
     Dim query As String
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "SELECT COUNT(*) FROM usuario WHERE deleted = 0 and account_id = '" & UserList(UserIndex).AccountInfo.ID & "';"
 
@@ -287,7 +309,10 @@ Public Function GetCountUserAccount(ByVal UserIndex As Integer) As Byte
 
     GetCountUserAccount = val(Database_RecordSet.Fields(0).Value)
     Set Database_RecordSet = Nothing
+    
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Function
 ErrorHandler:
@@ -305,13 +330,17 @@ Public Sub BorrarUsuarioDatabase(ByVal UserName As String)
 
     Dim query As String
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "UPDATE usuario SET name = '" & UCase$(UserName) & "_deleted', deleted = TRUE WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
     Database_Connection.Execute (query)
 
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Sub
 
@@ -330,7 +359,9 @@ Public Function GetAccountSalt(ByVal AccountName As String) As String
 
     Dim query As String
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "SELECT salt FROM account WHERE UPPER(username) = '" & UCase$(AccountName) & "';"
 
@@ -344,7 +375,10 @@ Public Function GetAccountSalt(ByVal AccountName As String) As String
 
     GetAccountSalt = Database_RecordSet!salt
     Set Database_RecordSet = Nothing
+    
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Function
 ErrorHandler:
@@ -362,7 +396,9 @@ Public Function GetUserSalt(ByVal UserName As String) As String
 
     Dim query As String
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "SELECT salt FROM account WHERE id = (SELECT account_id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "');"
 
@@ -376,7 +412,10 @@ Public Function GetUserSalt(ByVal UserName As String) As String
 
     GetUserSalt = Database_RecordSet!salt
     Set Database_RecordSet = Nothing
+    
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Function
 ErrorHandler:
@@ -394,7 +433,9 @@ Public Function GetAccountPassword(ByVal AccountName As String) As String
 
     Dim query As String
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "SELECT password FROM account WHERE UPPER(username) = '" & UCase$(AccountName) & "';"
 
@@ -408,7 +449,10 @@ Public Function GetAccountPassword(ByVal AccountName As String) As String
 
     GetAccountPassword = Database_RecordSet!Password
     Set Database_RecordSet = Nothing
+    
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Function
 ErrorHandler:
@@ -426,7 +470,9 @@ Public Function GetUserPassword(ByVal UserName As String) As String
 
     Dim query As String
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "SELECT password FROM account WHERE id = (SELECT account_id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "');"
 
@@ -440,7 +486,10 @@ Public Function GetUserPassword(ByVal UserName As String) As String
 
     GetUserPassword = Database_RecordSet!Password
     Set Database_RecordSet = Nothing
+    
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Function
 ErrorHandler:
@@ -458,7 +507,9 @@ Public Function GetUserEmail(ByVal UserName As String) As String
 
     Dim query As String
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "SELECT username FROM account WHERE id = (SELECT account_id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "');"
 
@@ -472,7 +523,10 @@ Public Function GetUserEmail(ByVal UserName As String) As String
 
     GetUserEmail = Database_RecordSet!UserName
     Set Database_RecordSet = Nothing
+    
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Function
 ErrorHandler:

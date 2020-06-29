@@ -1,23 +1,23 @@
 Attribute VB_Name = "Quests"
-'This program is free software; you can redistribute it and/or modify
-'it under the terms of the Affero General Public License;
-'either version 1 of the License, or any later version.
-'
-'This program is distributed in the hope that it will be useful,
-'but WITHOUT ANY WARRANTY; without even the implied warranty of
-'MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-'Affero General Public License for more details.
-'
-'You should have received a copy of the Affero General Public License
-'along with this program; if not, you can find it at [url=http://www.affero.org/oagpl.html]http://www.affero.org/oagpl.html[/url]
-'
-'Argentum Online is based on Baronsoft's VB6 Online RPG
-'You can contact the original creator of ORE at [email=aaron@baronsoft.com]aaron@baronsoft.com[/email]
-'for more information about ORE please visit [url=http://www.baronsoft.com/]http://www.baronsoft.com/[/url]
+
+'¿Como funciona este sistema de Quest?
+'Cada usuario tiene X cantidad de slots de quest que esta enumerado desde 1 a MAXQUESTS.
+'Cada quest se guardara en el slot correspondiente segun su indice. Por ejemplo, una quest
+'con ID 5, se guardara en el slot 5.
+
 Option Explicit
  
+Public Enum eStatusQuest
+
+    NoAceptada = 0
+    EnCurso = 1
+    Terminada = 2
+        
+End Enum
+ 
 'Constantes de las quests
-Public Const MAXUSERQUESTS As Integer = 15     'Maxima cantidad de quests que puede tener un usuario al mismo tiempo.
+Public Const MAXUSERQUESTS As Integer = 5      'Maxima cantidad de quests aceptadas sin completar que puede tener un usuario al mismo tiempo.
+Public MAXQUESTS As Integer                    'Maxima cantidad de quests que puede tener un usuario.
  
 Public Function TieneQuest(ByVal UserIndex As Integer, _
                            ByVal QuestNumber As Integer) As Byte
@@ -26,9 +26,10 @@ Public Function TieneQuest(ByVal UserIndex As Integer, _
     'Devuelve el slot de UserQuests en que tiene la quest QuestNumber. En caso contrario devuelve 0.
     'Last modified: 27/01/2010 by Amraphen
     '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+    
     Dim i As Integer
  
-    For i = 1 To MAXUSERQUESTS
+    For i = 1 To MAXQUESTS
 
         If UserList(UserIndex).QuestStats.Quests(i).QuestIndex = QuestNumber Then
             TieneQuest = i
@@ -41,26 +42,26 @@ Public Function TieneQuest(ByVal UserIndex As Integer, _
     TieneQuest = 0
 
 End Function
- 
-Public Function FreeQuestSlot(ByVal UserIndex As Integer) As Byte
 
-    '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-    'Devuelve el proximo slot de quest libre.
-    'Last modified: 27/01/2010 by Amraphen
-    '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+Private Function MaxQuestsAceptadas(ByVal UserIndex As Integer) As Boolean
+    '****************************************
+    'Autor: Lorwik
+    'Fecha: 28/06/2020
+    'Descripcion: Comprueba si el usuario supero el numero maximo de quest en curso
+    '****************************************
+
     Dim i As Integer
- 
-    For i = 1 To MAXUSERQUESTS
-
-        If UserList(UserIndex).QuestStats.Quests(i).QuestIndex = 0 Then
-            FreeQuestSlot = i
-            Exit Function
-
-        End If
-
+    Dim Count As Integer
+    
+    For i = 1 To MAXQUESTS
+        If UserList(UserIndex).QuestStats.Quests(i).QuestStatus = eStatusQuest.EnCurso Then Count = Count + 1
     Next i
     
-    FreeQuestSlot = 0
+    If Count >= MAXUSERQUESTS Then
+        MaxQuestsAceptadas = True
+    Else
+        MaxQuestsAceptadas = False
+    End If
 
 End Function
  
@@ -73,6 +74,8 @@ Public Sub HandleQuestAccept(ByVal UserIndex As Integer)
     Dim NpcIndex  As Integer
 
     Dim QuestSlot As Byte
+    
+    Dim i         As Byte
  
     Call UserList(UserIndex).incomingData.ReadByte
  
@@ -84,7 +87,7 @@ Public Sub HandleQuestAccept(ByVal UserIndex As Integer)
     If Distancia(UserList(UserIndex).Pos, Npclist(NpcIndex).Pos) > 5 Then
         Call WriteConsoleMsg(UserIndex, "Estas demasiado lejos.", FontTypeNames.FONTTYPE_INFO)
         Exit Sub
-
+'
     End If
     
     'Esta el user muerto?
@@ -93,14 +96,21 @@ Public Sub HandleQuestAccept(ByVal UserIndex As Integer)
         Exit Sub
 
     End If
-                    
-    QuestSlot = FreeQuestSlot(UserIndex)
     
     'Agregamos la quest.
-    With UserList(UserIndex).QuestStats.Quests(QuestSlot)
+    With UserList(UserIndex).QuestStats.Quests(Npclist(NpcIndex).QuestNumber)
         .QuestIndex = Npclist(NpcIndex).QuestNumber
+        .QuestStatus = eStatusQuest.EnCurso
         
-        If QuestList(.QuestIndex).RequiredNPCs Then ReDim .NPCsKilled(1 To QuestList(.QuestIndex).RequiredNPCs)
+        If QuestList(.QuestIndex).RequiredNPCs Then
+            ReDim .NPCsKilled(1 To QuestList(.QuestIndex).RequiredNPCs)
+            
+            For i = 1 To QuestList(.QuestIndex).RequiredNPCs
+                .NPCsKilled(i) = 0
+            Next i
+            
+        End If
+        
         Call WriteConsoleMsg(UserIndex, "Has aceptado la mision " & Chr(34) & QuestList(.QuestIndex).Nombre & Chr(34) & ".", FontTypeNames.FONTTYPE_INFO)
         
     End With
@@ -111,10 +121,12 @@ Public Sub FinishQuest(ByVal UserIndex As Integer, _
                        ByVal QuestIndex As Integer, _
                        ByVal QuestSlot As Byte)
 
-    '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+    '****************************************************
+    'Autor: Amraphen
+    'Fecha: 29/01/2010
     'Maneja el evento de terminar una quest.
-    'Last modified: 29/01/2010 by Amraphen
-    '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+    '****************************************************
+    
     Dim i              As Integer
 
     Dim InvSlotsLibres As Byte
@@ -220,34 +232,14 @@ Public Sub FinishQuest(ByVal UserIndex As Integer, _
             Next i
 
         End If
-    
+
+        'Se agrega que el usuario ya hizo esta quest.
+        UserList(UserIndex).QuestStats.Quests(QuestIndex).QuestStatus = eStatusQuest.Terminada
+        UserList(UserIndex).QuestStats.NumQuestsDone = UserList(UserIndex).QuestStats.NumQuestsDone + 1
+
         'Actualizamos el personaje
         Call CheckUserLevel(UserIndex)
         Call UpdateUserInv(True, UserIndex, 0)
-    
-        'Limpiamos el slot de quest.
-        Call CleanQuestSlot(UserIndex, QuestSlot)
-        
-        'Ordenamos las quests
-        Call ArrangeUserQuests(UserIndex)
-    
-        'Se agrega que el usuario ya hizo esta quest.
-        Call AddDoneQuest(UserIndex, QuestIndex)
-
-    End With
-
-End Sub
- 
-Public Sub AddDoneQuest(ByVal UserIndex As Integer, ByVal QuestIndex As Integer)
-
-    '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-    'Agrega la quest QuestIndex a la lista de quests hechas.
-    'Last modified: 28/01/2010 by Amraphen
-    '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-    With UserList(UserIndex).QuestStats
-        .NumQuestsDone = .NumQuestsDone + 1
-        ReDim Preserve .QuestsDone(1 To .NumQuestsDone)
-        .QuestsDone(.NumQuestsDone) = QuestIndex
 
     End With
 
@@ -256,19 +248,21 @@ End Sub
 Public Function UserDoneQuest(ByVal UserIndex As Integer, _
                               ByVal QuestIndex As Integer) As Boolean
 
-    '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-    'Verifica si el usuario hizo la quest QuestIndex.
-    'Last modified: 28/01/2010 by Amraphen
-    '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+    '****************************************************
+    'Autor: Lorwik
+    'Fecha: 28/06/2020
+    'Descripcion: Verifica si el usuario hizo la quest QuestIndex.
+    '****************************************************
     Dim i As Integer
 
     With UserList(UserIndex).QuestStats
 
         If .NumQuestsDone Then
 
-            For i = 1 To .NumQuestsDone
+            For i = 1 To MAXQUESTS
 
-                If .QuestsDone(i) = QuestIndex Then
+                'Tiene la quest terminada?
+                If .Quests(i).QuestIndex = QuestIndex And .Quests(i).QuestStatus = eStatusQuest.Terminada Then
                     UserDoneQuest = True
                     Exit Function
 
@@ -286,10 +280,11 @@ End Function
  
 Public Sub CleanQuestSlot(ByVal UserIndex As Integer, ByVal QuestSlot As Integer)
 
-    '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-    'Limpia un slot de quest de un usuario.
-    'Last modified: 28/01/2010 by Amraphen
-    '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+    '****************************************************
+    'Autor: Lorwik
+    'Fecha: 28/06/2020
+    'Descripcion: Limpia un slot de quest de un usuario.
+    '****************************************************
     Dim i As Integer
  
     With UserList(UserIndex).QuestStats.Quests(QuestSlot)
@@ -299,6 +294,7 @@ Public Sub CleanQuestSlot(ByVal UserIndex As Integer, ByVal QuestSlot As Integer
 
                 For i = 1 To QuestList(.QuestIndex).RequiredNPCs
                     .NPCsKilled(i) = 0
+                    .QuestStatus = eStatusQuest.NoAceptada
                 Next i
 
             End If
@@ -313,31 +309,31 @@ End Sub
  
 Public Sub ResetQuestStats(ByVal UserIndex As Integer)
 
-    '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+    '****************************************************
+    'Autor: Lorwik
+    'Fecha: 28/06/2020
     'Limpia todos los QuestStats de un usuario
-    'Last modified: 28/01/2010 by Amraphen
-    '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+    '****************************************************
+    
     Dim i As Integer
  
-    For i = 1 To MAXUSERQUESTS
+    For i = 1 To MAXQUESTS
         Call CleanQuestSlot(UserIndex, i)
     Next i
     
     With UserList(UserIndex).QuestStats
         .NumQuestsDone = 0
-        Erase .QuestsDone
-
     End With
 
 End Sub
  
 Public Sub HandleQuest(ByVal UserIndex As Integer)
 
-    '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+    '****************************************************
     'Maneja el paquete Quest.
     'Last modified: 18/05/2020
     'Lorwik: Paso todo el chequeo y la accion a otro sub refractorio
-    '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+    '****************************************************
     
     Dim NpcIndex As Integer
 
@@ -351,11 +347,12 @@ Public Sub HandleQuest(ByVal UserIndex As Integer)
 End Sub
 
 Public Sub AccionParaQuest(ByVal UserIndex As Integer, ByVal NpcIndex As Integer)
-'****************************************
-'Autor: Lorwik
-'Fecha: 18/05/2020
-'Descripción: 'Refactorizo para que los NPC de quest den misiones
-'****************************************
+    '****************************************
+    'Autor: Lorwik
+    'Fecha: 18/05/2020
+    'Descripción: 'Refactorizo para que los NPC de quest den misiones
+    '****************************************
+    
     Dim tmpByte  As Byte
 
     If NpcIndex = 0 Then Exit Sub
@@ -385,7 +382,7 @@ Public Sub AccionParaQuest(ByVal UserIndex As Integer, ByVal NpcIndex As Integer
         
         'El personaje ya hizo la quest?
         If UserDoneQuest(UserIndex, .QuestNumber) Then
-            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead("Ya has hecho una mision para mi.", .Char.CharIndex, vbWhite))
+            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead("Gracias por la ayuda, quizas en otro momento podamos te necesite.", .Char.CharIndex, vbWhite))
             Exit Sub
     
         End If
@@ -405,11 +402,9 @@ Public Sub AccionParaQuest(ByVal UserIndex As Integer, ByVal NpcIndex As Integer
             'El usuario esta haciendo la quest, entonces va a hablar con el NPC para recibir la recompensa.
             Call FinishQuest(UserIndex, .QuestNumber, tmpByte)
         Else
-            'El usuario no esta haciendo la quest, entonces primero recibe un informe con los detalles de la mision.
-            tmpByte = FreeQuestSlot(UserIndex)
             
             'El personaje tiene algun slot de quest para la nueva quest?
-            If tmpByte = 0 Then
+            If MaxQuestsAceptadas(UserIndex) Then
                 Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead("Estas haciendo demasiadas misiones. Vuelve cuando hayas completado alguna.", .Char.CharIndex, vbWhite))
                 Exit Sub
     
@@ -424,10 +419,12 @@ End Sub
  
 Public Sub LoadQuests()
 
-    '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+    '****************************************************
+    'Autor: Amraphen
+    'Fecha: 27/01/2010
     'Carga el archivo QUESTS.DAT en el array QuestList.
-    'Last modified: 27/01/2010 by Amraphen
-    '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+    '****************************************************
+     
     On Error GoTo ErrorHandler
 
     Dim Reader    As clsIniManager
@@ -449,6 +446,9 @@ Public Sub LoadQuests()
     'Redimensionamos el array
     NumQuests = Reader.GetValue("INIT", "NumQuests")
     ReDim QuestList(1 To NumQuests)
+    
+    'Numero maximo de quests
+    MAXQUESTS = NumQuests
     
     'Cargamos los datos
     For i = 1 To NumQuests
@@ -518,63 +518,13 @@ ErrorHandler:
     MsgBox "Error cargando el archivo QUESTS.DAT.", vbOKOnly + vbCritical
 
 End Sub
- 
-Public Sub SaveQuestStats(ByVal UserIndex As Integer, ByRef UserFile As clsIniManager)
 
-    '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-    'Guarda las QuestStats del usuario.
-    'Last modified: 29/01/2010 by Amraphen
-    '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-    Dim i      As Integer
-
-    Dim j      As Integer
-
-    Dim tmpStr As String
- 
-    For i = 1 To MAXUSERQUESTS
-
-        With UserList(UserIndex).QuestStats.Quests(i)
-            tmpStr = .QuestIndex
-            
-            If .QuestIndex Then
-                If QuestList(.QuestIndex).RequiredNPCs Then
-
-                    For j = 1 To QuestList(.QuestIndex).RequiredNPCs
-                        tmpStr = tmpStr & "-" & .NPCsKilled(j)
-                    Next j
-
-                End If
-
-            End If
-        
-            Call UserFile.ChangeValue("QUESTS", "Q" & i, tmpStr)
-
-        End With
-
-    Next i
-    
-    With UserList(UserIndex).QuestStats
-        tmpStr = .NumQuestsDone
-        
-        If .NumQuestsDone Then
-
-            For i = 1 To .NumQuestsDone
-                tmpStr = tmpStr & "-" & .QuestsDone(i)
-            Next i
-
-        End If
-        
-        Call UserFile.ChangeValue("QUESTS", "QuestsDone", tmpStr)
-
-    End With
-
-End Sub
- 
 Public Sub HandleQuestListRequest(ByVal UserIndex As Integer)
-    '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-    'Maneja el paquete QuestListRequest.
-    'Last modified: 30/01/2010 by Amraphen
-    '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+    '****************************************************
+    'Autor: Amraphen
+    'Fecha: 30/01/2010
+    'Descripcion: Maneja el paquete QuestListRequest.
+    '****************************************************
  
     'Leemos el paquete
     Call UserList(UserIndex).incomingData.ReadByte
@@ -582,48 +532,14 @@ Public Sub HandleQuestListRequest(ByVal UserIndex As Integer)
     Call WriteQuestListSend(UserIndex)
 
 End Sub
- 
-Public Sub ArrangeUserQuests(ByVal UserIndex As Integer)
 
-    '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-    'Ordena las quests del usuario de manera que queden todas al principio del arreglo.
-    'Last modified: 30/01/2010 by Amraphen
-    '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-    Dim i As Integer
-
-    Dim j As Integer
- 
-    With UserList(UserIndex).QuestStats
-
-        For i = 1 To MAXUSERQUESTS - 1
-
-            If .Quests(i).QuestIndex = 0 Then
-
-                For j = i + 1 To MAXUSERQUESTS
-
-                    If .Quests(j).QuestIndex Then
-                        .Quests(i) = .Quests(j)
-                        Call CleanQuestSlot(UserIndex, j)
-                        Exit For
-
-                    End If
-
-                Next j
-
-            End If
-
-        Next i
-
-    End With
-
-End Sub
- 
 Public Sub HandleQuestDetailsRequest(ByVal UserIndex As Integer)
-
-    '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-    'Maneja el paquete QuestInfoRequest.
-    'Last modified: 30/01/2010 by Amraphen
-    '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+    '****************************************************
+    'Autor: Amraphen
+    'Fecha: 30/01/2010
+    'Descripcion: Maneja el paquete QuestInfoRequest.
+    '****************************************************
+    
     Dim QuestSlot As Byte
  
     'Leemos el paquete
@@ -636,18 +552,17 @@ Public Sub HandleQuestDetailsRequest(ByVal UserIndex As Integer)
 End Sub
  
 Public Sub HandleQuestAbandon(ByVal UserIndex As Integer)
-    '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-    'Maneja el paquete QuestAbandon.
-    'Last modified: 31/01/2010 by Amraphen
-    '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+    '****************************************************
+    'Autor: Amraphen
+    'Fecha: 31/01/2010
+    'Descripcion: Maneja el paquete QuestAbandon.
+    '****************************************************
+    
     'Leemos el paquete.
     Call UserList(UserIndex).incomingData.ReadByte
     
     'Borramos la quest.
     Call CleanQuestSlot(UserIndex, UserList(UserIndex).incomingData.ReadByte)
-    
-    'Ordenamos la lista de quests del usuario.
-    Call ArrangeUserQuests(UserIndex)
     
     'Enviamos la lista de quests actualizada.
     Call WriteQuestListSend(UserIndex)

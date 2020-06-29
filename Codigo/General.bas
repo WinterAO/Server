@@ -313,6 +313,12 @@ Sub Main()
     Call CargarCiudades
     Call CargaApuestas
     
+    'Base de datos MySQL
+#If DBConexionUnica = 1 Then
+    frmCargando.Label1(2).Caption = "Cargando Base de datos"
+    Call Database_Connect
+#End If
+
     ' Npcs.dat
     frmCargando.Label1(2).Caption = "Cargando NPCs.Dat"
     Call CargaNpcsDat
@@ -1593,6 +1599,8 @@ Sub SaveUser(ByVal UserIndex As Integer, Optional ByVal SaveTimeOnline As Boolea
         .Reputacion.Promedio = Prom
         
         Call SaveUserToDatabase(UserIndex, SaveTimeOnline)
+        
+        Call UpdateUserQuest(UserIndex)
 
     End With
 

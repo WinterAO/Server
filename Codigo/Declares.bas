@@ -1178,14 +1178,14 @@ Public Type tUserQuest
 
     NPCsKilled() As Integer
     QuestIndex As Integer
-
+    QuestStatus As Byte
+    
 End Type
  
 Public Type tQuestStats
 
-    Quests(1 To MAXUSERQUESTS) As tUserQuest
+    Quests() As tUserQuest
     NumQuestsDone As Integer
-    QuestsDone() As Integer
 
 End Type
 

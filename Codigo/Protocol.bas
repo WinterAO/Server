@@ -22659,7 +22659,7 @@ Public Sub WriteQuestListSend(ByVal UserIndex As Integer)
     With UserList(UserIndex)
         .outgoingData.WriteByte ServerPacketID.QuestListSend
     
-        For i = 1 To MAXUSERQUESTS
+        For i = 1 To MAXQUESTS
 
             If .QuestStats.Quests(i).QuestIndex Then
                 tmpByte = tmpByte + 1

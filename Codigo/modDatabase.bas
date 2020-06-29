@@ -114,7 +114,9 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
 
     Dim LoopC  As Byte
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     'Basic user data
     With UserList(UserIndex)
@@ -259,8 +261,11 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
         Call Database_Connection.Execute(query)
 
     End With
-
+    
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
+
     Exit Sub
 
 ErrorHandler:
@@ -282,13 +287,11 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
 
     Dim UserId As Integer
 
-    Dim LoopC  As Byte
-    
-    Dim tmpStr As String
-    
-    Dim j      As Integer
+    Dim LoopC  As Integer
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     'Basic user data
     With UserList(UserIndex)
@@ -380,36 +383,9 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
         query = query & "WHERE id = " & .ID & ";"
         Call Database_Connection.Execute(query)
 
-        'User quest
-        'query = "DELETE FROM quest WHERE user_id = " & .ID & ";"
-        'Call Database_Connection.Execute(query)
-
-        'query = "INSERT INTO quest (id, user_id, estado, completado, npcs) VALUES "
-
-        'For LoopC = 1 To MAXUSERQUESTS
-        '    query = query & "("
-        '    query = query & .QuestStats.Quests(LoopC).QuestIndex & ", "
-        '    query = query & .ID & ", "
-        '    query = query & .QuestStats.QuestsDone(LoopC) & ", "
-            
-        '    For j = 1 To QuestList(.QuestStats.Quests(LoopC).QuestIndex).RequiredNPCs
-        '        tmpStr = tmpStr & "-" & .QuestStats.Quests(LoopC).NPCsKilled(j)
-        '    Next j
-                    
-        '    query = query & tmpStr & ")"
-
-        '    If LoopC < MAXUSERQUESTS Then
-        '        query = query & ", "
-        '    Else
-        '        query = query & ";"
-
-        '    End If
-
-        'Next LoopC
-
-        'Call Database_Connection.Execute(query)
-
-        'User spells
+        '*******************************************************************
+        'Hechizos
+        '*******************************************************************
         query = "DELETE FROM spell WHERE user_id = " & .ID & ";"
         Call Database_Connection.Execute(query)
 
@@ -432,7 +408,9 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
 
         Call Database_Connection.Execute(query)
 
-        'User inventory
+        '*******************************************************************
+        'Inventario
+        '*******************************************************************
         query = "DELETE FROM inventory_item WHERE user_id = " & .ID & ";"
         Call Database_Connection.Execute(query)
 
@@ -457,7 +435,9 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
 
         Call Database_Connection.Execute(query)
 
-        'User bank inventory
+        '*******************************************************************
+        'Boveda
+        '*******************************************************************
         query = "DELETE FROM bank_item WHERE user_id = " & .ID & ";"
         Call Database_Connection.Execute(query)
 
@@ -481,7 +461,9 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
 
         Call Database_Connection.Execute(query)
 
-        'User skills
+        '*******************************************************************
+        'Skills
+        '*******************************************************************
         query = "DELETE FROM skillpoint WHERE user_id = " & .ID & ";"
         Call Database_Connection.Execute(query)
 
@@ -506,7 +488,9 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
 
         Call Database_Connection.Execute(query)
 
-        'User pets
+        '*******************************************************************
+        'Mascotas
+        '*******************************************************************
         Dim petType As Integer
 
         query = "DELETE FROM pet WHERE user_id = " & .ID & ";"
@@ -548,13 +532,91 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
 
     End With
 
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Sub
 
 ErrorHandler:
     Call LogDatabaseError("Unable to UPDATE usuario to Mysql Database: " & UserList(UserIndex).Name & ". " & Err.Number & " - " & Err.description)
 
+End Sub
+
+Public Sub UpdateUserQuest(ByVal UserIndex As Integer)
+'************************************************************
+'Autor: Lorwik
+'Fecha: 28/06/2020
+'Descripción: Guarda las quest del usuario en la base de datos
+'************************************************************
+
+    Dim query  As String
+    Dim LoopC  As Integer
+    Dim j      As Integer
+    
+#If DBConexionUnica = 0 Then
+    Call Database_Connect
+#End If
+    
+        'Basic user data
+    With UserList(UserIndex)
+    
+        query = "DELETE FROM quest WHERE user_id = " & .ID & ";"
+        Call Database_Connection.Execute(query)
+
+        query = "INSERT INTO quest (idquest, user_id, estado, npcs) VALUES "
+
+        For LoopC = 1 To MAXQUESTS
+            query = query & "(" & .QuestStats.Quests(LoopC).QuestIndex & ", "            'ID de la quest
+            query = query & .ID & ", "                                                   'ID del usuario
+            query = query & CInt(.QuestStats.Quests(LoopC).QuestStatus) & ", "           'Estado de la quest
+            
+            '¿El id de la quest es valida?
+            If .QuestStats.Quests(LoopC).QuestIndex > 0 Then
+            
+                '¿La quest requiere matar NPC?
+                If QuestList(.QuestStats.Quests(LoopC).QuestIndex).RequiredNPCs > 0 Then
+                    For j = 1 To QuestList(.QuestStats.Quests(LoopC).QuestIndex).RequiredNPCs
+                    
+                        query = query & val(.QuestStats.Quests(LoopC).NPCsKilled(j))   'Cuantos NPCs se ha matado de los que requeridos
+                        
+                        If Not j = QuestList(.QuestStats.Quests(LoopC).QuestIndex).RequiredNPCs Then query = query & "."
+                    Next j
+                Else
+                
+                    query = query & "0"
+                    
+                End If
+                
+            Else
+                
+                query = query & "0"
+                
+            End If
+            
+            query = query & ")"
+
+            If LoopC < MAXQUESTS Then
+                query = query & ", "
+            Else
+                query = query & ";"
+
+            End If
+
+        Next LoopC
+Debug.Print query
+        Call Database_Connection.Execute(query)
+        
+    End With
+
+#If DBConexionUnica = 0 Then
+    Call Database_Close
+#End If
+
+    Exit Sub
+
+ErrorHandler:
+    Call LogDatabaseError("Unable to UPDATE usuario to Mysql Database: " & UserList(UserIndex).Name & ". " & Err.Number & " - " & Err.description)
 End Sub
 
 Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
@@ -570,7 +632,9 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
 
     Dim LoopC As Byte
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     'Basic user data
     With UserList(UserIndex)
@@ -794,8 +858,10 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
 
     End With
 
+#If DBConexionUnica = 0 Then
     Call Database_Close
-    
+#End If
+
     Exit Sub
 
 ErrorHandler:
@@ -815,46 +881,56 @@ Public Sub LoadQuestStats(ByVal UserIndex As Integer)
 
     Dim query       As String
     Dim Fields()    As String
-    Dim Completado  As Integer
     Dim Count       As Integer
     Dim j           As Integer
+    Dim tmpint      As Integer
     
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     With UserList(UserIndex).QuestStats
 
         query = "SELECT * FROM quest WHERE user_id = " & UserList(UserIndex).ID & ";"
         Set Database_RecordSet = Database_Connection.Execute(query)
     
-        
         If Not Database_RecordSet.RecordCount = 0 Then
             Database_RecordSet.MoveFirst
-    
+            Count = 1
+            
             While Not Database_RecordSet.EOF
     
-                If Not Count > MAXUSERQUESTS Then
-                    .Quests(Count).QuestIndex = val(Database_RecordSet!ID)
-        
-                    If QuestList(.Quests(Count).QuestIndex).RequiredNPCs Then
-                        ReDim .Quests(Count).NPCsKilled(1 To QuestList(.Quests(Count).QuestIndex).RequiredNPCs)
-        
-                        Fields = Split(Database_RecordSet!NPCs, "-")
-        
-                        For j = 1 To QuestList(.Quests(Count).QuestIndex).RequiredNPCs
-                           .Quests(Count).NPCsKilled(j) = val(Fields(j))
-                        Next j
-        
-                    End If
-                         
-                    Completado = val(Database_RecordSet!Completado)
-                         
-                    If Completado = 1 Then
-                        .NumQuestsDone = .NumQuestsDone + 1
-                            
-                        ReDim .QuestsDone(1 To .NumQuestsDone)
-                        .QuestsDone(Count) = 1
-                    End If
+                If Not Count > MAXQUESTS Then
+                    tmpint = val(Database_RecordSet!idquest)
+                    
+                    '¿Hay quest en el slot?
+                    If tmpint > 0 Then
+
+                        .Quests(Count).QuestIndex = tmpint
+                    
+                        '¿La quest requiere matar NPC?
+                        If QuestList(.Quests(Count).QuestIndex).RequiredNPCs Then
+                            ReDim .Quests(Count).NPCsKilled(1 To QuestList(.Quests(Count).QuestIndex).RequiredNPCs)
+            
+                            Fields = Split(Database_RecordSet!NPCs, ".")
+            
+                            For j = 1 To QuestList(.Quests(Count).QuestIndex).RequiredNPCs
+                                If UBound(Fields()) > 0 Then
+                                    .Quests(Count).NPCsKilled(j) = val(Fields(j))
+                                Else
+                                    .Quests(Count).NPCsKilled(j) = 0
+                                End If
+                            Next j
+            
+                        End If
+                             
+                        .Quests(Count).QuestStatus = CBool(Database_RecordSet!estado)
+                             
+                        'Si la quest actual se termino, lo sumamos al contador de terminados
+                        If .Quests(Count).QuestStatus = eStatusQuest.Terminada Then .NumQuestsDone = .NumQuestsDone + 1
                         
+                    End If
+
                     Count = Count + 1
                         
                     Database_RecordSet.MoveNext
@@ -867,7 +943,9 @@ Public Sub LoadQuestStats(ByVal UserIndex As Integer)
     End With
     Set Database_RecordSet = Nothing
 
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
     
     Exit Sub
 
@@ -886,7 +964,9 @@ Public Function PersonajeExisteDatabase(ByVal UserName As String) As Boolean
 
     Dim query As String
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "SELECT id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "' AND deleted = FALSE;"
 
@@ -900,7 +980,10 @@ Public Function PersonajeExisteDatabase(ByVal UserName As String) As Boolean
 
     PersonajeExisteDatabase = (Database_RecordSet.RecordCount > 0)
     Set Database_RecordSet = Nothing
+    
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Function
 
@@ -919,7 +1002,9 @@ Public Function BANCheckDatabase(ByVal UserName As String) As Boolean
 
     Dim query As String
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "SELECT is_ban FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
@@ -934,7 +1019,10 @@ Public Function BANCheckDatabase(ByVal UserName As String) As Boolean
     BANCheckDatabase = CBool(Database_RecordSet!is_ban)
 
     Set Database_RecordSet = Nothing
+    
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Function
 
@@ -952,14 +1040,18 @@ Public Sub UnBanDatabase(ByVal UserName As String)
     On Error GoTo ErrorHandler
 
     Dim query As String
-
+    
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "UPDATE usuario SET is_ban = FALSE WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
     Database_Connection.Execute (query)
 
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Sub
 
@@ -977,8 +1069,10 @@ Public Function GetUserGuildIndexDatabase(ByVal UserName As String) As Integer
     On Error GoTo ErrorHandler
 
     Dim query As String
-
+    
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "SELECT guild_index FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
@@ -992,7 +1086,10 @@ Public Function GetUserGuildIndexDatabase(ByVal UserName As String) As Integer
 
     GetUserGuildIndexDatabase = SanitizeNullValue(Database_RecordSet!Guild_Index, 0)
     Set Database_RecordSet = Nothing
+    
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Function
 
@@ -1011,13 +1108,17 @@ Public Sub CopyUserDatabase(ByVal UserName As String, ByVal newName As String)
 
     Dim query As String
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "UPDATE usuario SET name = '" & UCase$(newName) & "' WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
     Database_Connection.Execute (query)
 
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Sub
 
@@ -1037,13 +1138,17 @@ Public Sub MarcarPjComoQueYaVotoDatabase(ByVal UserIndex As Integer, _
 
     Dim query As String
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "UPDATE usuario SET votes_amount = " & NumeroEncuesta & " WHERE id = " & UserList(UserIndex).ID & ";"
 
     Database_Connection.Execute (query)
-
+    
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Sub
 
@@ -1062,7 +1167,9 @@ Public Function PersonajeCantidadVotosDatabase(ByVal UserName As String) As Inte
 
     Dim query As String
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "SELECT votes_amount FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
@@ -1076,7 +1183,10 @@ Public Function PersonajeCantidadVotosDatabase(ByVal UserName As String) As Inte
 
     PersonajeCantidadVotosDatabase = CInt(Database_RecordSet!votes_amount)
     Set Database_RecordSet = Nothing
+    
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Function
 
@@ -1101,7 +1211,9 @@ Public Sub SaveBan(ByVal UserName As String, _
 
     cantPenas = GetUserAmountOfPunishments(UserName)
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "UPDATE usuario SET is_ban = TRUE WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
@@ -1114,7 +1226,9 @@ Public Sub SaveBan(ByVal UserName As String, _
 
     Database_Connection.Execute (query)
 
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Sub
 
@@ -1132,8 +1246,10 @@ Public Function GetUserAmountOfPunishments(ByVal UserName As String) As Integer
     On Error GoTo ErrorHandler
 
     Dim query As String
-
+    
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "SELECT COUNT(1) as punishments FROM punishment WHERE user_id = (SELECT id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "')"
 
@@ -1147,7 +1263,10 @@ Public Function GetUserAmountOfPunishments(ByVal UserName As String) As Integer
 
     GetUserAmountOfPunishments = CInt(Database_RecordSet!punishments)
     Set Database_RecordSet = Nothing
+    
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Function
 ErrorHandler:
@@ -1167,7 +1286,9 @@ Public Sub SendUserPunishments(ByVal UserIndex As Integer, _
 
     Dim query As String
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "SELECT * FROM punishment WHERE user_id = (SELECT id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "');"
 
@@ -1186,7 +1307,10 @@ Public Sub SendUserPunishments(ByVal UserIndex As Integer, _
     End If
 
     Set Database_RecordSet = Nothing
+    
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Sub
 ErrorHandler:
@@ -1204,7 +1328,9 @@ Public Function GetUserPos(ByVal UserName As String) As String
 
     Dim query As String
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "SELECT pos_map, pos_x, pos_y FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
@@ -1218,7 +1344,10 @@ Public Function GetUserPos(ByVal UserName As String) As String
 
     GetUserPos = Database_RecordSet!pos_map & "-" & Database_RecordSet!pos_x & "-" & Database_RecordSet!pos_y
     Set Database_RecordSet = Nothing
+    
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Function
 ErrorHandler:
@@ -1237,8 +1366,10 @@ Public Sub SaveUserPunishment(ByVal UserName As String, _
     On Error GoTo ErrorHandler
 
     Dim query As String
-
+    
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "INSERT INTO punishment SET "
     query = query & "user_id = (SELECT id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "'), "
@@ -1247,7 +1378,9 @@ Public Sub SaveUserPunishment(ByVal UserName As String, _
 
     Database_Connection.Execute (query)
 
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Sub
 ErrorHandler:
@@ -1267,7 +1400,9 @@ Public Sub AlterUserPunishment(ByVal UserName As String, _
 
     Dim query As String
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "UPDATE punishment SET "
     query = query & "reason = '" & Reason & "' "
@@ -1275,7 +1410,9 @@ Public Sub AlterUserPunishment(ByVal UserName As String, _
 
     Database_Connection.Execute (query)
 
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Sub
 ErrorHandler:
@@ -1293,7 +1430,9 @@ Public Sub ResetUserFacciones(ByVal UserName As String)
 
     Dim query As String
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "UPDATE usuario SET "
     query = query & "pertenece_real = FALSE, "
@@ -1315,7 +1454,9 @@ Public Sub ResetUserFacciones(ByVal UserName As String)
 
     Database_Connection.Execute (query)
 
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Sub
 ErrorHandler:
@@ -1333,7 +1474,9 @@ Public Sub KickUserCouncils(ByVal UserName As String)
 
     Dim query As String
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "UPDATE usuario SET "
     query = query & "pertenece_consejo_real = FALSE, "
@@ -1342,7 +1485,9 @@ Public Sub KickUserCouncils(ByVal UserName As String)
 
     Database_Connection.Execute (query)
 
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Sub
 ErrorHandler:
@@ -1360,7 +1505,9 @@ Public Sub KickUserFacciones(ByVal UserName As String)
 
     Dim query As String
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "UPDATE usuario SET "
     query = query & "pertenece_real = FALSE, "
@@ -1368,8 +1515,10 @@ Public Sub KickUserFacciones(ByVal UserName As String)
     query = query & "WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
     Database_Connection.Execute (query)
-
+    
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Sub
 ErrorHandler:
@@ -1387,7 +1536,9 @@ Public Sub KickUserChaosLegion(ByVal UserName As String)
 
     Dim query As String
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "UPDATE usuario SET "
     query = query & "pertenece_caos = FALSE, "
@@ -1396,7 +1547,9 @@ Public Sub KickUserChaosLegion(ByVal UserName As String)
 
     Database_Connection.Execute (query)
 
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Sub
 ErrorHandler:
@@ -1414,7 +1567,9 @@ Public Sub KickUserRoyalArmy(ByVal UserName As String)
 
     Dim query As String
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "UPDATE usuario SET "
     query = query & "pertenece_real = FALSE, "
@@ -1423,7 +1578,9 @@ Public Sub KickUserRoyalArmy(ByVal UserName As String)
 
     Database_Connection.Execute (query)
 
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Sub
 ErrorHandler:
@@ -1441,7 +1598,9 @@ Public Sub UpdateUserLogged(ByVal UserName As String, ByVal Logged As Byte)
 
     Dim query As String
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "UPDATE usuario SET "
     query = query & "is_logged = " & IIf(Logged = 1, "TRUE", "FALSE") & " "
@@ -1449,7 +1608,9 @@ Public Sub UpdateUserLogged(ByVal UserName As String, ByVal Logged As Byte)
 
     Database_Connection.Execute (query)
 
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Sub
 ErrorHandler:
@@ -1467,7 +1628,9 @@ Public Function GetUserLastIps(ByVal UserName As String) As String
 
     Dim query As String
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "SELECT last_ip FROM account WHERE id = (SELECT account_id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "');"
 
@@ -1481,7 +1644,10 @@ Public Function GetUserLastIps(ByVal UserName As String) As String
 
     GetUserLastIps = Database_RecordSet!last_ip
     Set Database_RecordSet = Nothing
+    
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Function
 ErrorHandler:
@@ -1501,7 +1667,9 @@ Public Function GetUserSkills(ByVal UserName As String) As String
 
     GetUserSkills = vbNullString
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "SELECT number, value FROM skillpoint WHERE user_id = (SELECT id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "');"
 
@@ -1521,7 +1689,9 @@ Public Function GetUserSkills(ByVal UserName As String) As String
 
     Set Database_RecordSet = Nothing
 
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Function
 ErrorHandler:
@@ -1539,7 +1709,9 @@ Public Function GetUserFreeSkills(ByVal UserName As String) As Integer
 
     Dim query As String
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "SELECT free_skillpoints FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
@@ -1553,7 +1725,10 @@ Public Function GetUserFreeSkills(ByVal UserName As String) As Integer
 
     GetUserFreeSkills = CInt(Database_RecordSet!free_skillpoints)
     Set Database_RecordSet = Nothing
+    
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Function
 ErrorHandler:
@@ -1572,7 +1747,9 @@ Public Sub SaveUserTrainingTime(ByVal UserName As String, _
 
     Dim query As String
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "UPDATE usuario SET "
     query = query & "counter_training = " & trainingTime & " "
@@ -1580,7 +1757,9 @@ Public Sub SaveUserTrainingTime(ByVal UserName As String, _
 
     Database_Connection.Execute (query)
 
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Sub
 ErrorHandler:
@@ -1598,7 +1777,9 @@ Public Function GetUserTrainingTime(ByVal UserName As String) As Long
 
     Dim query As String
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "SELECT counter_training FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
@@ -1612,7 +1793,10 @@ Public Function GetUserTrainingTime(ByVal UserName As String) As Long
 
     GetUserTrainingTime = CLng(Database_RecordSet!counter_training)
     Set Database_RecordSet = Nothing
+    
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Function
 ErrorHandler:
@@ -1630,7 +1814,9 @@ Public Function UserBelongsToRoyalArmy(ByVal UserName As String) As Boolean
 
     Dim query As String
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "SELECT pertenece_real FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "' AND deleted = FALSE;"
 
@@ -1644,7 +1830,10 @@ Public Function UserBelongsToRoyalArmy(ByVal UserName As String) As Boolean
 
     UserBelongsToRoyalArmy = CBool(Database_RecordSet!pertenece_real)
     Set Database_RecordSet = Nothing
+    
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Function
 
@@ -1663,7 +1852,9 @@ Public Function UserBelongsToChaosLegion(ByVal UserName As String) As Boolean
 
     Dim query As String
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "SELECT pertenece_caos FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "' AND deleted = FALSE;"
 
@@ -1677,7 +1868,10 @@ Public Function UserBelongsToChaosLegion(ByVal UserName As String) As Boolean
 
     UserBelongsToChaosLegion = CBool(Database_RecordSet!pertenece_caos)
     Set Database_RecordSet = Nothing
+    
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Function
 
@@ -1696,7 +1890,9 @@ Public Function GetUserLevel(ByVal UserName As String) As Byte
 
     Dim query As String
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "SELECT level FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
@@ -1710,7 +1906,10 @@ Public Function GetUserLevel(ByVal UserName As String) As Byte
 
     GetUserLevel = CByte(Database_RecordSet!Level)
     Set Database_RecordSet = Nothing
+    
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Function
 
@@ -1729,7 +1928,9 @@ Public Function GetUserPromedio(ByVal UserName As String) As Long
 
     Dim query As String
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "SELECT rep_average FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
@@ -1743,7 +1944,10 @@ Public Function GetUserPromedio(ByVal UserName As String) As Long
 
     GetUserPromedio = CLng(Database_RecordSet!rep_average)
     Set Database_RecordSet = Nothing
+
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Function
 
@@ -1762,7 +1966,9 @@ Public Function GetUserReenlists(ByVal UserName As String) As Byte
 
     Dim query As String
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "SELECT reenlistadas FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
@@ -1776,7 +1982,10 @@ Public Function GetUserReenlists(ByVal UserName As String) As Byte
 
     GetUserReenlists = CByte(Database_RecordSet!Reenlistadas)
     Set Database_RecordSet = Nothing
+    
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Function
 
@@ -1795,7 +2004,9 @@ Public Sub SaveUserReenlists(ByVal UserName As String, ByVal Reenlists As Byte)
 
     Dim query As String
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "UPDATE usuario SET "
     query = query & "reenlistadas = " & Reenlists & " "
@@ -1803,7 +2014,9 @@ Public Sub SaveUserReenlists(ByVal UserName As String, ByVal Reenlists As Byte)
 
     Database_Connection.Execute (query)
 
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Sub
 ErrorHandler:
@@ -1826,8 +2039,10 @@ Public Sub SendUserStatsTxtDatabase(ByVal sendIndex As Integer, ByVal UserName A
     Else
         Call WriteConsoleMsg(sendIndex, "Estadisticas de: " & UserName, FontTypeNames.FONTTYPE_INFO)
 
+    #If DBConexionUnica = 0 Then
         Call Database_Connect
-
+    #End If
+    
         query = "SELECT level, exp, elu, min_sta, max_sta, min_hp, max_hp, min_man, max_man, min_hit, max_hit, gold FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
         Set Database_RecordSet = Database_Connection.Execute(query)
@@ -1846,7 +2061,10 @@ Public Sub SendUserStatsTxtDatabase(ByVal sendIndex As Integer, ByVal UserName A
         Call WriteConsoleMsg(sendIndex, "Oro: " & Database_RecordSet!Gold, FontTypeNames.FONTTYPE_INFO)
 
         Set Database_RecordSet = Nothing
+        
+    #If DBConexionUnica = 0 Then
         Call Database_Close
+    #End If
 
     End If
 
@@ -1872,8 +2090,10 @@ Public Sub SendUserMiniStatsTxtFromDatabase(ByVal sendIndex As Integer, _
     Else
         Call WriteConsoleMsg(sendIndex, "Estadisticas de: " & UserName, FontTypeNames.FONTTYPE_INFO)
 
+    #If DBConexionUnica = 0 Then
         Call Database_Connect
-
+    #End If
+    
         query = "SELECT killed_npcs, killed_users, ciudadanos_matados, criminales_matados, class_id, genre_id, race_id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
         Set Database_RecordSet = Database_Connection.Execute(query)
@@ -1892,7 +2112,10 @@ Public Sub SendUserMiniStatsTxtFromDatabase(ByVal sendIndex As Integer, _
         Call WriteConsoleMsg(sendIndex, "Raza: " & ListaRazas(Database_RecordSet!race_id), FontTypeNames.FONTTYPE_INFO)
 
         Set Database_RecordSet = Nothing
+        
+    #If DBConexionUnica = 0 Then
         Call Database_Close
+    #End If
 
     End If
 
@@ -1916,7 +2139,9 @@ Public Sub SendUserOROTxtFromDatabase(ByVal sendIndex As Integer, _
     If Not PersonajeExiste(UserName) Then
         Call WriteConsoleMsg(sendIndex, "Pj Inexistente", FontTypeNames.FONTTYPE_INFO)
     Else
-        Call Database_Connect
+        #If DBConexionUnica = 0 Then
+            Call Database_Connect
+        #End If
 
         query = "SELECT bank_gold FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
@@ -1932,7 +2157,10 @@ Public Sub SendUserOROTxtFromDatabase(ByVal sendIndex As Integer, _
         Call WriteConsoleMsg(sendIndex, "Oro en banco: " & Database_RecordSet!bank_gold, FontTypeNames.FONTTYPE_INFO)
 
         Set Database_RecordSet = Nothing
-        Call Database_Close
+        
+        #If DBConexionUnica = 0 Then
+            Call Database_Close
+        #End If
 
     End If
 
@@ -1958,7 +2186,9 @@ Public Sub SendUserInvTxtFromDatabase(ByVal sendIndex As Integer, _
     If Not PersonajeExiste(UserName) Then
         Call WriteConsoleMsg(sendIndex, "Pj Inexistente", FontTypeNames.FONTTYPE_INFO)
     Else
-        Call Database_Connect
+        #If DBConexionUnica = 0 Then
+            Call Database_Connect
+        #End If
 
         query = "SELECT number, item_id, amount FROM inventory_item WHERE user_id = (SELECT id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "')"
 
@@ -1984,7 +2214,10 @@ Public Sub SendUserInvTxtFromDatabase(ByVal sendIndex As Integer, _
         End If
 
         Set Database_RecordSet = Nothing
-        Call Database_Close
+        
+        #If DBConexionUnica = 0 Then
+            Call Database_Close
+        #End If
 
     End If
 
@@ -2010,7 +2243,9 @@ Public Sub SendUserBovedaTxtFromDatabase(ByVal sendIndex As Integer, _
     If Not PersonajeExiste(UserName) Then
         Call WriteConsoleMsg(sendIndex, "Pj Inexistente", FontTypeNames.FONTTYPE_INFO)
     Else
-        Call Database_Connect
+        #If DBConexionUnica = 0 Then
+            Call Database_Connect
+        #End If
 
         query = "SELECT number, item_id, amount FROM bank_item WHERE user_id = (SELECT id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "')"
 
@@ -2036,7 +2271,10 @@ Public Sub SendUserBovedaTxtFromDatabase(ByVal sendIndex As Integer, _
         End If
 
         Set Database_RecordSet = Nothing
-        Call Database_Close
+        
+        #If DBConexionUnica = 0 Then
+            Call Database_Close
+        #End If
 
     End If
 
@@ -2062,7 +2300,9 @@ Public Sub SendCharacterInfoDatabase(ByVal UserIndex As Integer, ByVal UserName 
 
     Dim query       As String
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "SELECT race_id, class_id, genre_id, level, gold, bank_gold, rep_average, guild_requests_history, guild_index, guild_member_history, pertenece_real, pertenece_caos, ciudadanos_matados, criminales_matados FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
@@ -2094,6 +2334,10 @@ Public Sub SendCharacterInfoDatabase(ByVal UserIndex As Integer, ByVal UserName 
 
     Call Protocol.WriteCharacterInfo(UserIndex, UserName, Database_RecordSet!race_id, Database_RecordSet!class_id, Database_RecordSet!genre_id, Database_RecordSet!Level, Database_RecordSet!Gold, Database_RecordSet!bank_gold, Database_RecordSet!rep_average, SanitizeNullValue(Database_RecordSet!guild_requests_history, vbNullString), gName, Miembro, Database_RecordSet!pertenece_real, Database_RecordSet!pertenece_caos, Database_RecordSet!ciudadanos_matados, Database_RecordSet!criminales_matados)
 
+#If DBConexionUnica = 0 Then
+    Call Database_Close
+#End If
+
     Exit Sub
 ErrorHandler:
     Call LogDatabaseError("Error in SendCharacterInfoDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
@@ -2110,7 +2354,9 @@ Public Function GetUserGuildMemberDatabase(ByVal UserName As String) As String
 
     Dim query As String
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "SELECT guild_member_history FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
@@ -2124,7 +2370,10 @@ Public Function GetUserGuildMemberDatabase(ByVal UserName As String) As String
 
     GetUserGuildMemberDatabase = SanitizeNullValue(Database_RecordSet!guild_member_history, vbNullString)
     Set Database_RecordSet = Nothing
+    
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Function
 
@@ -2143,7 +2392,9 @@ Public Function GetUserGuildAspirantDatabase(ByVal UserName As String) As Intege
 
     Dim query As String
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "SELECT guild_aspirant_index FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
@@ -2157,7 +2408,10 @@ Public Function GetUserGuildAspirantDatabase(ByVal UserName As String) As Intege
 
     GetUserGuildAspirantDatabase = SanitizeNullValue(Database_RecordSet!guild_aspirant_index, 0)
     Set Database_RecordSet = Nothing
+    
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Function
 
@@ -2176,7 +2430,9 @@ Public Function GetUserGuildRejectionReasonDatabase(ByVal UserName As String) As
 
     Dim query As String
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "SELECT guild_rejected_because FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
@@ -2190,7 +2446,10 @@ Public Function GetUserGuildRejectionReasonDatabase(ByVal UserName As String) As
 
     GetUserGuildRejectionReasonDatabase = SanitizeNullValue(Database_RecordSet!guild_rejected_because, vbNullString)
     Set Database_RecordSet = Nothing
+    
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Function
 
@@ -2209,7 +2468,9 @@ Public Function GetUserGuildPedidosDatabase(ByVal UserName As String) As String
 
     Dim query As String
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "SELECT guild_requests_history FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
@@ -2223,7 +2484,10 @@ Public Function GetUserGuildPedidosDatabase(ByVal UserName As String) As String
 
     GetUserGuildPedidosDatabase = SanitizeNullValue(Database_RecordSet!guild_requests_history, vbNullString)
     Set Database_RecordSet = Nothing
+    
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Function
 
@@ -2243,15 +2507,19 @@ Public Sub SaveUserGuildRejectionReasonDatabase(ByVal UserName As String, _
 
     Dim query As String
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "UPDATE usuario SET "
     query = query & "guild_rejected_because = '" & Reason & "' "
     query = query & "WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
     Database_Connection.Execute (query)
-
+    
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Sub
 ErrorHandler:
@@ -2270,15 +2538,19 @@ Public Sub SaveUserGuildIndexDatabase(ByVal UserName As String, _
 
     Dim query As String
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "UPDATE usuario SET "
     query = query & "guild_index = " & GuildIndex & " "
     query = query & "WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
     Database_Connection.Execute (query)
-
+    
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Sub
 ErrorHandler:
@@ -2297,7 +2569,9 @@ Public Sub SaveUserGuildAspirantDatabase(ByVal UserName As String, _
 
     Dim query As String
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "UPDATE usuario SET "
     query = query & "guild_aspirant_index = " & AspirantIndex & " "
@@ -2305,7 +2579,9 @@ Public Sub SaveUserGuildAspirantDatabase(ByVal UserName As String, _
 
     Database_Connection.Execute (query)
 
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Sub
 ErrorHandler:
@@ -2323,7 +2599,9 @@ Public Sub SaveUserGuildMemberDatabase(ByVal UserName As String, ByVal guilds As
 
     Dim query As String
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "UPDATE usuario SET "
     query = query & "guild_member_history = '" & guilds & "' "
@@ -2331,7 +2609,9 @@ Public Sub SaveUserGuildMemberDatabase(ByVal UserName As String, ByVal guilds As
 
     Database_Connection.Execute (query)
 
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Sub
 ErrorHandler:
@@ -2349,7 +2629,9 @@ Public Sub SaveUserGuildPedidosDatabase(ByVal UserName As String, ByVal Pedidos 
 
     Dim query As String
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "UPDATE usuario SET "
     query = query & "guild_requests_history = '" & Pedidos & "' "
@@ -2357,7 +2639,9 @@ Public Sub SaveUserGuildPedidosDatabase(ByVal UserName As String, ByVal Pedidos 
 
     Database_Connection.Execute (query)
 
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Sub
 ErrorHandler:
@@ -2374,8 +2658,10 @@ Public Sub SaveAccountLastLoginDatabase(ByVal UserName As String, ByVal UserIP A
     On Error GoTo ErrorHandler
 
     Dim query As String
-
+    
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "UPDATE account SET "
     query = query & "date_last_login = NOW(), "
@@ -2384,7 +2670,9 @@ Public Sub SaveAccountLastLoginDatabase(ByVal UserName As String, ByVal UserIP A
 
     Database_Connection.Execute (query)
 
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Sub
 ErrorHandler:
@@ -2402,13 +2690,17 @@ Public Sub SaveAccountEditGemasDatabase(ByVal UserName As String, ByVal Gemas As
 
     Dim query As String
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "UPDATE account SET gemas = '" & Gemas & "' WHERE id = (SELECT account_id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "');"
 
     Database_Connection.Execute (query)
 
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Sub
 ErrorHandler:
@@ -2425,14 +2717,18 @@ Public Sub SaveAccountSumaGemasDatabase(ByVal UserName As String, ByVal Gemas As
     On Error GoTo ErrorHandler
 
     Dim query As String
-
+    
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "UPDATE account SET gemas = gemas + '" & Gemas & "' WHERE id = (SELECT account_id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "');"
 
     Database_Connection.Execute (query)
 
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Sub
 ErrorHandler:
@@ -2450,13 +2746,17 @@ Public Sub SaveAccountRestaGemasDatabase(ByVal UserName As String, ByVal Gemas A
 
     Dim query As String
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "UPDATE account SET gemas = gemas - '" & Gemas & "' WHERE id = (SELECT account_id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "');"
 
     Database_Connection.Execute (query)
 
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Sub
 ErrorHandler:
@@ -2474,7 +2774,9 @@ Public Function GetGemasDatabase(ByVal UserName As String) As Long
 
     Dim query As String
 
+#If DBConexionUnica = 0 Then
     Call Database_Connect
+#End If
 
     query = "SELECT gemas FROM account WHERE id = (SELECT account_id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "');"
     Debug.Print query
@@ -2488,7 +2790,10 @@ Public Function GetGemasDatabase(ByVal UserName As String) As Long
 
     GetGemasDatabase = CLng(Database_RecordSet!Gemas)
     Set Database_RecordSet = Nothing
+    
+#If DBConexionUnica = 0 Then
     Call Database_Close
+#End If
 
     Exit Function
 

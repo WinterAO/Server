@@ -287,7 +287,7 @@ Public Sub MuereNpc(ByVal NpcIndex As Integer, ByVal UserIndex As Integer)
     ' ++ Si el npc lo mata un elemental Userindex 0 y japish
     Dim i As Long, j As Long
 
-    For i = 1 To MAXUSERQUESTS
+    For i = 1 To MAXQUESTS
 
         With UserList(UserIndex).QuestStats.Quests(i)
 
