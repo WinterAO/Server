@@ -49,6 +49,7 @@ Public Sub Database_Connect()
     
 ErrorHandler:
     Call LogDatabaseError("Database Error: " & Err.Number & " - " & Err.description)
+    Debug.Print "Database Error: " & Err.Number & " - " & Err.description
 
 End Sub
 

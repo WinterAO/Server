@@ -63,6 +63,22 @@ NPCS PRETORIANOS
 2) A los NPCs Hostiles se les asigna 50 slots por Nivel.
 
 ##############################################
+###########DROP & INVENTARIO NPC##############
+##############################################
+
+Los NPC NO hostiles se entienden que son vendedores, por lo que los objetos
+que tengan en su inventarion se entienden que son para comerciar.
+Se indicara el indice de objeto - cantidad que dispondra.
+
+Los objetos del inventario de los NPC HOSTILES son para drop al morir, estos
+podran tener probabilidad de ser dropeados, siendo 100 el 100%
+Se indicara el indice de objeto - cantidad a dropear - probabilidad de drop
+
+¡SIEMPRE HAY QUE ESPECIFICAR LA PROBABILIDAD!
+
+En todos los casos hay que especificar la cantidad de objetos en el inventario con NROITEMS=
+
+##############################################
 ##############################################
 ##############################################
 
@@ -603,7 +619,7 @@ Snd2=119
 Snd3=14
 BackUp=0
 NROITEMS=1
-Drop1=26-1 'Pollo
+Obj1=26-1-100 'Pollo
 
 [NPC502]
 Name=Cuervo Salvaje
@@ -803,7 +819,7 @@ PoderEvasion=0
 SND2=103
 BackUp=0
 NROITEMS=1
-Drop1=666-1 'Piel de gato
+Obj1=666-1-100 'Piel de gato
 
 [NPC509]
 Name=Aguila
@@ -1059,8 +1075,8 @@ Snd2=119
 Snd3=14
 BackUp=0
 NROITEMS=2
-Drop1=26-1 'Pollo
-Drop2=1249-1 'Veneno de serpiente
+Obj1=26-1-100 'Pollo
+Obj2=1249-1-50 'Veneno de serpiente
 
 [NPC518]
 Name=Vibora
@@ -1091,7 +1107,7 @@ Snd2=297
 Snd3=298
 BackUp=0
 NROITEMS=1
-Drop1=1249-1 'Veneno de serpiente
+Obj1=1249-1-50 'Veneno de serpiente
 
 ##################
 ####LEVEL 10######
@@ -1286,9 +1302,8 @@ DEF=0
 PoderAtaque=100
 PoderEvasion=45
 BackUp=0
-NROITEMS=3
-Drop1=404-1 'Escudo de Tortuga
-Drop2=38-20 'Pociones Rojas
+NROITEMS=1
+Obj1=404-1-30 'Escudo de Tortuga
 
 [NPC558]
 Name=Tortuga Gigante
@@ -1315,9 +1330,8 @@ DEF=0
 PoderAtaque=100
 PoderEvasion=45
 BackUp=0
-NROITEMS=2
-Drop1=404-1 'Escudo de Tortuga
-Drop2=38-20 'Pociones Rojas
+NROITEMS=1
+Obj1=404-1-30 'Escudo de Tortuga
 
 [NPC559]
 Name=Cria de Lobo
@@ -1348,7 +1362,7 @@ Snd2=9
 Snd3=107
 BackUp=0
 NROITEMS=1
-Drop1=27-3 'Chuleta
+Obj1=27-3-30 'Chuleta
 
 [NPC560]
 Name=Gato Negro
@@ -1574,9 +1588,8 @@ ELV=15
 PoderAtaque=64
 PoderEvasion=60
 BackUp=0
-NROITEMS=5
-Drop1=415-1 'Piel Oso Pardo
-Drop2=38-100 'Pociones Rojas
+NROITEMS=1
+Obj1=415-1-100 'Piel Oso Pardo
 
 [NPC607]
 Name=Cocodrilo Joven
@@ -1630,11 +1643,11 @@ PoderEvasion=10
 BackUp=0
 Explota=1
 NROITEMS=5
-Drop1=12-50 'Oro
-Drop2=12-80 'Oro
-Drop3=12-150 'Oro
-Drop4=37-50 'Pocion Azul
-Drop5=12-5000 'Oro
+Obj1=12-50-50 'Oro
+Obj2=12-80-50 'Oro
+Obj3=12-150-50 'Oro
+Obj4=37-50-50 'Pocion Azul
+Obj5=12-5000-80 'Oro
 
 [NPC609] 
 Name=Orco
@@ -1662,7 +1675,7 @@ PoderAtaque=84
 PoderEvasion=70
 BackUp=0
 NROITEMS=1
-Drop1=1250-1 'Fragmento de arma
+Obj1=1250-1-30 'Fragmento de arma
 
 ##################
 ####LEVEL 20######
@@ -1696,7 +1709,7 @@ Snd1=35
 Snd2=9
 BackUp=0
 NROITEMS=1
-Drop1=27-3 'Chuleta
+Obj1=27-3-30 'Chuleta
 
 [NPC651]
 Name=Rata Gigante
@@ -1726,7 +1739,7 @@ Snd1=35
 Snd2=9
 BackUp=0
 NROITEMS=1
-Drop1=27-3 'Chuleta
+Obj1=27-3-30 'Chuleta
 
 [NPC652]
 Name=Lobo
@@ -1756,8 +1769,8 @@ Snd1=35
 Snd2=9
 BackUp=0
 NROITEMS=2
-Drop1=414-1 'Piel de Lobo
-Drop2=27-3 'Chuleta
+Obj1=414-1-30 'Piel de Lobo
+Obj2=27-3-30 'Chuleta
 
 [NPC653]
 Name=Zorro
@@ -1787,8 +1800,8 @@ Snd1=35
 Snd2=9
 BackUp=0
 NROITEMS=2
-Drop1=414-1 'Piel de Lobo
-Drop2=27-3 'Chuleta
+Obj1=414-1-30 'Piel de Lobo
+Obj2=27-3-30 'Chuleta
 
 [NPC654]
 Name=Cria de Tigre
@@ -1815,8 +1828,8 @@ PoderAtaque=700
 PoderEvasion=45
 BackUp=0
 NROITEMS=2
-Drop1=414-20 'Piel de Tigre (le pongo de lobo mientras, cambiar!!)
-Drop2=27-23 'Chuleta
+Obj1=414-20-30 'Piel de Tigre (le pongo de lobo mientras, cambiar!!)
+Obj2=27-23-30 'Chuleta
 
 [NPC655]
 Name=Tigre
@@ -1843,8 +1856,8 @@ PoderAtaque=700
 PoderEvasion=45
 BackUp=0
 NROITEMS=2
-Drop1=414-20 'Piel de Tigre (le pongo de lobo mientras, cambiar!!)
-Drop2=27-23 'Chuleta
+Obj1=414-20-30 'Piel de Tigre (le pongo de lobo mientras, cambiar!!)
+Obj2=27-23-30 'Chuleta
 
 [NPC656]
 Name=Oso
@@ -1871,9 +1884,8 @@ ELV=20
 PoderAtaque=84
 PoderEvasion=70
 BackUp=0
-NROITEMS=2
-Drop1=415-1 'Piel Oso Pardo
-Drop2=38-100 'Pociones Rojas
+NROITEMS=1
+Obj1=415-1-30 'Piel Oso Pardo
 
 ##################
 ####LEVEL 25######
@@ -1904,9 +1916,8 @@ ELV=25
 PoderAtaque=84
 PoderEvasion=70
 BackUp=0
-NROITEMS=2
-Drop1=415-1 'Piel Oso Pardo
-Drop2=38-100 'Pociones Rojas
+NROITEMS=1
+Obj1=415-1-30 'Piel Oso Pardo
 
 [NPC701]
 Name=Aracnido Gigante
@@ -1934,9 +1945,7 @@ PoderAtaque=84
 PoderEvasion=70
 Veneno=1
 BackUp=0
-NROITEMS=2
-Drop1=12-175 'Oro
-Drop2=38-30 ' Pociones Rojas
+NROITEMS=0
 
 [NPC702]
 Name=Basilisco
@@ -1996,9 +2005,7 @@ Retardo=30
 ActivoPotencia=1
 Snd3=171
 BackUp=0
-NROITEMS=2
-Drop1=38-300 'Pocion Roja
-Drop2=37-500 'Pocion Azul
+NROITEMS=0
 
 [NPC751] 
 Name=Minotauro
@@ -2163,12 +2170,12 @@ Sp3=39
 Sp4=5
 Sp5=36
 NROITEMS=6
-Obj1=12-5000 ' Oro
-Obj2=519-1   ' Tunica legendaria
-Obj3=37-300  ' Pocion Azul
-Obj4=38-300  ' Pocion Roja
-Obj5=361-1   ' Tormenta de Fuego
-Obj6=697-1   ' Anillo Magico
+Obj1=12-5000-100 ' Oro
+Obj2=519-1-100   ' Tunica legendaria
+Obj3=37-300-100  ' Pocion Azul
+Obj4=38-300-100  ' Pocion Roja
+Obj5=361-1-100   ' Tormenta de Fuego
+Obj6=697-1-100   ' Anillo Magico
 BackUp=0
 
 ############################################
@@ -2202,12 +2209,12 @@ Sp3=39
 Sp4=5
 Sp5=36
 NROITEMS=6
-Obj1=12-5000 ' Oro
-Obj2=525-1   ' Tunica Combinada
-Obj3=37-300  ' Pocion Azul
-Obj4=38-300  ' Pocion Roja
-Obj5=361-1   ' Tormenta de Fuego
-Obj6=697-1   ' Anillo Magico
+Obj1=12-5000-100 ' Oro
+Obj2=525-1-100   ' Tunica Combinada
+Obj3=37-300-100  ' Pocion Azul
+Obj4=38-300-100  ' Pocion Roja
+Obj5=361-1-100   ' Tormenta de Fuego
+Obj6=697-1-100   ' Anillo Magico
 BackUp=0
 
 ############################################
@@ -2241,12 +2248,12 @@ Sp3=39
 Sp4=5
 Sp5=36
 NROITEMS=6
-Obj1=12-5000 ' Oro
-Obj2=519-1   ' Tunica legendaria
-Obj3=37-300  ' Pocion Azul
-Obj4=38-300  ' Pocion Roja
-Obj5=132-1   ' Casco de Hierro
-Obj6=1049-1  ' Laud Elfico
+Obj1=12-5000-100 ' Oro
+Obj2=519-1-100   ' Tunica legendaria
+Obj3=37-300-100  ' Pocion Azul
+Obj4=38-300-100  ' Pocion Roja
+Obj5=132-1-100   ' Casco de Hierro
+Obj6=1049-1-100  ' Laud Elfico
 BackUp=0
 
 ############################################
@@ -2280,12 +2287,12 @@ Sp3=39
 Sp4=5
 Sp5=36
 NROITEMS=6
-Obj1=12-5000 ' Oro
-Obj2=525-1   ' Tunica Combinada
-Obj3=37-300  ' Pocion Azul
-Obj4=38-300  ' Pocion Roja
-Obj5=132-1   ' Casco de Hierro
-Obj6=1049-1  ' Laud Elfico
+Obj1=12-5000-100 ' Oro
+Obj2=525-1-100   ' Tunica Combinada
+Obj3=37-300-100  ' Pocion Azul
+Obj4=38-300-100  ' Pocion Roja
+Obj5=132-1-100   ' Casco de Hierro
+Obj6=1049-1-100  ' Laud Elfico
 BackUp=0
 
 ############################################
@@ -2316,11 +2323,11 @@ LanzaSpells=2
 Sp1=25
 Sp2=38
 NROITEMS=5
-Obj1=12-10000 ' Oro
-Obj2=238-1    ' Tunica Azul
-Obj3=37-400   ' Pocion Azul
-Obj4=660-1    ' Baculo Engarzado
-Obj5=662-1    ' Sombrero de Mago
+Obj1=12-10000-100 ' Oro
+Obj2=238-1-100    ' Tunica Azul
+Obj3=37-400-100   ' Pocion Azul
+Obj4=660-1-100    ' Baculo Engarzado
+Obj5=662-1-100    ' Sombrero de Mago
 BackUp=0
 
 ############################################
@@ -2351,11 +2358,11 @@ LanzaSpells=2
 Sp1=25
 Sp2=38
 NROITEMS=5
-Obj1=12-10000 ' Oro
-Obj2=670-1    ' Tunica de mago 
-Obj3=37-400   ' Pocion Azul
-Obj4=660-1    ' Baculo Engarzado
-Obj5=662-1    ' Sombrero de Mago
+Obj1=12-10000-100 ' Oro
+Obj2=670-1-100    ' Tunica de mago 
+Obj3=37-400-100   ' Pocion Azul
+Obj4=660-1-100    ' Baculo Engarzado
+Obj5=662-1-100    ' Sombrero de Mago
 BackUp=0
 
 ############################################
@@ -2386,11 +2393,11 @@ LanzaSpells=2
 Sp1=25
 Sp2=38
 NROITEMS=5
-Obj1=12-10000 ' Oro
-Obj2=986-1    ' Tunica de Druida
-Obj3=37-400   ' Pocion Azul
-Obj4=1050-1   ' Flauta Elfica
-Obj5=1004-1   ' Casco de Tigre
+Obj1=12-10000-100 ' Oro
+Obj2=986-1-100    ' Tunica de Druida
+Obj3=37-400-100   ' Pocion Azul
+Obj4=1050-1-100   ' Flauta Elfica
+Obj5=1004-1-100   ' Casco de Tigre
 BackUp=0
 
 ############################################
@@ -2421,11 +2428,11 @@ LanzaSpells=2
 Sp1=25
 Sp2=38
 NROITEMS=5
-Obj1=12-10000 ' Oro
-Obj2=524-1    ' Tunica roja especial
-Obj3=37-400   ' Pocion Azul
-Obj4=1050-1   ' Flauta Elfica
-Obj5=1004-1   ' Casco de Tigre
+Obj1=12-10000-100 ' Oro
+Obj2=524-1-100    ' Tunica roja especial
+Obj3=37-400-100   ' Pocion Azul
+Obj4=1050-1-100   ' Flauta Elfica
+Obj5=1004-1-100   ' Casco de Tigre
 BackUp=0
 
 ############################################
@@ -2455,14 +2462,14 @@ PoderEvasion=220
 LanzaSpells=1
 Sp1=37
 NROITEMS=8
-Obj1=12-5000  ' Oro
-Obj2=665-1    ' Arco de Cazador
-Obj3=553-125  ' Flecha +3
-Obj4=360-1    ' Armadura de Cazador 
-Obj5=370-1    ' Capucha de Cazador 
-Obj6=128-1    ' Escudo de Hierro
-Obj7=36-20    ' Pocion Amarilla
-Obj8=39-20    ' Pocion Verde
+Obj1=12-5000-100  ' Oro
+Obj2=665-1-100    ' Arco de Cazador
+Obj3=553-125-100  ' Flecha +3
+Obj4=360-1-100    ' Armadura de Cazador 
+Obj5=370-1-100    ' Capucha de Cazador 
+Obj6=128-1-100    ' Escudo de Hierro
+Obj7=36-20-100    ' Pocion Amarilla
+Obj8=39-20-100    ' Pocion Verde
 BackUp=0
 
 ############################################
@@ -2492,14 +2499,14 @@ PoderEvasion=220
 LanzaSpells=1
 Sp1=37
 NROITEMS=8
-Obj1=12-5000  ' Oro
-Obj2=665-1    ' Arco de Cazador(E/G)
-Obj3=553-125  ' Flecha +3
-Obj4=648-1    ' Armadura de Cazador (E/G) 
-Obj5=370-1    ' Capucha de Cazador 
-Obj6=128-1    ' Escudo de Hierro
-Obj7=36-20    ' Pocion Amarilla
-Obj8=39-20    ' Pocion Verde
+Obj1=12-5000-100  ' Oro
+Obj2=665-1-100    ' Arco de Cazador(E/G)
+Obj3=553-125-100  ' Flecha +3
+Obj4=648-1-100    ' Armadura de Cazador (E/G) 
+Obj5=370-1-100    ' Capucha de Cazador 
+Obj6=128-1-100    ' Escudo de Hierro
+Obj7=36-20-100    ' Pocion Amarilla
+Obj8=39-20-100    ' Pocion Verde
 BackUp=0
 
 ############################################
@@ -2529,12 +2536,12 @@ PoderEvasion=220
 LanzaSpells=1
 Sp1=37
 NROITEMS=6
-Obj1=12-8000  ' Oro
-Obj2=1009-125 ' Cuchillas
-Obj3=519-1    ' Tunica Legendaria
-Obj4=1010-1   ' Sombrero Pirata 
-Obj5=36-20    ' Pocion Amarilla
-Obj6=39-20    ' Pocion Verde
+Obj1=12-8000-100  ' Oro
+Obj2=1009-125-100 ' Cuchillas
+Obj3=519-1-100    ' Tunica Legendaria
+Obj4=1010-1-100   ' Sombrero Pirata 
+Obj5=36-20-100    ' Pocion Amarilla
+Obj6=39-20-100    ' Pocion Verde
 BackUp=0
 
 ############################################
@@ -2564,12 +2571,12 @@ PoderEvasion=220
 LanzaSpells=1
 Sp1=37
 NROITEMS=6
-Obj1=12-8000  ' Oro
-Obj2=1009-125 ' Cuchillas
-Obj3=525-1    ' Tunica Combinada (E/G)
-Obj4=1010-1   ' Sombrero Pirata 
-Obj5=36-20    ' Pocion Amarilla
-Obj6=39-20    ' Pocion Verde
+Obj1=12-8000-100  ' Oro
+Obj2=1009-125-100 ' Cuchillas
+Obj3=525-1-100    ' Tunica Combinada (E/G)
+Obj4=1010-1-100   ' Sombrero Pirata 
+Obj5=36-20-100    ' Pocion Amarilla
+Obj6=39-20-100    ' Pocion Verde
 BackUp=0
 
 ############################################
@@ -2598,14 +2605,14 @@ PoderAtaque=600
 PoderEvasion=250
 LanzaSpells=0
 NROITEMS=8
-Obj1=12-5000 ' Oro
-Obj2=129-1   ' Hacha de Guerra Dos Filos
-Obj3=195-1   ' Armadura de Placas Completa
-Obj4=131-1   ' Casco de Hierro Completo
-Obj5=128-1   ' Escudo de Hierro
-Obj6=36-30   ' Pocion Amarilla
-Obj7=39-30   ' Pocion Verde
-Obj8=38-300  ' Pocion Roja
+Obj1=12-5000-100 ' Oro
+Obj2=129-1-100   ' Hacha de Guerra Dos Filos
+Obj3=195-1-100   ' Armadura de Placas Completa
+Obj4=131-1-100   ' Casco de Hierro Completo
+Obj5=128-1-100   ' Escudo de Hierro
+Obj6=36-30-100   ' Pocion Amarilla
+Obj7=39-30-100   ' Pocion Verde
+Obj8=38-300-100  ' Pocion Roja
 BackUp=0
 
 ############################################
@@ -2634,14 +2641,14 @@ PoderAtaque=600
 PoderEvasion=250
 LanzaSpells=0
 NROITEMS=8
-Obj1=12-5000 ' Oro
-Obj2=129-1   ' Hacha de Guerra Dos Filos
-Obj3=243-1   ' Armadura de Placas Completa (E/G)
-Obj4=131-1   ' Casco de Hierro Completo
-Obj5=128-1   ' Escudo de Hierro
-Obj6=36-30   ' Pocion Amarilla
-Obj7=39-30   ' Pocion Verde
-Obj8=38-300  ' Pocion Roja
+Obj1=12-5000-100 ' Oro
+Obj2=129-1-100   ' Hacha de Guerra Dos Filos
+Obj3=243-1-100   ' Armadura de Placas Completa (E/G)
+Obj4=131-1-100   ' Casco de Hierro Completo
+Obj5=128-1-100   ' Escudo de Hierro
+Obj6=36-30-100   ' Pocion Amarilla
+Obj7=39-30-100   ' Pocion Verde
+Obj8=38-300-100  ' Pocion Roja
 BackUp=0
 
 ############################################
@@ -2670,13 +2677,13 @@ PoderAtaque=600
 PoderEvasion=250
 LanzaSpells=0
 NROITEMS=7
-Obj1=12-5000 ' Oro
-Obj2=129-1   ' Hacha de Guerra Dos Filos
-Obj3=195-1   ' Armadura de Placas Completa
-Obj4=131-1   ' Casco de Hierro Completo
-Obj5=128-1   ' Escudo de Hierro
-Obj6=37-450  ' Pocion Azul
-Obj7=38-300  ' Pocion Roja
+Obj1=12-5000-100 ' Oro
+Obj2=129-1-100   ' Hacha de Guerra Dos Filos
+Obj3=195-1-100   ' Armadura de Placas Completa
+Obj4=131-1-100   ' Casco de Hierro Completo
+Obj5=128-1-100   ' Escudo de Hierro
+Obj6=37-450-100  ' Pocion Azul
+Obj7=38-300-100  ' Pocion Roja
 BackUp=0
 
 ############################################
@@ -2705,13 +2712,13 @@ PoderAtaque=600
 PoderEvasion=250
 LanzaSpells=0
 NROITEMS=7
-Obj1=12-5000 ' Oro
-Obj2=129-1   ' Hacha de Guerra Dos Filos
-Obj3=243-1   ' Armadura de Placas Completa (E/G)
-Obj4=131-1   ' Casco de Hierro Completo
-Obj5=128-1   ' Escudo de Hierro
-Obj6=37-450  ' Pocion Azul
-Obj7=38-300  ' Pocion Roja
+Obj1=12-5000-100 ' Oro
+Obj2=129-1-100   ' Hacha de Guerra Dos Filos
+Obj3=243-1-100   ' Armadura de Placas Completa (E/G)
+Obj4=131-1-100   ' Casco de Hierro Completo
+Obj5=128-1-100   ' Escudo de Hierro
+Obj6=37-450-100  ' Pocion Azul
+Obj7=38-300-100  ' Pocion Roja
 BackUp=0
 
 ############################################
@@ -2740,14 +2747,14 @@ PoderAtaque=600
 PoderEvasion=250
 LanzaSpells=0
 NROITEMS=8
-Obj1=12-5000 ' Oro
-Obj2=367-2   ' Daga +4
-Obj3=356-1   ' Armadura de las sombras
-Obj4=131-1   ' Casco de Hierro Completo
-Obj5=404-1   ' Escudo de Tortuga
-Obj6=697-1   ' Anillo magico
-Obj7=37-450  ' Pocion Azul
-Obj8=38-300  ' Pocion Roja
+Obj1=12-5000-100 ' Oro
+Obj2=367-2-100   ' Daga +4
+Obj3=356-1-100   ' Armadura de las sombras
+Obj4=131-1-100   ' Casco de Hierro Completo
+Obj5=404-1-100   ' Escudo de Tortuga
+Obj6=697-1-100   ' Anillo magico
+Obj7=37-450-100  ' Pocion Azul
+Obj8=38-300-100  ' Pocion Roja
 BackUp=0
 
 ############################################
@@ -2776,14 +2783,14 @@ PoderAtaque=600
 PoderEvasion=250
 LanzaSpells=0
 NROITEMS=8
-Obj1=12-5000 ' Oro
-Obj2=367-2   ' Daga +4
-Obj3=854-1   ' Armadura de las sombras (E/G)
-Obj4=131-1   ' Casco de Hierro Completo
-Obj5=404-1   ' Escudo de Tortuga
-Obj6=697-1   ' Anillo magico
-Obj7=37-450  ' Pocion Azul
-Obj8=38-300  ' Pocion Roja
+Obj1=12-5000-100 ' Oro
+Obj2=367-2-100   ' Daga +4
+Obj3=854-1-100   ' Armadura de las sombras (E/G)
+Obj4=131-1-100   ' Casco de Hierro Completo
+Obj5=404-1-100   ' Escudo de Tortuga
+Obj6=697-1-100   ' Anillo magico
+Obj7=37-450-100  ' Pocion Azul
+Obj8=38-300-100  ' Pocion Roja
 BackUp=0
 
 ############################################
@@ -2812,14 +2819,14 @@ PoderAtaque=600
 PoderEvasion=250
 LanzaSpells=0
 NROITEMS=8
-Obj1=12-5000 ' Oro
-Obj2=123-2   ' Espada Vikinga
-Obj3=195-1   ' Armadura de Placas Completa
-Obj4=131-1   ' Casco de Hierro Completo
-Obj5=128-1   ' Escudo de Hierro
-Obj6=873-1   ' Guantes de hurto
-Obj7=37-450  ' Pocion Azul
-Obj8=38-300  ' Pocion Roja
+Obj1=12-5000-100 ' Oro
+Obj2=123-2-100   ' Espada Vikinga
+Obj3=195-1-100   ' Armadura de Placas Completa
+Obj4=131-1-100   ' Casco de Hierro Completo
+Obj5=128-1-100   ' Escudo de Hierro
+Obj6=873-1-100   ' Guantes de hurto
+Obj7=37-450-100  ' Pocion Azul
+Obj8=38-300-100  ' Pocion Roja
 BackUp=0
 
 ############################################
@@ -2848,14 +2855,14 @@ PoderAtaque=600
 PoderEvasion=250
 LanzaSpells=0
 NROITEMS=8
-Obj1=12-5000 ' Oro
-Obj2=123-2   ' Espada Vikinga
-Obj3=243-1   ' Armadura de Placas Completa (E/G)
-Obj4=131-1   ' Casco de Hierro Completo
-Obj5=128-1   ' Escudo de Hierro
-Obj6=873-1   ' Guantes de hurto
-Obj7=37-450  ' Pocion Azul
-Obj8=38-300  ' Pocion Roja
+Obj1=12-5000-100 ' Oro
+Obj2=123-2-100   ' Espada Vikinga
+Obj3=243-1-100   ' Armadura de Placas Completa (E/G)
+Obj4=131-1-100   ' Casco de Hierro Completo
+Obj5=128-1-100   ' Escudo de Hierro
+Obj6=873-1-100   ' Guantes de hurto
+Obj7=37-450-100  ' Pocion Azul
+Obj8=38-300-100  ' Pocion Roja
 BackUp=0
 
 ############################################
@@ -2887,9 +2894,9 @@ LanzaSpells=2
 Sp1=47 ' Flecha
 Sp2=39 ' Paralisis
 NROITEMS=3
-Obj1=12-10000 ' Oro
-Obj2=873-1    ' Guantes de hurto
-Obj3=132-1    ' Casco de Hierro
+Obj1=12-10000-100 ' Oro
+Obj2=873-1-100    ' Guantes de hurto
+Obj3=132-1-100    ' Casco de Hierro
 BackUp=0
 
 ############################################
@@ -2921,7 +2928,7 @@ LanzaSpells=2
 Sp1=47 ' Flecha
 Sp2=39 ' Paralisis
 NROITEMS=3
-Obj1=12-10000 ' Oro
-Obj2=873-1    ' Guantes de hurto
-Obj3=132-1    ' Casco de Hierro
+Obj1=12-10000-100 ' Oro
+Obj2=873-1-100    ' Guantes de hurto
+Obj3=132-1-100    ' Casco de Hierro
 BackUp=0

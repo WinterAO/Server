@@ -913,6 +913,7 @@ Public Type UserObj
     ObjIndex As Integer
     Amount As Integer
     Equipped As Byte
+    RandomDrop As Integer
 
 End Type
 
@@ -1822,15 +1823,6 @@ End Type
 
 ' New type for holding the pathfinding info
 
-Public Type tDrops
-
-    ObjIndex As Integer
-    Amount As Long
-
-End Type
-
-Public Const MAX_NPC_DROPS As Byte = 5
-
 Public Type npc
 
     Name As String
@@ -1863,7 +1855,6 @@ Public Type npc
 
     GiveEXP As Long
     GiveGLD As Long
-    Drop(1 To MAX_NPC_DROPS) As tDrops
     
     QuestNumber As Integer
     
@@ -2518,3 +2509,17 @@ Public RetardoSpawn(1 To MAXNPCS) As tRetarded
 Public Declare Function timeGetTime Lib "winmm.dll" () As Long
 Public BanUsersChatGlobal As Collection
 Public GlobalChatActive As Boolean
+
+'DROP GLOBALES
+
+Public Type GlobalObj
+
+    ObjIndex As Integer
+    MinAmount As Integer
+    MaxAmount As Integer
+    Prob As Byte
+        
+End Type
+
+Public GlobalDROPObject() As GlobalObj
+Public NUMGLOBALDROPS As Integer

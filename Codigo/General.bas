@@ -326,6 +326,7 @@ Sub Main()
     ' Obj.dat
     frmCargando.Label1(2).Caption = "Cargando Obj.Dat"
     Call LoadOBJData
+    Call LoadGlobalDrop
     
     ' Hechizos.dat
     frmCargando.Label1(2).Caption = "Cargando Hechizos.Dat"
@@ -790,6 +791,7 @@ Sub Restart()
     
     Call ResetForums
     Call LoadOBJData
+    Call LoadGlobalDrop
     
     Call LoadMapData
     

@@ -271,7 +271,7 @@ Public Sub MuereNpc(ByVal NpcIndex As Integer, ByVal UserIndex As Integer)
    
     If MiNPC.MaestroUser = 0 Then
         'Tiramos el inventario
-        Call NPC_TIRAR_ITEMS(MiNPC, MiNPC.NPCtype = eNPCType.Pretoriano)
+        Call NPC_TIRAR_ITEMS(UserIndex, MiNPC, MiNPC.NPCtype = eNPCType.Pretoriano)
         'ReSpawn o no
         If MiNPC.flags.TiempoRetardoMin = 0 Then Call ReSpawnNpc(MiNPC)
 
@@ -1219,19 +1219,7 @@ Public Function OpenNPC(ByVal NpcNumber As Integer, _
             ln = Leer.GetValue("NPC" & NpcNumber, "Obj" & LoopC)
             .Invent.Object(LoopC).ObjIndex = val(ReadField(1, ln, 45))
             .Invent.Object(LoopC).Amount = val(ReadField(2, ln, 45))
-        Next LoopC
-        
-        For LoopC = 1 To MAX_NPC_DROPS
-            ln = Leer.GetValue("NPC" & NpcNumber, "Drop" & LoopC)
-            .Drop(LoopC).ObjIndex = val(ReadField(1, ln, 45))
-
-            If .Drop(LoopC).ObjIndex = iORO Then
-                .Drop(LoopC).Amount = val(ReadField(2, ln, 45)) * OroMultiplier
-            Else
-                .Drop(LoopC).Amount = val(ReadField(2, ln, 45))
-
-            End If
-
+            .Invent.Object(LoopC).RandomDrop = val(ReadField(3, ln, 45))
         Next LoopC
         
         .flags.LanzaSpells = val(Leer.GetValue("NPC" & NpcNumber, "LanzaSpells"))

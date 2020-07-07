@@ -1367,6 +1367,57 @@ Errhandler:
 
 End Sub
 
+Sub LoadGlobalDrop()
+'**********************************************
+'Autor: Lorwik
+'Fecha: 01/07/2020
+'Descripcion: Carga la lista de drops globales de NPCs
+'**********************************************
+
+    On Error GoTo Errhandler
+
+    If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando base de datos de drop globales."
+    
+    Dim i As Integer
+    Dim ln As String
+
+    Dim Leer   As clsIniManager
+
+    Set Leer = New clsIniManager
+    
+    Call Leer.Initialize(DatPath & "global_drop.dat")
+    
+    'obtiene el numero de obj
+    NUMGLOBALDROPS = val(Leer.GetValue("GLOBAL", "NumDrops"))
+    
+    frmCargando.cargar.min = 0
+    frmCargando.cargar.max = NumObjDatas
+    frmCargando.cargar.Value = 0
+    
+    ReDim Preserve GlobalDROPObject(1 To NUMGLOBALDROPS) As GlobalObj
+    
+    For i = 1 To NUMGLOBALDROPS
+    
+        GlobalDROPObject(i).ObjIndex = Leer.GetValue("DROP" & i, "ObjIndex")
+        
+        ln = Leer.GetValue("DROP" & i, "Amount")
+        
+        GlobalDROPObject(i).MinAmount = val(ReadField(1, ln, Asc("-")))
+        GlobalDROPObject(i).MaxAmount = val(ReadField(2, ln, Asc("-")))
+        GlobalDROPObject(i).Prob = Leer.GetValue("DROP" & i, "Prob")
+    
+    Next i
+    
+    Set Leer = Nothing
+    
+    If frmMain.Visible Then frmMain.txtStatus.Text = Date & " " & time & " - Se cargo base de datos de los drop globales. Operacion Realizada con exito."
+    
+    Exit Sub
+Errhandler:
+    MsgBox "error cargando drop globales " & Err.Number & ": " & Err.description
+
+End Sub
+
 Function GetVar(ByVal File As String, _
                 ByVal Main As String, _
                 ByVal Var As String, _
@@ -2041,7 +2092,7 @@ Sub BackUPnPc(ByVal NpcIndex As Integer, ByVal hFile As Integer)
         If .Invent.NroItems > 0 Then
 
             For LoopC = 1 To .Invent.NroItems
-                Print #hFile, "Obj" & LoopC & "=" & .Invent.Object(LoopC).ObjIndex & "-" & .Invent.Object(LoopC).Amount
+                Print #hFile, "Obj" & LoopC & "=" & .Invent.Object(LoopC).ObjIndex & "-" & .Invent.Object(LoopC).Amount & "-" & .Invent.Object(LoopC).RandomDrop
             Next LoopC
 
         End If
@@ -2111,6 +2162,7 @@ Sub CargarNpcBackUp(ByVal NpcIndex As Integer, ByVal NpcNumber As Integer)
                 ln = GetVar(npcfile, "NPC" & NpcNumber, "Obj" & LoopC)
                 .Invent.Object(LoopC).ObjIndex = val(ReadField(1, ln, 45))
                 .Invent.Object(LoopC).Amount = val(ReadField(2, ln, 45))
+                .Invent.Object(LoopC).RandomDrop = val(ReadField(3, ln, 45))
                
             Next LoopC
 
@@ -2119,15 +2171,10 @@ Sub CargarNpcBackUp(ByVal NpcIndex As Integer, ByVal NpcNumber As Integer)
             For LoopC = 1 To MAX_INVENTORY_SLOTS
                 .Invent.Object(LoopC).ObjIndex = 0
                 .Invent.Object(LoopC).Amount = 0
+                .Invent.Object(LoopC).RandomDrop = 0
             Next LoopC
 
         End If
-        
-        For LoopC = 1 To MAX_NPC_DROPS
-            ln = GetVar(npcfile, "NPC" & NpcNumber, "Drop" & LoopC)
-            .Drop(LoopC).ObjIndex = val(ReadField(1, ln, 45))
-            .Drop(LoopC).Amount = val(ReadField(2, ln, 45))
-        Next LoopC
         
         .flags.NPCActive = True
         .flags.Respawn = val(GetVar(npcfile, "NPC" & NpcNumber, "ReSpawn"))

@@ -1,0 +1,36 @@
+'WinterAO - DROPS GLOBALES
+
+'Sintaxis OBJs: ObjIndex=IndiceDeObjeto
+'								Cantidad=CantidadMin-CantidadMax
+'								Prob=Float
+'Sintaxis NPCs: NPCNumber=IndiceDeNPC 
+'								SpawnTime=TiempoMinSpawn-TiempoMaxSpawn 
+'								Amount=CantidadMinSpawn-CantidadMaxSpawn
+
+
+[GLOBAL]
+NumDrops=4
+
+'Pocion roja
+[DROP1]
+ObjIndex=38
+Prob=0.1
+Amount=1-20
+
+'Pocion azul
+[DROP2]
+ObjIndex=37
+Prob=0.1
+Amount=1-20
+
+'Pocion amarilla
+[DROP3]
+ObjIndex=36
+Prob=0.1
+Amount=1-5
+
+'Pocion verde
+[DROP4]
+ObjIndex=39
+Prob=0.1
+Amount=1-5
