@@ -1347,10 +1347,7 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
             Next i
 
         End If
-    
-        'Redimensionamos el array segun el num maximo de quest actual
-        ReDim .QuestStats.Quests(1 To MAXQUESTS) As tUserQuest
-    
+
         If .flags.Navegando = 1 Then
             Call WriteNavigateToggle(UserIndex)
 

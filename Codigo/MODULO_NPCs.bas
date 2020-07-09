@@ -291,13 +291,13 @@ Public Sub MuereNpc(ByVal NpcIndex As Integer, ByVal UserIndex As Integer)
 
         With UserList(UserIndex).QuestStats.Quests(i)
 
-            If .QuestIndex Then
-                If QuestList(.QuestIndex).RequiredNPCs Then
+            If UserList(UserIndex).QuestStats.Quests(i).QuestStatus = eStatusQuest.EnCurso Then
+                If QuestList(i).RequiredNPCs Then
 
-                    For j = 1 To QuestList(.QuestIndex).RequiredNPCs
+                    For j = 1 To QuestList(i).RequiredNPCs
 
-                        If QuestList(.QuestIndex).RequiredNPC(j).NpcIndex = MiNPC.Numero Then
-                            If QuestList(.QuestIndex).RequiredNPC(j).Amount > .NPCsKilled(j) Then
+                        If QuestList(i).RequiredNPC(j).NpcIndex = MiNPC.Numero Then
+                            If QuestList(i).RequiredNPC(j).Amount > .NPCsKilled(j) Then
                                 .NPCsKilled(j) = .NPCsKilled(j) + 1
 
                             End If

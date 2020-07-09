@@ -7,7 +7,7 @@ Desc=Las serpientes se han multiplicado envenenando inclusive a las gallinas, ac
 RequiredLevel=1
  
 RequiredNPCs=2
-RequiredNPC1=519-10
+RequiredNPC1=518-10
 RequiredNPC2=517-10
 
 RequiredOBJs=1

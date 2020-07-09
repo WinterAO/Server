@@ -17,7 +17,7 @@ End Enum
  
 'Constantes de las quests
 Public Const MAXUSERQUESTS As Integer = 5      'Maxima cantidad de quests aceptadas sin completar que puede tener un usuario al mismo tiempo.
-Public MAXQUESTS As Integer                    'Maxima cantidad de quests que puede tener un usuario.
+Public Const MAXQUESTS As Integer = 200        'Maxima cantidad de quests que puede tener un usuario
  
 Public Function TieneQuest(ByVal UserIndex As Integer, _
                            ByVal QuestNumber As Integer) As Byte
@@ -27,17 +27,11 @@ Public Function TieneQuest(ByVal UserIndex As Integer, _
     'Last modified: 27/01/2010 by Amraphen
     '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
     
-    Dim i As Integer
- 
-    For i = 1 To MAXQUESTS
+    If UserList(UserIndex).QuestStats.Quests(QuestNumber).QuestStatus = eStatusQuest.EnCurso Then
+        TieneQuest = QuestNumber
+        Exit Function
 
-        If UserList(UserIndex).QuestStats.Quests(i).QuestIndex = QuestNumber Then
-            TieneQuest = i
-            Exit Function
-
-        End If
-
-    Next i
+    End If
     
     TieneQuest = 0
 
@@ -99,19 +93,18 @@ Public Sub HandleQuestAccept(ByVal UserIndex As Integer)
     
     'Agregamos la quest.
     With UserList(UserIndex).QuestStats.Quests(Npclist(NpcIndex).QuestNumber)
-        .QuestIndex = Npclist(NpcIndex).QuestNumber
         .QuestStatus = eStatusQuest.EnCurso
         
-        If QuestList(.QuestIndex).RequiredNPCs Then
-            ReDim .NPCsKilled(1 To QuestList(.QuestIndex).RequiredNPCs)
+        If QuestList(Npclist(NpcIndex).QuestNumber).RequiredNPCs Then
+            ReDim .NPCsKilled(1 To QuestList(Npclist(NpcIndex).QuestNumber).RequiredNPCs)
             
-            For i = 1 To QuestList(.QuestIndex).RequiredNPCs
+            For i = 1 To QuestList(Npclist(NpcIndex).QuestNumber).RequiredNPCs
                 .NPCsKilled(i) = 0
             Next i
             
         End If
         
-        Call WriteConsoleMsg(UserIndex, "Has aceptado la mision " & Chr(34) & QuestList(.QuestIndex).Nombre & Chr(34) & ".", FontTypeNames.FONTTYPE_INFO)
+        Call WriteConsoleMsg(UserIndex, "Has aceptado la mision " & Chr(34) & QuestList(Npclist(NpcIndex).QuestNumber).Nombre & Chr(34) & ".", FontTypeNames.FONTTYPE_INFO)
         
     End With
 
@@ -253,22 +246,12 @@ Public Function UserDoneQuest(ByVal UserIndex As Integer, _
     'Fecha: 28/06/2020
     'Descripcion: Verifica si el usuario hizo la quest QuestIndex.
     '****************************************************
-    Dim i As Integer
-
     With UserList(UserIndex).QuestStats
-
-        If .NumQuestsDone Then
-
-            For i = 1 To MAXQUESTS
-
-                'Tiene la quest terminada?
-                If .Quests(i).QuestIndex = QuestIndex And .Quests(i).QuestStatus = eStatusQuest.Terminada Then
-                    UserDoneQuest = True
-                    Exit Function
-
-                End If
-
-            Next i
+    
+        'Tiene la quest terminada?
+        If .Quests(QuestIndex).QuestStatus = eStatusQuest.Terminada Then
+            UserDoneQuest = True
+            Exit Function
 
         End If
 
@@ -289,19 +272,15 @@ Public Sub CleanQuestSlot(ByVal UserIndex As Integer, ByVal QuestSlot As Integer
  
     With UserList(UserIndex).QuestStats.Quests(QuestSlot)
 
-        If .QuestIndex Then
-            If QuestList(.QuestIndex).RequiredNPCs Then
+        If QuestList(QuestSlot).RequiredNPCs Then
 
-                For i = 1 To QuestList(.QuestIndex).RequiredNPCs
-                    .NPCsKilled(i) = 0
-                    .QuestStatus = eStatusQuest.NoAceptada
-                Next i
-
-            End If
+            For i = 1 To QuestList(QuestSlot).RequiredNPCs
+                .NPCsKilled(i) = 0
+                .QuestStatus = eStatusQuest.NoAceptada
+            Next i
 
         End If
 
-        .QuestIndex = 0
 
     End With
 
@@ -446,10 +425,7 @@ Public Sub LoadQuests()
     'Redimensionamos el array
     NumQuests = Reader.GetValue("INIT", "NumQuests")
     ReDim QuestList(1 To NumQuests)
-    
-    'Numero maximo de quests
-    MAXQUESTS = NumQuests
-    
+
     'Cargamos los datos
     For i = 1 To NumQuests
 
@@ -547,7 +523,7 @@ Public Sub HandleQuestDetailsRequest(ByVal UserIndex As Integer)
     
     QuestSlot = UserList(UserIndex).incomingData.ReadByte
     
-    Call WriteQuestDetails(UserIndex, UserList(UserIndex).QuestStats.Quests(QuestSlot).QuestIndex, QuestSlot)
+    Call WriteQuestDetails(UserIndex, QuestSlot, QuestSlot)
 
 End Sub
  

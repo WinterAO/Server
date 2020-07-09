@@ -304,7 +304,7 @@ Private Enum ClientPacketID
     Acvc
     IrCvc
     DragAndDropHechizos
-    Quest                       '/QUEST
+    quest                       '/QUEST
     QuestAccept
     QuestListRequest
     QuestDetailsRequest
@@ -851,7 +851,7 @@ Public Function HandleIncomingData(ByVal UserIndex As Integer) As Boolean
         Case ClientPacketID.DragAndDropHechizos
             Call HandleDragAndDropHechizos(UserIndex)
   
-        Case ClientPacketID.Quest
+        Case ClientPacketID.quest
             Call Quests.HandleQuest(UserIndex)
             
         Case ClientPacketID.QuestAccept
@@ -22661,9 +22661,9 @@ Public Sub WriteQuestListSend(ByVal UserIndex As Integer)
     
         For i = 1 To MAXQUESTS
 
-            If .QuestStats.Quests(i).QuestIndex Then
+            If .QuestStats.Quests(i).QuestStatus = eStatusQuest.EnCurso Then
                 tmpByte = tmpByte + 1
-                tmpStr = tmpStr & QuestList(.QuestStats.Quests(i).QuestIndex).Nombre & "-"
+                tmpStr = tmpStr & QuestList(i).Nombre & "-"
 
             End If
 

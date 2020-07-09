@@ -508,7 +508,7 @@ Public Enum eNPCType
     Gobernador = 11
     WorldBoss = 12
     dummy = 13
-    Quest = 14
+    quest = 14
     Marinero = 15
     
 End Enum
@@ -1178,14 +1178,13 @@ End Type
 Public Type tUserQuest
 
     NPCsKilled() As Integer
-    QuestIndex As Integer
     QuestStatus As Byte
     
 End Type
  
 Public Type tQuestStats
 
-    Quests() As tUserQuest
+    Quests(1 To MAXQUESTS) As tUserQuest
     NumQuestsDone As Integer
 
 End Type
