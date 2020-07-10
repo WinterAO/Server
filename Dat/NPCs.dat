@@ -59,7 +59,7 @@ NPCS PRETORIANOS
 ###############OBSERVACIONES##################
 ##############################################
 
-1) Los NPCs pretorianos se numeran a partir del 900 (NO CAMBIAR)
+1) Los NPCs pretorianos se numeran a partir del 1200 (NO CAMBIAR)
 2) A los NPCs Hostiles se les asigna 50 slots por Nivel.
 
 ##############################################
@@ -86,7 +86,7 @@ En todos los casos hay que especificar la cantidad de objetos en el inventario c
 [INIT]
 'aca va el numero de NPC mas alto, NO la cantidad de NPCs.
 'esto sirve para que los GMS puedan ver la lista completa de npcs a invocar en una ventanita.
-NumNPCs=923
+NumNPCs=1223
 
 ##############################################################
 ################ NPCS VENDEDORES DE ISLA NEWBIE #####################
@@ -2063,11 +2063,121 @@ PoderEvasion=245
 snd2=78
 BackUp=0
 
+##################
+####LEVEL 35######
+##################
+
+'800 - 849
+
+##################
+####LEVEL 40######
+##################
+
+'850 - 849
+
+##################
+####LEVEL 45######
+##################
+
+'900 - 949
+
+##################
+####LEVEL 50######
+##################
+
+1000 - 1049
+
+##################
+####LEVEL 55######
+##################
+
+[NPC1050]
+Name=Titan de Fuego
+NpcType=0
+Head=0
+Heading=1
+Body=606
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=3250
+MinHP=99999
+MaxHP=99999
+MaxHIT=500
+MinHIT=500
+DEF=30
+ELV=55
+DEFm=10
+PoderAtaque=260
+PoderEvasion=245
+snd2=78
+BackUp=0
+
+[NPC1051]
+Name=Titan de Agua
+NpcType=0
+Head=0
+Heading=1
+Body=610
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=3250
+MinHP=99999
+MaxHP=99999
+MaxHIT=500
+MinHIT=500
+DEF=30
+ELV=55
+DEFm=10
+PoderAtaque=260
+PoderEvasion=245
+snd2=78
+BackUp=0
+
+[NPC1052]
+Name=Titan de Tierra
+NpcType=0
+Head=0
+Heading=1
+Body=609
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=3250
+MinHP=99999
+MaxHP=99999
+MaxHIT=500
+MinHIT=500
+DEF=30
+ELV=55
+DEFm=10
+PoderAtaque=260
+PoderEvasion=245
+snd2=78
+BackUp=0
+NoShadow=1
+
 ##############################################
 ##############NPC PRETORIANOS#################
 ##############################################
 
-[NPC900] ' Alto
+[NPC1200] ' Alto
 Name=Rey Pretoriano
 NpcType=10
 Head=14
@@ -2104,7 +2214,7 @@ BackUp=0
 
 ############################################
 
-[NPC901] ' Bajo (Asignar cabeza default)
+[NPC1201] ' Bajo (Asignar cabeza default)
 Name=Rey Pretoriano
 NpcType=10
 Head=14
@@ -2141,7 +2251,7 @@ BackUp=0
 
 ############################################
 
-[NPC902]
+[NPC1202]
 Name=Clerigo Pretoriano
 NpcType=10
 Head=74
@@ -2180,7 +2290,7 @@ BackUp=0
 
 ############################################
 
-[NPC903] ' Bajo (Asignar cabeza default)
+[NPC1203] ' Bajo (Asignar cabeza default)
 Name=Clerigo Pretoriano
 NpcType=10
 Head=74
@@ -2219,7 +2329,7 @@ BackUp=0
 
 ############################################
 
-[NPC904]
+[NPC1204]
 Name=Bardo Pretoriano
 NpcType=10
 Head=74
@@ -2258,7 +2368,7 @@ BackUp=0
 
 ############################################
 
-[NPC905] ' Bajo (Asignar cabeza default)
+[NPC1205] ' Bajo (Asignar cabeza default)
 Name=Bardo Pretoriano
 NpcType=10
 Head=74
@@ -2297,7 +2407,7 @@ BackUp=0
 
 ############################################
 
-[NPC906]
+[NPC1206]
 Name=Mago Pretoriano
 NpcType=10
 Head=104
@@ -2332,7 +2442,7 @@ BackUp=0
 
 ############################################
 
-[NPC907] ' Bajo (Asignar cabeza default)
+[NPC1207] ' Bajo (Asignar cabeza default)
 Name=Mago Pretoriano
 NpcType=10
 Head=104
@@ -2367,7 +2477,7 @@ BackUp=0
 
 ############################################
 
-[NPC908]
+[NPC1208]
 Name=Druida Pretoriano
 NpcType=10
 Head=104
@@ -2402,7 +2512,7 @@ BackUp=0
 
 ############################################
 
-[NPC909] ' Bajo (Asignar cabeza default)
+[NPC1209] ' Bajo (Asignar cabeza default)
 Name=Druida Pretoriano
 NpcType=10
 Head=104
@@ -2437,7 +2547,7 @@ BackUp=0
 
 ############################################
 
-[NPC910]
+[NPC1210]
 Name=Cazador Pretoriano
 NpcType=10
 Head=301
@@ -2474,7 +2584,7 @@ BackUp=0
 
 ############################################
  
-[NPC911] ' Bajo (Asignar cabeza default)
+[NPC1211] ' Bajo (Asignar cabeza default)
 Name=Cazador Pretoriano
 NpcType=10
 Head=301
@@ -2511,7 +2621,7 @@ BackUp=0
 
 ############################################
 
-[NPC912]
+[NPC1212]
 Name=Pirata Pretoriano
 NpcType=10
 Head=301
@@ -2546,7 +2656,7 @@ BackUp=0
 
 ############################################
 
-[NPC913] ' Bajo (Asignar cabeza default)
+[NPC1213] ' Bajo (Asignar cabeza default)
 Name=Pirata Pretoriano
 NpcType=10
 Head=301
@@ -2581,7 +2691,7 @@ BackUp=0
 
 ############################################
 
-[NPC914]
+[NPC1214]
 Name=Guerrero Pretoriano
 NpcType=10
 Head=7
@@ -2617,7 +2727,7 @@ BackUp=0
 
 ############################################
 
-[NPC915] ' Bajo (Asignar cabeza default)
+[NPC1215] ' Bajo (Asignar cabeza default)
 Name=Guerrero Pretoriano
 NpcType=10
 Head=7
@@ -2653,7 +2763,7 @@ BackUp=0
 
 ############################################
 
-[NPC916]
+[NPC1216]
 Name=Paladin Pretoriano
 NpcType=10
 Head=7
@@ -2688,7 +2798,7 @@ BackUp=0
 
 ############################################
 
-[NPC917] ' Bajo (Asignar cabeza default)
+[NPC1217] ' Bajo (Asignar cabeza default)
 Name=Paladin Pretoriano
 NpcType=10
 Head=7
@@ -2723,7 +2833,7 @@ BackUp=0
 
 ############################################
 
-[NPC918]
+[NPC1218]
 Name=Asesino Pretoriano
 NpcType=10
 Head=7
@@ -2759,7 +2869,7 @@ BackUp=0
 
 ############################################
 
-[NPC919] ' Bajo (Asignar cabeza default)
+[NPC1219] ' Bajo (Asignar cabeza default)
 Name=Asesino Pretoriano
 NpcType=10
 Head=7
@@ -2795,7 +2905,7 @@ BackUp=0
 
 ############################################
 
-[NPC920]
+[NPC1220]
 Name=Bandido Pretoriano
 NpcType=10
 Head=7
@@ -2831,7 +2941,7 @@ BackUp=0
 
 ############################################
 
-[NPC921] ' Bajo (Asignar cabeza default)
+[NPC1221] ' Bajo (Asignar cabeza default)
 Name=Bandido Pretoriano
 NpcType=10
 Head=7
@@ -2867,7 +2977,7 @@ BackUp=0
 
 ############################################
 
-[NPC922]
+[NPC1222]
 Name=Ladron Pretoriano
 NpcType=10
 Head=7
@@ -2901,7 +3011,7 @@ BackUp=0
 
 ############################################
 
-[NPC923] ' Bajo (Asignar cabeza default)
+[NPC1223] ' Bajo (Asignar cabeza default)
 Name=Ladron Pretoriano
 NpcType=10
 Head=7

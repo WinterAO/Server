@@ -452,8 +452,6 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
             query = query & "elu = '" & .Stats.EluSkills(LoopC) & "' "
             query = query & "WHERE user_id = '" & .ID & "' AND number = '" & LoopC & "'"
             
-            Debug.Print query
-            
             Call Database_Connection.Execute(query)
         Next LoopC
 
@@ -461,16 +459,8 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
         'Mascotas
         '*******************************************************************
         Dim petType As Integer
-
-        query = "DELETE FROM pet WHERE user_id = " & .ID & ";"
-        Call Database_Connection.Execute(query)
-
-        query = "INSERT INTO pet (user_id, number, pet_id) VALUES "
-
         For LoopC = 1 To MAXMASCOTAS
-            query = query & "("
-            query = query & .ID & ", "
-            query = query & LoopC & ", "
+            query = "UPDATE pet SET "
 
             'CHOTS | I got this logic from SaveUserToCharfile
             If .MascotasIndex(LoopC) > 0 Then
@@ -486,18 +476,11 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
 
             End If
 
-            query = query & petType & ")"
-
-            If LoopC < MAXMASCOTAS Then
-                query = query & ", "
-            Else
-                query = query & ";"
-
-            End If
-
+            query = query & "pet_id = '" & petType & "' "
+            query = query & "WHERE user_id = '" & .ID & "' AND number = '" & LoopC & "'"
+            Debug.Print query
+            Call Database_Connection.Execute(query)
         Next LoopC
-
-        Call Database_Connection.Execute(query)
 
     End With
 
@@ -851,10 +834,8 @@ Public Sub LoadQuestStats(ByVal UserIndex As Integer)
             Database_RecordSet.MoveFirst
             Count = 1
             
-            While Not Database_RecordSet.EOF
-    
-                If Not Count > MAXQUESTS Then
-                    
+            While Not Database_RecordSet.EOF And Count <> NumQuests
+
                     '¿La quest requiere matar NPC?
                     If QuestList(Count).RequiredNPCs Then
                         ReDim .Quests(Count).NPCsKilled(1 To QuestList(Count).RequiredNPCs)
@@ -870,9 +851,7 @@ Public Sub LoadQuestStats(ByVal UserIndex As Integer)
                                     .Quests(Count).NPCsKilled(j) = 0
                             End If
                         Next j
-            
-                    End If
-                             
+     
                     .Quests(Count).QuestStatus = CByte(Database_RecordSet!estado)
                              
                     'Si la quest actual se termino, lo sumamos al contador de terminados
@@ -888,6 +867,7 @@ Public Sub LoadQuestStats(ByVal UserIndex As Integer)
         End If
 
     End With
+    
     Set Database_RecordSet = Nothing
 
 #If DBConexionUnica = 0 Then

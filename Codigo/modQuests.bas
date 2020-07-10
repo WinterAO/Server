@@ -18,6 +18,7 @@ End Enum
 'Constantes de las quests
 Public Const MAXUSERQUESTS As Integer = 5      'Maxima cantidad de quests aceptadas sin completar que puede tener un usuario al mismo tiempo.
 Public Const MAXQUESTS As Integer = 200        'Maxima cantidad de quests que puede tener un usuario
+Public NumQuests As Integer                    'Num de quest dateadas actualmente
  
 Public Function TieneQuest(ByVal UserIndex As Integer, _
                            ByVal QuestNumber As Integer) As Byte
@@ -35,6 +36,25 @@ Public Function TieneQuest(ByVal UserIndex As Integer, _
     
     TieneQuest = 0
 
+End Function
+
+Public Function EstadoQuest(ByVal UserIndex As Integer, _
+                           ByVal QuestNumber As Integer) As Byte
+
+    '****************************************
+    'Autor: Lorwik
+    'Fecha: 09/07/2020
+    'Descripcion: Devuelve el estado de la quest
+    '****************************************
+    
+    'Si el numero de la quest es invalida, devolvemos como que no acepto ninguna quest
+    If QuestNumber <= 0 Or UserIndex = 0 Then
+        EstadoQuest = 0
+        Exit Function
+    End If
+    
+    EstadoQuest = UserList(UserIndex).QuestStats.Quests(QuestNumber).QuestStatus
+    
 End Function
 
 Private Function MaxQuestsAceptadas(ByVal UserIndex As Integer) As Boolean
@@ -271,7 +291,9 @@ Public Sub CleanQuestSlot(ByVal UserIndex As Integer, ByVal QuestSlot As Integer
     Dim i As Integer
  
     With UserList(UserIndex).QuestStats.Quests(QuestSlot)
-
+        
+        If QuestSlot = NumQuests Then Exit Sub
+        
         If QuestList(QuestSlot).RequiredNPCs Then
 
             For i = 1 To QuestList(QuestSlot).RequiredNPCs
@@ -280,8 +302,7 @@ Public Sub CleanQuestSlot(ByVal UserIndex As Integer, ByVal QuestSlot As Integer
             Next i
 
         End If
-
-
+        
     End With
 
 End Sub
@@ -407,8 +428,6 @@ Public Sub LoadQuests()
     On Error GoTo ErrorHandler
 
     Dim Reader    As clsIniManager
-
-    Dim NumQuests As Integer
 
     Dim tmpStr    As String
 

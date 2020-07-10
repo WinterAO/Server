@@ -102,7 +102,7 @@ Public Sub NPC_TIRAR_ITEMS(ByVal UserIndex As Integer, ByRef npc As npc, ByVal I
                 MiObj.ObjIndex = .Invent.Object(i).ObjIndex
                 Call TirarItemAlPiso(.Pos, MiObj)
 
-                If ObjData(ObjIndex).Log = 1 Then _
+                If ObjData(MiObj.ObjIndex).Log = 1 Then _
                     Call LogDesarrollo(npc.Name & " dropeo " & MiObj.Amount & " " & ObjData(ObjIndex).Name & "[" & ObjIndex & "]")
 
             End If

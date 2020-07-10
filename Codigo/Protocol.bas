@@ -10430,9 +10430,7 @@ Private Sub HandleEditChar(ByVal UserIndex As Integer)
                         If val(Arg1) <= MAX_EXP_EDIT Then
                         
                             If tUser <= 0 Then ' Offline
-                                Var = GetVar(UserCharPath, "STATS", "EXP")
-                                Call WriteVar(UserCharPath, "STATS", "EXP", Var + val(Arg1))
-                                Call WriteConsoleMsg(UserIndex, "Charfile Alterado: " & UserName, FontTypeNames.FONTTYPE_INFO)
+                                Call WriteConsoleMsg(UserIndex, "El usuario no esta online", FontTypeNames.FONTTYPE_INFO)
                             Else ' Online
                                 UserList(tUser).Stats.Exp = UserList(tUser).Stats.Exp + val(Arg1)
                                 Call CheckUserLevel(tUser)
@@ -18168,7 +18166,8 @@ Public Sub WriteCharacterCreate(ByVal UserIndex As Integer, _
                                 ByVal Privileges As Byte, _
                                 ByVal GrhAura As Long, _
                                 ByVal AuraColor As Long, _
-                                Optional ByVal NoShadow As Byte = False)
+                                Optional ByVal NoShadow As Byte = False, _
+                                Optional ByVal EstadoQuest As Byte = 255)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -18177,7 +18176,7 @@ Public Sub WriteCharacterCreate(ByVal UserIndex As Integer, _
     '***************************************************
     On Error GoTo Errhandler
 
-    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterCreate(body, Head, heading, CharIndex, X, Y, weapon, shield, FX, FXLoops, helmet, Name, NickColor, Privileges, GrhAura, AuraColor, NoShadow))
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterCreate(body, Head, heading, CharIndex, X, Y, weapon, shield, FX, FXLoops, helmet, Name, NickColor, Privileges, GrhAura, AuraColor, NoShadow, EstadoQuest))
     Exit Sub
 
 Errhandler:
@@ -21389,7 +21388,8 @@ Public Function PrepareMessageCharacterCreate(ByVal body As Integer, _
                                               ByVal Privileges As Byte, _
                                               ByVal GrhAura As Long, _
                                               ByVal AuraColor As Long, _
-                                              ByVal NoShadow As Byte) As String
+                                              ByVal NoShadow As Byte, _
+                                              ByVal EstadoQuest As Byte) As String
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -21416,6 +21416,7 @@ Public Function PrepareMessageCharacterCreate(ByVal body As Integer, _
         Call .WriteLong(GrhAura)
         Call .WriteLong(AuraColor)
         Call .WriteByte(NoShadow)
+        Call .WriteByte(EstadoQuest)
         
         PrepareMessageCharacterCreate = .ReadASCIIStringFixed(.Length)
 

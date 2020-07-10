@@ -755,6 +755,7 @@ Public Sub MakeNPCChar(ByVal toMap As Boolean, _
     
     Dim CharIndex As Integer
     Dim color As Byte
+    Dim EstadoQuest As Integer
     
     If Npclist(NpcIndex).Char.CharIndex = 0 Then
         CharIndex = NextOpenCharIndex
@@ -767,10 +768,17 @@ Public Sub MakeNPCChar(ByVal toMap As Boolean, _
     
     If Npclist(NpcIndex).NPCtype = WorldBoss Then color = 8
     
+    If Npclist(NpcIndex).QuestNumber > 0 Then
+        EstadoQuest = Quests.EstadoQuest(sndIndex, Npclist(NpcIndex).QuestNumber)
+    Else
+        EstadoQuest = 255 'El NPC No tiene quest
+    End If
+        
+    
     If Not toMap Then
-        'En caso de que sea hostil no mostramos el nombre, si es un npc no hostil o un WorldBoss mostramos nombre. (Recox)
+        'En caso de que sea hostil no mostramos el nombre, si es un npc no hostil o un WorldBoss mostramos nombre.
         If Not Npclist(NpcIndex).Hostile = 1 Or Npclist(NpcIndex).NPCtype = WorldBoss Then
-            Call WriteCharacterCreate(sndIndex, Npclist(NpcIndex).Char.body, Npclist(NpcIndex).Char.Head, Npclist(NpcIndex).Char.heading, Npclist(NpcIndex).Char.CharIndex, X, Y, 0, 0, 0, 0, 0, Npclist(NpcIndex).Name, color, 0, NingunAura, NingunAura, Npclist(NpcIndex).NoShadow)
+            Call WriteCharacterCreate(sndIndex, Npclist(NpcIndex).Char.body, Npclist(NpcIndex).Char.Head, Npclist(NpcIndex).Char.heading, Npclist(NpcIndex).Char.CharIndex, X, Y, 0, 0, 0, 0, 0, Npclist(NpcIndex).Name, color, 0, NingunAura, NingunAura, Npclist(NpcIndex).NoShadow, EstadoQuest)
         Else
             Call WriteCharacterCreate(sndIndex, Npclist(NpcIndex).Char.body, Npclist(NpcIndex).Char.Head, Npclist(NpcIndex).Char.heading, Npclist(NpcIndex).Char.CharIndex, X, Y, 0, 0, 0, 0, 0, vbNullString, 0, 0, NingunAura, NingunAura, Npclist(NpcIndex).NoShadow)
         End If
