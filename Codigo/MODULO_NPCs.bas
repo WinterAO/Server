@@ -750,12 +750,12 @@ Public Sub MakeNPCChar(ByVal toMap As Boolean, _
     '***************************************************
     'Author: Unknown
     'Last Modification: -
-    '
     '***************************************************
     
     Dim CharIndex As Integer
     Dim color As Byte
     Dim EstadoQuest As Integer
+    Dim NombreNPC As String
     
     If Npclist(NpcIndex).Char.CharIndex = 0 Then
         CharIndex = NextOpenCharIndex
@@ -773,15 +773,16 @@ Public Sub MakeNPCChar(ByVal toMap As Boolean, _
     Else
         EstadoQuest = 255 'El NPC No tiene quest
     End If
-        
+    
+    'Si el NPC no es hostil o es un WorldBoss, tendra nombre
+    If Npclist(NpcIndex).Hostile = 0 Or Npclist(NpcIndex).NPCtype = WorldBoss Then
+        NombreNPC = Npclist(NpcIndex).Name
+    Else
+        NombreNPC = vbNullString
+    End If
     
     If Not toMap Then
-        'En caso de que sea hostil no mostramos el nombre, si es un npc no hostil o un WorldBoss mostramos nombre.
-        If Not Npclist(NpcIndex).Hostile = 1 Or Npclist(NpcIndex).NPCtype = WorldBoss Then
-            Call WriteCharacterCreate(sndIndex, Npclist(NpcIndex).Char.body, Npclist(NpcIndex).Char.Head, Npclist(NpcIndex).Char.heading, Npclist(NpcIndex).Char.CharIndex, X, Y, 0, 0, 0, 0, 0, Npclist(NpcIndex).Name, color, 0, NingunAura, NingunAura, Npclist(NpcIndex).NoShadow, EstadoQuest)
-        Else
-            Call WriteCharacterCreate(sndIndex, Npclist(NpcIndex).Char.body, Npclist(NpcIndex).Char.Head, Npclist(NpcIndex).Char.heading, Npclist(NpcIndex).Char.CharIndex, X, Y, 0, 0, 0, 0, 0, vbNullString, 0, 0, NingunAura, NingunAura, Npclist(NpcIndex).NoShadow)
-        End If
+        Call WriteCharacterCreate(sndIndex, Npclist(NpcIndex).Char.body, Npclist(NpcIndex).Char.Head, Npclist(NpcIndex).Char.heading, Npclist(NpcIndex).Char.CharIndex, X, Y, 0, 0, 0, 0, 0, NombreNPC, color, 0, NingunAura, NingunAura, Npclist(NpcIndex).NoShadow, EstadoQuest)
 
     Else
         Call AgregarNpc(NpcIndex)
@@ -800,13 +801,15 @@ Public Sub ChangeNPCChar(ByVal NpcIndex As Integer, _
     '
     '***************************************************
 
+    Dim EstadoQuest As Integer
+    
     If NpcIndex > 0 Then
 
         With Npclist(NpcIndex).Char
             .body = body
             .Head = Head
             .heading = heading
-            
+      
             Call SendData(SendTarget.ToNPCArea, NpcIndex, PrepareMessageCharacterChange(body, Head, heading, .CharIndex, 0, 0, 0, 0, 0, NingunAura, NingunAura))
 
         End With

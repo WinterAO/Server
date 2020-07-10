@@ -478,7 +478,7 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
 
             query = query & "pet_id = '" & petType & "' "
             query = query & "WHERE user_id = '" & .ID & "' AND number = '" & LoopC & "'"
-            Debug.Print query
+
             Call Database_Connection.Execute(query)
         Next LoopC
 

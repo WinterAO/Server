@@ -533,7 +533,7 @@ Sub ia_CreateChar(ByVal ProximoBot As Byte)
             tmp_Color = eNickColor.ieCiudadano
         End If
         
-        PackageToSend = PrepareMessageCharacterCreate(.body, .Head, eHeading.SOUTH, .CharIndex, BotList(ProximoBot).Pos.X, BotList(ProximoBot).Pos.Y, .WeaponAnim, .ShieldAnim, 0, 0, .CascoAnim, BotList(ProximoBot).Name, tmp_Color, 0, 0, 0, 0)
+        PackageToSend = PrepareMessageCharacterCreate(.body, .Head, eHeading.SOUTH, .CharIndex, BotList(ProximoBot).Pos.X, BotList(ProximoBot).Pos.Y, .WeaponAnim, .ShieldAnim, 0, 0, .CascoAnim, BotList(ProximoBot).Name, tmp_Color, 0, 0, 0, 0, 255)
         
         'Actualizo el area.
         ia_SendToBotArea ProximoBot, PackageToSend
@@ -1147,7 +1147,7 @@ Sub ia_ActionViajante(ByVal BotIndex As Byte)
                    tmp_Color = eNickColor.ieCiudadano
                 End If
                 
-                ia_SendToBotArea BotIndex, PrepareMessageCharacterCreate(.Char.body, .Char.Head, .Char.heading, .Char.CharIndex, .Pos.X, .Pos.Y, .Char.WeaponAnim, .Char.ShieldAnim, 0, 0, .Char.CascoAnim, .Name, tmp_Color, 0, 0, 0, 0)
+                ia_SendToBotArea BotIndex, PrepareMessageCharacterCreate(.Char.body, .Char.Head, .Char.heading, .Char.CharIndex, .Pos.X, .Pos.Y, .Char.WeaponAnim, .Char.ShieldAnim, 0, 0, .Char.CascoAnim, .Name, tmp_Color, 0, 0, 0, 0, 255)
             End If
          End If
          

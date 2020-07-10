@@ -21456,6 +21456,7 @@ Public Function PrepareMessageCharacterChange(ByVal body As Integer, _
     'Last Modification: 05/17/06
     'Prepares the "CharacterChange" message and returns it
     '***************************************************
+    
     With auxiliarBuffer
         Call .WriteByte(ServerPacketID.CharacterChange)
         
