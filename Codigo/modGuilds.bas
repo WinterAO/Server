@@ -706,8 +706,8 @@ Public Function PuedeFundarUnClan(ByVal UserIndex As Integer, _
 
     End If
     
-    If UserList(UserIndex).Stats.ELV < 40 Or UserList(UserIndex).Stats.UserSkills(eSkill.Liderazgo) < 90 Or Not TieneObjetos(ITEMFUNDARCLAN, 1, UserIndex) Then
-        refError = "Para fundar un clan debes ser nivel 40, tener 90 skills en liderazgo y esta en posesión del " & ObjData(ITEMFUNDARCLAN).Name & "."
+    If UserList(UserIndex).Stats.ELV < 40 Or UserList(UserIndex).Stats.UserSkills(eSkill.Liderazgo) < 100 Or Not TieneObjetos(ITEMFUNDARCLAN, 1, UserIndex) Then
+        refError = "Para fundar un clan debes ser nivel 40, tener 100 skills en liderazgo y esta en posesión del " & ObjData(ITEMFUNDARCLAN).Name & "."
         Exit Function
 
     End If
