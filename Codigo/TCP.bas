@@ -337,7 +337,6 @@ End Function
 
 Sub ConnectNewUser(ByVal UserIndex As Integer, _
                    ByRef Name As String, _
-                   ByRef AccountHash As String, _
                    ByVal UserRaza As eRaza, _
                    ByVal UserSexo As eGenero, _
                    ByVal UserClase As eClass, _
@@ -357,28 +356,8 @@ Sub ConnectNewUser(ByVal UserIndex As Integer, _
     '03/12/2009: Budi - Optimizacion del codigo.
     '12/10/2018: CHOTS - Sistema de cuentas
     '*************************************************
-
-    Dim i As Byte
-    Dim Suma As Byte
-    
     With UserList(UserIndex)
-        
-        '¿Intentaron hackear los atributos?
-        For i = 1 To NUMATRIBUTOS
-            If .Stats.UserAtributos(i) > 18 Then
-                Call WriteErrorMsg(UserIndex, "Error en la asignacion de atributos, vuelva a asignarlos.")
-                Exit Sub
-            End If
-            
-            'Vamos sumando todos los atributos para luego comprobarlos
-            Suma = Suma + .Stats.UserAtributos(i)
-        Next i
-        
-        Debug.Print "asdasd: " & Suma
-        If Suma <> 70 Then
-            Call WriteErrorMsg(UserIndex, "Error en la asignacion de atributos, vuelva a asignarlos.")
-            Exit Sub
-        End If
+        Dim i As Byte
         
         If Not AsciiValidos(Name) Or LenB(Name) = 0 Then
             Call WriteErrorMsg(UserIndex, "Nombre invalido.")
@@ -400,13 +379,6 @@ Sub ConnectNewUser(ByVal UserIndex As Integer, _
         'Existe el personaje?
         If PersonajeExiste(Name) Then
             Call WriteErrorMsg(UserIndex, "Ya existe el personaje.")
-            Exit Sub
-
-        End If
-    
-        'Tiro los dados antes de llegar aca??
-        If .Stats.UserAtributos(eAtributos.Fuerza) = 0 Then
-            Call WriteErrorMsg(UserIndex, "Debe tirar los dados antes de poder crear un personaje.")
             Exit Sub
 
         End If
@@ -436,15 +408,16 @@ Sub ConnectNewUser(ByVal UserIndex As Integer, _
         .Raza = UserRaza
         .Genero = UserSexo
         .Hogar = eCiudad.cRamx
+        
+        'Nuevo sistema de atributos, todos parten de 18
+        For i = 1 To NUMATRIBUTOS
+            UserList(UserIndex).Stats.UserAtributos(i) = 18
+        Next i
 
         'Primero agregamos los items, ya que en caso de que el nivel
         'Inicial sea mayor al de un newbie, los items se borran automaticamente.
         '???????????????? INVENTARIO
-        If InventarioUsarConfiguracionPersonalizada Then
-            Call AddItemsCustomToNewUser(UserIndex)
-        Else
-            Call AddItemsToNewUser(UserIndex, UserClase, UserRaza)
-        End If
+        Call AddItemsToNewUser(UserIndex, UserClase, UserRaza)
 
         '???????????????? ATRIBUTOS
         Call SetAttributesToNewUser(UserIndex, UserClase, UserRaza)
@@ -458,6 +431,10 @@ Sub ConnectNewUser(ByVal UserIndex As Integer, _
         .Char.Head = Head
     
         .OrigChar = .Char
+        
+        'De primeras podra hablar por global
+        .flags.Global = 1
+        .Counters.LastGlobalMsg = INTERVALO_GLOBAL
 
         #If ConUpTime Then
             .LogOnTime = Now
@@ -472,7 +449,7 @@ Sub ConnectNewUser(ByVal UserIndex As Integer, _
     Call SaveUser(UserIndex)
   
     'Open User
-    Call ConnectUser(UserIndex, Name, AccountHash)
+    Call ConnectUser(UserIndex, Name)
 
     'Aqui solo vamos a hacer un request a los endpoints de la aplicacion en Node.js
     'el repositorio para hacer funcionar esto, es este: https://github.com/ao-libre/ao-api-server
@@ -583,7 +560,13 @@ Private Sub SetAttributesToNewUser(ByVal UserIndex As Integer, ByVal UserClase A
         .Stats.Gld = 0
     
         .Stats.Exp = 0
-        .Stats.ELU = 150
+        If Not EXP_X_LVL(1) > 0 Then
+            .Stats.ELU = EXP_X_LVL(1)
+        Else
+            .Stats.ELU = 200
+            Call LogError("Error en SetAttributesToNewUser: Falta la experiencia en la tabla de experiencia para el nivel 1")
+        End If
+        
         .Stats.ELV = 1
     End With
 
@@ -611,17 +594,6 @@ Private Sub AddItemsToNewUser(ByVal UserIndex As Integer, ByVal UserClase As eCl
             .Invent.Object(Slot).ObjIndex = 856
             .Invent.Object(Slot).Amount = 200
 
-        Else
-            'Pociones amarillas (Newbie)
-            Slot = Slot + 1
-            .Invent.Object(Slot).ObjIndex = 855
-            .Invent.Object(Slot).Amount = 100
-
-            'Pociones verdes (Newbie)
-            Slot = Slot + 1
-            .Invent.Object(Slot).ObjIndex = 858
-            .Invent.Object(Slot).Amount = 50
-
         End If
 
         ' Ropa (Newbie)
@@ -647,12 +619,24 @@ Private Sub AddItemsToNewUser(ByVal UserIndex As Integer, ByVal UserClase As eCl
         'Arma (Newbie)
         Slot = Slot + 1
         Select Case UserClase
-            Case eClass.Hunter
+            Case eClass.Hunter, eClass.Thief
                 ' Arco (Newbie)
                 .Invent.Object(Slot).ObjIndex = 859
-            Case eClass.Worker
-                ' Herramienta (Newbie)
-                .Invent.Object(Slot).ObjIndex = RandomNumber(561, 565)
+                .Invent.Object(Slot).Amount = 1
+                Slot = Slot + 1
+                .Invent.Object(Slot).ObjIndex = 460
+            Case eClass.Mage
+                ' Baston de Mago (Newbie)
+                .Invent.Object(Slot).ObjIndex = 862
+            Case eClass.Brujo
+                ' Baston de Brujo (Newbie)
+                .Invent.Object(Slot).ObjIndex = 4
+            Case eClass.Paladin
+                ' Martillo de Guerra (Newbie)
+                .Invent.Object(Slot).ObjIndex = 5
+            Case eClass.Warrior
+                ' Espada Larga (Newbie)
+                .Invent.Object(Slot).ObjIndex = 6
             Case Else
                 ' Daga (Newbie)
                 .Invent.Object(Slot).ObjIndex = 460
@@ -671,7 +655,7 @@ Private Sub AddItemsToNewUser(ByVal UserIndex As Integer, ByVal UserClase As eCl
         If UserClase = eClass.Hunter Then
             Slot = Slot + 1
             .Invent.Object(Slot).ObjIndex = 860
-            .Invent.Object(Slot).Amount = 150
+            .Invent.Object(Slot).Amount = 500
 
             ' Equipo flechas
             .Invent.Object(Slot).Equipped = 1
@@ -704,26 +688,6 @@ Private Sub AddItemsToNewUser(ByVal UserIndex As Integer, ByVal UserClase As eCl
         Next i
 
      End With
-End Sub
-
-Private Sub AddItemsCustomToNewUser(ByVal UserIndex As Integer)
-'*************************************************
-'Author: Lucas Recoaro (Recox)
-'Last modified: 19/03/2019
-'Agrega items customizados al usuario recien creado
-'*************************************************
-    Dim CantidadItemsIniciales As Integer
-    Dim Slot As Long
-
-    Call CargarObjetosIniciales
-
-    With UserList(UserIndex)
-        For Slot = 1 To MAX_OBJ_INICIAL
-            .Invent.Object(Slot).ObjIndex = ItemsIniciales(Slot).ObjIndex
-            .Invent.Object(Slot).Amount = ItemsIniciales(Slot).Amount
-            .Invent.Object(Slot).Equipped = ItemsIniciales(Slot).Equipped
-        Next Slot
-    End With
 End Sub
 
 Private Sub CargarObjetosIniciales()
@@ -768,7 +732,7 @@ Sub ConnectAccount(ByVal UserIndex As Integer, _
 
     Set oSHA256 = New CSHA256
 
-    If Not CheckMailString(UserName) Or LenB(UserName) = 0 Then
+    If LenB(UserName) > 24 Or LenB(UserName) = 0 Then
         Call WriteErrorMsg(UserIndex, "Nombre invalido.")
         Exit Sub
 
@@ -888,6 +852,7 @@ Sub CloseSocketSL(ByVal UserIndex As Integer)
     '***************************************************
 
     If UserList(UserIndex).ConnID <> -1 And UserList(UserIndex).ConnIDValida Then
+        Call SecurityIp.IpRestarConexion(GetLongIp(UserList(UserIndex).IP))
         Call BorraSlotSock(UserList(UserIndex).ConnID)
         Call WSApiCloseSocket(UserList(UserIndex).ConnID)
         UserList(UserIndex).ConnIDValida = False
@@ -986,8 +951,7 @@ Function ValidateChr(ByVal UserIndex As Integer) As Boolean
 End Function
 
 Sub ConnectUser(ByVal UserIndex As Integer, _
-                ByRef Name As String, _
-                ByRef AccountHash As String)
+                ByRef Name As String)
 
     '***************************************************
     'Autor: Unknown (orginal version)
@@ -1051,7 +1015,7 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
         End If
     
         'El personaje pertenece a la cuenta
-        If Not PersonajePerteneceCuenta(Name, AccountHash) Then
+        If Not PersonajePerteneceCuenta(UserIndex, Name) Then
             Call WriteErrorMsg(UserIndex, "El personaje al que intentas acceder no pertenece a tu cuenta.")
             Call CloseUser(UserIndex)
             Exit Sub
@@ -1097,16 +1061,6 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
         'Add RM flag if needed
         If EsRolesMaster(Name) Then
             .flags.Privilegios = .flags.Privilegios Or PlayerType.RoleMaster
-
-        End If
-    
-        If ServerSoloGMs > 0 Then
-            If (.flags.Privilegios And (PlayerType.Admin Or PlayerType.Dios Or PlayerType.SemiDios Or PlayerType.Consejero)) = 0 Then
-                Call WriteErrorMsg(UserIndex, "Servidor restringido a administradores. Por favor reintente en unos momentos.")
-                Call CloseUser(UserIndex)
-                Exit Sub
-
-            End If
 
         End If
     
@@ -1278,6 +1232,8 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
                 .Char.ShieldAnim = NingunEscudo
                 .Char.WeaponAnim = NingunArma
                 .Char.CascoAnim = NingunCasco
+                .Char.AuraAnim = NingunAura
+                .Char.AuraColor = NingunAura
 
             End If
         
@@ -1391,7 +1347,7 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
             Next i
 
         End If
-    
+
         If .flags.Navegando = 1 Then
             Call WriteNavigateToggle(UserIndex)
 
@@ -1582,7 +1538,8 @@ Sub ResetCharInfo(ByVal UserIndex As Integer)
         .loops = 0
         .ShieldAnim = 0
         .WeaponAnim = 0
-
+        .AuraAnim = 0
+        .AuraColor = 0
     End With
 
 End Sub
@@ -1603,7 +1560,6 @@ Sub ResetBasicUserInfo(ByVal UserIndex As Integer)
         .Pos.Map = 0
         .Pos.X = 0
         .Pos.Y = 0
-        .IP = vbNullString
         .clase = 0
         .Email = vbNullString
         .Genero = 0
@@ -1754,6 +1710,7 @@ Sub ResetUserFlags(ByVal UserIndex As Integer)
         .ParalizedByIndex = 0
         .ParalizedByNpcIndex = 0
         .TargetBot = 0
+        .Global = 0
         
         If .OwnedNpc <> 0 Then
             Call PerdioNpc(UserIndex)

@@ -1,13 +1,13 @@
 VERSION 5.00
-Object = "{48E59290-9880-11CF-9754-00AA00C00908}#1.0#0"; "MSINET.ocx"
+Object = "{48E59290-9880-11CF-9754-00AA00C00908}#1.0#0"; "MSINET.OCX"
 Begin VB.Form frmMain 
    BackColor       =   &H00000000&
    BorderStyle     =   3  'Fixed Dialog
    Caption         =   "WinterAO Resurrection Server"
-   ClientHeight    =   6465
+   ClientHeight    =   5895
    ClientLeft      =   1950
    ClientTop       =   1515
-   ClientWidth     =   9885
+   ClientWidth     =   9855
    ControlBox      =   0   'False
    FillColor       =   &H00C0C0C0&
    BeginProperty Font 
@@ -25,10 +25,32 @@ Begin VB.Form frmMain
    MaxButton       =   0   'False
    MinButton       =   0   'False
    PaletteMode     =   1  'UseZOrder
-   ScaleHeight     =   6465
-   ScaleWidth      =   9885
+   ScaleHeight     =   5895
+   ScaleWidth      =   9855
    StartUpPosition =   2  'CenterScreen
    WindowState     =   1  'Minimized
+   Begin VB.CommandButton cmdDB 
+      BackColor       =   &H00E0E0E0&
+      Caption         =   "Desconectar de la DB"
+      Height          =   375
+      Index           =   1
+      Left            =   7560
+      Style           =   1  'Graphical
+      TabIndex        =   27
+      Top             =   5400
+      Width           =   2055
+   End
+   Begin VB.CommandButton cmdDB 
+      BackColor       =   &H00E0E0E0&
+      Caption         =   "Conectar a la DB"
+      Height          =   375
+      Index           =   0
+      Left            =   5280
+      Style           =   1  'Graphical
+      TabIndex        =   26
+      Top             =   5400
+      Width           =   2055
+   End
    Begin VB.TextBox txtNumCuentas 
       Alignment       =   2  'Center
       BackColor       =   &H00C0FFFF&
@@ -43,10 +65,10 @@ Begin VB.Form frmMain
    Begin VB.CommandButton cmdCommand3 
       Caption         =   "SpawnBOT"
       Height          =   360
-      Left            =   5160
+      Left            =   9240
       TabIndex        =   23
-      Top             =   6000
-      Width           =   1110
+      Top             =   120
+      Width           =   630
    End
    Begin VB.TextBox txtRecordOnline 
       Alignment       =   2  'Center
@@ -71,7 +93,7 @@ Begin VB.Form frmMain
          Strikethrough   =   0   'False
       EndProperty
       ForeColor       =   &H0080FFFF&
-      Height          =   2055
+      Height          =   975
       Left            =   5160
       MultiLine       =   -1  'True
       TabIndex        =   15
@@ -90,11 +112,11 @@ Begin VB.Form frmMain
       BackColor       =   &H008080FF&
       Caption         =   "Forzar Cierre del Servidor Sin Backup"
       Height          =   375
-      Left            =   120
+      Left            =   5160
       Style           =   1  'Graphical
       TabIndex        =   13
-      Top             =   6000
-      Width           =   4935
+      Top             =   4920
+      Width           =   4575
    End
    Begin VB.CheckBox chkServerHabilitado 
       BackColor       =   &H00000000&
@@ -178,7 +200,7 @@ Begin VB.Form frmMain
          Top             =   1440
       End
       Begin VB.Timer TIMER_AI 
-         Interval        =   500
+         Interval        =   380
          Left            =   1680
          Top             =   1440
       End
@@ -809,6 +831,11 @@ Private Sub cmdApagarServidor_Click()
 
     'Guardar Pjs
     Call GuardarUsuarios
+    
+    'Cerramos la conexion con la DB
+    #If DBConexionUnica = 1 Then
+        Call Database_Close
+    #End If
 
     'Chauuu
     Unload frmMain
@@ -824,6 +851,26 @@ End Sub
 Private Sub cmdConfiguracion_Click()
     frmServidor.Visible = True
 
+End Sub
+
+Private Sub cmdDB_Click(Index As Integer)
+
+#If DBConexionUnica = 0 Then
+    MsgBox ("El server esta configurado para conexion/desconexion por cada query, no es posible conectar ni desconectar en este modo. Cambie la configuracion desde los argunmentos en el codigo.")
+    Exit Sub
+#End If
+
+    Select Case Index
+    
+        Case 0 'Conectar
+            If MsgBox("Desea CONECTAR a la base de datos MYSQL? ¡Si ya esta conectada podria provocar errores!!!", vbYesNo, "¡CONEXION A LA MYSQL!") = vbNo Then Exit Sub
+            Call Database_Connect
+            
+        Case 1 'Desconectar
+            If MsgBox("Desea DESCONECTAR de la base de datos MYSQL? ¡Si ya esta desconectada podria provocar errores!!!", vbYesNo, "¡DESCONEXION DE LA MYSQL!") = vbNo Then Exit Sub
+            Call Database_Close
+            
+    End Select
 End Sub
 
 Private Sub CMDDUMP_Click()
@@ -844,6 +891,10 @@ Private Sub cmdForzarCierre_Click()
         
     If MsgBox("Desea FORZAR el CIERRE del SERVIDOR?", vbYesNo, "CIERRE DEL SERVIDOR!!!") = vbNo Then Exit Sub
         
+#If DBConexionUnica = 1 Then
+    Call Database_Close
+#End If
+    
     Call CloseServer
 
 End Sub

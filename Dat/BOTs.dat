@@ -25,6 +25,7 @@ NumBOTs=3
 
 [BOT1]
 Name=Dacker
+Heading=1
 Raza=1
 Genero=1
 Head=4
@@ -36,12 +37,15 @@ MaxVida=200
 MinMana=50
 MaxMana=200
 Viajante=0
-NROITEMS=2
+NROITEMS=4
 Drop1=12-1000
 Drop2=38-50
+Drop3=30-1
+Drop4=123-1
 
 [BOT2]
 Name=Perole
+Heading=1
 Raza=2
 Genero=1
 Head=101
@@ -58,6 +62,7 @@ Drop1=12-1000
 
 [BOT3]
 Name=Kiwrol
+Heading=1
 Raza=4
 Genero=1
 Head=301

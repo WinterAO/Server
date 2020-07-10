@@ -1,15 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.1
+-- version 4.6.6deb5
 -- https://www.phpmyadmin.net/
 --
--- Servidor: 127.0.0.1
--- Tiempo de generación: 15-05-2020 a las 02:53:38
--- Versión del servidor: 10.4.11-MariaDB
--- Versión de PHP: 7.2.28
+-- Servidor: localhost:3306
+-- Tiempo de generación: 04-06-2020 a las 19:50:51
+-- Versión del servidor: 10.3.22-MariaDB-0+deb10u1
+-- Versión de PHP: 7.3.14-1~deb10u1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
-START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -30,26 +28,20 @@ USE `winterao`;
 -- Estructura de tabla para la tabla `account`
 --
 
-DROP TABLE IF EXISTS `account`;
 CREATE TABLE `account` (
   `id` mediumint(8) UNSIGNED NOT NULL,
-  `username` varchar(50) NOT NULL,
+  `username` varchar(24) NOT NULL,
+  `email` varchar(64) NOT NULL,
   `password` varchar(64) NOT NULL,
-  `salt` varchar(10) NOT NULL,
-  `hash` varchar(32) NOT NULL,
+  `salt` varchar(12) NOT NULL,
+  `id_recuperacion` varchar(32) DEFAULT NULL,
   `date_created` timestamp NULL DEFAULT current_timestamp(),
   `last_ip` varchar(16) DEFAULT NULL,
   `date_last_login` timestamp NULL DEFAULT current_timestamp(),
-  `gemas` int(11) DEFAULT 0,
+  `gemas` int(12) DEFAULT 0,
   `status` tinyint(1) NOT NULL DEFAULT 0,
   `id_confirmacion` varchar(128) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Truncar tablas antes de insertar `account`
---
-
-TRUNCATE TABLE `account`;
 
 -- --------------------------------------------------------
 
@@ -57,25 +49,18 @@ TRUNCATE TABLE `account`;
 -- Estructura de tabla para la tabla `attribute`
 --
 
-DROP TABLE IF EXISTS `attribute`;
 CREATE TABLE `attribute` (
   `user_id` mediumint(8) UNSIGNED NOT NULL,
   `number` tinyint(3) UNSIGNED NOT NULL,
   `value` tinyint(3) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Truncar tablas antes de insertar `attribute`
---
-
-TRUNCATE TABLE `attribute`;
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `bank_item`
 --
 
-DROP TABLE IF EXISTS `bank_item`;
 CREATE TABLE `bank_item` (
   `user_id` mediumint(8) UNSIGNED NOT NULL,
   `number` tinyint(3) UNSIGNED NOT NULL,
@@ -83,18 +68,12 @@ CREATE TABLE `bank_item` (
   `amount` smallint(5) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Truncar tablas antes de insertar `bank_item`
---
-
-TRUNCATE TABLE `bank_item`;
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `inventory_item`
 --
 
-DROP TABLE IF EXISTS `inventory_item`;
 CREATE TABLE `inventory_item` (
   `user_id` mediumint(8) UNSIGNED NOT NULL,
   `number` tinyint(3) UNSIGNED NOT NULL,
@@ -103,54 +82,36 @@ CREATE TABLE `inventory_item` (
   `is_equipped` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Truncar tablas antes de insertar `inventory_item`
---
-
-TRUNCATE TABLE `inventory_item`;
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `pet`
 --
 
-DROP TABLE IF EXISTS `pet`;
 CREATE TABLE `pet` (
   `user_id` mediumint(8) UNSIGNED NOT NULL,
   `number` tinyint(3) UNSIGNED NOT NULL,
   `pet_id` smallint(5) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Truncar tablas antes de insertar `pet`
---
-
-TRUNCATE TABLE `pet`;
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `punishment`
 --
 
-DROP TABLE IF EXISTS `punishment`;
 CREATE TABLE `punishment` (
   `user_id` mediumint(8) UNSIGNED NOT NULL,
   `number` tinyint(3) UNSIGNED NOT NULL,
   `reason` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Truncar tablas antes de insertar `punishment`
---
-
-TRUNCATE TABLE `punishment`;
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `skillpoint`
 --
 
-DROP TABLE IF EXISTS `skillpoint`;
 CREATE TABLE `skillpoint` (
   `user_id` mediumint(8) UNSIGNED NOT NULL,
   `number` tinyint(3) UNSIGNED NOT NULL,
@@ -159,36 +120,24 @@ CREATE TABLE `skillpoint` (
   `elu` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Truncar tablas antes de insertar `skillpoint`
---
-
-TRUNCATE TABLE `skillpoint`;
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `spell`
 --
 
-DROP TABLE IF EXISTS `spell`;
 CREATE TABLE `spell` (
   `user_id` mediumint(8) UNSIGNED NOT NULL,
   `number` tinyint(3) UNSIGNED NOT NULL,
   `spell_id` smallint(5) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Truncar tablas antes de insertar `spell`
---
-
-TRUNCATE TABLE `spell`;
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `usuario`
 --
 
-DROP TABLE IF EXISTS `usuario`;
 CREATE TABLE `usuario` (
   `id` mediumint(8) UNSIGNED NOT NULL,
   `account_id` mediumint(8) UNSIGNED NOT NULL,
@@ -204,8 +153,7 @@ CREATE TABLE `usuario` (
   `description` varchar(255) DEFAULT NULL,
   `gold` int(10) UNSIGNED NOT NULL,
   `bank_gold` int(10) UNSIGNED NOT NULL DEFAULT 0,
-  `free_skillpoints` smallint(5) UNSIGNED NOT NULL,
-  `assigned_skillpoints` smallint(5) UNSIGNED NOT NULL,
+  `elo` int(10) UNSIGNED NOT NULL,
   `pet_amount` tinyint(3) UNSIGNED NOT NULL DEFAULT 0,
   `votes_amount` smallint(5) UNSIGNED DEFAULT 0,
   `pos_map` smallint(5) UNSIGNED NOT NULL,
@@ -286,11 +234,6 @@ CREATE TABLE `usuario` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Truncar tablas antes de insertar `usuario`
---
-
-TRUNCATE TABLE `usuario`;
---
 -- Índices para tablas volcadas
 --
 
@@ -358,14 +301,12 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `account`
 --
 ALTER TABLE `account`
-  MODIFY `id` mediumint(8) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
+  MODIFY `id` mediumint(8) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
   MODIFY `id` mediumint(8) UNSIGNED NOT NULL AUTO_INCREMENT;
-
 --
 -- Restricciones para tablas volcadas
 --
@@ -417,7 +358,6 @@ ALTER TABLE `spell`
 --
 ALTER TABLE `usuario`
   ADD CONSTRAINT `fk_user_account` FOREIGN KEY (`account_id`) REFERENCES `account` (`id`);
-COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

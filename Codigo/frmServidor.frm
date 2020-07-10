@@ -394,6 +394,7 @@ Private Sub cmdLoadWorldBackup_Click()
     Call LoadSini
     Call CargarBackUp
     Call LoadOBJData
+    Call LoadGlobalDrop
 
     SockListen = ListenForConnect(Puerto, hWndMsg, vbNullString)
 
@@ -604,6 +605,9 @@ Private Sub listDats_Click()
 
         Case "OBJ.DAT"
             Call LoadOBJData
+            
+        Case "GLOBAL_DROP.dat"
+            Call LoadGlobalDrop
         
         Case "OBJCARPINTERO.DAT"
             Call LoadObjCarpintero

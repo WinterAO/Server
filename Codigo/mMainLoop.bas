@@ -322,7 +322,7 @@ Public Sub GameTimer()
     'BOTS:
     For i = 1 To MAX_BOTS
     
-        If IA_Bot(i).Invocado Then IA_Action i
+        If BotList(i).Invocado Then IA_Action (i)
     
     Next i
 
@@ -368,7 +368,8 @@ Public Sub PasarSegundo()
                 'Cerrar usuario
                 If .Counters.Saliendo Then
                     .Counters.Salir = .Counters.Salir - 1
-
+                    Call WriteConsoleMsg(i, "Cerrando en... " & .Counters.Salir, FontTypeNames.FONTTYPE_INFO)
+                    
                     If .Counters.Salir <= 0 Then
                         Call WriteConsoleMsg(i, "Gracias por jugar WinterAO", FontTypeNames.FONTTYPE_INFO)
                         Call WriteDisconnect(i)

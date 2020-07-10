@@ -29,9 +29,7 @@ Attribute VB_Name = "Trabajo"
 
 Option Explicit
 
-Private Const GASTO_ENERGIA_TRABAJADOR    As Byte = 2
-
-Private Const GASTO_ENERGIA_NO_TRABAJADOR As Byte = 6
+Private Const GASTO_ENERGIA As Byte = 6
 
 Public Sub DoPermanecerOculto(ByVal UserIndex As Integer)
 
@@ -66,7 +64,7 @@ Public Sub DoPermanecerOculto(ByVal UserIndex As Integer)
                     ' Pierde la apariencia de fragata fantasmal
                     Call ToggleBoatBody(UserIndex)
                     Call WriteConsoleMsg(UserIndex, "Has recuperado tu apariencia normal!", FontTypeNames.FONTTYPE_INFO)
-                    Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, NingunArma, NingunEscudo, NingunCasco)
+                    Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, NingunArma, NingunEscudo, NingunCasco, NingunAura, NingunAura)
 
                 End If
 
@@ -141,7 +139,7 @@ Public Sub DoOcultarse(ByVal UserIndex As Integer)
                 ' Le cambiamos el body a galeon fantasmal
                 .Char.body = iFragataFantasmal
                 ' Actualizamos clientes
-                Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, NingunArma, NingunEscudo, NingunCasco)
+                Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, NingunArma, NingunEscudo, NingunCasco, NingunAura, NingunAura)
 
             End If
             
@@ -230,7 +228,9 @@ Public Sub DoNavega(ByVal UserIndex As Integer, _
                 .Char.ShieldAnim = NingunEscudo
                 .Char.WeaponAnim = NingunArma
                 .Char.CascoAnim = NingunCasco
-
+                .Char.AuraAnim = NingunAura
+                .Char.AuraColor = NingunAura
+                
             End If
             
             ' Comienza a navegar
@@ -259,6 +259,8 @@ Public Sub DoNavega(ByVal UserIndex As Integer, _
                 .Char.ShieldAnim = NingunEscudo
                 .Char.WeaponAnim = NingunArma
                 .Char.CascoAnim = NingunCasco
+                .Char.AuraAnim = NingunAura
+                .Char.AuraColor = NingunAura
 
             End If
             
@@ -268,7 +270,7 @@ Public Sub DoNavega(ByVal UserIndex As Integer, _
         End If
         
         ' Actualizo clientes
-        Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim)
+        Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
 
     End With
     
@@ -739,31 +741,16 @@ Public Sub HerreroConstruirItem(ByVal UserIndex As Integer, ByVal ItemIndex As I
             End If
         
             'Sacamos energia
-            If .clase = eClass.Worker Then
-
-                'Chequeamos que tenga los puntos antes de sacarselos
-                If .Stats.MinSta >= GASTO_ENERGIA_TRABAJADOR Then
-                    .Stats.MinSta = .Stats.MinSta - GASTO_ENERGIA_TRABAJADOR
-                    Call WriteUpdateSta(UserIndex)
-                Else
-                    Call WriteConsoleMsg(UserIndex, "No tienes suficiente energia.", FontTypeNames.FONTTYPE_INFO)
-                    Exit Sub
-
-                End If
-
+            'Chequeamos que tenga los puntos antes de sacarselos
+            If .Stats.MinSta >= GASTO_ENERGIA Then
+                .Stats.MinSta = .Stats.MinSta - GASTO_ENERGIA
+                Call WriteUpdateSta(UserIndex)
             Else
-
-                'Chequeamos que tenga los puntos antes de sacarselos
-                If .Stats.MinSta >= GASTO_ENERGIA_NO_TRABAJADOR Then
-                    .Stats.MinSta = .Stats.MinSta - GASTO_ENERGIA_NO_TRABAJADOR
-                    Call WriteUpdateSta(UserIndex)
-                Else
-                    Call WriteConsoleMsg(UserIndex, "No tienes suficiente energia.", FontTypeNames.FONTTYPE_INFO)
-                    Exit Sub
-
-                End If
+                Call WriteConsoleMsg(UserIndex, "No tienes suficiente energia.", FontTypeNames.FONTTYPE_INFO)
+                Exit Sub
 
             End If
+
         
             Call HerreroQuitarMateriales(UserIndex, ItemIndex, CantidadItems)
             ' AGREGAR FX
@@ -921,29 +908,13 @@ Public Sub CarpinteroConstruirItem(ByVal UserIndex As Integer, ByVal ItemIndex A
             End If
            
             'Sacamos energia
-            If .clase = eClass.Worker Then
-
-                'Chequeamos que tenga los puntos antes de sacarselos
-                If .Stats.MinSta >= GASTO_ENERGIA_TRABAJADOR Then
-                    .Stats.MinSta = .Stats.MinSta - GASTO_ENERGIA_TRABAJADOR
-                    Call WriteUpdateSta(UserIndex)
-                Else
-                    Call WriteConsoleMsg(UserIndex, "No tienes suficiente energia.", FontTypeNames.FONTTYPE_INFO)
-                    Exit Sub
-
-                End If
-
+            'Chequeamos que tenga los puntos antes de sacarselos
+            If .Stats.MinSta >= GASTO_ENERGIA Then
+                .Stats.MinSta = .Stats.MinSta - GASTO_ENERGIA
+                Call WriteUpdateSta(UserIndex)
             Else
-
-                'Chequeamos que tenga los puntos antes de sacarselos
-                If .Stats.MinSta >= GASTO_ENERGIA_NO_TRABAJADOR Then
-                    .Stats.MinSta = .Stats.MinSta - GASTO_ENERGIA_NO_TRABAJADOR
-                    Call WriteUpdateSta(UserIndex)
-                Else
-                    Call WriteConsoleMsg(UserIndex, "No tienes suficiente energia.", FontTypeNames.FONTTYPE_INFO)
-                    Exit Sub
-
-                End If
+                Call WriteConsoleMsg(UserIndex, "No tienes suficiente energia.", FontTypeNames.FONTTYPE_INFO)
+                Exit Sub
 
             End If
             
@@ -1263,29 +1234,13 @@ Public Sub DoUpgrade(ByVal UserIndex As Integer, ByVal ItemIndex As Integer)
         End If
         
         'Sacamos energia
-        If .clase = eClass.Worker Then
-
-            'Chequeamos que tenga los puntos antes de sacarselos
-            If .Stats.MinSta >= GASTO_ENERGIA_TRABAJADOR Then
-                .Stats.MinSta = .Stats.MinSta - GASTO_ENERGIA_TRABAJADOR
-                Call WriteUpdateSta(UserIndex)
-            Else
-                Call WriteConsoleMsg(UserIndex, "No tienes suficiente energia.", FontTypeNames.FONTTYPE_INFO)
-                Exit Sub
-
-            End If
-
+        'Chequeamos que tenga los puntos antes de sacarselos
+        If .Stats.MinSta >= GASTO_ENERGIA Then
+            .Stats.MinSta = .Stats.MinSta - GASTO_ENERGIA
+            Call WriteUpdateSta(UserIndex)
         Else
-
-            'Chequeamos que tenga los puntos antes de sacarselos
-            If .Stats.MinSta >= GASTO_ENERGIA_NO_TRABAJADOR Then
-                .Stats.MinSta = .Stats.MinSta - GASTO_ENERGIA_NO_TRABAJADOR
-                Call WriteUpdateSta(UserIndex)
-            Else
-                Call WriteConsoleMsg(UserIndex, "No tienes suficiente energia.", FontTypeNames.FONTTYPE_INFO)
-                Exit Sub
-
-            End If
+            Call WriteConsoleMsg(UserIndex, "No tienes suficiente energia.", FontTypeNames.FONTTYPE_INFO)
+            Exit Sub
 
         End If
     
@@ -1392,22 +1347,12 @@ Function ModNavegacion(ByVal clase As eClass, ByVal UserIndex As Integer) As Sin
     '***************************************************
     'Autor: Unknown (orginal version)
     'Last Modification: 27/11/2009
-    '27/11/2009: ZaMa - A worker can navigate before only if it's an expert fisher
     '12/04/2010: ZaMa - Arreglo modificador de pescador, para que navegue con 60 skills.
     '***************************************************
     Select Case clase
 
         Case eClass.Pirat
             ModNavegacion = 1
-
-        Case eClass.Worker
-
-            If UserList(UserIndex).Stats.UserSkills(eSkill.pesca) = 100 Then
-                ModNavegacion = 1.71
-            Else
-                ModNavegacion = 2
-
-            End If
 
         Case Else
             ModNavegacion = 2
@@ -1423,15 +1368,7 @@ Function ModFundicion(ByVal clase As eClass) As Single
     '
     '***************************************************
 
-    Select Case clase
-
-        Case eClass.Worker
-            ModFundicion = 1
-
-        Case Else
-            ModFundicion = 3
-
-    End Select
+    ModFundicion = 3
 
 End Function
 
@@ -1442,15 +1379,8 @@ Function ModCarpinteria(ByVal clase As eClass) As Integer
     '
     '***************************************************
 
-    Select Case clase
+    ModCarpinteria = 3
 
-        Case eClass.Worker
-            ModCarpinteria = 1
-
-        Case Else
-            ModCarpinteria = 3
-
-    End Select
 
 End Function
 
@@ -1461,15 +1391,8 @@ Function ModHerreriA(ByVal clase As eClass) As Single
     'Last Modification: -
     '
     '***************************************************
-    Select Case clase
-
-        Case eClass.Worker
-            ModHerreriA = 1
-
-        Case Else
-            ModHerreriA = 4
-
-    End Select
+    
+    ModHerreriA = 4
 
 End Function
 
@@ -1720,7 +1643,7 @@ Sub DoAdminInvisible(ByVal UserIndex As Integer)
             .Counters.TiempoOculto = 0
             
             ' Solo el admin sabe que se hace visible
-            tempData = PrepareMessageCharacterChange(.Char.body, .Char.Head, .Char.heading, .Char.CharIndex, .Char.WeaponAnim, .Char.ShieldAnim, .Char.FX, .Char.loops, .Char.CascoAnim)
+            tempData = PrepareMessageCharacterChange(.Char.body, .Char.Head, .Char.heading, .Char.CharIndex, .Char.WeaponAnim, .Char.ShieldAnim, .Char.FX, .Char.loops, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
             Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(tempData)
             
             tempData = PrepareMessageSetInvisible(.Char.CharIndex, False)
@@ -1856,12 +1779,7 @@ Public Sub DoPescar(ByVal UserIndex As Integer)
 
     With UserList(UserIndex)
 
-        If .clase = eClass.Worker Then
-            Call QuitarSta(UserIndex, EsfuerzoPescarPescador)
-        Else
-            Call QuitarSta(UserIndex, EsfuerzoPescarGeneral)
-
-        End If
+        Call QuitarSta(UserIndex, EsfuerzoPescar)
     
         Skill = .Stats.UserSkills(eSkill.pesca)
         Suerte = Int(-0.00125 * Skill * Skill - 0.3 * Skill + 49)
@@ -1871,15 +1789,10 @@ Public Sub DoPescar(ByVal UserIndex As Integer)
         If res <= DificultadPescar Then
 
             Dim MiObj As obj
-        
-            If .clase = eClass.Worker Then
-                MAXITEMS = MaxItemsExtraibles(.Stats.ELV)
             
-                CantidadItems = RandomNumber(1, MAXITEMS)
-            Else
-                CantidadItems = 1
-
-            End If
+            MAXITEMS = MaxItemsExtraibles(.Stats.ELV)
+            
+            CantidadItems = RandomNumber(1, MAXITEMS)
 
             CantidadItems = CantidadItems * OficioMultiplier
             
@@ -1896,7 +1809,7 @@ Public Sub DoPescar(ByVal UserIndex As Integer)
             Call WriteConsoleMsg(UserIndex, "Has pescado un lindo pez!", FontTypeNames.FONTTYPE_INFO)
             
             'Renderizo el dano en render.
-            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageCreateDamage(.Pos.X, .Pos.Y, MiObj.Amount, DAMAGE_TRABAJO))
+            Call WriteMessageCreateDamage(UserIndex, MiObj.Amount, DAMAGE_TRABAJO)
             
             Call SubirSkill(UserIndex, eSkill.pesca, True)
         Else
@@ -1947,23 +1860,14 @@ Public Sub DoPescarRed(ByVal UserIndex As Integer)
 
     Dim res           As Integer
 
-    Dim EsPescador    As Boolean
-
     Dim MAXITEMS      As Integer
 
     Dim CantidadItems As Integer
 
     With UserList(UserIndex)
     
-        If .clase = eClass.Worker Then
-            Call QuitarSta(UserIndex, EsfuerzoPescarPescador)
-            EsPescador = True
-        Else
-            Call QuitarSta(UserIndex, EsfuerzoPescarGeneral)
-            EsPescador = False
+        Call QuitarSta(UserIndex, EsfuerzoPescar)
 
-        End If
-        
         iSkill = .Stats.UserSkills(eSkill.pesca)
         
         ' m = (60-11)/(1-10)
@@ -1978,14 +1882,9 @@ Public Sub DoPescarRed(ByVal UserIndex As Integer)
             
                 Dim MiObj As obj
                 
-                If EsPescador Then
-                    MAXITEMS = MaxItemsExtraibles(.Stats.ELV)
-                    CantidadItems = RandomNumber(1, MAXITEMS)
-                Else
-                    CantidadItems = 1
-
-                End If
-
+                MAXITEMS = MaxItemsExtraibles(.Stats.ELV)
+                CantidadItems = RandomNumber(1, MAXITEMS)
+                    
                 CantidadItems = CantidadItems * OficioMultiplier
                 
                 MiObj.Amount = CantidadItems
@@ -2263,7 +2162,7 @@ Public Function ObjEsRobable(ByVal VictimaIndex As Integer, _
 
     OI = UserList(VictimaIndex).Invent.Object(Slot).ObjIndex
 
-    ObjEsRobable = ObjData(OI).OBJType <> eOBJType.otLlaves And UserList(VictimaIndex).Invent.Object(Slot).Equipped = 0 And ObjData(OI).Real = 0 And ObjData(OI).Caos = 0 And ObjData(OI).OBJType <> eOBJType.otBarcos And Not ItemNewbie(OI)
+    ObjEsRobable = ObjData(OI).OBJType <> eOBJType.otLlaves And UserList(VictimaIndex).Invent.Object(Slot).Equipped = 0 And ObjData(OI).Real = 0 And ObjData(OI).Caos = 0 And ObjData(OI).OBJType <> eOBJType.otBarcos And ObjData(OI).OBJType <> eOBJType.otMonturas And ObjData(OI).NoRobable = 1 And Not ItemNewbie(OI)
 
 End Function
 
@@ -2391,7 +2290,7 @@ Public Sub DoApunalar(ByVal UserIndex As Integer, _
     Select Case UserList(UserIndex).clase
 
         Case eClass.Assasin
-            Suerte = Int(((0.00003 * Skill - 0.002) * Skill + 0.098) * Skill + 4.25)
+            Suerte = Int(((0.00004 * Skill - 0.002) * Skill + 0.098) * Skill + 4.25)
     
         Case eClass.Cleric, eClass.Paladin, eClass.Pirat
             Suerte = Int(((0.000003 * Skill + 0.0006) * Skill + 0.0107) * Skill + 4.93)
@@ -2611,12 +2510,7 @@ Public Sub DoTalar(ByVal UserIndex As Integer, _
 
     With UserList(UserIndex)
 
-        If .clase = eClass.Worker Then
-            Call QuitarSta(UserIndex, EsfuerzoTalarLenador)
-        Else
-            Call QuitarSta(UserIndex, EsfuerzoTalarGeneral)
-
-        End If
+        Call QuitarSta(UserIndex, EsfuerzoTalar)
     
         Skill = .Stats.UserSkills(eSkill.Talar)
         Suerte = Int(-0.00125 * Skill * Skill - 0.3 * Skill + 49)
@@ -2627,14 +2521,9 @@ Public Sub DoTalar(ByVal UserIndex As Integer, _
 
             Dim MiObj As obj
         
-            If .clase = eClass.Worker Then
-                MAXITEMS = MaxItemsExtraibles(.Stats.ELV)
-            
-                CantidadItems = RandomNumber(1, MAXITEMS)
-            Else
-                CantidadItems = 1
-
-            End If
+            MAXITEMS = MaxItemsExtraibles(.Stats.ELV)
+        
+            CantidadItems = RandomNumber(1, MAXITEMS)
 
             CantidadItems = CantidadItems * OficioMultiplier
             
@@ -2652,7 +2541,7 @@ Public Sub DoTalar(ByVal UserIndex As Integer, _
             Call WriteConsoleMsg(UserIndex, "Has conseguido algo de lena!", FontTypeNames.FONTTYPE_INFO)
             
             'Renderizo el dano en render.
-            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageCreateDamage(.Pos.X, .Pos.Y, MiObj.Amount, DAMAGE_TRABAJO))
+            Call WriteMessageCreateDamage(UserIndex, MiObj.Amount, DAMAGE_TRABAJO)
             
             Call SubirSkill(UserIndex, eSkill.Talar, True)
         Else
@@ -2711,13 +2600,8 @@ Public Sub DoMineria(ByVal UserIndex As Integer)
 
     With UserList(UserIndex)
 
-        If .clase = eClass.Worker Then
-            Call QuitarSta(UserIndex, EsfuerzoExcavarMinero)
-        Else
-            Call QuitarSta(UserIndex, EsfuerzoExcavarGeneral)
+        Call QuitarSta(UserIndex, EsfuerzoExcavar)
 
-        End If
-    
         Dim Skill As Integer
 
         Skill = .Stats.UserSkills(eSkill.Mineria)
@@ -2733,14 +2617,9 @@ Public Sub DoMineria(ByVal UserIndex As Integer)
         
             MiObj.ObjIndex = ObjData(.flags.TargetObj).MineralIndex
         
-            If .clase = eClass.Worker Then
-                MAXITEMS = MaxItemsExtraibles(.Stats.ELV)
+            MAXITEMS = MaxItemsExtraibles(.Stats.ELV)
             
-                CantidadItems = RandomNumber(1, MAXITEMS)
-            Else
-                CantidadItems = 1
-
-            End If
+            CantidadItems = RandomNumber(1, MAXITEMS)
 
             CantidadItems = CantidadItems * OficioMultiplier
 
@@ -2752,6 +2631,7 @@ Public Sub DoMineria(ByVal UserIndex As Integer)
             
             'Renderizo el dano en render.
             Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageCreateDamage(.Pos.X, .Pos.Y, MiObj.Amount, DAMAGE_TRABAJO))
+            Call WriteMessageCreateDamage(UserIndex, MiObj.Amount, DAMAGE_TRABAJO)
             
             Call SubirSkill(UserIndex, eSkill.Mineria, True)
         Else
@@ -2870,7 +2750,7 @@ Public Sub DoMeditar(ByVal UserIndex As Integer)
             If .Stats.MinMAN > .Stats.MaxMAN Then .Stats.MinMAN = .Stats.MaxMAN
             
             'Renderizo el dano en render.
-            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageCreateDamage(.Pos.X, .Pos.Y, cant, DAMAGE_TRABAJO))
+            Call WriteMessageCreateDamage(UserIndex, cant, DAMAGE_TRABAJO)
             
             Call WriteUpdateMana(UserIndex)
             Call SubirSkill(UserIndex, eSkill.Meditar, True)
@@ -3123,12 +3003,7 @@ Public Function MaxItemsConstruibles(ByVal UserIndex As Integer) As Integer
     
     With UserList(UserIndex)
 
-        If .clase = eClass.Worker Then
-            MaxItemsConstruibles = MaximoInt(1, CInt((.Stats.ELV - 2) * 0.2))
-        Else
-            MaxItemsConstruibles = 1
-
-        End If
+    MaxItemsConstruibles = MaximoInt(1, CInt((.Stats.ELV - 2) * 0.2))
 
     End With
 
@@ -3169,7 +3044,7 @@ Public Sub ImitateNpc(ByVal UserIndex As Integer, ByVal NpcIndex As Integer)
             .Char.body = Npclist(NpcIndex).Char.body
             .Char.Head = Npclist(NpcIndex).Char.Head
             
-            Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim)
+            Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
 
         End If
     
@@ -3244,7 +3119,7 @@ Public Sub DoEquita(ByVal UserIndex As Integer, _
                 Call WriteEquitandoToggle(UserIndex)
 
                 'Mostramos solo el casco de los items equipados por que los demas items quedan mal en el render, solo es un tema visual (Recox)
-                Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, NingunArma, NingunEscudo, .Char.CascoAnim)
+                Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, NingunArma, NingunEscudo, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
             Else
                 Call WriteConsoleMsg(UserIndex, "Debe esperar " & .Counters.MonturaCounter & " segundos para volver a usar tu montura", FontTypeNames.FONTTYPE_INFO)
             End If
@@ -3270,7 +3145,7 @@ Public Sub UnmountMontura(ByVal UserIndex As Integer)
 
         ' Seteamos el equipo que tiene y lo mostramos en el render.
         Call SetEquipmentOnCharAfterNavigateOrEquitate(UserIndex)
-        Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim)
+        Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
   
         ' Termina de equitar
         .flags.Equitando = 0

@@ -271,7 +271,7 @@ Public Sub MuereNpc(ByVal NpcIndex As Integer, ByVal UserIndex As Integer)
    
     If MiNPC.MaestroUser = 0 Then
         'Tiramos el inventario
-        Call NPC_TIRAR_ITEMS(MiNPC, MiNPC.NPCtype = eNPCType.Pretoriano)
+        Call NPC_TIRAR_ITEMS(UserIndex, MiNPC, MiNPC.NPCtype = eNPCType.Pretoriano)
         'ReSpawn o no
         If MiNPC.flags.TiempoRetardoMin = 0 Then Call ReSpawnNpc(MiNPC)
 
@@ -287,17 +287,17 @@ Public Sub MuereNpc(ByVal NpcIndex As Integer, ByVal UserIndex As Integer)
     ' ++ Si el npc lo mata un elemental Userindex 0 y japish
     Dim i As Long, j As Long
 
-    For i = 1 To MAXUSERQUESTS
+    For i = 1 To MAXQUESTS
 
         With UserList(UserIndex).QuestStats.Quests(i)
 
-            If .QuestIndex Then
-                If QuestList(.QuestIndex).RequiredNPCs Then
+            If UserList(UserIndex).QuestStats.Quests(i).QuestStatus = eStatusQuest.EnCurso Then
+                If QuestList(i).RequiredNPCs Then
 
-                    For j = 1 To QuestList(.QuestIndex).RequiredNPCs
+                    For j = 1 To QuestList(i).RequiredNPCs
 
-                        If QuestList(.QuestIndex).RequiredNPC(j).NpcIndex = MiNPC.Numero Then
-                            If QuestList(.QuestIndex).RequiredNPC(j).Amount > .NPCsKilled(j) Then
+                        If QuestList(i).RequiredNPC(j).NpcIndex = MiNPC.Numero Then
+                            If QuestList(i).RequiredNPC(j).Amount > .NPCsKilled(j) Then
                                 .NPCsKilled(j) = .NPCsKilled(j) + 1
 
                             End If
@@ -750,11 +750,12 @@ Public Sub MakeNPCChar(ByVal toMap As Boolean, _
     '***************************************************
     'Author: Unknown
     'Last Modification: -
-    '
     '***************************************************
     
     Dim CharIndex As Integer
     Dim color As Byte
+    Dim EstadoQuest As Integer
+    Dim NombreNPC As String
     
     If Npclist(NpcIndex).Char.CharIndex = 0 Then
         CharIndex = NextOpenCharIndex
@@ -767,13 +768,21 @@ Public Sub MakeNPCChar(ByVal toMap As Boolean, _
     
     If Npclist(NpcIndex).NPCtype = WorldBoss Then color = 8
     
+    If Npclist(NpcIndex).QuestNumber > 0 Then
+        EstadoQuest = Quests.EstadoQuest(sndIndex, Npclist(NpcIndex).QuestNumber)
+    Else
+        EstadoQuest = 255 'El NPC No tiene quest
+    End If
+    
+    'Si el NPC no es hostil o es un WorldBoss, tendra nombre
+    If Npclist(NpcIndex).Hostile = 0 Or Npclist(NpcIndex).NPCtype = WorldBoss Then
+        NombreNPC = Npclist(NpcIndex).Name
+    Else
+        NombreNPC = vbNullString
+    End If
+    
     If Not toMap Then
-        'En caso de que sea hostil no mostramos el nombre, si es un npc no hostil o un WorldBoss mostramos nombre. (Recox)
-        If Not Npclist(NpcIndex).Hostile = 1 Or Npclist(NpcIndex).NPCtype = WorldBoss Then
-            Call WriteCharacterCreate(sndIndex, Npclist(NpcIndex).Char.body, Npclist(NpcIndex).Char.Head, Npclist(NpcIndex).Char.heading, Npclist(NpcIndex).Char.CharIndex, X, Y, 0, 0, 0, 0, 0, Npclist(NpcIndex).Name, color, 0, Npclist(NpcIndex).NoShadow)
-        Else
-            Call WriteCharacterCreate(sndIndex, Npclist(NpcIndex).Char.body, Npclist(NpcIndex).Char.Head, Npclist(NpcIndex).Char.heading, Npclist(NpcIndex).Char.CharIndex, X, Y, 0, 0, 0, 0, 0, vbNullString, 0, 0, Npclist(NpcIndex).NoShadow)
-        End If
+        Call WriteCharacterCreate(sndIndex, Npclist(NpcIndex).Char.body, Npclist(NpcIndex).Char.Head, Npclist(NpcIndex).Char.heading, Npclist(NpcIndex).Char.CharIndex, X, Y, 0, 0, 0, 0, 0, NombreNPC, color, 0, NingunAura, NingunAura, Npclist(NpcIndex).NoShadow, EstadoQuest)
 
     Else
         Call AgregarNpc(NpcIndex)
@@ -792,14 +801,16 @@ Public Sub ChangeNPCChar(ByVal NpcIndex As Integer, _
     '
     '***************************************************
 
+    Dim EstadoQuest As Integer
+    
     If NpcIndex > 0 Then
 
         With Npclist(NpcIndex).Char
             .body = body
             .Head = Head
             .heading = heading
-            
-            Call SendData(SendTarget.ToNPCArea, NpcIndex, PrepareMessageCharacterChange(body, Head, heading, .CharIndex, 0, 0, 0, 0, 0))
+      
+            Call SendData(SendTarget.ToNPCArea, NpcIndex, PrepareMessageCharacterChange(body, Head, heading, .CharIndex, 0, 0, 0, 0, 0, NingunAura, NingunAura))
 
         End With
 
@@ -1219,19 +1230,7 @@ Public Function OpenNPC(ByVal NpcNumber As Integer, _
             ln = Leer.GetValue("NPC" & NpcNumber, "Obj" & LoopC)
             .Invent.Object(LoopC).ObjIndex = val(ReadField(1, ln, 45))
             .Invent.Object(LoopC).Amount = val(ReadField(2, ln, 45))
-        Next LoopC
-        
-        For LoopC = 1 To MAX_NPC_DROPS
-            ln = Leer.GetValue("NPC" & NpcNumber, "Drop" & LoopC)
-            .Drop(LoopC).ObjIndex = val(ReadField(1, ln, 45))
-
-            If .Drop(LoopC).ObjIndex = iORO Then
-                .Drop(LoopC).Amount = val(ReadField(2, ln, 45)) * OroMultiplier
-            Else
-                .Drop(LoopC).Amount = val(ReadField(2, ln, 45))
-
-            End If
-
+            .Invent.Object(LoopC).RandomDrop = val(ReadField(3, ln, 45))
         Next LoopC
         
         .flags.LanzaSpells = val(Leer.GetValue("NPC" & NpcNumber, "LanzaSpells"))

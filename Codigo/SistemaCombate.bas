@@ -1228,8 +1228,8 @@ Public Sub UsuarioAtaca(ByVal UserIndex As Integer)
         
         If bot_Index <> 0 Then
            'Checkeo que esté invocado.
-           If ModBOTS.IA_Bot(bot_Index).Invocado Then
-                 ia_DamageHit bot_Index, UserIndex
+           If ModBOTS.BOTList(bot_Index).Invocado Then
+                 'ia_DamageHit bot_Index, UserIndex
            End If
         End If
         
@@ -1323,7 +1323,8 @@ Public Function UsuarioImpacto(ByVal AtacanteIndex As Integer, _
         If .Invent.EscudoEqpObjIndex > 0 Then
             UserPoderEvasionEscudo = PoderEvasionEscudo(VictimaIndex)
             UserPoderEvasion = UserPoderEvasion + UserPoderEvasionEscudo
-            Call SendData(SendTarget.ToPCArea, AtacanteIndex, PrepareMessageProyectil(AtacanteIndex, UserList(AtacanteIndex).Char.CharIndex, .Char.CharIndex, ObjData(UserList(AtacanteIndex).Invent.MunicionEqpObjIndex).GrhIndex))
+            If UserList(AtacanteIndex).Invent.MunicionEqpObjIndex > 0 Then _
+                Call SendData(SendTarget.ToPCArea, AtacanteIndex, PrepareMessageProyectil(AtacanteIndex, UserList(AtacanteIndex).Char.CharIndex, .Char.CharIndex, ObjData(UserList(AtacanteIndex).Invent.MunicionEqpObjIndex).GrhIndex))
         Else
             UserPoderEvasionEscudo = 0
 

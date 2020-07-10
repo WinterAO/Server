@@ -178,6 +178,7 @@ Private Sub List1_Click()
 
             With UserList(UserIndex)
                 Text1.Text = "UserLogged: " & .flags.UserLogged & vbCrLf
+                Text1.Text = Text1.Text & "AccountLogged: " & .flags.AccountLogged & vbCrLf
                 Text1.Text = Text1.Text & "IdleCount: " & .Counters.IdleCount & vbCrLf
                 Text1.Text = Text1.Text & "ConnId: " & .ConnID & vbCrLf
                 Text1.Text = Text1.Text & "ConnIDValida: " & .ConnIDValida & vbCrLf

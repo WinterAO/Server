@@ -164,7 +164,7 @@ Function HayAgua(ByVal Map As Integer, ByVal X As Integer, ByVal Y As Integer) A
     '
     '*******************************************
 
-    If Map > 0 And Map < NumMaps + 1 And X > 0 And X < 101 And Y > 0 And Y < 101 Then
+    If Map > 0 And Map < NumMaps + 1 And X > XMinMapSize And X < XMaxMapSize + 1 And Y > YMinMapSize And Y < YMaxMapSize + 1 Then
 
         With MapData(Map, X, Y)
 
@@ -282,8 +282,15 @@ Sub Main()
     
     ChDir App.Path
     ChDrive App.Path
+    
+    'Inicializamos la cabecera
+    Call IniciarCabecera
+    
     Call LoadMotd
     Call BanIpCargar
+    
+    Call BanGlobalChatCargar
+    GlobalChatActive = True
     
     UltimoSlotLimpieza = -1
     
@@ -306,6 +313,12 @@ Sub Main()
     Call CargarCiudades
     Call CargaApuestas
     
+    'Base de datos MySQL
+#If DBConexionUnica = 1 Then
+    frmCargando.Label1(2).Caption = "Cargando Base de datos"
+    Call Database_Connect
+#End If
+
     ' Npcs.dat
     frmCargando.Label1(2).Caption = "Cargando NPCs.Dat"
     Call CargaNpcsDat
@@ -313,6 +326,7 @@ Sub Main()
     ' Obj.dat
     frmCargando.Label1(2).Caption = "Cargando Obj.Dat"
     Call LoadOBJData
+    Call LoadGlobalDrop
     
     ' Hechizos.dat
     frmCargando.Label1(2).Caption = "Cargando Hechizos.Dat"
@@ -346,8 +360,6 @@ Sub Main()
     'Bots
     frmCargando.Label1(2).Caption = "Cargando Bots"
     Call ModBOTS.CargarBOTs
-    Call ModBOTS.CargarMensajesBOTS
-    Call ModBOTS.ia_Spells
     
     ' Mapas
     If BootDelBackUp Then
@@ -363,6 +375,9 @@ Sub Main()
     
     'Arenas de Retos
     Call LoadArenas
+    
+    'Cargamos la experiencia requerida para cada nivel
+    Call CargarExpXLVL
     
     ' Home distance
     Call generateMatrix(MATRIX_INITIAL_MAP)
@@ -474,7 +489,7 @@ Private Sub LoadConstants()
     ListaClases(eClass.Bandit) = "Bandido"
     ListaClases(eClass.Paladin) = "Paladin"
     ListaClases(eClass.Hunter) = "Cazador"
-    ListaClases(eClass.Worker) = "Trabajador"
+    ListaClases(eClass.Brujo) = "Brujo"
     ListaClases(eClass.Pirat) = "Pirata"
     
     ' Skills
@@ -498,6 +513,7 @@ Private Sub LoadConstants()
     SkillsNames(eSkill.Proyectiles) = "Combate a distancia"
     SkillsNames(eSkill.Wrestling) = "Combate sin armas"
     SkillsNames(eSkill.Navegacion) = "Navegacion"
+    SkillsNames(eSkill.Equitacion) = "Equitacion"
     
     ' Attributes
     ListaAtributos(eAtributos.Fuerza) = "Fuerza"
@@ -775,6 +791,7 @@ Sub Restart()
     
     Call ResetForums
     Call LoadOBJData
+    Call LoadGlobalDrop
     
     Call LoadMapData
     
@@ -899,9 +916,9 @@ Public Sub EfectoFrio(ByVal UserIndex As Integer)
 
         If .Counters.Frio < IntervaloFrio Then
             .Counters.Frio = .Counters.Frio + 1
-        Else
+        Else '
 
-            If MapInfo(.Pos.Map).Terreno = eTerrain.terrain_nieve Then
+            If TerrainStringToByte(MapInfo(.Pos.Map).Terreno) = eTerrain.terrain_nieve Then
                 Call WriteConsoleMsg(UserIndex, "Estas muriendo de frio, abrigate o moriras!!", FontTypeNames.FONTTYPE_INFO)
                 modifi = Porcentaje(.Stats.MaxHp, 5)
                 .Stats.MinHp = .Stats.MinHp - modifi
@@ -1049,6 +1066,8 @@ Public Sub EfectoMimetismo(ByVal UserIndex As Integer)
                     .Char.ShieldAnim = NingunEscudo
                     .Char.WeaponAnim = NingunArma
                     .Char.CascoAnim = NingunCasco
+                    .Char.AuraAnim = NingunAura
+                    .Char.AuraColor = NingunAura
 
                 End If
 
@@ -1058,11 +1077,13 @@ Public Sub EfectoMimetismo(ByVal UserIndex As Integer)
                 .Char.CascoAnim = .CharMimetizado.CascoAnim
                 .Char.ShieldAnim = .CharMimetizado.ShieldAnim
                 .Char.WeaponAnim = .CharMimetizado.WeaponAnim
+                .Char.AuraAnim = .CharMimetizado.AuraAnim
+                .Char.AuraColor = .CharMimetizado.AuraColor
 
             End If
             
             With .Char
-                Call ChangeUserChar(UserIndex, .body, .Head, .heading, .WeaponAnim, .ShieldAnim, .CascoAnim)
+                Call ChangeUserChar(UserIndex, .body, .Head, .heading, .WeaponAnim, .ShieldAnim, .CascoAnim, .AuraAnim, .AuraColor)
 
             End With
             
@@ -1564,6 +1585,8 @@ Sub SaveUser(ByVal UserIndex As Integer, Optional ByVal SaveTimeOnline As Boolea
             .Char.CascoAnim = .CharMimetizado.CascoAnim
             .Char.ShieldAnim = .CharMimetizado.ShieldAnim
             .Char.WeaponAnim = .CharMimetizado.WeaponAnim
+            .Char.AuraAnim = .CharMimetizado.AuraAnim
+            .Char.AuraColor = .CharMimetizado.AuraColor
             .Counters.Mimetismo = 0
             .flags.Mimetizado = 0
             ' Se fue el efecto del mimetismo, puede ser atacado por npcs
@@ -1578,6 +1601,8 @@ Sub SaveUser(ByVal UserIndex As Integer, Optional ByVal SaveTimeOnline As Boolea
         .Reputacion.Promedio = Prom
         
         Call SaveUserToDatabase(UserIndex, SaveTimeOnline)
+        
+        Call UpdateUserQuest(UserIndex)
 
     End With
 
@@ -1598,6 +1623,8 @@ Sub LoadUser(ByVal UserIndex As Integer)
     On Error GoTo ErrorHandler
 
     Call LoadUserFromDatabase(UserIndex)
+    
+    Call LoadQuestStats(UserIndex)
 
     With UserList(UserIndex)
 
@@ -1782,4 +1809,152 @@ Private Sub InicializarSonidos()
     SND_RESUCITAR_SACERDOTE = 103
     SND_CURAR_SACERDOTE = 104
     
+End Sub
+
+Public Sub LogGlobal(ByVal str As String)
+'***************************************************
+'Autor: Lorwik
+'Fecha: 09/06/2020
+'Descripcion: Guardamos todo lo que se habla por el chat global
+'***************************************************
+
+    Dim nfile As Integer
+    
+    nfile = FreeFile ' obtenemos un canal
+    Open App.Path & "\logs\GlobalChat(" & Month(Date) & "-" & Year(Date) & ").log" For Append Shared As #nfile
+    
+        Print #nfile, Date & " " & time & " " & str
+        
+    Close #nfile
+
+End Sub
+
+Public Sub BanGlobalChatCargar()
+'***************************************************
+'Autor: Lorwik
+'Fecha: 09/06/2020
+'Descripcion: Carga la lista de baneados del chat global
+'***************************************************
+    Dim ArchN As Long
+    Dim Tmp As String
+    Dim ArchivoLog As String
+
+    ArchivoLog = App.Path & "\logs\BanGlobalChat.dat"
+
+    Set BanUsersChatGlobal = New Collection
+
+    ArchN = FreeFile()
+    Open ArchivoLog For Input As #ArchN
+
+    Do While Not EOF(ArchN)
+        Line Input #ArchN, Tmp
+        BanUsersChatGlobal.Add Tmp
+    Loop
+
+    Close #ArchN
+End Sub
+
+Public Sub BanGlobalChatAgregar(ByVal UserName As String)
+'***************************************************
+'Autor: Lorwik
+'Fecha: 09/06/2020
+'Descripcion: Agrega un nuevo baneado del chat global
+'***************************************************
+
+    BanUsersChatGlobal.Add UserName
+
+    Call BanGlobalChatGuardar
+End Sub
+
+Public Function BanGlobalChatBuscar(ByVal UserName As String) As Long
+'***************************************************
+'Autor: Lorwik
+'Fecha: 09/06/2020
+'Descripcion: Busca un usuario baneado del chat global de entre la lista
+'***************************************************
+
+    Dim Dale As Boolean
+    Dim LoopC As Long
+
+    Dale = True
+    LoopC = 1
+    Do While LoopC <= BanUsersChatGlobal.Count And Dale
+        Dale = (BanUsersChatGlobal.Item(LoopC) <> UserName)
+        LoopC = LoopC + 1
+    Loop
+
+    If Dale Then
+        BanGlobalChatBuscar = 0
+    Else
+        BanGlobalChatBuscar = LoopC - 1
+    End If
+End Function
+
+Public Function BanGlobalChatQuitar(ByVal UserName As String) As Boolean
+'***************************************************
+'Autor: Lorwik
+'Fecha: 09/06/2020
+'Descripcion: Elimina a un usuario baneado del chat global de la lista
+'***************************************************
+On Error Resume Next
+
+    Dim n As Long
+
+    n = BanGlobalChatBuscar(UserName)
+    If n > 0 Then
+        BanUsersChatGlobal.Remove n
+        BanGlobalChatGuardar
+        BanGlobalChatQuitar = True
+    Else
+        BanGlobalChatQuitar = False
+    End If
+
+End Function
+
+Public Sub BanGlobalChatGuardar()
+'***************************************************
+'Autor: Lorwik
+'Fecha: 09/06/2020
+'Descripcion: Guarda la lista de usuarios baneados del chat global
+'***************************************************
+
+    Dim ArchivoLog As String
+    Dim ArchN As Long
+    Dim LoopC As Long
+
+    ArchivoLog = App.Path & "\logs\BanGlobalChat.dat"
+
+    ArchN = FreeFile()
+    Open ArchivoLog For Output As #ArchN
+
+    For LoopC = 1 To BanUsersChatGlobal.Count
+        Print #ArchN, BanUsersChatGlobal.Item(LoopC)
+    Next LoopC
+
+    Close #ArchN
+End Sub
+
+Public Sub CargarExpXLVL()
+'****************************************
+'Autor: Lorwik
+'Fecha: 27/06/2020
+'Descripción: Cargamos en un Array la exp requerida para subir de nivel
+'****************************************
+
+    Dim LoopC As Long
+    Dim Leer As New clsIniManager
+    
+    If Not FileExist(App.Path & "\Dat\exp_por_nivel.dat", vbNormal) Then
+        MsgBox ("No se ha encontrado el archivo '\Dat\exp_por_nivel.dat'")
+        End
+    End If
+    
+    Call Leer.Initialize(App.Path & "\Dat\exp_por_nivel.dat")
+  
+    For LoopC = 1 To STAT_MAXELV
+    
+         EXP_X_LVL(LoopC) = CLng(Leer.GetValue("INIT", "Nivel" & LoopC))
+          
+    Next LoopC
+  
 End Sub

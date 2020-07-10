@@ -1185,7 +1185,7 @@ Sub HechizoEstadoUsuario(ByVal UserIndex As Integer, ByRef HechizoCasteado As Bo
             .Char.ShieldAnim = UserList(targetIndex).Char.ShieldAnim
             .Char.WeaponAnim = UserList(targetIndex).Char.WeaponAnim
         
-            Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim)
+            Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
        
             Call InfoHechizo(UserIndex)
             HechizoCasteado = True
@@ -1833,7 +1833,7 @@ Sub HechizoEstadoNPC(ByVal NpcIndex As Integer, _
                 .Char.ShieldAnim = NingunEscudo
                 .Char.WeaponAnim = NingunArma
         
-                Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim)
+                Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
             
             Else
                 Call WriteConsoleMsg(UserIndex, "Solo los druidas pueden mimetizarse con criaturas.", FontTypeNames.FONTTYPE_INFO)
@@ -1927,9 +1927,10 @@ Sub HechizoPropNPC(ByVal spellIndex As Integer, _
 
             End If
 
-            If UserList(UserIndex).Invent.AnilloEqpObjIndex = LAUDELFICO Or UserList(UserIndex).Invent.AnilloEqpObjIndex = FLAUTAELFICA Then
-                dano = dano * 1.04  'laud magico de los bardos
-
+            If UserList(UserIndex).Invent.AnilloEqpObjIndex = LAUDELFICO Then
+                dano = dano * 1.02  'Laud magico de los bardos
+            ElseIf UserList(UserIndex).Invent.AnilloEqpObjIndex = FLAUTAELFICA Then
+                dano = dano * 1.04 'Flauta
             End If
     
             Call InfoHechizo(UserIndex)

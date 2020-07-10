@@ -133,6 +133,16 @@ Public MapDat As tMapDat
 
 #End If
 
+Public Sub IniciarCabecera()
+
+    With MiCabecera
+        .Desc = "WinterAO Resurrection mod Argentum Online by Noland Studios. http://winterao.com.ar"
+        .crc = Rnd * 245
+        .MagicWord = Rnd * 92
+    End With
+    
+End Sub
+
 Public Sub CargarSpawnList()
     '****************************************************************************************
     'Author: Unknown
@@ -1068,11 +1078,8 @@ Sub LoadOBJData()
             '07/09/07
             
             .GrhIndex = val(Leer.GetValue("OBJ" & Object, "GrhIndex"))
-
-            If .GrhIndex = 0 Then
-                .GrhIndex = .GrhIndex
-
-            End If
+            
+            .ParticulaIndex = val(Leer.GetValue("OBJ" & Object, "ParticulaIndex"))
             
             .OBJType = val(Leer.GetValue("OBJ" & Object, "ObjType"))
             
@@ -1195,6 +1202,13 @@ Sub LoadOBJData()
                 Case eOBJType.otTeleport
                     .Radio = val(Leer.GetValue("OBJ" & Object, "Radio"))
                     
+                Case eOBJType.otPasajes
+                    .DesdeMap = val(Leer.GetValue("OBJ" & Object, "DesdeMap"))
+                    .HastaMap = val(Leer.GetValue("OBJ" & Object, "HastaMap"))
+                    .HastaX = val(Leer.GetValue("OBJ" & Object, "HastaX"))
+                    .HastaY = val(Leer.GetValue("OBJ" & Object, "HastaY"))
+                    .CantidadSkill = val(Leer.GetValue("OBJ" & Object, "CantidadSkill"))
+                    
                 Case eOBJType.otMochilas
                     .MochilaType = val(Leer.GetValue("OBJ" & Object, "MochilaType"))
                     .MinLevel = val(Leer.GetValue("OBJ" & Object, "MinLevel"))
@@ -1204,6 +1218,11 @@ Sub LoadOBJData()
                     
                 Case eOBJType.otPergaminos
                     .MinLevel = val(Leer.GetValue("OBJ" & Object, "MinLevel"))
+                    
+                Case eOBJType.otManuales
+                    .IndiceSkill = val(Leer.GetValue("OBJ" & Object, "IndiceSkill"))
+                    .CuantosSkill = val(Leer.GetValue("OBJ" & Object, "CuantosSkill"))
+                    .SkNecesarios = val(Leer.GetValue("OBJ" & Object, "SkNecesarios"))
 
             End Select
             
@@ -1318,6 +1337,14 @@ Sub LoadOBJData()
             
             .NoSeCae = val(Leer.GetValue("OBJ" & Object, "NoSeCae"))
             
+            'Auras
+            Dim Aura As String
+            Aura = Leer.GetValue("OBJ" & Object, "Aura")
+            .GrhAura = val(ReadField(1, Aura, Asc("-")))
+            .AuraColor = val(ReadField(2, Aura, Asc("-")))
+            
+            .NoRobable = val(Leer.GetValue("OBJ" & Object, "NoRobable"))
+            
             .Upgrade = val(Leer.GetValue("OBJ" & Object, "Upgrade"))
             
             frmCargando.cargar.Value = frmCargando.cargar.Value + 1
@@ -1337,6 +1364,57 @@ Sub LoadOBJData()
     Exit Sub
 Errhandler:
     MsgBox "error cargando objetos " & Err.Number & ": " & Err.description
+
+End Sub
+
+Sub LoadGlobalDrop()
+'**********************************************
+'Autor: Lorwik
+'Fecha: 01/07/2020
+'Descripcion: Carga la lista de drops globales de NPCs
+'**********************************************
+
+    On Error GoTo Errhandler
+
+    If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando base de datos de drop globales."
+    
+    Dim i As Integer
+    Dim ln As String
+
+    Dim Leer   As clsIniManager
+
+    Set Leer = New clsIniManager
+    
+    Call Leer.Initialize(DatPath & "global_drop.dat")
+    
+    'obtiene el numero de obj
+    NUMGLOBALDROPS = val(Leer.GetValue("GLOBAL", "NumDrops"))
+    
+    frmCargando.cargar.min = 0
+    frmCargando.cargar.max = NumObjDatas
+    frmCargando.cargar.Value = 0
+    
+    ReDim Preserve GlobalDROPObject(1 To NUMGLOBALDROPS) As GlobalObj
+    
+    For i = 1 To NUMGLOBALDROPS
+    
+        GlobalDROPObject(i).ObjIndex = Leer.GetValue("DROP" & i, "ObjIndex")
+        
+        ln = Leer.GetValue("DROP" & i, "Amount")
+        
+        GlobalDROPObject(i).MinAmount = val(ReadField(1, ln, Asc("-")))
+        GlobalDROPObject(i).MaxAmount = val(ReadField(2, ln, Asc("-")))
+        GlobalDROPObject(i).Prob = Leer.GetValue("DROP" & i, "Prob")
+    
+    Next i
+    
+    Set Leer = Nothing
+    
+    If frmMain.Visible Then frmMain.txtStatus.Text = Date & " " & time & " - Se cargo base de datos de los drop globales. Operacion Realizada con exito."
+    
+    Exit Sub
+Errhandler:
+    MsgBox "error cargando drop globales " & Err.Number & ": " & Err.description
 
 End Sub
 
@@ -1493,10 +1571,14 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
     Dim npcfile         As String
     Dim i               As Long
     Dim j               As Long
+    Dim LaCabecera      As tCabecera
     
     fh = FreeFile
     
     Open MAPFl & ".csm" For Binary Access Read As fh
+    
+        Get #fh, , LaCabecera
+    
         Get #fh, , MH
         Get #fh, , MapSize
         Get #fh, , MapDat
@@ -1631,7 +1713,11 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
         .InvocarSinEfecto = MapDat.InvocarSinEfecto
         .RoboNpcsPermitido = MapDat.RoboNpcsPermitido
 
-        .lvlMinimo = MapDat.lvlMinimo
+        If MapDat.lvlMinimo = "" Then
+            .lvlMinimo = 0
+        Else
+            .lvlMinimo = MapDat.lvlMinimo
+        End If
         
         .NoEncriptarMP = MapDat.NoEncriptarMP
 
@@ -1688,11 +1774,12 @@ Sub LoadSini()
     
     STAT_MAXELV = val(Lector.GetValue("INIT", "NivelMaximo"))
     
+    'Redimensionamos el array de experiencia por nivel
+    ReDim EXP_X_LVL(1 To STAT_MAXELV) As Long
+    
     ExpMultiplier = val(Lector.GetValue("INIT", "ExpMulti"))
     OroMultiplier = val(Lector.GetValue("INIT", "OroMulti"))
     OficioMultiplier = val(Lector.GetValue("INIT", "OficioMulti"))
-    DiceMinimum = val(Lector.GetValue("INIT", "MinDados"))
-    DiceMaximum = val(Lector.GetValue("INIT", "MaxDados"))
     
     DropItemsAlMorir = CBool(Lector.GetValue("INIT", "DropItemsAlMorir"))
     
@@ -1740,9 +1827,6 @@ Sub LoadSini()
     ContadorAntiPiquete = val(Lector.GetValue("INIT", "ContadorAntiPiquete"))
     MinutosCarcelPiquete = val(Lector.GetValue("INIT", "MinutosCarcelPiquete"))
 
-    'Inventario Inicial
-    InventarioUsarConfiguracionPersonalizada = CBool(val(Lector.GetValue("INVENTARIO", "InventarioUsarConfiguracionPersonalizada")))
-
     'Atributos Iniciales
     EstadisticasInicialesUsarConfiguracionPersonalizada = CBool(val(Lector.GetValue("ESTADISTICASINICIALESPJ", "Activado")))
 
@@ -1763,6 +1847,7 @@ Sub LoadSini()
     IntervaloUserPuedeCastear = val(Lector.GetValue("INTERVALOS", "IntervaloLanzaHechizo"))
     IntervaloUserPuedeTrabajar = val(Lector.GetValue("INTERVALOS", "IntervaloTrabajo"))
     IntervaloUserPuedeAtacar = val(Lector.GetValue("INTERVALOS", "IntervaloUserPuedeAtacar"))
+    INTERVALO_GLOBAL = val(Lector.GetValue("INTERVALOS", "IntervaloGlobal"))
     
     'TODO : Agregar estos intervalos al form!!!
     IntervaloMagiaGolpe = val(Lector.GetValue("INTERVALOS", "IntervaloMagiaGolpe"))
@@ -1773,6 +1858,7 @@ Sub LoadSini()
     IntervaloPuedeSerAtacado = val(Lector.GetValue("INTERVALOS", "IntervaloPuedeSerAtacado"))
     IntervaloAtacable = val(Lector.GetValue("INTERVALOS", "IntervaloAtacable"))
     IntervaloOwnedNpc = val(Lector.GetValue("INTERVALOS", "IntervaloOwnedNpc"))
+    
 
     MinutosWs = val(Lector.GetValue("INTERVALOS", "IntervaloWS"))
 
@@ -2006,7 +2092,7 @@ Sub BackUPnPc(ByVal NpcIndex As Integer, ByVal hFile As Integer)
         If .Invent.NroItems > 0 Then
 
             For LoopC = 1 To .Invent.NroItems
-                Print #hFile, "Obj" & LoopC & "=" & .Invent.Object(LoopC).ObjIndex & "-" & .Invent.Object(LoopC).Amount
+                Print #hFile, "Obj" & LoopC & "=" & .Invent.Object(LoopC).ObjIndex & "-" & .Invent.Object(LoopC).Amount & "-" & .Invent.Object(LoopC).RandomDrop
             Next LoopC
 
         End If
@@ -2076,6 +2162,7 @@ Sub CargarNpcBackUp(ByVal NpcIndex As Integer, ByVal NpcNumber As Integer)
                 ln = GetVar(npcfile, "NPC" & NpcNumber, "Obj" & LoopC)
                 .Invent.Object(LoopC).ObjIndex = val(ReadField(1, ln, 45))
                 .Invent.Object(LoopC).Amount = val(ReadField(2, ln, 45))
+                .Invent.Object(LoopC).RandomDrop = val(ReadField(3, ln, 45))
                
             Next LoopC
 
@@ -2084,15 +2171,10 @@ Sub CargarNpcBackUp(ByVal NpcIndex As Integer, ByVal NpcNumber As Integer)
             For LoopC = 1 To MAX_INVENTORY_SLOTS
                 .Invent.Object(LoopC).ObjIndex = 0
                 .Invent.Object(LoopC).Amount = 0
+                .Invent.Object(LoopC).RandomDrop = 0
             Next LoopC
 
         End If
-        
-        For LoopC = 1 To MAX_NPC_DROPS
-            ln = GetVar(npcfile, "NPC" & NpcNumber, "Drop" & LoopC)
-            .Drop(LoopC).ObjIndex = val(ReadField(1, ln, 45))
-            .Drop(LoopC).Amount = val(ReadField(2, ln, 45))
-        Next LoopC
         
         .flags.NPCActive = True
         .flags.Respawn = val(GetVar(npcfile, "NPC" & NpcNumber, "ReSpawn"))

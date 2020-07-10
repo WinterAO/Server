@@ -121,6 +121,8 @@ Public IntervaloAtacable                 As Long
 
 Public IntervaloOwnedNpc                 As Long
 
+Public INTERVALO_GLOBAL                  As Long
+
 'BALANCE
 
 Public PorcentajeRecuperoMana            As Integer
@@ -445,12 +447,12 @@ Public Function BanIpQuita(ByVal IP As String) As Boolean
 
     On Error Resume Next
 
-    Dim n As Long
+    Dim N As Long
     
-    n = BanIpBuscar(IP)
+    N = BanIpBuscar(IP)
 
-    If n > 0 Then
-        Call BanIps.Remove(n)
+    If N > 0 Then
+        Call BanIps.Remove(N)
         Call BanIpGuardar
         
         ' Agrego la regla al firewall para que borre la regla de la IP a desbanear.

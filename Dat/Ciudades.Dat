@@ -24,11 +24,11 @@ Y=75
 MAPA=29
 
 [Prision]
-X=75
-Y=47
-MAPA=66
+X=44
+Y=54
+MAPA=35
 
 [Prision-Afuera]
-X=75
-Y=65
-MAPA=66
+X=43
+Y=67
+MAPA=35

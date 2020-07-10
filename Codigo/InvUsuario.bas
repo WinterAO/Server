@@ -500,11 +500,6 @@ Sub DropObj(ByVal UserIndex As Integer, _
                 Call QuitarUserInvItem(UserIndex, Slot, DropObj.Amount)
                 Call UpdateUserInv(False, UserIndex, Slot)
             
-                If ObjData(DropObj.ObjIndex).OBJType = eOBJType.otBarcos Then
-                    Call WriteConsoleMsg(UserIndex, "ATENCION!! ACABAS DE TIRAR TU BARCA!", FontTypeNames.FONTTYPE_WARNING)
-
-                End If
-            
                 If Not .flags.Privilegios And PlayerType.User Then Call LogGM(.Name, "Tiro cantidad:" & Num & " Objeto:" & ObjData(DropObj.ObjIndex).Name)
             
                 'Log de Objetos que se tiran al piso. Pablo (ToxicWaste) 07/09/07
@@ -548,7 +543,7 @@ Sub EraseObj(ByVal Num As Integer, _
         If .ObjInfo.Amount <= 0 Then
             .ObjInfo.ObjIndex = 0
             .ObjInfo.Amount = 0
-        
+
             Call modSendData.SendToAreaByPos(Map, X, Y, PrepareMessageObjectDelete(X, Y))
 
         End If
@@ -576,7 +571,7 @@ Sub MakeObj(ByRef obj As obj, _
             Else
                 .ObjInfo = obj
                 
-                Call modSendData.SendToAreaByPos(Map, X, Y, PrepareMessageObjectCreate(ObjData(obj.ObjIndex).GrhIndex, X, Y, ObjData(obj.ObjIndex).Shadow))
+                Call modSendData.SendToAreaByPos(Map, X, Y, PrepareMessageObjectCreate(ObjData(obj.ObjIndex).GrhIndex, ObjData(obj.ObjIndex).ParticulaIndex, X, Y, ObjData(obj.ObjIndex).Shadow))
 
             End If
             
@@ -809,7 +804,9 @@ Public Sub Desequipar(ByVal UserIndex As Integer, ByVal Slot As Byte)
 
                     With .Char
                         .WeaponAnim = NingunArma
-                        Call ChangeUserChar(UserIndex, .body, .Head, .heading, .WeaponAnim, .ShieldAnim, .CascoAnim)
+                        .AuraAnim = NingunAura
+                        .AuraColor = NingunAura
+                        Call ChangeUserChar(UserIndex, .body, .Head, .heading, .WeaponAnim, .ShieldAnim, .CascoAnim, .AuraAnim, .AuraColor)
 
                     End With
 
@@ -845,7 +842,7 @@ Public Sub Desequipar(ByVal UserIndex As Integer, ByVal Slot As Byte)
                 Call DarCuerpoDesnudo(UserIndex, .flags.Mimetizado = 1)
 
                 With .Char
-                    Call ChangeUserChar(UserIndex, .body, .Head, .heading, .WeaponAnim, .ShieldAnim, .CascoAnim)
+                    Call ChangeUserChar(UserIndex, .body, .Head, .heading, .WeaponAnim, .ShieldAnim, .CascoAnim, .AuraAnim, .AuraColor)
 
                 End With
                  
@@ -862,7 +859,7 @@ Public Sub Desequipar(ByVal UserIndex As Integer, ByVal Slot As Byte)
 
                     With .Char
                         .CascoAnim = NingunCasco
-                        Call ChangeUserChar(UserIndex, .body, .Head, .heading, .WeaponAnim, .ShieldAnim, .CascoAnim)
+                        Call ChangeUserChar(UserIndex, .body, .Head, .heading, .WeaponAnim, .ShieldAnim, .CascoAnim, .AuraAnim, .AuraColor)
 
                     End With
 
@@ -881,7 +878,7 @@ Public Sub Desequipar(ByVal UserIndex As Integer, ByVal Slot As Byte)
 
                     With .Char
                         .ShieldAnim = NingunEscudo
-                        Call ChangeUserChar(UserIndex, .body, .Head, .heading, .WeaponAnim, .ShieldAnim, .CascoAnim)
+                        Call ChangeUserChar(UserIndex, .body, .Head, .heading, .WeaponAnim, .ShieldAnim, .CascoAnim, .AuraAnim, .AuraColor)
 
                     End With
 
@@ -924,9 +921,7 @@ Function EsUsable(ByVal ObjIndex As Integer)
     
     Select Case obj.OBJType
     
-         Case eOBJType.otArbolElfico, _
-              eOBJType.otArboles, _
-              eOBJType.otCarteles, _
+         Case eOBJType.otCarteles, _
               eOBJType.otForos, _
               eOBJType.otFragua, _
               eOBJType.otMuebles, _
@@ -1074,7 +1069,9 @@ Sub EquiparInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                             .CharMimetizado.WeaponAnim = NingunArma
                         Else
                             .Char.WeaponAnim = NingunArma
-                            Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim)
+                            .Char.AuraAnim = NingunAura
+                            .Char.AuraColor = NingunAura
+                            Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
 
                         End If
 
@@ -1099,7 +1096,9 @@ Sub EquiparInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                         .CharMimetizado.WeaponAnim = GetWeaponAnim(UserIndex, ObjIndex)
                     Else
                         .Char.WeaponAnim = GetWeaponAnim(UserIndex, ObjIndex)
-                        Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim)
+                        .Char.AuraAnim = obj.GrhAura
+                        .Char.AuraColor = obj.AuraColor
+                        Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
 
                     End If
 
@@ -1184,7 +1183,7 @@ Sub EquiparInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                         Call DarCuerpoDesnudo(UserIndex, .flags.Mimetizado = 1)
 
                         If Not .flags.Mimetizado = 1 Then
-                            Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim)
+                            Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
 
                         End If
 
@@ -1207,7 +1206,7 @@ Sub EquiparInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                         .CharMimetizado.body = obj.Ropaje
                     Else
                         .Char.body = obj.Ropaje
-                        Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim)
+                        Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
 
                     End If
 
@@ -1230,7 +1229,7 @@ Sub EquiparInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                             .CharMimetizado.CascoAnim = NingunCasco
                         Else
                             .Char.CascoAnim = NingunCasco
-                            Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim)
+                            Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
 
                         End If
 
@@ -1254,7 +1253,7 @@ Sub EquiparInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                         .CharMimetizado.CascoAnim = obj.CascoAnim
                     Else
                         .Char.CascoAnim = obj.CascoAnim
-                        Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim)
+                        Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
 
                     End If
 
@@ -1277,7 +1276,7 @@ Sub EquiparInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                             .CharMimetizado.ShieldAnim = NingunEscudo
                         Else
                             .Char.ShieldAnim = NingunEscudo
-                            Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim)
+                            Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
 
                         End If
 
@@ -1302,7 +1301,7 @@ Sub EquiparInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                     Else
                         .Char.ShieldAnim = obj.ShieldAnim
                          
-                        Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim)
+                        Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
 
                     End If
 
@@ -1363,7 +1362,7 @@ Private Function CheckRazaUsaRopa(ByVal UserIndex As Integer, _
     With UserList(UserIndex)
 
         'Verifica si la raza puede usar la ropa
-        If .Raza = eRaza.Humano Or .Raza = eRaza.Elfo Or .Raza = eRaza.Drow Then
+        If .Raza = eRaza.Humano Or .Raza = eRaza.Elfo Or .Raza = eRaza.Drow Or .Raza = eRaza.Orco Or .Raza = eRaza.Vampiro Then
             CheckRazaUsaRopa = (ObjData(ItemIndex).RazaEnana = 0)
         Else
             CheckRazaUsaRopa = (ObjData(ItemIndex).RazaEnana = 1)
@@ -1998,8 +1997,8 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                 'Verifica si esta aproximado al agua antes de permitirle navegar
                 If .Stats.ELV < 25 Then
 
-                    ' Solo pirata y trabajador pueden navegar antes
-                    If .clase <> eClass.Worker And .clase <> eClass.Pirat Then
+                    ' Solo pirata puede navegar antes
+                    If .clase <> eClass.Pirat Then
                         Call WriteConsoleMsg(UserIndex, "Para recorrer los mares debes ser nivel 25 o superior.", FontTypeNames.FONTTYPE_INFO)
                         Exit Sub
                     Else
@@ -2007,7 +2006,7 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                         ' Pero a partir de 20
                         If .Stats.ELV < 20 Then
                             
-                            If .clase = eClass.Worker And .Stats.UserSkills(eSkill.pesca) <> 100 Then
+                            If .Stats.UserSkills(eSkill.pesca) <> 100 Then
                                 Call WriteConsoleMsg(UserIndex, "Para recorrer los mares debes ser nivel 20 y ademas tu skill en pesca debe ser 100.", FontTypeNames.FONTTYPE_INFO)
                             Else
                                 Call WriteConsoleMsg(UserIndex, "Para recorrer los mares debes ser nivel 20 o superior.", FontTypeNames.FONTTYPE_INFO)
@@ -2015,17 +2014,6 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                             End If
                             
                             Exit Sub
-                        Else
-
-                            ' Esta entre 20 y 25, si es trabajador necesita tener 100 en pesca
-                            If .clase = eClass.Worker Then
-                                If .Stats.UserSkills(eSkill.pesca) <> 100 Then
-                                    Call WriteConsoleMsg(UserIndex, "Para recorrer los mares debes ser nivel 20 o superior y ademas tu skill en pesca debe ser 100.", FontTypeNames.FONTTYPE_INFO)
-                                    Exit Sub
-
-                                End If
-
-                            End If
 
                         End If
 
@@ -2043,7 +2031,6 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                     Call WriteConsoleMsg(UserIndex, "Debes aproximarte al agua para navegar y a la tierra para bajar!", FontTypeNames.FONTTYPE_INFO)
 
                 End If
-
 
             '<-------------> MONTURAS <----------->
             Case eOBJType.otMonturas
@@ -2068,35 +2055,81 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                     Call WriteConsoleMsg(UserIndex, "Tu clase no puede usar este objeto.", FontTypeNames.FONTTYPE_INFO)
                 End If
                     
-            Case eOBJType.otManuales
+            Case eOBJType.otPasajes
             
-                Select Case ObjIndex
+                If .flags.Muerto = 1 Then
+                    'Call WriteConsoleMsg(UserIndex, "Estas muerto!! Solo podes usar items cuando estas vivo. ", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
+                    Exit Sub
+
+                End If
+
+                If .flags.TargetNpcTipo <> Marinero Then
+                    Call WriteConsoleMsg(UserIndex, "Primero debes hacer click sobre el marinero.", FontTypeNames.FONTTYPE_INFO)
+                    Exit Sub
+                End If
+                    
+                If Distancia(Npclist(.flags.TargetNPC).Pos, .Pos) > 3 Then
+                    Call WriteConsoleMsg(UserIndex, "¡Estas demasiado lejos!", FontTypeNames.FONTTYPE_INFO)
+                    Exit Sub
+                End If
+                    
+                If .Pos.Map <> obj.DesdeMap Then
+                    Call WriteConsoleMsg(UserIndex, "El pasaje no lo compraste aquí! Largate!", FontTypeNames.FONTTYPE_INFO)
+                    Exit Sub
+                End If
+                    
+                If Not MapaValido(obj.HastaMap) Then
+                    Call WriteConsoleMsg(UserIndex, "El pasaje lleva hacia un mapa que ya no esta disponible! Disculpa las molestias.", FontTypeNames.FONTTYPE_INFO)
+                    Exit Sub
+                End If
+                    
+                If .Stats.UserSkills(eSkill.Navegacion) < obj.CantidadSkill Then
+                    Call WriteConsoleMsg(UserIndex, "Debido a la peligrosidad del viaje no puedo llevarte. Necesitas " & obj.CantidadSkill & " skills para utilizar este pasaje. Consulta el manual del juego en http://winterao.com.ar/wiki/ para saber cómo conseguirlos.", FontTypeNames.FONTTYPE_INFO)
+                    Exit Sub
+                End If
+                    
+                If .Stats.ELV < 10 Then
+                    Call WriteConsoleMsg(UserIndex, "Debido a la peligrosidad del viaje, no puedo llevarte, necesitas ser nivel 10 como minimo.", FontTypeNames.FONTTYPE_INFO)
+                    Exit Sub
+                End If
+                    
+                Call WarpUserChar(UserIndex, obj.HastaMap, obj.HastaX, obj.HastaY, True)
+                Call WriteConsoleMsg(UserIndex, "Has viajado por varios días, te sientes exhausto!", FontTypeNames.FONTTYPE_CENTINELA)
                 
-                    Case 1127   ' Manual de Liderazgo
-                        
-                        If .Stats.UserSkills(eSkill.Liderazgo) < 100 Then
-                            .Stats.UserSkills(eSkill.Liderazgo) = 100
-                            Call QuitarUserInvItem(UserIndex, Slot, 1)
-                            Call UpdateUserInv(False, UserIndex, Slot)
-                        End If
-                        
-                    Case 1128   ' Manual de Supervivencia
-                        
-                        If .Stats.UserSkills(eSkill.Supervivencia) < 100 Then
-                            .Stats.UserSkills(eSkill.Supervivencia) = 100
-                            Call QuitarUserInvItem(UserIndex, Slot, 1)
-                            Call UpdateUserInv(False, UserIndex, Slot)
-                        End If
-                        
-                    Case 1129   ' Manual de Navegacion
-                        
-                        If .Stats.UserSkills(eSkill.Navegacion) < 100 Then
-                            .Stats.UserSkills(eSkill.Navegacion) = 100
-                            Call QuitarUserInvItem(UserIndex, Slot, 1)
-                            Call UpdateUserInv(False, UserIndex, Slot)
-                        End If
-                        
-                End Select
+                'Penalizador:
+                .Stats.MinAGU = 0
+                .Stats.MinHam = 0
+                .flags.Sed = 1
+                .flags.Hambre = 1
+                
+                Call WriteUpdateHungerAndThirst(UserIndex)
+                Call QuitarUserInvItem(UserIndex, Slot, 1)
+                Call UpdateUserInv(False, UserIndex, Slot)
+                    
+            Case eOBJType.otManuales
+                '¿Esta muerto?
+                If .flags.Muerto = 1 Then
+                    Call WriteConsoleMsg(UserIndex, "¡Estás muerto!", FontTypeNames.FONTTYPE_INFO)
+                    Exit Sub
+                End If
+                
+                If .Stats.UserSkills(obj.IndiceSkill) >= obj.CuantosSkill Then
+                    Call WriteConsoleMsg(UserIndex, "¡Tus conocimientos son superiores a los de este manual!", FontTypeNames.FONTTYPE_INFO)
+                    Exit Sub
+                End If
+                
+                If Not .Stats.UserSkills(obj.IndiceSkill) >= obj.SkNecesarios Then
+                    Call WriteConsoleMsg(UserIndex, "¡No llegas a comprender este manual, necesitas tener " & obj.SkNecesarios & " Skills para comprenderlo!", FontTypeNames.FONTTYPE_INFO)
+                    Exit Sub
+                End If
+                
+                .Stats.UserSkills(obj.IndiceSkill) = obj.CuantosSkill
+                Call WriteConsoleMsg(UserIndex, "¡Tus conocimientos en " & SkillsNames(obj.IndiceSkill) & " aumentaron en " & obj.CuantosSkill & " puntos!", FontTypeNames.FONTTYPE_INFOBOLD)
+                
+                'Quitamos el manual del inventario
+                Call QuitarUserInvItem(UserIndex, Slot, 1)
+                Call UpdateUserInv(False, UserIndex, Slot)
                     
             End Select
     

@@ -77,6 +77,8 @@ Public Const INFINITE_LOOPS As Integer = -1
 
 Public Const FXSANGRE = 14
 
+Public Const FX_PASA_NIVEL = 51
+
 Public Const MAXAMIGOS As Byte = 50   'Cantidad Maxima de Amigos
 
 ''
@@ -190,7 +192,7 @@ Public Enum eClass
     Bandit      'Bandido
     Paladin     'Paladin
     Hunter      'Cazador
-    Worker      'Trabajador
+    Brujo       'Brujo
     Pirat       'Pirata
 
 End Enum
@@ -257,6 +259,8 @@ Public Const NingunCasco             As Integer = 2
 
 Public Const NingunArma              As Integer = 2
 
+Public Const NingunAura              As Integer = 0
+
 Public Const EspadaMataDragonesIndex As Integer = 402
 
 Public Const LAUDMAGICO              As Integer = 696
@@ -281,11 +285,11 @@ Public Const MAXMASCOTASENTRENADOR   As Byte = 7
 
 Public Enum FXIDs
 
-    FXWARP = 1
     FXMEDITARCHICO = 4
     FXMEDITARMEDIANO = 5
     FXMEDITARGRANDE = 6
     FXMEDITARXGRANDE = 16
+    FXWARP = 25
     FXMEDITARXXGRANDE = 34
 
 End Enum
@@ -329,7 +333,6 @@ Public Enum eTrigger6
 
 End Enum
 
-'TODO : Reemplazar por un enum
 Public Const Bosque   As String = "BOSQUE"
 
 Public Const Nieve    As String = "NIEVE"
@@ -386,19 +389,14 @@ End Enum
 Public Const MAXUSERHECHIZOS               As Byte = 35
 
 ' TODO: Y ESTO ? LO CONOCE GD ?
-Public Const EsfuerzoTalarGeneral          As Byte = 4
 
-Public Const EsfuerzoTalarLenador          As Byte = 2
+Public Const EsfuerzoTalar                 As Byte = 2
 
-Public Const EsfuerzoPescarPescador        As Byte = 1
+Public Const EsfuerzoPescar                As Byte = 3
 
-Public Const EsfuerzoPescarGeneral         As Byte = 3
+Public Const EsfuerzoExcavar               As Byte = 3
 
-Public Const EsfuerzoExcavarMinero         As Byte = 2
-
-Public Const EsfuerzoExcavarGeneral        As Byte = 5
-
-Public Const FX_TELEPORT_INDEX             As Integer = 1
+Public Const FX_TELEPORT_INDEX             As Integer = 25
 
 Public Const PORCENTAJE_MATERIALES_UPGRADE As Single = 0.85
 
@@ -416,7 +414,9 @@ End Enum
 
 Public Const Guardias                       As Integer = 6
 
-Public Const MAX_ORO_EDIT                   As Long = 5000000
+Public Const MAX_ORO_EDIT                   As Long = 500000
+
+Public Const MAX_EXP_EDIT                   As Long = 500000
 
 Public Const MAX_VIDA_EDIT                  As Long = 30000
 
@@ -508,7 +508,9 @@ Public Enum eNPCType
     Gobernador = 11
     WorldBoss = 12
     dummy = 13
-    Quest = 14
+    quest = 14
+    Marinero = 15
+    
 End Enum
 
 Public Const MIN_APUNALAR   As Byte = 10
@@ -652,7 +654,7 @@ Public Const AumentoSTLadron            As Byte = AumentoSTDef + 3
 
 Public Const AumentoSTMago              As Byte = AumentoSTDef - 1
 
-Public Const AumentoSTTrabajador        As Byte = AumentoSTDef + 25
+Public Const AumentoSTBrujo             As Byte = AumentoSTDef + 25
 
 'Sonidos
 Public SND_SWING                        As Byte
@@ -755,7 +757,7 @@ Public Enum eOBJType
     otBotellaVacia = 33
     otBotellaLlena = 34
     otManuales = 35
-    otArbolElfico = 36
+    otPasajes = 36
     otMochilas = 37
     otYacimientoPez = 38
     otCualquiera = 1000
@@ -782,6 +784,8 @@ Public Const ELU_SKILL_INICIAL        As Byte = 200
 Public Const EXP_ACIERTO_SKILL        As Byte = 50
 
 Public Const EXP_FALLO_SKILL          As Byte = 20
+
+Public EXP_X_LVL() As Long
 
 ' **************************************************************
 ' **************************************************************
@@ -909,6 +913,7 @@ Public Type UserObj
     ObjIndex As Integer
     Amount As Integer
     Equipped As Byte
+    RandomDrop As Integer
 
 End Type
 
@@ -982,6 +987,8 @@ Public Type Char
     
     heading As eHeading
 
+    AuraAnim As Long
+    AuraColor As Long
 End Type
 
 Public Type CraftingItem
@@ -1000,6 +1007,8 @@ Public Type ObjData
     
     GrhIndex As Long ' Indice del grafico que representa el obj
     GrhSecundario As Long
+    
+    ParticulaIndex As Integer
     
     'Solo contenedores
     MAXITEMS As Integer
@@ -1133,6 +1142,23 @@ Public Type ObjData
     
     MontTipo As Byte 'Tipo de Montura
     
+    IndiceSkill As Byte 'El indice del Skills
+    CuantosSkill As Byte 'Cantidad de Skills que va a sumar
+    SkNecesarios As Byte 'Cantidad de Skills que requiere para poder aprender el manual
+    
+    NoRobable As Byte 'No se puede robar
+    
+    'Pasajes
+    DesdeMap As Integer
+    HastaMap As Integer
+    HastaY As Byte
+    HastaX As Byte
+    NecesitaSkill As Byte
+    CantidadSkill As Byte
+    
+    'Auras
+    GrhAura As Long
+    AuraColor As Long
 End Type
 
 Public Type obj
@@ -1152,15 +1178,14 @@ End Type
 Public Type tUserQuest
 
     NPCsKilled() As Integer
-    QuestIndex As Integer
-
+    QuestStatus As Byte
+    
 End Type
  
 Public Type tQuestStats
 
-    Quests(1 To MAXUSERQUESTS) As tUserQuest
+    Quests(1 To MAXQUESTS) As tUserQuest
     NumQuestsDone As Integer
-    QuestsDone() As Integer
 
 End Type
 
@@ -1460,6 +1485,8 @@ Public Type UserFlags
     ParalizedByNpcIndex As Integer
     
     TargetBot As Byte
+    
+    Global As Byte 'Indica si el usuario puede usar el global
 
 End Type
 
@@ -1519,6 +1546,7 @@ Public Type UserCounters
     
     PacketsTick As Byte
 
+    LastGlobalMsg As Long
 End Type
 
 'Cosas faccionarias.
@@ -1573,8 +1601,8 @@ Public Type AccountUser
     ID As Long
     UserName As String
     Password As String
+    Email As String
     salt As String
-    Hash As String
     status As Boolean
     Gemas As Long
     
@@ -1794,15 +1822,6 @@ End Type
 
 ' New type for holding the pathfinding info
 
-Public Type tDrops
-
-    ObjIndex As Integer
-    Amount As Long
-
-End Type
-
-Public Const MAX_NPC_DROPS As Byte = 5
-
 Public Type npc
 
     Name As String
@@ -1835,7 +1854,6 @@ Public Type npc
 
     GiveEXP As Long
     GiveGLD As Long
-    Drop(1 To MAX_NPC_DROPS) As tDrops
     
     QuestNumber As Integer
     
@@ -2336,6 +2354,8 @@ Public Enum eGMCommands
     LimpiarMundo            '/LIMPIARMUNDO
     EditGems                '/EDITGEMS
     ConsultarGemas          '/CONSULTARGEMS
+    SilenciarGlobal         '/SILENCIARGLOBAL
+    ToggleGlobal            '/TOGGLEGLOBAL
 End Enum
 
 Public Const MATRIX_INITIAL_MAP                     As Integer = 1
@@ -2372,7 +2392,7 @@ Public Const ORCO_H_ULTIMA_CABEZA                   As Integer = 530
 
 Public Const VAMPIRO_H_PRIMER_CABEZA                As Integer = 623
 
-Public Const VAMPIRO_H_ULTIMA_CABEZA                As Integer = 631
+Public Const VAMPIRO_H_ULTIMA_CABEZA                As Integer = 633
 
 '**************************************************
 Public Const HUMANO_M_PRIMER_CABEZA                 As Integer = 70
@@ -2399,9 +2419,9 @@ Public Const ORCO_M_PRIMER_CABEZA                   As Integer = 570
 
 Public Const ORCO_M_ULTIMA_CABEZA                   As Integer = 599
 
-Public Const VAMPIRO_M_PRIMER_CABEZA                As Integer = 632
+Public Const VAMPIRO_M_PRIMER_CABEZA                As Integer = 634
 
-Public Const VAMPIRO_M_ULTIMA_CABEZA                As Integer = 640
+Public Const VAMPIRO_M_ULTIMA_CABEZA                As Integer = 643
 
 ' Por ahora la dejo constante.. SI se quisiera extender la propiedad de paralziar, se podria hacer
 ' una nueva variable en el dat.
@@ -2452,10 +2472,6 @@ Public OroMultiplier        As Integer
 
 Public OficioMultiplier     As Integer
 
-Public DiceMinimum          As Integer
-
-Public DiceMaximum          As Integer
-
 Public DropItemsAlMorir     As Boolean
 
 Public ArtesaniaCosto       As Long
@@ -2463,8 +2479,6 @@ Public ArtesaniaCosto       As Long
 Public ContadorAntiPiquete  As Integer
 
 Public MinutosCarcelPiquete As Integer
-
-Public InventarioUsarConfiguracionPersonalizada As Boolean
 
 Public EstadisticasInicialesUsarConfiguracionPersonalizada As Boolean
 
@@ -2489,3 +2503,22 @@ Type tRetarded
 End Type
 
 Public RetardoSpawn(1 To MAXNPCS) As tRetarded
+
+'CHAT GLOBAL
+Public Declare Function timeGetTime Lib "winmm.dll" () As Long
+Public BanUsersChatGlobal As Collection
+Public GlobalChatActive As Boolean
+
+'DROP GLOBALES
+
+Public Type GlobalObj
+
+    ObjIndex As Integer
+    MinAmount As Integer
+    MaxAmount As Integer
+    Prob As Byte
+        
+End Type
+
+Public GlobalDROPObject() As GlobalObj
+Public NUMGLOBALDROPS As Integer
