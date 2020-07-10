@@ -54,6 +54,10 @@ Public Const MAXASPIRANTES        As Byte = 10
 
 Private Const MAXANTIFACCION      As Byte = 5
 
+'Objeto necesario para poder fundar clan
+
+Private Const ITEMFUNDARCLAN      As Integer = 1251
+
 'puntos maximos de antifaccion que un clan tolera antes de ser cambiada su alineacion
 
 Public Enum ALINEACION_GUILD
@@ -702,8 +706,8 @@ Public Function PuedeFundarUnClan(ByVal UserIndex As Integer, _
 
     End If
     
-    If UserList(UserIndex).Stats.ELV < 25 Or UserList(UserIndex).Stats.UserSkills(eSkill.Liderazgo) < 90 Then
-        refError = "Para fundar un clan debes ser nivel 25 y tener 90 skills en liderazgo."
+    If UserList(UserIndex).Stats.ELV < 40 Or UserList(UserIndex).Stats.UserSkills(eSkill.Liderazgo) < 90 Or Not TieneObjetos(ITEMFUNDARCLAN, 1, UserIndex) Then
+        refError = "Para fundar un clan debes ser nivel 40, tener 90 skills en liderazgo y esta en posesión del " & ObjData(ITEMFUNDARCLAN).Name & "."
         Exit Function
 
     End If
