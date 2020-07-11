@@ -14253,11 +14253,11 @@ Crucial=0
 Valor=100000
 
 [OBJ1127]
-Name=Manual de Liderazgo SUPREMO
+Name=Secretos de Liderazgo
 GrhIndex=538
 ObjType=35
 Agarrable=0
-Valor=100000
+Valor=0
 IndiceSkill=16
 CuantosSkill=100
 SkNecesarios=0
@@ -15728,6 +15728,30 @@ Crucial=0
 
 [OBJ1251]
 Name=Anillo de la hermandad
+GrhIndex=17937
+ObjType=30
+Agarrable=0
+Valor=0
+Crucial=0
+
+[OBJ1252]
+Name=Esencia del Titan de Tierra
+GrhIndex=17937
+ObjType=30
+Agarrable=0
+Valor=0
+Crucial=0
+
+[OBJ1253]
+Name=Esencia del Titan de Agua
+GrhIndex=17937
+ObjType=30
+Agarrable=0
+Valor=0
+Crucial=0
+
+[OBJ1254]
+Name=Esencia del Titan de Fuego
 GrhIndex=17937
 ObjType=30
 Agarrable=0

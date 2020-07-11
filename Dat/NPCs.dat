@@ -2117,6 +2117,8 @@ PoderAtaque=260
 PoderEvasion=245
 snd2=78
 BackUp=0
+NROITEMS=1
+Obj1=1254-1
 
 [NPC1051]
 Name=Titan de Agua
@@ -2144,6 +2146,8 @@ PoderAtaque=260
 PoderEvasion=245
 snd2=78
 BackUp=0
+NROITEMS=1
+Obj1=1253-1
 
 [NPC1052]
 Name=Titan de Tierra
@@ -2172,6 +2176,8 @@ PoderEvasion=245
 snd2=78
 BackUp=0
 NoShadow=1
+NROITEMS=1
+Obj1=1252-1
 
 ##############################################
 ##############NPC PRETORIANOS#################
