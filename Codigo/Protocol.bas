@@ -22918,9 +22918,10 @@ Public Sub HandleLimpiarMundo(ByVal Userindex As Integer)
     'Me fijo si es GM
     If Not EsGm(Userindex) Then Exit Sub
     
-    'Forzamos la ejecucion de la limpieza del mundo con cuenta regresiva.
-    'Y de paso nos ahorramos en repetir codigo.
-    counterSV.Limpieza = 6
+    
+    Call LogGM(UserList(Userindex).Name, " forzo la limpieza del mundo.")
+    
+    tickLimpieza = 301
     
 End Sub
 

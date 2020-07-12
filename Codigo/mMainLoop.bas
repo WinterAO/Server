@@ -36,7 +36,7 @@ Public Sub PacketResend()
     'Last Modification: 04/01/07
     'Attempts to resend to the user all data that may be enqueued.
     '***************************************************
-    On Error GoTo Errhandler:
+    On Error GoTo ErrHandler:
 
     Dim i As Long
     For i = 1 To LastUser
@@ -45,7 +45,7 @@ Public Sub PacketResend()
 
     Exit Sub
 
-Errhandler:
+ErrHandler:
     Call LogError("Error en packetResend - Error: " & Err.Number & " - Desc: " & Err.description)
 
     Resume Next
@@ -338,23 +338,31 @@ Public Sub PasarSegundo()
     '
     '***************************************************
 
-    On Error GoTo Errhandler
+    On Error GoTo ErrHandler
 
     Dim i As Long
     
     'Limpieza del mundo
-    If counterSV.Limpieza > 0 Then
-        counterSV.Limpieza = counterSV.Limpieza - 1
-        
-        If counterSV.Limpieza < 6 Then Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Limpieza del mundo en " & counterSV.Limpieza & " segundos. Atentos!!", FontTypeNames.FONTTYPE_SERVER))
-        
-        If counterSV.Limpieza = 0 Then
-            Call BorrarObjetosLimpieza
-            Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Limpieza del mundo finalizada.", FontTypeNames.FONTTYPE_SERVER))
-            UltimoSlotLimpieza = -1
+    If tickLimpieza > 0 Then
+        tickLimpieza = tickLimpieza - 1
+                
+        Select Case tickLimpieza
+                                                        
+            Case 300
+                Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Servidor> Limpieza del mundo en 5 Minuto. Atentos!!", FontTypeNames.FONTTYPE_SERVER))
 
-        End If
-
+            Case 60
+                Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Servidor> Limpieza del mundo en 1 Minuto. Atentos!!", FontTypeNames.FONTTYPE_SERVER))
+                
+            Case 5 To 1
+                Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Servidor> Limpieza del mundo en " & tickLimpieza & " segundos. Atentos!!", FontTypeNames.FONTTYPE_SERVER))
+            
+            Case 0
+                Call BorrarObjetosLimpieza
+                Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Servidor> Limpieza del mundo finalizada.", FontTypeNames.FONTTYPE_SERVER))
+                
+        End Select
+        
     End If
     
     For i = 1 To LastUser
@@ -455,7 +463,7 @@ Public Sub PasarSegundo()
 
     Exit Sub
 
-Errhandler:
+ErrHandler:
     Call LogError("Error en PasarSegundo. Err: " & Err.description & " - " & Err.Number & " - UserIndex: " & i)
 
     Resume Next

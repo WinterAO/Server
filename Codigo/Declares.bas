@@ -55,13 +55,7 @@ Type CentinelaUser
 
 End Type
 
-Private Type tCountersServidor
-
-    Limpieza As Integer
-
-End Type
-
-Public counterSV      As tCountersServidor
+Public tickLimpieza      As Integer
 
 ''
 ' Modulo de declaraciones. Aca hay de todo.
