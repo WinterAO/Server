@@ -388,20 +388,20 @@ Private Function ValidateFight_Users(ByVal UserIndex As Integer, _
         If Users(LoopC) <> vbNullString Then
             tUser = NameIndex(Users(LoopC))
                       
-            ' No fuckings gms
-            If tUser > 0 Then
-                If EsGm(tUser) Then
-                    ' ValidateFight_Users = False
-                ' Exit Function
-                    End If
-                End If
                       
             If tUser <= 0 Then
                 'call SendMsjUsers("El personaje " & Users(LoopC) & " esta offline.", Users())
                 Call WriteConsoleMsg(UserIndex, "El personaje " & Users(LoopC) & " esta offline", FontTypeNames.FONTTYPE_INFO)
                 ValidateFight_Users = False
                 Exit Function
-             End If
+            End If
+            
+            '¿Se invito a un GM?
+            If EsGm(tUser) Then
+                Call WriteConsoleMsg(UserIndex, "Los GMs no pueden participar en retos.", FontTypeNames.FONTTYPE_INFO)
+                ValidateFight_Users = False
+                Exit Function
+            End If
                           
             With UserList(tUser)
                 If .flags.Muerto = 1 Then

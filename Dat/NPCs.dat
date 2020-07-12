@@ -569,6 +569,58 @@ Comercia=0
 BackUp=0
 
 ##############################################################
+############## NPCS VENDEDORES DE SHAKOUD ####################
+##############################################################
+
+[NPC50]
+Name=Gobernadora
+NpcType=11
+Desc=Hola ¿Que te parecen las visas de la hermosa Shakoud?. ¿Te apetece establecer Shakoud como tu hogar y teletransportarte aquí cuando mueras? escribe /HOGAR
+Head=9
+Heading=1
+Body=485
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=0
+BackUp=0
+
+[NPC51]
+Name=Sacerdote
+NpcType=1
+Desc=Hijo mio ¿estas herido?, deja que las palabras de los dioses sanen tus heridas.
+Head=314
+Heading=1
+Body=159
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=0
+BackUp=0
+
+[NPC52]
+Name=Banquero
+NpcType=4
+Desc=Hola, bienvenido a la sede de Shakoud de la cadena de finanzas Goliath. Somos la cadena mas grande en Argentum, contamos con bancos en las ciudades mas importantes.
+Head=428
+Heading=1
+Body=292
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=0
+BackUp=0
+
+##############################################################
 ####################### HOSTILES #############################
 ##############################################################
 

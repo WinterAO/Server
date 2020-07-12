@@ -17124,7 +17124,7 @@ Public Sub WriteLoggedMessage(ByVal UserIndex As Integer)
         Call .outgoingData.WriteByte(.clase)
 
     End With
-
+    
     Exit Sub
 
 Errhandler:
@@ -22218,6 +22218,8 @@ Public Sub WriteUserAccountLogged(ByVal UserIndex As Integer)
 
     With UserList(UserIndex)
         Call .outgoingData.WriteByte(ServerPacketID.AccountLogged)
+        .Redundance = RandomNumber(15, 250)
+        Call .outgoingData.WriteByte(.Redundance)
         Call .outgoingData.WriteASCIIString(.AccountInfo.UserName)
         Call .outgoingData.WriteByte(.AccountInfo.NumChars)
 
@@ -22241,7 +22243,6 @@ Public Sub WriteUserAccountLogged(ByVal UserIndex As Integer)
             Next i
 
         End If
-
     End With
 
     Exit Sub

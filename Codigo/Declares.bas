@@ -1710,6 +1710,8 @@ Public Type User
     cvcUser As cvc_User
     
     QuestStats As tQuestStats
+    
+    Redundance As Byte
 
 End Type
 
@@ -2485,6 +2487,8 @@ Public ApiPath As String
 Public ApiNodeJsTaskId As Double
 
 Public NombreServidor As String
+
+Public Security As New clsSecurity
 
 'Lorwik> Sistema de retardo de Spawn de NPC
 Type tRetarded

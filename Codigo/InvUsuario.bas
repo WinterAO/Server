@@ -2212,7 +2212,8 @@ Sub TirarTodo(ByVal UserIndex As Integer)
         ' Si estas en zona segura tampoco se tira el oro.
         If MapInfo(.Pos.Map).Pk Then
             
-            If Cantidad > 0 Then
+            'Si supera los 100k no se cae
+            If Cantidad > 0 And Cantidad < 100000 Then
                 Call TirarOro(Cantidad, UserIndex)
             End If
             

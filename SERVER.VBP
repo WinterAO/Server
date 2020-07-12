@@ -80,6 +80,7 @@ Module=Cuentas; Codigo\Cuentas.bas
 Module=Logs; Codigo\Logs.bas
 Module=Amigos; Codigo\Amigos.bas
 Module=ModBOTS; Codigo\ModBOTS.bas
+Class=clsSecurity; Codigo\clsSecurity.cls
 IconForm="frmMain"
 Startup="Sub Main"
 HelpFile=""

@@ -582,6 +582,7 @@ Private Sub AddItemsToNewUser(ByVal UserIndex As Integer, ByVal UserClase As eCl
     Dim IsPaladin As Boolean
 
     IsPaladin = UserClase = eClass.Paladin
+    
     With UserList(UserIndex)
         'Pociones Rojas (Newbie)
         Slot = 1
@@ -612,7 +613,7 @@ Private Sub AddItemsToNewUser(ByVal UserIndex As Integer, ByVal UserClase As eCl
         ' Equipo ropa
         .Invent.Object(Slot).Amount = 1
         .Invent.Object(Slot).Equipped = 1
-
+'
         .Invent.ArmourEqpSlot = Slot
         .Invent.ArmourEqpObjIndex = .Invent.Object(Slot).ObjIndex
 
