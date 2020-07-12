@@ -1391,7 +1391,8 @@ PoderEvasion=25
 Snd1=35
 Snd2=9
 BackUp=0
-NROITEMS=0
+NROITEMS=1
+Obj1=666-1-80 'Piel de gato
 
 ##################
 ####LEVEL 15######
