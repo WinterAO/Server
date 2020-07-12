@@ -1375,6 +1375,7 @@ End Type
 
 'Flags
 Public Type UserFlags
+    GMRequested As Integer
     ' Retos
     SlotReto As Byte
     SlotRetoUser As Byte
@@ -1900,7 +1901,7 @@ Public Type MapBlock
 
     Blocked As Byte
     Graphic(1 To 4) As Long
-    UserIndex As Integer
+    Userindex As Integer
     NpcIndex As Integer
     ObjInfo As obj
     TileExit As WorldPos
