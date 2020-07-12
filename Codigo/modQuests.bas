@@ -292,7 +292,8 @@ Public Sub CleanQuestSlot(ByVal UserIndex As Integer, ByVal QuestSlot As Integer
  
     With UserList(UserIndex).QuestStats.Quests(QuestSlot)
         
-        If QuestSlot = NumQuests Then Exit Sub
+        '¿El slot de quest es mayor al numero de quest cargadas o no tiene la quest aceptada?
+        If QuestSlot > NumQuests Or .QuestStatus = eStatusQuest.NoAceptada Then Exit Sub
         
         If QuestList(QuestSlot).RequiredNPCs Then
 

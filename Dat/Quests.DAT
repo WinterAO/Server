@@ -70,7 +70,7 @@ RewardOBJ1=559-1
 
 [QUEST5]
 Nombre=Prueba de hermandad
-Desc=Siempre me decian que no confiara en nadie, el
+Desc=Hoy en dia todos quieren tener su propia hermandad, pero muchos no son dignos de ello. Una hermandad significa confiar en tus hermanos, estar con ellos en las situaciones mas dificiles. Demuestrame que eres digno de fundar una hermandad y te obsequiere con este objeto.
 RequiredLevel=40
  
 RequiredNPCs=3
