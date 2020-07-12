@@ -552,6 +552,22 @@ Obj3=1008-1000
 Obj4=1058-1000
 BackUp=1
 
+[NPC25]
+Name=Gobernador
+NpcType=11
+Desc=Hola joven, espero que estes disfrutando de la belleza de Ramx. Si quieres establecer Ramx como tu hogar y teletransportarte aquí cuando mueras, escribe /HOGAR
+Head=9
+Heading=1
+Body=171
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=0
+BackUp=0
+
 ##############################################################
 ####################### HOSTILES #############################
 ##############################################################

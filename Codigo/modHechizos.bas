@@ -1185,7 +1185,7 @@ Sub HechizoEstadoUsuario(ByVal UserIndex As Integer, ByRef HechizoCasteado As Bo
             .Char.ShieldAnim = UserList(targetIndex).Char.ShieldAnim
             .Char.WeaponAnim = UserList(targetIndex).Char.WeaponAnim
         
-            Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
+            Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.Heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
        
             Call InfoHechizo(UserIndex)
             HechizoCasteado = True
@@ -1486,14 +1486,6 @@ Sub HechizoEstadoUsuario(ByVal UserIndex As Integer, ByRef HechizoCasteado As Bo
                 Else
                     Call WriteConsoleMsg(UserIndex, "El esfuerzo de resucitar te ha debilitado.", FontTypeNames.FONTTYPE_INFO)
                     HechizoCasteado = True
-
-                End If
-            
-                If UserList(targetIndex).flags.Traveling = 1 Then
-                    UserList(targetIndex).Counters.goHome = 0
-                    UserList(targetIndex).flags.Traveling = 0
-                    'Call WriteConsoleMsg(TargetIndex, "Tu viaje ha sido cancelado.", FontTypeNames.FONTTYPE_FIGHT)
-                    Call WriteMultiMessage(targetIndex, eMessages.CancelHome)
 
                 End If
             
@@ -1833,7 +1825,7 @@ Sub HechizoEstadoNPC(ByVal NpcIndex As Integer, _
                 .Char.ShieldAnim = NingunEscudo
                 .Char.WeaponAnim = NingunArma
         
-                Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
+                Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.Heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
             
             Else
                 Call WriteConsoleMsg(UserIndex, "Solo los druidas pueden mimetizarse con criaturas.", FontTypeNames.FONTTYPE_INFO)

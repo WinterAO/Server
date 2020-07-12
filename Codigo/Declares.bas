@@ -760,6 +760,7 @@ Public Enum eOBJType
     otPasajes = 36
     otMochilas = 37
     otYacimientoPez = 38
+    otPiedraHogar = 39
     otCualquiera = 1000
 
 End Enum
@@ -985,7 +986,7 @@ Public Type Char
     FX As Integer
     loops As Integer
     
-    heading As eHeading
+    Heading As eHeading
 
     AuraAnim As Long
     AuraColor As Long
@@ -1478,7 +1479,6 @@ Public Type UserFlags
     Mimetizado As Byte
     
     lastMap As Integer
-    Traveling As Byte 'Travelin Band ?
     
     ParalizedBy As String
     ParalizedByIndex As Integer
@@ -1541,8 +1541,6 @@ Public Type UserCounters
     Ocultando As Long   ' Unico trabajo no revisado por el centinela
     
     failedUsageAttempts As Long
-    
-    goHome As Long
     
     PacketsTick As Byte
 
@@ -2102,8 +2100,6 @@ Public DistribucionSemienteraVida(1 To 4) As Integer
 
 Public Ciudades(1 To NUMCIUDADES)         As WorldPos
 
-Public distanceToCities()                 As HomeDistance
-
 Public QuestList()                        As tQuest
 
 Public Records()                          As tRecord
@@ -2189,7 +2185,6 @@ Public Enum eMessages
     UserKill
     EarnExp
     Home
-    CancelHome
     FinishHome
     
     '//Mensajes nuevos
@@ -2359,8 +2354,6 @@ Public Enum eGMCommands
 End Enum
 
 Public Const MATRIX_INITIAL_MAP                     As Integer = 1
-
-Public Const GOHOME_PENALTY                         As Integer = 5
 
 Public Const GM_MAP                                 As Integer = 49
 

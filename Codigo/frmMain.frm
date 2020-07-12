@@ -573,12 +573,8 @@ Sub CheckIdleUser()
             
             'Conexion activa? y es un usuario loggeado?
             If .ConnID <> -1 And .flags.UserLogged Then
-
-                'Actualiza el contador de inactividad
-                If .flags.Traveling = 0 Then
-                    .Counters.IdleCount = .Counters.IdleCount + 1
-
-                End If
+            
+                .Counters.IdleCount = .Counters.IdleCount + 1
                 
                 If Not EsGm(iUserIndex) Then
                     If .Counters.IdleCount >= IdleLimit Then
@@ -853,14 +849,14 @@ Private Sub cmdConfiguracion_Click()
 
 End Sub
 
-Private Sub cmdDB_Click(Index As Integer)
+Private Sub cmdDB_Click(index As Integer)
 
 #If DBConexionUnica = 0 Then
     MsgBox ("El server esta configurado para conexion/desconexion por cada query, no es posible conectar ni desconectar en este modo. Cambie la configuracion desde los argunmentos en el codigo.")
     Exit Sub
 #End If
 
-    Select Case Index
+    Select Case index
     
         Case 0 'Conectar
             If MsgBox("Desea CONECTAR a la base de datos MYSQL? ¡Si ya esta conectada podria provocar errores!!!", vbYesNo, "¡CONEXION A LA MYSQL!") = vbNo Then Exit Sub

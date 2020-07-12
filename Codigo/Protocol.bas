@@ -944,7 +944,7 @@ Public Sub WriteMultiMessage(ByVal UserIndex As Integer, _
         
         Select Case MessageIndex
 
-            Case eMessages.NPCSwing, eMessages.NPCKillUser, eMessages.BlockedWithShieldUser, eMessages.BlockedWithShieldother, eMessages.UserSwing, eMessages.SafeModeOn, eMessages.SafeModeOff, eMessages.ResuscitationSafeOff, eMessages.ResuscitationSafeOn, eMessages.NobilityLost, eMessages.CantUseWhileMeditating, eMessages.CancelHome, eMessages.FinishHome
+            Case eMessages.NPCSwing, eMessages.NPCKillUser, eMessages.BlockedWithShieldUser, eMessages.BlockedWithShieldother, eMessages.UserSwing, eMessages.SafeModeOn, eMessages.SafeModeOff, eMessages.ResuscitationSafeOff, eMessages.ResuscitationSafeOn, eMessages.NobilityLost, eMessages.CantUseWhileMeditating, eMessages.FinishHome
             
             Case eMessages.NPCHitUser
                 Call .WriteByte(Arg1) 'Target
@@ -1506,7 +1506,6 @@ End Sub
 '
 ' @param    userIndex The index of the user sending the message.
 Private Sub HandleHome(ByVal UserIndex As Integer)
-
     '***************************************************
     'Author: Budi
     'Creation Date: 06/01/2010
@@ -1517,38 +1516,18 @@ Private Sub HandleHome(ByVal UserIndex As Integer)
         Call .incomingData.ReadByte
 
         If .flags.TargetNpcTipo = eNPCType.Gobernador Then
-            Call setHome(UserIndex, Npclist(.flags.TargetNPC).Ciudad, .flags.TargetNPC)
-        Else
-
-            If .flags.Muerto = 1 Then
-
-                'Si es un mapa comUn y no esta en cana
-                If (MapInfo(.Pos.Map).Restringir = eRestrict.restrict_no) And (.Counters.Pena = 0) Then
-                    If .flags.Traveling = 0 Then
-                        If Ciudades(.Hogar).Map <> .Pos.Map Then
-                            Call goHome(UserIndex)
-                        Else
-                            Call WriteConsoleMsg(UserIndex, "Ya te encuentras en tu hogar.", FontTypeNames.FONTTYPE_INFO)
-
-                        End If
-
-                    Else
-                        Call WriteMultiMessage(UserIndex, eMessages.CancelHome)
-                        .flags.Traveling = 0
-                        .Counters.goHome = 0
-
-                    End If
-
-                Else
-                    Call WriteConsoleMsg(UserIndex, "No puedes usar este comando aqui.", FontTypeNames.FONTTYPE_FIGHT)
-
-                End If
-
+            
+            If Distancia(.Pos, Npclist(.flags.TargetNPC).Pos) > 3 Then
+                Call WriteConsoleMsg(UserIndex, "¡El gobernador no puede oirte, acercate mas para hablar con el!", FontTypeNames.FONTTYPE_INFO)
+                
             Else
-                Call WriteConsoleMsg(UserIndex, "Debes estar muerto para utilizar este comando.", FontTypeNames.FONTTYPE_INFO)
-
+                Call setHome(UserIndex, Npclist(.flags.TargetNPC).Ciudad, .flags.TargetNPC)
+                
             End If
-
+        
+        Else
+            Call WriteConsoleMsg(UserIndex, "¡Debes seleccionar al gobernador de una ciudad para establecer un nuevo hogar!", FontTypeNames.FONTTYPE_INFO)
+            
         End If
 
     End With
@@ -1853,7 +1832,7 @@ Private Sub HandleTalk(ByVal UserIndex As Integer)
                     ' Pierde la apariencia de fragata fantasmal
                     Call ToggleBoatBody(UserIndex)
                     Call WriteConsoleMsg(UserIndex, "Has recuperado tu apariencia normal!", FontTypeNames.FONTTYPE_INFO)
-                    Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, NingunArma, NingunEscudo, NingunCasco, NingunAura, NingunAura)
+                    Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.Heading, NingunArma, NingunEscudo, NingunCasco, NingunAura, NingunAura)
 
                 End If
 
@@ -1964,7 +1943,7 @@ Private Sub HandleYell(ByVal UserIndex As Integer)
                     ' Pierde la apariencia de fragata fantasmal
                     Call ToggleBoatBody(UserIndex)
                     Call WriteConsoleMsg(UserIndex, "Has recuperado tu apariencia normal!", FontTypeNames.FONTTYPE_INFO)
-                    Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, NingunArma, NingunEscudo, NingunCasco, NingunAura, NingunAura)
+                    Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.Heading, NingunArma, NingunEscudo, NingunCasco, NingunAura, NingunAura)
 
                 End If
 
@@ -2216,13 +2195,13 @@ Private Sub HandleWalk(ByVal UserIndex As Integer)
 
     Dim TempTick As Long
 
-    Dim heading  As eHeading
+    Dim Heading  As eHeading
     
     With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
-        heading = .incomingData.ReadByte()
+        Heading = .incomingData.ReadByte()
 
         Dim TiempoDeWalk As Byte
         If .flags.Equitando = 1 Then
@@ -2269,12 +2248,6 @@ Private Sub HandleWalk(ByVal UserIndex As Integer)
         'If exiting, cancel
         Call CancelExit(UserIndex)
         
-        'Esta usando el /HOGAR, no se puede mover
-        If .flags.Traveling = 1 Then
-            Call WriteConsoleMsg(UserIndex, "No puedes moverte mientras estas viajando a tu hogar con el comando /HOGAR.", FontTypeNames.FONTTYPE_INFO)
-            Exit Sub
-        End If
-        
         If .flags.Paralizado = 0 Then
             If .flags.Meditando Then
                 'Stop meditating, next action will start movement.
@@ -2285,10 +2258,10 @@ Private Sub HandleWalk(ByVal UserIndex As Integer)
                 Call WriteConsoleMsg(UserIndex, "Dejas de meditar.", FontTypeNames.FONTTYPE_INFO)
                 
                 Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageCreateFX(.Char.CharIndex, 0, 0))
-                Call MoveUserChar(UserIndex, heading)
+                Call MoveUserChar(UserIndex, Heading)
             Else
                 'Move user
-                Call MoveUserChar(UserIndex, heading)
+                Call MoveUserChar(UserIndex, Heading)
                 
                 'Stop resting if needed
                 If .flags.Descansar Then
@@ -2325,7 +2298,7 @@ Private Sub HandleWalk(ByVal UserIndex As Integer)
                         ' Pierde la apariencia de fragata fantasmal
                         Call ToggleBoatBody(UserIndex)
                         Call WriteConsoleMsg(UserIndex, "Has recuperado tu apariencia normal!", FontTypeNames.FONTTYPE_INFO)
-                        Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, NingunArma, NingunEscudo, NingunCasco, NingunAura, NingunAura)
+                        Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.Heading, NingunArma, NingunEscudo, NingunCasco, NingunAura, NingunAura)
 
                     End If
 
@@ -2430,7 +2403,7 @@ Private Sub HandleAttack(ByVal UserIndex As Integer)
                     ' Pierde la apariencia de fragata fantasmal
                     Call ToggleBoatBody(UserIndex)
                     Call WriteConsoleMsg(UserIndex, "Has recuperado tu apariencia normal!", FontTypeNames.FONTTYPE_INFO)
-                    Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, NingunArma, NingunEscudo, NingunCasco, NingunAura, NingunAura)
+                    Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.Heading, NingunArma, NingunEscudo, NingunCasco, NingunAura, NingunAura)
 
                 End If
 
@@ -3837,17 +3810,17 @@ Private Sub HandleChangeHeading(ByVal UserIndex As Integer)
         'Remove packet ID
         Call .incomingData.ReadByte
         
-        Dim heading As eHeading
+        Dim Heading As eHeading
 
         Dim posX    As Integer
 
         Dim posY    As Integer
                 
-        heading = .incomingData.ReadByte()
+        Heading = .incomingData.ReadByte()
         
         If .flags.Paralizado = 1 And .flags.Inmovilizado = 0 Then
 
-            Select Case heading
+            Select Case Heading
 
                 Case eHeading.NORTH
                     posY = -1
@@ -3871,9 +3844,9 @@ Private Sub HandleChangeHeading(ByVal UserIndex As Integer)
         End If
         
         'Validate heading (VB won't say invalid cast if not a valid index like .Net languages would do... *sigh*)
-        If heading > 0 And heading < 5 Then
-            .Char.heading = heading
-            Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
+        If Heading > 0 And Heading < 5 Then
+            .Char.Heading = Heading
+            Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.Heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
 
         End If
 
@@ -10451,7 +10424,7 @@ Private Sub HandleEditChar(ByVal UserIndex As Integer)
                             Call WriteVar(UserCharPath, "INIT", "Body", Arg1)
                             Call WriteConsoleMsg(UserIndex, "Charfile Alterado: " & UserName, FontTypeNames.FONTTYPE_INFO)
                         Else
-                            Call ChangeUserChar(tUser, val(Arg1), UserList(tUser).Char.Head, UserList(tUser).Char.heading, UserList(tUser).Char.WeaponAnim, UserList(tUser).Char.ShieldAnim, UserList(tUser).Char.CascoAnim, UserList(tUser).Char.AuraAnim, UserList(tUser).Char.AuraColor)
+                            Call ChangeUserChar(tUser, val(Arg1), UserList(tUser).Char.Head, UserList(tUser).Char.Heading, UserList(tUser).Char.WeaponAnim, UserList(tUser).Char.ShieldAnim, UserList(tUser).Char.CascoAnim, UserList(tUser).Char.AuraAnim, UserList(tUser).Char.AuraColor)
 
                         End If
                         
@@ -10464,7 +10437,7 @@ Private Sub HandleEditChar(ByVal UserIndex As Integer)
                             Call WriteVar(UserCharPath, "INIT", "Head", Arg1)
                             Call WriteConsoleMsg(UserIndex, "Charfile Alterado: " & UserName, FontTypeNames.FONTTYPE_INFO)
                         Else
-                            Call ChangeUserChar(tUser, UserList(tUser).Char.body, val(Arg1), UserList(tUser).Char.heading, UserList(tUser).Char.WeaponAnim, UserList(tUser).Char.ShieldAnim, UserList(tUser).Char.CascoAnim, UserList(tUser).Char.AuraAnim, UserList(tUser).Char.AuraColor)
+                            Call ChangeUserChar(tUser, UserList(tUser).Char.body, val(Arg1), UserList(tUser).Char.Heading, UserList(tUser).Char.WeaponAnim, UserList(tUser).Char.ShieldAnim, UserList(tUser).Char.CascoAnim, UserList(tUser).Char.AuraAnim, UserList(tUser).Char.AuraColor)
 
                         End If
                         
@@ -11433,14 +11406,7 @@ Private Sub HandleReviveChar(ByVal UserIndex As Integer)
 
                         End If
                         
-                        If .flags.Traveling = 1 Then
-                            .flags.Traveling = 0
-                            .Counters.goHome = 0
-                            Call WriteMultiMessage(tUser, eMessages.CancelHome)
-
-                        End If
-                        
-                        Call ChangeUserChar(tUser, .Char.body, .OrigChar.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
+                        Call ChangeUserChar(tUser, .Char.body, .OrigChar.Head, .Char.Heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
                         
                         Call WriteConsoleMsg(tUser, UserList(UserIndex).Name & " te ha resucitado.", FontTypeNames.FONTTYPE_INFO)
                     Else
@@ -11449,13 +11415,6 @@ Private Sub HandleReviveChar(ByVal UserIndex As Integer)
                     End If
                     
                     .Stats.MinHp = .Stats.MaxHp
-                    
-                    If .flags.Traveling = 1 Then
-                        .Counters.goHome = 0
-                        .flags.Traveling = 0
-                        Call WriteMultiMessage(tUser, eMessages.CancelHome)
-
-                    End If
                     
                 End With
                 
@@ -18152,7 +18111,7 @@ End Sub
 Public Sub WriteCharacterCreate(ByVal UserIndex As Integer, _
                                 ByVal body As Integer, _
                                 ByVal Head As Integer, _
-                                ByVal heading As eHeading, _
+                                ByVal Heading As eHeading, _
                                 ByVal CharIndex As Integer, _
                                 ByVal X As Byte, _
                                 ByVal Y As Byte, _
@@ -18176,7 +18135,7 @@ Public Sub WriteCharacterCreate(ByVal UserIndex As Integer, _
     '***************************************************
     On Error GoTo Errhandler
 
-    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterCreate(body, Head, heading, CharIndex, X, Y, weapon, shield, FX, FXLoops, helmet, Name, NickColor, Privileges, GrhAura, AuraColor, NoShadow, EstadoQuest))
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterCreate(body, Head, Heading, CharIndex, X, Y, weapon, shield, FX, FXLoops, helmet, Name, NickColor, Privileges, GrhAura, AuraColor, NoShadow, EstadoQuest))
     Exit Sub
 
 Errhandler:
@@ -18292,7 +18251,7 @@ End Sub
 Public Sub WriteCharacterChange(ByVal UserIndex As Integer, _
                                 ByVal body As Integer, _
                                 ByVal Head As Integer, _
-                                ByVal heading As eHeading, _
+                                ByVal Heading As eHeading, _
                                 ByVal CharIndex As Integer, _
                                 ByVal weapon As Integer, _
                                 ByVal shield As Integer, _
@@ -18309,7 +18268,7 @@ Public Sub WriteCharacterChange(ByVal UserIndex As Integer, _
     '***************************************************
     On Error GoTo Errhandler
 
-    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterChange(body, Head, heading, CharIndex, weapon, shield, FX, FXLoops, helmet, AuraAnim, AuraColor))
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterChange(body, Head, Heading, CharIndex, weapon, shield, FX, FXLoops, helmet, AuraAnim, AuraColor))
     Exit Sub
 
 Errhandler:
@@ -21374,7 +21333,7 @@ End Function
 
 Public Function PrepareMessageCharacterCreate(ByVal body As Integer, _
                                               ByVal Head As Integer, _
-                                              ByVal heading As eHeading, _
+                                              ByVal Heading As eHeading, _
                                               ByVal CharIndex As Integer, _
                                               ByVal X As Byte, _
                                               ByVal Y As Byte, _
@@ -21402,7 +21361,7 @@ Public Function PrepareMessageCharacterCreate(ByVal body As Integer, _
         Call .WriteInteger(CharIndex)
         Call .WriteInteger(body)
         Call .WriteInteger(Head)
-        Call .WriteByte(heading)
+        Call .WriteByte(Heading)
         Call .WriteByte(X)
         Call .WriteByte(Y)
         Call .WriteInteger(weapon)
@@ -21441,7 +21400,7 @@ End Function
 
 Public Function PrepareMessageCharacterChange(ByVal body As Integer, _
                                               ByVal Head As Integer, _
-                                              ByVal heading As eHeading, _
+                                              ByVal Heading As eHeading, _
                                               ByVal CharIndex As Integer, _
                                               ByVal weapon As Integer, _
                                               ByVal shield As Integer, _
@@ -21476,7 +21435,7 @@ Public Function PrepareMessageCharacterChange(ByVal body As Integer, _
     End With
 
 End Function
-Public Function PrepareMessageHeadingChange(ByVal heading As eHeading, _
+Public Function PrepareMessageHeadingChange(ByVal Heading As eHeading, _
                                             ByVal CharIndex As Integer)
 
     '***************************************************
@@ -21487,7 +21446,7 @@ Public Function PrepareMessageHeadingChange(ByVal heading As eHeading, _
     With auxiliarBuffer
         Call .WriteByte(ServerPacketID.HeadingChange)
         Call .WriteInteger(CharIndex)
-        Call .WriteByte(heading)
+        Call .WriteByte(Heading)
 
         PrepareMessageHeadingChange = .ReadASCIIStringFixed(.Length)
 

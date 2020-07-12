@@ -40,6 +40,7 @@
 ' 36: Pasajes
 ' 37: Mochilas
 ' 38: YacimientoPez
+' 39: Piedra de Hogar
 
 
 ##############################################
@@ -93,7 +94,7 @@ este objeto se mostrara con un grafico. Si le ponemos
 [INIT]
 'aca va el numero de OBJ mas alto, NO la cantidad de OBJs.
 'esto sirve para que los GMS puedan ver la lista completa de items para crear en una ventanita.
-NumOBJs=1251
+NumOBJs=1255
 
 
 [OBJ1]
@@ -15757,3 +15758,11 @@ ObjType=30
 Agarrable=0
 Valor=0
 Crucial=0
+
+[OBJ1255]
+Name=Piedra de Hogar
+GrhIndex=700
+ObjType=39
+Agarrable=0
+Crucial=0
+NoSeCae=1

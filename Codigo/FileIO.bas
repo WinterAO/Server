@@ -2055,7 +2055,7 @@ Sub BackUPnPc(ByVal NpcIndex As Integer, ByVal hFile As Integer)
         Print #hFile, "Desc=" & .Desc
         Print #hFile, "Head=" & val(.Char.Head)
         Print #hFile, "Body=" & val(.Char.body)
-        Print #hFile, "Heading=" & val(.Char.heading)
+        Print #hFile, "Heading=" & val(.Char.Heading)
         Print #hFile, "Movement=" & val(.Movement)
         Print #hFile, "Attackable=" & val(.Attackable)
         Print #hFile, "Comercia=" & val(.Comercia)
@@ -2131,7 +2131,7 @@ Sub CargarNpcBackUp(ByVal NpcIndex As Integer, ByVal NpcNumber As Integer)
         
         .Char.body = val(GetVar(npcfile, "NPC" & NpcNumber, "Body"))
         .Char.Head = val(GetVar(npcfile, "NPC" & NpcNumber, "Head"))
-        .Char.heading = val(GetVar(npcfile, "NPC" & NpcNumber, "Heading"))
+        .Char.Heading = val(GetVar(npcfile, "NPC" & NpcNumber, "Heading"))
         
         .Attackable = val(GetVar(npcfile, "NPC" & NpcNumber, "Attackable"))
         .Comercia = val(GetVar(npcfile, "NPC" & NpcNumber, "Comercia"))
@@ -2232,102 +2232,6 @@ Public Sub CargaApuestas()
     Apuestas.Jugadas = val(GetVar(DatPath & "apuestas.dat", "Main", "Jugadas"))
 
     If frmMain.Visible Then frmMain.txtStatus.Text = Date & " " & time & " - Se cargo el archivo apuestas.dat"
-
-End Sub
-
-Public Sub generateMatrix(ByVal Mapa As Integer)
-    '***************************************************
-    'Author: Unknown
-    'Last Modification: -
-    '
-    '***************************************************
-
-    Dim i As Integer
-
-    Dim j As Integer
-    
-    ReDim distanceToCities(1 To NumMaps) As HomeDistance
-    
-    For j = 1 To NUMCIUDADES
-        For i = 1 To NumMaps
-            distanceToCities(i).distanceToCity(j) = -1
-        Next i
-    Next j
-    
-    For j = 1 To NUMCIUDADES
-        For i = 1 To 4
-
-            Select Case i
-
-                Case eHeading.NORTH
-                    Call setDistance(getLimit(Ciudades(j).Map, eHeading.NORTH), j, i, 0, 1)
-
-                Case eHeading.EAST
-                    Call setDistance(getLimit(Ciudades(j).Map, eHeading.EAST), j, i, 1, 0)
-
-                Case eHeading.SOUTH
-                    Call setDistance(getLimit(Ciudades(j).Map, eHeading.SOUTH), j, i, 0, 1)
-
-                Case eHeading.WEST
-                    Call setDistance(getLimit(Ciudades(j).Map, eHeading.WEST), j, i, -1, 0)
-
-            End Select
-
-        Next i
-    Next j
-
-End Sub
-
-Public Sub setDistance(ByVal Mapa As Integer, _
-                       ByVal city As Byte, _
-                       ByVal side As Integer, _
-                       Optional ByVal X As Integer = 0, _
-                       Optional ByVal Y As Integer = 0)
-    '***************************************************
-    'Author: Unknown
-    'Last Modification: -
-    '
-    '***************************************************
-
-    Dim i   As Integer
-
-    Dim lim As Integer
-
-    If Mapa <= 0 Or Mapa > NumMaps Then Exit Sub
-
-    If distanceToCities(Mapa).distanceToCity(city) >= 0 Then Exit Sub
-
-    If Mapa = Ciudades(city).Map Then
-        distanceToCities(Mapa).distanceToCity(city) = 0
-    Else
-        distanceToCities(Mapa).distanceToCity(city) = Abs(X) + Abs(Y)
-
-    End If
-
-    For i = 1 To 4
-        lim = getLimit(Mapa, i)
-
-        If lim > 0 Then
-
-            Select Case i
-
-                Case eHeading.NORTH
-                    Call setDistance(lim, city, i, X, Y + 1)
-
-                Case eHeading.EAST
-                    Call setDistance(lim, city, i, X + 1, Y)
-
-                Case eHeading.SOUTH
-                    Call setDistance(lim, city, i, X, Y - 1)
-
-                Case eHeading.WEST
-                    Call setDistance(lim, city, i, X - 1, Y)
-
-            End Select
-
-        End If
-
-    Next i
 
 End Sub
 

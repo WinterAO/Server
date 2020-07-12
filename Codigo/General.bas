@@ -379,9 +379,6 @@ Sub Main()
     'Cargamos la experiencia requerida para cada nivel
     Call CargarExpXLVL
     
-    ' Home distance
-    Call generateMatrix(MATRIX_INITIAL_MAP)
-    
     ' Connections
     Call ResetUsersConnections
     
@@ -1015,26 +1012,6 @@ Public Sub EfectoEstadoAtacable(ByVal UserIndex As Integer)
 End Sub
 
 ''
-' Maneja el tiempo de arrivo al hogar
-'
-' @param UserIndex  El index del usuario a ser afectado por el /hogar
-'
-
-Public Sub TravelingEffect(ByVal UserIndex As Integer)
-    '******************************************************
-    'Author: ZaMa
-    'Last Update: 01/06/2010 (ZaMa)
-    '******************************************************
-
-    ' Si ya paso el tiempo de penalizacion
-    If IntervaloGoHome(UserIndex) Then
-        Call HomeArrival(UserIndex)
-
-    End If
-
-End Sub
-
-''
 ' Maneja el tiempo y el efecto del mimetismo
 '
 ' @param UserIndex  El index del usuario a ser afectado por el mimetismo
@@ -1083,7 +1060,7 @@ Public Sub EfectoMimetismo(ByVal UserIndex As Integer)
             End If
             
             With .Char
-                Call ChangeUserChar(UserIndex, .body, .Head, .heading, .WeaponAnim, .ShieldAnim, .CascoAnim, .AuraAnim, .AuraColor)
+                Call ChangeUserChar(UserIndex, .body, .Head, .Heading, .WeaponAnim, .ShieldAnim, .CascoAnim, .AuraAnim, .AuraColor)
 
             End With
             
@@ -1695,7 +1672,7 @@ Sub LoadUser(ByVal UserIndex As Integer)
             .Char.WeaponAnim = NingunArma
             .Char.ShieldAnim = NingunEscudo
             .Char.CascoAnim = NingunCasco
-            .Char.heading = eHeading.SOUTH
+            .Char.Heading = eHeading.SOUTH
 
         End If
 

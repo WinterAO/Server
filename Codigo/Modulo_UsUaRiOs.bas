@@ -126,14 +126,7 @@ Public Sub RevivirUsuario(ByVal UserIndex As Integer)
 
         End If
         
-        If .flags.Traveling Then
-            .flags.Traveling = 0
-            .Counters.goHome = 0
-            Call WriteMultiMessage(UserIndex, eMessages.CancelHome)
-
-        End If
-        
-        Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
+        Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.Heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
         Call WriteUpdateUserStats(UserIndex)
 
     End With
@@ -316,7 +309,7 @@ End Sub
 Public Sub ChangeUserChar(ByVal UserIndex As Integer, _
                           ByVal body As Integer, _
                           ByVal Head As Integer, _
-                          ByVal heading As Byte, _
+                          ByVal Heading As Byte, _
                           ByVal Arma As Integer, _
                           ByVal Escudo As Integer, _
                           ByVal Casco As Integer, _
@@ -331,13 +324,13 @@ Public Sub ChangeUserChar(ByVal UserIndex As Integer, _
     With UserList(UserIndex).Char
         .body = body
         .Head = Head
-        .heading = heading
+        .Heading = Heading
         .WeaponAnim = Arma
         .ShieldAnim = Escudo
         .CascoAnim = Casco
         
-        Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageCharacterChange(body, Head, heading, .CharIndex, Arma, Escudo, .FX, .loops, Casco, AuraAnim, AuraColor))
-        Call SendData(SendTarget.ToPCAreaButIndex, UserIndex, PrepareMessageHeadingChange(heading, .CharIndex))
+        Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageCharacterChange(body, Head, Heading, .CharIndex, Arma, Escudo, .FX, .loops, Casco, AuraAnim, AuraColor))
+        Call SendData(SendTarget.ToPCAreaButIndex, UserIndex, PrepareMessageHeadingChange(Heading, .CharIndex))
 
     End With
 
@@ -493,7 +486,7 @@ Public Sub RefreshCharStatus(ByVal UserIndex As Integer)
 
             End If
             
-            Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
+            Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.Heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
 
         End If
         
@@ -637,7 +630,7 @@ Public Sub MakeUserChar(ByVal toMap As Boolean, _
 
                 End If
             
-                Call WriteCharacterCreate(sndIndex, .Char.body, .Char.Head, .Char.heading, .Char.CharIndex, X, Y, .Char.WeaponAnim, .Char.ShieldAnim, .Char.FX, 999, .Char.CascoAnim, UserName, NickColor, Privileges, .Char.AuraAnim, .Char.AuraColor)
+                Call WriteCharacterCreate(sndIndex, .Char.body, .Char.Head, .Char.Heading, .Char.CharIndex, X, Y, .Char.WeaponAnim, .Char.ShieldAnim, .Char.FX, 999, .Char.CascoAnim, UserName, NickColor, Privileges, .Char.AuraAnim, .Char.AuraColor)
             Else
                 'Hide the name and clan - set privs as normal user
                 Call AgregarUser(UserIndex, .Pos.Map, ButIndex)
@@ -1039,7 +1032,7 @@ Sub MoveUserChar(ByVal UserIndex As Integer, ByVal nHeading As eHeading)
                         Call WriteForceCharMove(CasperIndex, CasperHeading)
                             
                         'Update map and char
-                        .Char.heading = CasperHeading
+                        .Char.Heading = CasperHeading
                         MapData(.Pos.Map, .Pos.X, .Pos.Y).UserIndex = CasperIndex
 
                     End With
@@ -1071,7 +1064,7 @@ Sub MoveUserChar(ByVal UserIndex As Integer, ByVal nHeading As eHeading)
                 End If
                 
                 .Pos = nPos
-                .Char.heading = nHeading
+                .Char.Heading = nHeading
                 MapData(.Pos.Map, .Pos.X, .Pos.Y).UserIndex = UserIndex
                 
                 If HaySacerdote(UserIndex) Then Call AccionParaSacerdote(UserIndex)
@@ -1271,11 +1264,6 @@ Public Sub SendUserStatsTxt(ByVal sendIndex As Integer, ByVal UserIndex As Integ
             Call WriteConsoleMsg(sendIndex, "Logeado hace: " & Hour(TempDate) & ":" & Minute(TempDate) & ":" & Second(TempDate), FontTypeNames.FONTTYPE_INFO)
             Call WriteConsoleMsg(sendIndex, "Total: " & TempStr, FontTypeNames.FONTTYPE_INFO)
         #End If
-
-        If .flags.Traveling = 1 Then
-            Call WriteConsoleMsg(sendIndex, "Tiempo restante para llegar a tu hogar: " & GetHomeArrivalTime(UserIndex) & " segundos.", FontTypeNames.FONTTYPE_INFO)
-
-        End If
         
         Call WriteConsoleMsg(sendIndex, "Oro: " & .Stats.Gld & "  Posicion: " & .Pos.X & "," & .Pos.Y & " en mapa " & .Pos.Map, FontTypeNames.FONTTYPE_INFO)
         Call WriteConsoleMsg(sendIndex, "Dados: " & .Stats.UserAtributos(eAtributos.Fuerza) & ", " & .Stats.UserAtributos(eAtributos.Agilidad) & ", " & .Stats.UserAtributos(eAtributos.Inteligencia) & ", " & .Stats.UserAtributos(eAtributos.Carisma) & ", " & .Stats.UserAtributos(eAtributos.Constitucion), FontTypeNames.FONTTYPE_INFO)
@@ -1871,7 +1859,7 @@ Public Sub UserDie(ByVal UserIndex As Integer, Optional ByVal AttackerIndex As I
         .NroMascotas = 0
         
         '<< Actualizamos clientes >>
-        Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, NingunArma, NingunEscudo, NingunCasco, NingunAura, NingunAura)
+        Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.Heading, NingunArma, NingunEscudo, NingunCasco, NingunAura, NingunAura)
         Call WriteUpdateUserStats(UserIndex)
         Call WriteUpdateStrenghtAndDexterity(UserIndex)
 
@@ -2108,23 +2096,6 @@ Sub WarpUserChar(ByVal UserIndex As Integer, _
             If MapInfo(OldMap).NumUsers < 0 Then
                 MapInfo(OldMap).NumUsers = 0
             End If
-        
-            'Si el mapa al que entro NO ES superficial AND en el que estaba TAMPOCO ES superficial, ENTONCES
-            Dim nextMap, previousMap As Boolean
-
-            nextMap = IIf(distanceToCities(Map).distanceToCity(.Hogar) >= 0, True, False)
-            previousMap = IIf(distanceToCities(.Pos.Map).distanceToCity(.Hogar) >= 0, True, False)
-
-            If previousMap And nextMap Then '138 => 139 (Ambos superficiales, no tiene que pasar nada)
-                'NO PASA NADA PORQUE NO ENTRO A UN DUNGEON.
-            ElseIf previousMap And Not nextMap Then '139 => 140 (139 es superficial, 140 no. Por lo tanto 139 es el ultimo mapa superficial)
-                .flags.lastMap = .Pos.Map
-            ElseIf Not previousMap And nextMap Then '140 => 139 (140 es no es superficial, 139 si. Por lo tanto, el ultimo mapa es 0 ya que no esta en un dungeon)
-                .flags.lastMap = 0
-            ElseIf Not previousMap And Not nextMap Then '140 => 141 (Ninguno es superficial, el ultimo mapa es el mismo de antes)
-                .flags.lastMap = .flags.lastMap
-
-            End If
             
             Call WriteRemoveAllDialogs(UserIndex)
 
@@ -2138,16 +2109,6 @@ Sub WarpUserChar(ByVal UserIndex As Integer, _
         Call WriteUserCharIndexInServer(UserIndex)
         
         Call DoTileEvents(UserIndex, Map, X, Y)
-        
-        If Teletransported Then
-            If .flags.Traveling = 1 Then
-                .flags.Traveling = 0
-                .Counters.goHome = 0
-                Call WriteMultiMessage(UserIndex, eMessages.CancelHome)
-
-            End If
-
-        End If
         
         If FX And .flags.AdminInvisible = 0 Then 'FX
             Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_WARP, X, Y))
@@ -2401,7 +2362,7 @@ Sub Cerrar_Usuario(ByVal UserIndex As Integer)
                             ' Pierde la apariencia de fragata fantasmal
                             Call ToggleBoatBody(UserIndex)
                             Call WriteConsoleMsg(UserIndex, "Has recuperado tu apariencia normal!", FontTypeNames.FONTTYPE_INFO)
-                            Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, NingunArma, NingunEscudo, NingunCasco, NingunAura, NingunAura)
+                            Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.Heading, NingunArma, NingunEscudo, NingunCasco, NingunAura, NingunAura)
                             HiddenPirat = True
 
                         End If
@@ -2420,13 +2381,6 @@ Sub Cerrar_Usuario(ByVal UserIndex As Integer)
                     Call SetInvisible(UserIndex, .Char.CharIndex, False)
 
                 End If
-
-            End If
-            
-            If .flags.Traveling = 1 Then
-                Call WriteMultiMessage(UserIndex, eMessages.CancelHome)
-                .flags.Traveling = 0
-                .Counters.goHome = 0
 
             End If
             
@@ -2931,41 +2885,6 @@ Public Function getMaxInventorySlots(ByVal UserIndex As Integer) As Byte
 
 End Function
 
-Public Sub goHome(ByVal UserIndex As Integer)
-    '***************************************************
-    'Author: Budi
-    'Last Modification: 01/06/2010
-    '01/06/2010: ZaMa - Ahora usa otro tipo de intervalo
-    '***************************************************
-
-    Dim Distance As Long
-
-    Dim Tiempo   As Long
-    
-    With UserList(UserIndex)
-
-        If .flags.Muerto = 1 Then
-            If .flags.lastMap = 0 Then
-                Distance = distanceToCities(.Pos.Map).distanceToCity(.Hogar)
-            Else
-                Distance = distanceToCities(.flags.lastMap).distanceToCity(.Hogar) + GOHOME_PENALTY
-
-            End If
-            
-            Tiempo = (Distance + 1) * 30 'seg
-            
-            Call IntervaloGoHome(UserIndex, Tiempo * 1000, True)
-                
-            Call WriteMultiMessage(UserIndex, eMessages.Home, Distance, Tiempo, , MapInfo(Ciudades(.Hogar).Map).Name)
-        Else
-            Call WriteConsoleMsg(UserIndex, "Debes estar muerto para poder utilizar este comando.", FontTypeNames.FONTTYPE_FIGHT)
-
-        End If
-        
-    End With
-    
-End Sub
-
 Public Function ToogleToAtackable(ByVal UserIndex As Integer, _
                                   ByVal OwnerIndex As Integer, _
                                   Optional ByVal StealingNpc As Boolean = True) As Boolean
@@ -3034,7 +2953,6 @@ Public Sub setHome(ByVal UserIndex As Integer, _
     '30/04/2010: ZaMa - Ahora el npc avisa que se cambio de hogar.
     '01/06/2010: ZaMa - Ahora te avisa si ya tenes ese hogar.
     '***************************************************
-    If newHome < eCiudad.cRamx Or newHome > eCiudad.cHaverwood - 1 Then Exit Sub
     
     If UserList(UserIndex).Hogar <> newHome Then
         UserList(UserIndex).Hogar = newHome
@@ -3047,31 +2965,11 @@ Public Sub setHome(ByVal UserIndex As Integer, _
 
 End Sub
 
-Public Function GetHomeArrivalTime(ByVal UserIndex As Integer) As Integer
-
+Public Sub MandaraCasa(ByVal UserIndex As Integer)
     '**************************************************************
-    'Author: ZaMa
-    'Last Modify by: ZaMa
-    'Last Modify Date: 01/06/2010
-    'Calculates the time left to arrive home.
-    '**************************************************************
-    Dim TActual As Long
-    
-    TActual = GetTickCount() And &H7FFFFFFF
-    
-    With UserList(UserIndex)
-        GetHomeArrivalTime = (.Counters.goHome - TActual) * 0.001
-
-    End With
-
-End Function
-
-Public Sub HomeArrival(ByVal UserIndex As Integer)
-    '**************************************************************
-    'Author: ZaMa
-    'Last Modify by: ZaMa
-    'Last Modify Date: 01/06/2010
-    'Teleports user to its home.
+    'Author: Lorwik
+    'Fecha: 12/07/2020
+    'Descripción: Si cumple los requisitos, lo devolvemos a casa.
     '**************************************************************
     
     Dim tX   As Integer
@@ -3081,6 +2979,11 @@ Public Sub HomeArrival(ByVal UserIndex As Integer)
     Dim tMap As Integer
 
     With UserList(UserIndex)
+    
+        If .flags.Muerto = 0 Then
+            Call WriteConsoleMsg(UserIndex, "Debes estar muerto para teletransportarte a tu hogar.", FontTypeNames.FONTTYPE_FIGHT)
+            Exit Sub
+        End If
 
         'Antes de que el pj llegue a la ciudad, lo hacemos dejar de navegar para que no se buguee.
         If .flags.Navegando = 1 Then
@@ -3105,9 +3008,6 @@ Public Sub HomeArrival(ByVal UserIndex As Integer)
         Call WarpUserChar(UserIndex, tMap, tX, tY, True)
         
         Call WriteMultiMessage(UserIndex, eMessages.FinishHome)
-        
-        .flags.Traveling = 0
-        .Counters.goHome = 0
         
     End With
     

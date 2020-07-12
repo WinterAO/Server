@@ -284,9 +284,7 @@ Public Sub GameTimer()
                         If bEnviarAyS Then Call WriteUpdateHungerAndThirst(iUserIndex)
                         
                         If .NroMascotas > 0 Then Call TiempoInvocacion(iUserIndex)
-                    Else
-
-                        If .flags.Traveling <> 0 Then Call TravelingEffect(iUserIndex)
+                        
                     End If 'Muerto
                 
                 'Inactividad de cuentas

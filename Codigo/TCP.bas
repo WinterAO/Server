@@ -427,7 +427,7 @@ Sub ConnectNewUser(ByVal UserIndex As Integer, _
         End If
 
         Call DarCuerpo(UserIndex)
-        .Char.heading = eHeading.SOUTH
+        .Char.Heading = eHeading.SOUTH
         .Char.Head = Head
     
         .OrigChar = .Char
@@ -672,6 +672,11 @@ Private Sub AddItemsToNewUser(ByVal UserIndex As Integer, ByVal UserClase As eCl
         Slot = Slot + 1
         .Invent.Object(Slot).ObjIndex = 468
         .Invent.Object(Slot).Amount = 100
+        
+        'Piedra de Hogar
+        Slot = Slot + 1
+        .Invent.Object(Slot).ObjIndex = 1255
+        .Invent.Object(Slot).Amount = 1
 
         ' Sin casco y escudo
         .Char.ShieldAnim = NingunEscudo
@@ -1487,7 +1492,6 @@ Sub ResetContadores(ByVal UserIndex As Integer)
         .Estupidez = 0
         .failedUsageAttempts = 0
         .Frio = 0
-        .goHome = 0
         .HPCounter = 0
         .IdleCount = 0
         .Invisibilidad = 0
@@ -1534,7 +1538,7 @@ Sub ResetCharInfo(ByVal UserIndex As Integer)
         .FX = 0
         .Head = 0
         .loops = 0
-        .heading = 0
+        .Heading = 0
         .loops = 0
         .ShieldAnim = 0
         .WeaponAnim = 0
@@ -1697,7 +1701,6 @@ Sub ResetUserFlags(ByVal UserIndex As Integer)
         .Silenciado = 0
         .AdminPerseguible = False
         .lastMap = 0
-        .Traveling = 0
         .AtacablePor = 0
         .AtacadoPorNpc = 0
         .AtacadoPorUser = 0
