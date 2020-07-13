@@ -2948,21 +2948,30 @@ Public Sub setHome(ByVal UserIndex As Integer, _
                    ByVal NpcIndex As Integer)
 
     '***************************************************
-    'Author: Budi
-    'Last Modification: 01/06/2010
-    '30/04/2010: ZaMa - Ahora el npc avisa que se cambio de hogar.
-    '01/06/2010: ZaMa - Ahora te avisa si ya tenes ese hogar.
+    'Autor: Lorwik
+    'Fecha 13/07/2020
+    'Descripcion: Establece el nuevo hogar de un usuario
     '***************************************************
     
-    If UserList(UserIndex).Hogar <> newHome Then
-        UserList(UserIndex).Hogar = newHome
+    With UserList(UserIndex)
+        '¿La ciudad que tiene el NPC es invalida?
+        If newHome <= 0 Then
+            Call WriteChatOverHead(UserIndex, "Lo siento, en estos momentos no puedo aceptarte en mi ciudad.", Npclist(NpcIndex).Char.CharIndex, vbWhite)
+            Call LogError("Error en SetHome: La ciudad a la que " & .Name & " quiere establecer como hogar, es invalida. NewHome: " & newHome)
+            
+        Else
+            If .Hogar <> newHome Then
+                .Hogar = newHome
+            
+                Call WriteChatOverHead(UserIndex, "Bienvenido a nuestra humilde comunidad, este es ahora tu nuevo hogar!!!", Npclist(NpcIndex).Char.CharIndex, vbWhite)
+                Call WriteConsoleMsg(UserIndex, "Ahora eres ciudadano de " & MapInfo(Ciudades(.Hogar).Map).Name, FontTypeNames.FONTTYPE_INFO)
+            Else
+                Call WriteChatOverHead(UserIndex, "Ya eres miembro de nuestra humilde comunidad!!!", Npclist(NpcIndex).Char.CharIndex, vbWhite)
+        
+            End If
+        End If
+    End With
     
-        Call WriteChatOverHead(UserIndex, "Bienvenido a nuestra humilde comunidad, este es ahora tu nuevo hogar!!!", Npclist(NpcIndex).Char.CharIndex, vbWhite)
-    Else
-        Call WriteChatOverHead(UserIndex, "Ya eres miembro de nuestra humilde comunidad!!!", Npclist(NpcIndex).Char.CharIndex, vbWhite)
-
-    End If
-
 End Sub
 
 Public Sub MandaraCasa(ByVal UserIndex As Integer)
@@ -2977,6 +2986,8 @@ Public Sub MandaraCasa(ByVal UserIndex As Integer)
     Dim tY   As Integer
 
     Dim tMap As Integer
+    
+    Dim LaCasa As Byte
 
     With UserList(UserIndex)
     
@@ -3000,9 +3011,16 @@ Public Sub MandaraCasa(ByVal UserIndex As Integer)
             'Le sacamos el navegando, pero no le mostramos a los demas porque va a ser sumoneado hasta ulla.
         End If
         
-        tX = Ciudades(.Hogar).X
-        tY = Ciudades(.Hogar).Y
-        tMap = Ciudades(.Hogar).Map
+        '¿El hogar es invalido? Lo mandamos a Ramx
+        If .Hogar <= 0 Then
+            LaCasa = 1
+        Else
+            LaCasa = .Hogar
+        End If
+        
+        tX = Ciudades(LaCasa).X
+        tY = Ciudades(LaCasa).Y
+        tMap = Ciudades(LaCasa).Map
         
         Call FindLegalPos(UserIndex, tMap, tX, tY)
         Call WarpUserChar(UserIndex, tMap, tX, tY, True)

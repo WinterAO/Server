@@ -196,7 +196,7 @@ Public Enum eCiudad
     cRamx = 1
     cShakoud
     cBelleuve
-    cOrac
+    cIslaZharkel
     cHaverwood
 
 End Enum
@@ -1895,7 +1895,7 @@ Public Type MapBlock
 
     Blocked As Byte
     Graphic(1 To 4) As Long
-    Userindex As Integer
+    UserIndex As Integer
     NpcIndex As Integer
     ObjInfo As obj
     TileExit As WorldPos
@@ -2116,7 +2116,7 @@ Public Belleuve        As WorldPos
 
 Public Haverwood       As WorldPos
 
-Public Orac            As WorldPos
+Public IslaZharkel     As WorldPos
 
 Public Prision         As WorldPos
 

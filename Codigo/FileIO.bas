@@ -1970,10 +1970,10 @@ Sub CargarCiudades()
             .Y = Lector.GetValue("Belleuve", "Y")
         End With
         
-        With Orac
-            .Map = Lector.GetValue("Orac", "Mapa")
-            .X = Lector.GetValue("Orac", "X")
-            .Y = Lector.GetValue("Orac", "Y")
+        With IslaZharkel
+            .Map = Lector.GetValue("IslaZharkel", "Mapa")
+            .X = Lector.GetValue("IslaZharkel", "X")
+            .Y = Lector.GetValue("IslaZharkel", "Y")
         End With
         
         With Haverwood
@@ -1999,7 +1999,7 @@ Sub CargarCiudades()
     Ciudades(eCiudad.cRamx) = Ramx
     Ciudades(eCiudad.cShakoud) = Shakoud
     Ciudades(eCiudad.cBelleuve) = Belleuve
-    Ciudades(eCiudad.cOrac) = Orac
+    Ciudades(eCiudad.cIslaZharkel) = IslaZharkel
     Ciudades(eCiudad.cHaverwood) = Haverwood
 
     If frmMain.Visible Then frmMain.txtStatus.Text = Date & " " & time & " - Se cargaron las ciudades.dat"

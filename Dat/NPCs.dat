@@ -567,6 +567,7 @@ Domable=0
 Alineacion=0
 Comercia=0
 BackUp=0
+Ciudad=1
 
 ##############################################################
 ############## NPCS VENDEDORES DE SHAKOUD ####################
@@ -587,6 +588,7 @@ Domable=0
 Alineacion=0
 Comercia=0
 BackUp=0
+Ciudad=2
 
 [NPC51]
 Name=Sacerdote
