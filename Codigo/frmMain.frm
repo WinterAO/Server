@@ -767,7 +767,7 @@ Private Sub AutoSave_Timer()
     End If
 
     If MinsPjesSave = MinutosGuardarUsuarios - 1 Then
-        Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("CharSave en 1 minuto ...", FontTypeNames.FONTTYPE_SERVER))
+        Call SendData(SendTarget.ToGM, 0, PrepareMessageConsoleMsg("CharSave en 1 minuto ...", FontTypeNames.FONTTYPE_SERVER))
     ElseIf MinsPjesSave >= MinutosGuardarUsuarios Then
         Call mdParty.ActualizaExperiencias
         Call GuardarUsuarios
