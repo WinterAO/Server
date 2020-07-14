@@ -119,6 +119,17 @@ Public Sub DoTileEvents(ByVal UserIndex As Integer, _
                     
                 End If
                 
+                If UserList(UserIndex).flags.Equitando Then
+                    
+                    If ObjData(UserList(UserIndex).Invent.MonturaObjIndex).MontTipo = 1 And MapInfo(.TileExit.Map).Zona <> "DUNGEON" Or _
+                            ObjData(UserList(UserIndex).Invent.MonturaObjIndex).MontTipo <> 1 And MapInfo(.TileExit.Map).Zona = "DUNGEON" Then
+                        
+                        Call UnmountMontura(UserIndex)
+                        Call WriteEquitandoToggle(UserIndex)
+                    End If
+                    
+                End If
+                
                 ' Es un teleport, entra en una posicion random, acorde al radio (si es 0, es pos fija)
                 ' We have 5 attempts to not falling into another teleport or a map exit.. If we get to the fifth attemp,
                 ' the teleport will act as if its radius = 0.
