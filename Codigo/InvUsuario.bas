@@ -476,6 +476,12 @@ Sub DropObj(ByVal UserIndex As Integer, _
                 Exit Sub
 
             End If
+            
+            If ObjData(DropObj.ObjIndex).OBJType = otPiedraHogar Then
+                Call WriteConsoleMsg(UserIndex, "No puedes tirar la piedra de hogar.", FontTypeNames.FONTTYPE_WARNING)
+                Exit Sub
+
+            End If
         
             DropObj.Amount = MinimoInt(Num, .Invent.Object(Slot).Amount)
 

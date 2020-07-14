@@ -4491,7 +4491,15 @@ Private Sub HandleUserCommerceOffer(ByVal UserIndex As Integer)
 
             End If
         
+            'No se puede comerciar con los items de newbie
             If ItemNewbie(ObjIndex) Then
+                Call WriteCancelOfferItem(UserIndex, OfferSlot)
+                Exit Sub
+
+            End If
+            
+            'No se puede comerciar con la piedra de hogar
+            If ObjData(ObjIndex).OBJType = otPiedraHogar Then
                 Call WriteCancelOfferItem(UserIndex, OfferSlot)
                 Exit Sub
 
