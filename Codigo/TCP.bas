@@ -358,11 +358,24 @@ Sub ConnectNewUser(ByVal UserIndex As Integer, _
     '*************************************************
     With UserList(UserIndex)
         Dim i As Byte
+        Dim count As Integer
         
         If Not AsciiValidos(Name) Or LenB(Name) = 0 Then
             Call WriteErrorMsg(UserIndex, "Nombre invalido.")
             Exit Sub
 
+        End If
+        
+        'Solo permitimos 1 espacio en los nombres
+        For i = 1 To Len(Name)
+            
+            If mid(Name, i, 1) = Chr(32) Then count = count + 1
+            
+        Next i
+        
+        If count > 1 Then
+                        Call WriteErrorMsg(UserIndex, "Nombre invalido.")
+            Exit Sub
         End If
     
         If UserList(UserIndex).flags.UserLogged Then
