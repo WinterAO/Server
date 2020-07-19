@@ -36,7 +36,7 @@ Public Sub PacketResend()
     'Last Modification: 04/01/07
     'Attempts to resend to the user all data that may be enqueued.
     '***************************************************
-    On Error GoTo ErrHandler:
+    On Error GoTo Errhandler:
 
     Dim i As Long
     For i = 1 To LastUser
@@ -45,7 +45,7 @@ Public Sub PacketResend()
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
     Call LogError("Error en packetResend - Error: " & Err.Number & " - Desc: " & Err.description)
 
     Resume Next
@@ -88,7 +88,7 @@ Public Sub TIMER_AI()
 
                             End If
                             
-                            Mapa = .Pos.Map
+                            Mapa = .Pos.map
                             
                             If Mapa > 0 Then
                                 If MapInfo(Mapa).NumUsers > 0 Then
@@ -116,7 +116,7 @@ Public Sub TIMER_AI()
     Exit Sub
 
 ErrorHandler:
-    Call LogError("Error en TIMER_AI_Timer " & Npclist(NpcIndex).Name & " mapa:" & Npclist(NpcIndex).Pos.Map)
+    Call LogError("Error en TIMER_AI_Timer " & Npclist(NpcIndex).Name & " mapa:" & Npclist(NpcIndex).Pos.map)
     Call MuereNpc(NpcIndex, 0)
 
 End Sub
@@ -338,7 +338,7 @@ Public Sub PasarSegundo()
     '
     '***************************************************
 
-    On Error GoTo ErrHandler
+    On Error GoTo Errhandler
 
     Dim i As Long
     
@@ -370,6 +370,12 @@ Public Sub PasarSegundo()
         With UserList(i)
 
             If .flags.UserLogged Then
+            
+                'Portales
+                If .PortalTiempo > 0 Then
+                    .PortalTiempo = .PortalTiempo - 1
+                    If .PortalTiempo < 1 Then Call Borrar_Portal_User(i)
+                End If
             
                 'Cerrar usuario
                 If .Counters.Saliendo Then
@@ -415,7 +421,7 @@ Public Sub PasarSegundo()
                  
                         If .Counters.Pena < 1 Then
                             .Counters.Pena = 0
-                            Call WarpUserChar(i, Libertad.Map, Libertad.X, Libertad.Y, True)
+                            Call WarpUserChar(i, Libertad.map, Libertad.X, Libertad.Y, True)
                             Call WriteConsoleMsg(i, "Has sido liberado!", FontTypeNames.FONTTYPE_INFO)
 
                         End If
@@ -427,10 +433,10 @@ Public Sub PasarSegundo()
                 'Sacamos energia
                 If Lloviendo Then Call EfectoLluvia(i)
                 
-                If Not .Pos.Map = 0 Then
+                If Not .Pos.map = 0 Then
 
                     'Counter de piquete
-                    If MapData(.Pos.Map, .Pos.X, .Pos.Y).Trigger = eTrigger.ANTIPIQUETE Then
+                    If MapData(.Pos.map, .Pos.X, .Pos.Y).Trigger = eTrigger.ANTIPIQUETE Then
                             If .flags.Muerto = 0 Then
                                 .Counters.PiqueteC = .Counters.PiqueteC + 1
                                 .Counters.ContadorPiquete = .Counters.ContadorPiquete + 1
@@ -463,7 +469,7 @@ Public Sub PasarSegundo()
 
     Exit Sub
 
-ErrHandler:
+Errhandler:
     Call LogError("Error en PasarSegundo. Err: " & Err.description & " - " & Err.Number & " - UserIndex: " & i)
 
     Resume Next

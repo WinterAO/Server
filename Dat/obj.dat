@@ -94,7 +94,7 @@ este objeto se mostrara con un grafico. Si le ponemos
 [INIT]
 'aca va el numero de OBJ mas alto, NO la cantidad de OBJs.
 'esto sirve para que los GMS puedan ver la lista completa de items para crear en una ventanita.
-NumOBJs=1283
+NumOBJs=1284
 
 
 [OBJ1]
@@ -7944,8 +7944,8 @@ Crucial=0
 Nosecae=1
 
 [OBJ651]
-Name=Portal Magico
-GrhIndex=308
+Name=Portal Abissal
+ParticulaIndex=106
 VGrande=501
 ObjType=30
 Agarrable=1
@@ -16048,3 +16048,12 @@ Agarrable=1
 Llave=0
 IndexAbierta=1282
 IndexCerrada=1283
+
+[OBJ1284]
+Name=Portal Abissal
+GrhIndex=609
+ObjType=24
+Agarrable=0
+Valor=150000
+Crucial=1
+HechizoIndex=51

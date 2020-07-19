@@ -475,7 +475,8 @@ Public Sub CargarHechizos()
     If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando Hechizos."
     
     Dim Hechizo As Integer
-
+    Dim str     As String
+    
     Dim Leer    As clsIniManager
 
     Set Leer = New clsIniManager
@@ -581,6 +582,14 @@ Public Sub CargarHechizos()
             
             .NeedStaff = val(Leer.GetValue("Hechizo" & Hechizo, "NeedStaff"))
             .StaffAffected = CBool(val(Leer.GetValue("Hechizo" & Hechizo, "StaffAffected")))
+            
+            'Portales
+            .Portal = val(Leer.GetValue("Hechizo" & Hechizo, "Portal"))
+            str = Leer.GetValue("Hechizo" & Hechizo, "PortalMap")
+            
+            .PortalPos.Map = val(ReadField(1, str, 45))
+            .PortalPos.X = val(ReadField(2, str, 45))
+            .PortalPos.Y = val(ReadField(3, str, 45))
 
         End With
 

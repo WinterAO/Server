@@ -892,7 +892,7 @@ Function EstaPCarea(index As Integer, Index2 As Integer) As Boolean
     For Y = UserList(index).Pos.Y - MinYBorder + 1 To UserList(index).Pos.Y + MinYBorder - 1
         For X = UserList(index).Pos.X - MinXBorder + 1 To UserList(index).Pos.X + MinXBorder - 1
 
-            If MapData(UserList(index).Pos.Map, X, Y).UserIndex = Index2 Then
+            If MapData(UserList(index).Pos.map, X, Y).UserIndex = Index2 Then
                 EstaPCarea = True
                 Exit Function
 
@@ -918,7 +918,7 @@ Function HayPCarea(Pos As WorldPos) As Boolean
         For X = Pos.X - MinXBorder + 1 To Pos.X + MinXBorder - 1
 
             If X > 0 And Y > 0 And X < 101 And Y < 101 Then
-                If MapData(Pos.Map, X, Y).UserIndex > 0 Then
+                If MapData(Pos.map, X, Y).UserIndex > 0 Then
                     HayPCarea = True
                     Exit Function
 
@@ -945,7 +945,7 @@ Function HayOBJarea(Pos As WorldPos, ObjIndex As Integer) As Boolean
     For Y = Pos.Y - MinYBorder + 1 To Pos.Y + MinYBorder - 1
         For X = Pos.X - MinXBorder + 1 To Pos.X + MinXBorder - 1
 
-            If MapData(Pos.Map, X, Y).ObjInfo.ObjIndex = ObjIndex Then
+            If MapData(Pos.map, X, Y).ObjInfo.ObjIndex = ObjIndex Then
                 HayOBJarea = True
                 Exit Function
 
@@ -1124,7 +1124,7 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
     
         Dim Mapa As Integer
 
-        Mapa = .Pos.Map
+        Mapa = .Pos.map
     
         'Posicion de comienzo
         If Mapa = 0 Then
@@ -1134,7 +1134,7 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
             ' .Pos = Ciudades(.Hogar)
             ' mapa = Ciudades(.Hogar).Map
             .Pos = Ramx
-            Mapa = Ramx.Map
+            Mapa = Ramx.map
         Else
     
             If Not MapaValido(Mapa) Then
@@ -1148,7 +1148,7 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
             ' If map has different initial coords, update it
             Dim StartMap As Integer
 
-            StartMap = MapInfo(Mapa).StartPos.Map
+            StartMap = MapInfo(Mapa).StartPos.map
 
             If StartMap <> 0 Then
                 If MapaValido(StartMap) Then
@@ -1262,10 +1262,10 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
     
         'Info
         Call WriteUserIndexInServer(UserIndex) 'Enviamos el User index
-        Call WriteChangeMap(UserIndex, .Pos.Map, MapInfo(.Pos.Map).MapVersion) 'Carga el mapa
+        Call WriteChangeMap(UserIndex, .Pos.map, MapInfo(.Pos.map).MapVersion) 'Carga el mapa
 
         'Si tiene MP3 el mapa mandamos que lo reproduzca
-        Call WritePlayMusic(UserIndex, val(ReadField(1, MapInfo(.Pos.Map).music, 45)))
+        Call WritePlayMusic(UserIndex, val(ReadField(1, MapInfo(.Pos.map).music, 45)))
         
         If .flags.Privilegios = PlayerType.Dios Then
             .flags.ChatColor = RGB(250, 250, 150)
@@ -1290,12 +1290,12 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
             Call DoAdminInvisible(UserIndex)
             .flags.SendDenounces = True
         End If
-        Call MakeUserChar(True, .Pos.Map, UserIndex, .Pos.Map, .Pos.X, .Pos.Y)
+        Call MakeUserChar(True, .Pos.map, UserIndex, .Pos.map, .Pos.X, .Pos.Y)
     
         Call WriteUserCharIndexInServer(UserIndex)
         ''[/el oso]
     
-        Call DoTileEvents(UserIndex, .Pos.Map, .Pos.X, .Pos.Y)
+        Call DoTileEvents(UserIndex, .Pos.map, .Pos.X, .Pos.Y)
     
         Call CheckUserLevel(UserIndex)
         Call WriteUpdateUserStats(UserIndex)
@@ -1333,7 +1333,7 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
         Call UpdateUserLogged(.Name, 1)
     
     
-        MapInfo(.Pos.Map).NumUsers = MapInfo(.Pos.Map).NumUsers + 1
+        MapInfo(.Pos.map).NumUsers = MapInfo(.Pos.map).NumUsers + 1
     
         If NumUsers > RecordUsuariosOnline Then
             Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Record de usuarios conectados simultaneamente. Hay " & NumUsers & " usuarios.", FontTypeNames.FONTTYPE_INFOBOLD))
@@ -1344,7 +1344,7 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
             frmMain.txtRecordOnline.Text = RecordUsuariosOnline
         End If
     
-        If .NroMascotas > 0 And MapInfo(.Pos.Map).Pk Then
+        If .NroMascotas > 0 And MapInfo(.Pos.map).Pk Then
 
             Dim i As Integer
 
@@ -1575,7 +1575,7 @@ Sub ResetBasicUserInfo(ByVal UserIndex As Integer)
         .ID = 0
         .Desc = vbNullString
         .DescRM = vbNullString
-        .Pos.Map = 0
+        .Pos.map = 0
         .Pos.X = 0
         .Pos.Y = 0
         .clase = 0
@@ -1586,6 +1586,12 @@ Sub ResetBasicUserInfo(ByVal UserIndex As Integer)
         
         .PartyIndex = 0
         .PartySolicitud = 0
+        
+        .CreoPortal = False
+        .PortalPos.map = 0
+        .PortalPos.X = 0
+        .PortalPos.Y = 0
+        .PortalTiempo = 0
         
         With .Stats
             .Banco = 0
@@ -1860,7 +1866,7 @@ Sub CloseUser(ByVal UserIndex As Integer)
 
     Dim n    As Integer
 
-    Dim Map  As Integer
+    Dim map  As Integer
 
     Dim Name As String
 
@@ -1922,7 +1928,7 @@ Sub CloseUser(ByVal UserIndex As Integer)
         .flags.AtacadoPorNpc = 0
         .flags.NPCAtacado = 0
     
-        Map = .Pos.Map
+        map = .Pos.map
         Name = UCase$(.Name)
     
         .Char.FX = 0
@@ -1946,6 +1952,9 @@ Sub CloseUser(ByVal UserIndex As Integer)
 
         'si esta en party le devolvemos la experiencia
         If .PartyIndex > 0 Then Call mdParty.SalirDeParty(UserIndex)
+        
+        'Si creo un portal, lo borramos
+        If .CreoPortal = True Then Call Borrar_Portal_User(UserIndex)
     
         'Save statistics
         Call Statistics.UserDisconnected(UserIndex)
@@ -1961,7 +1970,7 @@ Sub CloseUser(ByVal UserIndex As Integer)
         '    Call SendToUserArea(UserIndex, "QDL" & .Char.charindex)
         'End If
     
-        If MapInfo(Map).NumUsers > 0 Then
+        If MapInfo(map).NumUsers > 0 Then
             Call SendData(SendTarget.ToPCAreaButIndex, UserIndex, PrepareMessageRemoveCharDialog(.Char.CharIndex))
 
         End If
@@ -1983,10 +1992,10 @@ Sub CloseUser(ByVal UserIndex As Integer)
         Next i
     
         'Update Map Users
-        MapInfo(Map).NumUsers = MapInfo(Map).NumUsers - 1
+        MapInfo(map).NumUsers = MapInfo(map).NumUsers - 1
     
-        If MapInfo(Map).NumUsers < 0 Then
-            MapInfo(Map).NumUsers = 0
+        If MapInfo(map).NumUsers < 0 Then
+            MapInfo(map).NumUsers = 0
 
         End If
     
@@ -2043,7 +2052,7 @@ Public Sub EnviarNoche(ByVal UserIndex As Integer)
     '
     '***************************************************
 
-    Call WriteSendNight(UserIndex, IIf(DeNoche And (MapInfo(UserList(UserIndex).Pos.Map).Zona = Campo Or MapInfo(UserList(UserIndex).Pos.Map).Zona = Ciudad), True, False))
+    Call WriteSendNight(UserIndex, IIf(DeNoche And (MapInfo(UserList(UserIndex).Pos.map).Zona = Campo Or MapInfo(UserList(UserIndex).Pos.map).Zona = Ciudad), True, False))
     Call WriteSendNight(UserIndex, IIf(DeNoche, True, False))
 
 End Sub

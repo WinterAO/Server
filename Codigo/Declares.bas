@@ -31,7 +31,7 @@ Option Explicit
 
 #If False Then
 
-    Dim Map, X, Y, body, clase, race, Email, obj, Length As Variant
+    Dim map, X, Y, body, clase, race, Email, obj, Length As Variant
 
 #End If
 
@@ -788,6 +788,14 @@ Public EXP_X_LVL() As Long
 ' **************************************************************
 ' **************************************************************
 
+Public Type WorldPos
+
+    map As Integer
+    X As Integer
+    Y As Integer
+
+End Type
+
 Public Type tObservacion
 
     Creador As String
@@ -894,6 +902,9 @@ Public Type tHechizo
     
     NeedStaff As Integer
     StaffAffected As Boolean
+    
+    Portal As Byte
+    PortalPos As WorldPos
 
 End Type
 
@@ -945,14 +956,6 @@ End Type
 
 Public Type Position
 
-    X As Integer
-    Y As Integer
-
-End Type
-
-Public Type WorldPos
-
-    Map As Integer
     X As Integer
     Y As Integer
 
@@ -1580,7 +1583,7 @@ Public Type AccountCharacters
     helmet As Integer
     Class As Byte
     race As Byte
-    Map As Integer
+    map As Integer
     Level As Byte
     Gold As Long
     criminal As Boolean
@@ -1707,6 +1710,10 @@ Public Type User
     QuestStats As tQuestStats
     
     Redundance As Byte
+    
+    CreoPortal As Boolean
+    PortalPos As WorldPos
+    PortalTiempo As Integer
 
 End Type
 

@@ -12,7 +12,7 @@
 '4.....Terreno.
 
 [INIT]
-NumeroHechizos=50
+NumeroHechizos=51
 
 
 [HECHIZO1]
@@ -3008,3 +3008,19 @@ MinSkill=101
 ManaRequerido=0
 StaRequerido=5
 Target=3
+
+[HECHIZO51]
+Nombre=Portal a Abissal
+Desc=El brujo invoca un portal hacia el vacio Abissal donde podra viajar a diferentes destinos.
+PalabrasMagicas=Statim Aperta Portal
+HechizeroMsg=Comienzas abrir un portal al Vacio Abissal.
+Tipo=3
+WAV=249
+FXgrh=7
+Loops=0
+MinSkill=100
+ManaRequerido=1100
+StaRequerido=500
+Target=4
+Portal=1
+PortalMap=127-50-50 '(MAP)-(COR X)- (COR Y)
