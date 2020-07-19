@@ -1597,6 +1597,8 @@ Private Sub HandleDeleteChar(ByVal UserIndex As Integer)
     If BorrarUsuario(UserIndex, UserList(UserIndex).AccountInfo.AccountPJ(PJSeleccionado).Name) Then
         'Si se pudo borrar enviamos paquete para mostrar mensaje satisfactorio en el cliente
         Call UserList(UserIndex).outgoingData.WriteByte(ServerPacketID.DeletedChar)
+        'Mandamos la actualizacion de personajes de la cuenta
+        Call LoginAccountDatabase(UserIndex, UserList(UserIndex).AccountInfo.UserName, True)
     Else
         Call WriteErrorMsg(UserIndex, "Error al borrar el PJ. Intentelo de nuevo o contacte con un Administrador.")
         Exit Sub
@@ -1775,7 +1777,6 @@ Private Sub HandleLoginNewChar(ByVal UserIndex As Integer)
         Call WriteErrorMsg(UserIndex, "Esta version del juego es obsoleta, la version correcta es la " & ULTIMAVERSION & ". La misma se encuentra disponible en www.winterao.com.ar")
     Else
         Call ConnectNewUser(UserIndex, UserName, race, gender, Class, Head)
-
     End If
   
 Errhandler:
@@ -22232,8 +22233,7 @@ Errhandler:
 
 End Sub
 
-Public Sub WriteUserAccountLogged(ByVal UserIndex As Integer)
-
+Public Sub WriteUserAccountLogged(ByVal UserIndex As Integer, Optional ByVal Refresh As Boolean = False)
 '***************************************************
 'Author: Juan Andres Dalmasso (CHOTS)
 'Last Modification: 12/10/2018
@@ -22247,6 +22247,7 @@ Public Sub WriteUserAccountLogged(ByVal UserIndex As Integer)
         Call .outgoingData.WriteByte(ServerPacketID.AccountLogged)
         .Redundance = RandomNumber(15, 250)
         Call .outgoingData.WriteByte(.Redundance)
+        Call .outgoingData.WriteBoolean(Refresh)
         Call .outgoingData.WriteASCIIString(.AccountInfo.UserName)
         Call .outgoingData.WriteByte(.AccountInfo.NumChars)
 

@@ -358,7 +358,7 @@ Sub ConnectNewUser(ByVal UserIndex As Integer, _
     '*************************************************
     With UserList(UserIndex)
         Dim i As Byte
-        Dim count As Integer
+        Dim Count As Integer
         
         If Not AsciiValidos(Name) Or LenB(Name) = 0 Then
             Call WriteErrorMsg(UserIndex, "Nombre invalido.")
@@ -369,11 +369,11 @@ Sub ConnectNewUser(ByVal UserIndex As Integer, _
         'Solo permitimos 1 espacio en los nombres
         For i = 1 To Len(Name)
             
-            If mid(Name, i, 1) = Chr(32) Then count = count + 1
+            If mid(Name, i, 1) = Chr(32) Then Count = Count + 1
             
         Next i
         
-        If count > 1 Then
+        If Count > 1 Then
                         Call WriteErrorMsg(UserIndex, "Nombre invalido.")
             Exit Sub
         End If

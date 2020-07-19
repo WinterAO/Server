@@ -71,6 +71,27 @@ ErrorHandler:
 
 End Sub
 
+Public Function CheckSQLStatus() As Boolean
+    '***************************************************
+    'Author: Lorwik
+    'Fecha: 17/07/2020
+    'Descripcion: Comprobamos el estado de la conexion a la base de datos.
+    '***************************************************
+    
+    If Database_Connection Is Nothing Then
+        CheckSQLStatus = False
+        Exit Function
+    End If
+    
+    If Database_Connection.State <> 1 Then
+        CheckSQLStatus = False
+        Exit Function
+    End If
+    
+    'La conexion es correcta
+    CheckSQLStatus = True
+End Function
+
 Sub SaveUserToDatabase(ByVal UserIndex As Integer, _
                        Optional ByVal SaveTimeOnline As Boolean = True)
     '*************************************************
@@ -117,6 +138,9 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
 
 #If DBConexionUnica = 0 Then
     Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
 #End If
 
     'Basic user data
@@ -314,6 +338,9 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
 
 #If DBConexionUnica = 0 Then
     Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
 #End If
 
     'Basic user data
@@ -343,7 +370,7 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
         query = query & "shield_id = " & .Char.ShieldAnim & ", "
         query = query & "aura_id = " & .Char.AuraAnim & ", "
         query = query & "aura_color = " & .Char.AuraColor & ", "
-        query = query & "heading = " & .Char.heading & ", "
+        query = query & "heading = " & .Char.Heading & ", "
         query = query & "items_amount = " & .Invent.NroItems & ", "
         query = query & "slot_armour = " & .Invent.ArmourEqpSlot & ", "
         query = query & "slot_weapon = " & .Invent.WeaponEqpSlot & ", "
@@ -509,6 +536,9 @@ Public Sub UpdateUserQuest(ByVal UserIndex As Integer)
     
 #If DBConexionUnica = 0 Then
     Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
 #End If
     
     'Basic user data
@@ -571,6 +601,9 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
 
 #If DBConexionUnica = 0 Then
     Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
 #End If
 
     'Basic user data
@@ -604,7 +637,7 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
         .OrigChar.WeaponAnim = Database_RecordSet!weapon_id
         .OrigChar.CascoAnim = Database_RecordSet!helmet_id
         .OrigChar.ShieldAnim = Database_RecordSet!shield_id
-        .OrigChar.heading = Database_RecordSet!heading
+        .OrigChar.Heading = Database_RecordSet!Heading
         .OrigChar.AuraAnim = Database_RecordSet!Aura_id
         .OrigChar.AuraColor = Database_RecordSet!Aura_color
         .Invent.NroItems = Database_RecordSet!items_amount
@@ -823,6 +856,9 @@ Public Sub LoadQuestStats(ByVal UserIndex As Integer)
     
 #If DBConexionUnica = 0 Then
     Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
 #End If
 
     With UserList(UserIndex).QuestStats
@@ -893,6 +929,9 @@ Public Function PersonajeExisteDatabase(ByVal UserName As String) As Boolean
 
 #If DBConexionUnica = 0 Then
     Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
 #End If
 
     query = "SELECT id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "' AND deleted = FALSE;"
@@ -931,6 +970,9 @@ Public Function BANCheckDatabase(ByVal UserName As String) As Boolean
 
 #If DBConexionUnica = 0 Then
     Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
 #End If
 
     query = "SELECT is_ban FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
@@ -970,6 +1012,9 @@ Public Sub UnBanDatabase(ByVal UserName As String)
     
 #If DBConexionUnica = 0 Then
     Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
 #End If
 
     query = "UPDATE usuario SET is_ban = FALSE WHERE UPPER(name) = '" & UCase$(UserName) & "';"
@@ -999,6 +1044,9 @@ Public Function GetUserGuildIndexDatabase(ByVal UserName As String) As Integer
     
 #If DBConexionUnica = 0 Then
     Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
 #End If
 
     query = "SELECT guild_index FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
@@ -1037,6 +1085,9 @@ Public Sub CopyUserDatabase(ByVal UserName As String, ByVal newName As String)
 
 #If DBConexionUnica = 0 Then
     Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
 #End If
 
     query = "UPDATE usuario SET name = '" & UCase$(newName) & "' WHERE UPPER(name) = '" & UCase$(UserName) & "';"
@@ -1067,6 +1118,9 @@ Public Sub MarcarPjComoQueYaVotoDatabase(ByVal UserIndex As Integer, _
 
 #If DBConexionUnica = 0 Then
     Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
 #End If
 
     query = "UPDATE usuario SET votes_amount = " & NumeroEncuesta & " WHERE id = " & UserList(UserIndex).ID & ";"
@@ -1096,6 +1150,9 @@ Public Function PersonajeCantidadVotosDatabase(ByVal UserName As String) As Inte
 
 #If DBConexionUnica = 0 Then
     Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
 #End If
 
     query = "SELECT votes_amount FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
@@ -1140,6 +1197,9 @@ Public Sub SaveBan(ByVal UserName As String, _
 
 #If DBConexionUnica = 0 Then
     Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
 #End If
 
     query = "UPDATE usuario SET is_ban = TRUE WHERE UPPER(name) = '" & UCase$(UserName) & "';"
@@ -1176,6 +1236,9 @@ Public Function GetUserAmountOfPunishments(ByVal UserName As String) As Integer
     
 #If DBConexionUnica = 0 Then
     Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
 #End If
 
     query = "SELECT COUNT(1) as punishments FROM punishment WHERE user_id = (SELECT id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "')"
@@ -1215,6 +1278,9 @@ Public Sub SendUserPunishments(ByVal UserIndex As Integer, _
 
 #If DBConexionUnica = 0 Then
     Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
 #End If
 
     query = "SELECT * FROM punishment WHERE user_id = (SELECT id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "');"
@@ -1257,6 +1323,9 @@ Public Function GetUserPos(ByVal UserName As String) As String
 
 #If DBConexionUnica = 0 Then
     Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
 #End If
 
     query = "SELECT pos_map, pos_x, pos_y FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
@@ -1296,6 +1365,9 @@ Public Sub SaveUserPunishment(ByVal UserName As String, _
     
 #If DBConexionUnica = 0 Then
     Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
 #End If
 
     query = "INSERT INTO punishment SET "
@@ -1329,6 +1401,9 @@ Public Sub AlterUserPunishment(ByVal UserName As String, _
 
 #If DBConexionUnica = 0 Then
     Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
 #End If
 
     query = "UPDATE punishment SET "
@@ -1359,6 +1434,9 @@ Public Sub ResetUserFacciones(ByVal UserName As String)
 
 #If DBConexionUnica = 0 Then
     Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
 #End If
 
     query = "UPDATE usuario SET "
@@ -1403,6 +1481,9 @@ Public Sub KickUserCouncils(ByVal UserName As String)
 
 #If DBConexionUnica = 0 Then
     Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
 #End If
 
     query = "UPDATE usuario SET "
@@ -1434,6 +1515,9 @@ Public Sub KickUserFacciones(ByVal UserName As String)
 
 #If DBConexionUnica = 0 Then
     Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
 #End If
 
     query = "UPDATE usuario SET "
@@ -1465,6 +1549,9 @@ Public Sub KickUserChaosLegion(ByVal UserName As String)
 
 #If DBConexionUnica = 0 Then
     Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
 #End If
 
     query = "UPDATE usuario SET "
@@ -1496,6 +1583,9 @@ Public Sub KickUserRoyalArmy(ByVal UserName As String)
 
 #If DBConexionUnica = 0 Then
     Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
 #End If
 
     query = "UPDATE usuario SET "
@@ -1527,6 +1617,9 @@ Public Sub UpdateUserLogged(ByVal UserName As String, ByVal Logged As Byte)
 
 #If DBConexionUnica = 0 Then
     Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
 #End If
 
     query = "UPDATE usuario SET "
@@ -1557,6 +1650,9 @@ Public Function GetUserLastIps(ByVal UserName As String) As String
 
 #If DBConexionUnica = 0 Then
     Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
 #End If
 
     query = "SELECT last_ip FROM account WHERE id = (SELECT account_id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "');"
@@ -1596,6 +1692,9 @@ Public Function GetUserSkills(ByVal UserName As String) As String
 
 #If DBConexionUnica = 0 Then
     Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
 #End If
 
     query = "SELECT number, value FROM skillpoint WHERE user_id = (SELECT id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "');"
@@ -1638,6 +1737,9 @@ Public Function GetUserFreeSkills(ByVal UserName As String) As Integer
 
 #If DBConexionUnica = 0 Then
     Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
 #End If
 
     query = "SELECT free_skillpoints FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
@@ -1676,6 +1778,9 @@ Public Sub SaveUserTrainingTime(ByVal UserName As String, _
 
 #If DBConexionUnica = 0 Then
     Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
 #End If
 
     query = "UPDATE usuario SET "
@@ -1706,6 +1811,9 @@ Public Function GetUserTrainingTime(ByVal UserName As String) As Long
 
 #If DBConexionUnica = 0 Then
     Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
 #End If
 
     query = "SELECT counter_training FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
@@ -1743,6 +1851,9 @@ Public Function UserBelongsToRoyalArmy(ByVal UserName As String) As Boolean
 
 #If DBConexionUnica = 0 Then
     Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
 #End If
 
     query = "SELECT pertenece_real FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "' AND deleted = FALSE;"
@@ -1781,6 +1892,9 @@ Public Function UserBelongsToChaosLegion(ByVal UserName As String) As Boolean
 
 #If DBConexionUnica = 0 Then
     Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
 #End If
 
     query = "SELECT pertenece_caos FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "' AND deleted = FALSE;"
@@ -1819,6 +1933,9 @@ Public Function GetUserLevel(ByVal UserName As String) As Byte
 
 #If DBConexionUnica = 0 Then
     Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
 #End If
 
     query = "SELECT level FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
@@ -1857,6 +1974,9 @@ Public Function GetUserPromedio(ByVal UserName As String) As Long
 
 #If DBConexionUnica = 0 Then
     Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
 #End If
 
     query = "SELECT rep_average FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
@@ -1895,6 +2015,9 @@ Public Function GetUserReenlists(ByVal UserName As String) As Byte
 
 #If DBConexionUnica = 0 Then
     Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
 #End If
 
     query = "SELECT reenlistadas FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
@@ -1933,6 +2056,9 @@ Public Sub SaveUserReenlists(ByVal UserName As String, ByVal Reenlists As Byte)
 
 #If DBConexionUnica = 0 Then
     Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
 #End If
 
     query = "UPDATE usuario SET "
@@ -1966,9 +2092,12 @@ Public Sub SendUserStatsTxtDatabase(ByVal sendIndex As Integer, ByVal UserName A
     Else
         Call WriteConsoleMsg(sendIndex, "Estadisticas de: " & UserName, FontTypeNames.FONTTYPE_INFO)
 
-    #If DBConexionUnica = 0 Then
-        Call Database_Connect
-    #End If
+#If DBConexionUnica = 0 Then
+    Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
+#End If
     
         query = "SELECT level, exp, elu, min_sta, max_sta, min_hp, max_hp, min_man, max_man, min_hit, max_hit, gold FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
@@ -2017,9 +2146,12 @@ Public Sub SendUserMiniStatsTxtFromDatabase(ByVal sendIndex As Integer, _
     Else
         Call WriteConsoleMsg(sendIndex, "Estadisticas de: " & UserName, FontTypeNames.FONTTYPE_INFO)
 
-    #If DBConexionUnica = 0 Then
-        Call Database_Connect
-    #End If
+#If DBConexionUnica = 0 Then
+    Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
+#End If
     
         query = "SELECT killed_npcs, killed_users, ciudadanos_matados, criminales_matados, class_id, genre_id, race_id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
@@ -2068,6 +2200,9 @@ Public Sub SendUserOROTxtFromDatabase(ByVal sendIndex As Integer, _
     Else
         #If DBConexionUnica = 0 Then
             Call Database_Connect
+        #Else
+            'Si perdimos la conexion reconectamos
+            If CheckSQLStatus = False Then Database_Connect
         #End If
 
         query = "SELECT bank_gold FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
@@ -2115,6 +2250,9 @@ Public Sub SendUserInvTxtFromDatabase(ByVal sendIndex As Integer, _
     Else
         #If DBConexionUnica = 0 Then
             Call Database_Connect
+        #Else
+            'Si perdimos la conexion reconectamos
+            If CheckSQLStatus = False Then Database_Connect
         #End If
 
         query = "SELECT number, item_id, amount FROM inventory_item WHERE user_id = (SELECT id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "')"
@@ -2172,6 +2310,9 @@ Public Sub SendUserBovedaTxtFromDatabase(ByVal sendIndex As Integer, _
     Else
         #If DBConexionUnica = 0 Then
             Call Database_Connect
+        #Else
+            'Si perdimos la conexion reconectamos
+            If CheckSQLStatus = False Then Database_Connect
         #End If
 
         query = "SELECT number, item_id, amount FROM bank_item WHERE user_id = (SELECT id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "')"
@@ -2227,9 +2368,12 @@ Public Sub SendCharacterInfoDatabase(ByVal UserIndex As Integer, ByVal UserName 
 
     Dim query       As String
 
-#If DBConexionUnica = 0 Then
-    Call Database_Connect
-#End If
+    #If DBConexionUnica = 0 Then
+        Call Database_Connect
+    #Else
+        'Si perdimos la conexion reconectamos
+        If CheckSQLStatus = False Then Database_Connect
+    #End If
 
     query = "SELECT race_id, class_id, genre_id, level, gold, bank_gold, rep_average, guild_requests_history, guild_index, guild_member_history, pertenece_real, pertenece_caos, ciudadanos_matados, criminales_matados FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
@@ -2281,9 +2425,12 @@ Public Function GetUserGuildMemberDatabase(ByVal UserName As String) As String
 
     Dim query As String
 
-#If DBConexionUnica = 0 Then
-    Call Database_Connect
-#End If
+    #If DBConexionUnica = 0 Then
+        Call Database_Connect
+    #Else
+        'Si perdimos la conexion reconectamos
+        If CheckSQLStatus = False Then Database_Connect
+    #End If
 
     query = "SELECT guild_member_history FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
@@ -2298,9 +2445,9 @@ Public Function GetUserGuildMemberDatabase(ByVal UserName As String) As String
     GetUserGuildMemberDatabase = SanitizeNullValue(Database_RecordSet!guild_member_history, vbNullString)
     Set Database_RecordSet = Nothing
     
-#If DBConexionUnica = 0 Then
-    Call Database_Close
-#End If
+    #If DBConexionUnica = 0 Then
+        Call Database_Close
+    #End If
 
     Exit Function
 
@@ -2321,6 +2468,9 @@ Public Function GetUserGuildAspirantDatabase(ByVal UserName As String) As Intege
 
 #If DBConexionUnica = 0 Then
     Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
 #End If
 
     query = "SELECT guild_aspirant_index FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
@@ -2359,6 +2509,9 @@ Public Function GetUserGuildRejectionReasonDatabase(ByVal UserName As String) As
 
 #If DBConexionUnica = 0 Then
     Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
 #End If
 
     query = "SELECT guild_rejected_because FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
@@ -2397,6 +2550,9 @@ Public Function GetUserGuildPedidosDatabase(ByVal UserName As String) As String
 
 #If DBConexionUnica = 0 Then
     Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
 #End If
 
     query = "SELECT guild_requests_history FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
@@ -2436,6 +2592,9 @@ Public Sub SaveUserGuildRejectionReasonDatabase(ByVal UserName As String, _
 
 #If DBConexionUnica = 0 Then
     Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
 #End If
 
     query = "UPDATE usuario SET "
@@ -2467,6 +2626,9 @@ Public Sub SaveUserGuildIndexDatabase(ByVal UserName As String, _
 
 #If DBConexionUnica = 0 Then
     Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
 #End If
 
     query = "UPDATE usuario SET "
@@ -2498,6 +2660,9 @@ Public Sub SaveUserGuildAspirantDatabase(ByVal UserName As String, _
 
 #If DBConexionUnica = 0 Then
     Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
 #End If
 
     query = "UPDATE usuario SET "
@@ -2528,6 +2693,9 @@ Public Sub SaveUserGuildMemberDatabase(ByVal UserName As String, ByVal guilds As
 
 #If DBConexionUnica = 0 Then
     Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
 #End If
 
     query = "UPDATE usuario SET "
@@ -2558,6 +2726,9 @@ Public Sub SaveUserGuildPedidosDatabase(ByVal UserName As String, ByVal Pedidos 
 
 #If DBConexionUnica = 0 Then
     Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
 #End If
 
     query = "UPDATE usuario SET "
@@ -2588,6 +2759,9 @@ Public Sub SaveAccountLastLoginDatabase(ByVal UserName As String, ByVal UserIP A
     
 #If DBConexionUnica = 0 Then
     Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
 #End If
 
     query = "UPDATE account SET "
@@ -2619,8 +2793,10 @@ Public Sub SaveAccountEditGemasDatabase(ByVal UserName As String, ByVal Gemas As
 
 #If DBConexionUnica = 0 Then
     Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
 #End If
-
     query = "UPDATE account SET gemas = '" & Gemas & "' WHERE id = (SELECT account_id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "');"
 
     Database_Connection.Execute (query)
@@ -2647,6 +2823,9 @@ Public Sub SaveAccountSumaGemasDatabase(ByVal UserName As String, ByVal Gemas As
     
 #If DBConexionUnica = 0 Then
     Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
 #End If
 
     query = "UPDATE account SET gemas = gemas + '" & Gemas & "' WHERE id = (SELECT account_id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "');"
@@ -2675,6 +2854,9 @@ Public Sub SaveAccountRestaGemasDatabase(ByVal UserName As String, ByVal Gemas A
 
 #If DBConexionUnica = 0 Then
     Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
 #End If
 
     query = "UPDATE account SET gemas = gemas - '" & Gemas & "' WHERE id = (SELECT account_id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "');"
@@ -2703,6 +2885,9 @@ Public Function GetGemasDatabase(ByVal UserName As String) As Long
 
 #If DBConexionUnica = 0 Then
     Call Database_Connect
+#Else
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Connect
 #End If
 
     query = "SELECT gemas FROM account WHERE id = (SELECT account_id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "');"

@@ -7,7 +7,7 @@ Begin VB.Form frmMain
    ClientHeight    =   5895
    ClientLeft      =   1950
    ClientTop       =   1515
-   ClientWidth     =   9855
+   ClientWidth     =   10890
    ControlBox      =   0   'False
    FillColor       =   &H00C0C0C0&
    BeginProperty Font 
@@ -26,30 +26,41 @@ Begin VB.Form frmMain
    MinButton       =   0   'False
    PaletteMode     =   1  'UseZOrder
    ScaleHeight     =   5895
-   ScaleWidth      =   9855
+   ScaleWidth      =   10890
    StartUpPosition =   2  'CenterScreen
    WindowState     =   1  'Minimized
+   Begin VB.CommandButton cmdDB 
+      BackColor       =   &H00E0E0E0&
+      Caption         =   "Estado de la conexión"
+      Height          =   375
+      Index           =   2
+      Left            =   8880
+      Style           =   1  'Graphical
+      TabIndex        =   28
+      Top             =   5400
+      Width           =   1935
+   End
    Begin VB.CommandButton cmdDB 
       BackColor       =   &H00E0E0E0&
       Caption         =   "Desconectar de la DB"
       Height          =   375
       Index           =   1
-      Left            =   7560
+      Left            =   6840
       Style           =   1  'Graphical
       TabIndex        =   27
       Top             =   5400
-      Width           =   2055
+      Width           =   1935
    End
    Begin VB.CommandButton cmdDB 
       BackColor       =   &H00E0E0E0&
       Caption         =   "Conectar a la DB"
       Height          =   375
       Index           =   0
-      Left            =   5280
+      Left            =   5160
       Style           =   1  'Graphical
       TabIndex        =   26
       Top             =   5400
-      Width           =   2055
+      Width           =   1575
    End
    Begin VB.TextBox txtNumCuentas 
       Alignment       =   2  'Center
@@ -65,7 +76,7 @@ Begin VB.Form frmMain
    Begin VB.CommandButton cmdCommand3 
       Caption         =   "SpawnBOT"
       Height          =   360
-      Left            =   9240
+      Left            =   9720
       TabIndex        =   23
       Top             =   120
       Width           =   630
@@ -99,7 +110,7 @@ Begin VB.Form frmMain
       TabIndex        =   15
       Text            =   "frmMain.frx":1042
       Top             =   3840
-      Width           =   4575
+      Width           =   5655
    End
    Begin InetCtlsObjects.Inet Inet1 
       Left            =   4200
@@ -116,7 +127,7 @@ Begin VB.Form frmMain
       Style           =   1  'Graphical
       TabIndex        =   13
       Top             =   4920
-      Width           =   4575
+      Width           =   5655
    End
    Begin VB.CheckBox chkServerHabilitado 
       BackColor       =   &H00000000&
@@ -398,7 +409,7 @@ Begin VB.Form frmMain
          Strikethrough   =   0   'False
       EndProperty
       Height          =   495
-      Left            =   5280
+      Left            =   5760
       MousePointer    =   3  'I-Beam
       TabIndex        =   14
       Top             =   1320
@@ -865,6 +876,14 @@ Private Sub cmdDB_Click(index As Integer)
         Case 1 'Desconectar
             If MsgBox("Desea DESCONECTAR de la base de datos MYSQL? ¡Si ya esta desconectada podria provocar errores!!!", vbYesNo, "¡DESCONEXION DE LA MYSQL!") = vbNo Then Exit Sub
             Call Database_Close
+            
+        Case 2 'Estado de la conexion
+        
+            If CheckSQLStatus Then
+                MsgBox "Base de datos CONECTADA"
+            Else
+                MsgBox "No hay conexión con la Base de datos"
+            End If
             
     End Select
 End Sub
