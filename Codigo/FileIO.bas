@@ -1400,7 +1400,7 @@ Sub LoadGlobalDrop()
     NUMGLOBALDROPS = val(Leer.GetValue("GLOBAL", "NumDrops"))
     
     frmCargando.cargar.min = 0
-    frmCargando.cargar.max = NumObjDatas
+    frmCargando.cargar.max = NUMGLOBALDROPS
     frmCargando.cargar.Value = 0
     
     ReDim Preserve GlobalDROPObject(1 To NUMGLOBALDROPS) As GlobalObj

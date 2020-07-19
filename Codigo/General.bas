@@ -379,6 +379,10 @@ Sub Main()
     'Cargamos la experiencia requerida para cada nivel
     Call CargarExpXLVL
     
+    'Invocaciones.dat
+    frmCargando.Label1(2).Caption = "Cargando Invocaciones.dat"
+    Call InitInvocaciones
+    
     ' Connections
     Call ResetUsersConnections
     

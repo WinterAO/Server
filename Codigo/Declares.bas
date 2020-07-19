@@ -31,7 +31,7 @@ Option Explicit
 
 #If False Then
 
-    Dim map, X, Y, body, clase, race, Email, obj, Length As Variant
+    Dim Map, X, Y, body, clase, race, Email, obj, Length As Variant
 
 #End If
 
@@ -308,6 +308,7 @@ Public Enum eTrigger
     ZONASEGURA = 4
     ANTIPIQUETE = 5
     ZONAPELEA = 6
+    Invocaciones = 7
 
 End Enum
 
@@ -502,7 +503,7 @@ Public Enum eNPCType
     Gobernador = 11
     WorldBoss = 12
     dummy = 13
-    quest = 14
+    Quest = 14
     Marinero = 15
     
 End Enum
@@ -790,7 +791,7 @@ Public EXP_X_LVL() As Long
 
 Public Type WorldPos
 
-    map As Integer
+    Map As Integer
     X As Integer
     Y As Integer
 
@@ -1583,7 +1584,7 @@ Public Type AccountCharacters
     helmet As Integer
     Class As Byte
     race As Byte
-    map As Integer
+    Map As Integer
     Level As Byte
     Gold As Long
     criminal As Boolean
@@ -1794,6 +1795,8 @@ Public Type NPCFlags
     ActivoPotencia As Boolean
     AumentaPotencia As Boolean
     
+    Invocacion As Byte
+    
 End Type
 
 Public Type tCriaturasEntrenador
@@ -1824,7 +1827,7 @@ End Type
 
 ' New type for holding the pathfinding info
 
-Public Type npc
+Public Type NPC
 
     Name As String
     Char As Char 'Define como se vera
@@ -2060,7 +2063,7 @@ Public HappyHourDays(1 To 7) As tHappyHour    ' 0.13.5
 '*****************ARRAYS PUBLICOS*************************
 Public UserList()                         As User 'USUARIOS
 
-Public Npclist(1 To MAXNPCS)              As npc 'NPCS
+Public Npclist(1 To MAXNPCS)              As NPC 'NPCS
 
 Public MapData()                          As MapBlock
 

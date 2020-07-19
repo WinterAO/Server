@@ -30,6 +30,7 @@ Retardo ===== El NPC tendra un retardo de Respawn especificado en Minutos
 Explotar ===== El NPC tendra un 50% de explota haciendo el doble de su golpe minimo
 LanzaMensaje ===== El NPC mandara un mensaje cuando le quede un 10% de su vida
 ActivoPotencia ===== El NPC pegar el doble a partir de su 50% de vida
+Invocacion ===== NPC que son de invocacion
 
 ##############################################
 ################ORDEN EN DAT##################
@@ -2809,6 +2810,7 @@ PoderAtaque=260
 PoderEvasion=245
 snd2=78
 BackUp=0
+Invocacion=1
 NROITEMS=1
 Obj1=1254-1
 
@@ -2838,6 +2840,7 @@ PoderAtaque=260
 PoderEvasion=245
 snd2=78
 BackUp=0
+Invocacion=1
 NROITEMS=1
 Obj1=1253-1
 
@@ -2868,6 +2871,7 @@ PoderEvasion=245
 snd2=78
 BackUp=0
 NoShadow=1
+Invocacion=1
 NROITEMS=1
 Obj1=1252-1
 

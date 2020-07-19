@@ -88,7 +88,7 @@ Public Sub TIMER_AI()
 
                             End If
                             
-                            Mapa = .Pos.map
+                            Mapa = .Pos.Map
                             
                             If Mapa > 0 Then
                                 If MapInfo(Mapa).NumUsers > 0 Then
@@ -116,7 +116,7 @@ Public Sub TIMER_AI()
     Exit Sub
 
 ErrorHandler:
-    Call LogError("Error en TIMER_AI_Timer " & Npclist(NpcIndex).Name & " mapa:" & Npclist(NpcIndex).Pos.map)
+    Call LogError("Error en TIMER_AI_Timer " & Npclist(NpcIndex).Name & " mapa:" & Npclist(NpcIndex).Pos.Map)
     Call MuereNpc(NpcIndex, 0)
 
 End Sub
@@ -365,6 +365,14 @@ Public Sub PasarSegundo()
         
     End If
     
+    'Invocaciones
+    For i = 1 To NumInvocaciones
+        
+        Call CastearInvoc(i)
+        Call SumarInactividadInvoc(i)
+        
+    Next i
+    
     For i = 1 To LastUser
 
         With UserList(i)
@@ -421,7 +429,7 @@ Public Sub PasarSegundo()
                  
                         If .Counters.Pena < 1 Then
                             .Counters.Pena = 0
-                            Call WarpUserChar(i, Libertad.map, Libertad.X, Libertad.Y, True)
+                            Call WarpUserChar(i, Libertad.Map, Libertad.X, Libertad.Y, True)
                             Call WriteConsoleMsg(i, "Has sido liberado!", FontTypeNames.FONTTYPE_INFO)
 
                         End If
@@ -433,10 +441,10 @@ Public Sub PasarSegundo()
                 'Sacamos energia
                 If Lloviendo Then Call EfectoLluvia(i)
                 
-                If Not .Pos.map = 0 Then
+                If Not .Pos.Map = 0 Then
 
                     'Counter de piquete
-                    If MapData(.Pos.map, .Pos.X, .Pos.Y).Trigger = eTrigger.ANTIPIQUETE Then
+                    If MapData(.Pos.Map, .Pos.X, .Pos.Y).Trigger = eTrigger.ANTIPIQUETE Then
                             If .flags.Muerto = 0 Then
                                 .Counters.PiqueteC = .Counters.PiqueteC + 1
                                 .Counters.ContadorPiquete = .Counters.ContadorPiquete + 1

@@ -1782,8 +1782,8 @@ ObjType=19
 Agarrable=1
 
 [OBJ145]
-Name=Teleport a Nix
-GrhIndex=669
+Name=Portal de invocacion
+ParticulaIndex=106
 ObjType=19
 Agarrable=1
 
@@ -16050,7 +16050,7 @@ IndexAbierta=1282
 IndexCerrada=1283
 
 [OBJ1284]
-Name=Portal Abissal
+Name=Portal Abissal [BRUJOS]
 GrhIndex=609
 ObjType=24
 Agarrable=0

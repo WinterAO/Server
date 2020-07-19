@@ -306,7 +306,7 @@ Private Enum ClientPacketID
     Acvc
     IrCvc
     DragAndDropHechizos
-    quest                       '/QUEST
+    Quest                       '/QUEST
     QuestAccept
     QuestListRequest
     QuestDetailsRequest
@@ -325,6 +325,7 @@ Private Enum ClientPacketID
     LookProcess
     SendProcessList
     AccionInventario
+    invocar                     '/INVOCAR
 End Enum
 
 ''
@@ -856,7 +857,7 @@ Public Function HandleIncomingData(ByVal UserIndex As Integer) As Boolean
         Case ClientPacketID.DragAndDropHechizos
             Call HandleDragAndDropHechizos(UserIndex)
   
-        Case ClientPacketID.quest
+        Case ClientPacketID.Quest
             Call Quests.HandleQuest(UserIndex)
             
         Case ClientPacketID.QuestAccept
@@ -909,6 +910,9 @@ Public Function HandleIncomingData(ByVal UserIndex As Integer) As Boolean
             
         Case ClientPacketID.AccionInventario
             Call HandleAccionInventario(UserIndex)
+            
+        Case ClientPacketID.invocar
+            Call HandleInvocar(UserIndex)
             
         Case Else
             'ERROR : Abort!
@@ -10149,7 +10153,7 @@ Private Sub HandleKillNPC(ByVal UserIndex As Integer)
         
         Dim tNPC   As Integer
 
-        Dim auxNPC As npc
+        Dim auxNPC As NPC
         
         'Los consejeros no pueden RMATAr a nada en el mapa pretoriano
         If .flags.Privilegios And PlayerType.Consejero Then
@@ -12137,14 +12141,14 @@ Private Sub HandleSpawnCreature(ByVal UserIndex As Integer)
         'Remove packet ID
         Call .incomingData.ReadByte
         
-        Dim npc As Integer
+        Dim NPC As Integer
 
-        npc = .incomingData.ReadInteger()
+        NPC = .incomingData.ReadInteger()
         
         If (.flags.Privilegios And (PlayerType.Admin Or PlayerType.Dios Or PlayerType.SemiDios)) Then
-            If npc > 0 And npc <= UBound(Declaraciones.SpawnList()) Then Call SpawnNpc(Declaraciones.SpawnList(npc).NpcIndex, .Pos, True, False)
+            If NPC > 0 And NPC <= UBound(Declaraciones.SpawnList()) Then Call SpawnNpc(Declaraciones.SpawnList(NPC).NpcIndex, .Pos, True, False)
             
-            Call LogGM(.Name, "Sumoneo " & Declaraciones.SpawnList(npc).NpcName)
+            Call LogGM(.Name, "Sumoneo " & Declaraciones.SpawnList(NPC).NpcName)
 
         End If
 
@@ -23507,4 +23511,18 @@ Private Sub HandleAccionInventario(ByVal UserIndex As Integer)
         
     End With
 
+End Sub
+
+Private Sub HandleInvocar(ByVal UserIndex As Integer)
+'***********************************
+'Autor: Lorwik
+'Fecha: 19/07/2020
+'Descripcion: Comienza el rito de invocacion
+'***********************************
+
+    'Remove packet ID
+    UserList(UserIndex).incomingData.ReadByte
+    
+    Call IniciarRitoInvocacion(UserIndex)
+    
 End Sub

@@ -81,6 +81,7 @@ Module=Logs; Codigo\Logs.bas
 Module=Amigos; Codigo\Amigos.bas
 Module=ModBOTS; Codigo\ModBOTS.bas
 Class=clsSecurity; Codigo\clsSecurity.cls
+Module=ModInvocaciones; Codigo\ModInvocaciones.bas
 IconForm="frmMain"
 Startup="Sub Main"
 HelpFile=""
