@@ -845,6 +845,15 @@ Sub HandleHechizoUsuario(ByVal UserIndex As Integer, ByVal spellIndex As Integer
 
     Dim ManaRequerida   As Integer
     
+    With UserList(UserIndex)
+        '<<<< Equitando >>>
+        If .flags.Equitando = 1 Then
+            Call UnmountMontura(UserIndex)
+            Call WriteEquitandoToggle(UserIndex)
+
+        End If
+    End With
+    
     Select Case Hechizos(spellIndex).Tipo
 
         Case TipoHechizo.uEstado
@@ -919,6 +928,12 @@ Sub HandleHechizoNPC(ByVal UserIndex As Integer, ByVal HechizoIndex As Integer)
     Dim ManaRequerida   As Long
     
     With UserList(UserIndex)
+        '<<<< Equitando >>>
+        If .flags.Equitando = 1 Then
+            Call UnmountMontura(UserIndex)
+            Call WriteEquitandoToggle(UserIndex)
+
+        End If
         
         Select Case Hechizos(HechizoIndex).Tipo
 
@@ -1669,15 +1684,6 @@ Sub HechizoEstadoNPC(ByVal NpcIndex As Integer, _
                     Exit Sub
 
                 End If
-
-                With UserList(UserIndex)
-                    '<<<< Equitando >>>
-                    If .flags.Equitando = 1 Then
-                        Call UnmountMontura(UserIndex)
-                        Call WriteEquitandoToggle(UserIndex)
-                        
-                    End If
-                End With
 
                 Call NPCAtacado(NpcIndex, UserIndex)
                 Call InfoHechizo(UserIndex)
