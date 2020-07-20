@@ -2267,6 +2267,9 @@ Private Sub HandleWalk(ByVal UserIndex As Integer)
         'If exiting, cancel
         Call CancelExit(UserIndex)
         
+        'Si esta casteando, lo cancelamos
+        Call CancelCast(UserIndex)
+        
         If .flags.Paralizado = 0 Then
             If .flags.Meditando Then
                 'Stop meditating, next action will start movement.
@@ -2402,6 +2405,9 @@ Private Sub HandleAttack(ByVal UserIndex As Integer)
         
         'If exiting, cancel
         Call CancelExit(UserIndex)
+        
+        'Si esta casteando, lo cancelamos
+        Call CancelCast(UserIndex)
         
         'Play AttackAnim on Clients
         Call SendData(SendTarget.ToPCAreaButIndex, UserIndex, PrepareMessageCharacterAttackAnim(.Char.CharIndex))
@@ -3059,6 +3065,9 @@ Private Sub HandleWork(ByVal UserIndex As Integer)
         'If exiting, cancel
         Call CancelExit(UserIndex)
         
+        'Si esta casteando, lo cancelamos
+        Call CancelCast(UserIndex)
+        
         Select Case Skill
         
             Case Robar, Magia, Domar
@@ -3347,6 +3356,9 @@ Private Sub HandleWorkLeftClick(ByVal UserIndex As Integer)
         'If exiting, cancel
         Call CancelExit(UserIndex)
         
+        'Si esta casteando, lo cancelamos
+        Call CancelCast(UserIndex)
+        
         Select Case Skill
 
             Case eSkill.Proyectiles
@@ -3405,7 +3417,7 @@ Private Sub HandleWorkLeftClick(ByVal UserIndex As Integer)
                 'Check intervals and cast
                 If .flags.Hechizo > 0 Then
                     Call LanzarHechizo(.flags.Hechizo, UserIndex)
-                    .flags.Hechizo = 0
+                    
                 Else
                     Call WriteConsoleMsg(UserIndex, "Primero selecciona el hechizo que quieres lanzar!", FontTypeNames.FONTTYPE_INFO)
 
@@ -3908,7 +3920,7 @@ Private Sub HandleTrain(ByVal UserIndex As Integer)
         If Npclist(.flags.TargetNPC).Mascotas < MAXMASCOTASENTRENADOR Then
             If PetIndex > 0 And PetIndex < Npclist(.flags.TargetNPC).NroCriaturas + 1 Then
                 'Create the creature
-                SpawnedNpc = SpawnNpc(Npclist(.flags.TargetNPC).Criaturas(PetIndex).NpcIndex, Npclist(.flags.TargetNPC).Pos, True, False)
+                SpawnedNpc = SpawnNpc(Npclist(.flags.TargetNPC).Criaturas(PetIndex).NPCIndex, Npclist(.flags.TargetNPC).Pos, True, False)
                 
                 If SpawnedNpc > 0 Then
                     Npclist(SpawnedNpc).MaestroNpc = .flags.TargetNPC
@@ -8016,7 +8028,7 @@ Private Sub HandleLeaveFaction(ByVal UserIndex As Integer)
 
     Dim TalkToDemon As Boolean
 
-    Dim NpcIndex    As Integer
+    Dim NPCIndex    As Integer
     
     With UserList(UserIndex)
         'Remove packet ID
@@ -8031,15 +8043,15 @@ Private Sub HandleLeaveFaction(ByVal UserIndex As Integer)
         End If
         
         ' Chequea si habla con el rey o el demonio. Puede salir sin hacerlo, pero si lo hace le reponden los npcs
-        NpcIndex = .flags.TargetNPC
+        NPCIndex = .flags.TargetNPC
 
-        If NpcIndex <> 0 Then
+        If NPCIndex <> 0 Then
 
             ' Es rey o domonio?
-            If Npclist(NpcIndex).NPCtype = eNPCType.Noble Then
+            If Npclist(NPCIndex).NPCtype = eNPCType.Noble Then
 
                 'Rey?
-                If Npclist(NpcIndex).flags.Faccion = 0 Then
+                If Npclist(NPCIndex).flags.Faccion = 0 Then
                     TalkToKing = True
                     ' Demonio
                 Else
@@ -8056,13 +8068,13 @@ Private Sub HandleLeaveFaction(ByVal UserIndex As Integer)
 
             ' Si le pidio al demonio salir de la armada, este le responde.
             If TalkToDemon Then
-                Call WriteChatOverHead(UserIndex, "Sal de aqui bufon!!!", Npclist(NpcIndex).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "Sal de aqui bufon!!!", Npclist(NPCIndex).Char.CharIndex, vbWhite)
             
             Else
 
                 ' Si le pidio al rey salir de la armada, le responde.
                 If TalkToKing Then
-                    Call WriteChatOverHead(UserIndex, "Seras bienvenido a las fuerzas imperiales si deseas regresar.", Npclist(NpcIndex).Char.CharIndex, vbWhite)
+                    Call WriteChatOverHead(UserIndex, "Seras bienvenido a las fuerzas imperiales si deseas regresar.", Npclist(NPCIndex).Char.CharIndex, vbWhite)
 
                 End If
                 
@@ -8075,12 +8087,12 @@ Private Sub HandleLeaveFaction(ByVal UserIndex As Integer)
 
             ' Si le pidio al rey salir del caos, le responde.
             If TalkToKing Then
-                Call WriteChatOverHead(UserIndex, "Sal de aqui maldito criminal!!!", Npclist(NpcIndex).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "Sal de aqui maldito criminal!!!", Npclist(NPCIndex).Char.CharIndex, vbWhite)
             Else
 
                 ' Si le pidio al demonio salir del caos, este le responde.
                 If TalkToDemon Then
-                    Call WriteChatOverHead(UserIndex, "Ya volveras arrastrandote.", Npclist(NpcIndex).Char.CharIndex, vbWhite)
+                    Call WriteChatOverHead(UserIndex, "Ya volveras arrastrandote.", Npclist(NPCIndex).Char.CharIndex, vbWhite)
 
                 End If
                 
@@ -8094,11 +8106,11 @@ Private Sub HandleLeaveFaction(ByVal UserIndex As Integer)
             ' Si le hablaba al rey o demonio, le repsonden ellos
             'Corregido, solo si son en efecto el rey o el demonio, no cualquier NPC (C4b3z0n)
             If (TalkToDemon And criminal(UserIndex)) Or (TalkToKing And Not criminal(UserIndex)) Then 'Si se pueden unir a la faccion (status), son invitados
-                Call WriteChatOverHead(UserIndex, "No perteneces a nuestra faccion. Si deseas unirte, di /ENLISTAR", Npclist(NpcIndex).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "No perteneces a nuestra faccion. Si deseas unirte, di /ENLISTAR", Npclist(NPCIndex).Char.CharIndex, vbWhite)
             ElseIf (TalkToDemon And Not criminal(UserIndex)) Then
-                Call WriteChatOverHead(UserIndex, "Sal de aqui bufon!!!", Npclist(NpcIndex).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "Sal de aqui bufon!!!", Npclist(NPCIndex).Char.CharIndex, vbWhite)
             ElseIf (TalkToKing And criminal(UserIndex)) Then
-                Call WriteChatOverHead(UserIndex, "Sal de aqui maldito criminal!!!", Npclist(NpcIndex).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "Sal de aqui maldito criminal!!!", Npclist(NPCIndex).Char.CharIndex, vbWhite)
             Else
                 Call WriteConsoleMsg(UserIndex, "No perteneces a ninguna faccion!", FontTypeNames.FONTTYPE_FIGHT)
 
@@ -12146,7 +12158,7 @@ Private Sub HandleSpawnCreature(ByVal UserIndex As Integer)
         NPC = .incomingData.ReadInteger()
         
         If (.flags.Privilegios And (PlayerType.Admin Or PlayerType.Dios Or PlayerType.SemiDios)) Then
-            If NPC > 0 And NPC <= UBound(Declaraciones.SpawnList()) Then Call SpawnNpc(Declaraciones.SpawnList(NPC).NpcIndex, .Pos, True, False)
+            If NPC > 0 And NPC <= UBound(Declaraciones.SpawnList()) Then Call SpawnNpc(Declaraciones.SpawnList(NPC).NPCIndex, .Pos, True, False)
             
             Call LogGM(.Name, "Sumoneo " & Declaraciones.SpawnList(NPC).NpcName)
 
@@ -14796,7 +14808,7 @@ Private Sub HandleKillAllNearbyNPCs(ByVal UserIndex As Integer)
             For X = .Pos.X - MinXBorder + 1 To .Pos.X + MinXBorder - 1
 
                 If X > 0 And Y > 0 And X < 101 And Y < 101 Then
-                    If MapData(.Pos.Map, X, Y).NpcIndex > 0 Then Call QuitarNPC(MapData(.Pos.Map, X, Y).NpcIndex)
+                    If MapData(.Pos.Map, X, Y).NPCIndex > 0 Then Call QuitarNPC(MapData(.Pos.Map, X, Y).NPCIndex)
 
                 End If
 
@@ -16200,25 +16212,25 @@ Public Sub HandleCreateNPC(ByVal UserIndex As Integer)
         'Remove Packet ID
         Call .incomingData.ReadByte
         
-        Dim NpcIndex As Integer: NpcIndex = .incomingData.ReadInteger()
+        Dim NPCIndex As Integer: NPCIndex = .incomingData.ReadInteger()
         Dim Respawn As Boolean: Respawn = .incomingData.ReadBoolean()
         
         'Nos fijamos que sea GM.
         If Not EsGm(UserIndex) Then Exit Sub
         
         'Nos fijamos si es pretoriano.
-        If Npclist(NpcIndex).NPCtype = eNPCType.Pretoriano Then
+        If Npclist(NPCIndex).NPCtype = eNPCType.Pretoriano Then
             Call WriteConsoleMsg(UserIndex, "No puedes sumonear miembros del clan pretoriano de esta forma, utiliza /CREARPRETORIANOS MAPA X Y.", FontTypeNames.FONTTYPE_WARNING)
             Exit Sub
 
         End If
         
         'Invocamos el NPC.
-        If NpcIndex <> 0 Then
+        If NPCIndex <> 0 Then
         
-            NpcIndex = SpawnNpc(NpcIndex, .Pos, True, Respawn)
+            NPCIndex = SpawnNpc(NPCIndex, .Pos, True, Respawn)
         
-            Call LogGM(.Name, "Invoco " & IIf(Respawn, "con respawn", vbNullString) & " a " & Npclist(NpcIndex).Name & " [Indice: " & NpcIndex & "] en el mapa " & .Pos.Map)
+            Call LogGM(.Name, "Invoco " & IIf(Respawn, "con respawn", vbNullString) & " a " & Npclist(NPCIndex).Name & " [Indice: " & NPCIndex & "] en el mapa " & .Pos.Map)
 
         End If
 
@@ -19751,7 +19763,7 @@ End Sub
 ' @param    npcIndex The index of the requested trainer.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteTrainerCreatureList(ByVal UserIndex As Integer, ByVal NpcIndex As Integer)
+Public Sub WriteTrainerCreatureList(ByVal UserIndex As Integer, ByVal NPCIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -19767,8 +19779,8 @@ Public Sub WriteTrainerCreatureList(ByVal UserIndex As Integer, ByVal NpcIndex A
     With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.TrainerCreatureList)
         
-        For i = 1 To Npclist(NpcIndex).NroCriaturas
-            str = str & Npclist(NpcIndex).Criaturas(i).NpcName & SEPARATOR
+        For i = 1 To Npclist(NPCIndex).NroCriaturas
+            str = str & Npclist(NPCIndex).Criaturas(i).NpcName & SEPARATOR
         Next i
         
         If LenB(str) > 0 Then str = Left$(str, Len(str) - 1)
@@ -21735,23 +21747,23 @@ Private Sub HandleImpersonate(ByVal UserIndex As Integer)
         ' Dsgm/Dsrm/Rm
         If (.flags.Privilegios And PlayerType.Dios) = 0 And (.flags.Privilegios And (PlayerType.SemiDios Or PlayerType.RoleMaster)) <> (PlayerType.SemiDios Or PlayerType.RoleMaster) Then Exit Sub
         
-        Dim NpcIndex As Integer
+        Dim NPCIndex As Integer
 
-        NpcIndex = .flags.TargetNPC
+        NPCIndex = .flags.TargetNPC
         
-        If NpcIndex = 0 Then Exit Sub
+        If NPCIndex = 0 Then Exit Sub
         
         ' Copy head, body and desc
-        Call ImitateNpc(UserIndex, NpcIndex)
+        Call ImitateNpc(UserIndex, NPCIndex)
         
         ' Teleports user to npc's coords
-        Call WarpUserChar(UserIndex, Npclist(NpcIndex).Pos.Map, Npclist(NpcIndex).Pos.X, Npclist(NpcIndex).Pos.Y, False, True)
+        Call WarpUserChar(UserIndex, Npclist(NPCIndex).Pos.Map, Npclist(NPCIndex).Pos.X, Npclist(NPCIndex).Pos.Y, False, True)
         
         ' Log gm
-        Call LogGM(.Name, "/IMPERSONAR con " & Npclist(NpcIndex).Name & " en mapa " & .Pos.Map)
+        Call LogGM(.Name, "/IMPERSONAR con " & Npclist(NPCIndex).Name & " en mapa " & .Pos.Map)
         
         ' Remove npc
-        Call QuitarNPC(NpcIndex)
+        Call QuitarNPC(NPCIndex)
         
     End With
     
@@ -21777,15 +21789,15 @@ Private Sub HandleImitate(ByVal UserIndex As Integer)
         ' Dsgm/Dsrm/Rm/ConseRm
         If (.flags.Privilegios And PlayerType.Dios) = 0 And (.flags.Privilegios And (PlayerType.SemiDios Or PlayerType.RoleMaster)) <> (PlayerType.SemiDios Or PlayerType.RoleMaster) And (.flags.Privilegios And (PlayerType.Consejero Or PlayerType.RoleMaster)) <> (PlayerType.Consejero Or PlayerType.RoleMaster) Then Exit Sub
         
-        Dim NpcIndex As Integer
+        Dim NPCIndex As Integer
 
-        NpcIndex = .flags.TargetNPC
+        NPCIndex = .flags.TargetNPC
         
-        If NpcIndex = 0 Then Exit Sub
+        If NPCIndex = 0 Then Exit Sub
         
         ' Copy head, body and desc
-        Call ImitateNpc(UserIndex, NpcIndex)
-        Call LogGM(.Name, "/MIMETIZAR con " & Npclist(NpcIndex).Name & " en mapa " & .Pos.Map)
+        Call ImitateNpc(UserIndex, NPCIndex)
+        Call LogGM(.Name, "/MIMETIZAR con " & Npclist(NPCIndex).Name & " en mapa " & .Pos.Map)
         
     End With
     
@@ -22580,7 +22592,7 @@ Public Sub WriteQuestDetails(ByVal UserIndex As Integer, _
             'Si hay npcs entonces enviamos la lista
             For i = 1 To QuestList(QuestIndex).RequiredNPCs
                 Call .WriteInteger(QuestList(QuestIndex).RequiredNPC(i).Amount)
-                Call .WriteASCIIString(GetVar(DatPath & "NPCs.dat", "NPC" & QuestList(QuestIndex).RequiredNPC(i).NpcIndex, "Name"))
+                Call .WriteASCIIString(GetVar(DatPath & "NPCs.dat", "NPC" & QuestList(QuestIndex).RequiredNPC(i).NPCIndex, "Name"))
 
                 'Si es una quest ya empezada, entonces mandamos los NPCs que mat�.
                 If QuestSlot Then

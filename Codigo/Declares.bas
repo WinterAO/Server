@@ -906,6 +906,8 @@ Public Type tHechizo
     
     Portal As Byte
     PortalPos As WorldPos
+    
+    Casteo As Byte
 
 End Type
 
@@ -1169,7 +1171,7 @@ End Type
 
 Public Type tQuestNpc
 
-    NpcIndex As Integer
+    NPCIndex As Integer
     Amount As Integer
 
 End Type
@@ -1317,6 +1319,12 @@ End Type
 '*********************************************************
 '*********************************************************
 '*********************************************************
+
+Private Type tCasteoSpell
+    Casteando As Boolean 'Indica si esta casteando
+    SpellID As Integer  'Hechizo que esta casteando
+    TimeCast As Long 'Tiempo de casteo
+End Type
 
 Public Type tReputacion 'Fama del usuario
 
@@ -1486,6 +1494,8 @@ Public Type UserFlags
     TargetBot As Byte
     
     Global As Byte 'Indica si el usuario puede usar el global
+    
+    CasteoSpell As tCasteoSpell
 
 End Type
 
@@ -1801,7 +1811,7 @@ End Type
 
 Public Type tCriaturasEntrenador
 
-    NpcIndex As Integer
+    NPCIndex As Integer
     NpcName As String
     tmpIndex As Integer
 
@@ -1906,7 +1916,7 @@ Public Type MapBlock
     Blocked As Byte
     Graphic(1 To 4) As Long
     UserIndex As Integer
-    NpcIndex As Integer
+    NPCIndex As Integer
     ObjInfo As obj
     TileExit As WorldPos
     Trigger As eTrigger

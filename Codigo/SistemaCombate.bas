@@ -1816,6 +1816,9 @@ Sub UsuarioAtacadoPorUsuario(ByVal AttackerIndex As Integer, ByVal victimIndex A
     
     'Si la victima esta saliendo se cancela la salida
     Call CancelExit(victimIndex)
+    
+    'Si esta casteando, lo cancelamos
+    Call CancelCast(victimIndex)
 
 End Sub
 

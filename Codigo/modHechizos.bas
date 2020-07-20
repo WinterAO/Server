@@ -1021,6 +1021,14 @@ Sub LanzarHechizo(ByVal spellIndex As Integer, ByVal UserIndex As Integer)
         End If
     
         If PuedeLanzar(UserIndex, spellIndex) Then
+        
+            If Hechizos(spellIndex).Casteo > 0 And .flags.CasteoSpell.Casteando = False Then
+                .flags.CasteoSpell.Casteando = True
+                .flags.CasteoSpell.SpellID = spellIndex
+                .flags.CasteoSpell.TimeCast = Hechizos(spellIndex).Casteo
+                Call WriteConsoleMsg(UserIndex, "Te concentras para lanzar el hechizo...", FontTypeNames.FONTTYPE_INFO)
+                Exit Sub
+            End If
 
             Select Case Hechizos(spellIndex).Target
 
@@ -1064,6 +1072,8 @@ Sub LanzarHechizo(ByVal spellIndex As Integer, ByVal UserIndex As Integer)
         If .Counters.Trabajando Then .Counters.Trabajando = .Counters.Trabajando - 1
     
         If .Counters.Ocultando Then .Counters.Ocultando = .Counters.Ocultando - 1
+        
+        .flags.Hechizo = 0
 
     End With
 
@@ -3041,6 +3051,39 @@ Private Sub HechizoTerrenoMaterializa(ByVal UserIndex As Integer, ByRef Cast As 
                 
             End If
             
+        End If
+
+    End With
+End Sub
+
+Public Sub ResetCasteo(ByVal UserIndex As Integer)
+'***************************************
+'Autor: Lorwik
+'Fecha: 20/07/2020
+'Descripción: Resetea los flags de casteos  de un usuario
+'***************************************
+
+    With UserList(UserIndex)
+        .flags.CasteoSpell.Casteando = False
+        .flags.CasteoSpell.SpellID = 0
+        .flags.CasteoSpell.TimeCast = 0
+    End With
+
+End Sub
+
+Public Sub CancelCast(ByVal UserIndex As Integer)
+'***************************************
+'Autor: Lorwik
+'Fecha: 20/07/2020
+'Descripción: Cancela un casteo
+'***************************************
+
+    With UserList(UserIndex)
+    
+        If .flags.CasteoSpell.Casteando Then
+            Call WriteConsoleMsg(UserIndex, "No logras concentrarte y cancelas el casteo.", FontTypeNames.FONTTYPE_INFO)
+            Call ResetCasteo(UserIndex)
+            .flags.Hechizo = 0
         End If
 
     End With

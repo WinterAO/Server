@@ -56,7 +56,7 @@ Public Sub TIMER_AI()
 
     On Error GoTo ErrorHandler
 
-    Dim NpcIndex As Long
+    Dim NPCIndex As Long
     Dim Mapa     As Integer
     Dim e_p      As Integer
     
@@ -64,27 +64,27 @@ Public Sub TIMER_AI()
     If Not haciendoBK And Not EnPausa Then
 
         'Update NPCs
-        For NpcIndex = 1 To LastNPC
+        For NPCIndex = 1 To LastNPC
             
-            With Npclist(NpcIndex)
+            With Npclist(NPCIndex)
 
                 If .flags.NPCActive Then 'Nos aseguramos que sea INTELIGENTE!
                 
                     ' Chequea si contiua teniendo dueno
-                    If .Owner > 0 Then Call ValidarPermanenciaNpc(NpcIndex)
+                    If .Owner > 0 Then Call ValidarPermanenciaNpc(NPCIndex)
                 
                     If .flags.Paralizado = 1 Then
-                        Call EfectoParalisisNpc(NpcIndex)
+                        Call EfectoParalisisNpc(NPCIndex)
                     Else
 
                         ' Preto? Tienen ai especial
                         If .NPCtype = eNPCType.Pretoriano Then
-                            Call ClanPretoriano(.ClanIndex).PerformPretorianAI(NpcIndex)
+                            Call ClanPretoriano(.ClanIndex).PerformPretorianAI(NPCIndex)
                         Else
 
                             'Usamos AI si hay algun user en el mapa
                             If .flags.Inmovilizado = 1 Then
-                                Call EfectoParalisisNpc(NpcIndex)
+                                Call EfectoParalisisNpc(NPCIndex)
 
                             End If
                             
@@ -93,7 +93,7 @@ Public Sub TIMER_AI()
                             If Mapa > 0 Then
                                 If MapInfo(Mapa).NumUsers > 0 Then
                                     If .Movement <> TipoAI.ESTATICO Then
-                                        Call NPCAI(NpcIndex)
+                                        Call NPCAI(NPCIndex)
 
                                     End If
 
@@ -109,15 +109,15 @@ Public Sub TIMER_AI()
 
             End With
 
-        Next NpcIndex
+        Next NPCIndex
 
     End If
     
     Exit Sub
 
 ErrorHandler:
-    Call LogError("Error en TIMER_AI_Timer " & Npclist(NpcIndex).Name & " mapa:" & Npclist(NpcIndex).Pos.Map)
-    Call MuereNpc(NpcIndex, 0)
+    Call LogError("Error en TIMER_AI_Timer " & Npclist(NPCIndex).Name & " mapa:" & Npclist(NPCIndex).Pos.Map)
+    Call MuereNpc(NPCIndex, 0)
 
 End Sub
 
@@ -383,6 +383,16 @@ Public Sub PasarSegundo()
                 If .PortalTiempo > 0 Then
                     .PortalTiempo = .PortalTiempo - 1
                     If .PortalTiempo < 1 Then Call Borrar_Portal_User(i)
+                End If
+                
+                '¿Esta casteando un hechizo?
+                If .flags.CasteoSpell.Casteando = True Then
+                    .flags.CasteoSpell.TimeCast = .flags.CasteoSpell.TimeCast - 1
+                    
+                    If .flags.CasteoSpell.TimeCast <= 0 Then
+                        Call LanzarHechizo(.flags.CasteoSpell.SpellID, i)
+                        Call ResetCasteo(i)
+                    End If
                 End If
             
                 'Cerrar usuario

@@ -64,7 +64,7 @@ Public Sub DoPermanecerOculto(ByVal UserIndex As Integer)
                     ' Pierde la apariencia de fragata fantasmal
                     Call ToggleBoatBody(UserIndex)
                     Call WriteConsoleMsg(UserIndex, "Has recuperado tu apariencia normal!", FontTypeNames.FONTTYPE_INFO)
-                    Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, NingunArma, NingunEscudo, NingunCasco, NingunAura, NingunAura)
+                    Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.Heading, NingunArma, NingunEscudo, NingunCasco, NingunAura, NingunAura)
 
                 End If
 
@@ -139,7 +139,7 @@ Public Sub DoOcultarse(ByVal UserIndex As Integer)
                 ' Le cambiamos el body a galeon fantasmal
                 .Char.body = iFragataFantasmal
                 ' Actualizamos clientes
-                Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, NingunArma, NingunEscudo, NingunCasco, NingunAura, NingunAura)
+                Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.Heading, NingunArma, NingunEscudo, NingunCasco, NingunAura, NingunAura)
 
             End If
             
@@ -270,7 +270,7 @@ Public Sub DoNavega(ByVal UserIndex As Integer, _
         End If
         
         ' Actualizo clientes
-        Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
+        Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.Heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
 
     End With
     
@@ -963,12 +963,12 @@ Public Sub ArtesanoConstruirItem(ByVal UserIndex As Integer, ByVal Item As Integ
     Dim ArtesanoObj As ObjData
     ArtesanoObj = ObjData(ObjArtesano(Item))
 
-    Dim NpcIndex As Integer
-    NpcIndex = UserList(UserIndex).flags.TargetNPC
+    Dim NPCIndex As Integer
+    NPCIndex = UserList(UserIndex).flags.TargetNPC
 
     ' Revisamos si tiene las monedas para la comision
     If UserList(UserIndex).Stats.Gld < ArtesaniaCosto Then
-        Call WriteChatOverHead(UserIndex, "No tienes suficientes monedas de oro para pagarme!", Npclist(NpcIndex).Char.CharIndex, vbWhite)
+        Call WriteChatOverHead(UserIndex, "No tienes suficientes monedas de oro para pagarme!", Npclist(NPCIndex).Char.CharIndex, vbWhite)
         Exit Sub
     End If
 
@@ -979,7 +979,7 @@ Public Sub ArtesanoConstruirItem(ByVal UserIndex As Integer, ByVal Item As Integ
         With ArtesanoObj.ItemCrafteo(i)
 
             If Not TieneObjetos(.ObjIndex, .Amount, UserIndex) Then
-                Call WriteChatOverHead(UserIndex, "No tienes los materiales necesarios!", Npclist(NpcIndex).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "No tienes los materiales necesarios!", Npclist(NPCIndex).Char.CharIndex, vbWhite)
                 Exit Sub
             End If
 
@@ -1013,7 +1013,7 @@ Public Sub ArtesanoConstruirItem(ByVal UserIndex As Integer, ByVal Item As Integ
         Call TirarItemAlPiso(UserList(UserIndex).Pos, ObjetoCreado)
     End If
 
-    Call WriteChatOverHead(UserIndex, "Aqui tienes tu " & ArtesanoObj.Name & ". Vuelve pronto!", Npclist(NpcIndex).Char.CharIndex, vbWhite)
+    Call WriteChatOverHead(UserIndex, "Aqui tienes tu " & ArtesanoObj.Name & ". Vuelve pronto!", Npclist(NPCIndex).Char.CharIndex, vbWhite)
 
 End Sub
 
@@ -1442,7 +1442,7 @@ Function FreeMascotaIndex(ByVal UserIndex As Integer) As Integer
 
 End Function
 
-Sub DoDomar(ByVal UserIndex As Integer, ByVal NpcIndex As Integer)
+Sub DoDomar(ByVal UserIndex As Integer, ByVal NPCIndex As Integer)
     '***************************************************
     'Author: Nacho (Integer)
     'Last Modification: 01/05/2010
@@ -1463,7 +1463,7 @@ Sub DoDomar(ByVal UserIndex As Integer, ByVal NpcIndex As Integer)
 
     Dim NroPets          As Integer
     
-    If Npclist(NpcIndex).MaestroUser = UserIndex Then
+    If Npclist(NPCIndex).MaestroUser = UserIndex Then
         Call WriteConsoleMsg(UserIndex, "Ya domaste a esa criatura.", FontTypeNames.FONTTYPE_INFO)
         Exit Sub
 
@@ -1473,13 +1473,13 @@ Sub DoDomar(ByVal UserIndex As Integer, ByVal NpcIndex As Integer)
 
         If .NroMascotas < MAXMASCOTAS Then
             
-            If Npclist(NpcIndex).MaestroNpc > 0 Or Npclist(NpcIndex).MaestroUser > 0 Then
+            If Npclist(NPCIndex).MaestroNpc > 0 Or Npclist(NPCIndex).MaestroUser > 0 Then
                 Call WriteConsoleMsg(UserIndex, "La criatura ya tiene amo.", FontTypeNames.FONTTYPE_INFO)
                 Exit Sub
 
             End If
             
-            If Not PuedeDomarMascota(UserIndex, NpcIndex) Then
+            If Not PuedeDomarMascota(UserIndex, NPCIndex) Then
                 Call WriteConsoleMsg(UserIndex, "No puedes domar mas de dos criaturas del mismo tipo.", FontTypeNames.FONTTYPE_INFO)
                 Exit Sub
 
@@ -1489,14 +1489,14 @@ Sub DoDomar(ByVal UserIndex As Integer, ByVal NpcIndex As Integer)
             
             ' 20% de bonificacion
             If .Invent.AnilloEqpObjIndex = FLAUTAELFICA Then
-                puntosRequeridos = Npclist(NpcIndex).flags.Domable * 0.8
+                puntosRequeridos = Npclist(NPCIndex).flags.Domable * 0.8
             
                 ' 11% de bonificacion
             ElseIf .Invent.AnilloEqpObjIndex = FLAUTAMAGICA Then
-                puntosRequeridos = Npclist(NpcIndex).flags.Domable * 0.89
+                puntosRequeridos = Npclist(NPCIndex).flags.Domable * 0.89
                 
             Else
-                puntosRequeridos = Npclist(NpcIndex).flags.Domable
+                puntosRequeridos = Npclist(NPCIndex).flags.Domable
 
             End If
             
@@ -1506,13 +1506,13 @@ Sub DoDomar(ByVal UserIndex As Integer, ByVal NpcIndex As Integer)
 
                 .NroMascotas = .NroMascotas + 1
                 index = FreeMascotaIndex(UserIndex)
-                .MascotasIndex(index) = NpcIndex
-                .MascotasType(index) = Npclist(NpcIndex).Numero
+                .MascotasIndex(index) = NPCIndex
+                .MascotasType(index) = Npclist(NPCIndex).Numero
                 
-                Npclist(NpcIndex).MaestroUser = UserIndex
+                Npclist(NPCIndex).MaestroUser = UserIndex
                 
-                Call FollowAmo(NpcIndex)
-                Call ReSpawnNpc(Npclist(NpcIndex))
+                Call FollowAmo(NPCIndex)
+                Call ReSpawnNpc(Npclist(NPCIndex))
                 
                 Call WriteConsoleMsg(UserIndex, "La criatura te ha aceptado como su amo.", FontTypeNames.FONTTYPE_INFO)
                 
@@ -1520,10 +1520,10 @@ Sub DoDomar(ByVal UserIndex As Integer, ByVal NpcIndex As Integer)
                 CanStay = (MapInfo(.Pos.Map).Pk = True)
                 
                 If Not CanStay Then
-                    petType = Npclist(NpcIndex).Numero
+                    petType = Npclist(NPCIndex).Numero
                     NroPets = .NroMascotas
                     
-                    Call QuitarNPC(NpcIndex)
+                    Call QuitarNPC(NPCIndex)
                     
                     .MascotasType(index) = petType
                     .NroMascotas = NroPets
@@ -1567,7 +1567,7 @@ End Sub
 ' @param integer NPCindex The index of the npc to tome.
 ' @return boolean True if can, false if not.
 Private Function PuedeDomarMascota(ByVal UserIndex As Integer, _
-                                   ByVal NpcIndex As Integer) As Boolean
+                                   ByVal NPCIndex As Integer) As Boolean
 
     '***************************************************
     'Author: ZaMa
@@ -1581,7 +1581,7 @@ Private Function PuedeDomarMascota(ByVal UserIndex As Integer, _
     
     For i = 1 To MAXMASCOTAS
 
-        If UserList(UserIndex).MascotasType(i) = Npclist(NpcIndex).Numero Then
+        If UserList(UserIndex).MascotasType(i) = Npclist(NPCIndex).Numero Then
             numMascotas = numMascotas + 1
 
         End If
@@ -1643,7 +1643,7 @@ Sub DoAdminInvisible(ByVal UserIndex As Integer)
             .Counters.TiempoOculto = 0
             
             ' Solo el admin sabe que se hace visible
-            tempData = PrepareMessageCharacterChange(.Char.body, .Char.Head, .Char.heading, .Char.CharIndex, .Char.WeaponAnim, .Char.ShieldAnim, .Char.FX, .Char.loops, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
+            tempData = PrepareMessageCharacterChange(.Char.body, .Char.Head, .Char.Heading, .Char.CharIndex, .Char.WeaponAnim, .Char.ShieldAnim, .Char.FX, .Char.loops, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
             Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(tempData)
             
             tempData = PrepareMessageSetInvisible(.Char.CharIndex, False)
@@ -2265,6 +2265,9 @@ Public Sub RobarObjeto(ByVal LadrOnIndex As Integer, ByVal VictimaIndex As Integ
 
         'If exiting, cancel de quien es robado
         Call CancelExit(VictimaIndex)
+        
+        'Si esta casteando, lo cancelamos
+        Call CancelCast(VictimaIndex)
 
     End With
 
@@ -3018,7 +3021,7 @@ Public Function MaxItemsExtraibles(ByVal UserLevel As Integer) As Integer
 
 End Function
 
-Public Sub ImitateNpc(ByVal UserIndex As Integer, ByVal NpcIndex As Integer)
+Public Sub ImitateNpc(ByVal UserIndex As Integer, ByVal NPCIndex As Integer)
     '***************************************************
     'Author: ZaMa
     'Last Modification: 20/11/2010
@@ -3028,7 +3031,7 @@ Public Sub ImitateNpc(ByVal UserIndex As Integer, ByVal NpcIndex As Integer)
     With UserList(UserIndex)
         
         ' Copy desc
-        .DescRM = Npclist(NpcIndex).Name
+        .DescRM = Npclist(NPCIndex).Name
         
         ' Remove Anims (Npcs don't use equipment anims yet)
         .Char.CascoAnim = NingunCasco
@@ -3038,13 +3041,13 @@ Public Sub ImitateNpc(ByVal UserIndex As Integer, ByVal NpcIndex As Integer)
         ' If admin is invisible the store it in old char
         If .flags.AdminInvisible = 1 Or .flags.invisible = 1 Or .flags.Oculto = 1 Then
             
-            .flags.OldBody = Npclist(NpcIndex).Char.body
-            .flags.OldHead = Npclist(NpcIndex).Char.Head
+            .flags.OldBody = Npclist(NPCIndex).Char.body
+            .flags.OldHead = Npclist(NPCIndex).Char.Head
         Else
-            .Char.body = Npclist(NpcIndex).Char.body
-            .Char.Head = Npclist(NpcIndex).Char.Head
+            .Char.body = Npclist(NPCIndex).Char.body
+            .Char.Head = Npclist(NPCIndex).Char.Head
             
-            Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
+            Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.Heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
 
         End If
     
@@ -3119,7 +3122,7 @@ Public Sub DoEquita(ByVal UserIndex As Integer, _
                 Call WriteEquitandoToggle(UserIndex)
 
                 'Mostramos solo el casco de los items equipados por que los demas items quedan mal en el render, solo es un tema visual (Recox)
-                Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, NingunArma, NingunEscudo, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
+                Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.Heading, NingunArma, NingunEscudo, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
             Else
                 Call WriteConsoleMsg(UserIndex, "Debe esperar " & .Counters.MonturaCounter & " segundos para volver a usar tu montura", FontTypeNames.FONTTYPE_INFO)
             End If
@@ -3145,7 +3148,7 @@ Public Sub UnmountMontura(ByVal UserIndex As Integer)
 
         ' Seteamos el equipo que tiene y lo mostramos en el render.
         Call SetEquipmentOnCharAfterNavigateOrEquitate(UserIndex)
-        Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
+        Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.Heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
   
         ' Termina de equitar
         .flags.Equitando = 0
