@@ -505,6 +505,7 @@ Public Enum eNPCType
     dummy = 13
     Quest = 14
     Marinero = 15
+    Subastador = 16
     
 End Enum
 
@@ -1916,7 +1917,7 @@ Public Type MapBlock
 
     Blocked As Byte
     Graphic(1 To 4) As Long
-    UserIndex As Integer
+    Userindex As Integer
     NPCIndex As Integer
     ObjInfo As obj
     TileExit As WorldPos

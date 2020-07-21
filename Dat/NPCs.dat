@@ -21,6 +21,7 @@ TODOS LOS NPC CON RETARDO Y WORLDBOSS TIENEN QUE TENER PosOrig
 13 ====== Dummys
 14 ====== Quest
 15 ====== Marinero
+16 ====== Subastador
 
 ##############################################
 ############## EFECTOS DE NPC ################
@@ -818,6 +819,22 @@ Comercia=1
 TipoItems=20
 NROITEMS=0
 BackUp=1
+
+[NPC64]
+Name=Subastador
+NpcType=16
+Desc=¡Quien da más! ¡Quien da más! ¡Hey! ¿Te gustaria obtener un buen beneficio por tus objetos?
+Head=313
+Heading=1
+Body=493
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=0
+BackUp=0
 
 ##############################################################
 ############## NPCS VENDEDORES DE BELLEUVE ###################

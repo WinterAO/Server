@@ -621,13 +621,13 @@ Sub CheckIdleUser()
 End Sub
 
 Public Sub UpdateNpcsExp(ByVal Multiplicador As Single) ' 0.13.5
-    Dim NpcIndex As Long
-    For NpcIndex = 1 To LastNPC
-        With Npclist(NpcIndex)
+    Dim NPCIndex As Long
+    For NPCIndex = 1 To LastNPC
+        With Npclist(NPCIndex)
             .GiveEXP = .GiveEXP * Multiplicador
             .flags.ExpCount = .flags.ExpCount * Multiplicador
         End With
-    Next NpcIndex
+    Next NPCIndex
 End Sub
 
 Private Sub HappyHourManager()
@@ -765,6 +765,9 @@ Private Sub AutoSave_Timer()
 
     'Actualizamos la lluvia
     Call tLluviaEvent
+    
+    ' Actualizamos la subasta
+    Call Actualizar_Subasta
 
     If Minutos = MinutosWs - 1 Then
         Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Worldsave en 1 minuto ...", FontTypeNames.FONTTYPE_SERVER))
