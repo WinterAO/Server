@@ -908,6 +908,7 @@ Public Type tHechizo
     PortalPos As WorldPos
     
     Casteo As Byte
+    CastFX As Integer
 
 End Type
 

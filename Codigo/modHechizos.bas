@@ -1027,6 +1027,7 @@ Sub LanzarHechizo(ByVal spellIndex As Integer, ByVal UserIndex As Integer)
                 .flags.CasteoSpell.SpellID = spellIndex
                 .flags.CasteoSpell.TimeCast = Hechizos(spellIndex).Casteo
                 Call WriteConsoleMsg(UserIndex, "Te concentras para lanzar el hechizo...", FontTypeNames.FONTTYPE_INFO)
+                Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageCreateParticleChar(.Char.CharIndex, Hechizos(spellIndex).CastFX, True, 0))
                 Exit Sub
             End If
 
@@ -3026,7 +3027,7 @@ Private Sub HechizoTerrenoMaterializa(ByVal UserIndex As Integer, ByRef Cast As 
                 Exit Sub
             End If
 
-            If MapInfo(.Pos.Map).Pk = False Or (.Counters.Pena = 0) Then
+            If MapInfo(.Pos.Map).Pk = False Or (.Counters.Pena <> 0) Then
                 Call WriteConsoleMsg(UserIndex, "Una fuerza misteriosa no te permite abrir portales aquí.", FontTypeNames.FONTTYPE_INFO)
                 Cast = False
                 Exit Sub
@@ -3064,6 +3065,8 @@ Public Sub ResetCasteo(ByVal UserIndex As Integer)
 '***************************************
 
     With UserList(UserIndex)
+        Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageCreateParticleChar(.Char.CharIndex, Hechizos(.flags.CasteoSpell.SpellID).CastFX, False, 0))
+        
         .flags.CasteoSpell.Casteando = False
         .flags.CasteoSpell.SpellID = 0
         .flags.CasteoSpell.TimeCast = 0

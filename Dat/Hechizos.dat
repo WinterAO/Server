@@ -11,6 +11,17 @@
 '3.....Usuario Y Npc.
 '4.....Terreno.
 
+'#######################################
+'Hechizos de casteo
+'#######################################
+
+'Los hechizos pueden tener un tiempo de preparacion antes de ser lanzados (casteo).
+'Para definir un hechizo de casteo basta con poner los siguientes parametros:
+'Casteo=<Segundos de casteo>
+'CastFX=<Particula de casteo>
+
+'#######################################
+
 [INIT]
 NumeroHechizos=51
 
@@ -3025,3 +3036,4 @@ Target=4
 Portal=1
 PortalMap=127-50-50 '(MAP)-(COR X)- (COR Y)
 Casteo=5
+CastFX=63

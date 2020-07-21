@@ -592,6 +592,7 @@ Public Sub CargarHechizos()
             .PortalPos.Y = val(ReadField(3, str, 45))
             
             .Casteo = val(Leer.GetValue("Hechizo" & Hechizo, "Casteo"))
+            .CastFX = val(Leer.GetValue("Hechizo" & Hechizo, "CastFX"))
 
         End With
 

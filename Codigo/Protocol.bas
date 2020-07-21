@@ -171,6 +171,7 @@ Private Enum ServerPacketID
     proyectil
     SeeInProcess
     ShowProcess
+    CharParticle
 End Enum
 
 Private Enum ClientPacketID
@@ -23538,3 +23539,31 @@ Private Sub HandleInvocar(ByVal UserIndex As Integer)
     Call IniciarRitoInvocacion(UserIndex)
     
 End Sub
+
+''
+' Prepares the "CreateParticleChar" message and returns it.
+
+Public Function PrepareMessageCreateParticleChar(ByVal CharIndex As Integer, _
+                                       ByVal ParticulaID As Integer, _
+                                       ByVal Create As Boolean, _
+                                       ByVal Life As Long) As String
+
+    '***********************************
+    'Autor: Lorwik
+    'Fecha: 20/07/2020
+    'Descripcion: Enviamos crear una particula en un char
+    '***********************************
+
+    With auxiliarBuffer
+        Call .WriteByte(ServerPacketID.CharParticle)
+        Call .WriteInteger(ParticulaID)
+        Call .WriteBoolean(Create)
+        Call .WriteInteger(CharIndex)
+        Call .WriteLong(Life)
+        
+        PrepareMessageCreateParticleChar = .ReadASCIIStringFixed(.Length)
+
+    End With
+
+End Function
+
