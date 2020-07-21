@@ -48,12 +48,30 @@ Public Sub Consultar_Subasta(ByVal Userindex As Integer)
 End Sub
  
 Public Sub Iniciar_Subasta(ByVal Userindex As Integer, Slot As Integer, Amount As Integer, ValorBase As Long)
+
     With Subasta
         ' Si ya hay una subasta le informamos que debe esperar
         If .Actual = True Then
             Call WriteConsoleMsg(Userindex, "Ya hay una subasta actualmente, deberás esperar " & .Tiempo & " minutos para inciar una nueva subasta.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
         Else
+        
+            'AntiHack (Ya se comprobo en el cliente, se vuelve a comprobar aqui)
+            If Amount <= 0 Then
+                Call WriteConsoleMsg(Userindex, "Debes subastar una cantidad mayor a 0 de ítems.", FontTypeNames.FONTTYPE_INFO)
+                Exit Sub
+            End If
+            
+            If ValorBase <= 100 Then
+                Call WriteConsoleMsg(Userindex, "Debes poner un valor mayor a 100 para poder subastar.", FontTypeNames.FONTTYPE_INFO)
+                Exit Sub
+            End If
+            
+            If UserList(Userindex).Invent.Object(Slot).ObjIndex <= 0 Then
+                Call WriteConsoleMsg(Userindex, "Debes seleccionar un ítem para poder iniciar una subasta.", FontTypeNames.FONTTYPE_INFO)
+                Exit Sub
+            End If
+            
             ' Comprobamos que el usuario tenga lo que intenta ofertar
             If UserList(Userindex).Invent.Object(Slot).Amount < Amount Then
                 Call WriteConsoleMsg(Userindex, "No tienes la cantidad de ítems que deseas subastar.", FontTypeNames.FONTTYPE_INFO)
