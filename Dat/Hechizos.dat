@@ -23,7 +23,7 @@
 '#######################################
 
 [INIT]
-NumeroHechizos=51
+NumeroHechizos=52
 
 
 [HECHIZO1]
@@ -3037,3 +3037,63 @@ Portal=1
 PortalMap=127-50-50 '(MAP)-(COR X)- (COR Y)
 Casteo=5
 CastFX=63
+
+[HECHIZO52]
+Nombre=Bomba Electrica
+Desc=Éste es uno de los hechizos de daño más poderoso de todo el Argentum. Al controlarlo podrás manipular las fuerzas de la naturaleza de modo tal que del cielo mismo caiga una fuerte descarga de electricidad sobre el objetivo. El daño que provoca en sus vícitimas puede ser mortal frente a principiantes o aprendices.
+PalabrasMagicas=T'HY KOOOL AREA
+HechizeroMsg=Has lanzado una descarga eléctrica sobre 
+TargetMsg=ha lanzado una descarga eléctrica sobre ti.
+Tipo=1
+WAV=97
+FXgrh=11
+Loops=0
+MinSkill=85
+ManaRequerido=460
+StaRequerido=67
+Target=3
+SubeHP=2
+MinHP=62
+MaxHP=75
+SubeMana=0
+MinMana=0
+MaxMana=0
+SubeSta=0
+MinSta=0
+MaxSta=0
+SubeHam=0
+MinHam=0
+MaxHam=0
+SubeSed=0
+MinSed=0
+MaxSed=0
+SubeAG=0
+MinAG=0
+MaxAG=0
+SubeFU=0
+MinFU=0
+MaxFU=0
+SubeCA=0
+MinCA=0
+MaxCA=0
+Invisibilidad=0
+Paraliza=0
+Inmoviliza=0
+RemoverParalisis=0
+RemoverEstupidez=0
+RemueveInvisibilidadParcial=0
+CuraVeneno=0
+Envenena=0
+Revivir=0
+Ceguera=0
+Estupidez=0
+Invoca=0
+NumNpc=0
+Cant=0
+Mimetiza=0
+Materializa=0
+itemindex=0
+StaffAffected=1
+NeedStaff=0
+Resis=1
+RadioArea=5

@@ -593,6 +593,8 @@ Public Sub CargarHechizos()
             
             .Casteo = val(Leer.GetValue("Hechizo" & Hechizo, "Casteo"))
             .CastFX = val(Leer.GetValue("Hechizo" & Hechizo, "CastFX"))
+            
+            .RadioArea = val(Leer.GetValue("Hechizo" & Hechizo, "RadioArea"))
 
         End With
 
@@ -2032,7 +2034,7 @@ Sub WriteVar(ByVal File As String, _
     
 End Sub
 
-Function criminal(ByVal UserIndex As Integer) As Boolean
+Function criminal(ByVal Userindex As Integer) As Boolean
     '***************************************************
     'Author: Unknown
     'Last Modification: -
@@ -2041,7 +2043,7 @@ Function criminal(ByVal UserIndex As Integer) As Boolean
 
     Dim L As Long
     
-    With UserList(UserIndex).Reputacion
+    With UserList(Userindex).Reputacion
         L = (-.AsesinoRep) + (-.BandidoRep) + .BurguesRep + (-.LadronesRep) + .NobleRep + .PlebeRep
         L = L / 6
         criminal = (L < 0)

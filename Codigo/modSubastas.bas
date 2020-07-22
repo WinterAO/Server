@@ -78,11 +78,13 @@ Public Sub Iniciar_Subasta(ByVal Userindex As Integer, Slot As Integer, Amount A
                 Exit Sub
             End If
             
+            'Items de Newbie no se pueden vender
             If ItemNewbie(UserList(Userindex).Invent.Object(Slot).ObjIndex) = True Then
                 Call WriteConsoleMsg(Userindex, "No puedes subastar ítems de Newbie.", FontTypeNames.FONTTYPE_INFO)
                 Exit Sub
             End If
             
+            'Piedra de hogar no se puede vender
             If ObjData(UserList(Userindex).Invent.Object(Slot).ObjIndex).OBJType = otPiedraHogar Then
                 Call WriteConsoleMsg(Userindex, "¿¡Estas loco!? ¡Si vendes tu piedra de hogar no podras volver a casa!", FontTypeNames.FONTTYPE_INFO)
                 Exit Sub
@@ -174,10 +176,7 @@ End Sub
 Public Sub Actualizar_Subasta()
     With Subasta
         ' Revisamos
-        If .Actual = False Then
-            Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("[Subasta] No hay subastas actualmente, para iniciar una nueva subasta utilice el comando /Subasta", FontTypeNames.FONTTYPE_INFO))
-            Exit Sub
-        Else
+        If .Actual Then
             ' Restamos tiempo
             .Tiempo = .Tiempo - 1
             

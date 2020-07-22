@@ -41,6 +41,7 @@
 ' 37: Mochilas
 ' 38: YacimientoPez
 ' 39: Piedra de Hogar
+' 40: Cajas Loot
 
 
 ##############################################
@@ -94,7 +95,7 @@ este objeto se mostrara con un grafico. Si le ponemos
 [INIT]
 'aca va el numero de OBJ mas alto, NO la cantidad de OBJs.
 'esto sirve para que los GMS puedan ver la lista completa de items para crear en una ventanita.
-NumOBJs=1284
+NumOBJs=1292
 
 
 [OBJ1]
@@ -16068,3 +16069,67 @@ CP8=Bandido
 CP9=Paladin
 CP10=CAZADOR
 CP11=PIRATA
+
+[OBJ1285]
+Name=Cofre de aventurero
+GrhIndex=11981
+ObjType=40
+Agarrable=0
+Valor=100
+Crucial=0
+
+[OBJ1286]
+Name=Llave de cofre de aventurero
+GrhIndex=11989
+ObjType=30
+Agarrable=0
+Valor=21
+Crucial=0
+
+[OBJ1287]
+Name=Cofre sumergido
+GrhIndex=11983
+ObjType=40
+Agarrable=0
+Valor=100
+Crucial=0
+
+[OBJ1288]
+Name=Llave de cofre sumergido
+GrhIndex=11990
+ObjType=30
+Agarrable=0
+Valor=21
+Crucial=0
+
+[OBJ1289]
+Name=Cofre viejo
+GrhIndex=11985
+ObjType=40
+Agarrable=0
+Valor=100
+Crucial=0
+
+[OBJ1290]
+Name=Llave de cofre viejo
+GrhIndex=11991
+ObjType=30
+Agarrable=0
+Valor=21
+Crucial=0
+
+[OBJ1291]
+Name=Cofre ensangrentado
+GrhIndex=11987
+ObjType=40
+Agarrable=0
+Valor=100
+Crucial=0
+
+[OBJ1292]
+Name=Llave de cofre ensangrentado
+GrhIndex=11992
+ObjType=30
+Agarrable=0
+Valor=21
+Crucial=0

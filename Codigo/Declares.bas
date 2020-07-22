@@ -910,6 +910,8 @@ Public Type tHechizo
     
     Casteo As Byte
     CastFX As Integer
+    
+    RadioArea As Integer
 
 End Type
 

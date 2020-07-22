@@ -23457,11 +23457,14 @@ On Error GoTo Errhandler
         data = buffer.ReadASCIIString()
         tIndex = NameIndex(data)
         
-        If tIndex > 0 And Not EsAdmin(data) Then
-            UserList(tIndex).flags.GMRequested = Userindex
-            Call WriteSeeInProcess(tIndex)
-        Else
-            Call WriteConsoleMsg(Userindex, "Usuario offline.", FontTypeNames.FONTTYPE_INFO)
+        'Solo los GMs pueden ver los procesos a los usuarios
+        If EsGm(Userindex) Then
+            If tIndex > 0 And Not EsAdmin(data) Then
+                UserList(tIndex).flags.GMRequested = Userindex
+                Call WriteSeeInProcess(tIndex)
+            Else
+                Call WriteConsoleMsg(Userindex, "Usuario offline.", FontTypeNames.FONTTYPE_INFO)
+            End If
         End If
         
         Call .incomingData.CopyBuffer(buffer)
