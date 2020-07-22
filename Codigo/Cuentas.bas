@@ -1,7 +1,7 @@
 Attribute VB_Name = "Cuentas"
 Option Explicit
 
-Public Sub LoginAccountDatabase(ByVal UserIndex As Integer, ByVal UserName As String)
+Public Sub LoginAccountDatabase(ByVal UserIndex As Integer, ByVal UserName As String, Optional ByVal Refresh As Boolean = False)
     '***************************************************
     'Author: Lorwik
     'Last Modification: 20/05/2020
@@ -14,20 +14,22 @@ Public Sub LoginAccountDatabase(ByVal UserIndex As Integer, ByVal UserName As St
 #If DBConexionUnica = 0 Then
     Call Database_Connect
 #End If
-
-    query = "SELECT id, username, email, password, salt, gemas, status FROM account "
-    query = query & "WHERE UPPER(username) = '" & UCase$(UserName) & "';"
-
-    Set Database_RecordSet = Database_Connection.Execute(query)
-
-    If Database_RecordSet.BOF Or Database_RecordSet.EOF Then
-        Call WriteErrorMsg(UserIndex, "Error al cargar la cuenta.")
-        Call CloseUser(UserIndex)
-        Exit Sub
-
-    End If
     
     With UserList(UserIndex)
+    
+    If Refresh = False Then
+    
+        query = "SELECT id, username, email, password, salt, gemas, status FROM account "
+        query = query & "WHERE UPPER(username) = '" & UCase$(UserName) & "';"
+    
+        Set Database_RecordSet = Database_Connection.Execute(query)
+    
+        If Database_RecordSet.BOF Or Database_RecordSet.EOF Then
+            Call WriteErrorMsg(UserIndex, "Error al cargar la cuenta.")
+            Call CloseUser(UserIndex)
+            Exit Sub
+    
+        End If
         
         'Guardo la información de la cuenta
         .AccountInfo.ID = CInt(Database_RecordSet!ID)
@@ -40,6 +42,7 @@ Public Sub LoginAccountDatabase(ByVal UserIndex As Integer, ByVal UserName As St
         
         Set Database_RecordSet = Nothing
         
+    End If
     
         'Now the characters
         query = "SELECT id, name, level, gold, body_id, head_id, weapon_id, shield_id, helmet_id, race_id, class_id, pos_map, rep_average, is_dead FROM usuario "
@@ -98,7 +101,7 @@ Public Sub LoginAccountDatabase(ByVal UserIndex As Integer, ByVal UserName As St
     Call Database_Close
 #End If
     
-    Call WriteUserAccountLogged(UserIndex)
+    Call WriteUserAccountLogged(UserIndex, Refresh)
 
     Exit Sub
 ErrorHandler:

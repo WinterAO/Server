@@ -442,6 +442,12 @@ Public Sub EventoSockRead(ByVal Slot As Integer, ByRef Datos() As Byte)
 
     With UserList(Slot)
     
+        If UserList(Slot).flags.AccountLogged Then
+            Security.NAC_D_Byte Datos, UserList(Slot).Redundance
+        Else
+            Security.NAC_D_Byte Datos, 12
+        End If
+    
         Call .incomingData.WriteBlock(Datos)
     
         If .ConnID <> -1 Then

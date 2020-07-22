@@ -281,13 +281,6 @@ Public Sub Encarcelar(ByVal UserIndex As Integer, _
 
     End If
 
-    If UserList(UserIndex).flags.Traveling = 1 Then
-        UserList(UserIndex).flags.Traveling = 0
-        UserList(UserIndex).Counters.goHome = 0
-        Call WriteMultiMessage(UserIndex, eMessages.CancelHome)
-
-    End If
-
 End Sub
 
 Public Function BorrarUsuario(ByVal UserIndex As Integer, ByVal UserName As String) As Boolean
@@ -447,12 +440,12 @@ Public Function BanIpQuita(ByVal IP As String) As Boolean
 
     On Error Resume Next
 
-    Dim N As Long
+    Dim n As Long
     
-    N = BanIpBuscar(IP)
+    n = BanIpBuscar(IP)
 
-    If N > 0 Then
-        Call BanIps.Remove(N)
+    If n > 0 Then
+        Call BanIps.Remove(n)
         Call BanIpGuardar
         
         ' Agrego la regla al firewall para que borre la regla de la IP a desbanear.

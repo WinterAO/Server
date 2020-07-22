@@ -56,7 +56,7 @@ Public Sub TIMER_AI()
 
     On Error GoTo ErrorHandler
 
-    Dim NpcIndex As Long
+    Dim NPCIndex As Long
     Dim Mapa     As Integer
     Dim e_p      As Integer
     
@@ -64,27 +64,27 @@ Public Sub TIMER_AI()
     If Not haciendoBK And Not EnPausa Then
 
         'Update NPCs
-        For NpcIndex = 1 To LastNPC
+        For NPCIndex = 1 To LastNPC
             
-            With Npclist(NpcIndex)
+            With Npclist(NPCIndex)
 
                 If .flags.NPCActive Then 'Nos aseguramos que sea INTELIGENTE!
                 
                     ' Chequea si contiua teniendo dueno
-                    If .Owner > 0 Then Call ValidarPermanenciaNpc(NpcIndex)
+                    If .Owner > 0 Then Call ValidarPermanenciaNpc(NPCIndex)
                 
                     If .flags.Paralizado = 1 Then
-                        Call EfectoParalisisNpc(NpcIndex)
+                        Call EfectoParalisisNpc(NPCIndex)
                     Else
 
                         ' Preto? Tienen ai especial
                         If .NPCtype = eNPCType.Pretoriano Then
-                            Call ClanPretoriano(.ClanIndex).PerformPretorianAI(NpcIndex)
+                            Call ClanPretoriano(.ClanIndex).PerformPretorianAI(NPCIndex)
                         Else
 
                             'Usamos AI si hay algun user en el mapa
                             If .flags.Inmovilizado = 1 Then
-                                Call EfectoParalisisNpc(NpcIndex)
+                                Call EfectoParalisisNpc(NPCIndex)
 
                             End If
                             
@@ -93,7 +93,7 @@ Public Sub TIMER_AI()
                             If Mapa > 0 Then
                                 If MapInfo(Mapa).NumUsers > 0 Then
                                     If .Movement <> TipoAI.ESTATICO Then
-                                        Call NPCAI(NpcIndex)
+                                        Call NPCAI(NPCIndex)
 
                                     End If
 
@@ -109,15 +109,15 @@ Public Sub TIMER_AI()
 
             End With
 
-        Next NpcIndex
+        Next NPCIndex
 
     End If
     
     Exit Sub
 
 ErrorHandler:
-    Call LogError("Error en TIMER_AI_Timer " & Npclist(NpcIndex).Name & " mapa:" & Npclist(NpcIndex).Pos.Map)
-    Call MuereNpc(NpcIndex, 0)
+    Call LogError("Error en TIMER_AI_Timer " & Npclist(NPCIndex).Name & " mapa:" & Npclist(NPCIndex).Pos.Map)
+    Call MuereNpc(NPCIndex, 0)
 
 End Sub
 
@@ -284,9 +284,7 @@ Public Sub GameTimer()
                         If bEnviarAyS Then Call WriteUpdateHungerAndThirst(iUserIndex)
                         
                         If .NroMascotas > 0 Then Call TiempoInvocacion(iUserIndex)
-                    Else
-
-                        If .flags.Traveling <> 0 Then Call TravelingEffect(iUserIndex)
+                        
                     End If 'Muerto
                 
                 'Inactividad de cuentas
@@ -345,25 +343,57 @@ Public Sub PasarSegundo()
     Dim i As Long
     
     'Limpieza del mundo
-    If counterSV.Limpieza > 0 Then
-        counterSV.Limpieza = counterSV.Limpieza - 1
-        
-        If counterSV.Limpieza < 6 Then Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Limpieza del mundo en " & counterSV.Limpieza & " segundos. Atentos!!", FontTypeNames.FONTTYPE_SERVER))
-        
-        If counterSV.Limpieza = 0 Then
-            Call BorrarObjetosLimpieza
-            Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Limpieza del mundo finalizada.", FontTypeNames.FONTTYPE_SERVER))
-            UltimoSlotLimpieza = -1
+    If tickLimpieza > 0 Then
+        tickLimpieza = tickLimpieza - 1
+                
+        Select Case tickLimpieza
+                                                        
+            Case 300
+                Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Servidor> Limpieza del mundo en 5 Minuto. Atentos!!", FontTypeNames.FONTTYPE_SERVER))
 
-        End If
-
+            Case 60
+                Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Servidor> Limpieza del mundo en 1 Minuto. Atentos!!", FontTypeNames.FONTTYPE_SERVER))
+                
+            Case 5 To 1
+                Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Servidor> Limpieza del mundo en " & tickLimpieza & " segundos. Atentos!!", FontTypeNames.FONTTYPE_SERVER))
+            
+            Case 0
+                Call BorrarObjetosLimpieza
+                Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Servidor> Limpieza del mundo finalizada.", FontTypeNames.FONTTYPE_SERVER))
+                
+        End Select
+        
     End If
+    
+    'Invocaciones
+    For i = 1 To NumInvocaciones
+        
+        Call CastearInvoc(i)
+        Call SumarInactividadInvoc(i)
+        
+    Next i
     
     For i = 1 To LastUser
 
         With UserList(i)
 
             If .flags.UserLogged Then
+            
+                'Portales
+                If .PortalTiempo > 0 Then
+                    .PortalTiempo = .PortalTiempo - 1
+                    If .PortalTiempo < 1 Then Call Borrar_Portal_User(i)
+                End If
+                
+                '¿Esta casteando un hechizo?
+                If .flags.CasteoSpell.Casteando = True Then
+                    .flags.CasteoSpell.TimeCast = .flags.CasteoSpell.TimeCast - 1
+                    
+                    If .flags.CasteoSpell.TimeCast <= 0 Then
+                        Call LanzarHechizo(.flags.CasteoSpell.SpellID, i)
+                        Call ResetCasteo(i)
+                    End If
+                End If
             
                 'Cerrar usuario
                 If .Counters.Saliendo Then

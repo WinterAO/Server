@@ -117,6 +117,49 @@ manejador:
 
 End Function
 
+Public Function ItemNoUsaConUser(ByVal UserIndex As Integer, _
+                            ByVal ObjIndex As Integer) As Boolean
+    '***************************************************
+    'Autor: Lorwik
+    'Fecha: 14/07/2020
+    'Descripcion Devuelve true si el usuario no puede usar el item debido a su raza, sexo o clase
+    '***************************************************
+
+    If ObjIndex = 0 Then
+        ItemNoUsaConUser = False
+        Exit Function
+    End If
+
+    Select Case ObjData(ObjIndex).OBJType
+
+        Case eOBJType.otWeapon, eOBJType.otAnillo, eOBJType.otFlechas, eOBJType.otEscudo
+            If ClasePuedeUsarItem(UserIndex, ObjIndex) And FaccionPuedeUsarItem(UserIndex, ObjIndex) Then
+                ItemNoUsaConUser = False
+            Else
+                ItemNoUsaConUser = True
+            End If
+
+        Case eOBJType.otArmadura
+            If ClasePuedeUsarItem(UserIndex, ObjIndex) And SexoPuedeUsarItem(UserIndex, ObjIndex) And CheckRazaUsaRopa(UserIndex, ObjIndex) And FaccionPuedeUsarItem(UserIndex, ObjIndex) Then
+                ItemNoUsaConUser = False
+            Else
+                ItemNoUsaConUser = True
+            End If
+
+        Case eOBJType.otCasco, eOBJType.otPergaminos
+            If ClasePuedeUsarItem(UserIndex, ObjIndex) Then
+                ItemNoUsaConUser = False
+            Else
+                ItemNoUsaConUser = True
+            End If
+
+        Case Else
+            ItemNoUsaConUser = False
+
+    End Select
+
+End Function
+
 Sub QuitarNewbieObj(ByVal UserIndex As Integer)
     '***************************************************
     'Author: Unknown
@@ -476,6 +519,12 @@ Sub DropObj(ByVal UserIndex As Integer, _
                 Exit Sub
 
             End If
+            
+            If ObjData(DropObj.ObjIndex).OBJType = otPiedraHogar Then
+                Call WriteConsoleMsg(UserIndex, "No puedes tirar la piedra de hogar.", FontTypeNames.FONTTYPE_WARNING)
+                Exit Sub
+
+            End If
         
             DropObj.Amount = MinimoInt(Num, .Invent.Object(Slot).Amount)
 
@@ -806,7 +855,7 @@ Public Sub Desequipar(ByVal UserIndex As Integer, ByVal Slot As Byte)
                         .WeaponAnim = NingunArma
                         .AuraAnim = NingunAura
                         .AuraColor = NingunAura
-                        Call ChangeUserChar(UserIndex, .body, .Head, .heading, .WeaponAnim, .ShieldAnim, .CascoAnim, .AuraAnim, .AuraColor)
+                        Call ChangeUserChar(UserIndex, .body, .Head, .Heading, .WeaponAnim, .ShieldAnim, .CascoAnim, .AuraAnim, .AuraColor)
 
                     End With
 
@@ -842,7 +891,7 @@ Public Sub Desequipar(ByVal UserIndex As Integer, ByVal Slot As Byte)
                 Call DarCuerpoDesnudo(UserIndex, .flags.Mimetizado = 1)
 
                 With .Char
-                    Call ChangeUserChar(UserIndex, .body, .Head, .heading, .WeaponAnim, .ShieldAnim, .CascoAnim, .AuraAnim, .AuraColor)
+                    Call ChangeUserChar(UserIndex, .body, .Head, .Heading, .WeaponAnim, .ShieldAnim, .CascoAnim, .AuraAnim, .AuraColor)
 
                 End With
                  
@@ -859,7 +908,7 @@ Public Sub Desequipar(ByVal UserIndex As Integer, ByVal Slot As Byte)
 
                     With .Char
                         .CascoAnim = NingunCasco
-                        Call ChangeUserChar(UserIndex, .body, .Head, .heading, .WeaponAnim, .ShieldAnim, .CascoAnim, .AuraAnim, .AuraColor)
+                        Call ChangeUserChar(UserIndex, .body, .Head, .Heading, .WeaponAnim, .ShieldAnim, .CascoAnim, .AuraAnim, .AuraColor)
 
                     End With
 
@@ -878,7 +927,7 @@ Public Sub Desequipar(ByVal UserIndex As Integer, ByVal Slot As Byte)
 
                     With .Char
                         .ShieldAnim = NingunEscudo
-                        Call ChangeUserChar(UserIndex, .body, .Head, .heading, .WeaponAnim, .ShieldAnim, .CascoAnim, .AuraAnim, .AuraColor)
+                        Call ChangeUserChar(UserIndex, .body, .Head, .Heading, .WeaponAnim, .ShieldAnim, .CascoAnim, .AuraAnim, .AuraColor)
 
                     End With
 
@@ -1071,7 +1120,7 @@ Sub EquiparInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                             .Char.WeaponAnim = NingunArma
                             .Char.AuraAnim = NingunAura
                             .Char.AuraColor = NingunAura
-                            Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
+                            Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.Heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
 
                         End If
 
@@ -1098,7 +1147,7 @@ Sub EquiparInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                         .Char.WeaponAnim = GetWeaponAnim(UserIndex, ObjIndex)
                         .Char.AuraAnim = obj.GrhAura
                         .Char.AuraColor = obj.AuraColor
-                        Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
+                        Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.Heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
 
                     End If
 
@@ -1183,7 +1232,7 @@ Sub EquiparInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                         Call DarCuerpoDesnudo(UserIndex, .flags.Mimetizado = 1)
 
                         If Not .flags.Mimetizado = 1 Then
-                            Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
+                            Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.Heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
 
                         End If
 
@@ -1206,7 +1255,7 @@ Sub EquiparInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                         .CharMimetizado.body = obj.Ropaje
                     Else
                         .Char.body = obj.Ropaje
-                        Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
+                        Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.Heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
 
                     End If
 
@@ -1229,7 +1278,7 @@ Sub EquiparInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                             .CharMimetizado.CascoAnim = NingunCasco
                         Else
                             .Char.CascoAnim = NingunCasco
-                            Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
+                            Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.Heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
 
                         End If
 
@@ -1253,7 +1302,7 @@ Sub EquiparInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                         .CharMimetizado.CascoAnim = obj.CascoAnim
                     Else
                         .Char.CascoAnim = obj.CascoAnim
-                        Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
+                        Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.Heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
 
                     End If
 
@@ -1276,7 +1325,7 @@ Sub EquiparInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                             .CharMimetizado.ShieldAnim = NingunEscudo
                         Else
                             .Char.ShieldAnim = NingunEscudo
-                            Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
+                            Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.Heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
 
                         End If
 
@@ -1301,7 +1350,7 @@ Sub EquiparInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                     Else
                         .Char.ShieldAnim = obj.ShieldAnim
                          
-                        Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
+                        Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.Heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
 
                     End If
 
@@ -2130,6 +2179,28 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                 'Quitamos el manual del inventario
                 Call QuitarUserInvItem(UserIndex, Slot, 1)
                 Call UpdateUserInv(False, UserIndex, Slot)
+                
+            Case eOBJType.otPiedraHogar
+                If .flags.Muerto = 1 Then
+    
+                    'Si es un mapa comun y no esta en cana
+                    If (MapInfo(.Pos.Map).Restringir = eRestrict.restrict_no) And (.Counters.Pena = 0) Then
+                        If Ciudades(.Hogar).Map <> .Pos.Map Then
+                            Call MandaraCasa(UserIndex)
+                        Else
+                            Call WriteConsoleMsg(UserIndex, "Ya te encuentras en tu hogar.", FontTypeNames.FONTTYPE_INFO)
+    
+                        End If
+    
+                    Else
+                        Call WriteConsoleMsg(UserIndex, "Una fuerza misteriosa interfiere con la piedra, no puedes utilizarla aquí.", FontTypeNames.FONTTYPE_FIGHT)
+    
+                    End If
+    
+                Else
+                    Call WriteConsoleMsg(UserIndex, "La piedra no funciona si estas vivo.", FontTypeNames.FONTTYPE_INFO)
+    
+                End If
                     
             End Select
     
@@ -2190,7 +2261,8 @@ Sub TirarTodo(ByVal UserIndex As Integer)
         ' Si estas en zona segura tampoco se tira el oro.
         If MapInfo(.Pos.Map).Pk Then
             
-            If Cantidad > 0 Then
+            'Si supera los 100k no se cae
+            If Cantidad > 0 And Cantidad < 100000 Then
                 Call TirarOro(Cantidad, UserIndex)
             End If
             

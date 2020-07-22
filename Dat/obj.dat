@@ -40,6 +40,8 @@
 ' 36: Pasajes
 ' 37: Mochilas
 ' 38: YacimientoPez
+' 39: Piedra de Hogar
+' 40: Cajas Loot
 
 
 ##############################################
@@ -93,7 +95,7 @@ este objeto se mostrara con un grafico. Si le ponemos
 [INIT]
 'aca va el numero de OBJ mas alto, NO la cantidad de OBJs.
 'esto sirve para que los GMS puedan ver la lista completa de items para crear en una ventanita.
-NumOBJs=1250
+NumOBJs=1292
 
 
 [OBJ1]
@@ -1781,8 +1783,8 @@ ObjType=19
 Agarrable=1
 
 [OBJ145]
-Name=Teleport a Nix
-GrhIndex=669
+Name=Portal de invocacion
+ParticulaIndex=121
 ObjType=19
 Agarrable=1
 
@@ -7943,8 +7945,8 @@ Crucial=0
 Nosecae=1
 
 [OBJ651]
-Name=Portal Magico
-GrhIndex=308
+Name=Portal Abissal
+ParticulaIndex=97
 VGrande=501
 ObjType=30
 Agarrable=1
@@ -14253,11 +14255,11 @@ Crucial=0
 Valor=100000
 
 [OBJ1127]
-Name=Manual de Liderazgo SUPREMO
+Name=Secretos de Liderazgo
 GrhIndex=538
 ObjType=35
 Agarrable=0
-Valor=100000
+Valor=0
 IndiceSkill=16
 CuantosSkill=100
 SkNecesarios=0
@@ -15724,4 +15726,410 @@ GrhIndex=17937
 ObjType=30
 Agarrable=0
 Valor=0
+Crucial=0
+
+[OBJ1251]
+Name=Anillo de la hermandad
+GrhIndex=17937
+ObjType=30
+Agarrable=0
+Valor=0
+Crucial=0
+
+[OBJ1252]
+Name=Esencia del Titan de Tierra
+GrhIndex=17937
+ObjType=30
+Agarrable=0
+Valor=0
+Crucial=0
+
+[OBJ1253]
+Name=Esencia del Titan de Agua
+GrhIndex=17937
+ObjType=30
+Agarrable=0
+Valor=0
+Crucial=0
+
+[OBJ1254]
+Name=Esencia del Titan de Fuego
+GrhIndex=17937
+ObjType=30
+Agarrable=0
+Valor=0
+Crucial=0
+
+[OBJ1255]
+Name=Piedra de Hogar
+GrhIndex=4793
+ObjType=39
+Agarrable=0
+Crucial=0
+NoSeCae=1
+NoRobable=1
+NoComerciable=1
+
+[OBJ1256] 'Puerta para negocio porque no tiene clave
+Name=Puerta doble de madera abierta
+GrhIndex=5982
+ObjType=6
+Agarrable=1
+Abierta=0
+Llave=0
+IndexAbierta=1256
+IndexCerrada=1257
+
+[OBJ1257] 'Puerta para negocio porque no tiene clave
+Name=Puerta doble de madera cerrada
+GrhIndex=5984
+ObjType=6
+Abierta=1
+Agarrable=1
+Llave=0
+IndexAbierta=1256
+IndexCerrada=1257
+
+[OBJ1258] 'Puerta para negocio porque no tiene clave
+Name=Puerta doble de madera abierta
+GrhIndex=5983
+ObjType=6
+Agarrable=1
+Abierta=0
+Llave=0
+IndexAbierta=1258
+IndexCerrada=1259
+
+[OBJ1259] 'Puerta para negocio porque no tiene clave
+Name=Puerta doble de madera cerrada
+GrhIndex=5985
+ObjType=6
+Abierta=1
+Agarrable=1
+Llave=0
+IndexAbierta=1258
+IndexCerrada=1259
+
+[OBJ1260] 'Puerta para negocio porque no tiene clave
+Name=Puerta doble de madera abierta
+GrhIndex=5986
+ObjType=6
+Agarrable=1
+Abierta=0
+Llave=0
+IndexAbierta=1260
+IndexCerrada=1261
+
+[OBJ1261] 'Puerta para negocio porque no tiene clave
+Name=Puerta doble de madera cerrada
+GrhIndex=5988
+ObjType=6
+Abierta=1
+Agarrable=1
+Llave=0
+IndexAbierta=1260
+IndexCerrada=1261
+
+[OBJ1262] 'Puerta para negocio porque no tiene clave
+Name=Puerta doble de madera abierta
+GrhIndex=5987
+ObjType=6
+Agarrable=1
+Abierta=0
+Llave=0
+IndexAbierta=1262
+IndexCerrada=1263
+
+[OBJ1263] 'Puerta para negocio porque no tiene clave
+Name=Puerta doble de madera cerrada
+GrhIndex=5989
+ObjType=6
+Abierta=1
+Agarrable=1
+Llave=0
+IndexAbierta=1262
+IndexCerrada=1263
+
+[OBJ1264] 'Puerta para negocio porque no tiene clave
+Name=Puerta doble de madera abierta
+GrhIndex=5992
+ObjType=6
+Agarrable=1
+Abierta=0
+Llave=0
+IndexAbierta=1264
+IndexCerrada=1265
+
+[OBJ1265] 'Puerta para negocio porque no tiene clave
+Name=Puerta doble de madera cerrada
+GrhIndex=5990
+ObjType=6
+Abierta=1
+Agarrable=1
+Llave=0
+IndexAbierta=1264
+IndexCerrada=1265
+
+[OBJ1266] 'Puerta para negocio porque no tiene clave
+Name=Puerta doble de madera abierta
+GrhIndex=5993
+ObjType=6
+Agarrable=1
+Abierta=0
+Llave=0
+IndexAbierta=1266
+IndexCerrada=1267
+
+[OBJ1267] 'Puerta para negocio porque no tiene clave
+Name=Puerta doble de madera cerrada
+GrhIndex=5991
+ObjType=6
+Abierta=1
+Agarrable=1
+Llave=0
+IndexAbierta=1266
+IndexCerrada=1267
+
+[OBJ1268] 'Puerta para negocio porque no tiene clave
+Name=Puerta doble de madera abierta
+GrhIndex=5996
+ObjType=6
+Agarrable=1
+Abierta=0
+Llave=0
+IndexAbierta=1268
+IndexCerrada=1269
+
+[OBJ1269] 'Puerta para negocio porque no tiene clave
+Name=Puerta doble de madera cerrada
+GrhIndex=5994
+ObjType=6
+Abierta=1
+Agarrable=1
+Llave=0
+IndexAbierta=1268
+IndexCerrada=1269
+
+[OBJ1270] 'Puerta para negocio porque no tiene clave
+Name=Puerta doble de madera abierta
+GrhIndex=5997
+ObjType=6
+Agarrable=1
+Abierta=0
+Llave=0
+IndexAbierta=1270
+IndexCerrada=1271
+
+[OBJ1271] 'Puerta para negocio porque no tiene clave
+Name=Puerta doble de madera cerrada
+GrhIndex=5995
+ObjType=6
+Abierta=1
+Agarrable=1
+Llave=0
+IndexAbierta=1270
+IndexCerrada=1271
+
+[OBJ1272] 'Puerta para negocio porque no tiene clave
+Name=Puerta doble de madera abierta
+GrhIndex=9209
+ObjType=6
+Agarrable=1
+Abierta=0
+Llave=0
+IndexAbierta=1272
+IndexCerrada=1273
+
+[OBJ1273] 'Puerta para negocio porque no tiene clave
+Name=Puerta doble de madera cerrada
+GrhIndex=9207
+ObjType=6
+Abierta=1
+Agarrable=1
+Llave=0
+IndexAbierta=1272
+IndexCerrada=1273
+
+[OBJ1274] 'Puerta para negocio porque no tiene clave
+Name=Puerta doble de madera abierta
+GrhIndex=9210
+ObjType=6
+Agarrable=1
+Abierta=0
+Llave=0
+IndexAbierta=1274
+IndexCerrada=1275
+
+[OBJ1275] 'Puerta para negocio porque no tiene clave
+Name=Puerta doble de madera cerrada
+GrhIndex=9207
+ObjType=6
+Abierta=1
+Agarrable=1
+Llave=0
+IndexAbierta=1274
+IndexCerrada=1275
+
+[OBJ1276] 'Puerta para negocio porque no tiene clave
+Name=Puerta doble de madera abierta
+GrhIndex=9213
+ObjType=6
+Agarrable=1
+Abierta=0
+Llave=0
+IndexAbierta=1276
+IndexCerrada=1277
+
+[OBJ1277] 'Puerta para negocio porque no tiene clave
+Name=Puerta doble de madera cerrada
+GrhIndex=9211
+ObjType=6
+Abierta=1
+Agarrable=1
+Llave=0
+IndexAbierta=1276
+IndexCerrada=1277
+
+[OBJ1278] 'Puerta para negocio porque no tiene clave
+Name=Puerta doble de madera abierta
+GrhIndex=9214
+ObjType=6
+Agarrable=1
+Abierta=0
+Llave=0
+IndexAbierta=1278
+IndexCerrada=1279
+
+[OBJ1279] 'Puerta para negocio porque no tiene clave
+Name=Puerta doble de madera cerrada
+GrhIndex=9212
+ObjType=6
+Abierta=1
+Agarrable=1
+Llave=0
+IndexAbierta=1278
+IndexCerrada=1279
+
+[OBJ1280] 'Puerta para negocio porque no tiene clave
+Name=Puerta doble de madera abierta
+GrhIndex=9215
+ObjType=6
+Agarrable=1
+Abierta=0
+Llave=0
+IndexAbierta=1280
+IndexCerrada=1281
+
+[OBJ1281] 'Puerta para negocio porque no tiene clave
+Name=Puerta doble de madera cerrada
+GrhIndex=9216
+ObjType=6
+Abierta=1
+Agarrable=1
+Llave=0
+IndexAbierta=1280
+IndexCerrada=1281
+
+[OBJ1282] 'Puerta para negocio porque no tiene clave
+Name=Puerta doble de madera abierta
+GrhIndex=9217
+ObjType=6
+Agarrable=1
+Abierta=0
+Llave=0
+IndexAbierta=1282
+IndexCerrada=1283
+
+[OBJ1283] 'Puerta para negocio porque no tiene clave
+Name=Puerta doble de madera cerrada
+GrhIndex=9218
+ObjType=6
+Abierta=1
+Agarrable=1
+Llave=0
+IndexAbierta=1282
+IndexCerrada=1283
+
+[OBJ1284]
+Name=Portal Abissal [BRUJOS]
+GrhIndex=609
+ObjType=24
+Agarrable=0
+Valor=150000
+Crucial=1
+HechizoIndex=51
+CP1=Mago
+CP2=Clerigo
+CP3=Guerrero
+CP4=Asesino
+CP5=Ladron
+CP6=Bardo
+CP7=Druida
+CP8=Bandido
+CP9=Paladin
+CP10=CAZADOR
+CP11=PIRATA
+
+[OBJ1285]
+Name=Cofre de aventurero
+GrhIndex=11981
+ObjType=40
+Agarrable=0
+Valor=100
+Crucial=0
+
+[OBJ1286]
+Name=Llave de cofre de aventurero
+GrhIndex=11989
+ObjType=30
+Agarrable=0
+Valor=21
+Crucial=0
+
+[OBJ1287]
+Name=Cofre sumergido
+GrhIndex=11983
+ObjType=40
+Agarrable=0
+Valor=100
+Crucial=0
+
+[OBJ1288]
+Name=Llave de cofre sumergido
+GrhIndex=11990
+ObjType=30
+Agarrable=0
+Valor=21
+Crucial=0
+
+[OBJ1289]
+Name=Cofre viejo
+GrhIndex=11985
+ObjType=40
+Agarrable=0
+Valor=100
+Crucial=0
+
+[OBJ1290]
+Name=Llave de cofre viejo
+GrhIndex=11991
+ObjType=30
+Agarrable=0
+Valor=21
+Crucial=0
+
+[OBJ1291]
+Name=Cofre ensangrentado
+GrhIndex=11987
+ObjType=40
+Agarrable=0
+Valor=100
+Crucial=0
+
+[OBJ1292]
+Name=Llave de cofre ensangrentado
+GrhIndex=11992
+ObjType=30
+Agarrable=0
+Valor=21
 Crucial=0

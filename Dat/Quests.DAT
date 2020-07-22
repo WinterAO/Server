@@ -1,5 +1,5 @@
 [INIT]
-NumQuests=4
+NumQuests=6
 
 [QUEST1]
 Nombre=Gallos Envenenados
@@ -67,3 +67,45 @@ RewardGLD=3500
  
 RewardOBJs=1
 RewardOBJ1=559-1
+
+[QUEST5]
+Nombre=Prueba de hermandad
+Desc=Hoy en dia todos quieren tener su propia hermandad, pero muchos no son dignos de ello. Una hermandad significa confiar en tus hermanos, estar con ellos en las situaciones mas dificiles. Demuestrame que eres digno de fundar una hermandad y te obsequiere con este objeto.
+RequiredLevel=40
+ 
+RequiredNPCs=3
+RequiredNPC1=1050-1
+RequiredNPC2=1051-1
+RequiredNPC3=1052-1
+
+RequiredOBJs=3
+RequiredOBJ1=1252-1
+RequiredOBJ1=1253-1
+RequiredOBJ1=1254-1
+
+RewardEXP=1000
+RewardGLD=1000
+ 
+RewardOBJs=1
+RewardOBJ1=1251-1
+
+[QUEST6]
+Nombre=Como ser un buen lider
+Desc=Un buen lider no es aquel en da ordenes, es aquel en quien sus compañeros les confiarian hasta su vida. Durante decadas he ayudado a muchos lideres a llegar al a cima. Si desmuestras ser un buen lider, podria compartirte mis secretos.
+RequiredLevel=40
+ 
+RequiredNPCs=3
+RequiredNPC1=1050-1
+RequiredNPC2=1051-1
+RequiredNPC3=1052-1
+
+RequiredOBJs=3
+RequiredOBJ1=1252-1
+RequiredOBJ1=1253-1
+RequiredOBJ1=1254-1
+
+RewardEXP=1000
+RewardGLD=1000
+ 
+RewardOBJs=1
+RewardOBJ1=1127-1

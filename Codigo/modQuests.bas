@@ -23,10 +23,11 @@ Public NumQuests As Integer                    'Num de quest dateadas actualment
 Public Function TieneQuest(ByVal UserIndex As Integer, _
                            ByVal QuestNumber As Integer) As Byte
 
-    '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-    'Devuelve el slot de UserQuests en que tiene la quest QuestNumber. En caso contrario devuelve 0.
-    'Last modified: 27/01/2010 by Amraphen
-    '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+    '****************************************
+    'Autor: Lorwik
+    'Fecha: 09/07/2020
+    'Descripcion: Devuelve el slot de la quest si esta en curso
+    '****************************************
     
     If UserList(UserIndex).QuestStats.Quests(QuestNumber).QuestStatus = eStatusQuest.EnCurso Then
         TieneQuest = QuestNumber
@@ -292,7 +293,8 @@ Public Sub CleanQuestSlot(ByVal UserIndex As Integer, ByVal QuestSlot As Integer
  
     With UserList(UserIndex).QuestStats.Quests(QuestSlot)
         
-        If QuestSlot = NumQuests Then Exit Sub
+        '¿El slot de quest es mayor al numero de quest cargadas o no tiene la quest aceptada?
+        If QuestSlot > NumQuests Or .QuestStatus = eStatusQuest.NoAceptada Then Exit Sub
         
         If QuestList(QuestSlot).RequiredNPCs Then
 

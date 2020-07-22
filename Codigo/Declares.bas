@@ -55,13 +55,7 @@ Type CentinelaUser
 
 End Type
 
-Private Type tCountersServidor
-
-    Limpieza As Integer
-
-End Type
-
-Public counterSV      As tCountersServidor
+Public tickLimpieza      As Integer
 
 ''
 ' Modulo de declaraciones. Aca hay de todo.
@@ -202,7 +196,7 @@ Public Enum eCiudad
     cRamx = 1
     cShakoud
     cBelleuve
-    cOrac
+    cIslaZharkel
     cHaverwood
 
 End Enum
@@ -314,6 +308,7 @@ Public Enum eTrigger
     ZONASEGURA = 4
     ANTIPIQUETE = 5
     ZONAPELEA = 6
+    Invocaciones = 7
 
 End Enum
 
@@ -508,8 +503,9 @@ Public Enum eNPCType
     Gobernador = 11
     WorldBoss = 12
     dummy = 13
-    quest = 14
+    Quest = 14
     Marinero = 15
+    Subastador = 16
     
 End Enum
 
@@ -760,6 +756,7 @@ Public Enum eOBJType
     otPasajes = 36
     otMochilas = 37
     otYacimientoPez = 38
+    otPiedraHogar = 39
     otCualquiera = 1000
 
 End Enum
@@ -792,6 +789,14 @@ Public EXP_X_LVL() As Long
 ' ************************ TIPOS *******************************
 ' **************************************************************
 ' **************************************************************
+
+Public Type WorldPos
+
+    Map As Integer
+    X As Integer
+    Y As Integer
+
+End Type
 
 Public Type tObservacion
 
@@ -899,6 +904,14 @@ Public Type tHechizo
     
     NeedStaff As Integer
     StaffAffected As Boolean
+    
+    Portal As Byte
+    PortalPos As WorldPos
+    
+    Casteo As Byte
+    CastFX As Integer
+    
+    RadioArea As Integer
 
 End Type
 
@@ -955,14 +968,6 @@ Public Type Position
 
 End Type
 
-Public Type WorldPos
-
-    Map As Integer
-    X As Integer
-    Y As Integer
-
-End Type
-
 Public Type FXdata
 
     Nombre As String
@@ -985,7 +990,7 @@ Public Type Char
     FX As Integer
     loops As Integer
     
-    heading As eHeading
+    Heading As eHeading
 
     AuraAnim As Long
     AuraColor As Long
@@ -1170,7 +1175,7 @@ End Type
 
 Public Type tQuestNpc
 
-    NpcIndex As Integer
+    NPCIndex As Integer
     Amount As Integer
 
 End Type
@@ -1319,6 +1324,12 @@ End Type
 '*********************************************************
 '*********************************************************
 
+Private Type tCasteoSpell
+    Casteando As Boolean 'Indica si esta casteando
+    SpellID As Integer  'Hechizo que esta casteando
+    TimeCast As Long 'Tiempo de casteo
+End Type
+
 Public Type tReputacion 'Fama del usuario
 
     NobleRep As Long
@@ -1374,6 +1385,7 @@ End Type
 
 'Flags
 Public Type UserFlags
+    GMRequested As Integer
     ' Retos
     SlotReto As Byte
     SlotRetoUser As Byte
@@ -1478,7 +1490,6 @@ Public Type UserFlags
     Mimetizado As Byte
     
     lastMap As Integer
-    Traveling As Byte 'Travelin Band ?
     
     ParalizedBy As String
     ParalizedByIndex As Integer
@@ -1487,6 +1498,8 @@ Public Type UserFlags
     TargetBot As Byte
     
     Global As Byte 'Indica si el usuario puede usar el global
+    
+    CasteoSpell As tCasteoSpell
 
 End Type
 
@@ -1541,8 +1554,6 @@ Public Type UserCounters
     Ocultando As Long   ' Unico trabajo no revisado por el centinela
     
     failedUsageAttempts As Long
-    
-    goHome As Long
     
     PacketsTick As Byte
 
@@ -1712,6 +1723,12 @@ Public Type User
     cvcUser As cvc_User
     
     QuestStats As tQuestStats
+    
+    Redundance As Byte
+    
+    CreoPortal As Boolean
+    PortalPos As WorldPos
+    PortalTiempo As Integer
 
 End Type
 
@@ -1792,11 +1809,13 @@ Public Type NPCFlags
     ActivoPotencia As Boolean
     AumentaPotencia As Boolean
     
+    Invocacion As Byte
+    
 End Type
 
 Public Type tCriaturasEntrenador
 
-    NpcIndex As Integer
+    NPCIndex As Integer
     NpcName As String
     tmpIndex As Integer
 
@@ -1822,7 +1841,7 @@ End Type
 
 ' New type for holding the pathfinding info
 
-Public Type npc
+Public Type NPC
 
     Name As String
     Char As Char 'Define como se vera
@@ -1900,8 +1919,8 @@ Public Type MapBlock
 
     Blocked As Byte
     Graphic(1 To 4) As Long
-    UserIndex As Integer
-    NpcIndex As Integer
+    Userindex As Integer
+    NPCIndex As Integer
     ObjInfo As obj
     TileExit As WorldPos
     Trigger As eTrigger
@@ -2058,7 +2077,7 @@ Public HappyHourDays(1 To 7) As tHappyHour    ' 0.13.5
 '*****************ARRAYS PUBLICOS*************************
 Public UserList()                         As User 'USUARIOS
 
-Public Npclist(1 To MAXNPCS)              As npc 'NPCS
+Public Npclist(1 To MAXNPCS)              As NPC 'NPCS
 
 Public MapData()                          As MapBlock
 
@@ -2102,8 +2121,6 @@ Public DistribucionSemienteraVida(1 To 4) As Integer
 
 Public Ciudades(1 To NUMCIUDADES)         As WorldPos
 
-Public distanceToCities()                 As HomeDistance
-
 Public QuestList()                        As tQuest
 
 Public Records()                          As tRecord
@@ -2123,7 +2140,7 @@ Public Belleuve        As WorldPos
 
 Public Haverwood       As WorldPos
 
-Public Orac            As WorldPos
+Public IslaZharkel     As WorldPos
 
 Public Prision         As WorldPos
 
@@ -2189,7 +2206,6 @@ Public Enum eMessages
     UserKill
     EarnExp
     Home
-    CancelHome
     FinishHome
     
     '//Mensajes nuevos
@@ -2360,8 +2376,6 @@ End Enum
 
 Public Const MATRIX_INITIAL_MAP                     As Integer = 1
 
-Public Const GOHOME_PENALTY                         As Integer = 5
-
 Public Const GM_MAP                                 As Integer = 49
 
 Public Const TELEP_OBJ_INDEX                        As Integer = 1012
@@ -2492,6 +2506,8 @@ Public ApiPath As String
 Public ApiNodeJsTaskId As Double
 
 Public NombreServidor As String
+
+Public Security As New clsSecurity
 
 'Lorwik> Sistema de retardo de Spawn de NPC
 Type tRetarded

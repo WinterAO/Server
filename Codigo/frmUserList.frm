@@ -3,15 +3,55 @@ Begin VB.Form frmUserList
    BackColor       =   &H00FFC0C0&
    BorderStyle     =   1  'Fixed Single
    Caption         =   "Debug de Userlist"
-   ClientHeight    =   4665
+   ClientHeight    =   5115
    ClientLeft      =   45
    ClientTop       =   330
    ClientWidth     =   5520
    LinkTopic       =   "Form1"
    MaxButton       =   0   'False
-   ScaleHeight     =   4665
+   ScaleHeight     =   5115
    ScaleWidth      =   5520
    StartUpPosition =   2  'CenterScreen
+   Begin VB.CommandButton cmdDesconectar 
+      BackColor       =   &H00FFC0C0&
+      Caption         =   "Desconectar Cuenta"
+      BeginProperty Font 
+         Name            =   "MS Sans Serif"
+         Size            =   8.25
+         Charset         =   0
+         Weight          =   700
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   375
+      Index           =   1
+      Left            =   2880
+      Style           =   1  'Graphical
+      TabIndex        =   6
+      Top             =   4680
+      Width           =   2175
+   End
+   Begin VB.CommandButton cmdDesconectar 
+      BackColor       =   &H00FFC0C0&
+      Caption         =   "Desconectar PJ"
+      BeginProperty Font 
+         Name            =   "MS Sans Serif"
+         Size            =   8.25
+         Charset         =   0
+         Weight          =   700
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   375
+      Index           =   0
+      Left            =   120
+      Style           =   1  'Graphical
+      TabIndex        =   5
+      Top             =   4680
+      Width           =   2175
+   End
    Begin VB.CommandButton Command2 
       BackColor       =   &H00FFC0C0&
       Caption         =   "Echar todos los no Logged"
@@ -133,6 +173,64 @@ Attribute VB_Exposed = False
 '**************************************************************************
 
 Option Explicit
+
+Private Sub cmdDesconectar_Click(Index As Integer)
+'********************************************
+'Autor: Lorwik
+'Fecha: 13/07/2020
+'Descripción: Forzamos la desconexion de un PJ o cuenta del server
+'********************************************
+
+    Dim UserIndex As Integer
+    
+    UserIndex = List1.ItemData(List1.ListIndex)
+    
+    If UserIndex <= 0 Then
+        MsgBox "Usuario invalido"
+        Exit Sub
+    End If
+    
+    Select Case Index
+    
+        Case 0 'Desconectar PJ
+            If MsgBox("¿Seguro que quieres forzar la desconexion de este PJ?", vbYesNo, "¡DESCONEXION PJ!") = vbNo Then Exit Sub
+            
+            '¿Tiene un PJ Conectado?
+            If UserList(UserIndex).flags.UserLogged Then
+                Call WriteErrorMsg(UserIndex, "Has sido desconectado del servidor.")
+                Call WriteDisconnect(UserIndex)
+                Call FlushBuffer(UserIndex)
+                Call CloseUser(UserIndex)
+            
+            Else
+                MsgBox "El Usuario no tiene ningun PJ conectado"
+                
+            End If
+                        
+        Case 1 'Desconectar cuenta
+            If MsgBox("¿Seguro que quieres forzar la desconexion de esta Cuenta? Si el PJ esta conectado se le expulsara", vbYesNo, "¡DESCONEXION CUENTA!") = vbNo Then Exit Sub
+            
+            '¿Tiene la cuenta conectada?
+            If UserList(UserIndex).flags.AccountLogged Then
+                Call WriteErrorMsg(UserIndex, "Tu cuenta ha sido desconectada del servidor. Prueba a relogear.")
+                
+                Call WriteDisconnect(UserIndex)
+                Call FlushBuffer(UserIndex)
+                
+                '¿Tiene un PJ Conectado?
+                If UserList(UserIndex).flags.UserLogged Then _
+                    Call CloseUser(UserIndex)
+                    
+                Call CloseAccount(UserIndex)
+                
+            Else
+                MsgBox "El Usuario no tiene ninguna cuenta conectado"
+                
+            End If
+                
+    End Select
+    
+End Sub
 
 Private Sub Command1_Click()
 

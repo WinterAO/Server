@@ -76,7 +76,7 @@ End Type
 Private Type tDatosNPC
     X As Integer
     Y As Integer
-    NpcIndex As Integer
+    NPCIndex As Integer
 End Type
 
 Private Type tDatosObjs
@@ -164,7 +164,7 @@ Public Sub CargarSpawnList()
             
             i = i + 1
             
-            SpawnList(i).NpcIndex = LoopC
+            SpawnList(i).NPCIndex = LoopC
             SpawnList(i).NpcName = LeerNPCs.GetValue("NPC" & LoopC, "Name")
             
         End If
@@ -475,7 +475,8 @@ Public Sub CargarHechizos()
     If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando Hechizos."
     
     Dim Hechizo As Integer
-
+    Dim str     As String
+    
     Dim Leer    As clsIniManager
 
     Set Leer = New clsIniManager
@@ -581,6 +582,19 @@ Public Sub CargarHechizos()
             
             .NeedStaff = val(Leer.GetValue("Hechizo" & Hechizo, "NeedStaff"))
             .StaffAffected = CBool(val(Leer.GetValue("Hechizo" & Hechizo, "StaffAffected")))
+            
+            'Portales
+            .Portal = val(Leer.GetValue("Hechizo" & Hechizo, "Portal"))
+            str = Leer.GetValue("Hechizo" & Hechizo, "PortalMap")
+            
+            .PortalPos.Map = val(ReadField(1, str, 45))
+            .PortalPos.X = val(ReadField(2, str, 45))
+            .PortalPos.Y = val(ReadField(3, str, 45))
+            
+            .Casteo = val(Leer.GetValue("Hechizo" & Hechizo, "Casteo"))
+            .CastFX = val(Leer.GetValue("Hechizo" & Hechizo, "CastFX"))
+            
+            .RadioArea = val(Leer.GetValue("Hechizo" & Hechizo, "RadioArea"))
 
         End With
 
@@ -775,10 +789,10 @@ Public Sub GrabarMapa(ByVal Map As Long, ByRef MAPFILE As String)
                 If .TileExit.Map Then ByFlags = ByFlags Or 1
                 
                 ' No hacer backup de los NPCs invalidos (Pretorianos, Mascotas, Invocados )
-                If .NpcIndex Then
+                If .NPCIndex Then
                     
-                    NpcInvalido = (Npclist(.NpcIndex).NPCtype = eNPCType.Pretoriano) Or _
-                                  (Npclist(.NpcIndex).MaestroUser > 0)
+                    NpcInvalido = (Npclist(.NPCIndex).NPCtype = eNPCType.Pretoriano) Or _
+                                  (Npclist(.NPCIndex).MaestroUser > 0)
                     
                     If Not NpcInvalido Then ByFlags = ByFlags Or 2
 
@@ -794,7 +808,7 @@ Public Sub GrabarMapa(ByVal Map As Long, ByRef MAPFILE As String)
                     Call InfWriter.putInteger(.TileExit.Y)
                 End If
                 
-                If .NpcIndex And Not NpcInvalido Then Call InfWriter.putInteger(Npclist(.NpcIndex).Numero)
+                If .NPCIndex And Not NpcInvalido Then Call InfWriter.putInteger(Npclist(.NPCIndex).Numero)
                 
                 If .ObjInfo.ObjIndex Then
                     Call InfWriter.putInteger(.ObjInfo.ObjIndex)
@@ -1391,7 +1405,7 @@ Sub LoadGlobalDrop()
     NUMGLOBALDROPS = val(Leer.GetValue("GLOBAL", "NumDrops"))
     
     frmCargando.cargar.min = 0
-    frmCargando.cargar.max = NumObjDatas
+    frmCargando.cargar.max = NUMGLOBALDROPS
     frmCargando.cargar.Value = 0
     
     ReDim Preserve GlobalDROPObject(1 To NUMGLOBALDROPS) As GlobalObj
@@ -1651,27 +1665,27 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
                 ReDim NPCs(1 To .NumeroNPCs)
                 Get #fh, , NPCs
                 For i = 1 To .NumeroNPCs
-                    MapData(Map, NPCs(i).X, NPCs(i).Y).NpcIndex = NPCs(i).NpcIndex
-                    If MapData(Map, NPCs(i).X, NPCs(i).Y).NpcIndex > 0 Then
+                    MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex = NPCs(i).NPCIndex
+                    If MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex > 0 Then
                         
                         npcfile = DatPath & "NPCs.dat"
                         
                         'Si el npc debe hacer respawn en la pos original la guardamos
-                        If val(GetVar(npcfile, "NPC" & MapData(Map, NPCs(i).X, NPCs(i).Y).NpcIndex, "PosOrig")) = 1 Then
-                            MapData(Map, NPCs(i).X, NPCs(i).Y).NpcIndex = OpenNPC(MapData(Map, NPCs(i).X, NPCs(i).Y).NpcIndex)
-                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NpcIndex).Orig.Map = Map
-                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NpcIndex).Orig.X = NPCs(i).X
-                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NpcIndex).Orig.Y = NPCs(i).Y
+                        If val(GetVar(npcfile, "NPC" & MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex, "PosOrig")) = 1 Then
+                            MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex = OpenNPC(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex)
+                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Orig.Map = Map
+                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Orig.X = NPCs(i).X
+                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Orig.Y = NPCs(i).Y
                         Else
-                            MapData(Map, NPCs(i).X, NPCs(i).Y).NpcIndex = OpenNPC(MapData(Map, NPCs(i).X, NPCs(i).Y).NpcIndex)
+                            MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex = OpenNPC(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex)
                         End If
                         
-                        If Not MapData(Map, NPCs(i).X, NPCs(i).Y).NpcIndex = 0 Then
-                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NpcIndex).Pos.Map = Map
-                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NpcIndex).Pos.X = NPCs(i).X
-                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NpcIndex).Pos.Y = NPCs(i).Y
+                        If Not MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex = 0 Then
+                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Pos.Map = Map
+                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Pos.X = NPCs(i).X
+                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Pos.Y = NPCs(i).Y
        
-                            Call MakeNPCChar(True, 0, MapData(Map, NPCs(i).X, NPCs(i).Y).NpcIndex, Map, NPCs(i).X, NPCs(i).Y)
+                            Call MakeNPCChar(True, 0, MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex, Map, NPCs(i).X, NPCs(i).Y)
                         End If
                         
                     End If
@@ -1970,10 +1984,10 @@ Sub CargarCiudades()
             .Y = Lector.GetValue("Belleuve", "Y")
         End With
         
-        With Orac
-            .Map = Lector.GetValue("Orac", "Mapa")
-            .X = Lector.GetValue("Orac", "X")
-            .Y = Lector.GetValue("Orac", "Y")
+        With IslaZharkel
+            .Map = Lector.GetValue("IslaZharkel", "Mapa")
+            .X = Lector.GetValue("IslaZharkel", "X")
+            .Y = Lector.GetValue("IslaZharkel", "Y")
         End With
         
         With Haverwood
@@ -1999,7 +2013,7 @@ Sub CargarCiudades()
     Ciudades(eCiudad.cRamx) = Ramx
     Ciudades(eCiudad.cShakoud) = Shakoud
     Ciudades(eCiudad.cBelleuve) = Belleuve
-    Ciudades(eCiudad.cOrac) = Orac
+    Ciudades(eCiudad.cIslaZharkel) = IslaZharkel
     Ciudades(eCiudad.cHaverwood) = Haverwood
 
     If frmMain.Visible Then frmMain.txtStatus.Text = Date & " " & time & " - Se cargaron las ciudades.dat"
@@ -2020,7 +2034,7 @@ Sub WriteVar(ByVal File As String, _
     
 End Sub
 
-Function criminal(ByVal UserIndex As Integer) As Boolean
+Function criminal(ByVal Userindex As Integer) As Boolean
     '***************************************************
     'Author: Unknown
     'Last Modification: -
@@ -2029,7 +2043,7 @@ Function criminal(ByVal UserIndex As Integer) As Boolean
 
     Dim L As Long
     
-    With UserList(UserIndex).Reputacion
+    With UserList(Userindex).Reputacion
         L = (-.AsesinoRep) + (-.BandidoRep) + .BurguesRep + (-.LadronesRep) + .NobleRep + .PlebeRep
         L = L / 6
         criminal = (L < 0)
@@ -2038,7 +2052,7 @@ Function criminal(ByVal UserIndex As Integer) As Boolean
 
 End Function
 
-Sub BackUPnPc(ByVal NpcIndex As Integer, ByVal hFile As Integer)
+Sub BackUPnPc(ByVal NPCIndex As Integer, ByVal hFile As Integer)
     '***************************************************
     'Author: Unknown
     'Last Modification: 10/09/2010
@@ -2047,15 +2061,15 @@ Sub BackUPnPc(ByVal NpcIndex As Integer, ByVal hFile As Integer)
 
     Dim LoopC As Integer
     
-    Print #hFile, "[NPC" & Npclist(NpcIndex).Numero & "]"
+    Print #hFile, "[NPC" & Npclist(NPCIndex).Numero & "]"
     
-    With Npclist(NpcIndex)
+    With Npclist(NPCIndex)
         'General
         Print #hFile, "Name=" & .Name
         Print #hFile, "Desc=" & .Desc
         Print #hFile, "Head=" & val(.Char.Head)
         Print #hFile, "Body=" & val(.Char.body)
-        Print #hFile, "Heading=" & val(.Char.heading)
+        Print #hFile, "Heading=" & val(.Char.Heading)
         Print #hFile, "Movement=" & val(.Movement)
         Print #hFile, "Attackable=" & val(.Attackable)
         Print #hFile, "Comercia=" & val(.Comercia)
@@ -2103,7 +2117,7 @@ Sub BackUPnPc(ByVal NpcIndex As Integer, ByVal hFile As Integer)
 
 End Sub
 
-Sub CargarNpcBackUp(ByVal NpcIndex As Integer, ByVal NpcNumber As Integer)
+Sub CargarNpcBackUp(ByVal NPCIndex As Integer, ByVal NpcNumber As Integer)
     '***************************************************
     'Author: Unknown
     'Last Modification: -
@@ -2121,7 +2135,7 @@ Sub CargarNpcBackUp(ByVal NpcIndex As Integer, ByVal NpcNumber As Integer)
     npcfile = DatPath & "bkNPCs.dat"
     'End If
     
-    With Npclist(NpcIndex)
+    With Npclist(NPCIndex)
     
         .Numero = NpcNumber
         .Name = GetVar(npcfile, "NPC" & NpcNumber, "Name")
@@ -2131,7 +2145,7 @@ Sub CargarNpcBackUp(ByVal NpcIndex As Integer, ByVal NpcNumber As Integer)
         
         .Char.body = val(GetVar(npcfile, "NPC" & NpcNumber, "Body"))
         .Char.Head = val(GetVar(npcfile, "NPC" & NpcNumber, "Head"))
-        .Char.heading = val(GetVar(npcfile, "NPC" & NpcNumber, "Heading"))
+        .Char.Heading = val(GetVar(npcfile, "NPC" & NpcNumber, "Heading"))
         
         .Attackable = val(GetVar(npcfile, "NPC" & NpcNumber, "Attackable"))
         .Comercia = val(GetVar(npcfile, "NPC" & NpcNumber, "Comercia"))
@@ -2232,102 +2246,6 @@ Public Sub CargaApuestas()
     Apuestas.Jugadas = val(GetVar(DatPath & "apuestas.dat", "Main", "Jugadas"))
 
     If frmMain.Visible Then frmMain.txtStatus.Text = Date & " " & time & " - Se cargo el archivo apuestas.dat"
-
-End Sub
-
-Public Sub generateMatrix(ByVal Mapa As Integer)
-    '***************************************************
-    'Author: Unknown
-    'Last Modification: -
-    '
-    '***************************************************
-
-    Dim i As Integer
-
-    Dim j As Integer
-    
-    ReDim distanceToCities(1 To NumMaps) As HomeDistance
-    
-    For j = 1 To NUMCIUDADES
-        For i = 1 To NumMaps
-            distanceToCities(i).distanceToCity(j) = -1
-        Next i
-    Next j
-    
-    For j = 1 To NUMCIUDADES
-        For i = 1 To 4
-
-            Select Case i
-
-                Case eHeading.NORTH
-                    Call setDistance(getLimit(Ciudades(j).Map, eHeading.NORTH), j, i, 0, 1)
-
-                Case eHeading.EAST
-                    Call setDistance(getLimit(Ciudades(j).Map, eHeading.EAST), j, i, 1, 0)
-
-                Case eHeading.SOUTH
-                    Call setDistance(getLimit(Ciudades(j).Map, eHeading.SOUTH), j, i, 0, 1)
-
-                Case eHeading.WEST
-                    Call setDistance(getLimit(Ciudades(j).Map, eHeading.WEST), j, i, -1, 0)
-
-            End Select
-
-        Next i
-    Next j
-
-End Sub
-
-Public Sub setDistance(ByVal Mapa As Integer, _
-                       ByVal city As Byte, _
-                       ByVal side As Integer, _
-                       Optional ByVal X As Integer = 0, _
-                       Optional ByVal Y As Integer = 0)
-    '***************************************************
-    'Author: Unknown
-    'Last Modification: -
-    '
-    '***************************************************
-
-    Dim i   As Integer
-
-    Dim lim As Integer
-
-    If Mapa <= 0 Or Mapa > NumMaps Then Exit Sub
-
-    If distanceToCities(Mapa).distanceToCity(city) >= 0 Then Exit Sub
-
-    If Mapa = Ciudades(city).Map Then
-        distanceToCities(Mapa).distanceToCity(city) = 0
-    Else
-        distanceToCities(Mapa).distanceToCity(city) = Abs(X) + Abs(Y)
-
-    End If
-
-    For i = 1 To 4
-        lim = getLimit(Mapa, i)
-
-        If lim > 0 Then
-
-            Select Case i
-
-                Case eHeading.NORTH
-                    Call setDistance(lim, city, i, X, Y + 1)
-
-                Case eHeading.EAST
-                    Call setDistance(lim, city, i, X + 1, Y)
-
-                Case eHeading.SOUTH
-                    Call setDistance(lim, city, i, X, Y - 1)
-
-                Case eHeading.WEST
-                    Call setDistance(lim, city, i, X - 1, Y)
-
-            End Select
-
-        End If
-
-    Next i
 
 End Sub
 
