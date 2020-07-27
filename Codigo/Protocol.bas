@@ -19630,7 +19630,7 @@ Public Sub WriteSetInvisible(ByVal Userindex As Integer, _
     '***************************************************
     On Error GoTo Errhandler
 
-    Call UserList(Userindex).outgoingData.WriteASCIIStringFixed(PrepareMessageSetInvisible(CharIndex, invisible, IIf(invisible, (IntervaloInvisible - UserList(Userindex).Counters.Invisibilidad), 0)))
+    Call UserList(Userindex).outgoingData.WriteASCIIStringFixed(PrepareMessageSetInvisible(CharIndex, invisible))
     
     Exit Sub
 
@@ -20381,7 +20381,6 @@ Public Sub WriteParalizeOK(ByVal Userindex As Integer)
 
     With UserList(Userindex).outgoingData
         Call .WriteByte(ServerPacketID.ParalizeOK)
-        Call .WriteInteger(IIf(UserList(Userindex).flags.Paralizado, UserList(Userindex).Counters.Paralisis, 0))
     End With
     
     Call WritePosUpdate(Userindex)
@@ -20920,7 +20919,7 @@ End Sub
 ' @remarks  The message is written to no outgoing buffer, but only prepared in a single string to be easily sent to several clients.
 
 Public Function PrepareMessageSetInvisible(ByVal CharIndex As Integer, _
-                                           ByVal invisible As Boolean, Optional ByVal timeRemaining As Integer = 0) As String
+                                           ByVal invisible As Boolean) As String
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -20932,7 +20931,6 @@ Public Function PrepareMessageSetInvisible(ByVal CharIndex As Integer, _
         
         Call .WriteInteger(CharIndex)
         Call .WriteBoolean(invisible)
-        Call .WriteInteger(timeRemaining)
         
         PrepareMessageSetInvisible = .ReadASCIIStringFixed(.Length)
 
@@ -23075,8 +23073,6 @@ Public Sub WriteEquitandoToggle(ByVal Userindex As Integer)
 On Error GoTo Errhandler
     With UserList(Userindex)
         Call .outgoingData.WriteByte(ServerPacketID.EquitandoToggle)
-        
-        Call .outgoingData.WriteLong(.Counters.MonturaCounter)
         
     End With
 

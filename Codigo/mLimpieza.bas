@@ -54,5 +54,3 @@ Public Sub BorrarObjetosLimpieza()
     Next i
 
 End Sub
-
-

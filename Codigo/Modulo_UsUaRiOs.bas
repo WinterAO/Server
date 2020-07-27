@@ -2509,7 +2509,7 @@ Public Sub SetInvisible(ByVal Userindex As Integer, _
     Dim sndNick As String
 
     With UserList(Userindex)
-        Call SendData(SendTarget.ToUsersAndRmsAndCounselorsAreaButGMs, Userindex, PrepareMessageSetInvisible(userCharIndex, invisible, IIf(invisible, (IntervaloInvisible - .Counters.Invisibilidad), 0)))
+        Call SendData(SendTarget.ToUsersAndRmsAndCounselorsAreaButGMs, Userindex, PrepareMessageSetInvisible(userCharIndex, invisible))
     
         sndNick = .Name
     
