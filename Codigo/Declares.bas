@@ -411,7 +411,7 @@ Public Const Guardias                       As Integer = 6
 
 Public Const MAX_ORO_EDIT                   As Long = 500000
 
-Public Const MAX_EXP_EDIT                   As Long = 500000
+Public Const MAX_EXP_EDIT                   As Long = 5000000
 
 Public Const MAX_VIDA_EDIT                  As Long = 30000
 
@@ -1552,6 +1552,7 @@ Public Type UserCounters
     
     Trabajando As Long  ' Para el centinela
     Ocultando As Long   ' Unico trabajo no revisado por el centinela
+    Cheat As modAntiCheat.TimeIntervalos
     
     failedUsageAttempts As Long
     

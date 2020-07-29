@@ -29,7 +29,7 @@ Attribute VB_Name = "TCP"
 
 #If False Then
 
-    Dim Errhandler, Length, index As Variant
+    Dim errHandler, Length, index As Variant
 
 #End If
 
@@ -818,7 +818,7 @@ Sub CloseSocket(ByVal Userindex As Integer)
     '4/4/2020: FrankoH298 - Flusheamos el buffer antes de cerrar el socket.
     '
     '***************************************************
-    On Error GoTo Errhandler
+    On Error GoTo errHandler
     
     Call FlushBuffer(Userindex)
     
@@ -851,7 +851,7 @@ Sub CloseSocket(ByVal Userindex As Integer)
 
     Exit Sub
 
-Errhandler:
+errHandler:
 
     Call ResetUserSlot(Userindex)
         
@@ -1338,7 +1338,7 @@ Sub ConnectUser(ByVal Userindex As Integer, _
         If NumUsers > RecordUsuariosOnline Then
             Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Record de usuarios conectados simultaneamente. Hay " & NumUsers & " usuarios.", FontTypeNames.FONTTYPE_INFOBOLD))
             RecordUsuariosOnline = NumUsers
-            Call WriteVar(IniPath & "Server.ini", "INIT", "RECORD", str(RecordUsuariosOnline))
+            Call WriteVar(IniPath & "Server.ini", "INIT", "RECORD", Str(RecordUsuariosOnline))
 
             'Este ultimo es para saber siempre los records en el frmMain
             frmMain.txtRecordOnline.Text = RecordUsuariosOnline
@@ -1395,8 +1395,6 @@ Sub ConnectUser(ByVal Userindex As Integer, _
     
         Call WriteLoggedMessage(Userindex)
     
-        Call modGuilds.SendGuildNews(Userindex)
-    
         ' Esta protegido del ataque de npcs por 5 segundos, si no realiza ninguna accion
         Call IntervaloPermiteSerAtacado(Userindex, True)
     
@@ -1416,6 +1414,8 @@ Sub ConnectUser(ByVal Userindex As Integer, _
         Call Statistics.UserConnected(Userindex)
     
         Call MostrarNumUsers
+        
+        Call modGuilds.SendGuildNews(Userindex)
         
         'Aqui solo vamos a hacer un request a los endpoints de la aplicacion en Node.js
         'el repositorio para hacer funcionar esto, es este: https://github.com/ao-libre/ao-api-server
@@ -1534,6 +1534,8 @@ Sub ResetContadores(ByVal Userindex As Integer)
         .Veneno = 0
 
     End With
+    
+    Call modAntiCheat.ResetAllCount(Userindex)
 
 End Sub
 
@@ -1864,7 +1866,7 @@ Sub CloseUser(ByVal Userindex As Integer)
     '
     '***************************************************
 
-    On Error GoTo Errhandler
+    On Error GoTo errHandler
 
     Dim n    As Integer
 
@@ -2020,7 +2022,7 @@ Sub CloseUser(ByVal Userindex As Integer)
 
     Exit Sub
 
-Errhandler:
+errHandler:
     Call LogError("Error en CloseUser. Numero " & Err.Number & " Descripcion: " & Err.description)
 
 End Sub
@@ -2032,7 +2034,7 @@ Sub ReloadSokcet()
     '
     '***************************************************
 
-    On Error GoTo Errhandler
+    On Error GoTo errHandler
 
     Call LogApiSock("ReloadSokcet() " & NumUsers & " " & LastUser & " " & MaxUsers)
     
@@ -2045,7 +2047,7 @@ Sub ReloadSokcet()
 
     Exit Sub
     
-Errhandler:
+errHandler:
     Call LogError("Error en CheckSocketState " & Err.Number & ": " & Err.description)
 
 End Sub
