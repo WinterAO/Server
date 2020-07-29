@@ -84,6 +84,7 @@ Class=clsSecurity; Codigo\clsSecurity.cls
 Module=ModInvocaciones; Codigo\ModInvocaciones.bas
 Module=modSubastas; Codigo\modSubastas.bas
 Class=cWorldPos; Codigo\cWorldPos.cls
+Module=modAntiCheat; Codigo\modAntiCheat.bas
 IconForm="frmMain"
 Startup="Sub Main"
 HelpFile=""
