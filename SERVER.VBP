@@ -83,6 +83,7 @@ Module=ModBOTS; Codigo\ModBOTS.bas
 Class=clsSecurity; Codigo\clsSecurity.cls
 Module=ModInvocaciones; Codigo\ModInvocaciones.bas
 Module=modSubastas; Codigo\modSubastas.bas
+Class=cWorldPos; Codigo\cWorldPos.cls
 IconForm="frmMain"
 Startup="Sub Main"
 HelpFile=""

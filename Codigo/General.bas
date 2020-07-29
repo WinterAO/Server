@@ -292,8 +292,6 @@ Sub Main()
     Call BanGlobalChatCargar
     GlobalChatActive = True
     
-    UltimoSlotLimpieza = -1
-    
     ' Start loading..
     frmCargando.Show
     
