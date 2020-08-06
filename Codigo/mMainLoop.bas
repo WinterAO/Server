@@ -36,7 +36,7 @@ Public Sub PacketResend()
     'Last Modification: 04/01/07
     'Attempts to resend to the user all data that may be enqueued.
     '***************************************************
-    On Error GoTo Errhandler:
+    On Error GoTo errHandler:
 
     Dim i As Long
     For i = 1 To LastUser
@@ -45,7 +45,7 @@ Public Sub PacketResend()
 
     Exit Sub
 
-Errhandler:
+errHandler:
     Call LogError("Error en packetResend - Error: " & Err.Number & " - Desc: " & Err.description)
 
     Resume Next
@@ -91,7 +91,9 @@ Public Sub TIMER_AI()
                             Mapa = .Pos.Map
                             
                             If Mapa > 0 Then
+                                'Si no hay usuarios en el mapa no hacemos nada
                                 If MapInfo(Mapa).NumUsers > 0 Then
+                                    '¿El NPC tiene movimiento?
                                     If .Movement <> TipoAI.ESTATICO Then
                                         Call NPCAI(NPCIndex)
 
@@ -338,7 +340,7 @@ Public Sub PasarSegundo()
     '
     '***************************************************
 
-    On Error GoTo Errhandler
+    On Error GoTo errHandler
 
     Dim i As Long
     
@@ -487,7 +489,7 @@ Public Sub PasarSegundo()
 
     Exit Sub
 
-Errhandler:
+errHandler:
     Call LogError("Error en PasarSegundo. Err: " & Err.description & " - " & Err.Number & " - UserIndex: " & i)
 
     Resume Next

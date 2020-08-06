@@ -95,7 +95,7 @@ este objeto se mostrara con un grafico. Si le ponemos
 [INIT]
 'aca va el numero de OBJ mas alto, NO la cantidad de OBJs.
 'esto sirve para que los GMS puedan ver la lista completa de items para crear en una ventanita.
-NumOBJs=1292
+NumOBJs=1293
 
 
 [OBJ1]
@@ -2427,7 +2427,7 @@ Crucial=1
 HechizoIndex=9
 
 [OBJ207]
-Name=Devolver Movilidad
+Name=Remover Paralisis
 GrhIndex=609
 ObjType=24
 Agarrable=0
@@ -16133,3 +16133,14 @@ ObjType=30
 Agarrable=0
 Valor=21
 Crucial=0
+
+[OBJ1293]
+Name=Tunica del conquistador Abissal
+GrhIndex=33133
+ObjType=3
+NumRopaje=683
+Agarrable=0
+MaxDef=5
+MinDef=2
+Valor=600
+Crucial=1

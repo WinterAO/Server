@@ -31,7 +31,7 @@ Option Explicit
 
 #If False Then
 
-    Dim X, Y, Map, K, Errhandler, obj, index, n, Email As Variant
+    Dim X, Y, Map, K, errHandler, obj, index, n, Email As Variant
 
 #End If
 
@@ -449,18 +449,6 @@ Private Sub LoadConstants()
     ' Paths
     IniPath = App.Path & "\"
     DatPath = App.Path & "\Dat\"
-    CharPath = App.Path & "\Charfile\"
-    AccountPath = App.Path & "\Account\"
-    
-    ' Verifico si existe la carpeta donde se guardan las cuentas.
-    If LenB(Dir$(AccountPath, vbDirectory)) = 0 Then
-        Call MkDir(AccountPath)
-    End If
-    
-    ' Verifico si existe la carpeta donde se guardan los personajes.
-    If LenB(Dir$(CharPath, vbDirectory)) = 0 Then
-        Call MkDir(CharPath)
-    End If
     
     'Lorwik: Nueva subida de Skills, subira de 2 en 2 hasta el lvl max.
     LevelSkill(1).LevelValue = 2
@@ -851,7 +839,7 @@ Public Sub EfectoLluvia(ByVal Userindex As Integer)
     '
     '***************************************************
 
-    On Error GoTo Errhandler
+    On Error GoTo errHandler
 
     If UserList(Userindex).flags.UserLogged Then
         If Intemperie(Userindex) Then
@@ -867,7 +855,7 @@ Public Sub EfectoLluvia(ByVal Userindex As Integer)
     End If
     
     Exit Sub
-Errhandler:
+errHandler:
     LogError ("Error en EfectoLluvia")
 
 End Sub
@@ -1790,7 +1778,7 @@ Private Sub InicializarSonidos()
     
 End Sub
 
-Public Sub LogGlobal(ByVal str As String)
+Public Sub LogGlobal(ByVal Str As String)
 '***************************************************
 'Autor: Lorwik
 'Fecha: 09/06/2020
@@ -1802,7 +1790,7 @@ Public Sub LogGlobal(ByVal str As String)
     nfile = FreeFile ' obtenemos un canal
     Open App.Path & "\logs\GlobalChat(" & Month(Date) & "-" & Year(Date) & ").log" For Append Shared As #nfile
     
-        Print #nfile, Date & " " & time & " " & str
+        Print #nfile, Date & " " & time & " " & Str
         
     Close #nfile
 

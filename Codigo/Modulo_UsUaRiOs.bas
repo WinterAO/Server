@@ -550,7 +550,7 @@ Public Sub MakeUserChar(ByVal toMap As Boolean, _
     '15/01/2010: ZaMa - Ahora se envia el color del nick.
     '*************************************************
 
-    On Error GoTo Errhandler
+    On Error GoTo errHandler
 
     Dim CharIndex  As Integer
 
@@ -643,7 +643,7 @@ Public Sub MakeUserChar(ByVal toMap As Boolean, _
 
     Exit Sub
 
-Errhandler:
+errHandler:
     LogError ("MakeUserChar: num: " & Err.Number & " desc: " & Err.description)
     'Resume Next
     Call CloseSocket(Userindex)
@@ -685,7 +685,7 @@ Public Sub CheckUserLevel(ByVal Userindex As Integer, Optional ByVal PrintInCons
     Dim DistVida(1 To 5) As Integer
     Dim GI               As Integer 'Guild Index
     
-    On Error GoTo Errhandler
+    On Error GoTo errHandler
     
     WasNewbie = EsNewbie(Userindex)
     
@@ -948,7 +948,7 @@ Public Sub CheckUserLevel(ByVal Userindex As Integer, Optional ByVal PrintInCons
     
     Exit Sub
 
-Errhandler:
+errHandler:
     Call LogError("Error en la subrutina CheckUserLevel - Error : " & Err.Number & " - Description : " & Err.description)
 
 End Sub
@@ -1958,7 +1958,7 @@ Sub Tilelibre(ByRef Pos As WorldPos, _
     '23/01/2007 -> Pablo (ToxicWaste): El agua es ahora un TileLibre agregando las condiciones necesarias.
     '18/09/2010: ZaMa - Aplico optimizacion de busqueda de tile libre en forma de rombo.
     '**************************************************************
-    On Error GoTo Errhandler
+    On Error GoTo errHandler
 
     Dim Found As Boolean
 
@@ -2009,7 +2009,7 @@ Sub Tilelibre(ByRef Pos As WorldPos, _
     
     Exit Sub
     
-Errhandler:
+errHandler:
     Call LogError("Error en Tilelibre. Error: " & Err.Number & " - " & Err.description)
 
 End Sub
@@ -2723,7 +2723,7 @@ Public Function FarthestPet(ByVal Userindex As Integer) As Integer
     'Last Modify Date: 18/11/2009
     'Devuelve el indice de la mascota mas lejana.
     '**************************************************************
-    On Error GoTo Errhandler
+    On Error GoTo errHandler
     
     Dim PetIndex      As Integer
 
@@ -2769,7 +2769,7 @@ Public Function FarthestPet(ByVal Userindex As Integer) As Integer
 
     Exit Function
     
-Errhandler:
+errHandler:
     Call LogError("Error en FarthestPet")
 
 End Function

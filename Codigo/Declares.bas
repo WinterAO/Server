@@ -1990,11 +1990,6 @@ Public IniPath                            As String
 ''
 'Ruta base para guardar los chars
 Public CharPath                           As String
-
-''
-'Ruta para guardar las cuentas
-Public AccountPath                        As String
-
 ''
 'Ruta base para los archivos de mapas
 Public MapPath                            As String
