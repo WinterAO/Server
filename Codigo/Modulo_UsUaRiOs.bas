@@ -684,10 +684,12 @@ Public Sub CheckUserLevel(ByVal Userindex As Integer, Optional ByVal PrintInCons
     Dim aux              As Integer
     Dim DistVida(1 To 5) As Integer
     Dim GI               As Integer 'Guild Index
+    Dim SubiodeLvL       As Boolean
     
     On Error GoTo errHandler
     
     WasNewbie = EsNewbie(Userindex)
+    SubiodeLvL = False
     
     With UserList(Userindex)
 
@@ -868,7 +870,6 @@ Public Sub CheckUserLevel(ByVal Userindex As Integer, Optional ByVal PrintInCons
 
             End If
             
-            
             'Notificamos al user
             If PrintInConsole Then
                 If AumentoHP > 0 Then
@@ -892,6 +893,9 @@ Public Sub CheckUserLevel(ByVal Userindex As Integer, Optional ByVal PrintInCons
 
                 End If
             End If
+            
+            'Marcamos que subio del lvl
+            SubiodeLvL = True
             
             Call SendData(SendTarget.ToPCArea, Userindex, PrepareMessageCreateFX(UserList(Userindex).Char.CharIndex, FX_PASA_NIVEL, 0))
             
@@ -943,8 +947,9 @@ Public Sub CheckUserLevel(ByVal Userindex As Integer, Optional ByVal PrintInCons
     
     Call WriteUpdateUserStats(Userindex)
     
-    'Guardamos los datos del usuario.
-    Call SaveUser(Userindex, True)
+    'Si subio de nivel guardamos los datos del usuario.
+    If SubiodeLvL Then _
+        Call SaveUser(Userindex, True)
     
     Exit Sub
 
