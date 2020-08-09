@@ -318,13 +318,6 @@ Public Sub GameTimer()
         End With
 
     Next iUserIndex
-    
-    'BOTS:
-    For i = 1 To MAX_BOTS
-    
-        If BotList(i).Invocado Then IA_Action (i)
-    
-    Next i
 
     Exit Sub
 

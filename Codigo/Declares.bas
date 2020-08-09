@@ -1495,8 +1495,6 @@ Public Type UserFlags
     ParalizedByIndex As Integer
     ParalizedByNpcIndex As Integer
     
-    TargetBot As Byte
-    
     Global As Byte 'Indica si el usuario puede usar el global
     
     CasteoSpell As tCasteoSpell
@@ -1926,7 +1924,6 @@ Public Type MapBlock
     TileExit As WorldPos
     Trigger As eTrigger
     Particulas As Integer
-    BotIndex As Byte
     
 End Type
 

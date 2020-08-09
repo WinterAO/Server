@@ -1734,7 +1734,6 @@ Sub ResetUserFlags(ByVal Userindex As Integer)
         .ParalizedBy = vbNullString
         .ParalizedByIndex = 0
         .ParalizedByNpcIndex = 0
-        .TargetBot = 0
         .Global = 0
 
         Call ResetCasteo(Userindex)

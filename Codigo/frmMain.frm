@@ -36,7 +36,7 @@ Begin VB.Form frmMain
       Index           =   2
       Left            =   8880
       Style           =   1  'Graphical
-      TabIndex        =   28
+      TabIndex        =   27
       Top             =   5400
       Width           =   1935
    End
@@ -47,7 +47,7 @@ Begin VB.Form frmMain
       Index           =   1
       Left            =   6840
       Style           =   1  'Graphical
-      TabIndex        =   27
+      TabIndex        =   26
       Top             =   5400
       Width           =   1935
    End
@@ -58,7 +58,7 @@ Begin VB.Form frmMain
       Index           =   0
       Left            =   5160
       Style           =   1  'Graphical
-      TabIndex        =   26
+      TabIndex        =   25
       Top             =   5400
       Width           =   1575
    End
@@ -68,18 +68,10 @@ Begin VB.Form frmMain
       Height          =   255
       Left            =   8040
       Locked          =   -1  'True
-      TabIndex        =   25
+      TabIndex        =   24
       Text            =   "0"
       Top             =   240
       Width           =   975
-   End
-   Begin VB.CommandButton cmdCommand3 
-      Caption         =   "SpawnBOT"
-      Height          =   360
-      Left            =   9720
-      TabIndex        =   23
-      Top             =   120
-      Width           =   630
    End
    Begin VB.TextBox txtRecordOnline 
       Alignment       =   2  'Center
@@ -301,7 +293,7 @@ Begin VB.Form frmMain
       ForeColor       =   &H00FFFFFF&
       Height          =   195
       Left            =   5280
-      TabIndex        =   24
+      TabIndex        =   23
       Top             =   240
       Width           =   2820
    End
@@ -742,7 +734,7 @@ End Sub
 
 Private Sub AutoSave_Timer()
 
-    On Error GoTo Errhandler
+    On Error GoTo errHandler
 
     'fired every minute
     Static Minutos          As Long
@@ -813,7 +805,7 @@ Private Sub AutoSave_Timer()
     '<<<<<-------- Log the number of users online ------>>>
 
     Exit Sub
-Errhandler:
+errHandler:
     Call LogError("Error en TimerAutoSave " & Err.Number & ": " & Err.description)
 
     Resume Next
@@ -852,10 +844,6 @@ Private Sub cmdApagarServidor_Click()
 
     Call CloseServer
     
-End Sub
-
-Private Sub cmdCommand3_Click()
-    Call ModBOTS.ia_Spawn(Ramx)
 End Sub
 
 Private Sub cmdConfiguracion_Click()
