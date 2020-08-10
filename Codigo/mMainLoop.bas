@@ -442,9 +442,7 @@ Public Sub PasarSegundo()
                     End If
                     
                 End If
-                
-                'Sacamos energia
-                If Lloviendo Then Call EfectoLluvia(i)
+
                 
                 If Not .Pos.Map = 0 Then
 

@@ -300,7 +300,7 @@ Begin VB.Form frmMain
    Begin VB.Label lblLloviendoInfo 
       Appearance      =   0  'Flat
       BackColor       =   &H00000000&
-      Caption         =   "Esta lloviendo? Cargando..."
+      Caption         =   "Estado del mundo: Cargando..."
       ForeColor       =   &H00FFFF80&
       Height          =   255
       Left            =   5160
@@ -1062,7 +1062,7 @@ Private Sub SetSystray()
 
     Dim nid As NOTIFYICONDATA
     
-    S = "ARGENTUM ONLINE LIBRE - http://www.ArgentumOnline.org"
+    S = "WINTER AO - http://winterao.com.ar"
     nid = setNOTIFYICONDATA(frmMain.hWnd, vbNull, NIF_MESSAGE Or NIF_ICON Or NIF_TIP, WM_MOUSEMOVE, frmMain.Icon, S)
     i = Shell_NotifyIconA(NIM_ADD, nid)
         
@@ -1083,14 +1083,16 @@ Private Sub tLluviaEvent()
             If RandomNumber(1, 100) <= 2 Then
                 Lloviendo = True
                 MinutosSinLluvia = 0
-                Call SendData(SendTarget.ToAll, 0, PrepareMessageRainToggle())
+                'Call SendData(SendTarget.ToAll, 0, PrepareMessageActualizarClima())
+                Call SortearClima
 
             End If
 
         ElseIf MinutosSinLluvia >= 1440 Then
             Lloviendo = True
             MinutosSinLluvia = 0
-            Call SendData(SendTarget.ToAll, 0, PrepareMessageRainToggle())
+            'Call SendData(SendTarget.ToAll, 0, PrepareMessageActualizarClima())
+            Call SortearClima
 
         End If
 
@@ -1099,14 +1101,16 @@ Private Sub tLluviaEvent()
 
         If MinutosLloviendo >= 5 Then
             Lloviendo = False
-            Call SendData(SendTarget.ToAll, 0, PrepareMessageRainToggle())
+            'Call SendData(SendTarget.ToAll, 0, PrepareMessageActualizarClima())
+            Call SortearClima
             MinutosLloviendo = 0
         Else
 
             If RandomNumber(1, 100) <= 2 Then
                 Lloviendo = False
                 MinutosLloviendo = 0
-                Call SendData(SendTarget.ToAll, 0, PrepareMessageRainToggle())
+                'Call SendData(SendTarget.ToAll, 0, PrepareMessageActualizarClima())
+                Call SortearClima
 
             End If
 

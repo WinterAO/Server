@@ -60,7 +60,7 @@ Desc=Solo debes acabar con el Unicornio, pero ten cuidado, no es tarea fácil, m
 RequiredLevel=1
  
 RequiredNPCs=1
-RequiredNPC1=608-1
+RequiredNPC1=607-1
 
 RewardEXP=500
 RewardGLD=3500
@@ -74,9 +74,9 @@ Desc=Hoy en dia todos quieren tener su propia hermandad, pero muchos no son dign
 RequiredLevel=40
  
 RequiredNPCs=3
-RequiredNPC1=1050-1
-RequiredNPC2=1051-1
-RequiredNPC3=1052-1
+RequiredNPC1=1001-1
+RequiredNPC2=1002-1
+RequiredNPC3=1003-1
 
 RequiredOBJs=3
 RequiredOBJ1=1252-1
@@ -95,9 +95,9 @@ Desc=Un buen lider no es aquel en da ordenes, es aquel en quien sus compañeros 
 RequiredLevel=40
  
 RequiredNPCs=3
-RequiredNPC1=1050-1
-RequiredNPC2=1051-1
-RequiredNPC3=1052-1
+RequiredNPC1=1001-1
+RequiredNPC2=1002-1
+RequiredNPC3=1003-1
 
 RequiredOBJs=3
 RequiredOBJ1=1252-1
