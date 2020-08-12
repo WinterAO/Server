@@ -95,7 +95,7 @@ Public Sub MuereNpc(ByVal NPCIndex As Integer, ByVal UserIndex As Integer)
     '23/05/2010: ZaMa - El usuario pierde la pertenencia del npc.
     '13/07/2010: ZaMa - Optimizaciones de logica en la seleccion de pretoriano, y el posible cambio de alencion del usuario.
     '********************************************************
-    On Error GoTo Errhandler
+    On Error GoTo errHandler
 
     Dim MiNPC As NPC
 
@@ -316,7 +316,7 @@ Public Sub MuereNpc(ByVal NPCIndex As Integer, ByVal UserIndex As Integer)
 
     Exit Sub
 
-Errhandler:
+errHandler:
     Call LogError("Error en MuereNpc - Error: " & Err.Number & " - Desc: " & Err.description)
 
 End Sub
@@ -508,7 +508,7 @@ Public Sub QuitarNPC(ByVal NPCIndex As Integer)
     'Last Modification: 16/11/2009
     '16/11/2009: ZaMa - Now npcs lose their owner
     '***************************************************
-    On Error GoTo Errhandler
+    On Error GoTo errHandler
 
     '¿Es un NPC de invocacion? Reseteamos la invocacion
     If Npclist(NPCIndex).flags.Invocacion = 1 Then _
@@ -549,7 +549,7 @@ Public Sub QuitarNPC(ByVal NPCIndex As Integer)
 
     Exit Sub
 
-Errhandler:
+errHandler:
     Call LogError("Error en QuitarNPC")
 
 End Sub
@@ -561,7 +561,7 @@ Public Sub QuitarPet(ByVal UserIndex As Integer, ByVal NPCIndex As Integer)
     'Last Modification: 18/11/2009
     'Kills a pet
     '***************************************************
-    On Error GoTo Errhandler
+    On Error GoTo errHandler
 
     Dim i        As Integer
 
@@ -590,7 +590,7 @@ Public Sub QuitarPet(ByVal UserIndex As Integer, ByVal NPCIndex As Integer)
     
     Exit Sub
 
-Errhandler:
+errHandler:
     Call LogError("Error en QuitarPet. Error: " & Err.Number & " Desc: " & Err.description & " NpcIndex: " & NPCIndex & " UserIndex: " & UserIndex & " PetIndex: " & PetIndex)
 
 End Sub
@@ -626,7 +626,7 @@ Public Function CrearNPC(NroNPC As Integer, _
 
     Dim Pos            As WorldPos
 
-    Dim NEWPOS         As WorldPos
+    Dim newPos         As WorldPos
 
     Dim altpos         As WorldPos
 
@@ -674,19 +674,19 @@ Public Function CrearNPC(NroNPC As Integer, _
             Pos.X = RandomNumber(MinXBorder, MaxXBorder)    'Obtenemos posicion al azar en x
             Pos.Y = RandomNumber(MinYBorder, MaxYBorder)    'Obtenemos posicion al azar en y
             
-            Call ClosestLegalPos(Pos, NEWPOS, PuedeAgua, PuedeTierra)  'Nos devuelve la posicion valida mas cercana
+            Call ClosestLegalPos(Pos, newPos, PuedeAgua, PuedeTierra)  'Nos devuelve la posicion valida mas cercana
 
-            If NEWPOS.X <> 0 And NEWPOS.Y <> 0 Then
-                altpos.X = NEWPOS.X
-                altpos.Y = NEWPOS.Y
+            If newPos.X <> 0 And newPos.Y <> 0 Then
+                altpos.X = newPos.X
+                altpos.Y = newPos.Y
             End If
 
             'Si X e Y son iguales a 0 significa que no se encontro posicion valida
-            If LegalPos(NEWPOS.Map, NEWPOS.X, NEWPOS.Y, PuedeAgua, PuedeTierra) And Not HayPCarea(NEWPOS) And TestSpawnTrigger(NEWPOS, PuedeAgua) Then
+            If LegalPos(newPos.Map, newPos.X, newPos.Y, PuedeAgua, PuedeTierra) And Not HayPCarea(newPos) And TestSpawnTrigger(newPos, PuedeAgua) Then
                 'Asignamos las nuevas coordenas solo si son validas
-                Npclist(nIndex).Pos.Map = NEWPOS.Map
-                Npclist(nIndex).Pos.X = NEWPOS.X
-                Npclist(nIndex).Pos.Y = NEWPOS.Y
+                Npclist(nIndex).Pos.Map = newPos.Map
+                Npclist(nIndex).Pos.X = newPos.X
+                Npclist(nIndex).Pos.Y = newPos.Y
                 PosicionValida = True
             End If
                 
@@ -701,22 +701,22 @@ Public Function CrearNPC(NroNPC As Integer, _
                     PosicionValida = True
                 Else
                     ' WyroX: Superï¿½ la cantidad de intentos sin ninguna posiciï¿½n vï¿½lida? Probamos un intento mï¿½s pero sin el flag "PuedeTierra"
-                    Call ClosestLegalPos(Pos, NEWPOS, PuedeAgua)
+                    Call ClosestLegalPos(Pos, newPos, PuedeAgua)
 
-                    If NEWPOS.X <> 0 And NEWPOS.Y <> 0 Then
-                        Npclist(nIndex).Pos.Map = NEWPOS.Map
-                        Npclist(nIndex).Pos.X = NEWPOS.X
-                        Npclist(nIndex).Pos.Y = NEWPOS.Y
+                    If newPos.X <> 0 And newPos.Y <> 0 Then
+                        Npclist(nIndex).Pos.Map = newPos.Map
+                        Npclist(nIndex).Pos.X = newPos.X
+                        Npclist(nIndex).Pos.Y = newPos.Y
                         PosicionValida = True
                     Else
                         altpos.X = 50
                         altpos.Y = 50
-                        Call ClosestLegalPos(altpos, NEWPOS)
+                        Call ClosestLegalPos(altpos, newPos)
 
-                        If NEWPOS.X <> 0 And NEWPOS.Y <> 0 Then
-                            Npclist(nIndex).Pos.Map = NEWPOS.Map
-                            Npclist(nIndex).Pos.X = NEWPOS.X
-                            Npclist(nIndex).Pos.Y = NEWPOS.Y
+                        If newPos.X <> 0 And newPos.Y <> 0 Then
+                            Npclist(nIndex).Pos.Map = newPos.Map
+                            Npclist(nIndex).Pos.X = newPos.X
+                            Npclist(nIndex).Pos.Y = newPos.Y
                             PosicionValida = True
                         Else
                             Call QuitarNPC(nIndex)
@@ -787,7 +787,7 @@ Public Sub MakeNPCChar(ByVal toMap As Boolean, _
     
     If Not toMap Then
         Call WriteCharacterCreate(sndIndex, Npclist(NPCIndex).Char.body, Npclist(NPCIndex).Char.Head, Npclist(NPCIndex).Char.Heading, Npclist(NPCIndex).Char.CharIndex, X, Y, 0, 0, 0, 0, 0, NombreNPC, color, 0, NingunAura, NingunAura, Npclist(NPCIndex).NoShadow, EstadoQuest)
-
+'
     Else
         Call AgregarNpc(NPCIndex)
 
@@ -804,8 +804,6 @@ Public Sub ChangeNPCChar(ByVal NPCIndex As Integer, _
     'Last Modification: -
     '
     '***************************************************
-
-    Dim EstadoQuest As Integer
     
     If NPCIndex > 0 Then
 
@@ -813,7 +811,7 @@ Public Sub ChangeNPCChar(ByVal NPCIndex As Integer, _
             .body = body
             .Head = Head
             .Heading = Heading
-      
+            
             Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessageCharacterChange(body, Head, Heading, .CharIndex, 0, 0, 0, 0, 0, NingunAura, NingunAura))
 
         End With
@@ -944,7 +942,7 @@ Function NextOpenNPC() As Integer
     '
     '***************************************************
 
-    On Error GoTo Errhandler
+    On Error GoTo errHandler
 
     Dim LoopC As Long
       
@@ -957,7 +955,7 @@ Function NextOpenNPC() As Integer
     NextOpenNPC = LoopC
     Exit Function
 
-Errhandler:
+errHandler:
     Call LogError("Error en NextOpenNPC")
 
 End Function
@@ -998,7 +996,7 @@ Function SpawnNpc(ByVal NPCIndex As Integer, _
     '23/01/2007 -> Pablo (ToxicWaste): Creates an NPC of the type Npcindex
     '06/15/2008 -> Optimize el codigo. (NicoNZ)
     '***************************************************
-    Dim NEWPOS         As WorldPos
+    Dim newPos         As WorldPos
 
     Dim altpos         As WorldPos
 
@@ -1027,15 +1025,15 @@ Function SpawnNpc(ByVal NPCIndex As Integer, _
     PuedeAgua = Npclist(nIndex).flags.AguaValida
     PuedeTierra = Not Npclist(nIndex).flags.TierraInvalida = 1
         
-    Call ClosestLegalPos(Pos, NEWPOS, PuedeAgua, PuedeTierra)  'Nos devuelve la posicion valida mas cercana
+    Call ClosestLegalPos(Pos, newPos, PuedeAgua, PuedeTierra)  'Nos devuelve la posicion valida mas cercana
     Call ClosestLegalPos(Pos, altpos, PuedeAgua)
     'Si X e Y son iguales a 0 significa que no se encontro posicion valida
 
-    If NEWPOS.X <> 0 And NEWPOS.Y <> 0 Then
+    If newPos.X <> 0 And newPos.Y <> 0 Then
         'Asignamos las nuevas coordenas solo si son validas
-        Npclist(nIndex).Pos.Map = NEWPOS.Map
-        Npclist(nIndex).Pos.X = NEWPOS.X
-        Npclist(nIndex).Pos.Y = NEWPOS.Y
+        Npclist(nIndex).Pos.Map = newPos.Map
+        Npclist(nIndex).Pos.X = newPos.X
+        Npclist(nIndex).Pos.Y = newPos.Y
         PosicionValida = True
     Else
 
@@ -1059,7 +1057,7 @@ Function SpawnNpc(ByVal NPCIndex As Integer, _
     End If
 
     'asignamos las nuevas coordenas
-    Map = NEWPOS.Map
+    Map = newPos.Map
     X = Npclist(nIndex).Pos.X
     Y = Npclist(nIndex).Pos.Y
     

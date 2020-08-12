@@ -442,7 +442,6 @@ Public Sub PasarSegundo()
                     End If
                     
                 End If
-
                 
                 If Not .Pos.Map = 0 Then
 

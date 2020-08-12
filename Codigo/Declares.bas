@@ -1188,7 +1188,7 @@ Public Type tUserQuest
 End Type
  
 Public Type tQuestStats
-
+    
     Quests(1 To MAXQUESTS) As tUserQuest
     NumQuestsDone As Integer
 
@@ -1598,7 +1598,7 @@ Public Type AccountCharacters
     Class As Byte
     race As Byte
     Map As Integer
-    Level As Byte
+    level As Byte
     Gold As Long
     criminal As Boolean
     dead As Boolean
@@ -1918,7 +1918,7 @@ Public Type MapBlock
 
     Blocked As Byte
     Graphic(1 To 4) As Long
-    Userindex As Integer
+    UserIndex As Integer
     NPCIndex As Integer
     ObjInfo As obj
     TileExit As WorldPos

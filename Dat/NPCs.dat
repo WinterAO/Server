@@ -144,10 +144,14 @@ Hostile=0
 Domable=0
 Comercia=1
 TipoItems=11
-NROITEMS=3
-Obj1=1202-1000 'Pocion Azul
-Obj2=1203-1000 'Pocion Roja
-Obj3=166-1000 'Pocion Violeta
+NROITEMS=7
+Obj1=1202-1000 'Pocion Azul de Principiantes
+Obj2=1203-1000 'Pocion Roja de Principiantes
+Obj3=461-1000 'Pocion Roja (Newbie)
+Obj4=856-1000 'Pocion Azul (Newbie)
+Obj5=461-1000 'Pocion verde (Newbie)
+Obj6=855-1000 'Pocion Amarilla (Newbie)
+Obj7=166-1000 'Pocion Violeta
 BackUp=1
 
 [NPC4]
@@ -284,13 +288,15 @@ Hostile=0
 Domable=0
 Comercia=1
 TipoItems=11
-NROITEMS=6
-Obj1=36-1000 'Pocion Amarilla
-Obj2=37-1000 'Pocion Azul
-Obj3=38-1000 'Pocion Roja
-Obj4=39-1000 'Pocion Verde
-Obj5=166-1000 'Pocion Violeta
-Obj6=645-1000 'Pocion Negra
+NROITEMS=8
+Obj1=37-1000 'Pocion Azul
+Obj2=38-1000 'Pocion Roja
+Obj3=1202-1000 'Pocion Azul de Principiantes
+Obj4=1203-1000 'Pocion Roja de Principiantes
+Obj5=39-1000 'Pocion Verde
+Obj6=36-1000 'Pocion Amarilla
+Obj7=166-1000 'Pocion Violeta
+Obj8=645-1000 'Pocion Negra
 BackUp=1
 
 [NPC15] 'Herrero
@@ -1262,6 +1268,486 @@ NROITEMS=0
 BackUp=1
 
 ##############################################################
+############## NPCS VENDEDORES DE ISLA ZHARKEL ###############
+##############################################################
+
+[NPC150]
+Name=Gobernador
+NpcType=11
+Desc=Despues de la desaparición de Zharkel, esta isla era una bonita ciudad para vivir, hasta que emergio la entrada a ese antiguo Templo y se asento el ejercito rebelde, entonces la gente se volvio loca!.
+Head=313
+Heading=1
+Body=493
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=0
+BackUp=0
+Ciudad=3
+
+[NPC151]
+Name=Sacerdote
+NpcType=1
+Desc=Hijo mio, esta ciudad es muy peligrosa ¡andate con cuidado! ¿Necesitas una cura?
+Head=314
+Heading=1
+Body=159
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=0
+BackUp=0
+
+[NPC152]
+Name=Banquero
+NpcType=4
+Desc=Hola, bienvenido a la sede de la Isla Zharkel de la cadena de finanzas Goliath. Somos la cadena mas grande en Argentum, contamos con bancos en las ciudades mas importantes.
+Head=428
+Heading=1
+Body=299
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=0
+BackUp=0
+
+[NPC153]
+Name=Marinero
+NpcType=15
+Desc=¡Corre! ¡El barco va a zarpar!
+Head=33
+Heading=1
+Body=174
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=1
+TipoItems=20
+NROITEMS=0
+BackUp=1
+
+[NPC154] 'Vende Pociones
+Name=Asilithus
+NpcType=0
+Desc=Acercate joven, vas a necesitar pociones ¡seguro!
+Head=488
+Heading=1
+Body=275
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Comercia=1
+TipoItems=11
+NROITEMS=0
+BackUp=1
+
+[NPC155] 'Herrero
+Name=Herrero
+NpcType=0
+Desc=¡Hey! No pensaras aventurarte por estas tierras hostiles sin un arma ¿verdad?
+Head=417
+Heading=1
+Body=374
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=1
+TipoItems=2
+NROITEMS=0
+BackUp=1
+
+[NPC156] 'Sastre Isla Zharkel
+Name=Sastre
+NpcType=0
+Desc=Solo uso la mejor tela, la de mayor calidad!
+Head=484
+Heading=1
+Body=298
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=1
+TipoItems=3
+NROITEMS=0
+BackUp=1
+
+[NPC157] 'Armaduras Isla Zharkel
+Name=Armaduras
+Desc=En estas tierras es muy importante estar bien defendido, cualquiera te puede atacar por la espalda.
+Head=316
+Body=294
+Heading=4
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=1
+TipoItems=3
+NROITEMS=0
+BackUp=1
+
+[NPC158] 'Provisiones Isla Zharkel
+Name=Thorin
+NpcType=0
+Desc=Debes estar muy hambriendo y sediento para haber llegado hasta aquí. Te puedo ofrecer algunos víveres.
+Head=495
+Heading=1
+Body=301
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=1
+TipoItems=1
+NROITEMS=0
+BackUp=1
+
+[NPC159] 'VendeMagia Isla Zharkel
+Name=Mago
+NpcType=0
+Desc=¿Quieres aprender los secretos del mismisimo Zharkel? Ven, te puedo enseñar algunos hechizos
+Head=401
+Heading=1
+Body=310
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=1
+TipoItems=24
+NROITEMS=0
+BackUp=1
+
+[NPC160] 'Isla Zharkel Shakoud
+Name=Pescador
+NpcType=0
+Desc=En este rincon del mundo existen peces y otras criaturas marinas nunca vista. Algunos hablan de una criatura monstruosa en las profundidades del templo sumergido.
+Head=422
+Heading=1
+Body=300
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=1
+TipoItems=1
+NROITEMS=0
+BackUp=1
+
+[NPC161] 'Minero
+Name=Minero
+NpcType=0
+Desc=Amigo, ¿te has enterado de que han encontrado oro en el templo sumergido? ¡La gente se ha vuelto loca! Puedo venderte buenas herramientas para extraer todo ese oro.
+Head=412
+Heading=1
+Body=292
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=1
+TipoItems=23
+NROITEMS=0
+BackUp=1
+
+[NPC162] 'Mercader
+Name=Mercader
+NpcType=0
+Desc=Hola buen amigo, pertenezco al gremio de mercaderes de Winter y viajamos por todas las ciudades comprando y vendiendo todo tipo de mercancia.
+Head=7
+Heading=1
+Body=3
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=1
+TipoItems=1000
+NROITEMS=0
+BackUp=1
+
+##############################################################
+############## NPCS VENDEDORES DE HAVERWOOD ##################
+##############################################################
+
+[NPC200]
+Name=Gobernador
+NpcType=11
+Desc=Hola Joven, estas tierras son muy frias, pero es un lugar tranquilo para vivir. Si deseas establecerte escribe /HOGAR
+Head=313
+Heading=1
+Body=493
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=0
+BackUp=0
+Ciudad=2
+
+[NPC201]
+Name=Sacerdote
+NpcType=1
+Desc=¿Tienes frio? Ven, acercate y deja que cure tus heridas.
+Head=314
+Heading=1
+Body=159
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=0
+BackUp=0
+
+[NPC202]
+Name=Banquero
+NpcType=4
+Desc=Hola, bienvenido a la sede de Haverwood de la cadena de finanzas Goliath. Somos la cadena mas grande en Argentum, contamos con bancos en las ciudades mas importantes.
+Head=428
+Heading=1
+Body=299
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=0
+BackUp=0
+
+[NPC203]
+Name=Marinero
+NpcType=15
+Desc=¡Corre! ¡El barco va a zarpar!
+Head=33
+Heading=1
+Body=174
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=1
+TipoItems=20
+NROITEMS=0
+BackUp=1
+
+[NPC204] 'Vende Pociones
+Name=Krona
+NpcType=0
+Desc=Mis pociones te daran fuerzas y curaran cualquier dolencia.
+Head=488
+Heading=1
+Body=275
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Comercia=1
+TipoItems=11
+NROITEMS=0
+BackUp=1
+
+[NPC205] 'Herrero
+Name=Herrero
+NpcType=0
+Desc=Forjamos las mejores armas con el mejor acero de estas tierras.
+Head=417
+Heading=1
+Body=374
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=1
+TipoItems=2
+NROITEMS=0
+BackUp=1
+
+[NPC206] 'Sastre Haverwood
+Name=Sastre
+NpcType=0
+Desc=Amigo, en estas tierras heladas debes ir bien abrigado o podrias morir.
+Head=484
+Heading=1
+Body=298
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=1
+TipoItems=3
+NROITEMS=0
+BackUp=1
+
+[NPC207] 'Armaduras Haverwood
+Name=Armaduras
+Desc=Las armaduras de Haverwood te protegen a la vez que te mantienen calentito.
+Head=316
+Body=294
+Heading=4
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=1
+TipoItems=3
+NROITEMS=0
+BackUp=1
+
+[NPC208] 'Provisiones Haverwood
+Name=Thorin
+NpcType=0
+Desc=No querras quedar atrapado en la nieve sin provisiones ¿no?
+Head=495
+Heading=1
+Body=301
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=1
+TipoItems=1
+NROITEMS=0
+BackUp=1
+
+[NPC209] 'VendeMagia Haverwood
+Name=Mago
+NpcType=0
+Desc=En este rincon del mundo encontraras los mayores secretos arcanos.
+Head=401
+Heading=1
+Body=310
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=1
+TipoItems=24
+NROITEMS=0
+BackUp=1
+
+[NPC210] 'Pescador Haverwood
+Name=Pescador
+NpcType=0
+Desc=Es curioso que existan peces capaces de sobrevivir a estas bajas temperaturas.
+Head=422
+Heading=1
+Body=300
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=1
+TipoItems=1
+NROITEMS=0
+BackUp=1
+
+[NPC211] 'Minero
+Name=Minero
+NpcType=0
+Desc=Los aventureros hablan de un extraño cristal al oeste de la ciudad. Necesitaras herramientas para extraerlas.
+Head=412
+Heading=1
+Body=292
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=1
+TipoItems=23
+NROITEMS=0
+BackUp=1
+
+[NPC212] 'Mercader
+Name=Mercader
+NpcType=0
+Desc=Hola buen amigo, pertenezco al gremio de mercaderes de Winter y viajamos por todas las ciudades comprando y vendiendo todo tipo de mercancia.
+Head=7
+Heading=1
+Body=3
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=1
+TipoItems=1000
+NROITEMS=0
+BackUp=1
+
+[NPC213] 'Carpintera
+Name=Carpintera
+NpcType=0
+Desc=Los arboles helados ofrecen un excelente material de construcción, pero tambien son muy duros y dificiles de talar.
+Head=411
+Heading=1
+Body=293
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=1
+TipoItems=20
+NROITEMS=0
+BackUp=1
+
+##############################################################
 ####################### HOSTILES #############################
 ##############################################################
 
@@ -1322,7 +1808,7 @@ MinHIT=1
 ELV=5
 DEF=0
 PoderAtaque=5
-PoderEvasion=5
+PoderEvasion=0
 Snd1=118
 Snd2=119
 Snd3=14
@@ -1354,7 +1840,7 @@ ELV=5
 DEF=2
 DEFm=3
 PoderAtaque=20
-PoderEvasion=15
+PoderEvasion=5
 SND3=63
 BackUp=0
 NROITEMS=0
@@ -1778,7 +2264,7 @@ Envenena=1
 ELV=5
 DEF=0
 PoderAtaque=5
-PoderEvasion=5
+PoderEvasion=0
 Snd1=118
 Snd2=119
 Snd3=14
@@ -1841,7 +2327,7 @@ MinHIT=1
 ELV=5
 DEF=2
 PoderAtaque=20
-PoderEvasion=15
+PoderEvasion=0
 SND2=103
 BackUp=0
 NROITEMS=0
@@ -1902,7 +2388,7 @@ MinHIT=25
 ELV=10
 DEF=10
 PoderAtaque=30
-PoderEvasion=30
+PoderEvasion=10
 BackUp=0
 NROITEMS=0
 
@@ -1929,7 +2415,7 @@ MinHIT=40
 ELV=10
 DEF=13
 PoderAtaque=30
-PoderEvasion=30
+PoderEvasion=10
 BackUp=0
 NROITEMS=0
 
@@ -1956,7 +2442,7 @@ MinHIT=15
 ELV=10
 DEF=13
 PoderAtaque=30
-PoderEvasion=30
+PoderEvasion=0
 BackUp=0
 NROITEMS=0
 
@@ -1983,7 +2469,7 @@ MinHIT=10
 ELV=10
 DEF=13
 PoderAtaque=30
-PoderEvasion=30
+PoderEvasion=0
 BackUp=0
 NROITEMS=0
 
@@ -2037,7 +2523,7 @@ MinHIT=30
 ELV=10
 DEF=0
 PoderAtaque=100
-PoderEvasion=45
+PoderEvasion=15
 BackUp=0
 NROITEMS=1
 Obj1=404-1-30 'Escudo de Tortuga
@@ -2093,7 +2579,7 @@ MinHIT=5
 ELV=10
 DEF=8
 PoderAtaque=80
-PoderEvasion=25
+PoderEvasion=10
 Snd1=35
 Snd2=9
 Snd3=107
@@ -2124,7 +2610,7 @@ MinHIT=3
 ELV=10
 DEF=8
 PoderAtaque=80
-PoderEvasion=25
+PoderEvasion=10
 Snd1=35
 Snd2=9
 BackUp=0
@@ -2159,7 +2645,7 @@ MinHIT=20
 ELV=15
 DEF=19
 PoderAtaque=60
-PoderEvasion=50
+PoderEvasion=20
 BackUp=0
 NROITEMS=0
 
@@ -2186,7 +2672,7 @@ MinHIT=40
 ELV=15
 DEF=19
 PoderAtaque=60
-PoderEvasion=50
+PoderEvasion=20
 BackUp=0
 NROITEMS=0
 
@@ -2213,7 +2699,7 @@ MinHIT=15
 ELV=15
 DEF=19
 PoderAtaque=60
-PoderEvasion=50
+PoderEvasion=20
 BackUp=0
 NROITEMS=0
 
