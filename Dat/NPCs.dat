@@ -436,21 +436,16 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=24
-NROITEMS=14
-Obj1=363-1000 'Ataque de Hambre
-Obj2=199-1000 'Dardo Magico
+NROITEMS=8
+Obj1=199-1000 'Dardo Magico
+Obj2=197-1000 'Flecha Magica
 Obj3=200-1000 'Antidoto Magico
-Obj4=197-1000 'Flecha Magica
+Obj4=205-1000 'Proyectil Magico
 Obj5=201-1000 'Curar Heridas Leves
-Obj6=204-1000 'Flecha Electrica
-Obj7=318-1000 'Invisibilidad
-Obj8=380-1000 'Invocacion de Ultratumba
-Obj9=658-1000 'Vara de Fresno
-Obj10=659-1000 'Baston nudoso
-Obj11=696-1000 'Laud Magico
-Obj12=208-1000 'Flauta Magica
-Obj13=531-1000 'Descarga Electrica
-Obj14=205-1000 'Proyectil magico
+Obj6=200-1000 'Antidoto Magico
+Obj7=206-1000 'Paralizar
+Obj8=207-1000 'Remover Paralisis
+
 BackUp=1
 
 [NPC20] 'Pescador Ramx
@@ -751,7 +746,14 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=24
-NROITEMS=0
+NROITEMS=7
+Obj1=361-1000 'Tormenta de Fuego
+Obj2=197-1000 'Flecha Magica
+Obj3=205-1000 'Proyectil Magico
+Obj4=203-1000 'Curar Heridas Graves
+Obj5=200-1000 'Antidoto Magico
+Obj6=530-1000 'Inmovilizar
+Obj7=207-1000 'Remover Paralisis
 BackUp=1
 
 [NPC60] 'Pescador Shakoud
