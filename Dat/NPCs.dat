@@ -2845,7 +2845,7 @@ Obj3=12-150-50 'Oro
 Obj4=37-50-50 'Pocion Azul
 Obj5=12-5000-80 'Oro
 
-[NPC608] 
+[NPC608] 'Dungeon Newbie
 Name=Orco
 NpcType=0
 Head=0

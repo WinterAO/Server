@@ -92,7 +92,7 @@ Public Function CheckSQLStatus() As Boolean
     CheckSQLStatus = True
 End Function
 
-Sub SaveUserToDatabase(ByVal Userindex As Integer, _
+Sub SaveUserToDatabase(ByVal UserIndex As Integer, _
                        Optional ByVal SaveTimeOnline As Boolean = True)
     '*************************************************
     'Author: Juan Andres Dalmasso (CHOTS)
@@ -102,12 +102,12 @@ Sub SaveUserToDatabase(ByVal Userindex As Integer, _
 
     On Error GoTo ErrorHandler
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         If .ID > 0 Then
-            Call UpdateUserToDatabase(Userindex, SaveTimeOnline)
+            Call UpdateUserToDatabase(UserIndex, SaveTimeOnline)
         Else
-            Call InsertUserToDatabase(Userindex, SaveTimeOnline)
+            Call InsertUserToDatabase(UserIndex, SaveTimeOnline)
 
         End If
 
@@ -116,11 +116,11 @@ Sub SaveUserToDatabase(ByVal Userindex As Integer, _
     Exit Sub
 
 ErrorHandler:
-    Call LogDatabaseError("Unable to save User to Mysql Database: " & UserList(Userindex).Name & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Unable to save User to Mysql Database: " & UserList(UserIndex).Name & ". " & Err.Number & " - " & Err.description)
 
 End Sub
 
-Sub InsertUserToDatabase(ByVal Userindex As Integer, _
+Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
                          Optional ByVal SaveTimeOnline As Boolean = True)
     '*************************************************
     'Author: Juan Andres Dalmasso (CHOTS)
@@ -144,7 +144,7 @@ Sub InsertUserToDatabase(ByVal Userindex As Integer, _
 #End If
 
     'Basic user data
-    With UserList(Userindex)
+    With UserList(UserIndex)
         query = "INSERT INTO usuario SET "
         query = query & "name = '" & .Name & "', "
         query = query & "account_id = " & .AccountInfo.ID & ", "
@@ -316,11 +316,11 @@ Sub InsertUserToDatabase(ByVal Userindex As Integer, _
     Exit Sub
 
 ErrorHandler:
-    Call LogDatabaseError("Unable to INSERT User to Mysql Database: " & UserList(Userindex).Name & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Unable to INSERT User to Mysql Database: " & UserList(UserIndex).Name & ". " & Err.Number & " - " & Err.description)
 
 End Sub
 
-Sub UpdateUserToDatabase(ByVal Userindex As Integer, _
+Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
                          Optional ByVal SaveTimeOnline As Boolean = True)
     '*************************************************
     'Author: Juan Andres Dalmasso (CHOTS)
@@ -344,7 +344,7 @@ Sub UpdateUserToDatabase(ByVal Userindex As Integer, _
 #End If
 
     'Basic user data
-    With UserList(Userindex)
+    With UserList(UserIndex)
         query = "UPDATE usuario SET "
         query = query & "name = '" & .Name & "', "
         query = query & "level = " & .Stats.ELV & ", "
@@ -518,11 +518,11 @@ Sub UpdateUserToDatabase(ByVal Userindex As Integer, _
     Exit Sub
 
 ErrorHandler:
-    Call LogDatabaseError("Unable to UPDATE usuario to Mysql Database: " & UserList(Userindex).Name & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Unable to UPDATE usuario to Mysql Database: " & UserList(UserIndex).Name & ". " & Err.Number & " - " & Err.description)
 
 End Sub
 
-Public Sub UpdateUserQuest(ByVal Userindex As Integer)
+Public Sub UpdateUserQuest(ByVal UserIndex As Integer)
 '************************************************************
 'Autor: Lorwik
 'Fecha: 28/06/2020
@@ -542,7 +542,7 @@ Public Sub UpdateUserQuest(ByVal Userindex As Integer)
 #End If
     
     'Basic user data
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         For LoopC = 1 To MAXQUESTS
         
@@ -583,10 +583,10 @@ Public Sub UpdateUserQuest(ByVal Userindex As Integer)
     Exit Sub
 
 ErrorHandler:
-    Call LogDatabaseError("Unable to UPDATE usuario to Mysql Database: " & UserList(Userindex).Name & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Unable to UPDATE usuario to Mysql Database: " & UserList(UserIndex).Name & ". " & Err.Number & " - " & Err.description)
 End Sub
 
-Sub LoadUserFromDatabase(ByVal Userindex As Integer)
+Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
     '*************************************************
     'Author: Juan Andres Dalmasso (CHOTS)
     'Last modified: 09/10/2018
@@ -607,7 +607,7 @@ Sub LoadUserFromDatabase(ByVal Userindex As Integer)
 #End If
 
     'Basic user data
-    With UserList(Userindex)
+    With UserList(UserIndex)
         query = "SELECT *, DATE_FORMAT(fecha_ingreso, '%Y-%m-%d') as 'fecha_ingreso_format' FROM usuario WHERE UPPER(name) ='" & UCase$(.Name) & "';"
         Set Database_RecordSet = Database_Connection.Execute(query)
 
@@ -616,7 +616,7 @@ Sub LoadUserFromDatabase(ByVal Userindex As Integer)
         'Start setting data
         .ID = Database_RecordSet!ID
         .Name = Database_RecordSet!Name
-        .Stats.ELV = Database_RecordSet!Level
+        .Stats.ELV = Database_RecordSet!level
         .Stats.Exp = Database_RecordSet!Exp
         .Stats.ELU = Database_RecordSet!ELU
         .Genero = Database_RecordSet!genre_id
@@ -835,11 +835,11 @@ Sub LoadUserFromDatabase(ByVal Userindex As Integer)
     Exit Sub
 
 ErrorHandler:
-    Call LogDatabaseError("Unable to LOAD User from Mysql Database: " & UserList(Userindex).Name & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Unable to LOAD User from Mysql Database: " & UserList(UserIndex).Name & ". " & Err.Number & " - " & Err.description)
 
 End Sub
 
-Public Sub LoadQuestStats(ByVal Userindex As Integer)
+Public Sub LoadQuestStats(ByVal UserIndex As Integer)
     '*************************************************
     'Autor: Lorwik
     'Fecha: 23/06/2020
@@ -861,9 +861,9 @@ Public Sub LoadQuestStats(ByVal Userindex As Integer)
     If CheckSQLStatus = False Then Database_Connect
 #End If
 
-    With UserList(Userindex).QuestStats
+    With UserList(UserIndex).QuestStats
 
-        query = "SELECT * FROM quest WHERE user_id = '" & UserList(Userindex).ID & "';"
+        query = "SELECT * FROM quest WHERE user_id = '" & UserList(UserIndex).ID & "';"
         Set Database_RecordSet = Database_Connection.Execute(query)
     
         If Not Database_RecordSet.RecordCount = 0 Then
@@ -900,6 +900,8 @@ Public Sub LoadQuestStats(ByVal Userindex As Integer)
                 End If
             Wend
                 
+           Call ListarQuestsenCurso(UserIndex)
+                
         End If
 
     End With
@@ -913,7 +915,7 @@ Public Sub LoadQuestStats(ByVal Userindex As Integer)
     Exit Sub
 
 ErrorHandler:
-    Call LogDatabaseError("Unable to LOAD User from Mysql Database: " & UserList(Userindex).Name & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Unable to LOAD User from Mysql Database: " & UserList(UserIndex).Name & ". " & Err.Number & " - " & Err.description)
 
 End Sub
 
@@ -1105,7 +1107,7 @@ ErrorHandler:
 
 End Sub
 
-Public Sub MarcarPjComoQueYaVotoDatabase(ByVal Userindex As Integer, _
+Public Sub MarcarPjComoQueYaVotoDatabase(ByVal UserIndex As Integer, _
                                          ByVal NumeroEncuesta As Integer)
 
     '***************************************************
@@ -1123,7 +1125,7 @@ Public Sub MarcarPjComoQueYaVotoDatabase(ByVal Userindex As Integer, _
     If CheckSQLStatus = False Then Database_Connect
 #End If
 
-    query = "UPDATE usuario SET votes_amount = " & NumeroEncuesta & " WHERE id = " & UserList(Userindex).ID & ";"
+    query = "UPDATE usuario SET votes_amount = " & NumeroEncuesta & " WHERE id = " & UserList(UserIndex).ID & ";"
 
     Database_Connection.Execute (query)
     
@@ -1134,7 +1136,7 @@ Public Sub MarcarPjComoQueYaVotoDatabase(ByVal Userindex As Integer, _
     Exit Sub
 
 ErrorHandler:
-    Call LogDatabaseError("Error in MarcarPjComoQueYaVotoDatabase: " & UserList(Userindex).Name & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Error in MarcarPjComoQueYaVotoDatabase: " & UserList(UserIndex).Name & ". " & Err.Number & " - " & Err.description)
 
 End Sub
 
@@ -1264,7 +1266,7 @@ ErrorHandler:
 
 End Function
 
-Public Sub SendUserPunishments(ByVal Userindex As Integer, _
+Public Sub SendUserPunishments(ByVal UserIndex As Integer, _
                                        ByVal UserName As String, _
                                        ByVal Count As Integer)
 
@@ -1292,7 +1294,7 @@ Public Sub SendUserPunishments(ByVal Userindex As Integer, _
 
         While Not Database_RecordSet.EOF
 
-            Call WriteConsoleMsg(Userindex, Database_RecordSet!Number & " - " & Database_RecordSet!Reason, FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, Database_RecordSet!Number & " - " & Database_RecordSet!Reason, FontTypeNames.FONTTYPE_INFO)
 
             Database_RecordSet.MoveNext
         Wend
@@ -1948,7 +1950,7 @@ Public Function GetUserLevel(ByVal UserName As String) As Byte
 
     End If
 
-    GetUserLevel = CByte(Database_RecordSet!Level)
+    GetUserLevel = CByte(Database_RecordSet!level)
     Set Database_RecordSet = Nothing
     
 #If DBConexionUnica = 0 Then
@@ -2109,7 +2111,7 @@ Public Sub SendUserStatsTxtDatabase(ByVal sendIndex As Integer, ByVal UserName A
 
         End If
 
-        Call WriteConsoleMsg(sendIndex, "Nivel: " & Database_RecordSet!Level & "  EXP: " & Database_RecordSet!Exp & "/" & Database_RecordSet!ELU, FontTypeNames.FONTTYPE_INFO)
+        Call WriteConsoleMsg(sendIndex, "Nivel: " & Database_RecordSet!level & "  EXP: " & Database_RecordSet!Exp & "/" & Database_RecordSet!ELU, FontTypeNames.FONTTYPE_INFO)
         Call WriteConsoleMsg(sendIndex, "Energia: " & Database_RecordSet!min_sta & "/" & Database_RecordSet!max_sta, FontTypeNames.FONTTYPE_INFO)
         Call WriteConsoleMsg(sendIndex, "Salud: " & Database_RecordSet!min_hp & "/" & Database_RecordSet!max_hp, FontTypeNames.FONTTYPE_INFO)
         Call WriteConsoleMsg(sendIndex, "Mana: " & Database_RecordSet!min_man & "/" & Database_RecordSet!max_man, FontTypeNames.FONTTYPE_INFO)
@@ -2352,7 +2354,7 @@ ErrorHandler:
 
 End Sub
 
-Public Sub SendCharacterInfoDatabase(ByVal Userindex As Integer, ByVal UserName As String)
+Public Sub SendCharacterInfoDatabase(ByVal UserIndex As Integer, ByVal UserName As String)
 
     '***************************************************
     'Author: Juan Andres Dalmasso (CHOTS)
@@ -2380,7 +2382,7 @@ Public Sub SendCharacterInfoDatabase(ByVal Userindex As Integer, ByVal UserName 
     Set Database_RecordSet = Database_Connection.Execute(query)
 
     If Database_RecordSet.BOF Or Database_RecordSet.EOF Then
-        Call WriteConsoleMsg(Userindex, "Pj Inexistente", FontTypeNames.FONTTYPE_INFO)
+        Call WriteConsoleMsg(UserIndex, "Pj Inexistente", FontTypeNames.FONTTYPE_INFO)
         Exit Sub
 
     End If
@@ -2403,7 +2405,7 @@ Public Sub SendCharacterInfoDatabase(ByVal Userindex As Integer, ByVal UserName 
 
     End If
 
-    Call Protocol.WriteCharacterInfo(Userindex, UserName, Database_RecordSet!race_id, Database_RecordSet!class_id, Database_RecordSet!genre_id, Database_RecordSet!Level, Database_RecordSet!Gold, Database_RecordSet!bank_gold, Database_RecordSet!rep_average, SanitizeNullValue(Database_RecordSet!guild_requests_history, vbNullString), gName, Miembro, Database_RecordSet!pertenece_real, Database_RecordSet!pertenece_caos, Database_RecordSet!ciudadanos_matados, Database_RecordSet!criminales_matados)
+    Call Protocol.WriteCharacterInfo(UserIndex, UserName, Database_RecordSet!race_id, Database_RecordSet!class_id, Database_RecordSet!genre_id, Database_RecordSet!level, Database_RecordSet!Gold, Database_RecordSet!bank_gold, Database_RecordSet!rep_average, SanitizeNullValue(Database_RecordSet!guild_requests_history, vbNullString), gName, Miembro, Database_RecordSet!pertenece_real, Database_RecordSet!pertenece_caos, Database_RecordSet!ciudadanos_matados, Database_RecordSet!criminales_matados)
 
 #If DBConexionUnica = 0 Then
     Call Database_Close

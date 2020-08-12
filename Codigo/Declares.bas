@@ -1188,7 +1188,8 @@ Public Type tUserQuest
 End Type
  
 Public Type tQuestStats
-    
+
+    QuestEnCurso(1 To MAXUSERQUESTS) As Integer 'Guarda las ID de las quest en curso
     Quests(1 To MAXQUESTS) As tUserQuest
     NumQuestsDone As Integer
 
