@@ -144,10 +144,14 @@ Hostile=0
 Domable=0
 Comercia=1
 TipoItems=11
-NROITEMS=3
-Obj1=1202-1000 'Pocion Azul
-Obj2=1203-1000 'Pocion Roja
-Obj3=166-1000 'Pocion Violeta
+NROITEMS=7
+Obj1=1202-1000 'Pocion Azul de Principiantes
+Obj2=1203-1000 'Pocion Roja de Principiantes
+Obj3=461-1000 'Pocion Roja (Newbie)
+Obj4=856-1000 'Pocion Azul (Newbie)
+Obj5=461-1000 'Pocion verde (Newbie)
+Obj6=855-1000 'Pocion Amarilla (Newbie)
+Obj7=166-1000 'Pocion Violeta
 BackUp=1
 
 [NPC4]
@@ -284,13 +288,15 @@ Hostile=0
 Domable=0
 Comercia=1
 TipoItems=11
-NROITEMS=6
-Obj1=36-1000 'Pocion Amarilla
-Obj2=37-1000 'Pocion Azul
-Obj3=38-1000 'Pocion Roja
-Obj4=39-1000 'Pocion Verde
-Obj5=166-1000 'Pocion Violeta
-Obj6=645-1000 'Pocion Negra
+NROITEMS=8
+Obj1=37-1000 'Pocion Azul
+Obj2=38-1000 'Pocion Roja
+Obj3=1202-1000 'Pocion Azul de Principiantes
+Obj4=1203-1000 'Pocion Roja de Principiantes
+Obj5=39-1000 'Pocion Verde
+Obj6=36-1000 'Pocion Amarilla
+Obj7=166-1000 'Pocion Violeta
+Obj8=645-1000 'Pocion Negra
 BackUp=1
 
 [NPC15] 'Herrero
@@ -1262,6 +1268,486 @@ NROITEMS=0
 BackUp=1
 
 ##############################################################
+############## NPCS VENDEDORES DE ISLA ZHARKEL ###############
+##############################################################
+
+[NPC150]
+Name=Gobernador
+NpcType=11
+Desc=Despues de la desaparición de Zharkel, esta isla era una bonita ciudad para vivir, hasta que emergio la entrada a ese antiguo Templo y se asento el ejercito rebelde, entonces la gente se volvio loca!.
+Head=313
+Heading=1
+Body=493
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=0
+BackUp=0
+Ciudad=3
+
+[NPC151]
+Name=Sacerdote
+NpcType=1
+Desc=Hijo mio, esta ciudad es muy peligrosa ¡andate con cuidado! ¿Necesitas una cura?
+Head=314
+Heading=1
+Body=159
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=0
+BackUp=0
+
+[NPC152]
+Name=Banquero
+NpcType=4
+Desc=Hola, bienvenido a la sede de la Isla Zharkel de la cadena de finanzas Goliath. Somos la cadena mas grande en Argentum, contamos con bancos en las ciudades mas importantes.
+Head=428
+Heading=1
+Body=299
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=0
+BackUp=0
+
+[NPC153]
+Name=Marinero
+NpcType=15
+Desc=¡Corre! ¡El barco va a zarpar!
+Head=33
+Heading=1
+Body=174
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=1
+TipoItems=20
+NROITEMS=0
+BackUp=1
+
+[NPC154] 'Vende Pociones
+Name=Asilithus
+NpcType=0
+Desc=Acercate joven, vas a necesitar pociones ¡seguro!
+Head=488
+Heading=1
+Body=275
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Comercia=1
+TipoItems=11
+NROITEMS=0
+BackUp=1
+
+[NPC155] 'Herrero
+Name=Herrero
+NpcType=0
+Desc=¡Hey! No pensaras aventurarte por estas tierras hostiles sin un arma ¿verdad?
+Head=417
+Heading=1
+Body=374
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=1
+TipoItems=2
+NROITEMS=0
+BackUp=1
+
+[NPC156] 'Sastre Isla Zharkel
+Name=Sastre
+NpcType=0
+Desc=Solo uso la mejor tela, la de mayor calidad!
+Head=484
+Heading=1
+Body=298
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=1
+TipoItems=3
+NROITEMS=0
+BackUp=1
+
+[NPC157] 'Armaduras Isla Zharkel
+Name=Armaduras
+Desc=En estas tierras es muy importante estar bien defendido, cualquiera te puede atacar por la espalda.
+Head=316
+Body=294
+Heading=4
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=1
+TipoItems=3
+NROITEMS=0
+BackUp=1
+
+[NPC158] 'Provisiones Isla Zharkel
+Name=Thorin
+NpcType=0
+Desc=Debes estar muy hambriendo y sediento para haber llegado hasta aquí. Te puedo ofrecer algunos víveres.
+Head=495
+Heading=1
+Body=301
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=1
+TipoItems=1
+NROITEMS=0
+BackUp=1
+
+[NPC159] 'VendeMagia Isla Zharkel
+Name=Mago
+NpcType=0
+Desc=¿Quieres aprender los secretos del mismisimo Zharkel? Ven, te puedo enseñar algunos hechizos
+Head=401
+Heading=1
+Body=310
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=1
+TipoItems=24
+NROITEMS=0
+BackUp=1
+
+[NPC160] 'Isla Zharkel Shakoud
+Name=Pescador
+NpcType=0
+Desc=En este rincon del mundo existen peces y otras criaturas marinas nunca vista. Algunos hablan de una criatura monstruosa en las profundidades del templo sumergido.
+Head=422
+Heading=1
+Body=300
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=1
+TipoItems=1
+NROITEMS=0
+BackUp=1
+
+[NPC161] 'Minero
+Name=Minero
+NpcType=0
+Desc=Amigo, ¿te has enterado de que han encontrado oro en el templo sumergido? ¡La gente se ha vuelto loca! Puedo venderte buenas herramientas para extraer todo ese oro.
+Head=412
+Heading=1
+Body=292
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=1
+TipoItems=23
+NROITEMS=0
+BackUp=1
+
+[NPC162] 'Mercader
+Name=Mercader
+NpcType=0
+Desc=Hola buen amigo, pertenezco al gremio de mercaderes de Winter y viajamos por todas las ciudades comprando y vendiendo todo tipo de mercancia.
+Head=7
+Heading=1
+Body=3
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=1
+TipoItems=1000
+NROITEMS=0
+BackUp=1
+
+##############################################################
+############## NPCS VENDEDORES DE HAVERWOOD ##################
+##############################################################
+
+[NPC200]
+Name=Gobernador
+NpcType=11
+Desc=Hola Joven, estas tierras son muy frias, pero es un lugar tranquilo para vivir. Si deseas establecerte escribe /HOGAR
+Head=313
+Heading=1
+Body=493
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=0
+BackUp=0
+Ciudad=2
+
+[NPC201]
+Name=Sacerdote
+NpcType=1
+Desc=¿Tienes frio? Ven, acercate y deja que cure tus heridas.
+Head=314
+Heading=1
+Body=159
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=0
+BackUp=0
+
+[NPC202]
+Name=Banquero
+NpcType=4
+Desc=Hola, bienvenido a la sede de Haverwood de la cadena de finanzas Goliath. Somos la cadena mas grande en Argentum, contamos con bancos en las ciudades mas importantes.
+Head=428
+Heading=1
+Body=299
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=0
+BackUp=0
+
+[NPC203]
+Name=Marinero
+NpcType=15
+Desc=¡Corre! ¡El barco va a zarpar!
+Head=33
+Heading=1
+Body=174
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=1
+TipoItems=20
+NROITEMS=0
+BackUp=1
+
+[NPC204] 'Vende Pociones
+Name=Krona
+NpcType=0
+Desc=Mis pociones te daran fuerzas y curaran cualquier dolencia.
+Head=488
+Heading=1
+Body=275
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Comercia=1
+TipoItems=11
+NROITEMS=0
+BackUp=1
+
+[NPC205] 'Herrero
+Name=Herrero
+NpcType=0
+Desc=Forjamos las mejores armas con el mejor acero de estas tierras.
+Head=417
+Heading=1
+Body=374
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=1
+TipoItems=2
+NROITEMS=0
+BackUp=1
+
+[NPC206] 'Sastre Haverwood
+Name=Sastre
+NpcType=0
+Desc=Amigo, en estas tierras heladas debes ir bien abrigado o podrias morir.
+Head=484
+Heading=1
+Body=298
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=1
+TipoItems=3
+NROITEMS=0
+BackUp=1
+
+[NPC207] 'Armaduras Haverwood
+Name=Armaduras
+Desc=Las armaduras de Haverwood te protegen a la vez que te mantienen calentito.
+Head=316
+Body=294
+Heading=4
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=1
+TipoItems=3
+NROITEMS=0
+BackUp=1
+
+[NPC208] 'Provisiones Haverwood
+Name=Thorin
+NpcType=0
+Desc=No querras quedar atrapado en la nieve sin provisiones ¿no?
+Head=495
+Heading=1
+Body=301
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=1
+TipoItems=1
+NROITEMS=0
+BackUp=1
+
+[NPC209] 'VendeMagia Haverwood
+Name=Mago
+NpcType=0
+Desc=En este rincon del mundo encontraras los mayores secretos arcanos.
+Head=401
+Heading=1
+Body=310
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=1
+TipoItems=24
+NROITEMS=0
+BackUp=1
+
+[NPC210] 'Pescador Haverwood
+Name=Pescador
+NpcType=0
+Desc=Es curioso que existan peces capaces de sobrevivir a estas bajas temperaturas.
+Head=422
+Heading=1
+Body=300
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=1
+TipoItems=1
+NROITEMS=0
+BackUp=1
+
+[NPC211] 'Minero
+Name=Minero
+NpcType=0
+Desc=Los aventureros hablan de un extraño cristal al oeste de la ciudad. Necesitaras herramientas para extraerlas.
+Head=412
+Heading=1
+Body=292
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=1
+TipoItems=23
+NROITEMS=0
+BackUp=1
+
+[NPC212] 'Mercader
+Name=Mercader
+NpcType=0
+Desc=Hola buen amigo, pertenezco al gremio de mercaderes de Winter y viajamos por todas las ciudades comprando y vendiendo todo tipo de mercancia.
+Head=7
+Heading=1
+Body=3
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=1
+TipoItems=1000
+NROITEMS=0
+BackUp=1
+
+[NPC213] 'Carpintera
+Name=Carpintera
+NpcType=0
+Desc=Los arboles helados ofrecen un excelente material de construcción, pero tambien son muy duros y dificiles de talar.
+Head=411
+Heading=1
+Body=293
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=1
+TipoItems=20
+NROITEMS=0
+BackUp=1
+
+##############################################################
 ####################### HOSTILES #############################
 ##############################################################
 
@@ -1322,7 +1808,7 @@ MinHIT=1
 ELV=5
 DEF=0
 PoderAtaque=5
-PoderEvasion=5
+PoderEvasion=0
 Snd1=118
 Snd2=119
 Snd3=14
@@ -1354,7 +1840,7 @@ ELV=5
 DEF=2
 DEFm=3
 PoderAtaque=20
-PoderEvasion=15
+PoderEvasion=5
 SND3=63
 BackUp=0
 NROITEMS=0
@@ -1387,8 +1873,8 @@ SND2=103
 BackUp=0
 NROITEMS=0
 
-[NPC504]
-Name=Murcielago
+[NPC504] 'Dungeon Newbie
+Name=Murcielago Rabioso
 NpcType=0
 Head=0
 Heading=1
@@ -1699,7 +2185,7 @@ BackUp=0
 NROITEMS=0
 
 [NPC515]
-Name=Aguila
+Name=Aguila Blanca
 NpcType=0
 Head=0
 Heading=1
@@ -1754,7 +2240,7 @@ SND2=103
 BackUp=0
 NROITEMS=0
 
-[NPC517]
+[NPC517] 'Isla Newbie
 Name=Gallo Salvaje Envenenado
 NpcType=0
 Head=0
@@ -1778,7 +2264,7 @@ Envenena=1
 ELV=5
 DEF=0
 PoderAtaque=5
-PoderEvasion=5
+PoderEvasion=0
 Snd1=118
 Snd2=119
 Snd3=14
@@ -1841,7 +2327,7 @@ MinHIT=1
 ELV=5
 DEF=2
 PoderAtaque=20
-PoderEvasion=15
+PoderEvasion=0
 SND2=103
 BackUp=0
 NROITEMS=0
@@ -1902,7 +2388,7 @@ MinHIT=25
 ELV=10
 DEF=10
 PoderAtaque=30
-PoderEvasion=30
+PoderEvasion=10
 BackUp=0
 NROITEMS=0
 
@@ -1929,7 +2415,7 @@ MinHIT=40
 ELV=10
 DEF=13
 PoderAtaque=30
-PoderEvasion=30
+PoderEvasion=10
 BackUp=0
 NROITEMS=0
 
@@ -1956,7 +2442,7 @@ MinHIT=15
 ELV=10
 DEF=13
 PoderAtaque=30
-PoderEvasion=30
+PoderEvasion=0
 BackUp=0
 NROITEMS=0
 
@@ -1983,7 +2469,7 @@ MinHIT=10
 ELV=10
 DEF=13
 PoderAtaque=30
-PoderEvasion=30
+PoderEvasion=0
 BackUp=0
 NROITEMS=0
 
@@ -2037,7 +2523,7 @@ MinHIT=30
 ELV=10
 DEF=0
 PoderAtaque=100
-PoderEvasion=45
+PoderEvasion=15
 BackUp=0
 NROITEMS=1
 Obj1=404-1-30 'Escudo de Tortuga
@@ -2093,7 +2579,7 @@ MinHIT=5
 ELV=10
 DEF=8
 PoderAtaque=80
-PoderEvasion=25
+PoderEvasion=10
 Snd1=35
 Snd2=9
 Snd3=107
@@ -2124,7 +2610,7 @@ MinHIT=3
 ELV=10
 DEF=8
 PoderAtaque=80
-PoderEvasion=25
+PoderEvasion=10
 Snd1=35
 Snd2=9
 BackUp=0
@@ -2159,7 +2645,7 @@ MinHIT=20
 ELV=15
 DEF=19
 PoderAtaque=60
-PoderEvasion=50
+PoderEvasion=20
 BackUp=0
 NROITEMS=0
 
@@ -2186,7 +2672,7 @@ MinHIT=40
 ELV=15
 DEF=19
 PoderAtaque=60
-PoderEvasion=50
+PoderEvasion=20
 BackUp=0
 NROITEMS=0
 
@@ -2213,7 +2699,7 @@ MinHIT=15
 ELV=15
 DEF=19
 PoderAtaque=60
-PoderEvasion=50
+PoderEvasion=20
 BackUp=0
 NROITEMS=0
 
@@ -2274,34 +2760,6 @@ BackUp=0
 NROITEMS=0
 
 [NPC605]
-Name=Exclavo Contrabandista
-NpcType=0
-Head=201
-Heading=1
-Body=48
-Movement=3
-AguaValida=0
-Attackable=1
-ReSpawn=0
-Hostile=1
-Domable=0
-Alineacion=2
-Comercia=0
-GiveEXP=360
-GiveGLD=360
-MinHP=360
-MaxHP=360
-MaxHIT=38
-MinHIT=28
-ELV=15
-DEF=0
-PoderAtaque=70
-PoderEvasion=50
-Snd3=155
-BackUp=0
-NROITEMS=0
-
-[NPC606]
 Name=Osezno
 NpcType=0
 Head=0
@@ -2329,7 +2787,7 @@ BackUp=0
 NROITEMS=1
 Obj1=415-1-100 'Piel Oso Pardo
 
-[NPC607]
+[NPC606]
 Name=Cocodrilo Joven
 NpcType=0
 Head=0
@@ -2355,7 +2813,7 @@ PoderAtaque=64
 PoderEvasion=60
 BackUp=0
 
-[NPC608]
+[NPC607]
 Name=Unicornio
 NpcType=12
 Head=0
@@ -2387,7 +2845,7 @@ Obj3=12-150-50 'Oro
 Obj4=37-50-50 'Pocion Azul
 Obj5=12-5000-80 'Oro
 
-[NPC609] 
+[NPC608] 'Dungeon Newbie
 Name=Orco
 NpcType=0
 Head=0
@@ -2415,7 +2873,7 @@ BackUp=0
 NROITEMS=1
 Obj1=1250-1-30 'Fragmento de arma
 
-[NPC610]
+[NPC609]
 Name=Lobo Adulto
 NpcType=0
 Head=0
@@ -2446,7 +2904,7 @@ NROITEMS=2
 Obj1=414-1-30 'Piel de Lobo
 Obj2=27-3-30 'Chuleta
 
-[NPC611]
+[NPC610]
 Name=Anfisbena
 NpcType=0
 Head=0
@@ -2472,7 +2930,7 @@ PoderAtaque=80
 PoderEvasion=25
 BackUp=0
 
-[NPC612]
+[NPC611]
 Name=Gusano de Arena
 NpcType=0
 Head=0
@@ -2498,8 +2956,7 @@ PoderAtaque=80
 PoderEvasion=100
 BackUp=0
 
-
-[NPC613]
+[NPC612]
 Name=Tarantula Venenosa
 NpcType=0
 Head=0
@@ -2525,13 +2982,12 @@ PoderAtaque=80
 PoderEvasion=100
 BackUp=0
 
-
-[NPC611]
-Name=Guerrero del Desierto
+[NPC613]
+Name=Duende Maligno
 NpcType=0
 Head=0
 Heading=1
-Body=208
+Body=73
 Movement=3
 AguaValida=0
 Attackable=1
@@ -2540,17 +2996,45 @@ Hostile=1
 Domable=2010
 Alineacion=2
 Comercia=0
-GiveEXP=1750
-GiveGLD=1750
-MinHP=1750
-MaxHP=1750
-MaxHIT=100
-MinHIT=80
+GiveEXP=150
+GiveGLD=150
+MinHP=150
+MaxHP=150
+MaxHIT=15
+MinHIT=25
 DEF=0
 ELV=15
-PoderAtaque=150
-PoderEvasion=200
+PoderAtaque=84
+PoderEvasion=30
 BackUp=0
+NROITEMS=0
+
+[NPC614]
+Name=Escarabajo Gigante
+NpcType=0
+Head=0
+Heading=1
+Body=73
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=0
+Hostile=1
+Domable=2010
+Alineacion=2
+Comercia=0
+GiveEXP=800
+GiveGLD=800
+MinHP=800
+MaxHP=800
+MaxHIT=70
+MinHIT=40
+DEF=0
+ELV=15
+PoderAtaque=84
+PoderEvasion=30
+BackUp=0
+NROITEMS=0
 
 ##################
 ####LEVEL 20######
@@ -2615,37 +3099,6 @@ BackUp=0
 NROITEMS=0
 
 [NPC652]
-Name=Lobo
-NpcType=0
-Head=0
-Heading=1
-Body=10
-Movement=3
-AguaValida=0
-Attackable=1
-ReSpawn=0
-Hostile=1
-Domable=1250
-Alineacion=2
-Comercia=0
-GiveEXP=600
-GiveGLD=120
-MinHP=600
-MaxHP=600
-MaxHIT=101
-MinHIT=75
-ELV=20
-DEF=8
-PoderAtaque=80
-PoderEvasion=25
-Snd1=35
-Snd2=9
-BackUp=0
-NROITEMS=2
-Obj1=414-1-30 'Piel de Lobo
-Obj2=27-3-30 'Chuleta
-
-[NPC653]
 Name=Zorro
 NpcType=0
 Head=0
@@ -2676,7 +3129,7 @@ NROITEMS=2
 Obj1=414-1-30 'Piel de Lobo
 Obj2=27-3-30 'Chuleta
 
-[NPC654]
+[NPC653]
 Name=Cria de Tigre
 NpcType=0
 Head=0
@@ -2704,7 +3157,7 @@ NROITEMS=2
 Obj1=414-20-30 'Piel de Tigre (le pongo de lobo mientras, cambiar!!)
 Obj2=27-23-30 'Chuleta
 
-[NPC655]
+[NPC654]
 Name=Tigre
 NpcType=0
 Head=0
@@ -2732,7 +3185,7 @@ NROITEMS=2
 Obj1=414-20-30 'Piel de Tigre (le pongo de lobo mientras, cambiar!!)
 Obj2=27-23-30 'Chuleta
 
-[NPC656]
+[NPC655]
 Name=Oso
 NpcType=0
 Head=0
@@ -2760,7 +3213,7 @@ BackUp=0
 NROITEMS=1
 Obj1=415-1-30 'Piel Oso Pardo
 
-[NPC657]
+[NPC656]
 Name=Muercielago Negro
 NpcType=0
 Head=0
@@ -2787,7 +3240,7 @@ PoderEvasion=30
 BackUp=0
 NROITEMS=0
 
-[NPC658]
+[NPC657]
 Name=Duende
 NpcType=0
 Head=0
@@ -2814,7 +3267,7 @@ PoderEvasion=30
 BackUp=0
 NROITEMS=0
 
-[NPC659]
+[NPC658]
 Name=Orco Guerrero
 NpcType=0
 Head=0
@@ -2841,7 +3294,7 @@ PoderEvasion=30
 BackUp=0
 NROITEMS=0
 
-[NPC660]
+[NPC659]
 Name=Ent
 NpcType=0
 Head=0
@@ -2868,7 +3321,7 @@ PoderEvasion=30
 BackUp=0
 NROITEMS=0
 
-[NPC661]
+[NPC660]
 Name=Llama Viviente
 NpcType=0
 Head=0
@@ -2895,35 +3348,8 @@ PoderEvasion=30
 BackUp=0
 NROITEMS=0
 
-[NPC662]
-Name=Escarabajo Gigante
-NpcType=0
-Head=0
-Heading=1
-Body=73
-Movement=3
-AguaValida=0
-Attackable=1
-ReSpawn=0
-Hostile=1
-Domable=2010
-Alineacion=2
-Comercia=0
-GiveEXP=800
-GiveGLD=800
-MinHP=800
-MaxHP=800
-MaxHIT=70
-MinHIT=40
-DEF=0
-ELV=20
-PoderAtaque=84
-PoderEvasion=30
-BackUp=0
-NROITEMS=0
-
-[NPC663]
-Name=Momia de la Luz
+[NPC661]
+Name=Momia
 NpcType=0
 Head=0
 Heading=1
@@ -2949,8 +3375,8 @@ PoderEvasion=30
 BackUp=0
 NROITEMS=0
 
-[NPC664]
-Name=Momia Expectral
+[NPC662]
+Name=Momia Putrefacta
 NpcType=0
 Head=0
 Heading=1
@@ -2976,7 +3402,7 @@ PoderEvasion=30
 BackUp=0
 NROITEMS=0
 
-[NPC664]
+[NPC663]
 Name=Akenaton
 NpcType=0
 Head=0
@@ -3000,6 +3426,141 @@ DEF=150
 ELV=20
 PoderAtaque=84
 PoderEvasion=30
+BackUp=0
+NROITEMS=0
+
+[NPC664]
+Name=Hadita
+NpcType=0
+Head=0
+Heading=1
+Body=73
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=0
+Hostile=1
+Domable=2010
+Alineacion=2
+Comercia=0
+GiveEXP=500
+GiveGLD=500
+MinHP=500
+MaxHP=500
+MaxHIT=25
+MinHIT=15
+DEF=150
+ELV=20
+PoderAtaque=84
+PoderEvasion=30
+BackUp=0
+NROITEMS=0
+
+[NPC665]
+Name=Hada Rosa
+NpcType=0
+Head=0
+Heading=1
+Body=73
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=0
+Hostile=1
+Domable=2010
+Alineacion=2
+Comercia=0
+GiveEXP=1500
+GiveGLD=1500
+MinHP=1500
+MaxHP=1500
+MaxHIT=45
+MinHIT=35
+DEF=150
+ELV=20
+PoderAtaque=84
+PoderEvasion=30
+BackUp=0
+NROITEMS=0
+
+[NPC666]
+Name=Hada Azul
+NpcType=0
+Head=0
+Heading=1
+Body=73
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=0
+Hostile=1
+Domable=2010
+Alineacion=2
+Comercia=0
+GiveEXP=1500
+GiveGLD=1500
+MinHP=1500
+MaxHP=1500
+MaxHIT=45
+MinHIT=35
+DEF=150
+ELV=20
+PoderAtaque=84
+PoderEvasion=30
+BackUp=0
+NROITEMS=0
+
+[NPC667]
+Name=Mole de Tierra
+NpcType=0
+Head=0
+Heading=1
+Body=73
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=0
+Hostile=1
+Domable=2010
+Alineacion=2
+Comercia=0
+GiveEXP=1200
+GiveGLD=1200
+MinHP=1200
+MaxHP=1200
+MaxHIT=80
+MinHIT=50
+DEF=150
+ELV=20
+PoderAtaque=84
+PoderEvasion=30
+BackUp=0
+NROITEMS=0
+
+[NPC668]
+Name=Esclavo Contrabandista
+NpcType=0
+Head=0
+Heading=1
+Body=73
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=0
+Hostile=1
+Domable=2010
+Alineacion=2
+Comercia=0
+GiveEXP=360
+GiveGLD=360
+MinHP=360
+MaxHP=360
+MaxHIT=38
+MinHIT=28
+DEF=150
+ELV=20
+PoderAtaque=70
+PoderEvasion=50
 BackUp=0
 NROITEMS=0
 
@@ -3202,7 +3763,7 @@ BackUp=0
 NROITEMS=0
 
 [NPC707]
-Name=Neith
+Name=Semerjet
 NpcType=0
 Head=0
 Heading=1
@@ -3257,43 +3818,489 @@ Veneno=1
 BackUp=0
 NROITEMS=0
 
-##################
-####LEVEL 30######
-##################
-
-[NPC750]
-Name=Gorila
+[NPC709]
+Name=Zombie Decapitado
 NpcType=0
 Head=0
 Heading=1
-Body=629
+Body=406
 Movement=3
 AguaValida=0
 Attackable=1
 ReSpawn=0
 Hostile=1
-Domable=2250
+Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=2200
-GiveGLD=2200
-MinHP=2200
-MaxHP=2200
-MaxHIT=115
-MinHIT=100
-DEF=30
-ELV=30
-PoderAtaque=260
-PoderEvasion=200
-Retardo=30
-ActivoPotencia=1
-Snd3=171
+GiveEXP=1300
+GiveGLD=1300
+MinHP=1300
+MaxHP=1300
+MaxHIT=80
+MinHIT=50
+DEF=50
+ELV=25
+PoderAtaque=0
+PoderEvasion=0
+Veneno=1
 BackUp=0
 NROITEMS=0
 
-[NPC751] 
-Name=Minotauro
+[NPC710]
+Name=Zombie Decapitado
 NpcType=0
+Head=0
+Heading=1
+Body=406
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=1300
+GiveGLD=1300
+MinHP=1300
+MaxHP=1300
+MaxHIT=80
+MinHIT=50
+DEF=50
+ELV=25
+PoderAtaque=0
+PoderEvasion=0
+Veneno=1
+BackUp=0
+NROITEMS=0
+
+[NPC711]
+Name=Zombie Descuartizado
+NpcType=0
+Head=0
+Heading=1
+Body=406
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=1000
+GiveGLD=1000
+MinHP=1000
+MaxHP=1000
+MaxHIT=50
+MinHIT=30
+DEF=50
+ELV=25
+PoderAtaque=0
+PoderEvasion=0
+Veneno=1
+BackUp=0
+NROITEMS=0
+
+[NPC712]
+Name=Esqueleto
+NpcType=0
+Head=0
+Heading=1
+Body=406
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=900
+GiveGLD=900
+MinHP=900
+MaxHP=900
+MaxHIT=50
+MinHIT=30
+DEF=0
+ELV=25
+PoderAtaque=0
+PoderEvasion=0
+Veneno=1
+BackUp=0
+NROITEMS=0
+
+[NPC713]
+Name=Esqueleto Guerrero
+NpcType=0
+Head=0
+Heading=1
+Body=406
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=950
+GiveGLD=950
+MinHP=950
+MaxHP=950
+MaxHIT=50
+MinHIT=30
+DEF=0
+ELV=25
+PoderAtaque=0
+PoderEvasion=0
+Veneno=1
+BackUp=0
+NROITEMS=0
+
+[NPC714]
+Name=Cuervo Asesino
+NpcType=0
+Head=0
+Heading=1
+Body=406
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=250
+GiveGLD=250
+MinHP=250
+MaxHP=250
+MaxHIT=50
+MinHIT=30
+DEF=0
+ELV=25
+PoderAtaque=0
+PoderEvasion=0
+Veneno=1
+BackUp=0
+NROITEMS=0
+
+[NPC715]
+Name=Cucaracha
+NpcType=0
+Head=0
+Heading=1
+Body=406
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=150
+GiveGLD=150
+MinHP=150
+MaxHP=150
+MaxHIT=50
+MinHIT=30
+DEF=0
+ELV=25
+PoderAtaque=0
+PoderEvasion=0
+Veneno=1
+BackUp=0
+NROITEMS=0
+
+[NPC716]
+Name=Lobo del Terror
+NpcType=0
+Head=0
+Heading=1
+Body=406
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=1000
+GiveGLD=1000
+MinHP=1000
+MaxHP=1000
+MaxHIT=80
+MinHIT=55
+DEF=50
+ELV=25
+PoderAtaque=260
+PoderEvasion=150
+Veneno=1
+BackUp=0
+NROITEMS=0
+
+[NPC717]
+Name=Lobo Zombie
+NpcType=0
+Head=0
+Heading=1
+Body=406
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=900
+GiveGLD=900
+MinHP=900
+MaxHP=900
+MaxHIT=50
+MinHIT=30
+DEF=0
+ELV=25
+PoderAtaque=0
+PoderEvasion=0
+Veneno=1
+BackUp=0
+NROITEMS=0
+
+[NPC718]
+Name=Fantasma
+NpcType=0
+Head=0
+Heading=1
+Body=406
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=500
+GiveGLD=500
+MinHP=500
+MaxHP=500
+MaxHIT=50
+MinHIT=30
+DEF=0
+ELV=25
+PoderAtaque=0
+PoderEvasion=0
+Veneno=1
+BackUp=0
+NROITEMS=0
+
+[NPC719]
+Name=Angel
+NpcType=0
+Head=0
+Heading=1
+Body=406
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=650
+GiveGLD=650
+MinHP=650
+MaxHP=650
+MaxHIT=50
+MinHIT=30
+DEF=0
+ELV=25
+PoderAtaque=0
+PoderEvasion=0
+Veneno=1
+BackUp=0
+NROITEMS=0
+
+[NPC720]
+Name=Bruja
+NpcType=0
+Head=0
+Heading=1
+Body=406
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=1400
+GiveGLD=1400
+MinHP=1400
+MaxHP=1400
+MaxHIT=50
+MinHIT=30
+DEF=0
+ELV=25
+PoderAtaque=0
+PoderEvasion=0
+Veneno=1
+BackUp=0
+NROITEMS=0
+
+[NPC721]
+Name=Ent Ancestral
+NpcType=0
+Head=0
+Heading=1
+Body=406
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=1650
+GiveGLD=1650
+MinHP=1650
+MaxHP=1650
+MaxHIT=50
+MinHIT=30
+DEF=0
+ELV=25
+PoderAtaque=0
+PoderEvasion=0
+Veneno=1
+BackUp=0
+NROITEMS=0
+
+[NPC722]
+Name=Guerrero del Desierto
+NpcType=0
+Head=0
+Heading=1
+Body=406
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=1750
+GiveGLD=1750
+MinHP=1750
+MaxHP=1750
+MaxHIT=100
+MinHIT=80
+DEF=0
+ELV=25
+PoderAtaque=150
+PoderEvasion=200
+Veneno=1
+BackUp=0
+NROITEMS=0
+
+[NPC723]
+Name=Coyote
+NpcType=0
+Head=0
+Heading=1
+Body=406
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=1700
+GiveGLD=1700
+MinHP=1700
+MaxHP=1700
+MaxHIT=50
+MinHIT=30
+DEF=0
+ELV=25
+PoderAtaque=0
+PoderEvasion=0
+Veneno=1
+BackUp=0
+NROITEMS=0
+
+[NPC724]
+Name=Protector de la Naturaleza
+NpcType=0
+Head=0
+Heading=1
+Body=406
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=2000
+GiveGLD=2000
+MinHP=2000
+MaxHP=2000
+MaxHIT=50
+MinHIT=30
+DEF=0
+ELV=25
+PoderAtaque=0
+PoderEvasion=0
+Veneno=1
+BackUp=0
+NROITEMS=0
+
+[NPC725]
+Name=Genio de Arena
+NpcType=0
+Head=0
+Heading=1
+Body=406
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=1850
+GiveGLD=1850
+MinHP=1850
+MaxHP=1850
+MaxHIT=50
+MinHIT=30
+DEF=0
+ELV=25
+PoderAtaque=0
+PoderEvasion=0
+Veneno=1
+BackUp=0
+NROITEMS=0
+
+##################
+####LEVEL 30######
+##################
+
+[NPC750] 'WORLDBOSS
+Name=Minotauro
+NpcType=12
 Head=0
 Heading=1
 Body=43
@@ -3320,9 +4327,9 @@ Nroitems=1
 BackUp=0
 NROITEMS=0
 
-[NPC752]
+[NPC751] 'WORLDBOSS
 Name=Tortuga Milenaria
-NpcType=0
+NpcType=12
 Head=0
 Heading=1
 Body=206
@@ -3347,7 +4354,7 @@ PoderEvasion=245
 snd2=78
 BackUp=0
 
-[NPC753]
+[NPC752]
 Name=Leviathan
 NpcType=0
 Head=0
@@ -3375,36 +4382,7 @@ PoderEvasion=150
 snd2=78
 BackUp=0
 
-[NPC754]
-Name=Cangrejo Protector WordBoss
-NpcType=0
-Head=0
-Heading=1
-Body=206
-Movement=3
-AguaValida=0
-Attackable=1
-ReSpawn=0
-Hostile=1
-Domable=0
-Alineacion=2
-Comercia=0
-GiveEXP=10000
-GiveGLD=10000
-MinHP=10000
-MaxHP=10000
-MaxHIT=220
-MinHIT=180
-DEF=100
-ELV=30
-DEFm=10
-PoderAtaque=260
-PoderEvasion=150
-snd2=78
-BackUp=0
-NROITEMS=0
-
-[NPC755] 
+[NPC753] 
 Name=Guardian de las Produndidades
 NpcType=0
 Head=0
@@ -3432,7 +4410,7 @@ Nroitems=1
 BackUp=0
 NROITEMS=0
 
-[NPC756] 
+[NPC754] 
 Name=Piraña
 NpcType=0
 Head=0
@@ -3460,9 +4438,9 @@ Nroitems=1
 BackUp=0
 NROITEMS=0
 
-[NPC757] 
-Name=Gorila GIgante WordBoss
-NpcType=0
+[NPC755] 'WORLDBOSS
+Name=Gorila Gigante
+NpcType=12
 Head=0
 Heading=1
 Body=43
@@ -3488,7 +4466,7 @@ Nroitems=1
 BackUp=0
 NROITEMS=0
 
-[NPC758] 
+[NPC756] 
 Name=Liche
 NpcType=0
 Head=0
@@ -3516,7 +4494,7 @@ Nroitems=1
 BackUp=0
 NROITEMS=0
 
-[NPC759] 
+[NPC757] 
 Name=Araña del Terror
 NpcType=0
 Head=0
@@ -3544,7 +4522,7 @@ Nroitems=1
 BackUp=0
 NROITEMS=0
 
-[NPC760] 
+[NPC758] 
 Name=Esqueleto
 NpcType=0
 Head=0
@@ -3572,35 +4550,7 @@ Nroitems=1
 BackUp=0
 NROITEMS=0
 
-[NPC761] 
-Name=Lobo del Terror
-NpcType=0
-Head=0
-Heading=1
-Body=43
-Movement=3
-AguaValida=0
-Attackable=1
-ReSpawn=1
-Hostile=1
-Domable=0
-Alineacion=2
-Comercia=0
-GiveEXP=1000
-GiveGLD=1000
-MinHP=1000
-MaxHP=1000
-MaxHIT=80
-MinHIT=55
-DEF=50
-ELV=30
-PoderAtaque=260
-PoderEvasion=150
-Nroitems=1
-BackUp=0
-NROITEMS=0
-
-[NPC762] 
+[NPC759] 
 Name=Fango
 NpcType=0
 Head=0
@@ -3628,8 +4578,149 @@ Nroitems=1
 BackUp=0
 NROITEMS=0
 
+[NPC760] 
+Name=Cria de Pinguino
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=750
+GiveGLD=750
+MinHP=750
+MaxHP=750
+MaxHIT=75
+MinHIT=50
+DEF=0
+DEFm=50
+ELV=30
+PoderAtaque=260
+PoderEvasion=150
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+[NPC761] 
+Name=Lobo Polar
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=3200
+GiveGLD=3200
+MinHP=3200
+MaxHP=3200
+MaxHIT=150
+MinHIT=95
+DEF=50
+ELV=30
+PoderAtaque=260
+PoderEvasion=150
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+[NPC762] 
+Name=Oso Blanco
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=2500
+GiveGLD=2500
+MinHP=2500
+MaxHP=2500
+MaxHIT=75
+MinHIT=50
+DEF=0
+ELV=30
+PoderAtaque=0
+PoderEvasion=0
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
 [NPC763] 
-Name=Gigante Terrorifico
+Name=Djin de Viento
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=3800
+GiveGLD=3800
+MinHP=3800
+MaxHP=3800
+MaxHIT=75
+MinHIT=50
+DEF=0
+ELV=30
+PoderAtaque=0
+PoderEvasion=0
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+[NPC764] 
+Name=Demogorgon
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=4000
+GiveGLD=4000
+MinHP=4000
+MaxHP=4000
+MaxHIT=75
+MinHIT=50
+DEF=0
+ELV=30
+PoderAtaque=0
+PoderEvasion=0
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+[NPC765] 
+Name=Fango
 NpcType=0
 Head=0
 Heading=1
@@ -3646,19 +4737,18 @@ GiveEXP=3500
 GiveGLD=3500
 MinHP=3500
 MaxHP=3500
-MaxHIT=180
-MinHIT=140
+MaxHIT=75
+MinHIT=50
 DEF=0
-DEFm=50
 ELV=30
-PoderAtaque=260
-PoderEvasion=150
+PoderAtaque=0
+PoderEvasion=0
 Nroitems=1
 BackUp=0
 NROITEMS=0
 
-[NPC764] 
-Name=Zombie Decapitado
+[NPC766] 
+Name=Hombre Lobo
 NpcType=0
 Head=0
 Heading=1
@@ -3671,12 +4761,180 @@ Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=1300
-GiveGLD=1300
-MinHP=1300
-MaxHP=1300
-MaxHIT=80
-MinHIT=55
+GiveEXP=3250
+GiveGLD=3250
+MinHP=3250
+MaxHP=3250
+MaxHIT=75
+MinHIT=50
+DEF=0
+ELV=30
+PoderAtaque=0
+PoderEvasion=0
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+[NPC767] 
+Name=Javaspi
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=3250
+GiveGLD=3250
+MinHP=3250
+MaxHP=3250
+MaxHIT=75
+MinHIT=50
+DEF=0
+ELV=30
+PoderAtaque=0
+PoderEvasion=0
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+[NPC768] 
+Name=La Parca
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=3500
+GiveGLD=3500
+MinHP=3500
+MaxHP=3500
+MaxHIT=75
+MinHIT=50
+DEF=0
+ELV=30
+PoderAtaque=0
+PoderEvasion=0
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+[NPC769] 
+Name=Licantropo
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=4000
+GiveGLD=4000
+MinHP=4000
+MaxHP=4000
+MaxHIT=75
+MinHIT=50
+DEF=0
+ELV=30
+PoderAtaque=0
+PoderEvasion=0
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+[NPC770] 
+Name=Viuda Negra
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=4200
+GiveGLD=4200
+MinHP=4200
+MaxHP=4200
+MaxHIT=75
+MinHIT=50
+DEF=0
+ELV=30
+PoderAtaque=0
+PoderEvasion=0
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+[NPC771] 
+Name=Gran Arbol Milenario
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=4500
+GiveGLD=4500
+MinHP=4500
+MaxHP=4500
+MaxHIT=75
+MinHIT=50
+DEF=0
+ELV=30
+PoderAtaque=0
+PoderEvasion=0
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+[NPC772] 
+Name=Adorador de Zharkel
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=3500
+GiveGLD=3500
+MinHP=3500
+MaxHP=3500
+MaxHIT=95
+MinHIT=80
 DEF=50
 ELV=30
 PoderAtaque=260
@@ -3691,7 +4949,7 @@ NROITEMS=0
 ##################
 
 [NPC800] 
-Name=Oso Polar Artico
+Name=Oso Polar
 NpcType=0
 Head=0
 Heading=1
@@ -3719,7 +4977,7 @@ BackUp=0
 NROITEMS=0
 
 [NPC801] 
-Name=Lobo Polar
+Name=Troglodita
 NpcType=0
 Head=0
 Heading=1
@@ -3732,12 +4990,12 @@ Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=3200
-GiveGLD=3200
-MinHP=3200
-MaxHP=3200
-MaxHIT=150
-MinHIT=95
+GiveEXP=7500
+GiveGLD=7500
+MinHP=7500
+MaxHP=7500
+MaxHIT=210
+MinHIT=180
 DEF=50
 ELV=35
 PoderAtaque=260
@@ -3831,7 +5089,7 @@ BackUp=0
 NROITEMS=0
 
 [NPC805] 
-Name=Excavador Viviente
+Name=Esbirro Excavador
 NpcType=0
 Head=0
 Heading=1
@@ -3848,8 +5106,8 @@ GiveEXP=4500
 GiveGLD=4500
 MinHP=4500
 MaxHP=4500
-MaxHIT=150
-MinHIT=100
+MaxHIT=120
+MinHIT=95
 DEF=50
 ELV=35
 PoderAtaque=260
@@ -3859,7 +5117,7 @@ BackUp=0
 NROITEMS=0
 
 [NPC806] 
-Name=Tentaculoso
+Name=Observador de las Profundidades
 NpcType=0
 Head=0
 Heading=1
@@ -3876,8 +5134,8 @@ GiveEXP=4000
 GiveGLD=4000
 MinHP=4000
 MaxHP=4000
-MaxHIT=150
-MinHIT=100
+MaxHIT=70
+MinHIT=50
 DEF=50
 ELV=35
 PoderAtaque=260
@@ -3887,67 +5145,7 @@ BackUp=0
 NROITEMS=0
 
 [NPC807] 
-Name=Adorador de Zharkel
-NpcType=0
-Head=0
-Heading=1
-Body=43
-Movement=3
-AguaValida=0
-Attackable=1
-ReSpawn=1
-Hostile=1
-Domable=0
-Alineacion=2
-Comercia=0
-GiveEXP=3500
-GiveGLD=3500
-MinHP=3500
-MaxHP=3500
-MaxHIT=95
-MinHIT=80
-DEF=50
-ELV=35
-PoderAtaque=260
-PoderEvasion=150
-Nroitems=1
-BackUp=0
-NROITEMS=0
-
-##################
-####LEVEL 40######
-##################
-
-[NPC850] 
-Name=Pinguino Mutante
-NpcType=0
-Head=0
-Heading=1
-Body=43
-Movement=3
-AguaValida=0
-Attackable=1
-ReSpawn=1
-Hostile=1
-Domable=0
-Alineacion=2
-Comercia=0
-GiveEXP=7500
-GiveGLD=7500
-MinHP=7500
-MaxHP=7500
-MaxHIT=210
-MinHIT=180
-DEF=50
-ELV=40
-PoderAtaque=260
-PoderEvasion=150
-Nroitems=1
-BackUp=0
-NROITEMS=0
-
-[NPC851] 
-Name=Esclavo Helado
+Name=Exclavo Helado
 NpcType=0
 Head=0
 Heading=1
@@ -3967,14 +5165,158 @@ MaxHP=5500
 MaxHIT=170
 MinHIT=150
 DEF=50
-ELV=40
+ELV=35
 PoderAtaque=260
 PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
 
-[NPC852] 
+[NPC808] 
+Name=Gigante Terrorifico
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=3500
+GiveGLD=3500
+MinHP=3500
+MaxHP=3500
+MaxHIT=170
+MinHIT=150
+DEF=50
+ELV=35
+PoderAtaque=260
+PoderEvasion=150
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+[NPC809] 
+Name=Señor del Terror
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=5000
+GiveGLD=5000
+MinHP=5000
+MaxHP=5000
+MaxHIT=120
+MinHIT=95
+DEF=50
+ELV=35
+PoderAtaque=260
+PoderEvasion=150
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+[NPC810] 
+Name=Ciclope
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=5500
+GiveGLD=5500
+MinHP=5500
+MaxHP=5500
+MaxHIT=120
+MinHIT=95
+DEF=50
+ELV=35
+PoderAtaque=260
+PoderEvasion=150
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+[NPC811] 
+Name=Reptiliano
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=5250
+GiveGLD=5250
+MinHP=5250
+MaxHP=5250
+MaxHIT=120
+MinHIT=95
+DEF=50
+ELV=35
+PoderAtaque=260
+PoderEvasion=150
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+[NPC812] 'WORLDBOSS
+Name=Crolusco 
+NpcType=12
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=10000
+GiveGLD=10000
+MinHP=10000
+MaxHP=1000
+MaxHIT=220
+MinHIT=180
+DEF=100
+ELV=35
+PoderAtaque=260
+PoderEvasion=150
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+##################
+####LEVEL 40######
+##################
+
+[NPC850] 
 Name=Beholder Helado
 NpcType=0
 Head=0
@@ -4002,35 +5344,7 @@ Nroitems=1
 BackUp=0
 NROITEMS=0
 
-[NPC853] 
-Name=Golem de Hielo
-NpcType=0
-Head=0
-Heading=1
-Body=43
-Movement=3
-AguaValida=0
-Attackable=1
-ReSpawn=1
-Hostile=1
-Domable=0
-Alineacion=2
-Comercia=0
-GiveEXP=10000
-GiveGLD=10000
-MinHP=10000
-MaxHP=1000
-MaxHIT=170
-MinHIT=150
-DEF=50
-ELV=40
-PoderAtaque=260
-PoderEvasion=150
-Nroitems=1
-BackUp=0
-NROITEMS=0
-
-[NPC854] 
+[NPC851] 
 Name=Genio Congelado
 NpcType=0
 Head=0
@@ -4058,8 +5372,120 @@ Nroitems=1
 BackUp=0
 NROITEMS=0
 
+[NPC852] 
+Name=Kraken
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=6200
+GiveGLD=6200
+MinHP=6200
+MaxHP=6200
+MaxHIT=139
+MinHIT=120
+DEF=50
+ELV=40
+PoderAtaque=260
+PoderEvasion=150
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+[NPC853] 
+Name=Beholder
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=6500
+GiveGLD=6500
+MinHP=6500
+MaxHP=6500
+MaxHIT=170
+MinHIT=150
+DEF=50
+ELV=40
+PoderAtaque=260
+PoderEvasion=150
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+[NPC854] 
+Name=Guerrero Troll
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=7200
+GiveGLD=7200
+MinHP=7200
+MaxHP=7200
+MaxHIT=139
+MinHIT=120
+DEF=0
+ELV=40
+PoderAtaque=0
+PoderEvasion=0
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
 [NPC855] 
-Name=Reina Araña Polar
+Name=Jefe Troll
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=8000
+GiveGLD=8000
+MinHP=8000
+MaxHP=8000
+MaxHIT=139
+MinHIT=120
+DEF=0
+ELV=40
+PoderAtaque=0
+PoderEvasion=0
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+[NPC856] 
+Name=Lanzapiedras Troll
 NpcType=0
 Head=0
 Heading=1
@@ -4076,12 +5502,348 @@ GiveEXP=7500
 GiveGLD=7500
 MinHP=7500
 MaxHP=7500
-MaxHIT=170
-MinHIT=150
-DEF=50
+MaxHIT=139
+MinHIT=120
+DEF=0
 ELV=40
-PoderAtaque=260
-PoderEvasion=150
+PoderAtaque=0
+PoderEvasion=0
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+[NPC857] 
+Name=Troll Decapitador
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=7000
+GiveGLD=7000
+MinHP=7000
+MaxHP=7000
+MaxHIT=139
+MinHIT=120
+DEF=0
+ELV=40
+PoderAtaque=0
+PoderEvasion=0
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+[NPC858] 
+Name=Troll Guardian
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=7000
+GiveGLD=7000
+MinHP=7000
+MaxHP=7000
+MaxHIT=139
+MinHIT=120
+DEF=0
+ELV=40
+PoderAtaque=0
+PoderEvasion=0
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+[NPC859] 
+Name=Beeholder
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=1500
+GiveGLD=1500
+MinHP=1500
+MaxHP=1500
+MaxHIT=139
+MinHIT=120
+DEF=0
+ELV=40
+PoderAtaque=0
+PoderEvasion=0
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+[NPC860] 
+Name=Demonio
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=8500
+GiveGLD=8500
+MinHP=8500
+MaxHP=8500
+MaxHIT=139
+MinHIT=120
+DEF=0
+ELV=40
+PoderAtaque=0
+PoderEvasion=0
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+[NPC861] 
+Name=Fenrir
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=6500
+GiveGLD=6500
+MinHP=6500
+MaxHP=6500
+MaxHIT=139
+MinHIT=120
+DEF=0
+ELV=40
+PoderAtaque=0
+PoderEvasion=0
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+[NPC862] 
+Name=Brachy Auratum
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=8000
+GiveGLD=8000
+MinHP=8000
+MaxHP=8000
+MaxHIT=139
+MinHIT=120
+DEF=0
+ELV=40
+PoderAtaque=0
+PoderEvasion=0
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+[NPC863] 
+Name=Guardian Raider
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=3000
+GiveGLD=3000
+MinHP=3000
+MaxHP=3000
+MaxHIT=139
+MinHIT=120
+DEF=0
+ELV=40
+PoderAtaque=0
+PoderEvasion=0
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+[NPC864] 
+Name=Guardian Raider
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=3000
+GiveGLD=3000
+MinHP=3000
+MaxHP=3000
+MaxHIT=139
+MinHIT=120
+DEF=0
+ELV=40
+PoderAtaque=0
+PoderEvasion=0
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+[NPC865] 
+Name=Ogro Brujo
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=8100
+GiveGLD=8100
+MinHP=8100
+MaxHP=8100
+MaxHIT=139
+MinHIT=120
+DEF=0
+ELV=40
+PoderAtaque=0
+PoderEvasion=0
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+[NPC866] 
+Name=Ogro Guerrero
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=8100
+GiveGLD=8100
+MinHP=8100
+MaxHP=8100
+MaxHIT=139
+MinHIT=120
+DEF=0
+ELV=40
+PoderAtaque=0
+PoderEvasion=0
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+[NPC867] 
+Name=Cria de Dragon
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=8500
+GiveGLD=8500
+MinHP=8500
+MaxHP=8500
+MaxHIT=139
+MinHIT=120
+DEF=0
+ELV=40
+PoderAtaque=0
+PoderEvasion=0
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+[NPC868] 
+Name=Octopus
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=6900
+GiveGLD=6900
+MinHP=6900
+MaxHP=6900
+MaxHIT=139
+MinHIT=120
+DEF=0
+ELV=40
+PoderAtaque=0
+PoderEvasion=0
 Nroitems=1
 BackUp=0
 NROITEMS=0
@@ -4090,12 +5852,12 @@ NROITEMS=0
 ####LEVEL 45######
 ##################
 
-[NPC900] '*
+[NPC900] 
 Name=Yeti
 NpcType=0
 Head=0
 Heading=1
-Body=641
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
@@ -4119,6 +5881,234 @@ BackUp=0
 NROITEMS=0
 
 [NPC901] 
+Name=Ettin
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=11000
+GiveGLD=11000
+MinHP=11000
+MaxHP=11000
+MaxHIT=170
+MinHIT=150
+DEF=50
+ELV=45
+PoderAtaque=260
+PoderEvasion=150
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+[NPC902] 
+Name=Reina Araña Polar
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=7500
+GiveGLD=7500
+MinHP=7500
+MaxHP=7500
+MaxHIT=170
+MinHIT=150
+DEF=50
+ELV=45
+PoderAtaque=260
+PoderEvasion=150
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+[NPC903] 
+Name=Golem de Hielo
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=10000
+GiveGLD=10000
+MinHP=10000
+MaxHP=10000
+MaxHIT=170
+MinHIT=150
+DEF=50
+ELV=45
+PoderAtaque=260
+PoderEvasion=150
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+[NPC904] 
+Name=Bomba de Lava
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=10000
+GiveGLD=10000
+MinHP=10000
+MaxHP=10000
+MaxHIT=170
+MinHIT=150
+DEF=50
+ELV=45
+PoderAtaque=260
+PoderEvasion=150
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+[NPC905] 
+Name=Protector de Titan
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=15000
+GiveGLD=15000
+MinHP=15000
+MaxHP=15000
+MaxHIT=170
+MinHIT=150
+DEF=50
+ELV=45
+PoderAtaque=260
+PoderEvasion=150
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+[NPC906] 
+Name=Protector de Lava de Titan
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=15000
+GiveGLD=15000
+MinHP=15000
+MaxHP=15000
+MaxHIT=170
+MinHIT=150
+DEF=50
+ELV=45
+PoderAtaque=260
+PoderEvasion=150
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+[NPC907] 
+Name=Demonio Guerrero
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=15000
+GiveGLD=15000
+MinHP=15000
+MaxHP=15000
+MaxHIT=170
+MinHIT=150
+DEF=50
+ELV=45
+PoderAtaque=260
+PoderEvasion=150
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+[NPC908] 
+Name=Señor del Hielo
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=12000
+GiveGLD=12000
+MinHP=12000
+MaxHP=12000
+MaxHIT=160
+MinHIT=140
+DEF=50
+ELV=45
+PoderAtaque=0
+PoderEvasion=150
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+##################
+####LEVEL 50######
+##################
+
+[NPC1000] 
 Name=Demonio Helado
 NpcType=0
 Head=0
@@ -4139,14 +6129,130 @@ MaxHP=20000
 MaxHIT=170
 MinHIT=150
 DEF=50
-ELV=45
+ELV=50
 PoderAtaque=260
 PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
 
-[NPC903] 
+[NPC1001] 
+Name=Smaug
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=20000
+GiveGLD=20000
+MinHP=20000
+MaxHP=20000
+MaxHIT=170
+MinHIT=150
+DEF=50
+ELV=50
+PoderAtaque=260
+PoderEvasion=150
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+[NPC1002] 
+Name=Demonio Brujo
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=20000
+GiveGLD=20000
+MinHP=20000
+MaxHP=20000
+MaxHIT=170
+MinHIT=150
+DEF=50
+ELV=50
+PoderAtaque=260
+PoderEvasion=150
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+[NPC1003] 
+Name=Golem de Lava
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=20000
+GiveGLD=20000
+MinHP=20000
+MaxHP=20000
+MaxHIT=170
+MinHIT=150
+DEF=50
+ELV=50
+PoderAtaque=260
+PoderEvasion=150
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+[NPC1004] 
+Name=Gran Demonio Behemoth
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=20000
+GiveGLD=20000
+MinHP=20000
+MaxHP=20000
+MaxHIT=170
+MinHIT=150
+DEF=50
+ELV=50
+PoderAtaque=260
+PoderEvasion=150
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+##################
+####LEVEL 55######
+##################
+
+[NPC1000] 
 Name=Rey Examine Word Boss
 NpcType=0
 Head=0
@@ -4167,24 +6273,14 @@ MaxHP=30000
 MaxHIT=170
 MinHIT=150
 DEF=50
-ELV=45
+ELV=55
 PoderAtaque=260
 PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
 
-##################
-####LEVEL 50######
-##################
-
-'1000 - 1049
-
-##################
-####LEVEL 55######
-##################
-
-[NPC1050]
+[NPC1001]
 Name=Titan de Fuego
 NpcType=0
 Head=0
@@ -4214,7 +6310,7 @@ Invocacion=1
 NROITEMS=1
 Obj1=1254-1
 
-[NPC1051]
+[NPC1002]
 Name=Titan de Agua
 NpcType=0
 Head=0
@@ -4244,7 +6340,7 @@ Invocacion=1
 NROITEMS=1
 Obj1=1253-1
 
-[NPC1052]
+[NPC1003]
 Name=Titan de Tierra
 NpcType=0
 Head=0
@@ -4274,6 +6370,34 @@ NoShadow=1
 Invocacion=1
 NROITEMS=1
 Obj1=1252-1
+
+[NPC1004] 
+Name=Dragon Legendario
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=10000
+GiveGLD=10000
+MinHP=10000
+MaxHP=10000
+MaxHIT=170
+MinHIT=150
+DEF=50
+ELV=55
+PoderAtaque=260
+PoderEvasion=150
+Nroitems=1
+BackUp=0
+NROITEMS=0
 
 ##############################################
 ##############NPC PRETORIANOS#################

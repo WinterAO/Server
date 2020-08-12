@@ -1189,6 +1189,7 @@ End Type
  
 Public Type tQuestStats
 
+    QuestEnCurso(1 To MAXUSERQUESTS) As Integer 'Guarda las ID de las quest en curso
     Quests(1 To MAXQUESTS) As tUserQuest
     NumQuestsDone As Integer
 
@@ -1495,8 +1496,6 @@ Public Type UserFlags
     ParalizedByIndex As Integer
     ParalizedByNpcIndex As Integer
     
-    TargetBot As Byte
-    
     Global As Byte 'Indica si el usuario puede usar el global
     
     CasteoSpell As tCasteoSpell
@@ -1600,7 +1599,7 @@ Public Type AccountCharacters
     Class As Byte
     race As Byte
     Map As Integer
-    Level As Byte
+    level As Byte
     Gold As Long
     criminal As Boolean
     dead As Boolean
@@ -1920,13 +1919,12 @@ Public Type MapBlock
 
     Blocked As Byte
     Graphic(1 To 4) As Long
-    Userindex As Integer
+    UserIndex As Integer
     NPCIndex As Integer
     ObjInfo As obj
     TileExit As WorldPos
     Trigger As eTrigger
     Particulas As Integer
-    BotIndex As Byte
     
 End Type
 
@@ -1990,11 +1988,6 @@ Public IniPath                            As String
 ''
 'Ruta base para guardar los chars
 Public CharPath                           As String
-
-''
-'Ruta para guardar las cuentas
-Public AccountPath                        As String
-
 ''
 'Ruta base para los archivos de mapas
 Public MapPath                            As String

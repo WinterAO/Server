@@ -132,7 +132,7 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
 
     Dim query  As String
 
-    Dim UserId As Integer
+    Dim UserID As Integer
 
     Dim LoopC  As Byte
 
@@ -192,14 +192,14 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
         Set Database_RecordSet = Database_Connection.Execute("SELECT LAST_INSERT_ID();")
 
         If Database_RecordSet.BOF Or Database_RecordSet.EOF Then
-            UserId = 1
+            UserID = 1
 
         End If
 
-        UserId = val(Database_RecordSet.Fields(0).Value)
+        UserID = val(Database_RecordSet.Fields(0).Value)
         Set Database_RecordSet = Nothing
 
-        .ID = UserId
+        .ID = UserID
 
         'User attributes
         query = "INSERT INTO attribute (user_id, number, value) VALUES "
@@ -332,7 +332,7 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
 
     Dim query  As String
 
-    Dim UserId As Integer
+    Dim UserID As Integer
 
     Dim LoopC  As Integer
 
@@ -616,7 +616,7 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
         'Start setting data
         .ID = Database_RecordSet!ID
         .Name = Database_RecordSet!Name
-        .Stats.ELV = Database_RecordSet!Level
+        .Stats.ELV = Database_RecordSet!level
         .Stats.Exp = Database_RecordSet!Exp
         .Stats.ELU = Database_RecordSet!ELU
         .Genero = Database_RecordSet!genre_id
@@ -899,6 +899,8 @@ Public Sub LoadQuestStats(ByVal UserIndex As Integer)
                         
                 End If
             Wend
+                
+           Call ListarQuestsenCurso(UserIndex)
                 
         End If
 
@@ -1948,7 +1950,7 @@ Public Function GetUserLevel(ByVal UserName As String) As Byte
 
     End If
 
-    GetUserLevel = CByte(Database_RecordSet!Level)
+    GetUserLevel = CByte(Database_RecordSet!level)
     Set Database_RecordSet = Nothing
     
 #If DBConexionUnica = 0 Then
@@ -2109,7 +2111,7 @@ Public Sub SendUserStatsTxtDatabase(ByVal sendIndex As Integer, ByVal UserName A
 
         End If
 
-        Call WriteConsoleMsg(sendIndex, "Nivel: " & Database_RecordSet!Level & "  EXP: " & Database_RecordSet!Exp & "/" & Database_RecordSet!ELU, FontTypeNames.FONTTYPE_INFO)
+        Call WriteConsoleMsg(sendIndex, "Nivel: " & Database_RecordSet!level & "  EXP: " & Database_RecordSet!Exp & "/" & Database_RecordSet!ELU, FontTypeNames.FONTTYPE_INFO)
         Call WriteConsoleMsg(sendIndex, "Energia: " & Database_RecordSet!min_sta & "/" & Database_RecordSet!max_sta, FontTypeNames.FONTTYPE_INFO)
         Call WriteConsoleMsg(sendIndex, "Salud: " & Database_RecordSet!min_hp & "/" & Database_RecordSet!max_hp, FontTypeNames.FONTTYPE_INFO)
         Call WriteConsoleMsg(sendIndex, "Mana: " & Database_RecordSet!min_man & "/" & Database_RecordSet!max_man, FontTypeNames.FONTTYPE_INFO)
@@ -2403,7 +2405,7 @@ Public Sub SendCharacterInfoDatabase(ByVal UserIndex As Integer, ByVal UserName 
 
     End If
 
-    Call Protocol.WriteCharacterInfo(UserIndex, UserName, Database_RecordSet!race_id, Database_RecordSet!class_id, Database_RecordSet!genre_id, Database_RecordSet!Level, Database_RecordSet!Gold, Database_RecordSet!bank_gold, Database_RecordSet!rep_average, SanitizeNullValue(Database_RecordSet!guild_requests_history, vbNullString), gName, Miembro, Database_RecordSet!pertenece_real, Database_RecordSet!pertenece_caos, Database_RecordSet!ciudadanos_matados, Database_RecordSet!criminales_matados)
+    Call Protocol.WriteCharacterInfo(UserIndex, UserName, Database_RecordSet!race_id, Database_RecordSet!class_id, Database_RecordSet!genre_id, Database_RecordSet!level, Database_RecordSet!Gold, Database_RecordSet!bank_gold, Database_RecordSet!rep_average, SanitizeNullValue(Database_RecordSet!guild_requests_history, vbNullString), gName, Miembro, Database_RecordSet!pertenece_real, Database_RecordSet!pertenece_caos, Database_RecordSet!ciudadanos_matados, Database_RecordSet!criminales_matados)
 
 #If DBConexionUnica = 0 Then
     Call Database_Close

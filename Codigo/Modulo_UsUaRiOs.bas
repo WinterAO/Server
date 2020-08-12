@@ -550,7 +550,7 @@ Public Sub MakeUserChar(ByVal toMap As Boolean, _
     '15/01/2010: ZaMa - Ahora se envia el color del nick.
     '*************************************************
 
-    On Error GoTo Errhandler
+    On Error GoTo errHandler
 
     Dim CharIndex  As Integer
 
@@ -643,7 +643,7 @@ Public Sub MakeUserChar(ByVal toMap As Boolean, _
 
     Exit Sub
 
-Errhandler:
+errHandler:
     LogError ("MakeUserChar: num: " & Err.Number & " desc: " & Err.description)
     'Resume Next
     Call CloseSocket(Userindex)
@@ -684,10 +684,12 @@ Public Sub CheckUserLevel(ByVal Userindex As Integer, Optional ByVal PrintInCons
     Dim aux              As Integer
     Dim DistVida(1 To 5) As Integer
     Dim GI               As Integer 'Guild Index
+    Dim SubiodeLvL       As Boolean
     
-    On Error GoTo Errhandler
+    On Error GoTo errHandler
     
     WasNewbie = EsNewbie(Userindex)
+    SubiodeLvL = False
     
     With UserList(Userindex)
 
@@ -868,7 +870,6 @@ Public Sub CheckUserLevel(ByVal Userindex As Integer, Optional ByVal PrintInCons
 
             End If
             
-            
             'Notificamos al user
             If PrintInConsole Then
                 If AumentoHP > 0 Then
@@ -892,6 +893,9 @@ Public Sub CheckUserLevel(ByVal Userindex As Integer, Optional ByVal PrintInCons
 
                 End If
             End If
+            
+            'Marcamos que subio del lvl
+            SubiodeLvL = True
             
             Call SendData(SendTarget.ToPCArea, Userindex, PrepareMessageCreateFX(UserList(Userindex).Char.CharIndex, FX_PASA_NIVEL, 0))
             
@@ -943,12 +947,13 @@ Public Sub CheckUserLevel(ByVal Userindex As Integer, Optional ByVal PrintInCons
     
     Call WriteUpdateUserStats(Userindex)
     
-    'Guardamos los datos del usuario.
-    Call SaveUser(Userindex, True)
+    'Si subio de nivel guardamos los datos del usuario.
+    If SubiodeLvL Then _
+        Call SaveUser(Userindex, True)
     
     Exit Sub
 
-Errhandler:
+errHandler:
     Call LogError("Error en la subrutina CheckUserLevel - Error : " & Err.Number & " - Description : " & Err.description)
 
 End Sub
@@ -1647,7 +1652,6 @@ Public Sub UserDie(ByVal Userindex As Integer, Optional ByVal AttackerIndex As I
         .flags.AtacadoPorUser = 0
         .flags.Envenenado = 0
         .flags.Muerto = 1
-        .flags.TargetBot = 0
 
         .Counters.Trabajando = 0
         
@@ -1958,7 +1962,7 @@ Sub Tilelibre(ByRef Pos As WorldPos, _
     '23/01/2007 -> Pablo (ToxicWaste): El agua es ahora un TileLibre agregando las condiciones necesarias.
     '18/09/2010: ZaMa - Aplico optimizacion de busqueda de tile libre en forma de rombo.
     '**************************************************************
-    On Error GoTo Errhandler
+    On Error GoTo errHandler
 
     Dim Found As Boolean
 
@@ -2009,7 +2013,7 @@ Sub Tilelibre(ByRef Pos As WorldPos, _
     
     Exit Sub
     
-Errhandler:
+errHandler:
     Call LogError("Error en Tilelibre. Error: " & Err.Number & " - " & Err.description)
 
 End Sub
@@ -2723,7 +2727,7 @@ Public Function FarthestPet(ByVal Userindex As Integer) As Integer
     'Last Modify Date: 18/11/2009
     'Devuelve el indice de la mascota mas lejana.
     '**************************************************************
-    On Error GoTo Errhandler
+    On Error GoTo errHandler
     
     Dim PetIndex      As Integer
 
@@ -2769,7 +2773,7 @@ Public Function FarthestPet(ByVal Userindex As Integer) As Integer
 
     Exit Function
     
-Errhandler:
+errHandler:
     Call LogError("Error en FarthestPet")
 
 End Function

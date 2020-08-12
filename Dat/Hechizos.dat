@@ -590,7 +590,7 @@ Resis=0
 '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 [HECHIZO10]
-Nombre=Devolver Movilidad
+Nombre=Remover Paralisis
 Desc=Conjuro con el cual podrás contrarrestar los efectos tanto de la parálisis como de la inmovilización. En virtud de que los hechizos de estatismo son usados con mucha frecuencia por todos las clases mágicas que habitan estas tierras, éste conjuro se vuelve prácticamente vital para cualquier valiente que esté dispuesto a combatir.
 PalabrasMagicas=AN HOAX VORP
 HechizeroMsg=Le has devuelto la movilidad a 
