@@ -2266,7 +2266,7 @@ Public Enum eGMCommands
     GuildOnlineMembers      '/ONCLAN
     TeleportCreate          '/CT
     TeleportDestroy         '/DT
-    RainToggle              '/LLUVIA
+    MeteoToggle             '/METEO
     SetCharDescription      '/SETDESC
     ForceMUSICToMap          '/FORCEMUSICMAP
     ForceWAVEToMap          '/FORCEWAVMAP

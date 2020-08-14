@@ -1222,8 +1222,8 @@ Private Sub HandleGMCommands(ByVal UserIndex As Integer)
             Case eGMCommands.TeleportDestroy         '/DT
                 Call HandleTeleportDestroy(UserIndex)
         
-            Case eGMCommands.RainToggle              '/LLUVIA
-                Call HandleRainToggle(UserIndex)
+            Case eGMCommands.MeteoToggle             '/METEO
+                Call HandleMeteoToggle(UserIndex)
         
             Case eGMCommands.SetCharDescription      '/SETDESC
                 Call HandleSetCharDescription(UserIndex)
@@ -12782,28 +12782,32 @@ Private Sub HandleExitDestroy(ByVal UserIndex As Integer)
 End Sub
 
 ''
-' Handles the "RainToggle" message.
+' Handles the "MeteoToggle" message.
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleRainToggle(ByVal UserIndex As Integer)
+Private Sub HandleMeteoToggle(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 12/29/06
     '
     '***************************************************
+    Dim Forzar As Byte
+    
     With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
+
+        Forzar = .incomingData.ReadByte
         
         If .flags.Privilegios And (PlayerType.User Or PlayerType.Consejero) Then Exit Sub
         
-        Call LogGM(.Name, "/LLUVIA")
+        Call LogGM(.Name, "/METEO " & Forzar)
         
         Lloviendo = Not Lloviendo
         
-        Call SortearClima
+        Call SortearClima(Forzar)
 
     End With
 
@@ -21203,7 +21207,7 @@ Public Function PrepareMessageActualizarClima() As String
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
-    'Prepares the "RainToggle" message and returns it
+    'Prepares the "ActualizarClima" message and returns it
     '***************************************************
     With auxiliarBuffer
         Call .WriteByte(ServerPacketID.ActualizarClima)
