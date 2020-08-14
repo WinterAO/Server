@@ -153,13 +153,13 @@ End Enum
 Public Enum PlayerType
 
     User = &H1
+    ChaosCouncil = &H40
+    RoyalCouncil = &H80
+    RoleMaster = &H20
     Consejero = &H2
     SemiDios = &H4
     Dios = &H8
     Admin = &H10
-    RoleMaster = &H20
-    ChaosCouncil = &H40
-    RoyalCouncil = &H80
 
 End Enum
 

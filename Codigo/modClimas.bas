@@ -9,21 +9,21 @@ Option Explicit
 
 Enum eColorEstado
     Amanecer = 0
-    MedioDia
-    Tarde
-    Noche
-    Lluvia
-    Nieve
-    Niebla
-    FogLluvia 'Niebla mas lluvia
+    MedioDia = 1
+    Tarde = 2
+    Noche = 3
+    Lluvia = 4
+    Nieve = 5
+    Niebla = 6
+    FogLluvia = 7 'Niebla mas lluvia
 End Enum
 
 Public DayStatus As eColorEstado 'Establece el color actual del dia
 
 'Todo en minutos:
 'Porcentaje del 1 al 100 de la lluvia sea con niebla
-Private Const FogProb As Byte = 7 'Niebla
-Private Const FogLluviaProb As Byte = 2 'Nieva + Lluvia
+Private Const FogProb As Byte = 20 'Niebla
+Private Const FogLluviaProb As Byte = 5 'Nieva + Lluvia
 
 Public Sub SortearHorario(Optional ByVal Clima As eColorEstado)
 '***************************************************************************************
@@ -99,25 +99,25 @@ Public Sub SortearClima()
 '**********************************************
 
     Dim Clima As eColorEstado
-    Dim DadosAleatorios As Byte
+    Dim DadosAleatorios As Integer
     
     '¿Esta lloviendo?
     If Lloviendo Then
-        
+    
         'Por el momento seteamos la lluvia, ya que no requiere probs
         Clima = eColorEstado.Lluvia
         
         'Vamos a tirar los datos
-        DadosAleatorios = RandomNumber(0, 100)
+        DadosAleatorios = RandomNumber(1, 1000)
         
         '¿Va haber niebla?
-        If FogProb <= DadosAleatorios Then
+        If FogProb >= DadosAleatorios Then
         
             'Ok, seteamos niebla
             Clima = eColorEstado.Niebla
         
             'Este porcentaje siempre es menor ¿lo pasara?
-            If FogLluviaProb <= DadosAleatorios Then
+            If FogLluviaProb >= DadosAleatorios Then
                 '¡Premio! Se vieneeee....
                 Clima = eColorEstado.FogLluvia
             End If
@@ -125,7 +125,7 @@ Public Sub SortearClima()
         End If
         
     End If
-    
+
     'Sea cual sea el resultado, lo mandamos
     Call SortearHorario(Clima)
     
