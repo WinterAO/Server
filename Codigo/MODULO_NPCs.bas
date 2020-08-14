@@ -345,6 +345,7 @@ Private Sub ResetNpcFlags(ByVal NPCIndex As Integer)
         .LanzaSpells = 0
         .invisible = 0
         .Maldicion = 0
+        .SiguiendoGm = False
         .OldHostil = 0
         .OldMovement = 0
         .Paralizado = 0
@@ -880,7 +881,7 @@ Public Function MoveNPCChar(ByVal NPCIndex As Integer, ByVal nHeading As Byte) A
             
             UserIndex = MapData(.Pos.Map, nPos.X, nPos.Y).UserIndex
 
-            ' Si hay un usuario a donde se mueve el npc, entonces esta muerto
+            ' Si hay un usuario a donde se mueve el npc, entonces esta muerto o es un gm invisible
             If UserIndex > 0 Then
                 
                 ' No se traslada caspers de agua a tierra
@@ -888,6 +889,9 @@ Public Function MoveNPCChar(ByVal NPCIndex As Integer, ByVal nHeading As Byte) A
 
                 ' No se traslada caspers de tierra a agua
                 If Not HayAgua(.Pos.Map, nPos.X, nPos.Y) And HayAgua(.Pos.Map, .Pos.X, .Pos.Y) Then Exit Function
+                
+                'Se choca con los gm invisible si es que esta siguiendo a uno por el comando /seguir
+                If .flags.SiguiendoGm = True And UserList(UserIndex).flags.AdminInvisible = 1 Then Exit Function
                 
                 With UserList(UserIndex)
                     ' Actualizamos posicion y mapa
@@ -1323,11 +1327,13 @@ Public Sub DoFollow(ByVal NPCIndex As Integer, ByVal UserName As String)
         If .flags.Follow Then
             .flags.AttackedBy = vbNullString
             .flags.Follow = False
+            .flags.SiguiendoGm = False
             .Movement = .flags.OldMovement
             .Hostile = .flags.OldHostil
         Else
             .flags.AttackedBy = UserName
             .flags.Follow = True
+            .flags.SiguiendoGm = True
             .Movement = TipoAI.NPCDEFENSA
             .Hostile = 0
 

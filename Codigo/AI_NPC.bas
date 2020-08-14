@@ -585,7 +585,7 @@ Private Sub SeguirAgresor(ByVal NPCIndex As Integer)
 
                             End If
 
-                            If UserList(UI).flags.Muerto = 0 And UserList(UI).flags.invisible = 0 And UserList(UI).flags.Oculto = 0 Then
+                             If (UserList(UI).flags.Muerto = 0 And UserList(UI).flags.invisible = 0 And UserList(UI).flags.Oculto = 0) Or (.flags.SiguiendoGm = True) Then
                                 If .flags.LanzaSpells > 0 Then
                                     Call NpcLanzaUnSpell(NPCIndex, UI)
                                 Else
@@ -683,7 +683,7 @@ Private Sub RestoreOldMovement(ByVal NPCIndex As Integer)
             .Movement = .flags.OldMovement
             .Hostile = .flags.OldHostil
             .flags.AttackedBy = vbNullString
-
+            .flags.SiguiendoGm = False
         End If
 
     End With

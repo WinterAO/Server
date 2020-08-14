@@ -1794,6 +1794,7 @@ Public Type NPCFlags
     invisible As Byte
     Maldicion As Byte
     Bendicion As Byte
+    SiguiendoGm As Boolean
     
     Snd1 As Integer
     Snd2 As Integer
