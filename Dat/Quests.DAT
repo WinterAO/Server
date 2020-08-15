@@ -3,12 +3,12 @@ NumQuests=6
 
 [QUEST1]
 Nombre=Gallos Envenenados
-Desc=Las serpientes se han multiplicado envenenando inclusive a las gallinas, acaba con 10 viboras y 10 gallinas envenenadas y te daré una recompensa. Ademas, si me traes 5 venenos de vibora podre elaborar una poción.
+Desc=Las viboras se han multiplicado envenenando inclusive a las gallinas, acaba con 10 viboras y 10 gallinas envenenadas y te daré una recompensa. Ademas, si me traes 5 venenos de vibora podre elaborar una poción.
 RequiredLevel=1
  
 RequiredNPCs=2
-RequiredNPC1=518-10
-RequiredNPC2=517-10
+RequiredNPC1=518-10 'Vibora
+RequiredNPC2=517-10 'Pollo Envenenado
 
 RequiredOBJs=1
 RequiredOBJ1=1249-5
@@ -16,7 +16,9 @@ RequiredOBJ1=1249-5
 RewardEXP=800
 RewardGLD=1000
  
-RewardOBJs=0
+RewardOBJs=2
+RewardOBJ1=1203-100
+RewardOBJ2=166-20
  
 [QUEST2]
 Nombre=Murcielagos vs Gatos
@@ -24,8 +26,8 @@ Desc=Mi nombre es Ormerk, soy un Brujo. Necesito que acabes con 15 murciélagos 
 RequiredLevel=1
 
 RequiredNPCs=2
-RequiredNPC1=560-10
-RequiredNPC2=504-15
+RequiredNPC1=560-10 'Gato
+RequiredNPC2=504-15 'Murcielago
 
 RequiredOBJs=1
 RequiredOBJ1=666-5
@@ -41,17 +43,17 @@ Desc=Muchas gracias, mi me llaman Lerd, en su momento fui un gran guerrero, actu
 RequiredLevel=1
  
 RequiredNPCs=2
-RequiredNPC1=559-10
-RequiredNPC2=608-10
+RequiredNPC1=559-10 'Cria de lobo
+RequiredNPC2=608-10 'Orco
 
 RequiredOBJs=1
-RequiredOBJ1=1250-5
+RequiredOBJ1=1250-5 'Fragmento de Arma
  
 RewardEXP=2500
 RewardGLD=1700
  
 RewardOBJs=1
-RewardOBJ1=238-1
+RewardOBJ1=165-1 'Daga +1
 
 
 [QUEST4]
@@ -60,7 +62,7 @@ Desc=Solo debes acabar con el Unicornio, pero ten cuidado, no es tarea fácil, m
 RequiredLevel=1
  
 RequiredNPCs=1
-RequiredNPC1=607-1
+RequiredNPC1=607-1 'Unicornio
 
 RewardEXP=500
 RewardGLD=3500

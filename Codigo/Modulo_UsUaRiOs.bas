@@ -675,6 +675,7 @@ Public Sub CheckUserLevel(ByVal Userindex As Integer, Optional ByVal PrintInCons
     '08/04/2011: Amraphen - Arreglada la distribucion de probabilidades para la vida en el caso de promedio entero.
     '06/09/2019: Jopi - Guardado de usuario al pasar de nivel.
     '*************************************************
+    Dim Pts              As Integer
     Dim AumentoHIT       As Integer
     Dim AumentoMANA      As Integer
     Dim AumentoSTA       As Integer
@@ -709,6 +710,14 @@ Public Sub CheckUserLevel(ByVal Userindex As Integer, Optional ByVal PrintInCons
             If PrintInConsole Then
                 Call SendData(SendTarget.ToPCArea, Userindex, PrepareMessagePlayWave(SND_NIVEL, .Pos.X, .Pos.Y))
                 Call WriteConsoleMsg(Userindex, "Has subido de nivel!", FontTypeNames.FONTTYPE_INFO)
+            End If
+            
+            If .Stats.ELV = 1 Then
+                Pts = 10
+            Else
+                'For multiple levels being rised at once
+                Pts = Pts + 5
+
             End If
             
             .Stats.ELV = .Stats.ELV + 1
@@ -939,6 +948,17 @@ Public Sub CheckUserLevel(ByVal Userindex As Integer, Optional ByVal PrintInCons
                     Call WriteConsoleMsg(Userindex, "Debes abandonar el Dungeon Newbie.", FontTypeNames.FONTTYPE_INFO)
                 End If
 
+            End If
+
+        End If
+        
+        'Send all gained skill points at once (if any)
+        If Pts > 0 Then
+            Call WriteLevelUp(Userindex, Pts)
+            
+            .Stats.SkillPts = .Stats.SkillPts + Pts
+            If PrintInConsole Then
+                Call WriteConsoleMsg(Userindex, "Has ganado un total de " & Pts & " skillpoints.", FontTypeNames.FONTTYPE_INFO)
             End If
 
         End If
@@ -1549,7 +1569,17 @@ Sub SubirSkill(ByVal Userindex As Integer, _
     With UserList(Userindex)
 
         If .flags.Hambre = 0 And .flags.Sed = 0 Then
+            If .Counters.AsignedSkills < 10 Then
+                If Not .flags.UltimoMensaje = 7 Then
+                    Call WriteConsoleMsg(Userindex, "Para poder entrenar un skill debes asignar los 10 skills iniciales.", FontTypeNames.FONTTYPE_INFO)
+                    .flags.UltimoMensaje = 7
+
+                End If
                 
+                Exit Sub
+
+            End If
+            
             With .Stats
 
                 If .UserSkills(Skill) = MAXSKILLPOINTS Then Exit Sub

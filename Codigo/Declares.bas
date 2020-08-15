@@ -1379,6 +1379,7 @@ Public Type UserStats
     
     ELO As Integer
     
+    SkillPts As Integer
     ExpSkills(1 To NUMSKILLS) As Long
     EluSkills(1 To NUMSKILLS) As Long
     
@@ -1554,6 +1555,8 @@ Public Type UserCounters
     Cheat As modAntiCheat.TimeIntervalos
     
     failedUsageAttempts As Long
+    
+    AsignedSkills As Byte
     
     PacketsTick As Byte
 
@@ -1920,7 +1923,7 @@ Public Type MapBlock
 
     Blocked As Byte
     Graphic(1 To 4) As Long
-    UserIndex As Integer
+    Userindex As Integer
     NPCIndex As Integer
     ObjInfo As obj
     TileExit As WorldPos
