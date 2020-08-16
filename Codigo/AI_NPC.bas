@@ -1332,9 +1332,8 @@ Function PathFindingAI(ByVal NPCIndex As Integer) As Boolean
     'This function seeks the shortest path from the Npc
     'to the user's location.
     '***************************************************
-    Dim Y As Long
-
-    Dim X As Long
+    Dim Y           As Long
+    Dim X           As Long
     
     With Npclist(NPCIndex)
 
@@ -1365,16 +1364,11 @@ Function PathFindingAI(ByVal NPCIndex As Integer) As Boolean
                                 
                                 'Si es un WorldBoss y se aleja 10 tiles de su OrigPos se le devuelve.
                                 If Npclist(NPCIndex).NPCtype = eNPCType.WorldBoss Then
-                                    If Npclist(NPCIndex).Pos.X = Npclist(NPCIndex).Orig.X - 10 Or Npclist(NPCIndex).Pos.X = Npclist(NPCIndex).Orig.X + 10 Or _
-                                        Npclist(NPCIndex).Pos.Y = Npclist(NPCIndex).Orig.Y - 10 Or Npclist(NPCIndex).Pos.Y = Npclist(NPCIndex).Orig.Y + 10 Then
-                                            Dim DragPos As WorldPos
-                                            DragPos.Map = Npclist(NPCIndex).Orig.Map
-                                            DragPos.X = Npclist(NPCIndex).Orig.X
-                                            DragPos.Y = Npclist(NPCIndex).Orig.Y
-                                            
-                                            Call SpawnNpc(Npclist(NPCIndex).Numero, DragPos, True, False, True)
-                                            Call SendData(SendTarget.ToPCArea, NPCIndex, PrepareMessagePlayWave(SND_WARP, X, Y))
-                                            Call QuitarNPC(NPCIndex)
+
+                                    If Npclist(NPCIndex).Pos.X > (Npclist(NPCIndex).Orig.X - 5) Or Npclist(NPCIndex).Pos.X < (Npclist(NPCIndex).Orig.X + 5) Or _
+                                        Npclist(NPCIndex).Pos.Y > (Npclist(NPCIndex).Orig.Y - 5) Or Npclist(NPCIndex).Pos.Y < (Npclist(NPCIndex).Orig.Y + 5) Then
+
+                                            Call NPCTelep(NPCIndex, Npclist(NPCIndex).Orig, True)
                                         End If
                                 End If
                                 

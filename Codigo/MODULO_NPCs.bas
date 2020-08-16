@@ -1096,6 +1096,42 @@ Sub ReSpawnNpc(MiNPC As NPC)
 
 End Sub
 
+Public Sub NPCTelep(ByVal NPCIndex As Integer, Posicion As WorldPos, ByVal FXTelep As Boolean)
+    '***************************************************
+    'Author: Lorwik
+    'Last Modification: 16/08/2020
+    'Teletransporta a un NPC a una posicion
+    '***************************************************
+
+    Dim n
+    
+    With Npclist(NPCIndex)
+        
+        'Sacamos el NPC de la antigua posicion
+        MapData(.Pos.Map, .Pos.X, .Pos.Y).NPCIndex = 0
+        
+        Debug.Print "Antigua posicion: " & .Pos.Map & "," & .Pos.X & "," & .Pos.Y
+        Debug.Print "Posicion Original: " & Posicion.Map & "," & Posicion.X & "," & Posicion.Y
+        
+        'Cambiamos la antigua por la nueva
+        .Pos = Posicion
+        
+        'Añadimos el NPC a la nueva posicion
+'        MapData(.Pos.Map, .Pos.X, .Pos.Y).NPCIndex = NPCIndex
+        
+        Debug.Print "Nueva posicion: " & .Pos.Map & "," & .Pos.X & "," & .Pos.Y
+        
+        'Actualizamos los clientes
+        Call SendData(SendTarget.toMap, NPCIndex, PrepareMessageCharacterMove(.Char.CharIndex, .Pos.X, .Pos.Y))
+        
+        '¿Mostramos FX?
+        If FXTelep Then _
+            Call SendData(SendTarget.ToPCArea, NPCIndex, PrepareMessagePlayWave(SND_WARP, .Pos.X, .Pos.Y))
+    
+    End With
+    
+End Sub
+
 Private Sub NPCTirarOro(ByRef MiNPC As NPC)
     '***************************************************
     'Author: Unknown

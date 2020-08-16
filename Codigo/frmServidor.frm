@@ -515,7 +515,7 @@ End Sub
 
 Private Sub cmdWorldBackup_Click()
 
-    On Error GoTo Errhandler
+    On Error GoTo errHandler
 
     Me.MousePointer = 11
     FrmStat.Show
@@ -525,19 +525,19 @@ Private Sub cmdWorldBackup_Click()
     
     Exit Sub
 
-Errhandler:
+errHandler:
     Call LogError("Error en WORLDSAVE")
 
 End Sub
 
 Private Sub cmdRecargarGuardiasPosOrig_Click()
 
-    On Error GoTo Errhandler
+    On Error GoTo errHandler
 
     ReSpawnOrigPosNpcs
     Exit Sub
 
-Errhandler:
+errHandler:
     Call LogError("Error en cmdRecargarGuardiasPosOrig")
 
 End Sub

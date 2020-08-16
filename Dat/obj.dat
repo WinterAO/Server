@@ -14051,7 +14051,7 @@ MinDef=2
 Valor=0
 Crucial=0
 
-[OBJ1214]
+[OBJ1114]
 Name=Montura de Sanguijuela
 GrhIndex=29873
 ObjType=25
@@ -14064,7 +14064,7 @@ Valor=0
 Crucial=0
 MinSkill=50
 
-[OBJ1215]
+[OBJ1115]
 Name=Montura gran Rey Mono
 GrhIndex=29873
 ObjType=25
@@ -14077,7 +14077,7 @@ MinSkill=80
 Valor=0
 Crucial=0
 
-[OBJ1216]
+[OBJ1116]
 Name=Montura Acuatica
 GrhIndex=29873
 ObjType=31
