@@ -32,6 +32,7 @@ Explotar ===== El NPC tendra un 50% de explota haciendo el doble de su golpe min
 LanzaMensaje ===== El NPC mandara un mensaje cuando le quede un 10% de su vida
 ActivoPotencia ===== El NPC pegar el doble a partir de su 50% de vida
 Invocacion ===== NPC que son de invocacion
+Tepeable ===== Se activa con porcentaje. El porcentaje indicara a partir de que vida empezara hacerse TP por golpes (Del 1% al 100%)
 
 ##############################################
 ################ORDEN EN DAT##################
@@ -365,7 +366,7 @@ BackUp=1
 [NPC17] 'Armaduras Ramx
 Name=Armaduras
 Desc=Todo viaje esta lleno de peligros y no sabras que podria llegar a sucederte. Ven, y deja que te muestre las mejoras armaduras.
-Head=6
+Head=538
 Body=93
 Heading=4
 Movement=1
@@ -436,21 +437,16 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=24
-NROITEMS=14
-Obj1=363-1000 'Ataque de Hambre
-Obj2=199-1000 'Dardo Magico
+NROITEMS=8
+Obj1=199-1000 'Dardo Magico
+Obj2=197-1000 'Flecha Magica
 Obj3=200-1000 'Antidoto Magico
-Obj4=197-1000 'Flecha Magica
+Obj4=205-1000 'Proyectil Magico
 Obj5=201-1000 'Curar Heridas Leves
-Obj6=204-1000 'Flecha Electrica
-Obj7=318-1000 'Invisibilidad
-Obj8=380-1000 'Invocacion de Ultratumba
-Obj9=658-1000 'Vara de Fresno
-Obj10=659-1000 'Baston nudoso
-Obj11=696-1000 'Laud Magico
-Obj12=208-1000 'Flauta Magica
-Obj13=531-1000 'Descarga Electrica
-Obj14=205-1000 'Proyectil magico
+Obj6=200-1000 'Antidoto Magico
+Obj7=206-1000 'Paralizar
+Obj8=207-1000 'Remover Paralisis
+
 BackUp=1
 
 [NPC20] 'Pescador Ramx
@@ -751,7 +747,14 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=24
-NROITEMS=0
+NROITEMS=7
+Obj1=361-1000 'Tormenta de Fuego
+Obj2=197-1000 'Flecha Magica
+Obj3=205-1000 'Proyectil Magico
+Obj4=203-1000 'Curar Heridas Graves
+Obj5=200-1000 'Antidoto Magico
+Obj6=530-1000 'Inmovilizar
+Obj7=207-1000 'Remover Paralisis
 BackUp=1
 
 [NPC60] 'Pescador Shakoud
@@ -1267,6 +1270,22 @@ TipoItems=20
 NROITEMS=0
 BackUp=1
 
+[NPC120]
+Name=Lord Legislador
+NpcType=5
+Desc=Es importante mantener el orden en el imperio y enseñar al pueblo cual es su lugar a toda costa. Si quieres estar entre mis filas y bajo mis ordenes, tan solo escribe /ENLISTAR.
+Head=510
+Heading=3
+Body=409
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=0
+BackUp=0
+
 ##############################################################
 ############## NPCS VENDEDORES DE ISLA ZHARKEL ###############
 ##############################################################
@@ -1275,7 +1294,7 @@ BackUp=1
 Name=Gobernador
 NpcType=11
 Desc=Despues de la desaparición de Zharkel, esta isla era una bonita ciudad para vivir, hasta que emergio la entrada a ese antiguo Templo y se asento el ejercito rebelde, entonces la gente se volvio loca!.
-Head=313
+Head=653
 Heading=1
 Body=493
 Movement=1
@@ -1292,7 +1311,7 @@ Ciudad=3
 Name=Sacerdote
 NpcType=1
 Desc=Hijo mio, esta ciudad es muy peligrosa ¡andate con cuidado! ¿Necesitas una cura?
-Head=314
+Head=620
 Heading=1
 Body=159
 Movement=1
@@ -1306,9 +1325,9 @@ BackUp=0
 
 [NPC152]
 Name=Banquero
-NpcType=4
+NpcType=6
 Desc=Hola, bienvenido a la sede de la Isla Zharkel de la cadena de finanzas Goliath. Somos la cadena mas grande en Argentum, contamos con bancos en las ciudades mas importantes.
-Head=428
+Head=612
 Heading=1
 Body=299
 Movement=1
@@ -1324,7 +1343,7 @@ BackUp=0
 Name=Marinero
 NpcType=15
 Desc=¡Corre! ¡El barco va a zarpar!
-Head=33
+Head=602
 Heading=1
 Body=174
 Movement=1
@@ -1339,10 +1358,10 @@ NROITEMS=0
 BackUp=1
 
 [NPC154] 'Vende Pociones
-Name=Asilithus
+Name=Asilithas
 NpcType=0
 Desc=Acercate joven, vas a necesitar pociones ¡seguro!
-Head=488
+Head=638
 Heading=1
 Body=275
 Movement=1
@@ -1359,7 +1378,7 @@ BackUp=1
 Name=Herrero
 NpcType=0
 Desc=¡Hey! No pensaras aventurarte por estas tierras hostiles sin un arma ¿verdad?
-Head=417
+Head=537
 Heading=1
 Body=374
 Movement=1
@@ -1377,7 +1396,7 @@ BackUp=1
 Name=Sastre
 NpcType=0
 Desc=Solo uso la mejor tela, la de mayor calidad!
-Head=484
+Head=548
 Heading=1
 Body=298
 Movement=1
@@ -1394,9 +1413,9 @@ BackUp=1
 [NPC157] 'Armaduras Isla Zharkel
 Name=Armaduras
 Desc=En estas tierras es muy importante estar bien defendido, cualquiera te puede atacar por la espalda.
-Head=316
+Head=541
 Body=294
-Heading=4
+Heading=1
 Movement=1
 Attackable=0
 ReSpawn=0
@@ -1412,7 +1431,7 @@ BackUp=1
 Name=Thorin
 NpcType=0
 Desc=Debes estar muy hambriendo y sediento para haber llegado hasta aquí. Te puedo ofrecer algunos víveres.
-Head=495
+Head=422
 Heading=1
 Body=301
 Movement=1
@@ -1427,10 +1446,10 @@ NROITEMS=0
 BackUp=1
 
 [NPC159] 'VendeMagia Isla Zharkel
-Name=Mago
+Name=Maga
 NpcType=0
 Desc=¿Quieres aprender los secretos del mismisimo Zharkel? Ven, te puedo enseñar algunos hechizos
-Head=401
+Head=372
 Heading=1
 Body=310
 Movement=1
@@ -1445,10 +1464,10 @@ NROITEMS=0
 BackUp=1
 
 [NPC160] 'Isla Zharkel Shakoud
-Name=Pescador
+Name=Pescadora
 NpcType=0
 Desc=En este rincon del mundo existen peces y otras criaturas marinas nunca vista. Algunos hablan de una criatura monstruosa en las profundidades del templo sumergido.
-Head=422
+Head=399
 Heading=1
 Body=300
 Movement=1
@@ -1462,11 +1481,11 @@ TipoItems=1
 NROITEMS=0
 BackUp=1
 
-[NPC161] 'Minero
-Name=Minero
+[NPC161] 'Minera
+Name=Minera
 NpcType=0
 Desc=Amigo, ¿te has enterado de que han encontrado oro en el templo sumergido? ¡La gente se ha vuelto loca! Puedo venderte buenas herramientas para extraer todo ese oro.
-Head=412
+Head=375
 Heading=1
 Body=292
 Movement=1
@@ -1484,7 +1503,7 @@ BackUp=1
 Name=Mercader
 NpcType=0
 Desc=Hola buen amigo, pertenezco al gremio de mercaderes de Winter y viajamos por todas las ciudades comprando y vendiendo todo tipo de mercancia.
-Head=7
+Head=105
 Heading=1
 Body=3
 Movement=1
@@ -1498,6 +1517,43 @@ TipoItems=1000
 NROITEMS=0
 BackUp=1
 
+[NPC163]
+Name=Kelsier
+NpcType=5
+Desc=Joven, si estas cansado de la tirania del Lord Legistador te invito a unirte a nuestra causa, tan solo debes escribir /ENLISTAR
+Head=533
+Heading=1
+Body=329
+Movement=1
+AguaValida=0
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=0
+Faccion=1
+BackUp=0
+
+[NPC164] 'Propiedades 
+Name=Cullighan
+NpcType=0
+Desc=Usted sabe que tener una propiedad en estas tierras es de inteligentes. ¿Le apetece echar un vistazo?
+Head=33
+Heading=1
+Body=240
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=1
+TipoItems=9
+NROITEMS=0
+InvReSpawn=1
+BackUp=1
+
 ##############################################################
 ############## NPCS VENDEDORES DE HAVERWOOD ##################
 ##############################################################
@@ -1506,7 +1562,7 @@ BackUp=1
 Name=Gobernador
 NpcType=11
 Desc=Hola Joven, estas tierras son muy frias, pero es un lugar tranquilo para vivir. Si deseas establecerte escribe /HOGAR
-Head=313
+Head=618
 Heading=1
 Body=493
 Movement=1
@@ -1523,7 +1579,7 @@ Ciudad=2
 Name=Sacerdote
 NpcType=1
 Desc=¿Tienes frio? Ven, acercate y deja que cure tus heridas.
-Head=314
+Head=526
 Heading=1
 Body=159
 Movement=1
@@ -1539,7 +1595,7 @@ BackUp=0
 Name=Banquero
 NpcType=4
 Desc=Hola, bienvenido a la sede de Haverwood de la cadena de finanzas Goliath. Somos la cadena mas grande en Argentum, contamos con bancos en las ciudades mas importantes.
-Head=428
+Head=118
 Heading=1
 Body=299
 Movement=1
@@ -1555,7 +1611,7 @@ BackUp=0
 Name=Marinero
 NpcType=15
 Desc=¡Corre! ¡El barco va a zarpar!
-Head=33
+Head=35
 Heading=1
 Body=174
 Movement=1
@@ -1570,10 +1626,10 @@ NROITEMS=0
 BackUp=1
 
 [NPC204] 'Vende Pociones
-Name=Krona
+Name=Elith
 NpcType=0
 Desc=Mis pociones te daran fuerzas y curaran cualquier dolencia.
-Head=488
+Head=487
 Heading=1
 Body=275
 Movement=1
@@ -1590,7 +1646,7 @@ BackUp=1
 Name=Herrero
 NpcType=0
 Desc=Forjamos las mejores armas con el mejor acero de estas tierras.
-Head=417
+Head=38
 Heading=1
 Body=374
 Movement=1
@@ -1608,7 +1664,7 @@ BackUp=1
 Name=Sastre
 NpcType=0
 Desc=Amigo, en estas tierras heladas debes ir bien abrigado o podrias morir.
-Head=484
+Head=385
 Heading=1
 Body=298
 Movement=1
@@ -1625,7 +1681,7 @@ BackUp=1
 [NPC207] 'Armaduras Haverwood
 Name=Armaduras
 Desc=Las armaduras de Haverwood te protegen a la vez que te mantienen calentito.
-Head=316
+Head=386
 Body=294
 Heading=4
 Movement=1
@@ -1643,7 +1699,7 @@ BackUp=1
 Name=Thorin
 NpcType=0
 Desc=No querras quedar atrapado en la nieve sin provisiones ¿no?
-Head=495
+Head=303
 Heading=1
 Body=301
 Movement=1
@@ -1661,7 +1717,7 @@ BackUp=1
 Name=Mago
 NpcType=0
 Desc=En este rincon del mundo encontraras los mayores secretos arcanos.
-Head=401
+Head=89
 Heading=1
 Body=310
 Movement=1
@@ -1679,7 +1735,7 @@ BackUp=1
 Name=Pescador
 NpcType=0
 Desc=Es curioso que existan peces capaces de sobrevivir a estas bajas temperaturas.
-Head=422
+Head=12
 Heading=1
 Body=300
 Movement=1
@@ -1697,7 +1753,7 @@ BackUp=1
 Name=Minero
 NpcType=0
 Desc=Los aventureros hablan de un extraño cristal al oeste de la ciudad. Necesitaras herramientas para extraerlas.
-Head=412
+Head=24
 Heading=1
 Body=292
 Movement=1
@@ -1715,7 +1771,7 @@ BackUp=1
 Name=Mercader
 NpcType=0
 Desc=Hola buen amigo, pertenezco al gremio de mercaderes de Winter y viajamos por todas las ciudades comprando y vendiendo todo tipo de mercancia.
-Head=7
+Head=25
 Heading=1
 Body=3
 Movement=1
@@ -1733,7 +1789,7 @@ BackUp=1
 Name=Carpintera
 NpcType=0
 Desc=Los arboles helados ofrecen un excelente material de construcción, pero tambien son muy duros y dificiles de talar.
-Head=411
+Head=26
 Heading=1
 Body=293
 Movement=1
@@ -1744,6 +1800,24 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=20
+NROITEMS=0
+BackUp=1
+
+[NPC214] 'Propiedades
+Name=Propiedades
+NpcType=0
+Desc=¿Pensando en adquirir una propiedad? Tengo algunas casas que te podrian gustar.
+Head=26
+Heading=1
+Body=293
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=1
+TipoItems=9
 NROITEMS=0
 BackUp=1
 
@@ -2124,7 +2198,9 @@ ELV=5
 DEF=0
 PoderAtaque=10
 PoderEvasion=0
-SND2=103
+Snd1=308
+Snd2=309
+Snd3=310
 BackUp=0
 NROITEMS=0
 
@@ -2443,6 +2519,9 @@ ELV=10
 DEF=13
 PoderAtaque=30
 PoderEvasion=0
+Snd1=308
+Snd2=309
+Snd3=310
 BackUp=0
 NROITEMS=0
 
@@ -2828,7 +2907,8 @@ Domable=0
 Alineacion=2
 Comercia=0
 GiveEXP=500
-Retardo=15
+TiempoRetardoMin=10
+TiempoRetardoMax=15
 MinHP=500
 MaxHP=500
 MaxHIT=15
@@ -2838,6 +2918,7 @@ PoderAtaque=10
 PoderEvasion=10
 BackUp=0
 Explota=1
+PosOrig=1
 NROITEMS=5
 Obj1=12-50-50 'Oro
 Obj2=12-80-50 'Oro
@@ -2869,9 +2950,12 @@ DEF=30
 ELV=15
 PoderAtaque=84
 PoderEvasion=70
+Snd1=299
+Snd2=300
+Snd3=301
 BackUp=0
 NROITEMS=1
-Obj1=1250-1-30 'Fragmento de arma
+Obj1=1250-1-60 'Fragmento de arma
 
 [NPC609]
 Name=Lobo Adulto
@@ -3093,8 +3177,9 @@ ELV=20
 DEF=8
 PoderAtaque=80
 PoderEvasion=25
-Snd1=35
-Snd2=9
+Snd1=308
+Snd2=309
+Snd3=310
 BackUp=0
 NROITEMS=0
 
@@ -3291,6 +3376,9 @@ DEF=0
 ELV=20
 PoderAtaque=84
 PoderEvasion=30
+Snd1=299
+Snd2=300
+Snd3=301
 BackUp=0
 NROITEMS=0
 

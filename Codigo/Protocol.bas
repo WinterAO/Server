@@ -111,6 +111,7 @@ Private Enum ServerPacketID
     UpdateHungerAndThirst        ' EHYS
     Fame                         ' FAMA
     MiniStats                    ' MEST
+    LevelUp                      ' SUNI
     AddForumMsg                  ' FMSG
     ShowForumForm                ' MFOR
     SetInvisible                 ' NOVER
@@ -210,9 +211,9 @@ Private Enum ClientPacketID
     CraftCarpenter                  'CNC
     WorkLeftClick                   'WLC
     CreateNewGuild                  'CIG
-    sadasdA
     EquipItem                      'EQUI
     ChangeHeading                  'CHEA
+    ModifySkills                   'SKSE
     Train                          'ENTR
     CommerceBuy                    'COMP
     BankExtractItem                'RETI
@@ -375,6 +376,7 @@ Public Enum eEditOptions
     eo_Level
     eo_Class
     eo_Skills
+    eo_SkillPointsLeft
     eo_Nobleza
     eo_Asesino
     eo_Sex
@@ -576,6 +578,9 @@ Public Function HandleIncomingData(ByVal UserIndex As Integer) As Boolean
         
         Case ClientPacketID.ChangeHeading           'CHEA
             Call HandleChangeHeading(UserIndex)
+            
+        Case ClientPacketID.ModifySkills            'SKSE
+            Call HandleModifySkills(UserIndex)
         
         Case ClientPacketID.Train                   'ENTR
             Call HandleTrain(UserIndex)
@@ -1222,8 +1227,8 @@ Private Sub HandleGMCommands(ByVal UserIndex As Integer)
             Case eGMCommands.TeleportDestroy         '/DT
                 Call HandleTeleportDestroy(UserIndex)
         
-            Case eGMCommands.RainToggle              '/LLUVIA
-                Call HandleRainToggle(UserIndex)
+            Case eGMCommands.MeteoToggle             '/METEO
+                Call HandleMeteoToggle(UserIndex)
         
             Case eGMCommands.SetCharDescription      '/SETDESC
                 Call HandleSetCharDescription(UserIndex)
@@ -3066,6 +3071,8 @@ Private Sub HandleWork(ByVal UserIndex As Integer)
 
     End If
     
+    On Error GoTo errHandler
+    
     With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
@@ -3138,6 +3145,9 @@ Private Sub HandleWork(ByVal UserIndex As Integer)
         End Select
         
     End With
+    
+errHandler:
+    Call LogError("Error en HandleWork en " & Erl & " - Skill: " & Skill & ". Err: " & Err.Number & " " & Err.description)
 
 End Sub
 
@@ -3297,6 +3307,8 @@ Private Sub HandleCraftCarpenter(ByVal UserIndex As Integer)
 
     End If
     
+    On Error GoTo errHandler
+    
     With UserList(UserIndex).incomingData
         'Remove packet ID
         Call .ReadByte
@@ -3313,6 +3325,9 @@ Private Sub HandleCraftCarpenter(ByVal UserIndex As Integer)
         Call CarpinteroConstruirItem(UserIndex, Item)
 
     End With
+    
+errHandler:
+    Call LogError("Error en HandleCraftcarpenter en " & Erl & " - Item: " & Item & ". Err " & Err.Number & " " & Err.description)
 
 End Sub
 
@@ -3884,6 +3899,100 @@ Private Sub HandleChangeHeading(ByVal UserIndex As Integer)
             Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.Heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
 
         End If
+
+    End With
+
+End Sub
+
+''
+' Handles the "ModifySkills" message.
+'
+' @param    userIndex The index of the user sending the message.
+
+Private Sub HandleModifySkills(ByVal UserIndex As Integer)
+
+    '***************************************************
+    'Author: Juan Martin Sotuyo Dodero (Maraxus)
+    'Last Modification: 11/19/09
+    '11/19/09: Pato - Adapting to new skills system.
+    '***************************************************
+    If UserList(UserIndex).incomingData.Length < 1 + NUMSKILLS Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
+        Exit Sub
+
+    End If
+    
+    With UserList(UserIndex)
+        'Remove packet ID
+        Call .incomingData.ReadByte
+        
+        Dim i                      As Long
+
+        Dim Count                  As Integer
+
+        Dim points(1 To NUMSKILLS) As Byte
+        
+        'Codigo para prevenir el hackeo de los skills
+        
+        For i = 1 To NUMSKILLS
+            points(i) = .incomingData.ReadByte()
+            
+            If points(i) < 0 Then
+                Call LogHackAttemp(.Name & " IP:" & .IP & " trato de hackear los skills.")
+                .Stats.SkillPts = 0
+                Call CloseSocket(UserIndex)
+                Exit Sub
+
+            End If
+            
+            Count = Count + points(i)
+        Next i
+        
+        If Count > .Stats.SkillPts Then
+            Call LogHackAttemp(.Name & " IP:" & .IP & " trato de hackear los skills.")
+            Call CloseSocket(UserIndex)
+            Exit Sub
+
+        End If
+        
+        'Comprobamos que no intente hackear y asignar en uno de los skills fijos
+        For i = 1 To NUMSKILLS
+            If points(i) > 0 Then
+                '¿El skill asignado es uno de los fijos?
+                If i = eSkill.Talar Or i = eSkill.Mineria Or i = eSkill.Carpinteria Or i = eSkill.Herreria Or _
+                    i = eSkill.Liderazgo Or i = eSkill.Navegacion Or i = eSkill.Equitacion Or i = eSkill.pesca Then
+                    
+                    Call LogHackAttemp(.Name & " IP:" & .IP & " trato de hackear los skills.")
+                    Call CloseSocket(UserIndex)
+                    Exit Sub
+                End If
+            End If
+        Next i
+        
+        .Counters.AsignedSkills = MinimoInt(10, .Counters.AsignedSkills + Count)
+        
+        With .Stats
+
+            For i = 1 To NUMSKILLS
+
+                If points(i) > 0 Then
+                    .SkillPts = .SkillPts - points(i)
+                    .UserSkills(i) = .UserSkills(i) + points(i)
+                    
+                    'Client should prevent this, but just in case...
+                    If .UserSkills(i) > 100 Then
+                        .SkillPts = .SkillPts + .UserSkills(i) - 100
+                        .UserSkills(i) = 100
+
+                    End If
+                    
+                    Call CheckEluSkill(UserIndex, i, True)
+
+                End If
+
+            Next i
+
+        End With
 
     End With
 
@@ -10612,6 +10721,19 @@ Private Sub HandleEditChar(ByVal UserIndex As Integer)
                         
                         ' Log it
                         CommandString = CommandString & "SKILLS "
+                        
+                Case eEditOptions.eo_SkillPointsLeft
+
+                        If tUser <= 0 Then ' Offline
+                            Call WriteConsoleMsg(UserIndex, "El usuario esta offline o no existe.", FontTypeNames.FONTTYPE_INFO)
+                            Call LogGM(.Name, "Intento editar un usuario inexistente u offline.")
+                        Else ' Online
+                            UserList(tUser).Stats.SkillPts = val(Arg1)
+
+                        End If
+                        
+                        ' Log it
+                        CommandString = CommandString & "SKILLSLIBRES "
                     
                 Case eEditOptions.eo_Nobleza
                         Var = IIf(val(Arg1) > MAXREP, MAXREP, val(Arg1))
@@ -12772,28 +12894,32 @@ Private Sub HandleExitDestroy(ByVal UserIndex As Integer)
 End Sub
 
 ''
-' Handles the "RainToggle" message.
+' Handles the "MeteoToggle" message.
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleRainToggle(ByVal UserIndex As Integer)
+Private Sub HandleMeteoToggle(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
     'Last Modification: 12/29/06
     '
     '***************************************************
+    Dim Forzar As Byte
+    
     With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
+
+        Forzar = .incomingData.ReadByte
         
         If .flags.Privilegios And (PlayerType.User Or PlayerType.Consejero) Then Exit Sub
         
-        Call LogGM(.Name, "/LLUVIA")
+        Call LogGM(.Name, "/METEO " & Forzar)
         
         Lloviendo = Not Lloviendo
         
-        Call SortearClima
+        Call SortearClima(Forzar)
 
     End With
 
@@ -19477,6 +19603,39 @@ errHandler:
 End Sub
 
 ''
+' Writes the "LevelUp" message to the given user's outgoing data buffer.
+'
+' @param    skillPoints The number of free skill points the player has.
+' @remarks  The data is not actually sent until the buffer is properly flushed.
+
+Public Sub WriteLevelUp(ByVal UserIndex As Integer, ByVal skillPoints As Integer)
+
+    '***************************************************
+    'Author: Juan Martin Sotuyo Dodero (Maraxus)
+    'Last Modification: 05/17/06
+    'Writes the "LevelUp" message to the given user's outgoing data buffer
+    '***************************************************
+    On Error GoTo errHandler
+
+    With UserList(UserIndex).outgoingData
+        Call .WriteByte(ServerPacketID.LevelUp)
+        Call .WriteInteger(skillPoints)
+
+    End With
+
+    Exit Sub
+
+errHandler:
+
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
+        Resume
+
+    End If
+
+End Sub
+
+''
 ' Writes the "AddForumMsg" message to the given user's outgoing data buffer.
 '
 ' @param    title The title of the message to display.
@@ -21193,7 +21352,7 @@ Public Function PrepareMessageActualizarClima() As String
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 05/17/06
-    'Prepares the "RainToggle" message and returns it
+    'Prepares the "ActualizarClima" message and returns it
     '***************************************************
     With auxiliarBuffer
         Call .WriteByte(ServerPacketID.ActualizarClima)
@@ -22549,7 +22708,7 @@ Public Sub HandleDragAndDropHechizos(ByVal UserIndex As Integer)
 End Sub
 
 Public Sub WriteQuestDetails(ByVal UserIndex As Integer, _
-                             ByVal QuestIndex As Integer, _
+                             ByVal Questindex As Integer, _
                              Optional QuestSlot As Byte = 0)
 
     '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -22566,25 +22725,25 @@ Public Sub WriteQuestDetails(ByVal UserIndex As Integer, _
         
         'Se usa la variable QuestSlot para saber si enviamos la info de una quest ya empezada o la info de una quest que no se aceptï¿½ todavï¿½a (1 para el primer caso y 0 para el segundo)
         Call .WriteByte(IIf(QuestSlot, 1, 0))
-        
+
         'Enviamos nombre, descripciï¿½n y nivel requerido de la quest
-        Call .WriteASCIIString(QuestList(QuestIndex).Nombre)
-        Call .WriteASCIIString(QuestList(QuestIndex).Desc)
-        Call .WriteByte(QuestList(QuestIndex).RequiredLevel)
+        Call .WriteASCIIString(QuestList(Questindex).Nombre)
+        Call .WriteASCIIString(QuestList(Questindex).Desc)
+        Call .WriteByte(QuestList(Questindex).RequiredLevel)
         
         'Enviamos la cantidad de npcs requeridos
-        Call .WriteByte(QuestList(QuestIndex).RequiredNPCs)
+        Call .WriteByte(QuestList(Questindex).RequiredNPCs)
 
-        If QuestList(QuestIndex).RequiredNPCs Then
+        If QuestList(Questindex).RequiredNPCs Then
 
             'Si hay npcs entonces enviamos la lista
-            For i = 1 To QuestList(QuestIndex).RequiredNPCs
-                Call .WriteInteger(QuestList(QuestIndex).RequiredNPC(i).Amount)
-                Call .WriteASCIIString(GetVar(DatPath & "NPCs.dat", "NPC" & QuestList(QuestIndex).RequiredNPC(i).NPCIndex, "Name"))
+            For i = 1 To QuestList(Questindex).RequiredNPCs
+                Call .WriteInteger(QuestList(Questindex).RequiredNPC(i).Amount)
+                Call .WriteASCIIString(GetVar(DatPath & "NPCs.dat", "NPC" & QuestList(Questindex).RequiredNPC(i).NPCIndex, "Name"))
 
                 'Si es una quest ya empezada, entonces mandamos los NPCs que matï¿½.
                 If QuestSlot Then
-                    Call .WriteInteger(UserList(UserIndex).QuestStats.Quests(QuestSlot).NPCsKilled(i))
+                    Call .WriteInteger(UserList(UserIndex).QuestStats.Quests(Questindex).NPCsKilled(i))
 
                 End If
 
@@ -22593,31 +22752,31 @@ Public Sub WriteQuestDetails(ByVal UserIndex As Integer, _
         End If
         
         'Enviamos la cantidad de objs requeridos
-        Call .WriteByte(QuestList(QuestIndex).RequiredOBJs)
+        Call .WriteByte(QuestList(Questindex).RequiredOBJs)
 
-        If QuestList(QuestIndex).RequiredOBJs Then
+        If QuestList(Questindex).RequiredOBJs Then
 
             'Si hay objs entonces enviamos la lista
-            For i = 1 To QuestList(QuestIndex).RequiredOBJs
-                Call .WriteInteger(QuestList(QuestIndex).RequiredOBJ(i).Amount)
-                Call .WriteASCIIString(ObjData(QuestList(QuestIndex).RequiredOBJ(i).ObjIndex).Name)
+            For i = 1 To QuestList(Questindex).RequiredOBJs
+                Call .WriteInteger(QuestList(Questindex).RequiredOBJ(i).Amount)
+                Call .WriteASCIIString(ObjData(QuestList(Questindex).RequiredOBJ(i).ObjIndex).Name)
             Next i
 
         End If
     
         'Enviamos la recompensa de oro y experiencia.
-        Call .WriteLong(QuestList(QuestIndex).RewardGLD)
-        Call .WriteLong(QuestList(QuestIndex).RewardEXP)
+        Call .WriteLong(QuestList(Questindex).RewardGLD)
+        Call .WriteLong(QuestList(Questindex).RewardEXP)
         
         'Enviamos la cantidad de objs de recompensa
-        Call .WriteByte(QuestList(QuestIndex).RewardOBJs)
+        Call .WriteByte(QuestList(Questindex).RewardOBJs)
 
-        If QuestList(QuestIndex).RewardOBJs Then
+        If QuestList(Questindex).RewardOBJs Then
 
             'si hay objs entonces enviamos la lista
-            For i = 1 To QuestList(QuestIndex).RewardOBJs
-                Call .WriteInteger(QuestList(QuestIndex).RewardOBJ(i).Amount)
-                Call .WriteASCIIString(ObjData(QuestList(QuestIndex).RewardOBJ(i).ObjIndex).Name)
+            For i = 1 To QuestList(Questindex).RewardOBJs
+                Call .WriteInteger(QuestList(Questindex).RewardOBJ(i).Amount)
+                Call .WriteASCIIString(ObjData(QuestList(Questindex).RewardOBJ(i).ObjIndex).Name)
             Next i
 
         End If
@@ -22653,11 +22812,11 @@ Public Sub WriteQuestListSend(ByVal UserIndex As Integer)
     With UserList(UserIndex)
         .outgoingData.WriteByte ServerPacketID.QuestListSend
     
-        For i = 1 To MAXQUESTS
+        For i = 1 To MAXUSERQUESTS
 
-            If .QuestStats.Quests(i).QuestStatus = eStatusQuest.EnCurso Then
+            If .QuestStats.QuestEnCurso(i) > 0 Then
                 tmpByte = tmpByte + 1
-                tmpStr = tmpStr & QuestList(i).Nombre & "-"
+                tmpStr = tmpStr & QuestList(.QuestStats.QuestEnCurso(i)).Nombre & "-"
 
             End If
 

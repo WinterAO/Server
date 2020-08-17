@@ -13,17 +13,16 @@ Enum eColorEstado
     Tarde
     Noche
     Lluvia
-    Nieve
     Niebla
-    FogLluvia 'Niebla mas lluvia
+    FogLluvia  'Niebla mas lluvia
 End Enum
 
 Public DayStatus As eColorEstado 'Establece el color actual del dia
 
 'Todo en minutos:
 'Porcentaje del 1 al 100 de la lluvia sea con niebla
-Private Const FogProb As Byte = 7 'Niebla
-Private Const FogLluviaProb As Byte = 2 'Nieva + Lluvia
+Private Const FogProb As Byte = 20 'Niebla
+Private Const FogLluviaProb As Byte = 5 'Nieva + Lluvia
 
 Public Sub SortearHorario(Optional ByVal Clima As eColorEstado)
 '***************************************************************************************
@@ -91,7 +90,7 @@ Private Sub ColorClima(Clima As eColorEstado)
     
 End Sub
 
-Public Sub SortearClima()
+Public Sub SortearClima(Optional ByVal Forzar As Byte = 0)
 '**********************************************
 'Autor: Lorwik
 'Ultima modificación: 09/08/2020
@@ -99,33 +98,50 @@ Public Sub SortearClima()
 '**********************************************
 
     Dim Clima As eColorEstado
-    Dim DadosAleatorios As Byte
+    Dim DadosAleatorios As Integer
     
     '¿Esta lloviendo?
     If Lloviendo Then
-        
-        'Por el momento seteamos la lluvia, ya que no requiere probs
-        Clima = eColorEstado.Lluvia
-        
-        'Vamos a tirar los datos
-        DadosAleatorios = RandomNumber(0, 100)
-        
-        '¿Va haber niebla?
-        If FogProb <= DadosAleatorios Then
-        
-            'Ok, seteamos niebla
-            Clima = eColorEstado.Niebla
-        
-            'Este porcentaje siempre es menor ¿lo pasara?
-            If FogLluviaProb <= DadosAleatorios Then
-                '¡Premio! Se vieneeee....
-                Clima = eColorEstado.FogLluvia
+
+        If Forzar = 0 Then
+            'Por el momento seteamos la lluvia, ya que no requiere probs
+            Clima = eColorEstado.Lluvia
+            
+            'Vamos a tirar los datos
+            DadosAleatorios = RandomNumber(1, 1000)
+            
+            '¿Va haber niebla?
+            If FogProb >= DadosAleatorios Then
+            
+                'Ok, seteamos niebla
+                Clima = eColorEstado.Niebla
+            
+                'Este porcentaje siempre es menor ¿lo pasara?
+                If FogLluviaProb >= DadosAleatorios Then
+                    '¡Premio! Se vieneeee....
+                    Clima = eColorEstado.FogLluvia
+                End If
+                
             End If
             
+        Else '¿Queremos forzar la aparicion de algun fenomeno?
+        
+            Select Case Forzar
+            
+                Case 1
+                    Clima = eColorEstado.Lluvia
+                    
+                Case 2
+                    Clima = eColorEstado.Niebla
+                
+                Case 3
+                    Clima = eColorEstado.FogLluvia
+            
+            End Select
         End If
         
     End If
-    
+
     'Sea cual sea el resultado, lo mandamos
     Call SortearHorario(Clima)
     

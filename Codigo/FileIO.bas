@@ -2036,7 +2036,7 @@ Sub WriteVar(ByVal File As String, _
     
 End Sub
 
-Function criminal(ByVal Userindex As Integer) As Boolean
+Function criminal(ByVal UserIndex As Integer) As Boolean
     '***************************************************
     'Author: Unknown
     'Last Modification: -
@@ -2045,7 +2045,7 @@ Function criminal(ByVal Userindex As Integer) As Boolean
 
     Dim L As Long
     
-    With UserList(Userindex).Reputacion
+    With UserList(UserIndex).Reputacion
         L = (-.AsesinoRep) + (-.BandidoRep) + .BurguesRep + (-.LadronesRep) + .NobleRep + .PlebeRep
         L = L / 6
         criminal = (L < 0)
@@ -2095,12 +2095,13 @@ Sub BackUPnPc(ByVal NPCIndex As Integer, ByVal hFile As Integer)
         Print #hFile, "ReSpawn=" & val(.flags.Respawn)
         Print #hFile, "BackUp=" & val(.flags.BackUp)
         Print #hFile, "Domable=" & val(.flags.Domable)
-        Print #hFile, "TiempoRetardoMin & "; val(.flags.TiempoRetardoMin)
-        Print #hFile, "TiempoRetardoMax" & val(.flags.TiempoRetardoMax)
+        Print #hFile, "TiempoRetardoMin= " & val(.flags.TiempoRetardoMin)
+        Print #hFile, "TiempoRetardoMax= " & val(.flags.TiempoRetardoMax)
         Print #hFile, "Explota" & val(.flags.Explota)
         
         Print #hFile, "LanzaMensaje" & .flags.LanzaMensaje
         Print #hFile, "AumentaPotencia" & val(.flags.AumentaPotencia)
+        Print #hFile, "Tepeable" & val(.flags.Tepeable)
         
         'Inventario
         Print #hFile, "NroItems=" & val(.Invent.NroItems)
@@ -2204,6 +2205,7 @@ Sub CargarNpcBackUp(ByVal NPCIndex As Integer, ByVal NpcNumber As Integer)
         
         .flags.LanzaMensaje = GetVar(npcfile, "NPC" & NpcNumber, "LanzaMensaje")
         .flags.AumentaPotencia = val(GetVar(npcfile, "NPC" & NpcNumber, "AumentaPotencia"))
+        .flags.Tepeable = val(GetVar(npcfile, "NPC", NpcNumber, "Tepeable"))
         
         
         'Tipo de items con los que comercia

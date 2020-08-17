@@ -153,13 +153,13 @@ End Enum
 Public Enum PlayerType
 
     User = &H1
+    ChaosCouncil = &H40
+    RoyalCouncil = &H80
+    RoleMaster = &H20
     Consejero = &H2
     SemiDios = &H4
     Dios = &H8
     Admin = &H10
-    RoleMaster = &H20
-    ChaosCouncil = &H40
-    RoyalCouncil = &H80
 
 End Enum
 
@@ -1379,6 +1379,7 @@ Public Type UserStats
     
     ELO As Integer
     
+    SkillPts As Integer
     ExpSkills(1 To NUMSKILLS) As Long
     EluSkills(1 To NUMSKILLS) As Long
     
@@ -1554,6 +1555,8 @@ Public Type UserCounters
     Cheat As modAntiCheat.TimeIntervalos
     
     failedUsageAttempts As Long
+    
+    AsignedSkills As Byte
     
     PacketsTick As Byte
 
@@ -1794,6 +1797,7 @@ Public Type NPCFlags
     invisible As Byte
     Maldicion As Byte
     Bendicion As Byte
+    SiguiendoGm As Boolean
     
     Snd1 As Integer
     Snd2 As Integer
@@ -1808,6 +1812,7 @@ Public Type NPCFlags
     
     ActivoPotencia As Boolean
     AumentaPotencia As Boolean
+    Tepeable As Byte
     
     Invocacion As Byte
     
@@ -2265,7 +2270,7 @@ Public Enum eGMCommands
     GuildOnlineMembers      '/ONCLAN
     TeleportCreate          '/CT
     TeleportDestroy         '/DT
-    RainToggle              '/LLUVIA
+    MeteoToggle             '/METEO
     SetCharDescription      '/SETDESC
     ForceMUSICToMap          '/FORCEMUSICMAP
     ForceWAVEToMap          '/FORCEWAVMAP

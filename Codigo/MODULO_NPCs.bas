@@ -345,6 +345,7 @@ Private Sub ResetNpcFlags(ByVal NPCIndex As Integer)
         .LanzaSpells = 0
         .invisible = 0
         .Maldicion = 0
+        .SiguiendoGm = False
         .OldHostil = 0
         .OldMovement = 0
         .Paralizado = 0
@@ -880,7 +881,7 @@ Public Function MoveNPCChar(ByVal NPCIndex As Integer, ByVal nHeading As Byte) A
             
             UserIndex = MapData(.Pos.Map, nPos.X, nPos.Y).UserIndex
 
-            ' Si hay un usuario a donde se mueve el npc, entonces esta muerto
+            ' Si hay un usuario a donde se mueve el npc, entonces esta muerto o es un gm invisible
             If UserIndex > 0 Then
                 
                 ' No se traslada caspers de agua a tierra
@@ -888,6 +889,9 @@ Public Function MoveNPCChar(ByVal NPCIndex As Integer, ByVal nHeading As Byte) A
 
                 ' No se traslada caspers de tierra a agua
                 If Not HayAgua(.Pos.Map, nPos.X, nPos.Y) And HayAgua(.Pos.Map, .Pos.X, .Pos.Y) Then Exit Function
+                
+                'Se choca con los gm invisible si es que esta siguiendo a uno por el comando /seguir
+                If .flags.SiguiendoGm = True And UserList(UserIndex).flags.AdminInvisible = 1 Then Exit Function
                 
                 With UserList(UserIndex)
                     ' Actualizamos posicion y mapa
@@ -912,6 +916,15 @@ Public Function MoveNPCChar(ByVal NPCIndex As Integer, ByVal nHeading As Byte) A
             .Char.Heading = nHeading
             MapData(.Pos.Map, nPos.X, nPos.Y).NPCIndex = NPCIndex
             Call CheckUpdateNeededNpc(NPCIndex, nHeading)
+            
+            'Si es un WorldBoss y se aleja 10 tiles de su OrigPos se le devuelve.
+            If Npclist(NPCIndex).NPCtype = eNPCType.WorldBoss And Npclist(NPCIndex).Pos.X <= (Npclist(NPCIndex).Orig.X - 10) Or _
+                Npclist(NPCIndex).Pos.X >= (Npclist(NPCIndex).Orig.X + 10) Or Npclist(NPCIndex).Pos.Y <= (Npclist(NPCIndex).Orig.Y - 10) Or _
+                    Npclist(NPCIndex).Pos.Y >= (Npclist(NPCIndex).Orig.Y + 10) Then
+                                        
+                Call NPCTelep(NPCIndex, Npclist(NPCIndex).Orig, True)
+                    
+            End If
         
             ' Npc has moved
             MoveNPCChar = True
@@ -1090,6 +1103,49 @@ Sub ReSpawnNpc(MiNPC As NPC)
 
     If (MiNPC.flags.Respawn = 0) Then Call CrearNPC(MiNPC.Numero, MiNPC.Pos.Map, MiNPC.Orig)
 
+End Sub
+
+Public Sub NPCTelep(ByVal NPCIndex As Integer, Posicion As WorldPos, ByVal FXTelep As Boolean)
+    '***************************************************
+    'Author: Lorwik
+    'Last Modification: 16/08/2020
+    'Teletransporta a un NPC a una posicion
+    '***************************************************
+
+    Dim nHeading As eHeading
+
+    With Npclist(NPCIndex)
+    
+        '¿Es una posicion legal?
+        If LegalPosNPC(Posicion.Map, Posicion.X, Posicion.Y, .flags.AguaValida = 1) Then
+            
+            If .flags.AguaValida = 0 And HayAgua(Posicion.Map, Posicion.X, Posicion.Y) Then Exit Sub
+            If .flags.TierraInvalida = 1 And Not HayAgua(Posicion.Map, Posicion.X, Posicion.Y) Then Exit Sub
+  
+            Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessageCharacterMove(.Char.CharIndex, Posicion.X, Posicion.Y))
+                
+            'Sacamos el NPC de la antigua posicion
+            MapData(.Pos.Map, .Pos.X, .Pos.Y).NPCIndex = 0
+            
+            'Cambiamos el Heading
+            Call HeadtoPos(nHeading, Posicion)
+            .Char.Heading = nHeading
+            
+            'Cambiamos la antigua por la nueva
+            .Pos = Posicion
+            
+            'Añadimos el NPC a la nueva posición en el mapa
+            MapData(Posicion.Map, Posicion.X, Posicion.Y).NPCIndex = NPCIndex
+            
+            Call CheckUpdateNeededNpc(NPCIndex, nHeading)
+            
+            '¿Mostramos FX?
+            If FXTelep Then _
+                Call SendData(SendTarget.ToPCArea, NPCIndex, PrepareMessagePlayWave(SND_WARP, Posicion.X, Posicion.Y))
+                
+        End If
+    End With
+    
 End Sub
 
 Private Sub NPCTirarOro(ByRef MiNPC As NPC)
@@ -1278,6 +1334,7 @@ Public Function OpenNPC(ByVal NpcNumber As Integer, _
             
             .LanzaMensaje = Leer.GetValue("NPC" & NpcNumber, "LanzaMensaje")
             .AumentaPotencia = val(Leer.GetValue("NPC" & NpcNumber, "AumentaPotencia"))
+            .Tepeable = val(Leer.GetValue("NPC" & NpcNumber, "Tepeable"))
             
             .Invocacion = val(Leer.GetValue("NPC" & NpcNumber, "Invocacion"))
         End With
@@ -1323,11 +1380,13 @@ Public Sub DoFollow(ByVal NPCIndex As Integer, ByVal UserName As String)
         If .flags.Follow Then
             .flags.AttackedBy = vbNullString
             .flags.Follow = False
+            .flags.SiguiendoGm = False
             .Movement = .flags.OldMovement
             .Hostile = .flags.OldHostil
         Else
             .flags.AttackedBy = UserName
             .flags.Follow = True
+            .flags.SiguiendoGm = True
             .Movement = TipoAI.NPCDEFENSA
             .Hostile = 0
 
@@ -1368,4 +1427,38 @@ Public Sub ValidarPermanenciaNpc(ByVal NPCIndex As Integer)
 
     End With
 
+End Sub
+
+Public Sub RandomNPCTepeable(ByVal NPCIndex As Integer)
+'***************************************************
+'Autor: Lorwik
+'Fecha: 16/08/2020
+'Desscripción: El NPC Se teletransporta a una ubicacion aleatoria
+'***************************************************
+    
+    Dim xX As Byte
+    Dim yY As Byte
+    Dim TpPos As WorldPos
+    
+    With Npclist(NPCIndex)
+    
+        'Si es un NPC Tepeable, y el bicho llego al porcentaje de vida...
+        If .flags.Tepeable > 0 And .flags.Tepeable <= Porcentaje(.Stats.MinHp, .flags.Tepeable) Then
+            
+            xX = .Pos.X + RandomNumber(-9, 9)
+            yY = .Pos.Y + RandomNumber(-9, 9)
+            
+            'Si la posición a la que se podria TP es valida...
+            If LegalPosNPC(.Pos.Map, xX, yY, .flags.AguaValida) Then
+            
+                TpPos.Map = .Pos.Map
+                TpPos.X = xX
+                TpPos.Y = yY
+            
+                Call NPCTelep(NPCIndex, TpPos, True)
+            End If
+            
+        End If
+        
+    End With
 End Sub

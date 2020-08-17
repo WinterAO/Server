@@ -9,7 +9,7 @@
 
 
 [GLOBAL]
-NumDrops=4
+NumDrops=5
 
 'Pocion roja
 [DROP1]
@@ -32,5 +32,11 @@ Amount=1-5
 'Pocion verde
 [DROP4]
 ObjIndex=39
+Prob=0.1
+Amount=1-5
+
+'Amuleto del silencio
+[DROP5]
+ObjIndex=1126
 Prob=0.1
 Amount=1-5

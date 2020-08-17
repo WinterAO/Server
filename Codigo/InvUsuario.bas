@@ -39,7 +39,7 @@ Public Function TieneObjetosRobables(ByVal UserIndex As Integer) As Boolean
     '17/09/02
     'Agregue que la funcion se asegure que el objeto no es un barco
 
-    On Error GoTo Errhandler
+    On Error GoTo errHandler
 
     Dim i        As Integer
 
@@ -61,7 +61,7 @@ Public Function TieneObjetosRobables(ByVal UserIndex As Integer) As Boolean
     
     Exit Function
 
-Errhandler:
+errHandler:
     Call LogError("Error en TieneObjetosRobables. Error: " & Err.Number & " - " & Err.description)
 
 End Function
@@ -263,7 +263,7 @@ Sub TirarOro(ByVal Cantidad As Long, ByVal UserIndex As Integer)
     'Last Modification: 23/01/2007
     '23/01/2007 -> Pablo (ToxicWaste): Billetera invertida y explotar oro en el agua.
     '***************************************************
-    On Error GoTo Errhandler
+    On Error GoTo errHandler
 
     'If Cantidad > 100000 Then Exit Sub
 
@@ -379,7 +379,7 @@ Sub TirarOro(ByVal Cantidad As Long, ByVal UserIndex As Integer)
 
     Exit Sub
 
-Errhandler:
+errHandler:
     Call LogError("Error en TirarOro. Error " & Err.Number & " : " & Err.description)
 
 End Sub
@@ -393,7 +393,7 @@ Sub QuitarUserInvItem(ByVal UserIndex As Integer, _
     '
     '***************************************************
 
-    On Error GoTo Errhandler
+    On Error GoTo errHandler
 
     If Slot < 1 Or Slot > UserList(UserIndex).CurrentInventorySlots Then Exit Sub
     
@@ -419,7 +419,7 @@ Sub QuitarUserInvItem(ByVal UserIndex As Integer, _
 
     Exit Sub
 
-Errhandler:
+errHandler:
     Call LogError("Error en QuitarUserInvItem. Error " & Err.Number & " : " & Err.description)
     
 End Sub
@@ -433,7 +433,7 @@ Sub UpdateUserInv(ByVal UpdateAll As Boolean, _
     '
     '***************************************************
 
-    On Error GoTo Errhandler
+    On Error GoTo errHandler
 
     Dim NullObj As UserObj
 
@@ -473,7 +473,7 @@ Sub UpdateUserInv(ByVal UpdateAll As Boolean, _
 
     End With
 
-Errhandler:
+errHandler:
     Call LogError("Error en UpdateUserInv. Error " & Err.Number & " : " & Err.description)
 
 End Sub
@@ -648,7 +648,7 @@ Function MeterItemEnInventario(ByVal UserIndex As Integer, ByRef MiObj As obj) A
     'Obtengo el numero de getMaxInventorySlots antes que nada para que funcionen correctamente las mochilas y alforjas (Recox)
     '***************************************************
 
-    On Error GoTo Errhandler
+    On Error GoTo errHandler
 
     Dim Slot As Byte
 
@@ -717,7 +717,7 @@ Function MeterItemEnInventario(ByVal UserIndex As Integer, ByRef MiObj As obj) A
     Call UpdateUserInv(False, UserIndex, Slot)
     
     Exit Function
-Errhandler:
+errHandler:
     Call LogError("Error en MeterItemEnInventario. Error " & Err.Number & " : " & Err.description)
 
 End Function
@@ -819,7 +819,7 @@ Public Sub Desequipar(ByVal UserIndex As Integer, ByVal Slot As Byte)
     '
     '***************************************************
 
-    On Error GoTo Errhandler
+    On Error GoTo errHandler
 
     'Desequipa el item slot del inventario
     Dim obj As ObjData
@@ -888,13 +888,15 @@ Public Sub Desequipar(ByVal UserIndex As Integer, ByVal Slot As Byte)
 
                 End With
                 
-                Call DarCuerpoDesnudo(UserIndex, .flags.Mimetizado = 1)
-
-                With .Char
-                    Call ChangeUserChar(UserIndex, .body, .Head, .Heading, .WeaponAnim, .ShieldAnim, .CascoAnim, .AuraAnim, .AuraColor)
-
-                End With
-                 
+                If Not .flags.Mimetizado = 1 And Not .flags.Navegando = 1 Then
+                    Call DarCuerpoDesnudo(UserIndex, .flags.Mimetizado = 1)
+    
+                    With .Char
+                        Call ChangeUserChar(UserIndex, .body, .Head, .Heading, .WeaponAnim, .ShieldAnim, .CascoAnim, .AuraAnim, .AuraColor)
+    
+                    End With
+                End If
+                
             Case eOBJType.otCasco
 
                 With .Invent
@@ -904,7 +906,7 @@ Public Sub Desequipar(ByVal UserIndex As Integer, ByVal Slot As Byte)
 
                 End With
                 
-                If Not .flags.Mimetizado = 1 Then
+                If Not .flags.Mimetizado = 1 Or Not .flags.Navegando = 1 Then
 
                     With .Char
                         .CascoAnim = NingunCasco
@@ -954,7 +956,7 @@ Public Sub Desequipar(ByVal UserIndex As Integer, ByVal Slot As Byte)
     
     Exit Sub
 
-Errhandler:
+errHandler:
     Call LogError("Error en Desquipar. Error " & Err.Number & " : " & Err.description)
 
 End Sub
@@ -998,7 +1000,7 @@ Function SexoPuedeUsarItem(ByVal UserIndex As Integer, _
     '14/01/2010: ZaMa - Agrego el motivo por el que no puede equipar/usar el item.
     '***************************************************
 
-    On Error GoTo Errhandler
+    On Error GoTo errHandler
     
     If ObjData(ObjIndex).Mujer = 1 Then
         SexoPuedeUsarItem = UserList(UserIndex).Genero <> eGenero.Hombre
@@ -1012,7 +1014,7 @@ Function SexoPuedeUsarItem(ByVal UserIndex As Integer, _
     If Not SexoPuedeUsarItem Then sMotivo = "Tu genero no puede usar este objeto."
     
     Exit Function
-Errhandler:
+errHandler:
     Call LogError("SexoPuedeUsarItem")
 
 End Function
@@ -1061,7 +1063,7 @@ Sub EquiparInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
     '03/02/2020: WyroX - Nivel minimo y skill minimo para poder equipar
     '*************************************************
 
-    On Error GoTo Errhandler
+    On Error GoTo errHandler
 
     'Equipa un item del inventario
     Dim obj      As ObjData
@@ -1212,11 +1214,6 @@ Sub EquiparInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
             
             Case eOBJType.otArmadura
 
-                If .flags.Navegando = 1 Then
-                    Call WriteConsoleMsg(UserIndex, "No podes equiparte o desequiparte vestimentas o armaduras mientras estas navegando.", FontTypeNames.FONTTYPE_INFO)
-                    Exit Sub
-                End If
-
                 'Parchesin para que no se saquen una armadura mientras estan en montura y dsp les queda el cuerpo de la armadura y velocidad de montura (Recox)
                 If .flags.Equitando = 1 Then
                     Call WriteConsoleMsg(UserIndex, "No podes equiparte o desequiparte vestimentas o armaduras mientras estas en tu montura.", FontTypeNames.FONTTYPE_INFO)
@@ -1229,9 +1226,8 @@ Sub EquiparInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                     'Si esta equipado lo quita
                     If .Invent.Object(Slot).Equipped Then
                         Call Desequipar(UserIndex, Slot)
-                        Call DarCuerpoDesnudo(UserIndex, .flags.Mimetizado = 1)
 
-                        If Not .flags.Mimetizado = 1 Then
+                        If Not .flags.Mimetizado = 1 And .flags.Navegando = 0 Then
                             Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.Heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
 
                         End If
@@ -1251,7 +1247,7 @@ Sub EquiparInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                     .Invent.ArmourEqpObjIndex = ObjIndex
                     .Invent.ArmourEqpSlot = Slot
                         
-                    If .flags.Mimetizado = 1 Then
+                    If .flags.Mimetizado = 1 Or .flags.Navegando = 1 Then
                         .CharMimetizado.body = obj.Ropaje
                     Else
                         .Char.body = obj.Ropaje
@@ -1267,14 +1263,13 @@ Sub EquiparInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
             
             Case eOBJType.otCasco
 
-                If .flags.Navegando = 1 Then Exit Sub
                 If ClasePuedeUsarItem(UserIndex, ObjIndex, sMotivo) Then
 
                     'Si esta equipado lo quita
                     If .Invent.Object(Slot).Equipped Then
                         Call Desequipar(UserIndex, Slot)
 
-                        If .flags.Mimetizado = 1 Then
+                        If .flags.Mimetizado = 1 Or .flags.Navegando = 1 Then
                             .CharMimetizado.CascoAnim = NingunCasco
                         Else
                             .Char.CascoAnim = NingunCasco
@@ -1298,7 +1293,7 @@ Sub EquiparInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                     .Invent.CascoEqpObjIndex = ObjIndex
                     .Invent.CascoEqpSlot = Slot
 
-                    If .flags.Mimetizado = 1 Then
+                    If .flags.Mimetizado = 1 Or .flags.Navegando = 1 Then
                         .CharMimetizado.CascoAnim = obj.CascoAnim
                     Else
                         .Char.CascoAnim = obj.CascoAnim
@@ -1313,8 +1308,7 @@ Sub EquiparInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
             
             Case eOBJType.otEscudo
 
-                If .flags.Navegando = 1 Then Exit Sub
-                
+
                 If ClasePuedeUsarItem(UserIndex, ObjIndex, sMotivo) And FaccionPuedeUsarItem(UserIndex, ObjIndex, sMotivo) Then
 
                     'Si esta equipado lo quita
@@ -1392,7 +1386,7 @@ Sub EquiparInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
     
     Exit Sub
     
-Errhandler:
+errHandler:
     Call LogError("EquiparInvItem Slot:" & Slot & " - Error: " & Err.Number & " - Error Description : " & Err.description)
 
 End Sub
@@ -1406,7 +1400,7 @@ Private Function CheckRazaUsaRopa(ByVal UserIndex As Integer, _
     '14/01/2010: ZaMa - Agrego el motivo por el que no puede equipar/usar el item.
     '***************************************************
 
-    On Error GoTo Errhandler
+    On Error GoTo errHandler
 
     With UserList(UserIndex)
 
@@ -1430,7 +1424,7 @@ Private Function CheckRazaUsaRopa(ByVal UserIndex As Integer, _
     
     Exit Function
     
-Errhandler:
+errHandler:
     Call LogError("Error CheckRazaUsaRopa ItemIndex:" & ItemIndex)
 
 End Function
@@ -2248,7 +2242,7 @@ Sub TirarTodo(ByVal UserIndex As Integer)
     '
     '***************************************************
 
-    On Error GoTo Errhandler
+    On Error GoTo errHandler
 
     With UserList(UserIndex)
 
@@ -2272,7 +2266,7 @@ Sub TirarTodo(ByVal UserIndex As Integer)
 
     Exit Sub
 
-Errhandler:
+errHandler:
     Call LogError("Error en TirarTodo. Error: " & Err.Number & " - " & Err.description)
 
 End Sub
@@ -2298,7 +2292,7 @@ Sub TirarTodosLosItems(ByVal UserIndex As Integer)
     'Last Modification: 12/01/2010 (ZaMa)
     '12/01/2010: ZaMa - Ahora los piratas no explotan items solo si estan entre 20 y 25
     '***************************************************
-    On Error GoTo Errhandler
+    On Error GoTo errHandler
 
     Dim i         As Byte
 
@@ -2360,7 +2354,7 @@ Sub TirarTodosLosItems(ByVal UserIndex As Integer)
     
     Exit Sub
     
-Errhandler:
+errHandler:
     Call LogError("Error en TirarTodosLosItems. Error: " & Err.Number & " - " & Err.description)
 
 End Sub

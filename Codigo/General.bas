@@ -1336,7 +1336,13 @@ Public Sub HambreYSed(ByVal UserIndex As Integer, ByRef fenviarAyS As Boolean)
                 .Counters.AGUACounter = .Counters.AGUACounter + 1
             Else
                 .Counters.AGUACounter = 0
-                .Stats.MinAGU = .Stats.MinAGU - 10
+                
+                If Lloviendo And TerrainStringToByte(MapInfo(.Pos.Map).Terreno) = eTerrain.terrain_desierto And MapInfo(.Pos.Map).Zona <> ("DUNGEON" Or "CIUDAD") Then
+                    .Stats.MinAGU = .Stats.MinAGU - 20
+                    Call WriteConsoleMsg(UserIndex, "Estas en una tormenta de arena, sientes el doble de sed.", FontTypeNames.FONTTYPE_INFO)
+                Else
+                    .Stats.MinAGU = .Stats.MinAGU - 10
+                End If
                 
                 If .Stats.MinAGU <= 0 Then
                     .Stats.MinAGU = 0
@@ -1356,8 +1362,14 @@ Public Sub HambreYSed(ByVal UserIndex As Integer, ByRef fenviarAyS As Boolean)
                 .Counters.COMCounter = .Counters.COMCounter + 1
             Else
                 .Counters.COMCounter = 0
-                .Stats.MinHam = .Stats.MinHam - 10
-
+                
+                If Lloviendo And TerrainStringToByte(MapInfo(.Pos.Map).Terreno) = eTerrain.terrain_nieve And MapInfo(.Pos.Map).Zona <> ("DUNGEON" Or "CIUDAD") Then
+                    .Stats.MinHam = .Stats.MinHam - 20
+                    Call WriteConsoleMsg(UserIndex, "Estas en una tormenta de nieve, sientes el doble de hambre.", FontTypeNames.FONTTYPE_INFO)
+                Else
+                    .Stats.MinHam = .Stats.MinHam - 10
+                End If
+                
                 If .Stats.MinHam <= 0 Then
                     .Stats.MinHam = 0
                     .flags.Hambre = 1
