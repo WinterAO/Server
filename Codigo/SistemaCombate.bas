@@ -2565,6 +2565,10 @@ Sub CalcularDarExp(ByVal UserIndex As Integer, _
 
     If ExpaDar <= 0 Then Exit Sub
     
+    'Si hay una diferencia de 7 niveles por encima, el bicho solo dara el 10% de la experiencia
+    If (Npclist(NPCIndex).Stats.ELV - 7) > UserList(UserIndex).Stats.ELV Then _
+        ExpaDar = Porcentaje(ExpaDar, 10)
+    
     '[Nacho] Vamos contando cuanta experiencia sacamos, porque se da toda la que no se dio al user que mata al NPC
     'Esto es porque cuando un elemental ataca, no se da exp, y tambien porque la cuenta que hicimos antes
     'Podria dar un numero fraccionario, esas fracciones se acumulan hasta formar enteros ;P

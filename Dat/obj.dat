@@ -711,6 +711,9 @@ Agarrable=1
 Abierta=0
 Llave=0
 Clave=3
+IndexAbierta=55
+IndexCerrada=56
+IndexCerradaLlave=57
 
 [OBJ56]
 Name=Puerta de madera cerrada
@@ -720,6 +723,9 @@ Agarrable=1
 Abierta=1
 Llave=0
 Clave=3
+IndexAbierta=55
+IndexCerrada=56
+IndexCerradaLlave=57
 
 [OBJ57]
 Name=Puerta de madera cerrada
