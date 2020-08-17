@@ -1365,9 +1365,9 @@ Function PathFindingAI(ByVal NPCIndex As Integer) As Boolean
                                 'Si es un WorldBoss y se aleja 10 tiles de su OrigPos se le devuelve.
                                 If Npclist(NPCIndex).NPCtype = eNPCType.WorldBoss Then
 
-                                    If Npclist(NPCIndex).Pos.X > (Npclist(NPCIndex).Orig.X - 5) Or Npclist(NPCIndex).Pos.X < (Npclist(NPCIndex).Orig.X + 5) Or _
-                                        Npclist(NPCIndex).Pos.Y > (Npclist(NPCIndex).Orig.Y - 5) Or Npclist(NPCIndex).Pos.Y < (Npclist(NPCIndex).Orig.Y + 5) Then
-
+                                    If Npclist(NPCIndex).Pos.X = (Npclist(NPCIndex).Orig.X - 5) Or Npclist(NPCIndex).Pos.X = (Npclist(NPCIndex).Orig.X + 5) Or _
+                                        Npclist(NPCIndex).Pos.Y = (Npclist(NPCIndex).Orig.Y - 5) Or Npclist(NPCIndex).Pos.Y = (Npclist(NPCIndex).Orig.Y + 5) Then
+                                        
                                             Call NPCTelep(NPCIndex, Npclist(NPCIndex).Orig, True)
                                         End If
                                 End If

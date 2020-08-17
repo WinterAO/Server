@@ -1812,6 +1812,7 @@ Public Type NPCFlags
     
     ActivoPotencia As Boolean
     AumentaPotencia As Boolean
+    Tepeable As Byte
     
     Invocacion As Byte
     
@@ -1923,7 +1924,7 @@ Public Type MapBlock
 
     Blocked As Byte
     Graphic(1 To 4) As Long
-    Userindex As Integer
+    UserIndex As Integer
     NPCIndex As Integer
     ObjInfo As obj
     TileExit As WorldPos

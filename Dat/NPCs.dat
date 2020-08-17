@@ -32,6 +32,7 @@ Explotar ===== El NPC tendra un 50% de explota haciendo el doble de su golpe min
 LanzaMensaje ===== El NPC mandara un mensaje cuando le quede un 10% de su vida
 ActivoPotencia ===== El NPC pegar el doble a partir de su 50% de vida
 Invocacion ===== NPC que son de invocacion
+Tepeable ===== Se activa con porcentaje. El porcentaje indicara a partir de que vida empezara hacerse TP por golpes (Del 1% al 100%)
 
 ##############################################
 ################ORDEN EN DAT##################
