@@ -1864,6 +1864,7 @@ Sub LoadSini()
     IntervaloUserPuedeTrabajar = val(Lector.GetValue("INTERVALOS", "IntervaloTrabajo"))
     IntervaloUserPuedeAtacar = val(Lector.GetValue("INTERVALOS", "IntervaloUserPuedeAtacar"))
     INTERVALO_GLOBAL = val(Lector.GetValue("INTERVALOS", "IntervaloGlobal"))
+    IntervaloPuedeMakrear = val(Lector.GetValue("INTERVALOS", "IntervaloMakreo"))
     
     'TODO : Agregar estos intervalos al form!!!
     IntervaloMagiaGolpe = val(Lector.GetValue("INTERVALOS", "IntervaloMagiaGolpe"))
@@ -2036,7 +2037,7 @@ Sub WriteVar(ByVal File As String, _
     
 End Sub
 
-Function criminal(ByVal UserIndex As Integer) As Boolean
+Function criminal(ByVal userIndex As Integer) As Boolean
     '***************************************************
     'Author: Unknown
     'Last Modification: -
@@ -2045,7 +2046,7 @@ Function criminal(ByVal UserIndex As Integer) As Boolean
 
     Dim L As Long
     
-    With UserList(UserIndex).Reputacion
+    With UserList(userIndex).Reputacion
         L = (-.AsesinoRep) + (-.BandidoRep) + .BurguesRep + (-.LadronesRep) + .NobleRep + .PlebeRep
         L = L / 6
         criminal = (L < 0)

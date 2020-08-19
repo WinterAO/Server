@@ -453,16 +453,6 @@ Public Const HACHA_LENA_ELFICA              As Integer = 1005
 
 Public Const PIQUETE_MINERO                 As Integer = 187
 
-Public Const HACHA_LENADOR_NEWBIE           As Integer = 561
-
-Public Const PIQUETE_MINERO_NEWBIE          As Integer = 562
-
-Public Const CANA_PESCA_NEWBIE              As Integer = 563
-
-Public Const SERRUCHO_CARPINTERO_NEWBIE     As Integer = 564
-
-Public Const MARTILLO_HERRERO_NEWBIE        As Integer = 565
-
 Public Const DAGA                           As Integer = 15
 
 Public Const FOGATA_APAG                    As Integer = 136
@@ -595,7 +585,6 @@ Public ListaPeces(1 To NUM_PECES) As Integer
 
 '%%%%%%%%%% CONSTANTES DE INDICES %%%%%%%%%%%%%%%
 Public Enum eSkill
-
     Magia = 1
     Robar = 2
     Tacticas = 3
@@ -604,19 +593,20 @@ Public Enum eSkill
     Apunalar = 6
     Ocultarse = 7
     Supervivencia = 8
-    Talar = 9
-    Comerciar = 10
-    Defensa = 11
-    pesca = 12
-    Mineria = 13
-    Carpinteria = 14
-    Herreria = 15
-    Liderazgo = 16
-    Domar = 17
-    Proyectiles = 18
-    Wrestling = 19
-    Navegacion = 20
-    Equitacion = 21
+    Defensa = 9
+    Proyectiles = 10
+    Wrestling = 11
+    Comerciar = 12
+    Domar = 13
+    '<--Fijos-->
+    Liderazgo = 14
+    Navegacion = 15
+    Equitacion = 16
+    Talar = 17
+    pesca = 18
+    Mineria = 19
+    Carpinteria = 20
+    Herreria = 21
 End Enum
 
 Public Enum eMochilas
@@ -659,7 +649,7 @@ Public SND_TALAR                        As Byte
 
 Public SND_PESCAR                       As Byte
 
-Public SND_MINERO                       As Byte
+Public SND_MINERO                       As Integer
 
 Public SND_WARP                         As Byte
 
@@ -1500,6 +1490,10 @@ Public Type UserFlags
     Global As Byte 'Indica si el usuario puede usar el global
     
     CasteoSpell As tCasteoSpell
+    
+    MacroTrabajo As eMacroTrabajo
+    MacroTrabajaObj As Integer
+    MacroCountObj As Integer
 
 End Type
 
@@ -1513,6 +1507,7 @@ Public Type UserCounters
     Lava As Integer
     COMCounter As Integer
     AGUACounter As Integer
+    MacroTrabajo As Integer
     Veneno As Integer
     Paralisis As Integer
     Ceguera As Integer
@@ -1581,13 +1576,6 @@ Public Type tFacciones
     FechaIngreso As String
     MatadosIngreso As Integer 'Para Armadas nada mas
     NextRecompensa As Integer
-
-End Type
-
-Public Type tCrafting
-
-    Cantidad As Long
-    PorCiclo As Integer
 
 End Type
 
@@ -1681,8 +1669,6 @@ Public Type User
     '[/KEVIN]
     
     Counters As UserCounters
-    
-    Construir As tCrafting
     
     MascotasIndex(1 To MAXMASCOTAS) As Integer
     MascotasType(1 To MAXMASCOTAS) As Integer
@@ -1924,7 +1910,7 @@ Public Type MapBlock
 
     Blocked As Byte
     Graphic(1 To 4) As Long
-    UserIndex As Integer
+    userIndex As Integer
     NPCIndex As Integer
     ObjInfo As obj
     TileExit As WorldPos
