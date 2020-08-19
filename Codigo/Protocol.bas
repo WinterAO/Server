@@ -3444,74 +3444,6 @@ Private Sub HandleWorkLeftClick(ByVal userIndex As Integer)
 
                 End If
             
-            Case eSkill.pesca
-                WeaponIndex = .Invent.WeaponEqpObjIndex
-
-                If WeaponIndex = 0 Then Exit Sub
-                
-                'Check interval
-                If Not IntervaloPermiteTrabajar(userIndex) Then Exit Sub
-                
-                'Basado en la idea de Barrin
-                'Comentario por Barrin: jah, "basado", caradura ! ^^
-                If MapData(.Pos.Map, .Pos.X, .Pos.Y).Trigger = eTrigger.BAJOTECHO Or MapData(.Pos.Map, .Pos.X, .Pos.Y).Trigger = eTrigger.CASA Then
-                    Call WriteConsoleMsg(userIndex, "No puedes pescar desde donde te encuentras.", FontTypeNames.FONTTYPE_INFO)
-                    Exit Sub
-
-                End If
-                
-                If HayAgua(.Pos.Map, X, Y) Then
-
-                    Select Case WeaponIndex
-
-                        Case CANA_PESCA
-                            .flags.MacroTrabajo = eMacroTrabajo.PESCAR
-                            Call WriteConsoleMsg(userIndex, "Comienzas a trabajar.", FontTypeNames.FONTTYPE_INFO)
-                        
-                        Case RED_PESCA
-                            
-                            DummyINT = MapData(.Pos.Map, X, Y).ObjInfo.ObjIndex
-                
-                            If DummyINT = 0 Then
-                                Call WriteConsoleMsg(userIndex, "No hay un yacimiento de peces donde pescar.", FontTypeNames.FONTTYPE_INFO)
-                                Exit Sub
-
-                            End If
-                            
-                            If Abs(.Pos.X - X) + Abs(.Pos.Y - Y) > 2 Then
-                                Call WriteConsoleMsg(userIndex, "Estas demasiado lejos para pescar.", FontTypeNames.FONTTYPE_INFO)
-                                Exit Sub
-
-                            End If
-                            
-                            If .Pos.X = X And .Pos.Y = Y Then
-                                Call WriteConsoleMsg(userIndex, "No puedes pescar desde alli.", FontTypeNames.FONTTYPE_INFO)
-                                Exit Sub
-
-                            End If
-                            
-                            'Hay un arbol normal donde clickeo?
-                            If ObjData(DummyINT).OBJType = eOBJType.otYacimientoPez Then
-                                Call DoPescarRed(userIndex)
-                            Else
-                                Call WriteConsoleMsg(userIndex, "No hay un yacimiento de peces donde pescar.", FontTypeNames.FONTTYPE_INFO)
-                                Exit Sub
-
-                            End If
-                              
-                        Case Else
-
-                            Exit Sub    'Invalid item!
-
-                    End Select
-                    
-                    'Play sound!
-                    Call SendData(SendTarget.ToPCArea, userIndex, PrepareMessagePlayWave(SND_PESCAR, .Pos.X, .Pos.Y))
-                Else
-                    Call WriteConsoleMsg(userIndex, "No hay agua donde pescar. Busca un lago, rio o mar.", FontTypeNames.FONTTYPE_INFO)
-
-                End If
-            
             Case eSkill.Robar
 
                 'Does the map allow us to steal here?
@@ -3563,6 +3495,49 @@ Private Sub HandleWorkLeftClick(ByVal userIndex As Integer)
 
                 Else
                     Call WriteConsoleMsg(userIndex, "No puedes robar en zonas seguras!", FontTypeNames.FONTTYPE_INFO)
+
+                End If
+                
+            Case eSkill.pesca
+                WeaponIndex = .Invent.WeaponEqpObjIndex
+
+                If WeaponIndex = 0 Then Exit Sub
+                
+                'Check interval
+                If Not IntervaloPermiteTrabajar(userIndex) Then Exit Sub
+                
+                If MapData(.Pos.Map, .Pos.X, .Pos.Y).Trigger = eTrigger.BAJOTECHO Or MapData(.Pos.Map, .Pos.X, .Pos.Y).Trigger = eTrigger.CASA Then
+                    Call WriteConsoleMsg(userIndex, "No puedes pescar desde donde te encuentras.", FontTypeNames.FONTTYPE_INFO)
+                    Exit Sub
+
+                End If
+                
+                If HayAgua(.Pos.Map, X, Y) Then
+
+                    Select Case WeaponIndex
+
+                        Case CANA_PESCA
+                            .flags.MacroTrabajo = eMacroTrabajo.PESCAR
+                        
+                        Case RED_PESCA
+                        
+                            If .Stats.UserSkills(eSkill.pesca) < ObjData(WeaponIndex).MinSkill Then
+                                Call WriteConsoleMsg(userIndex, "No tienes conocimientos en Pesca suficiente para usar la red. Necesitas al menos " & ObjData(WeaponIndex).MinSkill & " Skills.", FontTypeNames.FONTTYPE_INFO)
+                                Exit Sub
+                            End If
+                            
+                            .flags.MacroTrabajo = eMacroTrabajo.PescarRed
+   
+                        Case Else
+
+                            Exit Sub    'Invalid item!
+
+                    End Select
+                    
+                    Call WriteConsoleMsg(userIndex, "Comienzas a trabajar.", FontTypeNames.FONTTYPE_INFO)
+                    
+                Else
+                    Call WriteConsoleMsg(userIndex, "No hay agua donde pescar. Busca un lago, rio o mar.", FontTypeNames.FONTTYPE_INFO)
 
                 End If
             

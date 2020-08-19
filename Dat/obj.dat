@@ -2277,7 +2277,7 @@ Name=Yacimiento de Hierro
 GrhIndex=8616
 ObjType=22
 Agarrable=1
-MineralIndex=192
+RecursoIndex=192
 Recurso=19-1
 
 [OBJ189]
@@ -2285,7 +2285,7 @@ Name=Yacimiento de Hierro
 GrhIndex=8617
 ObjType=22
 Agarrable=1
-MineralIndex=192
+RecursoIndex=192
 Recurso=19-1
 
 [OBJ190]
@@ -2293,7 +2293,7 @@ Name=Yacimiento de Hierro
 GrhIndex=8618
 ObjType=22
 Agarrable=1
-MineralIndex=192
+RecursoIndex=192
 Recurso=19-1
 
 [OBJ191]
@@ -2301,7 +2301,7 @@ Name=Yacimiento de Hierro
 GrhIndex=8619
 ObjType=22
 Agarrable=1
-MineralIndex=192
+RecursoIndex=192
 Recurso=19-1
 
 [OBJ192]
@@ -2678,7 +2678,7 @@ Name=Yacimiento de Oro
 GrhIndex=8608
 ObjType=22
 Agarrable=1
-MineralIndex=194
+RecursoIndex=194
 Recurso=19-1
 
 [OBJ229]
@@ -2686,7 +2686,7 @@ Name=Yacimiento de Oro
 GrhIndex=8609
 ObjType=22
 Agarrable=1
-MineralIndex=194
+RecursoIndex=194
 Recurso=19-1
 
 [OBJ230]
@@ -2694,7 +2694,7 @@ Name=Yacimiento de Oro
 GrhIndex=8610
 ObjType=22
 Agarrable=1
-MineralIndex=194
+RecursoIndex=194
 Recurso=19-1
 
 [OBJ231]
@@ -2702,7 +2702,7 @@ Name=Yacimiento de Oro
 GrhIndex=8611
 ObjType=22
 Agarrable=1
-MineralIndex=194
+RecursoIndex=194
 Recurso=19-1
 
 [OBJ232]
@@ -2710,7 +2710,7 @@ Name=Yacimiento de Plata
 GrhIndex=8612
 ObjType=22
 Agarrable=1
-MineralIndex=193
+RecursoIndex=193
 Recurso=19-1
 
 [OBJ233]
@@ -2718,7 +2718,7 @@ Name=Yacimiento de Plata
 GrhIndex=8613
 ObjType=22
 Agarrable=1
-MineralIndex=193
+RecursoIndex=193
 Recurso=19-1
 
 [OBJ234]
@@ -2726,7 +2726,7 @@ Name=Yacimiento de Plata
 GrhIndex=8614
 ObjType=22
 Agarrable=1
-MineralIndex=193
+RecursoIndex=193
 Recurso=19-1
 
 [OBJ235]
@@ -2734,7 +2734,7 @@ Name=Yacimiento de Plata
 GrhIndex=8615
 ObjType=22
 Agarrable=1
-MineralIndex=193
+RecursoIndex=193
 Recurso=19-1
 
 [OBJ236]
@@ -6654,6 +6654,8 @@ Agarrable=0
 Valor=5000
 Crucial=0
 Herramienta=18-2
+MinSkill=60
+MinLevel=25
 
 [OBJ544]
 Name=Pez Dorado
@@ -6888,6 +6890,7 @@ GrhIndex=7002
 ObjType=4
 Agarrable=1
 Recurso=17-1
+RecursoIndex=58
 
 [OBJ562]
 Name=Piquete de Minero (Newbie)

@@ -1176,8 +1176,6 @@ Sub LoadOBJData()
                     .DuracionEfecto = val(Leer.GetValue("OBJ" & Object, "DuracionEfecto"))
                 
                 Case eOBJType.otBarcos
-                    .MinSkill = val(Leer.GetValue("OBJ" & Object, "MinSkill"))
-                    .MinLevel = val(Leer.GetValue("OBJ" & Object, "MinLevel"))
                     .MaxHIT = val(Leer.GetValue("OBJ" & Object, "MaxHIT"))
                     .MinHIT = val(Leer.GetValue("OBJ" & Object, "MinHIT"))
                     .Real = val(Leer.GetValue("OBJ" & Object, "Real"))
@@ -1192,14 +1190,9 @@ Sub LoadOBJData()
                     .MinLevel = val(Leer.GetValue("OBJ" & Object, "MinLevel"))
 
                 Case eOBJType.otMonturas
-                    .MinSkill = val(Leer.GetValue("OBJ" & Object, "MinSkill"))
-                    .MinLevel = val(Leer.GetValue("OBJ" & Object, "MinLevel"))
                     .MaxHIT = val(Leer.GetValue("OBJ" & Object, "MaxHIT"))
                     .MinHIT = val(Leer.GetValue("OBJ" & Object, "MinHIT"))
                     .MontTipo = val(Leer.GetValue("OBJ" & Object, "MontTipo"))
-
-                Case eOBJType.otMinerales
-                    .MinSkill = val(Leer.GetValue("OBJ" & Object, "MinSkill"))
 
                 Case eOBJType.otAnillo 'Pablo (ToxicWaste)
                     .LingH = val(Leer.GetValue("OBJ" & Object, "LingH"))
@@ -1247,7 +1240,7 @@ Sub LoadOBJData()
             
             .LingoteIndex = val(Leer.GetValue("OBJ" & Object, "LingoteIndex"))
             
-            .MineralIndex = val(Leer.GetValue("OBJ" & Object, "MineralIndex"))
+            .RecursoIndex = val(Leer.GetValue("OBJ" & Object, "RecursoIndex"))
             
             .MaxHp = val(Leer.GetValue("OBJ" & Object, "MaxHP"))
             .MinHp = val(Leer.GetValue("OBJ" & Object, "MinHP"))
@@ -1269,6 +1262,9 @@ Sub LoadOBJData()
             .RazaHumana = val(Leer.GetValue("OBJ" & Object, "RazaHumana"))
             
             .Valor = val(Leer.GetValue("OBJ" & Object, "Valor"))
+            
+            .MinSkill = val(Leer.GetValue("OBJ" & Object, "MinSkill"))
+            .MinLevel = val(Leer.GetValue("OBJ" & Object, "MinLevel"))
             
             .Crucial = val(Leer.GetValue("OBJ" & Object, "Crucial"))
             
@@ -1893,9 +1889,7 @@ Sub LoadSini()
     IntervaloOculto = val(Lector.GetValue("INTERVALOS", "IntervaloOculto"))
     
     '&&&&&&&&&&&&&&&&&&&&& SUERTE &&&&&&&&&&&&&&&&&&&&&&&
-    DificultadPescar = val(Lector.GetValue("DIFICULTAD", "DificultadPescar"))
-    DificultadTalar = val(Lector.GetValue("DIFICULTAD", "DificultadTalar"))
-    DificultadMinar = val(Lector.GetValue("DIFICULTAD", "DificultadMinar"))
+    DificultadExtraer = val(Lector.GetValue("DIFICULTAD", "DificultadExtraer"))
     '&&&&&&&&&&&&&&&&&&&&& FIN TIMERS &&&&&&&&&&&&&&&&&&&&&&&
       
     RecordUsuariosOnline = val(Lector.GetValue("INIT", "Record"))

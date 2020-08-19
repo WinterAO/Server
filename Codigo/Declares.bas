@@ -385,11 +385,7 @@ Public Const MAXUSERHECHIZOS               As Byte = 35
 
 ' TODO: Y ESTO ? LO CONOCE GD ?
 
-Public Const EsfuerzoTalar                 As Byte = 2
-
-Public Const EsfuerzoPescar                As Byte = 3
-
-Public Const EsfuerzoExcavar               As Byte = 3
+Public Const EsfuerzoExtraer               As Byte = 3
 
 Public Const FX_TELEPORT_INDEX             As Integer = 25
 
@@ -1021,7 +1017,7 @@ Public Type ObjData
     MinHp As Integer ' Minimo puntos de vida
     MaxHp As Integer ' Maximo puntos de vida
     
-    MineralIndex As Integer
+    RecursoIndex As Integer
     LingoteInex As Integer
     
     proyectil As Integer

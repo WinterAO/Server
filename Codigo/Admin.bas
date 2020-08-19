@@ -141,11 +141,7 @@ Public Lloviendo                         As Boolean
 
 Public DeNoche                           As Boolean
 
-Public DificultadPescar                      As Integer
-
-Public DificultadTalar                       As Integer
-
-Public DificultadMinar                       As Integer
+Public DificultadExtraer                 As Integer
 
 
 Function VersionOK(ByVal Ver As String) As Boolean

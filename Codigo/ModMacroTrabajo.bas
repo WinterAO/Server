@@ -353,34 +353,24 @@ Debug.Print Tarea
         
             'Pesca con caña
             Case eMacroTrabajo.PESCAR
-                If PuedePescar(userIndex) Then
-                    DoPescar userIndex
-                End If
+                If PuedePescar(userIndex) Then _
+                    Call DoPescar(userIndex, False)
             
             'Pesca con red
             Case eMacroTrabajo.PescarRed
-                If PuedePescar(userIndex) Then
-                    DoPescarRed userIndex
-                End If
+                If PuedePescar(userIndex) Then _
+                    Call DoPescar(userIndex, True)
                     
-            'Mineria
-            Case eMacroTrabajo.Minando
-                If PuedeExtraer(userIndex, Tarea) Then
-                    DoMineria userIndex
-                End If
+            'Mineria, Talar
+            Case eMacroTrabajo.Minando, eMacroTrabajo.Talando
+                If PuedeExtraer(userIndex, Tarea) Then _
+                    Call DoExtraer(userIndex, Tarea)
                     
             'Lingotear
             Case eMacroTrabajo.Lingotear
-                If PuedeLingotear(userIndex) Then
-                    FundirMineral userIndex
-                End If
-                    
-            'Talar
-            Case eMacroTrabajo.Talando
-                If PuedeExtraer(userIndex, Tarea) Then
-                    DoTalar (userIndex)
-                End If
-            
+                If PuedeLingotear(userIndex) Then _
+                    Call FundirMineral(userIndex)
+
             'Carpinteria
             Case eMacroTrabajo.Carpinteando
                 If PuedeCarpinteria(userIndex, .flags.MacroCountObj, .flags.MacroTrabajaObj) And .flags.MacroCountObj > 0 Then

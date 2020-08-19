@@ -1416,99 +1416,7 @@ Sub TratarDeHacerFogata(ByVal Map As Integer, _
 
 End Sub
 
-Public Sub DoPescar(ByVal userIndex As Integer)
-
-    '***************************************************
-    'Author: Unknown
-    'Last Modification: 26/10/2018
-    '16/11/2009: ZaMa - Implementado nuevo sistema de extraccion.
-    '11/05/2010: ZaMa - Arreglo formula de maximo de items contruibles/extraibles.
-    '05/13/2010: Pato - Refix a la formula de maximo de items construibles/extraibles.
-    '22/05/2010: ZaMa - Los caos ya no suben plebe al trabajar.
-    '28/05/2010: ZaMa - Los pks no suben plebe al trabajar.
-    '26/10/2018: CHOTS - Multiplicador de oficios
-    '***************************************************
-    On Error GoTo errHandler
-
-    Dim Suerte        As Integer
-
-    Dim res           As Integer
-
-    Dim Skill         As Integer
-
-    Dim MAXITEMS      As Integer
-
-    Dim CantidadItems As Integer
-
-    With UserList(userIndex)
-
-        Call QuitarSta(userIndex, EsfuerzoPescar)
-    
-        Skill = .Stats.UserSkills(eSkill.pesca)
-        Suerte = Int(-0.00125 * Skill * Skill - 0.3 * Skill + 49)
-    
-        res = RandomNumber(1, Suerte)
-    
-        If res <= DificultadPescar Then
-
-            Dim MiObj As obj
-            
-            MAXITEMS = MaxItemsExtraibles(.Stats.ELV)
-            
-            CantidadItems = RandomNumber(1, MAXITEMS)
-
-            CantidadItems = CantidadItems * OficioMultiplier
-            
-            With MiObj
-                .Amount = CantidadItems
-                .ObjIndex = Pescado
-            End With
-            
-            If Not MeterItemEnInventario(userIndex, MiObj) Then
-                Call TirarItemAlPiso(.Pos, MiObj)
-
-            End If
-        
-            Call WriteConsoleMsg(userIndex, "Has pescado un lindo pez!", FontTypeNames.FONTTYPE_INFO)
-            
-            'Renderizo el dano en render.
-            Call WriteMessageCreateDamage(userIndex, MiObj.Amount, DAMAGE_TRABAJO)
-            
-            Call SubirSkill(userIndex, eSkill.pesca, True)
-        Else
-
-            '[CDT 17-02-2004]
-            If Not .flags.UltimoMensaje = 6 Then
-                Call WriteConsoleMsg(userIndex, "No has pescado nada!", FontTypeNames.FONTTYPE_INFO)
-                .flags.UltimoMensaje = 6
-
-            End If
-
-            '[/CDT]
-        
-            Call SubirSkill(userIndex, eSkill.pesca, False)
-
-        End If
-    
-        If Not criminal(userIndex) Then
-            .Reputacion.PlebeRep = .Reputacion.PlebeRep + vlProleta
-
-            If .Reputacion.PlebeRep > MAXREP Then .Reputacion.PlebeRep = MAXREP
-
-        End If
-    
-        .Counters.Trabajando = .Counters.Trabajando + 1
-
-    End With
-
-    Exit Sub
-
-errHandler:
-    Call LogError("Error en DoPescar. Error " & Err.Number & " : " & Err.description)
-
-End Sub
-
-Public Sub DoPescarRed(ByVal userIndex As Integer)
+Public Sub DoPescar(ByVal userIndex As Integer, ByVal Red As Boolean)
 
     '***************************************************
     'Author: Unknown
@@ -1529,7 +1437,7 @@ Public Sub DoPescarRed(ByVal userIndex As Integer)
 
     With UserList(userIndex)
     
-        Call QuitarSta(userIndex, EsfuerzoPescar)
+        Call QuitarSta(userIndex, EsfuerzoExtraer)
 
         iSkill = .Stats.UserSkills(eSkill.pesca)
         
@@ -1541,7 +1449,7 @@ Public Sub DoPescarRed(ByVal userIndex As Integer)
         If Suerte > 0 Then
             res = RandomNumber(1, Suerte)
             
-            If res <= DificultadPescar Then
+            If res <= DificultadExtraer Then
             
                 Dim MiObj As obj
                 
@@ -1551,7 +1459,12 @@ Public Sub DoPescarRed(ByVal userIndex As Integer)
                 CantidadItems = CantidadItems * OficioMultiplier
                 
                 MiObj.Amount = CantidadItems
-                MiObj.ObjIndex = ListaPeces(RandomNumber(1, NUM_PECES))
+                
+                If Red Then
+                    MiObj.ObjIndex = ListaPeces(RandomNumber(1, NUM_PECES))
+                Else
+                    MiObj.ObjIndex = Pescado
+                End If
                 
                 If Not MeterItemEnInventario(userIndex, MiObj) Then
                     Call TirarItemAlPiso(.Pos, MiObj)
@@ -1578,13 +1491,16 @@ Public Sub DoPescarRed(ByVal userIndex As Integer)
         .Reputacion.PlebeRep = .Reputacion.PlebeRep + vlProleta
 
         If .Reputacion.PlebeRep > MAXREP Then .Reputacion.PlebeRep = MAXREP
+        
+        'Sonido
+        Call SendData(SendTarget.ToPCArea, userIndex, PrepareMessagePlayWave(SND_PESCAR, .Pos.X, .Pos.Y))
     
     End With
     
     Exit Sub
 
 errHandler:
-    Call LogError("Error en DoPescarRed")
+    Call LogError("Error en DoPescar Red: " & Red)
 
 End Sub
 
@@ -2176,14 +2092,14 @@ Public Sub DoTalar(ByVal userIndex As Integer, _
 
     With UserList(userIndex)
 
-        Call QuitarSta(userIndex, EsfuerzoTalar)
+        Call QuitarSta(userIndex, EsfuerzoExtraer)
     
         Skill = .Stats.UserSkills(eSkill.Talar)
         Suerte = Int(-0.00125 * Skill * Skill - 0.3 * Skill + 49)
     
         res = RandomNumber(1, Suerte)
     
-        If res <= DificultadTalar Then
+        If res <= DificultadExtraer Then
 
             Dim MiObj As obj
         
@@ -2266,7 +2182,7 @@ Public Sub DoMineria(ByVal userIndex As Integer)
 
     With UserList(userIndex)
 
-        Call QuitarSta(userIndex, EsfuerzoExcavar)
+        Call QuitarSta(userIndex, EsfuerzoExtraer)
 
         Dim Skill As Integer
 
@@ -2275,13 +2191,13 @@ Public Sub DoMineria(ByVal userIndex As Integer)
     
         res = RandomNumber(1, Suerte)
 
-        If res <= DificultadMinar Then
+        If res <= DificultadExtraer Then
 
             Dim MiObj As obj
         
             If .flags.TargetObj = 0 Then Exit Sub
         
-            MiObj.ObjIndex = ObjData(.flags.TargetObj).MineralIndex
+            MiObj.ObjIndex = ObjData(.flags.TargetObj).RecursoIndex
         
             MAXITEMS = MaxItemsExtraibles(.Stats.ELV)
             
@@ -2863,5 +2779,104 @@ Private Sub SetEquipmentOnCharAfterNavigateOrEquitate(ByVal userIndex As Integer
         
     End With
 
+
+End Sub
+
+Public Sub DoExtraer(ByVal userIndex As Integer, ByVal Profesion As Integer)
+
+    '***************************************************
+    'Autor: Lorwik
+    'Fecha: 19/08/2020
+    'Descripción: Extrae recursos de forma pasiva
+    '***************************************************
+    
+    On Error GoTo errHandler
+
+    Dim Suerte        As Integer
+    Dim res           As Integer
+    Dim MAXITEMS      As Integer
+    Dim CantidadItems As Integer
+    Dim MiObj As obj
+    
+
+    With UserList(userIndex)
+
+        If .flags.TargetObj = 0 Then Exit Sub
+
+        '¿La herramienta es de la misma categoria o superior?
+        If ObjData(.flags.TargetObj).Recurso.Categoria > ObjData(.Invent.WeaponEqpObjIndex).Herramienta.Categoria Then
+            Call WriteConsoleMsg(userIndex, "El recurso que intentas extraer es demasiado duro para esa herramienta.", FontTypeNames.FONTTYPE_INFO)
+            Call DejardeTrabajar(userIndex) 'Paramos el macro
+            Exit Sub
+        End If
+
+        Call QuitarSta(userIndex, EsfuerzoExtraer)
+
+        Dim Skill As Integer
+
+        Skill = .Stats.UserSkills(Profesion)
+        Suerte = Int(-0.00125 * Skill * Skill - 0.3 * Skill + 49)
+    
+        res = RandomNumber(1, Suerte)
+
+        If res <= DificultadExtraer Then
+        
+            MiObj.ObjIndex = ObjData(.flags.TargetObj).RecursoIndex
+        
+            MAXITEMS = MaxItemsExtraibles(.Stats.ELV)
+            
+            CantidadItems = RandomNumber(1, MAXITEMS)
+
+            CantidadItems = CantidadItems * OficioMultiplier
+
+            MiObj.Amount = CantidadItems
+       
+            If Not MeterItemEnInventario(userIndex, MiObj) Then Call TirarItemAlPiso(.Pos, MiObj)
+        
+            Call WriteConsoleMsg(userIndex, "Has extraido algunos materiales!", FontTypeNames.FONTTYPE_INFO)
+            
+            'Renderizo el dano en render.
+            Call SendData(SendTarget.ToPCArea, userIndex, PrepareMessageCreateDamage(.Pos.X, .Pos.Y, MiObj.Amount, DAMAGE_TRABAJO))
+            Call WriteMessageCreateDamage(userIndex, MiObj.Amount, DAMAGE_TRABAJO)
+            
+            Call SubirSkill(userIndex, Profesion, True)
+        Else
+
+            '[CDT 17-02-2004]
+            If Not .flags.UltimoMensaje = 9 Then
+                Call WriteConsoleMsg(userIndex, "No has conseguido nada!", FontTypeNames.FONTTYPE_INFO)
+                .flags.UltimoMensaje = 9
+
+            End If
+
+            '[/CDT]
+            Call SubirSkill(userIndex, Profesion, False)
+
+        End If
+    
+        If Not criminal(userIndex) Then
+            .Reputacion.PlebeRep = .Reputacion.PlebeRep + vlProleta
+
+            If .Reputacion.PlebeRep > MAXREP Then .Reputacion.PlebeRep = MAXREP
+
+        End If
+    
+        .Counters.Trabajando = .Counters.Trabajando + 1
+        
+        'Play sound!
+        If Profesion = eSkill.Mineria Then
+            Call SendData(SendTarget.ToPCArea, userIndex, PrepareMessagePlayWave(SND_MINERO, .Pos.X, .Pos.Y))
+            
+        ElseIf Profesion = eSkill.Talar Then
+            Call SendData(SendTarget.ToPCArea, userIndex, PrepareMessagePlayWave(SND_TALAR, .Pos.X, .Pos.Y))
+            
+        End If
+
+    End With
+
+    Exit Sub
+
+errHandler:
+    Call LogError("Error en Sub DoExtraer")
 
 End Sub
