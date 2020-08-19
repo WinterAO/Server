@@ -11,13 +11,14 @@ Option Explicit
 
 Public Enum eMacroTrabajo '(El 0 es no activado)
     Ninguno = 0
-    PESCAR = 1
+    Lingotear = 1
     PescarRed = 2
-    Lingotear = 3
-    Minando = 4
-    Talando = 5
-    Carpinteando = 6
-    Herreando = 7
+    'Coincide con el numero de los skills:
+    Talando = 17
+    PESCAR = 18
+    Minando = 19
+    Carpinteando = 20
+    Herreando = 21
 End Enum
 
 Public Function PuedePescar(ByVal userIndex As Integer) As Boolean
