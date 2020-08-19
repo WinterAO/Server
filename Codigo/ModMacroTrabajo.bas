@@ -13,7 +13,7 @@ Public Enum eMacroTrabajo '(El 0 es no activado)
     Ninguno = 0
     Lingotear = 1
     PescarRed = 2
-    'Coincide con el numero de los skills:
+    'DEBE y Coincide con el numero de los skills:
     Talando = 17
     PESCAR = 18
     Minando = 19
@@ -68,102 +68,52 @@ Public Function PuedePescar(ByVal userIndex As Integer) As Boolean
     
 End Function
 
-Public Function PuedeMinar(ByVal userIndex As Integer) As Boolean
+Public Function PuedeExtraer(ByVal userIndex As Integer, ByVal Skill As Byte) As Boolean
 '************************************
 'Autor: Lorwik
-'Requisitos para Minar
+'Requisitos para Extraer recursos de forma pasiva
 '************************************
 
-    With UserList(userIndex)
-    
-        If .Invent.WeaponEqpObjIndex = 0 Then Exit Function
-                
-        If .Invent.WeaponEqpObjIndex <> PIQUETE_MINERO Then
-            Call WriteConsoleMsg(userIndex, "Necesitas un pico de minero para minar.", FontTypeNames.FONTTYPE_INFOBOLD)
-            Call DejardeTrabajar(userIndex)
-            PuedeMinar = False
-            Exit Function
-        End If
-        
-        If .flags.invisible = 1 Or .flags.Oculto = 1 Then
-            Call WriteConsoleMsg(userIndex, "¡Estas Invisible!", FontTypeNames.FONTTYPE_INFOBOLD)
-            Call DejardeTrabajar(userIndex)
-            PuedeMinar = False
-            Exit Function
-        End If
-        
-        If .Stats.MinSta <= 5 Then
-            Call WriteConsoleMsg(userIndex, "Te encuentras demasiado cansado.", FontTypeNames.FONTTYPE_INFOBOLD)
-            Call SendData(SendTarget.ToPCArea, userIndex, PrepareMessagePlayWave(SND_MINERO, .Pos.X, .Pos.Y))
-            Call DejardeTrabajar(userIndex)
-            PuedeMinar = False
-            Exit Function
-        End If
-        
-        'Check there is a proper item there
-        If .flags.TargetObj = 0 Then
-            Call WriteConsoleMsg(userIndex, "No hay ningún yacimiento ahí.", FontTypeNames.FONTTYPE_INFOBOLD)
-            Call DejardeTrabajar(userIndex)
-            PuedeMinar = False
-            Exit Function
-        End If
-        
-        PuedeMinar = True
-    End With
-    
-End Function
-
-Public Function PuedeTalar(ByVal userIndex As Integer) As Boolean
-'************************************
-'Autor: Lorwik
-'Requisitos para Minar
-'************************************
     With UserList(userIndex)
     
         'Check interval
         If Not IntervaloPermiteTrabajar(userIndex) Then Exit Function
                 
         If .Invent.WeaponEqpObjIndex = 0 Then
-            Call WriteConsoleMsg(userIndex, "Deberías equiparte el hacha.", FontTypeNames.FONTTYPE_INFOBOLD)
-            PuedeTalar = False
+            Call WriteConsoleMsg(userIndex, "Deberías equiparte la herramienta.", FontTypeNames.FONTTYPE_INFOBOLD)
+            PuedeExtraer = False
             Exit Function
         End If
                 
-        If .Invent.WeaponEqpObjIndex <> HACHA_LENADOR Then
-            ' Podemos llegar acá si el user equipó el anillo dsp de la U y antes del click
-            PuedeTalar = False
+        If ObjData(.Invent.WeaponEqpObjIndex).Herramienta.Profesion <> Skill Then
+            Call DejardeTrabajar(userIndex)
+            PuedeExtraer = False
             Exit Function
         End If
         
         
         If MapInfo(UserList(userIndex).Pos.Map).Pk = False Then
-            Call WriteConsoleMsg(userIndex, "No puedes extraer leñas dentro de la ciudad.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(userIndex, "No puedes extraer recursos dentro de la ciudad.", FontTypeNames.FONTTYPE_INFO)
             Call DejardeTrabajar(userIndex)
-            PuedeTalar = False
+            PuedeExtraer = False
             Exit Function
         End If
         
         If .flags.invisible = 1 Or .flags.Oculto = 1 Then
             Call WriteConsoleMsg(userIndex, "¡Estas Invisible!", FontTypeNames.FONTTYPE_INFOBOLD)
             Call DejardeTrabajar(userIndex)
-            PuedeTalar = False
+            PuedeExtraer = False
             Exit Function
         End If
         
         If .Stats.MinSta <= 5 Then
             Call WriteConsoleMsg(userIndex, "Te encuentras demasiado cansado.", FontTypeNames.FONTTYPE_INFOBOLD)
             Call DejardeTrabajar(userIndex)
-            PuedeTalar = False
-            Exit Function
-        End If
-        
-        If .Invent.WeaponEqpObjIndex <> HACHA_LENADOR Then
-            Call DejardeTrabajar(userIndex)
-            PuedeTalar = False
+            PuedeExtraer = False
             Exit Function
         End If
     
-        PuedeTalar = True
+        PuedeExtraer = True
     End With
     
 End Function
@@ -415,7 +365,7 @@ Debug.Print Tarea
                     
             'Mineria
             Case eMacroTrabajo.Minando
-                If PuedeMinar(userIndex) Then
+                If PuedeExtraer(userIndex, Tarea) Then
                     DoMineria userIndex
                 End If
                     
@@ -427,7 +377,7 @@ Debug.Print Tarea
                     
             'Talar
             Case eMacroTrabajo.Talando
-                If PuedeTalar(userIndex) Then
+                If PuedeExtraer(userIndex, Tarea) Then
                     DoTalar (userIndex)
                 End If
             

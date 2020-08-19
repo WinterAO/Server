@@ -393,8 +393,6 @@ Public Const EsfuerzoExcavar               As Byte = 3
 
 Public Const FX_TELEPORT_INDEX             As Integer = 25
 
-Public Const PORCENTAJE_MATERIALES_UPGRADE As Single = 0.85
-
 ' La utilidad de esto es casi nula, solo se revisa si fue a la cabeza...
 Public Enum PartesCuerpo
 
@@ -993,6 +991,11 @@ End Type
 
 Public Const MAX_ITEMS_CRAFTEO As Byte = 4
 
+Public Type tProfesion
+    Profesion As Byte 'Indica el skill
+    Categoria As Byte 'Indica la categoria
+End Type
+
 'Tipos de objetos
 Public Type ObjData
 
@@ -1133,8 +1136,6 @@ Public Type ObjData
     Log As Byte 'es un objeto que queremos loguear? Pablo (ToxicWaste) 07/09/07
     NoLog As Byte 'es un objeto que esta prohibido loguear?
     
-    Upgrade As Integer
-    
     MontTipo As Byte 'Tipo de Montura
     
     IndiceSkill As Byte 'El indice del Skills
@@ -1154,6 +1155,9 @@ Public Type ObjData
     'Auras
     GrhAura As Long
     AuraColor As Long
+    
+    Herramienta As tProfesion
+    Recurso As tProfesion
 End Type
 
 Public Type obj

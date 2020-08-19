@@ -3566,33 +3566,7 @@ Private Sub HandleWorkLeftClick(ByVal userIndex As Integer)
 
                 End If
             
-            Case eSkill.Talar
-            
-                'Target whatever is in the tile
-                Call LookatTile(userIndex, .Pos.Map, X, Y)
-            
-                DummyINT = MapData(.Pos.Map, X, Y).ObjInfo.ObjIndex
-                
-                If DummyINT > 0 Then
-                    If Abs(.Pos.X - X) + Abs(.Pos.Y - Y) > 1 Then
-                        Call WriteConsoleMsg(userIndex, "Te encuentras demasiado lejos del árbol.", FontTypeNames.FONTTYPE_INFO)
-                        Exit Sub
-                    End If
-                
-                    '¿Hay un arbol donde clickeo?
-                    If ObjData(DummyINT).OBJType = eOBJType.otArboles Then
-                        If PuedeTalar(userIndex) Then
-                            .flags.MacroTrabajo = eMacroTrabajo.Talando
-                            Call WriteConsoleMsg(userIndex, "Comienzas a trabajar.", FontTypeNames.FONTTYPE_INFOBOLD)
-                        End If
-                    Else
-                        Call WriteConsoleMsg(userIndex, "No hay ningún árbol ahí.", FontTypeNames.FONTTYPE_INFO)
-                    End If
-                Else
-                    Call WriteConsoleMsg(userIndex, "No hay ningún árbol ahí.", FontTypeNames.FONTTYPE_INFO)
-                End If
-            
-            Case eSkill.Mineria
+            Case eSkill.Mineria, eSkill.Talar
                 'Target whatever is in the tile
                 Call LookatTile(userIndex, .Pos.Map, X, Y)
                 
@@ -3608,15 +3582,19 @@ Private Sub HandleWorkLeftClick(ByVal userIndex As Integer)
                     DummyINT = MapData(.Pos.Map, X, Y).ObjInfo.ObjIndex 'CHECK
                     
                     '¿Hay un yacimiento donde clickeo?
-                    If ObjData(DummyINT).OBJType = eOBJType.otYacimiento Then
-                        If PuedeMinar(userIndex) Then
-                            .flags.MacroTrabajo = eMacroTrabajo.Minando
+                    If ObjData(DummyINT).Recurso.Profesion = Skill Then
+                        If PuedeExtraer(userIndex, Skill) Then
+                            .flags.MacroTrabajo = Skill
+                            Call WriteConsoleMsg(userIndex, "Comienzas a trabajar.", FontTypeNames.FONTTYPE_INFO)
                         End If
+                        
                     Else
-                        Call WriteConsoleMsg(userIndex, "Ahí no hay ningún yacimiento.", FontTypeNames.FONTTYPE_INFO)
+                        Call WriteConsoleMsg(userIndex, "Ahí no hay ninguna fuente de recursos que puedas extraer con esa herramienta.", FontTypeNames.FONTTYPE_INFO)
+                        
                     End If
                 Else
-                    Call WriteConsoleMsg(userIndex, "Ahí no hay ningún yacimiento.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(userIndex, "Ahí no hay ninguna fuente de recursos.", FontTypeNames.FONTTYPE_INFO)
+                    
                 End If
             
             Case eSkill.Domar
@@ -19019,7 +18997,6 @@ Public Sub WriteBlacksmithWeapons(ByVal userIndex As Integer)
             Call .WriteInteger(obj.LingP)
             Call .WriteInteger(obj.LingO)
             Call .WriteInteger(ArmasHerrero(validIndexes(i)))
-            Call .WriteInteger(obj.Upgrade)
         Next i
 
     End With
@@ -19084,7 +19061,6 @@ Public Sub WriteBlacksmithArmors(ByVal userIndex As Integer)
             Call .WriteInteger(obj.LingP)
             Call .WriteInteger(obj.LingO)
             Call .WriteInteger(ArmadurasHerrero(validIndexes(i)))
-            Call .WriteInteger(obj.Upgrade)
         Next i
 
     End With
@@ -19148,7 +19124,6 @@ Public Sub WriteInitCarpenting(ByVal userIndex As Integer)
             Call .WriteInteger(obj.Madera)
             Call .WriteInteger(obj.MaderaElfica)
             Call .WriteInteger(ObjCarpintero(validIndexes(i)))
-            Call .WriteInteger(obj.Upgrade)
         Next i
         
     End With

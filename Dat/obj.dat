@@ -88,6 +88,33 @@ este objeto se mostrara con un grafico. Si le ponemos
 (No poner particulas en objetos de inventario)
 
 ##############################################
+#########NUEVO SISTEMA DE TRABAJO#############
+##############################################
+
+Dateo de herramientas y recursos de recoleccion pasivo:
+Herramientas:
+
+Herramienta=Nº Skill - Categoria
+Ejm de pico:
+
+Herramienta=19-1 (skill herreria, categoria 1)
+
+Recursos:
+
+Recurso=Nº Skill - Categoria
+Ejm de yacimiento:
+
+Recurso=19-1 (skill herreria, categoria 1)
+
+Skills Profesiones:
+
+'    Talar = 17
+'    pesca = 18
+'    Mineria = 19
+'    Carpinteria = 20
+'    Herreria = 21
+
+##############################################
 ##############################################
 ##############################################
 
@@ -1540,6 +1567,7 @@ LingH=5
 LingP=0
 LingO=0
 SkHerreria=12
+Herramienta=17-1
 
 [OBJ128]
 Name=Escudo de Hierro
@@ -1726,6 +1754,7 @@ Valor= 200
 Crucial=1
 Madera=70
 SkCarpinteria=12
+Herramienta=18-1
 
 [OBJ139]
 Name=Pescado
@@ -2241,6 +2270,7 @@ LingH=3
 LingP=0
 LingO=0
 SkHerreria=12
+Herramienta=19-1
 
 [OBJ188]
 Name=Yacimiento de Hierro
@@ -2248,6 +2278,7 @@ GrhIndex=8616
 ObjType=22
 Agarrable=1
 MineralIndex=192
+Recurso=19-1
 
 [OBJ189]
 Name=Yacimiento de Hierro
@@ -2255,6 +2286,7 @@ GrhIndex=8617
 ObjType=22
 Agarrable=1
 MineralIndex=192
+Recurso=19-1
 
 [OBJ190]
 Name=Yacimiento de Hierro
@@ -2262,6 +2294,7 @@ GrhIndex=8618
 ObjType=22
 Agarrable=1
 MineralIndex=192
+Recurso=19-1
 
 [OBJ191]
 Name=Yacimiento de Hierro
@@ -2269,6 +2302,7 @@ GrhIndex=8619
 ObjType=22
 Agarrable=1
 MineralIndex=192
+Recurso=19-1
 
 [OBJ192]
 Name=Minerales de Hierro
@@ -2645,6 +2679,7 @@ GrhIndex=8608
 ObjType=22
 Agarrable=1
 MineralIndex=194
+Recurso=19-1
 
 [OBJ229]
 Name=Yacimiento de Oro
@@ -2652,6 +2687,7 @@ GrhIndex=8609
 ObjType=22
 Agarrable=1
 MineralIndex=194
+Recurso=19-1
 
 [OBJ230]
 Name=Yacimiento de Oro
@@ -2659,6 +2695,7 @@ GrhIndex=8610
 ObjType=22
 Agarrable=1
 MineralIndex=194
+Recurso=19-1
 
 [OBJ231]
 Name=Yacimiento de Oro
@@ -2666,6 +2703,7 @@ GrhIndex=8611
 ObjType=22
 Agarrable=1
 MineralIndex=194
+Recurso=19-1
 
 [OBJ232]
 Name=Yacimiento de Plata
@@ -2673,6 +2711,7 @@ GrhIndex=8612
 ObjType=22
 Agarrable=1
 MineralIndex=193
+Recurso=19-1
 
 [OBJ233]
 Name=Yacimiento de Plata
@@ -2680,6 +2719,7 @@ GrhIndex=8613
 ObjType=22
 Agarrable=1
 MineralIndex=193
+Recurso=19-1
 
 [OBJ234]
 Name=Yacimiento de Plata
@@ -2687,6 +2727,7 @@ GrhIndex=8614
 ObjType=22
 Agarrable=1
 MineralIndex=193
+Recurso=19-1
 
 [OBJ235]
 Name=Yacimiento de Plata
@@ -2694,6 +2735,7 @@ GrhIndex=8615
 ObjType=22
 Agarrable=1
 MineralIndex=193
+Recurso=19-1
 
 [OBJ236]
 Name=Atlas Argentum 2
@@ -4530,6 +4572,7 @@ LingH=2
 LingP=0
 LingO=0
 SkHerreria=20
+Herramienta=21-1
 
 [OBJ390]
 Name=Armadura de Placas Completa +1
@@ -6610,6 +6653,7 @@ ObjType=2
 Agarrable=0
 Valor=5000
 Crucial=0
+Herramienta=18-2
 
 [OBJ544]
 Name=Pez Dorado
@@ -6839,16 +6883,11 @@ Agarrable=0
 Crucial=0
 
 [OBJ561]
-Name=Hacha de Talador (Newbie)
-GrhIndex=565
-ObjType=2
-Agarrable=0
-Anim=23
-MinHit=1
-MaxHit=2
-Valor=150
-Newbie=1
-Crucial=1
+Name=Arbol
+GrhIndex=7002
+ObjType=4
+Agarrable=1
+Recurso=17-1
 
 [OBJ562]
 Name=Piquete de Minero (Newbie)

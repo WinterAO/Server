@@ -1361,7 +1361,11 @@ Sub LoadOBJData()
             
             .NoRobable = val(Leer.GetValue("OBJ" & Object, "NoRobable"))
             
-            .Upgrade = val(Leer.GetValue("OBJ" & Object, "Upgrade"))
+            .Herramienta.Profesion = val(ReadField(1, Leer.GetValue("OBJ" & Object, "Herramienta"), Asc("-"))) 'Profesion a la que pertenece
+            .Herramienta.Categoria = val(ReadField(2, Leer.GetValue("OBJ" & Object, "Herramienta"), Asc("-"))) 'Categoria de la herramienta
+            
+            .Recurso.Profesion = val(ReadField(1, Leer.GetValue("OBJ" & Object, "Recurso"), Asc("-"))) 'Profesion a la que pertenece
+            .Recurso.Categoria = val(ReadField(2, Leer.GetValue("OBJ" & Object, "Recurso"), Asc("-"))) 'Categoria del recurso
             
             frmCargando.cargar.Value = frmCargando.cargar.Value + 1
 
