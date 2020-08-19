@@ -490,6 +490,8 @@ Public Enum eNPCType
     Quest = 14
     Marinero = 15
     Subastador = 16
+    Recurso = 17
+    Instructor = 18
     
 End Enum
 
@@ -1487,6 +1489,8 @@ Public Type UserFlags
     ParalizedByIndex As Integer
     ParalizedByNpcIndex As Integer
     
+    Subastando As Boolean
+    
     Global As Byte 'Indica si el usuario puede usar el global
     
     CasteoSpell As tCasteoSpell
@@ -1494,7 +1498,10 @@ Public Type UserFlags
     MacroTrabajo As eMacroTrabajo
     MacroTrabajaObj As Integer
     MacroCountObj As Integer
-
+    
+    ProfInstruyendo As Byte
+    Instruyendo As Byte
+    
 End Type
 
 Public Type UserCounters
@@ -1718,6 +1725,8 @@ Public Type User
     CreoPortal As Boolean
     PortalPos As WorldPos
     PortalTiempo As Integer
+    
+    Profesion(0 To 1) As Byte
 
 End Type
 
@@ -1897,6 +1906,7 @@ Public Type NPC
     ClanIndex As Integer
     
     NoShadow As Byte
+    Instruye As Byte 'Instruye un profesion
 
 End Type
 
@@ -1910,7 +1920,7 @@ Public Type MapBlock
 
     Blocked As Byte
     Graphic(1 To 4) As Long
-    userIndex As Integer
+    UserIndex As Integer
     NPCIndex As Integer
     ObjInfo As obj
     TileExit As WorldPos

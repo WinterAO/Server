@@ -1136,8 +1136,6 @@ Public Function UsuarioAtacaNpc(ByVal userIndex As Integer, _
         End If
     End With
     
-    
-
     Call NPCAtacado(NPCIndex, userIndex)
     
     If UserImpactoNpc(userIndex, NPCIndex) Then

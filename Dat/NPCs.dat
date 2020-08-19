@@ -22,6 +22,8 @@ TODOS LOS NPC CON RETARDO Y WORLDBOSS TIENEN QUE TENER PosOrig
 14 ====== Quest
 15 ====== Marinero
 16 ====== Subastador
+17 ====== Recurso
+18 ====== Instructor
 
 ##############################################
 ############## EFECTOS DE NPC ################
@@ -82,6 +84,21 @@ Se indicara el indice de objeto - cantidad a dropear - probabilidad de drop
 En todos los casos hay que especificar la cantidad de objetos en el inventario con NROITEMS=
 
 ##############################################
+################INSTRUCTORES##################
+##############################################
+
+Los instructores son NPC que instruyen en una profesion, deben tener el NPCType 18,
+y la propiedad Instruye= Skill de la profesion que va a instruir.
+
+Skills Profesiones:
+
+'    Talar = 17
+'    pesca = 18
+'    Mineria = 19
+'    Carpinteria = 20
+'    Herreria = 21
+
+##############################################
 ##############################################
 ##############################################
 
@@ -89,7 +106,7 @@ En todos los casos hay que especificar la cantidad de objetos en el inventario c
 [INIT]
 'aca va el numero de NPC mas alto, NO la cantidad de NPCs.
 'esto sirve para que los GMS puedan ver la lista completa de npcs a invocar en una ventanita.
-NumNPCs=1223
+NumNPCs=1300
 
 ##############################################################
 ################ NPCS VENDEDORES DE ISLA NEWBIE #####################
@@ -572,6 +589,22 @@ Alineacion=0
 Comercia=0
 BackUp=0
 Ciudad=1
+
+[NPC26] 'Instructor de Mineria
+Name=Instructor de Mineria
+NpcType=18
+Desc=¿Te interesa aprender el apasionante mundo de la mineria y conocer todas las piedras, minerales y cristales preciosos?
+Head=5
+Heading=1
+Body=1
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+BackUp=1
+Instruye=19
 
 ##############################################################
 ############## NPCS VENDEDORES DE SHAKOUD ####################
@@ -2142,7 +2175,9 @@ ELV=5
 DEF=0
 PoderAtaque=10
 PoderEvasion=0
-SND2=103
+Snd1=29
+Snd2=34
+Snd3=215
 BackUp=0
 NROITEMS=0
 
@@ -2753,6 +2788,9 @@ DEF=19
 PoderAtaque=60
 PoderEvasion=20
 BackUp=0
+Snd1=29
+Snd2=34
+Snd3=215
 NROITEMS=0
 
 [NPC602]
@@ -2888,6 +2926,7 @@ MaxHIT=45
 MinHIT=30
 DEF=0
 ELV=15
+AguaValida=1
 PoderAtaque=64
 PoderEvasion=60
 BackUp=0
@@ -3148,6 +3187,7 @@ ELV=20
 DEF=8
 PoderAtaque=80
 PoderEvasion=25
+AguaValida=1
 Snd1=35
 Snd2=9
 BackUp=0
@@ -3710,6 +3750,9 @@ PoderAtaque=200
 PoderEvasion=70
 Veneno=1
 BackUp=0
+Snd1=29
+Snd2=34
+Snd3=215
 NROITEMS=0
 
 [NPC702]
@@ -4608,6 +4651,9 @@ PoderAtaque=260
 PoderEvasion=150
 Nroitems=1
 BackUp=0
+Snd1=29
+Snd2=34
+Snd3=215
 NROITEMS=0
 
 [NPC758] 
@@ -7356,3 +7402,36 @@ Obj1=12-10000-100 ' Oro
 Obj2=873-1-100    ' Guantes de hurto
 Obj3=132-1-100    ' Casco de Hierro
 BackUp=0
+
+##############################################
+#############RECURSOS NATURALES###############
+##############################################
+
+[NPC1300]
+Name=Arbol
+NpcType=17
+Head=0
+Heading=1
+Body=13
+Movement=1
+AguaValida=0
+Attackable=1
+Respawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=0
+GiveGLD=0
+MinHP=100
+MaxHP=100
+MaxHIT=0
+MinHIT=0
+ELV=5
+DEF=0
+PoderAtaque=0
+PoderEvasion=0
+Snd1=13
+BackUp=0
+NROITEMS=1
+Obj1=58-50 'Madera
