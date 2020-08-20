@@ -1292,7 +1292,7 @@ Sub LoadOBJData()
             .SkCarpinteria = val(Leer.GetValue("OBJ" & Object, "SkCarpinteria"))
             
             If .SkCarpinteria > 0 Then
-                For i = 1 To 4
+                For i = 1 To MAXMATERIALES
                     .Materiales(i) = val(ReadField(i, Leer.GetValue("OBJ" & Object, "Materiales"), Asc("-")))
                     .CantMateriales(i) = val(ReadField(i, Leer.GetValue("OBJ" & Object, "CantMateriales"), Asc("-")))
                 Next i
@@ -1301,7 +1301,7 @@ Sub LoadOBJData()
             .SkHerreria = val(Leer.GetValue("OBJ" & Object, "SkHerreria"))
             
             If .SkHerreria > 0 Then
-                For i = 1 To 4
+                For i = 1 To MAXMATERIALES
                     .Materiales(i) = val(ReadField(i, Leer.GetValue("OBJ" & Object, "Materiales"), Asc("-")))
                     .CantMateriales(i) = val(ReadField(i, Leer.GetValue("OBJ" & Object, "CantMateriales"), Asc("-")))
                 Next i

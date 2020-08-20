@@ -61,6 +61,8 @@ Public tickLimpieza      As Integer
 ' Modulo de declaraciones. Aca hay de todo.
 '
 
+Public Const MAXMATERIALES As Byte = 4 '4 materiales maximo para construir un item con profesiones
+
 Public aClon          As clsAntiMassClon
 
 Public TrashCollector As Collection
@@ -1087,8 +1089,8 @@ Public Type ObjData
     
     Agarrable As Byte
     
-    Materiales(1 To 4)
-    CantMateriales(1 To 4)
+    Materiales(1 To MAXMATERIALES)
+    CantMateriales(1 To MAXMATERIALES)
     
     SkHerreria As Integer
     SkCarpinteria As Integer

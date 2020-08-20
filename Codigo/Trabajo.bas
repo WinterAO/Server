@@ -394,7 +394,7 @@ Sub QuitarMateriales(ByVal UserIndex As Integer, _
     Dim i As Byte
     With ObjData(ItemIndex)
 
-        For i = 1 To 4
+        For i = 1 To MAXMATERIALES
             If .Materiales(i) > 0 Then Call QuitarObjetos(.Materiales(i), .CantMateriales(i), UserIndex)
         Next i
 
@@ -415,7 +415,7 @@ Function TieneMateriales(ByVal UserIndex As Integer, _
     
     With ObjData(ItemIndex)
 
-        For i = 1 To 4
+        For i = 1 To MAXMATERIALES
             If .Materiales(i) > 0 Then
                 If Not TieneObjetos(.Materiales(i), .CantMateriales(i), UserIndex) Then
                     If ShowMsg Then Call WriteConsoleMsg(UserIndex, "No tienes suficiente materiales.", FontTypeNames.FONTTYPE_INFO)

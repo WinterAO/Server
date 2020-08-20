@@ -3621,11 +3621,11 @@ Private Sub HandleWorkLeftClick(ByVal UserIndex As Integer)
                     Call WriteConsoleMsg(UserIndex, "Comienzas a trabajar.", FontTypeNames.FONTTYPE_INFO)
                 End If
             
-            Case eSkill.herreria
+            Case eSkill.Herreria
                 'Target wehatever is in that tile
                 Call LookatTile(UserIndex, .Pos.Map, X, Y)
                 
-                If Not ConoceProfesion(UserIndex, eSkill.herreria) Then
+                If Not ConoceProfesion(UserIndex, eSkill.Herreria) Then
                     Call WriteConsoleMsg(UserIndex, "No conoces esa profesion.", FontTypeNames.FONTTYPE_INFOBOLD)
                     Exit Sub
                 End If
@@ -3900,7 +3900,7 @@ Private Sub HandleModifySkills(ByVal UserIndex As Integer)
         For i = 1 To NUMSKILLS
             If points(i) > 0 Then
                 '¿El skill asignado es uno de los fijos?
-                If i = eSkill.Talar Or i = eSkill.Mineria Or i = eSkill.Carpinteria Or i = eSkill.herreria Or _
+                If i = eSkill.Talar Or i = eSkill.Mineria Or i = eSkill.Carpinteria Or i = eSkill.Herreria Or _
                     i = eSkill.Liderazgo Or i = eSkill.Navegacion Or i = eSkill.Equitacion Or i = eSkill.pesca Then
                     
                     Call LogHackAttemp(.Name & " IP:" & .IP & " trato de hackear los skills.")
@@ -18967,7 +18967,7 @@ Public Sub WriteBlacksmithWeapons(ByVal UserIndex As Integer)
         For i = 1 To UBound(ArmasHerrero())
 
             ' Can the user create this object? If so add it to the list....
-            If ObjData(ArmasHerrero(i)).SkHerreria <= Round(UserList(UserIndex).Stats.UserSkills(eSkill.herreria) / ModHerreriA(UserList(UserIndex).clase), 0) Then
+            If ObjData(ArmasHerrero(i)).SkHerreria <= Round(UserList(UserIndex).Stats.UserSkills(eSkill.Herreria) / ModHerreriA(UserList(UserIndex).clase), 0) Then
                 Count = Count + 1
                 validIndexes(Count) = i
 
@@ -18984,7 +18984,7 @@ Public Sub WriteBlacksmithWeapons(ByVal UserIndex As Integer)
             Call .WriteASCIIString(obj.Name)
             Call .WriteLong(obj.GrhIndex)
             
-            For j = 1 To 4
+            For j = 1 To MAXMATERIALES
                 If obj.Materiales(j) > 0 Then
                     Call .WriteLong(ObjData(obj.Materiales(j)).GrhIndex)
                     Call .WriteInteger(obj.CantMateriales(j))
@@ -19042,7 +19042,7 @@ Public Sub WriteBlacksmithArmors(ByVal UserIndex As Integer)
         For i = 1 To UBound(ArmadurasHerrero())
 
             ' Can the user create this object? If so add it to the list....
-            If ObjData(ArmadurasHerrero(i)).SkHerreria <= Round(UserList(UserIndex).Stats.UserSkills(eSkill.herreria) / ModHerreriA(UserList(UserIndex).clase), 0) Then
+            If ObjData(ArmadurasHerrero(i)).SkHerreria <= Round(UserList(UserIndex).Stats.UserSkills(eSkill.Herreria) / ModHerreriA(UserList(UserIndex).clase), 0) Then
                 Count = Count + 1
                 validIndexes(Count) = i
 
@@ -19059,7 +19059,7 @@ Public Sub WriteBlacksmithArmors(ByVal UserIndex As Integer)
             Call .WriteASCIIString(obj.Name)
             Call .WriteLong(obj.GrhIndex)
             
-            For j = 1 To 4
+            For j = 1 To MAXMATERIALES
                 If obj.Materiales(j) > 0 Then
                     Call .WriteLong(ObjData(obj.Materiales(j)).GrhIndex)
                     Call .WriteInteger(obj.CantMateriales(j))
@@ -19134,7 +19134,7 @@ Public Sub WriteInitCarpenting(ByVal UserIndex As Integer)
             Call .WriteASCIIString(obj.Name)
             Call .WriteLong(obj.GrhIndex)
             
-            For j = 1 To 4
+            For j = 1 To MAXMATERIALES
                 If obj.Materiales(j) > 0 Then
                     Call .WriteLong(ObjData(obj.Materiales(j)).GrhIndex)
                     Call .WriteInteger(obj.CantMateriales(j))
