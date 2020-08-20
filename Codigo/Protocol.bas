@@ -18967,7 +18967,7 @@ Public Sub WriteBlacksmithWeapons(ByVal UserIndex As Integer)
         For i = 1 To UBound(ArmasHerrero())
 
             ' Can the user create this object? If so add it to the list....
-            If ObjData(ArmasHerrero(i)).SkHerreria <= Round(UserList(UserIndex).Stats.UserSkills(eSkill.Herreria) / ModHerreriA(UserList(UserIndex).clase), 0) Then
+            If ObjData(ArmasHerrero(i)).SkHerreria <= UserList(UserIndex).Stats.UserSkills(eSkill.Herreria) Then
                 Count = Count + 1
                 validIndexes(Count) = i
 
@@ -19042,7 +19042,7 @@ Public Sub WriteBlacksmithArmors(ByVal UserIndex As Integer)
         For i = 1 To UBound(ArmadurasHerrero())
 
             ' Can the user create this object? If so add it to the list....
-            If ObjData(ArmadurasHerrero(i)).SkHerreria <= Round(UserList(UserIndex).Stats.UserSkills(eSkill.Herreria) / ModHerreriA(UserList(UserIndex).clase), 0) Then
+            If ObjData(ArmadurasHerrero(i)).SkHerreria <= UserList(UserIndex).Stats.UserSkills(eSkill.Herreria) Then
                 Count = Count + 1
                 validIndexes(Count) = i
 
@@ -19117,7 +19117,7 @@ Public Sub WriteInitCarpenting(ByVal UserIndex As Integer)
         For i = 1 To UBound(ObjCarpintero())
 
             ' Can the user create this object? If so add it to the list....
-            If ObjData(ObjCarpintero(i)).SkCarpinteria <= UserList(UserIndex).Stats.UserSkills(eSkill.Carpinteria) \ ModCarpinteria(UserList(UserIndex).clase) Then
+            If ObjData(ObjCarpintero(i)).SkCarpinteria <= UserList(UserIndex).Stats.UserSkills(eSkill.Carpinteria) Then
                 Count = Count + 1
                 validIndexes(Count) = i
 

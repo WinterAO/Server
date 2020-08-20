@@ -293,7 +293,7 @@ Public Sub FundirMineral(ByVal UserIndex As Integer)
 
         If .flags.TargetObjInvIndex > 0 Then
            
-            If ObjData(.flags.TargetObjInvIndex).OBJType = eOBJType.otMinerales And ObjData(.flags.TargetObjInvIndex).MinSkill <= .Stats.UserSkills(eSkill.Mineria) / ModFundicion(.clase) Then
+            If ObjData(.flags.TargetObjInvIndex).OBJType = eOBJType.otMinerales And ObjData(.flags.TargetObjInvIndex).MinSkill <= .Stats.UserSkills(eSkill.Mineria) Then
                 Call DoLingotes(UserIndex)
             Else
                 Call WriteConsoleMsg(UserIndex, "No tienes conocimientos de mineria suficientes para trabajar este mineral.", FontTypeNames.FONTTYPE_INFO)
@@ -441,7 +441,7 @@ Public Function PuedeConstruirItemHerrero(ByVal UserIndex As Integer, _
     '24/08/2008: ZaMa - Validates if the player has the required skill
     '16/11/2009: ZaMa - Validates if the player has the required amount of materials, depending on the number of items to make
     '***************************************************
-    PuedeConstruirItemHerrero = TieneMateriales(UserIndex, ItemIndex) And Round(UserList(UserIndex).Stats.UserSkills(eSkill.Herreria) / ModHerreriA(UserList(UserIndex).clase), 0) >= ObjData(ItemIndex).SkHerreria
+    PuedeConstruirItemHerrero = TieneMateriales(UserIndex, ItemIndex) And UserList(UserIndex).Stats.UserSkills(eSkill.Herreria) >= ObjData(ItemIndex).SkHerreria
 
 End Function
 
@@ -639,7 +639,7 @@ Public Sub CarpinteroConstruirItem(ByVal UserIndex As Integer, ByVal ItemIndex A
 
         End If
     
-        If Round(.Stats.UserSkills(eSkill.Carpinteria) \ ModCarpinteria(.clase), 0) >= ObjData(ItemIndex).SkCarpinteria And PuedeConstruirCarpintero(ItemIndex) Then
+        If .Stats.UserSkills(eSkill.Carpinteria) >= ObjData(ItemIndex).SkCarpinteria And PuedeConstruirCarpintero(ItemIndex) Then
            
             'Sacamos energia
             'Chequeamos que tenga los puntos antes de sacarselos
@@ -875,41 +875,6 @@ Function ModNavegacion(ByVal clase As eClass, ByVal UserIndex As Integer) As Sin
             ModNavegacion = 2
 
     End Select
-
-End Function
-
-Function ModFundicion(ByVal clase As eClass) As Single
-    '***************************************************
-    'Author: Unknown
-    'Last Modification: -
-    '
-    '***************************************************
-
-    ModFundicion = 3
-
-End Function
-
-Function ModCarpinteria(ByVal clase As eClass) As Integer
-    '***************************************************
-    'Author: Unknown
-    'Last Modification: -
-    '
-    '***************************************************
-
-    ModCarpinteria = 3
-
-
-End Function
-
-Function ModHerreriA(ByVal clase As eClass) As Single
-
-    '***************************************************
-    'Author: Unknown
-    'Last Modification: -
-    '
-    '***************************************************
-    
-    ModHerreriA = 4
 
 End Function
 

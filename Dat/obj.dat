@@ -126,6 +126,13 @@ CantMateriales=X-X-X-X
 
 En caso de no asignar todos los materiales, se dejara 0.
 
+Lingote de hierro: 386
+Lingote de plata: 387
+Lingote de oro: 388
+
+Madera: 58
+Madera Magica: 1006
+
 ##############################################
 ##############################################
 ##############################################
