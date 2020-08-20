@@ -1614,6 +1614,11 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                             
                         Case HACHA_LENADOR, HACHA_LENA_ELFICA
                             
+                            If Not ConoceProfesion(UserIndex, eSkill.Talar) Then
+                                Call WriteConsoleMsg(UserIndex, "No conoces esa profesion.", FontTypeNames.FONTTYPE_INFOBOLD)
+                                Exit Sub
+                            End If
+                            
                             ' Lo tiene equipado?
                             If .Invent.WeaponEqpObjIndex = ObjIndex Then
                                 Call WriteMultiMessage(UserIndex, eMessages.WorkRequestTarget, eSkill.Talar)
@@ -1624,15 +1629,25 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                             
                         Case PIQUETE_MINERO
                         
+                            If Not ConoceProfesion(UserIndex, eSkill.Mineria) Then
+                                Call WriteConsoleMsg(UserIndex, "No conoces esa profesion.", FontTypeNames.FONTTYPE_INFOBOLD)
+                                Exit Sub
+                            End If
+                        
                             ' Lo tiene equipado?
                             If .Invent.WeaponEqpObjIndex = ObjIndex Then
-                                Call WriteMultiMessage(UserIndex, eMessages.WorkRequestTarget, eSkill.mineria)
+                                Call WriteMultiMessage(UserIndex, eMessages.WorkRequestTarget, eSkill.Mineria)
                             Else
                                 Call WriteConsoleMsg(UserIndex, "Debes tener equipada la herramienta para trabajar.", FontTypeNames.FONTTYPE_INFO)
 
                             End If
                             
                         Case MARTILLO_HERRERO
+                        
+                            If Not ConoceProfesion(UserIndex, eSkill.Herreria) Then
+                                Call WriteConsoleMsg(UserIndex, "No conoces esa profesion.", FontTypeNames.FONTTYPE_INFOBOLD)
+                                Exit Sub
+                            End If
                         
                             ' Lo tiene equipado?
                             If .Invent.WeaponEqpObjIndex = ObjIndex Then

@@ -1108,28 +1108,16 @@ Sub LoadOBJData()
                 Case eOBJType.otArmadura
                     .Real = val(Leer.GetValue("OBJ" & Object, "Real"))
                     .Caos = val(Leer.GetValue("OBJ" & Object, "Caos"))
-                    .LingH = val(Leer.GetValue("OBJ" & Object, "LingH"))
-                    .LingP = val(Leer.GetValue("OBJ" & Object, "LingP"))
-                    .LingO = val(Leer.GetValue("OBJ" & Object, "LingO"))
-                    .SkHerreria = val(Leer.GetValue("OBJ" & Object, "SkHerreria"))
                     .MinLevel = val(Leer.GetValue("OBJ" & Object, "MinLevel"))
                 
                 Case eOBJType.otEscudo
                     .ShieldAnim = val(Leer.GetValue("OBJ" & Object, "Anim"))
-                    .LingH = val(Leer.GetValue("OBJ" & Object, "LingH"))
-                    .LingP = val(Leer.GetValue("OBJ" & Object, "LingP"))
-                    .LingO = val(Leer.GetValue("OBJ" & Object, "LingO"))
-                    .SkHerreria = val(Leer.GetValue("OBJ" & Object, "SkHerreria"))
                     .Real = val(Leer.GetValue("OBJ" & Object, "Real"))
                     .Caos = val(Leer.GetValue("OBJ" & Object, "Caos"))
                     .MinLevel = val(Leer.GetValue("OBJ" & Object, "MinLevel"))
                 
                 Case eOBJType.otCasco
                     .CascoAnim = val(Leer.GetValue("OBJ" & Object, "Anim"))
-                    .LingH = val(Leer.GetValue("OBJ" & Object, "LingH"))
-                    .LingP = val(Leer.GetValue("OBJ" & Object, "LingP"))
-                    .LingO = val(Leer.GetValue("OBJ" & Object, "LingO"))
-                    .SkHerreria = val(Leer.GetValue("OBJ" & Object, "SkHerreria"))
                     .Real = val(Leer.GetValue("OBJ" & Object, "Real"))
                     .Caos = val(Leer.GetValue("OBJ" & Object, "Caos"))
                     .MinLevel = val(Leer.GetValue("OBJ" & Object, "MinLevel"))
@@ -1146,10 +1134,6 @@ Sub LoadOBJData()
                     .StaffDamageBonus = val(Leer.GetValue("OBJ" & Object, "StaffDamageBonus"))
                     .Refuerzo = val(Leer.GetValue("OBJ" & Object, "Refuerzo"))
                     
-                    .LingH = val(Leer.GetValue("OBJ" & Object, "LingH"))
-                    .LingP = val(Leer.GetValue("OBJ" & Object, "LingP"))
-                    .LingO = val(Leer.GetValue("OBJ" & Object, "LingO"))
-                    .SkHerreria = val(Leer.GetValue("OBJ" & Object, "SkHerreria"))
                     .Real = val(Leer.GetValue("OBJ" & Object, "Real"))
                     .Caos = val(Leer.GetValue("OBJ" & Object, "Caos"))
                     
@@ -1195,10 +1179,6 @@ Sub LoadOBJData()
                     .MontTipo = val(Leer.GetValue("OBJ" & Object, "MontTipo"))
 
                 Case eOBJType.otAnillo 'Pablo (ToxicWaste)
-                    .LingH = val(Leer.GetValue("OBJ" & Object, "LingH"))
-                    .LingP = val(Leer.GetValue("OBJ" & Object, "LingP"))
-                    .LingO = val(Leer.GetValue("OBJ" & Object, "LingO"))
-                    .SkHerreria = val(Leer.GetValue("OBJ" & Object, "SkHerreria"))
                     .MaxHIT = val(Leer.GetValue("OBJ" & Object, "MaxHIT"))
                     .MinHIT = val(Leer.GetValue("OBJ" & Object, "MinHIT"))
                     .MinLevel = val(Leer.GetValue("OBJ" & Object, "MinLevel"))
@@ -1311,8 +1291,21 @@ Sub LoadOBJData()
             
             .SkCarpinteria = val(Leer.GetValue("OBJ" & Object, "SkCarpinteria"))
             
-            If .SkCarpinteria > 0 Then .Madera = val(Leer.GetValue("OBJ" & Object, "Madera"))
-            .MaderaElfica = val(Leer.GetValue("OBJ" & Object, "MaderaElfica"))
+            If .SkCarpinteria > 0 Then
+                For i = 1 To 4
+                    .Materiales(i) = val(ReadField(i, Leer.GetValue("OBJ" & Object, "Materiales"), Asc("-")))
+                    .CantMateriales(i) = val(ReadField(i, Leer.GetValue("OBJ" & Object, "CantMateriales"), Asc("-")))
+                Next i
+            End If
+            
+            .SkHerreria = val(Leer.GetValue("OBJ" & Object, "SkHerreria"))
+            
+            If .SkHerreria > 0 Then
+                For i = 1 To 4
+                    .Materiales(i) = val(ReadField(i, Leer.GetValue("OBJ" & Object, "Materiales"), Asc("-")))
+                    .CantMateriales(i) = val(ReadField(i, Leer.GetValue("OBJ" & Object, "CantMateriales"), Asc("-")))
+                Next i
+            End If
             
             ReDim .ItemCrafteo(1 To MAX_ITEMS_CRAFTEO) As CraftingItem
             
@@ -2035,7 +2028,7 @@ Sub WriteVar(ByVal File As String, _
     
 End Sub
 
-Function criminal(ByVal userIndex As Integer) As Boolean
+Function criminal(ByVal UserIndex As Integer) As Boolean
     '***************************************************
     'Author: Unknown
     'Last Modification: -
@@ -2044,7 +2037,7 @@ Function criminal(ByVal userIndex As Integer) As Boolean
 
     Dim L As Long
     
-    With UserList(userIndex).Reputacion
+    With UserList(UserIndex).Reputacion
         L = (-.AsesinoRep) + (-.BandidoRep) + .BurguesRep + (-.LadronesRep) + .NobleRep + .PlebeRep
         L = L / 6
         criminal = (L < 0)

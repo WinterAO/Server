@@ -249,7 +249,7 @@ Private Function PuedeCarpinteria(ByVal UserIndex As Integer, ByVal Cantidad As 
         End If
         
         '¿Tiene materiales para construir el proximo item?
-        If Not CarpinteroTieneMateriales(UserIndex, Item) Then
+        If Not TieneMateriales(UserIndex, Item) Then
             Call DejardeTrabajar(UserIndex)
             PuedeCarpinteria = False
             Exit Function

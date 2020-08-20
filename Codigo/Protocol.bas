@@ -3550,7 +3550,7 @@ Private Sub HandleWorkLeftClick(ByVal UserIndex As Integer)
 
                 End If
             
-            Case eSkill.mineria, eSkill.Talar
+            Case eSkill.Mineria, eSkill.Talar
                 'Target whatever is in the tile
                 Call LookatTile(UserIndex, .Pos.Map, X, Y)
                 
@@ -3621,11 +3621,11 @@ Private Sub HandleWorkLeftClick(ByVal UserIndex As Integer)
                     Call WriteConsoleMsg(UserIndex, "Comienzas a trabajar.", FontTypeNames.FONTTYPE_INFO)
                 End If
             
-            Case eSkill.Herreria
+            Case eSkill.herreria
                 'Target wehatever is in that tile
                 Call LookatTile(UserIndex, .Pos.Map, X, Y)
                 
-                If Not ConoceProfesion(UserIndex, eSkill.mineria) Then
+                If Not ConoceProfesion(UserIndex, eSkill.herreria) Then
                     Call WriteConsoleMsg(UserIndex, "No conoces esa profesion.", FontTypeNames.FONTTYPE_INFOBOLD)
                     Exit Sub
                 End If
@@ -3900,7 +3900,7 @@ Private Sub HandleModifySkills(ByVal UserIndex As Integer)
         For i = 1 To NUMSKILLS
             If points(i) > 0 Then
                 '¿El skill asignado es uno de los fijos?
-                If i = eSkill.Talar Or i = eSkill.mineria Or i = eSkill.Carpinteria Or i = eSkill.Herreria Or _
+                If i = eSkill.Talar Or i = eSkill.Mineria Or i = eSkill.Carpinteria Or i = eSkill.herreria Or _
                     i = eSkill.Liderazgo Or i = eSkill.Navegacion Or i = eSkill.Equitacion Or i = eSkill.pesca Then
                     
                     Call LogHackAttemp(.Name & " IP:" & .IP & " trato de hackear los skills.")
@@ -18954,6 +18954,7 @@ Public Sub WriteBlacksmithWeapons(ByVal UserIndex As Integer)
     On Error GoTo errHandler
 
     Dim i              As Long
+    Dim j              As Byte
     Dim obj            As ObjData
     Dim validIndexes() As Integer
     Dim Count          As Integer
@@ -18966,7 +18967,7 @@ Public Sub WriteBlacksmithWeapons(ByVal UserIndex As Integer)
         For i = 1 To UBound(ArmasHerrero())
 
             ' Can the user create this object? If so add it to the list....
-            If ObjData(ArmasHerrero(i)).SkHerreria <= Round(UserList(UserIndex).Stats.UserSkills(eSkill.Herreria) / ModHerreriA(UserList(UserIndex).clase), 0) Then
+            If ObjData(ArmasHerrero(i)).SkHerreria <= Round(UserList(UserIndex).Stats.UserSkills(eSkill.herreria) / ModHerreriA(UserList(UserIndex).clase), 0) Then
                 Count = Count + 1
                 validIndexes(Count) = i
 
@@ -18982,10 +18983,20 @@ Public Sub WriteBlacksmithWeapons(ByVal UserIndex As Integer)
             obj = ObjData(ArmasHerrero(validIndexes(i)))
             Call .WriteASCIIString(obj.Name)
             Call .WriteLong(obj.GrhIndex)
-            Call .WriteInteger(obj.LingH)
-            Call .WriteInteger(obj.LingP)
-            Call .WriteInteger(obj.LingO)
-            Call .WriteInteger(ArmasHerrero(validIndexes(i)))
+            
+            For j = 1 To 4
+                If obj.Materiales(j) > 0 Then
+                    Call .WriteLong(ObjData(obj.Materiales(j)).GrhIndex)
+                    Call .WriteInteger(obj.CantMateriales(j))
+                    Call .WriteASCIIString(ObjData(obj.Materiales(j)).Name)
+                Else
+                    Call .WriteLong(0)
+                    Call .WriteInteger(0)
+                    Call .WriteASCIIString("Nada")
+                End If
+            Next j
+            
+           Call .WriteInteger(ArmasHerrero(validIndexes(i)))
         Next i
 
     End With
@@ -19018,6 +19029,7 @@ Public Sub WriteBlacksmithArmors(ByVal UserIndex As Integer)
     On Error GoTo errHandler
 
     Dim i              As Long
+    Dim j              As Byte
     Dim obj            As ObjData
     Dim validIndexes() As Integer
     Dim Count          As Integer
@@ -19030,7 +19042,7 @@ Public Sub WriteBlacksmithArmors(ByVal UserIndex As Integer)
         For i = 1 To UBound(ArmadurasHerrero())
 
             ' Can the user create this object? If so add it to the list....
-            If ObjData(ArmadurasHerrero(i)).SkHerreria <= Round(UserList(UserIndex).Stats.UserSkills(eSkill.Herreria) / ModHerreriA(UserList(UserIndex).clase), 0) Then
+            If ObjData(ArmadurasHerrero(i)).SkHerreria <= Round(UserList(UserIndex).Stats.UserSkills(eSkill.herreria) / ModHerreriA(UserList(UserIndex).clase), 0) Then
                 Count = Count + 1
                 validIndexes(Count) = i
 
@@ -19046,9 +19058,19 @@ Public Sub WriteBlacksmithArmors(ByVal UserIndex As Integer)
             obj = ObjData(ArmadurasHerrero(validIndexes(i)))
             Call .WriteASCIIString(obj.Name)
             Call .WriteLong(obj.GrhIndex)
-            Call .WriteInteger(obj.LingH)
-            Call .WriteInteger(obj.LingP)
-            Call .WriteInteger(obj.LingO)
+            
+            For j = 1 To 4
+                If obj.Materiales(j) > 0 Then
+                    Call .WriteLong(ObjData(obj.Materiales(j)).GrhIndex)
+                    Call .WriteInteger(obj.CantMateriales(j))
+                    Call .WriteASCIIString(ObjData(obj.Materiales(j)).Name)
+                Else
+                    Call .WriteLong(0)
+                    Call .WriteInteger(0)
+                    Call .WriteASCIIString("Nada")
+                End If
+            Next j
+            
             Call .WriteInteger(ArmadurasHerrero(validIndexes(i)))
         Next i
 
@@ -19082,6 +19104,7 @@ Public Sub WriteInitCarpenting(ByVal UserIndex As Integer)
     On Error GoTo errHandler
 
     Dim i              As Long
+    Dim j              As Byte
     Dim obj            As ObjData
     Dim validIndexes() As Integer
     Dim Count          As Integer
@@ -19110,8 +19133,19 @@ Public Sub WriteInitCarpenting(ByVal UserIndex As Integer)
             obj = ObjData(ObjCarpintero(validIndexes(i)))
             Call .WriteASCIIString(obj.Name)
             Call .WriteLong(obj.GrhIndex)
-            Call .WriteInteger(obj.Madera)
-            Call .WriteInteger(obj.MaderaElfica)
+            
+            For j = 1 To 4
+                If obj.Materiales(j) > 0 Then
+                    Call .WriteLong(ObjData(obj.Materiales(j)).GrhIndex)
+                    Call .WriteInteger(obj.CantMateriales(j))
+                    Call .WriteASCIIString(ObjData(obj.Materiales(j)).Name)
+                Else
+                    Call .WriteLong(0)
+                    Call .WriteInteger(0)
+                    Call .WriteASCIIString("Nada")
+                End If
+            Next j
+            
             Call .WriteInteger(ObjCarpintero(validIndexes(i)))
         Next i
         

@@ -1087,11 +1087,8 @@ Public Type ObjData
     
     Agarrable As Byte
     
-    LingH As Integer
-    LingO As Integer
-    LingP As Integer
-    Madera As Integer
-    MaderaElfica As Integer
+    Materiales(1 To 4)
+    CantMateriales(1 To 4)
     
     SkHerreria As Integer
     SkCarpinteria As Integer
@@ -1810,6 +1807,8 @@ Public Type NPCFlags
     Tepeable As Byte
     
     Invocacion As Byte
+    
+    Recurso As tProfesion
     
 End Type
 

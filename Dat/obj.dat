@@ -114,6 +114,18 @@ Skills Profesiones:
 '    Carpinteria = 20
 '    Herreria = 21
 
+<<<< ITEMS CONSTRUIBLES >>>>
+
+Cada item puede requerir hasta 4 materiales. Se especifica el objindex del material:
+
+Materiales=X-X-X-X
+
+Y la cantidad de cada material en el mismo orden
+
+CantMateriales=X-X-X-X
+
+En caso de no asignar todos los materiales, se dejara 0.
+
 ##############################################
 ##############################################
 ##############################################
@@ -149,9 +161,8 @@ CP1=MAGO
 CP2=DRUIDA
 CP3=PIRATA
 CP4=BARDO
-LingH=3
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=3-0-0-0
 SkHerreria=25
 
 [OBJ3]
@@ -170,9 +181,8 @@ CP3=LADRON
 CP4=BARDO
 CP5=ASESINO
 CP6=CLERIGO
-LingH=2
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=2-0-0-0
 SkHerreria=15
 
 [OBJ4]
@@ -266,9 +276,8 @@ CP2=DRUIDA
 CP3=CLERIGO
 CP4=BARDO
 CP5=ASESINO
-LingH=1
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=1-0-0-0
 SkHerreria=10
 
 [OBJ10]
@@ -328,10 +337,8 @@ MaxHit=2
 Apunala=1
 Valor=140
 Crucial=1
-LingH=2
-LingP=0
-LingO=0
-Upgrade=165
+Materiales=386-0-0-0
+CantMateriales=2-0-0-0
 SkHerreria=10
 
 [OBJ16] 'CASA RUINAS
@@ -381,9 +388,8 @@ CP2=DRUIDA
 CP3=CLERIGO
 CP4=BARDO
 CP5=ASESINO
-LingH=16
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=16-0-0-0
 SkHerreria=20
 
 [OBJ20]
@@ -1478,9 +1484,8 @@ CP5=CLERIGO
 CP6=ASESINO
 CP7=PALADIN
 CP8=PIRATA
-LingH=60
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=60-0-0-0
 SkHerreria=70
 
 [OBJ124]
@@ -1497,9 +1502,8 @@ Crucial=1
 CP1=MAGO
 CP2=DRUIDA
 CP3=BARDO
-LingH=43
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=43-0-0-0
 SkHerreria=55
 
 [OBJ125]
@@ -1513,9 +1517,8 @@ MinHit=6
 MaxHit=17
 Valor=4200
 Crucial=1
-LingH=60
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=60-0-0-0
 SkHerreria=70
 CP1=MAGO
 CP2=PALADIN
@@ -1548,9 +1551,8 @@ CP5=PIRATA
 CP6=CLERIGO
 CP7=ASESINO
 CP8=BRUJO
-LingH=90
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=90-0-0-0
 SkHerreria=90
 
 [OBJ127]
@@ -1563,9 +1565,8 @@ MinHit=2
 MaxHit=3
 Valor=350
 Crucial=1
-LingH=5
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=5-0-0-0
 SkHerreria=12
 Herramienta=17-1
 
@@ -1588,9 +1589,8 @@ CP5=PIRATA
 CP6=ASESINO
 CP7=CAZADOR
 CP8=BRUJO
-LingH=60
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=60-0-0-0
 SkHerreria=55
 
 [OBJ129]
@@ -1612,9 +1612,8 @@ CP6=ASESINO
 CP7=CAZADOR
 CP8=BRUJO
 CP9=BANDIDO
-LingH=85
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=85-0-0-0
 SkHerreria=86
 
 [OBJ130]
@@ -1636,9 +1635,8 @@ CP5=PIRATA
 CP6=ASESINO
 CP7=CAZADOR
 CP8=BRUJO
-LingH=100
-LingP=50
-LingO=0
+Materiales=386-387-0-0
+CantMateriales=100-50-0-0
 SkHerreria=85
 
 [OBJ131]
@@ -1657,9 +1655,8 @@ CP2=DRUIDA
 CP3=LADRON
 CP4=BARDO
 CP5=PIRATA
-LingH=65
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=65-0-0-0
 SkHerreria=75
 
 [OBJ132]
@@ -1677,10 +1674,8 @@ CP1=MAGO
 CP2=DRUIDA
 CP3=PIRATA
 CP4=LADRON
-LingH=10
-LingP=0
-LingO=0
-Upgrade=131
+Materiales=386-0-0-0
+CantMateriales=10-0-0-0
 SkHerreria=45
 
 [OBJ133]
@@ -1701,9 +1696,8 @@ CP3=LADRON
 CP4=BARDO
 CP5=PIRATA
 CP6=ASESINO
-LingH=60
-LingP=30
-LingO=0
+Materiales=386-387-0-0
+CantMateriales=60-30-0-0
 SkHerreria=70
 
 [OBJ134]
@@ -1752,7 +1746,8 @@ MinHit=1
 MaxHit=1
 Valor= 200
 Crucial=1
-Madera=70
+Materiales=58-0-0-0
+CantMateriales=70-0-0-0
 SkCarpinteria=12
 Herramienta=18-1
 
@@ -1951,9 +1946,8 @@ CP4=BARDO
 CP5=PIRATA
 CP6=CLERIGO
 CP7=ASESINO
-LingH=67
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=67-0-0-0
 SkHerreria=63
 
 [OBJ160]
@@ -1981,7 +1975,8 @@ ObjType=20
 Agarrable=0
 Valor=15
 Crucial=0
-Madera=25
+Materiales=58-0-0-0
+CantMateriales=25-0-0-0
 SkCarpinteria=9
 
 [OBJ163]
@@ -1991,7 +1986,8 @@ ObjType=20
 Agarrable=0
 Valor=6
 Crucial=0
-Madera=3
+Materiales=58-0-0-0
+CantMateriales=3-0-0-0
 SkCarpinteria=5
 
 [OBJ164]
@@ -2006,9 +2002,8 @@ MaxHit=5
 Apunala=1
 Valor=1050
 Crucial=1
-LingH=15
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=15-0-0-0
 SkHerreria=40
 
 [OBJ165]
@@ -2023,10 +2018,8 @@ MaxHit=4
 Apunala=1
 Valor=490
 Crucial=0
-LingH=7
-LingP=0
-LingO=0
-Upgrade=365
+Materiales=386-0-0-0
+CantMateriales=7-0-0-0
 SkHerreria=15
 
 [OBJ166] 
@@ -2045,7 +2038,8 @@ ObjType=20
 Agarrable=0
 Valor=1024
 Crucial=0
-Madera=400
+Materiales=58-0-0-0
+CantMateriales=400-0-0-0
 SkCarpinteria=56
 
 [OBJ168]
@@ -2055,7 +2049,8 @@ ObjType=20
 Agarrable=0
 Valor=52
 Crucial=0
-Madera=25
+Materiales=58-0-0-0
+CantMateriales=25-0-0-0
 SkCarpinteria=9
 
 [OBJ169]
@@ -2266,9 +2261,8 @@ MinHit=2
 MaxHit=3
 Valor=210
 Crucial=1
-LingH=3
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=3-0-0-0
 SkHerreria=12
 Herramienta=19-1
 
@@ -2352,10 +2346,8 @@ CP5=PIRATA
 CP6=ASESINO
 CP7=CAZADOR
 CP8=BRUJO
-LingH=392
-LingP=0
-LingO=0
-Upgrade=390
+Materiales=386-0-0-0
+CantMateriales=381-0-0-0
 SkHerreria=70
 
 [OBJ196]
@@ -2389,9 +2381,8 @@ MinHit=1
 MaxHit=2
 Valor=140
 Crucial=1
-LingH=2
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=2-0-0-0
 SkHerreria=12
 
 [OBJ199]
@@ -2496,7 +2487,8 @@ CP8=GUERRERO
 CP9=MAGO
 CP10=BARDO
 CP11=BRUJO
-Madera=1500
+Materiales=58-0-0-0
+CantMateriales=1500-0-0-0
 SkCarpinteria=100
 SND1=217
 SND2=217
@@ -2818,10 +2810,8 @@ CP4=BARDO
 CP5=PIRATA
 CP6=ASESINO
 CP7=CAZADOR
-LingH=392
-LingP=0
-LingO=0
-Upgrade=392
+Materiales=386-0-0-0
+CantMateriales=392-0-0-0
 SkHerreria=70
 
 '-------------------------------------------------------
@@ -4135,9 +4125,8 @@ CP8=BANDIDO
 CP9=CLERIGO
 CP10=LADRON
 CP11=BRUJO
-LingH=329
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=329-0-0-0
 SkHerreria=75
 
 [OBJ357]
@@ -4170,9 +4159,8 @@ Crucial=1
 CP1=MAGO
 CP2=DRUIDA
 CP3=BARDO
-LingH=105
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=105-0-0-0
 SkHerreria=65
 
 [OBJ360]
@@ -4216,7 +4204,8 @@ Crucial=0
 SND1=48
 SND2=48
 SND3=48
-Madera=800
+Materiales=58-0-0-0
+CantMateriales=800-0-0-0
 SkCarpinteria=75
 
 [OBJ363]
@@ -4249,10 +4238,8 @@ MaxHit=6
 Apunala=1
 Valor=1960
 Crucial=0
-LingH=28
-LingP=0
-LingO=0
-Upgrade=366
+Materiales=386-0-0-0
+CantMateriales=28-0-0-0
 SkHerreria=35
 
 [OBJ366]
@@ -4269,10 +4256,8 @@ Valor=2660
 Crucial=0
 CP1=GUERRERO
 CP2=PIRATA
-LingH=38
-LingP=0
-LingO=0
-Upgrade=367
+Materiales=386-0-0-0
+CantMateriales=38-0-0-0
 SkHerreria=50
 
 [OBJ367]
@@ -4297,9 +4282,8 @@ CP7=BANDIDO
 CP8=GUERRERO
 CP9=DRUIDA
 CP10=BRUJO
-LingH=50
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=50-0-0-0
 SkHerreria=75
 
 [OBJ368]
@@ -4325,9 +4309,8 @@ CP1=DRUIDA
 CP2=CLERIGO
 CP3=BARDO
 CP4=MAGO
-LingH=43
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=43-0-0-0
 SkHerreria=35
 
 [OBJ370]
@@ -4459,9 +4442,8 @@ MinDef=7
 Valor=3010
 Crucial=1
 CP1=MAGO
-LingH=43
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=43-0-0-0
 SkHerreria=35
 
 [OBJ380]
@@ -4568,9 +4550,8 @@ MinHit=2
 MaxHit=2
 Valor=140
 Crucial=1
-LingH=2
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=2-0-0-0
 SkHerreria=20
 Herramienta=21-1
 
@@ -4591,10 +4572,8 @@ CP4=BARDO
 CP5=PIRATA
 CP6=ASESINO
 CP7=BRUJO
-LingH=505
-LingP=0
-LingO=0
-Upgrade=391
+Materiales=386-0-0-0
+CantMateriales=505-0-0-0
 SkHerreria=85
 
 [OBJ391]
@@ -4614,9 +4593,8 @@ CP4=BARDO
 CP5=PIRATA
 CP6=ASESINO
 CP7=BRUJO
-LingH=680
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=680-0-0-0
 SkHerreria=90
 
 [OBJ392]
@@ -4637,10 +4615,8 @@ CP4=BARDO
 CP5=PIRATA
 CP6=ASESINO
 CP7=BRUJO
-LingH=505
-LingP=0
-LingO=0
-Upgrade=393
+Materiales=386-0-0-0
+CantMateriales=505-0-0-0
 SkHerreria=85
 
 [OBJ393]
@@ -4661,9 +4637,8 @@ CP4=BARDO
 CP5=PIRATA
 CP6=ASESINO
 CP7=BRUJO
-LingH=680
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=680-0-0-0
 SkHerreria=90
 
 [OBJ394]
@@ -4731,9 +4706,8 @@ Crucial=0
 CP1=MAGO
 CP2=DRUIDA
 CP3=PIRATA
-LingH=50
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=50-0-0-0
 SkHerreria=59
 
 [OBJ400]
@@ -4760,9 +4734,8 @@ CP8=GUERRERO
 CP9=BARDO
 CP10=DRUIDA
 CP11=BRUJO
-LingH=50
-LingP=100
-LingO=200
+Materiales=386-387-388-0
+CantMateriales=50-100-200-0
 SkHerreria=90
 
 [OBJ401]
@@ -4779,9 +4752,8 @@ Crucial=1
 CP1=MAGO
 CP2=DRUIDA
 CP3=BARDO
-LingH=33
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=33-0-0-0
 SkHerreria=30
 
 [OBJ402]
@@ -4796,9 +4768,8 @@ MinHit=100
 MaxHit=100
 Valor=188000
 Crucial=0
-LingH=600
-LingP=500
-LingO=700
+Materiales=386-387-388-0
+CantMateriales=600-500-700-0
 SkHerreria=100
 Log=1
 
@@ -4823,9 +4794,8 @@ CP7=CAZADOR
 CP8=ASESINO
 CP9=BANDIDO
 CP10=BRUJO
-LingH=140
-LingP=220
-LingO=0
+Materiales=386-387-0-0
+CantMateriales=140-220-0-0
 SkHerreria=90
 Log=1
 
@@ -4842,9 +4812,8 @@ Valor=350
 Crucial=1
 CP1=MAGO
 CP2=DRUIDA
-LingH=5
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=5-0-0-0
 SkHerreria=20
 
 [OBJ405]
@@ -4863,9 +4832,8 @@ CP2=DRUIDA
 CP3=LADRON
 CP4=BARDO
 CP5=PIRATA
-LingH=150
-LingP=130
-LingO=0
+Materiales=386-387-0-0
+CantMateriales=150-130-0-0
 SkHerreria=85
 
 [OBJ406]
@@ -5529,7 +5497,8 @@ Crucial=0
 SND1=40
 SND2=40
 SND3=40
-Madera=800
+Materiales=58-0-0-0
+CantMateriales=800-0-0-0
 SkCarpinteria=75
 
 [OBJ470]
@@ -5576,7 +5545,8 @@ MaxDef=10
 Valor=24000
 Crucial=0
 MinSkill=35
-Madera=10000
+Materiales=58-0-0-0
+CantMateriales=10000-0-0-0
 SkCarpinteria=40
 
 [OBJ475]
@@ -5592,9 +5562,9 @@ MaxDef=20
 Valor=53000
 Crucial=0
 MinSkill=45
-MaderaElfica=10000
+Materiales=58-1006-0-0
+CantMateriales=1000-10000-0-0
 SkCarpinteria=65
-Upgrade=476
 
 [OBJ476]
 Name=Galeon
@@ -5609,7 +5579,8 @@ MaxDef=25
 Valor=87000
 Crucial=0
 MinSkill=50
-MaderaElfica=15000
+Materiales=58-1006-0-0
+CantMateriales=2000-15000-0-0
 SkCarpinteria=90
 
 [OBJ477]
@@ -5635,8 +5606,8 @@ Valor=92
 Crucial=0
 CP1=MAGO
 CP2=DRUIDA
-Madera=42
-Upgrade=663
+Materiales=58-0-0-0
+CantMateriales=42-0-0-0
 SkCarpinteria=20
 
 [OBJ479]
@@ -5655,8 +5626,8 @@ Crucial=0
 CP1=MAGO
 CP2=DRUIDA
 CP3=PIRATA
-Madera=450
-Upgrade=664
+Materiales=58-0-0-0
+CantMateriales=450-0-0-0
 SkCarpinteria=40
 
 [OBJ480]
@@ -5670,8 +5641,8 @@ Valor=16
 Crucial=1
 CP1=MAGO
 CP2=DRUIDA
-Madera=1
-Upgrade=551
+Materiales=58-0-0-0
+CantMateriales=1-0-0-0
 SkCarpinteria=20
 
 [OBJ481]
@@ -5691,9 +5662,8 @@ CP4=BARDO
 CP5=PIRATA
 CP6=ASESINO
 CP7=BRUJO
-LingH=1000
-LingP=1000
-LingO=1000
+Materiales=386-387-388-0
+CantMateriales=1000-1000-1000-0
 SkHerreria=100
 
 [OBJ482]
@@ -5714,9 +5684,8 @@ CP4=BARDO
 CP5=PIRATA
 CP6=ASESINO
 CP7=BRUJO
-LingH=1000
-LingP=1000
-LingO=1000
+Materiales=386-387-388-0
+CantMateriales=1000-1000-1000-0
 SkHerreria=100
 
 [OBJ483]
@@ -5737,9 +5706,8 @@ CP4=BARDO
 CP5=PIRATA
 CP6=ASESINO
 CP7=BRUJO
-LingH=1000
-LingP=1000
-LingO=1000
+Materiales=386-387-388-0
+CantMateriales=1000-1000-1000-0
 SkHerreria=100
 
 [OBJ484]
@@ -5759,9 +5727,8 @@ CP4=BARDO
 CP5=CLERIGO
 CP6=PIRATA
 CP7=ASESINO
-LingH=66
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=66-0-0-0
 SkHerreria=50
 
 [OBJ485]
@@ -5781,9 +5748,8 @@ CP4=BARDO
 CP5=CLERIGO
 CP6=PIRATA
 CP7=ASESINO
-LingH=1000
-LingP=400
-LingO=600
+Materiales=386-387-388-0
+CantMateriales=1000-400-600-0
 SkHerreria=100
 
 [OBJ486]
@@ -5818,9 +5784,8 @@ CP6=PIRATA
 CP7=ASESINO
 CP8=CAZADOR
 CP9=BRUJO
-LingH=1000
-LingP=400
-LingO=800
+Materiales=386-387-388-0
+CantMateriales=1000-400-800-0
 SkHerreria=100
 
 [OBJ488]
@@ -5853,9 +5818,8 @@ CP5=CLERIGO
 CP6=PIRATA
 CP7=ASESINO
 CP8=BRUJO
-LingH=500
-LingP=200
-LingO=0
+Materiales=386-387-0-0
+CantMateriales=500-200-0-0
 SkHerreria=80
 
 [OBJ490]
@@ -5902,9 +5866,8 @@ CP1=MAGO
 CP2=DRUIDA
 CP3=CLERIGO
 CP4=BARDO
-LingH=43
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=43-0-0-0
 SkHerreria=35
 
 [OBJ493]
@@ -5926,9 +5889,8 @@ CP5=CLERIGO
 CP6=PIRATA
 CP7=ASESINO
 CP8=BRUJO
-LingH=425
-LingP=200
-LingO=0
+Materiales=386-387-0-0
+CantMateriales=425-200-0-0
 SkHerreria=82
 
 [OBJ494]
@@ -5964,9 +5926,8 @@ CP6=PIRATA
 CP7=ASESINO
 CP8=CAZADOR
 CP9=BRUJO
-LingH=800
-LingP=250
-LingO=0
+Materiales=386-387-0-0
+CantMateriales=800-200-0-0
 SkHerreria=100
 
 [OBJ496]
@@ -5988,9 +5949,8 @@ CP6=PIRATA
 CP7=ASESINO
 CP8=CAZADOR
 CP9=BRUJO
-LingH=650
-LingP=200
-LingO=0
+Materiales=386-387-0-0
+CantMateriales=650-200-0-0
 SkHerreria=90
 
 [OBJ497]
@@ -6011,9 +5971,8 @@ CP5=CLERIGO
 CP6=PIRATA
 CP7=ASESINO
 CP8=BRUJO
-LingH=600
-LingP=122
-LingO=0
+Materiales=386-387-0-0
+CantMateriales=600-122-0-0
 SkHerreria=85
 
 [OBJ498]
@@ -6039,9 +5998,8 @@ Crucial=1
 CP1=MAGO
 CP2=DRUIDA
 CP3=BARDO
-LingH=105
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=105-0-0-0
 SkHerreria=65
 
 [OBJ500]
@@ -6063,9 +6021,8 @@ CP5=CLERIGO
 CP6=PIRATA
 CP7=ASESINO
 CP8=BRUJO
-LingH=500
-LingP=200
-LingO=0
+Materiales=386-387-0-0
+CantMateriales=500-200-0-0
 SkHerreria=82
 
 [OBJ501]
@@ -6112,9 +6069,8 @@ CP3=ASESINO
 CP4=BARDO
 CP5=CAZADOR
 CP6=DRUIDA
-LingH=360
-LingP=0
-LingO=0
+Materiales=3860-0-0
+CantMateriales=360-0-0-0
 SkHerreria=80
 
 [OBJ504]
@@ -6386,9 +6342,8 @@ CP6=BANDIDO
 CP7=MAGO
 CP8=LADRON
 CP9=BRUJO
-LingH=132
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=132-0-0-0
 SkHerreria=70
 
 [OBJ521]
@@ -6406,9 +6361,8 @@ CP1=MAGO
 CP2=CLERIGO
 CP3=DRUIDA
 CP4=BARDO
-LingH=43
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=43-0-0-0
 SkHerreria=35
 
 [OBJ522]
@@ -6625,7 +6579,8 @@ Crucial=0
 SND1=51
 SND2=51
 SND3=51
-Madera=800
+Materiales=58-0-0-0
+CantMateriales=800-0-0-0
 SkCarpinteria=75
 
 [OBJ541]
@@ -6753,8 +6708,8 @@ CP6=DRUIDA
 CP7=BANDIDO
 CP8=BRUJO
 CP9=BARDO
-Madera=4
-Upgrade=552
+Materiales=58-0-0-0
+CantMateriales=4-0-0-0
 SkCarpinteria=40
 
 [OBJ552]
@@ -6775,7 +6730,8 @@ CP6=DRUIDA
 CP7=BANDIDO
 CP8=BRUJO
 CP9=BARDO
-Madera=6
+Materiales=58-0-0-0
+CantMateriales=6-0-0-0
 SkCarpinteria=65
 
 [OBJ553]
@@ -6796,7 +6752,8 @@ CP6=DRUIDA
 CP7=BANDIDO
 CP8=BRUJO
 CP9=BARDO
-MaderaElfica=2
+Materiales=58-1006-0-0
+CantMateriales=1-2-0-0
 SkCarpinteria=90
 
 [OBJ554]
@@ -6822,9 +6779,8 @@ MinHit=1000
 MaxHit=1000
 Valor=188000
 Crucial=0
-LingH=500
-LingP=400
-LingO=300
+Materiales=386-387-388-0
+CantMateriales=500-400-300-0
 SkHerreria=100
 
 [OBJ557]
@@ -6871,9 +6827,8 @@ MaxHit=8
 Apunala=1
 Valor=4060
 Crucial=0
-LingH=58
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=58-0-0-0
 SkHerreria=69
 CP1=PIRATA
 
@@ -7534,9 +7489,8 @@ Apunala=1
 Envenena=1
 Valor=350
 Crucial=1
-LingH=5
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=5-0-0-0
 SkHerreria=10
 
 [OBJ620]
@@ -7596,9 +7550,8 @@ CP3=LADRON
 CP4=BARDO
 CP5=PIRATA
 CP6=ASESINO
-LingH=25000
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=25000-0-0-0
 SkHerreria=6500
 
 [OBJ626]
@@ -7653,9 +7606,8 @@ CP1=CLERIGO
 CP2=BARDO
 CP3=DRUIDA
 CP4=MAGO
-LingH=169
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=169-0-0-0
 SkHerreria=70
 
 [OBJ630] '2da Jerarq
@@ -7782,9 +7734,8 @@ CP2=CLERIGO
 CP3=BARDO
 CP4=MAGO
 CP5=PIRATA
-LingH=169
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=169-0-0-0
 SkHerreria=70
 
 [OBJ636] '2da jerarq
@@ -8120,7 +8071,8 @@ CP8=GUERRERO
 CP9=BARDO
 CP10=DRUIDA
 CP11=BRUJO
-MaderaElfica=2900
+Materiales=58-1006-0-0
+CantMateriales=500-29000-0-0
 SkCarpinteria=85
 
 [OBJ661]
@@ -8189,7 +8141,8 @@ Valor=438
 Crucial=0
 CP1=MAGO
 CP2=DRUIDA
-Madera=175
+Materiales=58-0-0-0
+CantMateriales=175-0-0-0
 SkCarpinteria=50
 
 [OBJ664]
@@ -8215,7 +8168,8 @@ CP6=LADRON
 CP7=BARDO
 CP8=DRUIDA
 CP9=BRUJO
-Madera=650
+Materiales=58-0-0-0
+CantMateriales=650-0-0-0
 SkCarpinteria=75
 
 [OBJ665]
@@ -8243,7 +8197,8 @@ CP8=GUERRERO
 CP9=BARDO
 CP10=DRUIDA
 CP11=BRUJO
-MaderaElfica=500
+Materiales=58-1006-0-0
+CantMateriales=100-500-0-0
 SkCarpinteria=100
 
 [OBJ666]
@@ -8268,9 +8223,8 @@ Crucial=1
 CP1=MAGO
 CP2=DRUIDA
 CP3=BARDO
-LingH=105
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=105-0-0-0
 SkHerreria=65
 
 [OBJ668]
@@ -8345,9 +8299,8 @@ Crucial=1
 CP1=GUERRERO
 CP2=MAGO
 CP3=DRUIDA
-LingH=314
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=314-0-0-0
 SkHerreria=75
 
 [OBJ673]
@@ -8458,9 +8411,8 @@ CP6=BANDIDO
 CP7=MAGO
 CP8=LADRON
 CP9=BRUJO
-LingH=132
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=132-0-0-0
 SkHerreria=70
 
 [OBJ681]
@@ -8476,9 +8428,8 @@ MinDef=15
 Valor=11830
 Crucial=1
 CP1=MAGO
-LingH=169
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=169-0-0-0
 SkHerreria=70
 
 [OBJ682]
@@ -8520,9 +8471,8 @@ CP1=DRUIDA
 CP2=CLERIGO
 CP3=BARDO
 CP4=MAGO
-LingH=169
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=169-0-0-0
 SkHerreria=70
 
 [OBJ684]
@@ -8545,9 +8495,8 @@ CP6=BANDIDO
 CP7=MAGO
 CP8=LADRON
 CP9=BRUJO
-LingH=132
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=132-0-0-0
 SkHerreria=70
 
 [OBJ685]
@@ -8563,9 +8512,8 @@ MinDef=15
 Valor=11830
 Crucial=1
 CP1=MAGO
-LingH=169
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=169-0-0-0
 SkHerreria=70
 
 [OBJ686]
@@ -8665,9 +8613,8 @@ CP5=PIRATA
 CP6=ASESINO
 CP7=CAZADOR
 CP8=BRUJO
-LingH=250
-LingP=63
-LingO=0
+Materiales=386-387-0-0
+CantMateriales=250-63-0-0
 SkHerreria=80
 
 [OBJ692]
@@ -8696,9 +8643,8 @@ CP5=PIRATA
 CP6=ASESINO
 CP7=CAZADOR
 CP8=BRUJO
-LingH=250
-LingP=70
-LingO=0
+Materiales=386-387-0-0
+CantMateriales=250-70-0-0
 SkHerreria=80
 
 [OBJ694]
@@ -8721,9 +8667,8 @@ CP5=PIRATA
 CP6=ASESINO
 CP7=CAZADOR
 CP8=BRUJO
-LingH=250
-LingP=63
-LingO=0
+Materiales=386-387-0-0
+CantMateriales=250-63-0-0
 SkHerreria=80
 
 [OBJ695]
@@ -8746,9 +8691,8 @@ CP5=PIRATA
 CP6=ASESINO
 CP7=CAZADOR
 CP8=BRUJO
-LingH=250
-LingP=63
-LingO=0
+Materiales=386-387-0-0
+CantMateriales=250-63-0-0
 SkHerreria=80
 
 [OBJ696]
@@ -8772,7 +8716,8 @@ CP8=GUERRERO
 CP9=MAGO
 CP10=DRUIDA
 CP11=BRUJO
-Madera=1500
+Materiales=58-0-0-0
+CantMateriales=1500-0-0-0
 SkCarpinteria=100
 SND1=219
 SND2=219
@@ -8794,9 +8739,8 @@ CP4=GUERRERO
 CP5=PIRATA
 CP6=BANDIDO
 CP7=BRUJO
-LingH=50
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=50-0-0-0
 SkHerreria=50
 
 [OBJ698]
@@ -8816,9 +8760,8 @@ CP5=PIRATA
 CP6=BANDIDO
 CP7=BRUJO
 CP8=CAZADOR
-LingH=50
-LingP=50
-LingO=0
+Materiales=386-387-0-0
+CantMateriales=50-50-0-0
 SkHerreria=75
 
 [OBJ699]
@@ -8839,9 +8782,8 @@ CP6=BANDIDO
 CP7=PALADIN
 CP8=CAZADOR
 CP9=BRUJO
-LingH=200
-LingP=100
-LingO=50
+Materiales=386-387-388-0
+CantMateriales=200-100-50-0
 SkHerreria=90
     
 [OBJ700]
@@ -8853,9 +8795,8 @@ DefensaMagicaMax=210
 DefensaMagicaMin=200
 Valor=1500000
 Crucial=0
-LingH=3000
-LingP=2000
-LingO=3000
+Materiales=386-387-388-0
+CantMateriales=2000-3000-2000-0
 SkHerreria=100
 ImpideParalizar=1
 ImpideInmobilizar=1
@@ -8882,9 +8823,8 @@ CP5=PIRATA
 CP6=ASESINO
 CP7=CAZADOR
 CP8=BRUJO
-LingH=250
-LingP=63
-LingO=0
+Materiales=386-387-0-0
+CantMateriales=250-63-0-0
 SkHerreria=80
 
 [OBJ703]
@@ -8952,9 +8892,8 @@ CP3=LADRON
 CP4=BARDO
 CP5=PIRATA
 CP6=ASESINO
-LingH=60
-LingP=30
-LingO=0
+Materiales=386-387-0-0
+CantMateriales=60-30-50-0
 SkHerreria=70
 
 [OBJ709]
@@ -9119,7 +9058,8 @@ ObjType=20
 Agarrable=0
 Valor=15
 Crucial=0
-Madera=25
+Materiales=58-0-0-0
+CantMateriales=25-0-0-0
 SkCarpinteria=9
 
 [OBJ734]
@@ -9216,7 +9156,8 @@ ObjType=20
 Agarrable=0
 Valor=666
 Crucial=0
-Madera=400
+Materiales=58-0-0-0
+CantMateriales=400-0-0-0
 SkCarpinteria=56
 
 [OBJ749]
@@ -9256,9 +9197,8 @@ Crucial=1
 CP1=MAGO
 CP2=DRUIDA
 CP3=BARDO
-LingH=2
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=2-0-0-0
 SkHerreria=25
 
 [OBJ754]
@@ -9283,7 +9223,8 @@ ObjType=20
 Agarrable=0
 Valor=666
 Crucial=0
-Madera=400
+Materiales=58-0-0-0
+CantMateriales=400-0-0-0
 SkCarpinteria=56
 
 [OBJ757]
@@ -9493,7 +9434,8 @@ ObjType=20
 Agarrable=0
 Valor=84
 Crucial=0
-Madera=50
+Materiales=58-0-0-0
+CantMateriales=50-0-0-0
 SkCarpinteria=9
 
 [OBJ789]
@@ -9503,7 +9445,8 @@ ObjType=20
 Agarrable=0
 Valor=100
 Crucial=0
-Madera=60
+Materiales=58-0-0-0
+CantMateriales=60-0-0-0
 SkCarpinteria=15
 
 [OBJ790]
@@ -9513,7 +9456,8 @@ ObjType=20
 Agarrable=0
 Valor=100
 Crucial=0
-Madera=60
+Materiales=58-0-0-0
+CantMateriales=60-0-0-0
 SkCarpinteria=15
 
 [OBJ791]
@@ -9523,7 +9467,8 @@ ObjType=20
 Agarrable=0
 Valor=100
 Crucial=0
-Madera=120
+Materiales=58-0-0-0
+CantMateriales=120-0-0-0
 SkCarpinteria=25
 
 [OBJ792]
@@ -9578,7 +9523,8 @@ ObjType=20
 Agarrable=0
 Valor=84
 Crucial=0
-Madera=50
+Materiales=58-0-0-0
+CantMateriales=50-0-0-0
 SkCarpinteria=9
 
 [OBJ800]
@@ -9588,7 +9534,8 @@ ObjType=20
 Agarrable=0
 Valor=334
 Crucial=0
-Madera=200
+Materiales=58-0-0-0
+CantMateriales=200-0-0-0
 SkCarpinteria=30
 
 [OBJ801]
@@ -9972,9 +9919,8 @@ CP8=BANDIDO
 CP9=CLERIGO
 CP10=LADRON
 CP11=BRUJO
-LingH=329
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=329-0-0-0
 SkHerreria=75
 
 [OBJ855]
@@ -10348,9 +10294,8 @@ CP6=PIRATA
 CP7=ASESINO
 CP8=CAZADOR
 CP9=BRUJO
-LingH=650
-LingP=200
-LingO=0
+Materiales=386-387-0-0
+CantMateriales=650-200-0-0
 SkHerreria=90
 
 [OBJ882] 'humano
@@ -10366,9 +10311,8 @@ Crucial=1
 CP1=MAGO
 CP2=DRUIDA
 CP3=BARDO
-LingH=17
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=17-0-0-0
 SkHerreria=15
 
 [OBJ883] 'humano
@@ -10384,9 +10328,8 @@ Crucial=1
 CP1=MAGO
 CP2=BARDO
 CP3=DRUIDA
-LingH=36
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=36-0-0-0
 SkHerreria=32
 
 [OBJ884] 'humano mujer
@@ -10403,9 +10346,8 @@ Mujer=1
 CP1=MAGO
 CP2=BARDO
 CP3=DRUIDA
-LingH=36
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=36-0-0-0
 SkHerreria=32
 
 [OBJ885] 'humano
@@ -10421,9 +10363,8 @@ Crucial=1
 CP1=MAGO
 CP2=PIRATA
 CP3=DRUIDA
-LingH=57
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=57-0-0-0
 SkHerreria=44
 
 [OBJ886] 'humano mujer
@@ -10492,9 +10433,8 @@ Crucial=1
 CP1=MAGO
 CP2=DRUIDA
 CP3=BARDO
-LingH=105
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=105-0-0-0
 SkHerreria=65
 
 [OBJ890] 'humano
@@ -10544,9 +10484,8 @@ CP2=BARDO
 CP3=DRUIDA
 CP4=ASESINO
 CP5=PIRATA
-LingH=175
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=175-0-0-0
 SkHerreria=72
 
 [OBJ893] 'humano mujer
@@ -10564,9 +10503,8 @@ CP1=MAGO
 CP2=BARDO
 CP3=DRUIDA
 CP4=PIRATA
-LingH=105
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=105-0-0-0
 SkHerreria=65
 
 [OBJ894] 'humano mujer
@@ -10590,9 +10528,8 @@ CP7=BARDO
 CP8=DRUIDA
 CP9=GUERRERO
 CP10=BRUJO
-LingH=122
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=122-0-0-0
 SkHerreria=72
 
 [OBJ895] 'humano mujer
@@ -10613,9 +10550,8 @@ CP4=BARDO
 CP5=CLERIGO
 CP6=PIRATA
 CP7=ASESINO
-LingH=1000
-LingP=400
-LingO=600
+Materiales=386-387-388-0
+CantMateriales=1000-400-600-0
 SkHerreria=100
 
 [OBJ896] 'humano mujer
@@ -10645,9 +10581,8 @@ CP1=MAGO
 CP2=BARDO
 CP3=DRUIDA
 CP4=PIRATA
-LingH=105
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=105-0-0-0
 SkHerreria=65
 
 [OBJ898] 'humano Mujer
@@ -10668,9 +10603,8 @@ CP5=CLERIGO
 CP6=PIRATA
 CP7=ASESINO
 CP8=BRUJO
-LingH=600
-LingP=122
-LingO=0
+Materiales=386-387-0-0
+CantMateriales=600-122-0-0
 SkHerreria=85
 
 [OBJ899] 'humano mujer
@@ -10688,9 +10622,8 @@ CP1=MAGO
 CP2=BARDO
 CP3=DRUIDA
 CP4=PIRATA
-LingH=175
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=175-0-0-0
 SkHerreria=72
 
 [OBJ900] 'humano mujer
@@ -10707,9 +10640,8 @@ Mujer=1
 CP1=MAGO
 CP2=DRUIDA
 CP3=PIRATA
-LingH=132
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=132-0-0-0
 SkHerreria=70
 
 [OBJ901] 'humano mujer
@@ -10727,9 +10659,8 @@ CP1=MAGO
 CP2=BARDO
 CP3=DRUIDA
 CP4=PIRATA
-LingH=200
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=200-0-0-0
 SkHerreria=70
 
 [OBJ902] 'humano mujer
@@ -10747,9 +10678,8 @@ CP1=MAGO
 CP2=BARDO
 CP3=DRUIDA
 CP4=PIRATA
-LingH=211
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=211-0-0-0
 SkHerreria=73
 
 [OBJ903] 'humano
@@ -10767,9 +10697,8 @@ CP2=BARDO
 CP3=DRUIDA
 CP4=ASESINO
 CP5=PIRATA
-LingH=320
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=320-0-0-0
 SkHerreria=80
 
 [OBJ904] 'humano mujer
@@ -10786,9 +10715,8 @@ CP1=MAGO
 CP2=BARDO
 CP3=DRUIDA
 CP4=PIRATA
-LingH=210
-LingP=70
-LingO=0
+Materiales=386-387-0-0
+CantMateriales=210-70-0-0
 SkHerreria=80
 
 [OBJ905] 'humano
@@ -10809,9 +10737,8 @@ CP5=BANDIDO
 CP6=BARDO
 CP7=DRUIDA
 CP8=BRUJO
-LingH=150
-LingP=50
-LingO=100
+Materiales=386-387-388-0
+CantMateriales=150-50-100-0
 SkHerreria=85
 
 [OBJ906] 'humano
@@ -10832,9 +10759,8 @@ CP5=BANDIDO
 CP6=BARDO
 CP7=DRUIDA
 CP8=BRUJO
-LingH=1000
-LingP=1100
-LingO=1200
+Materiales=386-387-388-0
+CantMateriales=1000-1100-1200-0
 SkHerreria=100
 
 [OBJ907]
@@ -11123,9 +11049,8 @@ Mujer=1
 CP1=MAGO
 CP2=BARDO
 CP3=DRUIDA
-LingH=17
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=17-0-0-0
 SkHerreria=15
 
 
@@ -11264,9 +11189,8 @@ RazaEnana=1
 Mujer=1
 CP1=MAGO
 CP2=DRUIDA
-LingH=53
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=53-0-0-0
 SkHerreria=40
 
 [OBJ934] 'gnomo
@@ -11300,9 +11224,8 @@ CP1=MAGO
 CP2=BARDO
 CP3=DRUIDA
 CP4=PIRATA
-LingH=86
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=86-0-0-0
 SkHerreria=57
 
 [OBJ936] 'gnomo mujer 
@@ -11333,9 +11256,8 @@ CP1=MAGO
 CP2=BARDO
 CP3=DRUIDA
 CP4=PIRATA
-LingH=105
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=105-0-0-0
 SkHerreria=65
 
 [OBJ938] 'gnomo mujer
@@ -11379,9 +11301,8 @@ CP1=MAGO
 CP2=BARDO
 CP3=DRUIDA
 CP4=PIRATA
-LingH=219
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=219-0-0-0
 SkHerreria=75
 
 [OBJ941] 'gnomo mujer
@@ -11592,9 +11513,8 @@ Mujer=1
 CP1=MAGO
 CP2=BARDO
 CP3=DRUIDA
-LingH=156
-LingP=34
-LingO=0
+Materiales=386-387-0-0
+CantMateriales=156-34-0-0
 SkHerreria=73
 
 [OBJ957] 'enano mujer
@@ -11791,9 +11711,8 @@ RazaEnana=1
 CP1=MAGO
 CP2=DRUIDA
 CP2=PIRATA
-LingH=64
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=64-0-0-0
 SkHerreria=47
 
 [OBJ969] 'enano
@@ -11838,9 +11757,8 @@ CP1=MAGO
 CP2=BARDO
 CP3=DRUIDA
 CP4=PIRATA
-LingH=196
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=196-0-0-0
 SkHerreria=70
 
 [OBJ972] 'enano
@@ -11873,9 +11791,8 @@ CP1=MAGO
 CP2=BARDO
 CP3=DRUIDA
 CP4=PIRATA
-LingH=141
-LingP=29
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=141-29-0-0
 SkHerreria=70
 
 [OBJ974] 'enano
@@ -11909,9 +11826,8 @@ CP1=MAGO
 CP2=BARDO
 CP3=DRUIDA
 CP4=PIRATA
-LingH=330
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=330-0-0-0
 SkHerreria=80
 
 [OBJ976] 'enano
@@ -11929,9 +11845,8 @@ CP1=MAGO
 CP2=BARDO
 CP3=DRUIDA
 CP4=PIRATA
-LingH=600
-LingP=100
-LingO=0
+Materiales=386-387-0-0
+CantMateriales=600-100-0-0
 SkHerreria=85
 
 [OBJ977] 'elfo oscuro
@@ -11969,9 +11884,8 @@ MaxDef=20
 Valor=7000
 Crucial=1
 RazaDrow=1
-LingH=100
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=100-0-0-0
 SkHerreria=63
 CP1=DRUIDA
 
@@ -12311,7 +12225,7 @@ CP10=CLERIGO
 CP11=BRUJO
 
 [OBJ1005]
-Name=Hacha de madera Elfica
+Name=Hacha de madera Mágica
 GrhIndex=603
 ObjType=2
 Agarrable=0
@@ -12320,13 +12234,12 @@ MinHit=3
 MaxHit=8
 Valor=1750
 Crucial=1
-LingH=15
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=15-0-0-0
 SkHerreria=30
 
 [OBJ1006]
-Name=Madera Elfica
+Name=Madera Magica
 GrhIndex=1999
 ObjType=14
 Agarrable=0
@@ -12651,9 +12564,8 @@ CP1=MAGO
 CP2=DRUIDA
 CP3=PIRATA
 CP4=LADRON
-LingH=5
-LingP=0
-LingO=0
+Materiales=386-387-163-0
+CantMateriales=5-10-1-0
 SkHerreria=20
 
 [OBJ1038]
@@ -12672,9 +12584,8 @@ CP1=MAGO
 CP2=DRUIDA
 CP3=PIRATA
 CP4=LADRON
-LingH=5
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=5-0-0-0
 SkHerreria=20
 
 [OBJ1039]
@@ -12720,9 +12631,8 @@ CP6=BANDIDO
 CP7=MAGO
 CP8=LADRON
 CP9=BRUJO
-LingH=132
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=132-0-0-0
 SkHerreria=70
 
 [OBJ1041]
@@ -12768,9 +12678,8 @@ CP6=BANDIDO
 CP7=MAGO
 CP8=LADRON
 CP9=BRUJO
-LingH=132
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=132-0-0-0
 SkHerreria=70
 
 [OBJ1043]
@@ -12873,7 +12782,8 @@ CP8=GUERRERO
 CP9=MAGO
 CP10=DRUIDA
 CP11=BRUJO
-MaderaElfica=1150
+Materiales=58-1006-0-0
+CantMateriales=50-1150-0-0
 SkCarpinteria=100
 SND1=220
 SND2=220
@@ -12900,7 +12810,8 @@ CP8=GUERRERO
 CP9=MAGO
 CP10=BARDO
 CP11=BRUJO
-MaderaElfica=1000
+Materiales=58-1006-0-0
+CantMateriales=50-1000-0-0
 SkCarpinteria=100
 SND1=215
 SND2=215
@@ -14354,9 +14265,8 @@ NumRopaje=255
 Agarrable=0
 MaxDef=40
 MinDef=50
-LingH=5000
-LingP=3000
-LingO=1250
+Materiales=386-387-388-0
+CantMateriales=5000-3000-1250-0
 SkHerreria=100
 CP1=CAZADOR
 CP2=PALADIN
@@ -14377,9 +14287,8 @@ MaxDef=20
 MinDef=15
 Valor=1000000
 Crucial=0
-LingH=5000
-LingP=5000
-LingO=0
+Materiales=386-387-0-0
+CantMateriales=5000-5000-0-0
 SkHerreria=100
 CP1=PIRATA
 CP2=CAZADOR
@@ -14404,8 +14313,8 @@ MinHit=12
 MaxHit=15
 Valor=1000000
 Crucial=0
-Madera=10000
-Maderaelfica=5000
+Materiales=58-1006-0-0
+CantMateriales=10000-5000-0-0
 SkCarpinteria=100
 CP1=PIRATA
 CP2=PALADIN
@@ -14427,8 +14336,6 @@ Agarrable=0
 Valor=1200000
 Crucial=1
 HechizoIndex=32
-Madera=1
-SkCarpinteria=101
 Log=1
 
 [OBJ1136]
@@ -14441,9 +14348,8 @@ MaxDef=40
 MinDef=50
 Valor=3000000
 Crucial=0
-LingH=5500
-LingP=5000
-LingO=1250
+Materiales=386-387-388-0
+CantMateriales=5500-5000-1250-0
 SkHerreria=100
 
 [OBJ1137]
@@ -14458,9 +14364,8 @@ MaxDef=50
 MinDef=55
 Valor=1000000
 Crucial=0
-LingH=5500
-LingP=5000
-LingO=1250
+Materiales=386-387-388-0
+CantMateriales=5500-5000-1250-0
 SkHerreria=100
 
 [OBJ1138]
@@ -14477,9 +14382,8 @@ MaxHit=25
 Apunala=0
 Valor=5000000
 Crucial=0
-LingH=5000
-LingP=5000
-LingO=5000
+Materiales=386-387-388-0
+CantMateriales=5500-5000-5000-0
 SkHerreria=100
 CP1=PIRATA
 CP2=CAZADOR
@@ -14541,9 +14445,8 @@ CP2=DRUIDA
 CP3=LADRON
 CP4=BARDO
 CP5=PIRATA
-LingH=5000
-LingP=2500
-LingO=0
+Materiales=386-387-0-0
+CantMateriales=5500-5000-0-0
 SkHerreria=90
 
 [OBJ1142]
@@ -14579,9 +14482,8 @@ MaxDef=1
 MinDef=1
 Valor=1
 Crucial=0
-LingH=100
-LingP=0
-LingO=0
+Materiales=386-0-0-0
+CantMateriales=100-0-0-0
 SkHerreria=45
 
 [OBJ1144]
@@ -14615,9 +14517,8 @@ MaxDef=40
 MinDef=20
 Valor=1000000
 Crucial=0
-LingH=4000
-LingP=5000
-LingO=0
+Materiales=386-387-0-0
+CantMateriales=4000-5000-0-0
 SkHerreria=45
 
 [OBJ1147]
@@ -14667,9 +14568,8 @@ CP8=GUERRERO
 CP9=BARDO
 CP10=DRUIDA
 CP11=BRUJO
-LingH=4000
-LingP=1000
-LingO=2000
+Materiales=386-387-388-0
+CantMateriales=4000-1000-2000-0
 SkHerreria=90
 
 [OBJ1149]
@@ -14680,8 +14580,6 @@ Agarrable=0
 Valor=1200000
 Crucial=1
 HechizoIndex=52
-Madera=1
-SkCarpinteria=101
 Log=1
 
 [OBJ1150]
@@ -14700,9 +14598,8 @@ CP2=DRUIDA
 CP3=LADRON
 CP4=BARDO
 CP5=PIRATA
-LingH=1500
-LingP=1300
-LingO=0
+Materiales=386-387-0-0
+CantMateriales=1500-1300-0-0
 SkHerreria=85
 
 [OBJ1151]
@@ -14762,9 +14659,8 @@ MAXDEF=60
 MINDEF=50
 Valor=10000000
 Crucial=0
-LingH=10000
-LingP=10000
-LingO=10000
+Materiales=386-387-388-0
+CantMateriales=10000-10000-10000-0
 SkHerreria=100
 CP1=PIRATA
 CP2=CAZADOR
@@ -14851,9 +14747,8 @@ CP7=BANDIDO
 CP8=GUERRERO
 CP9=BARDO
 CP10=DRUIDA
-LingH=5000
-LingP=5000
-LingO=5000
+Materiales=386-387-388-0
+CantMateriales=5000-5000-5000-0
 SkHerreria=100
 
 [OBJ1159]
