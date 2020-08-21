@@ -19,6 +19,9 @@ Public Enum eMacroTrabajo '(El 0 es no activado)
     Minando = 19
     Carpinteando = 20
     Herreando = 21
+    Sastreando = 22
+    Plantitas = 23
+    Alminineando = 24
 End Enum
 
 Public Function PuedePescar(ByVal UserIndex As Integer) As Boolean

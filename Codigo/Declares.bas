@@ -505,7 +505,7 @@ Public Const MIN_APUNALAR   As Byte = 10
 
 ''
 ' Cantidad de skills
-Public Const NUMSKILLS      As Byte = 21
+Public Const NUMSKILLS      As Byte = 24
 
 ''
 ' Cantidad de Atributos
@@ -607,6 +607,9 @@ Public Enum eSkill
     Mineria = 19
     Carpinteria = 20
     Herreria = 21
+    Sastreria = 22
+    Herboristeria = 23
+    Alquimia = 24
 End Enum
 
 Public Enum eMochilas
