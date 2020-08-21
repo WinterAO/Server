@@ -665,6 +665,198 @@ errHandler:
 
 End Sub
 
+Public Sub SastreConstruirItem(ByVal UserIndex As Integer, ByVal ItemIndex As Integer)
+
+    '***************************************************
+    'Author: Lorwik
+    'Last Modification: 21/08/2020
+    '***************************************************
+    On Error GoTo errHandler
+
+    Dim TieneMateriales As Boolean
+
+    Dim WeaponIndex     As Integer
+
+    Dim OtroUserIndex   As Integer
+    
+    With UserList(UserIndex)
+
+        If .flags.Comerciando Then
+            OtroUserIndex = .ComUsu.DestUsu
+                
+            If OtroUserIndex > 0 And OtroUserIndex <= MaxUsers Then
+                Call WriteConsoleMsg(UserIndex, "Comercio cancelado, no puedes comerciar mientras trabajas!!", FontTypeNames.FONTTYPE_TALK)
+                Call WriteConsoleMsg(OtroUserIndex, "Comercio cancelado por el otro usuario!!", FontTypeNames.FONTTYPE_TALK)
+                
+                Call LimpiarComercioSeguro(UserIndex)
+
+            End If
+
+        End If
+        
+        WeaponIndex = .Invent.WeaponEqpObjIndex
+    
+        If WeaponIndex <> KIT_DE_COSTURA Then
+            Call WriteConsoleMsg(UserIndex, "Debes tener equipado el kit de sastreria para trabajar.", FontTypeNames.FONTTYPE_INFO)
+            Call DejardeTrabajar(UserIndex) 'Paramos el macro
+            Exit Sub
+
+        End If
+    
+        If .Stats.UserSkills(eSkill.Sastreria) >= ObjData(ItemIndex).SkSastreria Then
+           
+            'Sacamos energia
+            'Chequeamos que tenga los puntos antes de sacarselos
+            If .Stats.MinSta >= GASTO_ENERGIA Then
+                .Stats.MinSta = .Stats.MinSta - GASTO_ENERGIA
+                Call WriteUpdateSta(UserIndex)
+            Else
+                Call WriteConsoleMsg(UserIndex, "No tienes suficiente energia.", FontTypeNames.FONTTYPE_INFO)
+                Call DejardeTrabajar(UserIndex) 'Paramos el macro
+                Exit Sub
+
+            End If
+            
+            Call QuitarMateriales(UserIndex, ItemIndex)
+            Call WriteConsoleMsg(UserIndex, "Has construido el objeto!.", FontTypeNames.FONTTYPE_INFO)
+            
+            Dim MiObj As obj
+
+            MiObj.Amount = 1
+            MiObj.ObjIndex = ItemIndex
+
+            If Not MeterItemEnInventario(UserIndex, MiObj) Then
+                Call TirarItemAlPiso(.Pos, MiObj)
+
+            End If
+            
+            'Log de construccion de Items. Pablo (ToxicWaste) 10/09/07
+            If ObjData(MiObj.ObjIndex).Log = 1 Then
+                Call LogDesarrollo(.Name & " ha construido " & MiObj.Amount & " " & ObjData(MiObj.ObjIndex).Name)
+
+            End If
+            
+            Call SubirSkill(UserIndex, eSkill.Sastreria, True)
+            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_TRABAJO_CARPINTERO, .Pos.X, .Pos.Y))
+            
+            If Not criminal(UserIndex) Then
+                .Reputacion.PlebeRep = .Reputacion.PlebeRep + vlProleta
+
+                If .Reputacion.PlebeRep > MAXREP Then .Reputacion.PlebeRep = MAXREP
+
+            End If
+            
+            .Counters.Trabajando = .Counters.Trabajando + 1
+
+        Else
+            Call WriteConsoleMsg(UserIndex, "Aun no posees la habilidad suficiente para construir ese objeto. Necesitas al menos " & ObjData(ItemIndex).SkSastreria & " Skills.", FontTypeNames.FONTTYPE_INFO)
+
+        End If
+
+    End With
+    
+    Exit Sub
+errHandler:
+    Call LogError("Error en SastreConstruirItem. Error " & Err.Number & " : " & Err.description & ". UserIndex:" & UserIndex & ". ItemIndex:" & ItemIndex)
+
+End Sub
+
+Public Sub AlquimistaConstruirItem(ByVal UserIndex As Integer, ByVal ItemIndex As Integer)
+
+    '***************************************************
+    'Author: Lorwik
+    'Last Modification: 21/08/2020
+    '***************************************************
+    On Error GoTo errHandler
+
+    Dim TieneMateriales As Boolean
+
+    Dim WeaponIndex     As Integer
+
+    Dim OtroUserIndex   As Integer
+    
+    With UserList(UserIndex)
+
+        If .flags.Comerciando Then
+            OtroUserIndex = .ComUsu.DestUsu
+                
+            If OtroUserIndex > 0 And OtroUserIndex <= MaxUsers Then
+                Call WriteConsoleMsg(UserIndex, "Comercio cancelado, no puedes comerciar mientras trabajas!!", FontTypeNames.FONTTYPE_TALK)
+                Call WriteConsoleMsg(OtroUserIndex, "Comercio cancelado por el otro usuario!!", FontTypeNames.FONTTYPE_TALK)
+                
+                Call LimpiarComercioSeguro(UserIndex)
+
+            End If
+
+        End If
+        
+        WeaponIndex = .Invent.WeaponEqpObjIndex
+    
+        If WeaponIndex <> OLLA_ALQUIMISTA Then
+            Call WriteConsoleMsg(UserIndex, "Debes tener equipado la olla de alquimista para trabajar.", FontTypeNames.FONTTYPE_INFO)
+            Call DejardeTrabajar(UserIndex) 'Paramos el macro
+            Exit Sub
+
+        End If
+    
+        If .Stats.UserSkills(eSkill.Alquimia) >= ObjData(ItemIndex).SkAlquimia Then
+           
+            'Sacamos energia
+            'Chequeamos que tenga los puntos antes de sacarselos
+            If .Stats.MinSta >= GASTO_ENERGIA Then
+                .Stats.MinSta = .Stats.MinSta - GASTO_ENERGIA
+                Call WriteUpdateSta(UserIndex)
+            Else
+                Call WriteConsoleMsg(UserIndex, "No tienes suficiente energia.", FontTypeNames.FONTTYPE_INFO)
+                Call DejardeTrabajar(UserIndex) 'Paramos el macro
+                Exit Sub
+
+            End If
+            
+            Call QuitarMateriales(UserIndex, ItemIndex)
+            Call WriteConsoleMsg(UserIndex, "Has construido el objeto!.", FontTypeNames.FONTTYPE_INFO)
+            
+            Dim MiObj As obj
+
+            MiObj.Amount = 1
+            MiObj.ObjIndex = ItemIndex
+
+            If Not MeterItemEnInventario(UserIndex, MiObj) Then
+                Call TirarItemAlPiso(.Pos, MiObj)
+
+            End If
+            
+            'Log de construccion de Items. Pablo (ToxicWaste) 10/09/07
+            If ObjData(MiObj.ObjIndex).Log = 1 Then
+                Call LogDesarrollo(.Name & " ha construido " & MiObj.Amount & " " & ObjData(MiObj.ObjIndex).Name)
+
+            End If
+            
+            Call SubirSkill(UserIndex, eSkill.Alquimia, True)
+            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_TRABAJO_CARPINTERO, .Pos.X, .Pos.Y))
+            
+            If Not criminal(UserIndex) Then
+                .Reputacion.PlebeRep = .Reputacion.PlebeRep + vlProleta
+
+                If .Reputacion.PlebeRep > MAXREP Then .Reputacion.PlebeRep = MAXREP
+
+            End If
+            
+            .Counters.Trabajando = .Counters.Trabajando + 1
+
+        Else
+            Call WriteConsoleMsg(UserIndex, "Aun no posees la habilidad suficiente para construir ese objeto. Necesitas al menos " & ObjData(ItemIndex).SkAlquimia & " Skills.", FontTypeNames.FONTTYPE_INFO)
+
+        End If
+
+    End With
+    
+    Exit Sub
+errHandler:
+    Call LogError("Error en AlquimistaConstruirItem. Error " & Err.Number & " : " & Err.description & ". UserIndex:" & UserIndex & ". ItemIndex:" & ItemIndex)
+
+End Sub
+
 Public Sub ArtesanoConstruirItem(ByVal UserIndex As Integer, ByVal Item As Integer)
     Dim ArtesanoObj As ObjData
     ArtesanoObj = ObjData(ObjArtesano(Item))

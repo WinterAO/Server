@@ -1223,17 +1223,11 @@ Sub LoadOBJData()
             .DefensaMagicaMin = val(Leer.GetValue("OBJ" & Object, "DefensaMagicaMin"))
             
             .SkCarpinteria = val(Leer.GetValue("OBJ" & Object, "SkCarpinteria"))
-            
-            If .SkCarpinteria > 0 Then
-                For i = 1 To MAXMATERIALES
-                    .Materiales(i) = val(ReadField(i, Leer.GetValue("OBJ" & Object, "Materiales"), Asc("-")))
-                    .CantMateriales(i) = val(ReadField(i, Leer.GetValue("OBJ" & Object, "CantMateriales"), Asc("-")))
-                Next i
-            End If
-            
             .SkHerreria = val(Leer.GetValue("OBJ" & Object, "SkHerreria"))
+            .SkSastreria = val(Leer.GetValue("OBJ" & Object, "SkSastreria"))
+            .SkAlquimia = val(Leer.GetValue("OBJ" & Object, "SkAlquimia"))
             
-            If .SkHerreria > 0 Then
+            If .SkCarpinteria > 0 Or .SkHerreria > 0 Or .SkSastreria > 0 Or .SkAlquimia > 0 Then
                 For i = 1 To MAXMATERIALES
                     .Materiales(i) = val(ReadField(i, Leer.GetValue("OBJ" & Object, "Materiales"), Asc("-")))
                     .CantMateriales(i) = val(ReadField(i, Leer.GetValue("OBJ" & Object, "CantMateriales"), Asc("-")))

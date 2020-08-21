@@ -1780,6 +1780,26 @@ Sub ResetUserSpells(ByVal UserIndex As Integer)
 
 End Sub
 
+Sub ResetUserProfesion(ByVal UserIndex As Integer)
+    '***************************************************
+    'Autor: Lorwik
+    'Last Modification: 21/08/2020
+    '
+    '***************************************************
+    
+    Dim i As Byte
+    Dim j As Integer
+    
+    For i = 0 To 1
+    
+        For j = 1 To MAXUSERRECETAS
+            UserList(UserIndex).Profesion(i).Recetas(j) = 0
+        Next j
+        
+    Next i
+
+End Sub
+
 Sub ResetUserPets(ByVal UserIndex As Integer)
     '***************************************************
     'Author: Unknown
@@ -1855,6 +1875,7 @@ Sub ResetUserSlot(ByVal UserIndex As Integer)
     Call ResetUserFlags(UserIndex)
     Call LimpiarInventario(UserIndex)
     Call ResetUserSpells(UserIndex)
+    Call ResetUserProfesion(UserIndex)
     Call ResetUserPets(UserIndex)
     Call ResetUserBanco(UserIndex)
     Call ResetQuestStats(UserIndex)

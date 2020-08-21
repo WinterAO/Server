@@ -1106,6 +1106,8 @@ Public Type ObjData
     
     SkHerreria As Integer
     SkCarpinteria As Integer
+    SkSastreria As Integer
+    SkAlquimia As Integer
     
     ItemCrafteo() As CraftingItem
 

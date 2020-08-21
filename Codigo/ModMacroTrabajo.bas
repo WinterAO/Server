@@ -371,6 +371,170 @@ Private Function PuedeHerreria(ByVal UserIndex As Integer, ByVal Cantidad As Int
     End With
 End Function
 
+Private Function PuedeSastreria(ByVal UserIndex As Integer, ByVal Cantidad As Integer, ByVal Item As Integer) As Boolean
+'************************************
+'Autor: Lorwik
+'Requisitos para construir sastreria
+'************************************
+    Dim SlotProfesion As Integer
+
+    With UserList(UserIndex)
+    
+        If .flags.Trabajando <> eSkill.Sastreria Then
+            PuedeSastreria = False
+            Exit Function
+        End If
+    
+        SlotProfesion = ConoceProfesion(UserIndex, eSkill.Sastreria)
+        
+        If SlotProfesion < 0 Then
+            Call WriteConsoleMsg(UserIndex, "No conoces esa profesion.", FontTypeNames.FONTTYPE_INFOBOLD)
+            PuedeSastreria = False
+            Exit Function
+        End If
+        
+        '¿Intento de Hack?
+        If Not TieneReceta(Item, UserIndex, SlotProfesion) Then
+            PuedeSastreria = False
+            Exit Function
+        End If
+        
+        '¿El item es inferior a 0 (un item invalido?
+        If Item < 1 Then
+            Call DejardeTrabajar(UserIndex)
+            PuedeSastreria = False
+            Exit Function
+        End If
+           
+        '¿Ese objeto requiere 0 en skills?
+        If ObjData(Item).SkSastreria = 0 Then
+            Call DejardeTrabajar(UserIndex)
+            PuedeSastreria = False
+            Exit Function
+        End If
+        
+        '¿El contador de objetos pendientes a construir llego a 0?
+        If .flags.MacroCountObj < 1 Then
+            Call DejardeTrabajar(UserIndex)
+            PuedeSastreria = False
+            Exit Function
+        End If
+        
+        'El usuario esta invisible u oculto?
+        If .flags.invisible = 1 Or .flags.Oculto = 1 Then
+            Call WriteConsoleMsg(UserIndex, "¡Estas Invisible!", FontTypeNames.FONTTYPE_INFOBOLD)
+            Call DejardeTrabajar(UserIndex)
+            PuedeSastreria = False
+            Exit Function
+        End If
+        
+        '¿Tiene materiales para construir el proximo item?
+        If Not TieneMateriales(UserIndex, Item) Then
+            Call DejardeTrabajar(UserIndex)
+            PuedeSastreria = False
+            Exit Function
+        End If
+        
+        '¿Tiene los skills para construir el item?
+        If Not UserList(UserIndex).Stats.UserSkills(eSkill.Sastreria) >= ObjData(Item).SkSastreria Then
+            Call DejardeTrabajar(UserIndex)
+            PuedeSastreria = False
+            Exit Function
+        End If
+        
+        '¿Tiene el kit de sastreria equipado?
+        If Not UserList(UserIndex).Invent.WeaponEqpObjIndex = KIT_DE_COSTURA Then
+            Call DejardeTrabajar(UserIndex)
+            PuedeSastreria = False
+            Exit Function
+        End If
+        
+        PuedeSastreria = True
+    End With
+End Function
+
+Private Function PuedeAlquimia(ByVal UserIndex As Integer, ByVal Cantidad As Integer, ByVal Item As Integer) As Boolean
+'************************************
+'Autor: Lorwik
+'Requisitos para construir alquimia
+'************************************
+    Dim SlotProfesion As Integer
+
+    With UserList(UserIndex)
+    
+        If .flags.Trabajando <> eSkill.Alquimia Then
+            PuedeAlquimia = False
+            Exit Function
+        End If
+    
+        SlotProfesion = ConoceProfesion(UserIndex, eSkill.Alquimia)
+        
+        If SlotProfesion < 0 Then
+            Call WriteConsoleMsg(UserIndex, "No conoces esa profesion.", FontTypeNames.FONTTYPE_INFOBOLD)
+            PuedeAlquimia = False
+            Exit Function
+        End If
+        
+        '¿Intento de Hack?
+        If Not TieneReceta(Item, UserIndex, SlotProfesion) Then
+            PuedeAlquimia = False
+            Exit Function
+        End If
+        
+        '¿El item es inferior a 0 (un item invalido?
+        If Item < 1 Then
+            Call DejardeTrabajar(UserIndex)
+            PuedeAlquimia = False
+            Exit Function
+        End If
+           
+        '¿Ese objeto requiere 0 en skills?
+        If ObjData(Item).SkSastreria = 0 Then
+            Call DejardeTrabajar(UserIndex)
+            PuedeAlquimia = False
+            Exit Function
+        End If
+        
+        '¿El contador de objetos pendientes a construir llego a 0?
+        If .flags.MacroCountObj < 1 Then
+            Call DejardeTrabajar(UserIndex)
+            PuedeAlquimia = False
+            Exit Function
+        End If
+        
+        'El usuario esta invisible u oculto?
+        If .flags.invisible = 1 Or .flags.Oculto = 1 Then
+            Call WriteConsoleMsg(UserIndex, "¡Estas Invisible!", FontTypeNames.FONTTYPE_INFOBOLD)
+            Call DejardeTrabajar(UserIndex)
+            PuedeAlquimia = False
+            Exit Function
+        End If
+        
+        '¿Tiene materiales para construir el proximo item?
+        If Not TieneMateriales(UserIndex, Item) Then
+            Call DejardeTrabajar(UserIndex)
+            PuedeAlquimia = False
+            Exit Function
+        End If
+        
+        '¿Tiene los skills para construir el item?
+        If Not UserList(UserIndex).Stats.UserSkills(eSkill.Alquimia) >= ObjData(Item).SkAlquimia Then
+            Call DejardeTrabajar(UserIndex)
+            PuedeAlquimia = False
+            Exit Function
+        End If
+        
+        '¿Tiene el kit de sastreria equipado?
+        If Not UserList(UserIndex).Invent.WeaponEqpObjIndex = OLLA_ALQUIMISTA Then
+            Call DejardeTrabajar(UserIndex)
+            PuedeAlquimia = False
+            Exit Function
+        End If
+        
+        PuedeAlquimia = True
+    End With
+End Function
+
 Public Sub ComenzarCrafteo(ByVal UserIndex As Integer, ByVal Item As Long, ByVal Cantidad As Integer, ByVal Profesion As Byte)
 '************************************************
 'Autor: Lorwik
@@ -391,11 +555,11 @@ Public Sub ComenzarCrafteo(ByVal UserIndex As Integer, ByVal Item As Long, ByVal
             Case eSkill.Carpinteria
                 If ObjData(Item).SkCarpinteria = 0 Then Exit Sub
                 
-            Case eSkill.Herboristeria
-                'If ObjData(Item).SkAlquimia = 0 Then Exit Sub
+            Case eSkill.Sastreria
+                If ObjData(Item).SkSastreria = 0 Then Exit Sub
             
-            Case eSkill.Herboristeria
-                'If ObjData(Item).SkHerboristeria = 0 Then Exit Sub
+            Case eSkill.Alquimia
+                If ObjData(Item).SkAlquimia = 0 Then Exit Sub
             
         End Select
         
@@ -487,6 +651,24 @@ Debug.Print Tarea
             Case eMacroTrabajo.Herreando
                 If PuedeHerreria(UserIndex, .flags.MacroCountObj, .flags.MacroTrabajaObj) And .flags.MacroCountObj > 0 Then
                     Call HerreroConstruirItem(UserIndex, .flags.MacroTrabajaObj)
+                    .flags.MacroCountObj = .flags.MacroCountObj - 1 'Restamos en 1 a la cantidad de objetos que queremos construir
+                Else
+                    Call DejardeTrabajar(UserIndex)
+                End If
+                
+            'Sastreria
+            Case eMacroTrabajo.Sastreando
+                If PuedeSastreria(UserIndex, .flags.MacroCountObj, .flags.MacroTrabajaObj) And .flags.MacroCountObj > 0 Then
+                    Call SastreConstruirItem(UserIndex, .flags.MacroTrabajaObj)
+                    .flags.MacroCountObj = .flags.MacroCountObj - 1 'Restamos en 1 a la cantidad de objetos que queremos construir
+                Else
+                    Call DejardeTrabajar(UserIndex)
+                End If
+                
+            'Alquimia
+            Case eMacroTrabajo.CreandoPotis
+                If PuedeAlquimia(UserIndex, .flags.MacroCountObj, .flags.MacroTrabajaObj) And .flags.MacroCountObj > 0 Then
+                    Call AlquimistaConstruirItem(UserIndex, .flags.MacroTrabajaObj)
                     .flags.MacroCountObj = .flags.MacroCountObj - 1 'Restamos en 1 a la cantidad de objetos que queremos construir
                 Else
                     Call DejardeTrabajar(UserIndex)
