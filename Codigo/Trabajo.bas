@@ -566,7 +566,7 @@ Public Sub HerreroConstruirItem(ByVal UserIndex As Integer, ByVal ItemIndex As I
             End If
         
             .Counters.Trabajando = .Counters.Trabajando + 1
-
+            
         End If
 
     End With
@@ -682,6 +682,9 @@ Public Sub CarpinteroConstruirItem(ByVal UserIndex As Integer, ByVal ItemIndex A
             End If
             
             .Counters.Trabajando = .Counters.Trabajando + 1
+
+        Else
+            Call WriteConsoleMsg(UserIndex, "Aun no posees la habilidad suficiente para construir ese objeto. Necesitas al menos " & ObjData(ItemIndex).SkCarpinteria & " Skills.", FontTypeNames.FONTTYPE_INFO)
 
         End If
 
@@ -2738,7 +2741,7 @@ Public Sub AccionInstructor(ByVal UserIndex As Integer, ByVal NPCIndex As Intege
            
         Else 'Entonces quiere olvidar
         
-            Call WriteConfirmarInstruccion(UserIndex, "¿Seguro que quieres olvidar la profesion de " & SkillsNames(Npclist(NPCIndex).Instruye) & "?, perderas todos los skills adquiridos en dicha profesion.")
+            Call WriteConfirmarInstruccion(UserIndex, "¿Seguro que quieres olvidar la profesion de " & SkillsNames(Npclist(NPCIndex).Instruye) & "?, perderas todos los skills y TODAS las RECETAS adquiridas en dicha profesion.")
             .flags.ProfInstruyendo = Npclist(NPCIndex).Instruye
             .flags.Instruyendo = 2 '2: Olvidar
             
@@ -2757,53 +2760,72 @@ Public Sub AccionProfesion(ByVal UserIndex As Integer)
 '2: Olvidar
 '***************************************************
     Dim i As Byte
-    Dim SlotLibre As Byte
+    Dim Slot As Byte
     
     With UserList(UserIndex)
     
-    '¿Esta instruyendose?
-    If .flags.Instruyendo = 1 Then
+        '¿Esta instruyendose?
+        If .flags.Instruyendo = 1 Then
+        
+            'La instruccion cuesta 5K
+            If UserList(UserIndex).Stats.Gld < PRECIOINSTRUCCION Then
+                Call WriteConsoleMsg(UserIndex, "No suficiente dinero para pagar al instructor. Necesitas " & PRECIOINSTRUCCION & " monedas de oro.", FontTypeNames.FONTTYPE_INFO)
+                Exit Sub
+            End If
+            
+            'Buscamos un hueco libre
+            For i = 0 To 1
+                If .Profesion(i).Profesion = 0 Then Slot = i
+            Next i
+            
+            .Profesion(Slot).Profesion = .flags.ProfInstruyendo
+            
+            'Si es una profesion de crafting le damos una receta inicial:
+            Select Case .flags.ProfInstruyendo
+            
+                Case eSkill.Herreria
+                    .Profesion(Slot).Recetas(1) = 15
+                    
+                Case eSkill.Carpinteria
+                    .Profesion(Slot).Recetas(1) = 163
+            
+            End Select
+            
+            .Stats.UserSkills(.flags.ProfInstruyendo) = .Stats.UserSkills(.flags.ProfInstruyendo) + 1
+            Call CheckEluSkill(UserIndex, .flags.ProfInstruyendo, True)
+            
+            'Restamos el oro
+            .Stats.Gld = .Stats.Gld - PRECIOINSTRUCCION
+            Call WriteUpdateGold(UserIndex)
+            
+            Call WriteConsoleMsg(UserIndex, "¡Bienvenido al gremio de " & SkillsNames(.flags.ProfInstruyendo) & "! queda en tus manos adquirir mas destreza en la profesion", FontTypeNames.FONTTYPE_INFO)
+            
+            'Reseteamos los flags
+            .flags.ProfInstruyendo = 0
+            .flags.Instruyendo = 0
     
-        'La instruccion cuesta 5K
-        If UserList(UserIndex).Stats.Gld < PRECIOINSTRUCCION Then
-            Call WriteConsoleMsg(UserIndex, "No suficiente dinero para pagar al instructor. Necesitas " & PRECIOINSTRUCCION & " monedas de oro.", FontTypeNames.FONTTYPE_INFO)
-            Exit Sub
+        ElseIf .flags.Instruyendo = 2 Then '¿Esta olvidando?
+        
+            'Buscamos y olvidamos la profesion
+            Slot = ConoceProfesion(UserIndex, .flags.ProfInstruyendo)
+            
+            .Profesion(Slot).Profesion = 0
+            
+            'Eliminamos todas las recetas
+            For i = 1 To MAXUSERRECETAS
+                .Profesion(Slot).Recetas(i) = 0
+            Next i
+        
+            Call WriteConsoleMsg(UserIndex, "Es una lastima que hayas decidido abandonar el gremio de " & SkillsNames(.flags.ProfInstruyendo) & ".", FontTypeNames.FONTTYPE_INFO)
+        
+            'Eliminamos los skills
+            .Stats.UserSkills(.flags.ProfInstruyendo) = 0
+            
+            'Reseteamos los flags
+            .flags.ProfInstruyendo = 0
+            .flags.Instruyendo = 0
+            
         End If
-        
-        'Buscamos un hueco libre
-        For i = 0 To 1
-            If .Profesion(i).Profesion = 0 Then SlotLibre = i
-        Next i
-        
-        .Profesion(SlotLibre).Profesion = .flags.ProfInstruyendo
-        
-        'Restamos el oro
-        .Stats.Gld = .Stats.Gld - PRECIOINSTRUCCION
-        Call WriteUpdateGold(UserIndex)
-        
-        Call WriteConsoleMsg(UserIndex, "¡Bienvenido al gremio de " & SkillsNames(.flags.ProfInstruyendo) & "! queda en tus manos adquirir mas destreza en la profesion", FontTypeNames.FONTTYPE_INFO)
-        
-        'Reseteamos los flags
-        .flags.ProfInstruyendo = 0
-        .flags.Instruyendo = 0
-
-    ElseIf .flags.Instruyendo = 2 Then '¿Esta olvidando?
-    
-        'Buscamos y olvidamos la profesion
-        For i = 0 To 1
-            If .flags.ProfInstruyendo = .Profesion(i).Profesion Then .Profesion(i).Profesion = 0
-        Next i
-    
-        Call WriteConsoleMsg(UserIndex, "Es una lastima que hayas decidido abandonar el gremio de " & SkillsNames(.flags.ProfInstruyendo) & ".", FontTypeNames.FONTTYPE_INFO)
-    
-        'Eliminamos los skills
-        .Stats.UserSkills(.flags.ProfInstruyendo) = 0
-        
-        'Reseteamos los flags
-        .flags.ProfInstruyendo = 0
-        .flags.Instruyendo = 0
-        
-    End If
     
     End With
     

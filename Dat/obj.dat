@@ -346,7 +346,7 @@ Valor=140
 Crucial=1
 Materiales=386-0-0-0
 CantMateriales=2-0-0-0
-SkHerreria=10
+SkHerreria=1
 
 [OBJ16] 'CASA RUINAS
 Name=Puerta de madera abierta 2
@@ -1995,7 +1995,7 @@ Valor=6
 Crucial=0
 Materiales=58-0-0-0
 CantMateriales=3-0-0-0
-SkCarpinteria=5
+SkCarpinteria=1
 
 [OBJ164]
 Name=Espada Corta

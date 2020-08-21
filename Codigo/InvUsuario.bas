@@ -2258,14 +2258,14 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
 
 End Sub
 
-Sub EnivarArmasConstruibles(ByVal UserIndex As Integer)
+Sub EnviarHerreriaConstruibles(ByVal UserIndex As Integer)
     '***************************************************
     'Author: Unknown
     'Last Modification: -
     '
     '***************************************************
 
-    Call WriteBlacksmithWeapons(UserIndex)
+    Call WriteBlacksmith(UserIndex)
 
 End Sub
  
@@ -2277,17 +2277,6 @@ Sub EnivarObjConstruibles(ByVal UserIndex As Integer)
     '***************************************************
 
     Call WriteInitCarpenting(UserIndex)
-
-End Sub
-
-Sub EnivarArmadurasConstruibles(ByVal UserIndex As Integer)
-    '***************************************************
-    'Author: Unknown
-    'Last Modification: -
-    '
-    '***************************************************
-
-    Call WriteBlacksmithArmors(UserIndex)
 
 End Sub
 

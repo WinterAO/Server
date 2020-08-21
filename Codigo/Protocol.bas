@@ -99,8 +99,7 @@ Private Enum ServerPacketID
     ChangeBankSlot               ' SBO
     ChangeSpellSlot              ' SHS
     Atributes                    ' ATR
-    BlacksmithWeapons            ' LAH
-    BlacksmithArmors             ' LAR
+    Blacksmith
     InitCarpenting               ' OBR
     RestOK                       ' DOK
     errorMsg                     ' ERR
@@ -3632,8 +3631,7 @@ Private Sub HandleWorkLeftClick(ByVal UserIndex As Integer)
                 
                 If .flags.TargetObj > 0 Then
                     If ObjData(.flags.TargetObj).OBJType = eOBJType.otYunque Then
-                        Call EnivarArmasConstruibles(UserIndex)
-                        Call EnivarArmadurasConstruibles(UserIndex)
+                        Call EnviarHerreriaConstruibles(UserIndex)
                     Else
                         Call WriteConsoleMsg(UserIndex, "Ahi no hay ningUn yunque.", FontTypeNames.FONTTYPE_INFO)
 
@@ -18944,7 +18942,7 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteBlacksmithWeapons(ByVal UserIndex As Integer)
+Public Sub WriteBlacksmith(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -18953,125 +18951,57 @@ Public Sub WriteBlacksmithWeapons(ByVal UserIndex As Integer)
     '***************************************************
     On Error GoTo errHandler
 
-    Dim i              As Long
-    Dim j              As Byte
-    Dim obj            As ObjData
-    Dim validIndexes() As Integer
-    Dim Count          As Integer
+    Dim i                           As Long
+    Dim j                           As Byte
+    Dim obj(1 To MAXUSERRECETAS)    As Long
+    Dim validIndexes()              As Integer
+    Dim Count                       As Integer
+    Dim SlotProfesion               As Integer
     
-    ReDim validIndexes(1 To UBound(ArmasHerrero()))
+    With UserList(UserIndex)
     
-    With UserList(UserIndex).outgoingData
-        Call .WriteByte(ServerPacketID.BlacksmithWeapons)
+        'Obtenemos el slot de la profesion
+        SlotProfesion = ConoceProfesion(UserIndex, eSkill.Herreria)
         
-        For i = 1 To UBound(ArmasHerrero())
+        'Si por un casual nos llegara que no la conoce...
+        If SlotProfesion < 0 Then Exit Sub
+    
+        Call .outgoingData.WriteByte(ServerPacketID.Blacksmith)
+        
+        For i = 1 To MAXUSERRECETAS
 
             ' Can the user create this object? If so add it to the list....
-            If ObjData(ArmasHerrero(i)).SkHerreria <= UserList(UserIndex).Stats.UserSkills(eSkill.Herreria) Then
+            If .Profesion(SlotProfesion).Recetas(i) > 0 Then
                 Count = Count + 1
-                validIndexes(Count) = i
+                obj(Count) = .Profesion(SlotProfesion).Recetas(i)
 
             End If
 
         Next i
         
         ' Write the number of objects in the list
-        Call .WriteInteger(Count)
+        Call .outgoingData.WriteInteger(Count)
         
         ' Write the needed data of each object
         For i = 1 To Count
-            obj = ObjData(ArmasHerrero(validIndexes(i)))
-            Call .WriteASCIIString(obj.Name)
-            Call .WriteLong(obj.GrhIndex)
+            Call .outgoingData.WriteASCIIString(ObjData(obj(i)).Name)
+            Call .outgoingData.WriteLong(ObjData(obj(i)).GrhIndex)
             
             For j = 1 To MAXMATERIALES
-                If obj.Materiales(j) > 0 Then
-                    Call .WriteLong(ObjData(obj.Materiales(j)).GrhIndex)
-                    Call .WriteInteger(obj.CantMateriales(j))
-                    Call .WriteASCIIString(ObjData(obj.Materiales(j)).Name)
+                If ObjData(obj(i)).Materiales(j) > 0 Then
+                    Call .outgoingData.WriteLong(ObjData(ObjData(obj(i)).Materiales(j)).GrhIndex)
+                    Call .outgoingData.WriteInteger(ObjData(obj(i)).CantMateriales(j))
+                    Call .outgoingData.WriteASCIIString(ObjData(ObjData(obj(i)).Materiales(j)).Name)
+                    
                 Else
-                    Call .WriteLong(0)
-                    Call .WriteInteger(0)
-                    Call .WriteASCIIString("Nada")
+                    Call .outgoingData.WriteLong(0)
+                    Call .outgoingData.WriteInteger(0)
+                    Call .outgoingData.WriteASCIIString("Nada")
+                    
                 End If
             Next j
             
-           Call .WriteInteger(ArmasHerrero(validIndexes(i)))
-        Next i
-
-    End With
-
-    Exit Sub
-
-errHandler:
-
-    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(UserIndex)
-        Resume
-
-    End If
-
-End Sub
-
-''
-' Writes the "BlacksmithArmors" message to the given user's outgoing data buffer.
-'
-' @param    UserIndex User to which the message is intended.
-' @remarks  The data is not actually sent until the buffer is properly flushed.
-
-Public Sub WriteBlacksmithArmors(ByVal UserIndex As Integer)
-
-    '***************************************************
-    'Author: Juan Martin Sotuyo Dodero (Maraxus)
-    'Last Modification: 04/15/2008 (NicoNZ) Habia un error al fijarse los skills del personaje
-    'Writes the "BlacksmithArmors" message to the given user's outgoing data buffer
-    '***************************************************
-    On Error GoTo errHandler
-
-    Dim i              As Long
-    Dim j              As Byte
-    Dim obj            As ObjData
-    Dim validIndexes() As Integer
-    Dim Count          As Integer
-    
-    ReDim validIndexes(1 To UBound(ArmadurasHerrero()))
-    
-    With UserList(UserIndex).outgoingData
-        Call .WriteByte(ServerPacketID.BlacksmithArmors)
-        
-        For i = 1 To UBound(ArmadurasHerrero())
-
-            ' Can the user create this object? If so add it to the list....
-            If ObjData(ArmadurasHerrero(i)).SkHerreria <= UserList(UserIndex).Stats.UserSkills(eSkill.Herreria) Then
-                Count = Count + 1
-                validIndexes(Count) = i
-
-            End If
-
-        Next i
-        
-        ' Write the number of objects in the list
-        Call .WriteInteger(Count)
-        
-        ' Write the needed data of each object
-        For i = 1 To Count
-            obj = ObjData(ArmadurasHerrero(validIndexes(i)))
-            Call .WriteASCIIString(obj.Name)
-            Call .WriteLong(obj.GrhIndex)
-            
-            For j = 1 To MAXMATERIALES
-                If obj.Materiales(j) > 0 Then
-                    Call .WriteLong(ObjData(obj.Materiales(j)).GrhIndex)
-                    Call .WriteInteger(obj.CantMateriales(j))
-                    Call .WriteASCIIString(ObjData(obj.Materiales(j)).Name)
-                Else
-                    Call .WriteLong(0)
-                    Call .WriteInteger(0)
-                    Call .WriteASCIIString("Nada")
-                End If
-            Next j
-            
-            Call .WriteInteger(ArmadurasHerrero(validIndexes(i)))
+            Call .outgoingData.WriteInteger(obj(i))
         Next i
 
     End With

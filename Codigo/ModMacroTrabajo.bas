@@ -210,11 +210,20 @@ Private Function PuedeCarpinteria(ByVal UserIndex As Integer, ByVal Cantidad As 
 'Autor: Lorwik
 'Requisitos para construir carpinteria
 '************************************
+    Dim SlotProfesion As Integer
 
     With UserList(UserIndex)
+    
+        SlotProfesion = ConoceProfesion(UserIndex, eSkill.Carpinteria)
         
-        If ConoceProfesion(UserIndex, eSkill.Carpinteria) < 0 Then
+        If SlotProfesion < 0 Then
             Call WriteConsoleMsg(UserIndex, "No conoces esa profesion.", FontTypeNames.FONTTYPE_INFOBOLD)
+            PuedeCarpinteria = False
+            Exit Function
+        End If
+        
+        '¿Intento de Hack?
+        If Not TieneReceta(Item, UserIndex, SlotProfesion) Then
             PuedeCarpinteria = False
             Exit Function
         End If
@@ -285,15 +294,24 @@ Private Function PuedeHerreria(ByVal UserIndex As Integer, ByVal Cantidad As Int
 'Autor: Lorwik
 'Requisitos para construir Herreria
 '************************************
-
+    Dim SlotProfesion As Integer
+    
     With UserList(UserIndex)
     
-        If ConoceProfesion(UserIndex, eSkill.Herreria) < 0 Then
+        SlotProfesion = ConoceProfesion(UserIndex, eSkill.Herreria)
+    
+        If SlotProfesion < 0 Then
             Call WriteConsoleMsg(UserIndex, "No conoces esa profesion.", FontTypeNames.FONTTYPE_INFOBOLD)
             PuedeHerreria = False
             Exit Function
         End If
-    
+        
+        '¿Intento de Hack?
+        If Not TieneReceta(Item, UserIndex, SlotProfesion) Then
+            PuedeHerreria = False
+            Exit Function
+        End If
+        
         '¿El item es inferior a 0 (un item invalido?
         If Item < 1 Then
             Call DejardeTrabajar(UserIndex)
@@ -324,6 +342,7 @@ Private Function PuedeHerreria(ByVal UserIndex As Integer, ByVal Cantidad As Int
         End If
         
         If Not PuedeConstruirItemHerrero(UserIndex, Item) Then
+            Call WriteConsoleMsg(UserIndex, "No puedes construir ese objeto, te faltan materiales o la habilidad para poder construirlo.", FontTypeNames.FONTTYPE_INFO)
             Call DejardeTrabajar(UserIndex)
             PuedeHerreria = False
             Exit Function
@@ -377,29 +396,43 @@ Debug.Print Tarea
         
             'Pesca con caña
             Case eMacroTrabajo.PESCAR
-                If PuedePescar(UserIndex) Then _
+                If PuedePescar(UserIndex) Then
                     Call DoPescar(UserIndex, False)
+                Else
+                    Call DejardeTrabajar(UserIndex)
+                End If
             
             'Pesca con red
             Case eMacroTrabajo.PescarRed
-                If PuedePescar(UserIndex) Then _
+                If PuedePescar(UserIndex) Then
                     Call DoPescar(UserIndex, True)
+                Else
+                    Call DejardeTrabajar(UserIndex)
+                End If
                     
             'Mineria, Talar
             Case eMacroTrabajo.Minando, eMacroTrabajo.Talando
-                If PuedeExtraer(UserIndex, Tarea) Then _
+                If PuedeExtraer(UserIndex, Tarea) Then
                     Call DoExtraer(UserIndex, Tarea)
-                    
+                Else
+                    Call DejardeTrabajar(UserIndex)
+                End If
+                
             'Lingotear
             Case eMacroTrabajo.Lingotear
-                If PuedeLingotear(UserIndex) Then _
+                If PuedeLingotear(UserIndex) Then
                     Call FundirMineral(UserIndex)
+                Else
+                    Call DejardeTrabajar(UserIndex)
+                End If
 
             'Carpinteria
             Case eMacroTrabajo.Carpinteando
                 If PuedeCarpinteria(UserIndex, .flags.MacroCountObj, .flags.MacroTrabajaObj) And .flags.MacroCountObj > 0 Then
                     Call CarpinteroConstruirItem(UserIndex, .flags.MacroTrabajaObj)
                     .flags.MacroCountObj = .flags.MacroCountObj - 1 'Restamos en 1 a la cantidad de objetos que queremos construir
+                Else
+                    Call DejardeTrabajar(UserIndex)
                 End If
                 
             'Herreria
@@ -407,6 +440,8 @@ Debug.Print Tarea
                 If PuedeHerreria(UserIndex, .flags.MacroCountObj, .flags.MacroTrabajaObj) And .flags.MacroCountObj > 0 Then
                     Call HerreroConstruirItem(UserIndex, .flags.MacroTrabajaObj)
                     .flags.MacroCountObj = .flags.MacroCountObj - 1 'Restamos en 1 a la cantidad de objetos que queremos construir
+                Else
+                    Call DejardeTrabajar(UserIndex)
                 End If
             
         End Select

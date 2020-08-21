@@ -332,7 +332,7 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=2
-NROITEMS=18
+NROITEMS=22
 Obj1=389-1000 	'Martillo de Herrero
 Obj2=1009-10000 'Cuchillas
 Obj3=15-1000 	'Daga
@@ -351,6 +351,10 @@ Obj15=159-1000 	'Hacha de Barbaro
 Obj16=399-1000 	'Cimitarra
 Obj17=990-1000 	'Mazo del Juicio
 Obj18=403-1000 	'Espada de Plata
+Obj19=562-1000  'Plano de Daga envenenada
+Obj20=563-1000  'Plano de Daga +1
+Obj21=564-1000  'Plano de Daga +2
+Obj22=565-1000  'Plano de Daga 3
 BackUp=1
 
 [NPC16] 'Sastre Ramx
