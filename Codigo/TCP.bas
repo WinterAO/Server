@@ -1752,6 +1752,7 @@ Sub ResetUserFlags(ByVal UserIndex As Integer)
         .Subastando = False
         .ProfInstruyendo = 0
         .Instruyendo = 0
+        .Trabajando = 0
 
         Call ResetCasteo(UserIndex)
         

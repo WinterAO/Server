@@ -467,6 +467,8 @@ Public Const MARTILLO_HERRERO               As Integer = 389
 
 Public Const SERRUCHO_CARPINTERO            As Integer = 198
 
+Public Const KIT_DE_COSTURA                 As Integer = 1298
+
 Public Const ObjArboles                     As Integer = 4
 
 Public Const RED_PESCA                      As Integer = 543
@@ -1508,6 +1510,8 @@ Public Type UserFlags
     
     ProfInstruyendo As Byte
     Instruyendo As Byte
+    
+    Trabajando As Byte
     
 End Type
 

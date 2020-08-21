@@ -6004,7 +6004,8 @@ PoderAtaque=0
 PoderEvasion=0
 Nroitems=1
 BackUp=0
-NROITEMS=0
+NROITEMS=1
+Obj1=1302-2-80
 
 [NPC868] 
 Name=Octopus
@@ -6584,7 +6585,8 @@ PoderAtaque=260
 PoderEvasion=150
 Nroitems=1
 BackUp=0
-NROITEMS=0
+NROITEMS=1
+Obj1=1302-100-100
 
 ##############################################
 ##############NPC PRETORIANOS#################

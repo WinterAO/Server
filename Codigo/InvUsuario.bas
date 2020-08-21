@@ -1666,7 +1666,22 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                             
                             ' Lo tiene equipado?
                             If .Invent.WeaponEqpObjIndex = ObjIndex Then
-                                Call EnivarObjConstruibles(UserIndex)
+                                Call WriteInitTrabajo(UserIndex, eSkill.Carpinteria)
+                            Else
+                                Call WriteConsoleMsg(UserIndex, "Debes tener equipada la herramienta para trabajar.", FontTypeNames.FONTTYPE_INFO)
+
+                            End If
+                            
+                        Case KIT_DE_COSTURA
+                            If ConoceProfesion(UserIndex, eSkill.Sastreria) < 0 Then
+                                Call WriteConsoleMsg(UserIndex, "No conoces esa profesion.", FontTypeNames.FONTTYPE_INFOBOLD)
+                                Exit Sub
+                            End If
+                            
+                            ' Lo tiene equipado?
+                            If .Invent.WeaponEqpObjIndex = ObjIndex Then
+                                Call WriteInitTrabajo(UserIndex, eSkill.Sastreria)
+                                
                             Else
                                 Call WriteConsoleMsg(UserIndex, "Debes tener equipada la herramienta para trabajar.", FontTypeNames.FONTTYPE_INFO)
 
@@ -1677,7 +1692,7 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                             If ObjData(ObjIndex).SkHerreria > 0 Then
                                 ' Solo objetos que pueda hacer el herrero
                                 Call WriteMultiMessage(UserIndex, eMessages.WorkRequestTarget, FundirMetal) 'Call WriteWorkRequestTarget(UserIndex, FundirMetal)
-
+                                Exit Sub
                             End If
 
                     End Select
@@ -2255,28 +2270,6 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
             End Select
     
     End With
-
-End Sub
-
-Sub EnviarHerreriaConstruibles(ByVal UserIndex As Integer)
-    '***************************************************
-    'Author: Unknown
-    'Last Modification: -
-    '
-    '***************************************************
-
-    Call WriteBlacksmith(UserIndex)
-
-End Sub
- 
-Sub EnivarObjConstruibles(ByVal UserIndex As Integer)
-    '***************************************************
-    'Author: Unknown
-    'Last Modification: -
-    '
-    '***************************************************
-
-    Call WriteInitCarpenting(UserIndex)
 
 End Sub
 

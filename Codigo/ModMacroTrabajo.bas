@@ -21,7 +21,7 @@ Public Enum eMacroTrabajo '(El 0 es no activado)
     Herreando = 21
     Sastreando = 22
     Plantitas = 23
-    Alminineando = 24
+    CreandoPotis = 24
 End Enum
 
 Public Function PuedePescar(ByVal UserIndex As Integer) As Boolean
@@ -217,6 +217,11 @@ Private Function PuedeCarpinteria(ByVal UserIndex As Integer, ByVal Cantidad As 
 
     With UserList(UserIndex)
     
+        If .flags.Trabajando <> eSkill.Carpinteria Then
+            PuedeCarpinteria = False
+            Exit Function
+        End If
+    
         SlotProfesion = ConoceProfesion(UserIndex, eSkill.Carpinteria)
         
         If SlotProfesion < 0 Then
@@ -301,7 +306,12 @@ Private Function PuedeHerreria(ByVal UserIndex As Integer, ByVal Cantidad As Int
     
     With UserList(UserIndex)
     
-        SlotProfesion = ConoceProfesion(UserIndex, eSkill.Herreria)
+        If .flags.Trabajando <> eSkill.herreria Then
+            PuedeHerreria = False
+            Exit Function
+        End If
+    
+        SlotProfesion = ConoceProfesion(UserIndex, eSkill.herreria)
     
         If SlotProfesion < 0 Then
             Call WriteConsoleMsg(UserIndex, "No conoces esa profesion.", FontTypeNames.FONTTYPE_INFOBOLD)
@@ -368,6 +378,48 @@ Private Function PuedeHerreria(ByVal UserIndex As Integer, ByVal Cantidad As Int
     End With
 End Function
 
+Public Sub ComenzarCrafteo(ByVal UserIndex As Integer, ByVal Item As Long, ByVal Cantidad As Integer, ByVal Profesion As Byte)
+'************************************************
+'Autor: Lorwik
+'Ultima modificacion: 21/08/2020
+'Gestiona todo para poder empezar a caftear
+'************************************************
+
+    With UserList(UserIndex)
+    
+        If Not IntervaloPermiteTrabajar(UserIndex) Then Exit Sub
+    
+        Select Case Profesion
+        
+            Case eSkill.herreria
+            
+                If ObjData(Item).SkHerreria = 0 Then Exit Sub
+            
+            Case eSkill.Carpinteria
+                If ObjData(Item).SkCarpinteria = 0 Then Exit Sub
+                
+            Case eSkill.Herboristeria
+                'If ObjData(Item).SkAlquimia = 0 Then Exit Sub
+            
+            Case eSkill.Herboristeria
+                'If ObjData(Item).SkHerboristeria = 0 Then Exit Sub
+            
+        End Select
+        
+        'Comprobamos que no se encuentra trabajando, para prevenir bugs y hacks
+        If .flags.MacroTrabajo = 0 Then
+            .flags.MacroTrabajaObj = Item
+            .flags.MacroCountObj = Cantidad
+            .flags.MacroTrabajo = Profesion
+            Call WriteConsoleMsg(UserIndex, "Comienzas a trabajar.", FontTypeNames.FONTTYPE_INFO)
+        Else
+            Call WriteConsoleMsg(UserIndex, "Ya te encuentras trabajando.", FontTypeNames.FONTTYPE_INFO)
+        End If
+
+    End With
+    
+End Sub
+
 Public Sub DejardeTrabajar(ByVal UserIndex)
 '************************************************
 'Autor: Lorwik
@@ -414,7 +466,7 @@ Debug.Print Tarea
                 End If
                     
             'Mineria, Talar
-            Case eMacroTrabajo.Minando, eMacroTrabajo.Talando
+            Case eMacroTrabajo.Minando, eMacroTrabajo.Talando, eMacroTrabajo.Plantitas
                 If PuedeExtraer(UserIndex, Tarea) Then
                     Call DoExtraer(UserIndex, Tarea)
                 Else
@@ -451,5 +503,3 @@ Debug.Print Tarea
     End With
         
 End Sub
-
-

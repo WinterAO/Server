@@ -113,6 +113,9 @@ Skills Profesiones:
 '    Mineria = 19
 '    Carpinteria = 20
 '    Herreria = 21
+'    Sastreria = 22
+'    Herboristeria = 23
+'    Alquimia = 24
 
 <<<< ITEMS CONSTRUIBLES >>>>
 
@@ -141,7 +144,7 @@ Madera Magica: 1006
 [INIT]
 'aca va el numero de OBJ mas alto, NO la cantidad de OBJs.
 'esto sirve para que los GMS puedan ver la lista completa de items para crear en una ventanita.
-NumOBJs=1296
+NumOBJs=1305
 
 
 [OBJ1]
@@ -16106,3 +16109,88 @@ Agarrable=0
 Valor=0
 RecetaIndex=476 'Indice del objeto
 Profesion=20 'Skill de la profesion
+
+[OBJ1297]
+Name=Tijeras de herborista
+GrhIndex=5739
+ObjType=2
+Agarrable=0
+Anim=2
+RazaEnanaAnim=2
+MinHit=2
+MaxHit=2
+Valor=140
+Crucial=1
+Materiales=386-0-0-0
+CantMateriales=2-0-0-0
+SkHerreria=20
+Herramienta=23-1
+
+[OBJ1298]
+Name=Kit de costura
+GrhIndex=5729
+ObjType=2
+Agarrable=0
+Anim=2
+RazaEnanaAnim=2
+MinHit=2
+MaxHit=2
+Valor=140
+Crucial=1
+Herramienta=22-1
+
+[OBJ1299]
+Name=Hilo
+GrhIndex=5745
+ObjType=14
+Agarrable=0
+Valor=500
+Crucial=0
+
+[OBJ1300]
+Name=Hilo Burdo
+GrhIndex=5732
+ObjType=14
+Agarrable=0
+Valor=50
+Crucial=0
+
+[OBJ1301]
+Name=Ovillo de Lana
+GrhIndex=5731
+ObjType=14
+Agarrable=0
+Valor=50
+Crucial=0
+
+[OBJ1302]
+Name=Escama de dragon
+GrhIndex=5741
+ObjType=14
+Agarrable=0
+Valor=50
+Crucial=0
+
+[OBJ1303]
+Name=Tejido de Tela
+GrhIndex=5742
+ObjType=14
+Agarrable=0
+Valor=50
+Crucial=0
+
+[OBJ1304]
+Name=Tejido de Tela Mágico
+GrhIndex=5744
+ObjType=14
+Agarrable=0
+Valor=50
+Crucial=0
+
+[OBJ1305]
+Name=Hilo Mágico
+GrhIndex=5746
+ObjType=14
+Agarrable=0
+Valor=50
+Crucial=0
