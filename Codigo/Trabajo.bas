@@ -440,7 +440,7 @@ Public Function PuedeConstruirItemHerrero(ByVal UserIndex As Integer, _
     '24/08/2008: ZaMa - Validates if the player has the required skill
     '16/11/2009: ZaMa - Validates if the player has the required amount of materials, depending on the number of items to make
     '***************************************************
-    PuedeConstruirItemHerrero = TieneMateriales(UserIndex, ItemIndex) And UserList(UserIndex).Stats.UserSkills(eSkill.Herreria) >= ObjData(ItemIndex).SkHerreria
+    PuedeConstruirItemHerrero = TieneMateriales(UserIndex, ItemIndex) And UserList(UserIndex).Stats.UserSkills(eSkill.herreria) >= ObjData(ItemIndex).SkHerreria
 
 End Function
 
@@ -505,96 +505,65 @@ Public Sub HerreroConstruirItem(ByVal UserIndex As Integer, ByVal ItemIndex As I
             End If
 
         End If
-    
-        If PuedeConstruirHerreria(ItemIndex) Then
         
-            'Sacamos energia
-            'Chequeamos que tenga los puntos antes de sacarselos
-            If .Stats.MinSta >= GASTO_ENERGIA Then
-                .Stats.MinSta = .Stats.MinSta - GASTO_ENERGIA
-                Call WriteUpdateSta(UserIndex)
-            Else
-                Call WriteConsoleMsg(UserIndex, "No tienes suficiente energia.", FontTypeNames.FONTTYPE_INFO)
-                Call DejardeTrabajar(UserIndex) 'Paramos el macro
-                Exit Sub
+        'Sacamos energia
+        'Chequeamos que tenga los puntos antes de sacarselos
+        If .Stats.MinSta >= GASTO_ENERGIA Then
+            .Stats.MinSta = .Stats.MinSta - GASTO_ENERGIA
+            Call WriteUpdateSta(UserIndex)
+        Else
+            Call WriteConsoleMsg(UserIndex, "No tienes suficiente energia.", FontTypeNames.FONTTYPE_INFO)
+            Call DejardeTrabajar(UserIndex) 'Paramos el macro
+            Exit Sub
 
-            End If
-
-        
-            Call QuitarMateriales(UserIndex, ItemIndex)
-            ' AGREGAR FX
-        
-            'Mensajes de exito
-            Select Case ObjData(ItemIndex).OBJType
-                Case eOBJType.otWeapon
-                    Call WriteConsoleMsg(UserIndex, "Has construido el arma!.", FontTypeNames.FONTTYPE_INFO)
-                    
-                Case eOBJType.otEscudo
-                    Call WriteConsoleMsg(UserIndex, "Has construido el escudo!.", FontTypeNames.FONTTYPE_INFO)
-                    
-                Case eOBJType.otCasco
-                    Call WriteConsoleMsg(UserIndex, "Has construido el casco!.", FontTypeNames.FONTTYPE_INFO)
-                    
-                Case eOBJType.otArmadura
-                    Call WriteConsoleMsg(UserIndex, "Has construido la armadura!.", FontTypeNames.FONTTYPE_INFO)
-            End Select
-        
-            Dim MiObj As obj
-        
-            MiObj.Amount = 1
-            MiObj.ObjIndex = ItemIndex
-
-            If Not MeterItemEnInventario(UserIndex, MiObj) Then
-                Call TirarItemAlPiso(.Pos, MiObj)
-
-            End If
-        
-            'Log de construccion de Items. Pablo (ToxicWaste) 10/09/07
-            If ObjData(MiObj.ObjIndex).Log = 1 Then
-                Call LogDesarrollo(.Name & " ha construido " & MiObj.Amount & " " & ObjData(MiObj.ObjIndex).Name)
-
-            End If
-        
-            Call SubirSkill(UserIndex, eSkill.Herreria, True)
-            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_TRABAJO_HERRERO, .Pos.X, .Pos.Y))
-        
-            If Not criminal(UserIndex) Then
-                .Reputacion.PlebeRep = .Reputacion.PlebeRep + vlProleta
-
-                If .Reputacion.PlebeRep > MAXREP Then .Reputacion.PlebeRep = MAXREP
-
-            End If
-        
-            .Counters.Trabajando = .Counters.Trabajando + 1
-            
         End If
+
+        
+        Call QuitarMateriales(UserIndex, ItemIndex)
+        ' AGREGAR FX
+        
+        'Mensajes de exito
+        Select Case ObjData(ItemIndex).OBJType
+            Case eOBJType.otWeapon
+                Call WriteConsoleMsg(UserIndex, "Has construido el arma!.", FontTypeNames.FONTTYPE_INFO)
+                    
+            Case eOBJType.otEscudo
+                Call WriteConsoleMsg(UserIndex, "Has construido el escudo!.", FontTypeNames.FONTTYPE_INFO)
+                    
+            Case eOBJType.otCasco
+                Call WriteConsoleMsg(UserIndex, "Has construido el casco!.", FontTypeNames.FONTTYPE_INFO)
+                    
+            Case eOBJType.otArmadura
+                Call WriteConsoleMsg(UserIndex, "Has construido la armadura!.", FontTypeNames.FONTTYPE_INFO)
+        End Select
+        
+        Dim MiObj As obj
+        
+        MiObj.Amount = 1
+        MiObj.ObjIndex = ItemIndex
+
+        If Not MeterItemEnInventario(UserIndex, MiObj) Then _
+            Call TirarItemAlPiso(.Pos, MiObj)
+        
+        'Log de construccion de Items. Pablo (ToxicWaste) 10/09/07
+        If ObjData(MiObj.ObjIndex).Log = 1 Then _
+            Call LogDesarrollo(.Name & " ha construido " & MiObj.Amount & " " & ObjData(MiObj.ObjIndex).Name)
+        
+        Call SubirSkill(UserIndex, eSkill.herreria, True)
+        Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_TRABAJO_HERRERO, .Pos.X, .Pos.Y))
+        
+        If Not criminal(UserIndex) Then
+            .Reputacion.PlebeRep = .Reputacion.PlebeRep + vlProleta
+
+            If .Reputacion.PlebeRep > MAXREP Then .Reputacion.PlebeRep = MAXREP
+
+        End If
+        
+        .Counters.Trabajando = .Counters.Trabajando + 1
 
     End With
 
 End Sub
-
-Public Function PuedeConstruirCarpintero(ByVal ItemIndex As Integer) As Boolean
-
-    '***************************************************
-    'Author: Unknown
-    'Last Modification: -
-    '
-    '***************************************************
-    Dim i As Long
-
-    For i = 1 To UBound(ObjCarpintero)
-
-        If ObjCarpintero(i) = ItemIndex Then
-            PuedeConstruirCarpintero = True
-            Exit Function
-
-        End If
-
-    Next i
-
-    PuedeConstruirCarpintero = False
-
-End Function
 
 Public Sub CarpinteroConstruirItem(ByVal UserIndex As Integer, ByVal ItemIndex As Integer)
 
@@ -638,7 +607,7 @@ Public Sub CarpinteroConstruirItem(ByVal UserIndex As Integer, ByVal ItemIndex A
 
         End If
     
-        If .Stats.UserSkills(eSkill.Carpinteria) >= ObjData(ItemIndex).SkCarpinteria And PuedeConstruirCarpintero(ItemIndex) Then
+        If .Stats.UserSkills(eSkill.Carpinteria) >= ObjData(ItemIndex).SkCarpinteria Then
            
             'Sacamos energia
             'Chequeamos que tenga los puntos antes de sacarselos
@@ -2783,11 +2752,17 @@ Public Sub AccionProfesion(ByVal UserIndex As Integer)
             'Si es una profesion de crafting le damos una receta inicial:
             Select Case .flags.ProfInstruyendo
             
-                Case eSkill.Herreria
-                    .Profesion(Slot).Recetas(1) = 15
+                Case eSkill.herreria
+                    .Profesion(Slot).Recetas(1) = 15 'Daga
                     
                 Case eSkill.Carpinteria
-                    .Profesion(Slot).Recetas(1) = 163
+                    .Profesion(Slot).Recetas(1) = 163 'Cuchara
+                    
+                Case eSkill.Alquimia
+                    .Profesion(Slot).Recetas(1) = 166 'Pocion Violeta
+                    
+                Case eSkill.Sastreria
+                    .Profesion(Slot).Recetas(1) = 641 'Ropa de Pordiosero
             
             End Select
             

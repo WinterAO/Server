@@ -37,7 +37,7 @@ Option Explicit
 
 Global LeerNPCs As clsIniManager
 
-Sub DarCuerpoDesnudo(ByVal userIndex As Integer, _
+Sub DarCuerpoDesnudo(ByVal UserIndex As Integer, _
                      Optional ByVal Mimetizado As Boolean = False)
     '***************************************************
     'Autor: Nacho (Integer)
@@ -48,7 +48,7 @@ Sub DarCuerpoDesnudo(ByVal userIndex As Integer, _
 
     Dim MiCuerpoDesnudo As Integer
 
-    With UserList(userIndex)
+    With UserList(UserIndex)
 
         MiCuerpoDesnudo = CuerpoDesnudo(.Genero, .Raza)
     
@@ -213,7 +213,7 @@ Private Function HayLava(ByVal Map As Integer, _
 
 End Function
 
-Function HaySacerdote(ByVal userIndex As Integer) As Boolean
+Function HaySacerdote(ByVal UserIndex As Integer) As Boolean
     '******************************
     'Adaptacion a 13.0: Kaneidra
     'Last Modification: 15/05/2012
@@ -221,7 +221,7 @@ Function HaySacerdote(ByVal userIndex As Integer) As Boolean
  
     Dim X As Integer, Y As Integer
     
-    With UserList(userIndex)
+    With UserList(UserIndex)
     
         For Y = .Pos.Y - MinYBorder + 1 To .Pos.Y + MinYBorder - 1
             For X = .Pos.X - MinXBorder + 1 To .Pos.X + MinXBorder - 1
@@ -247,7 +247,7 @@ Function HaySacerdote(ByVal userIndex As Integer) As Boolean
  
 End Function
 
-Sub EnviarSpawnList(ByVal userIndex As Integer)
+Sub EnviarSpawnList(ByVal UserIndex As Integer)
     '***************************************************
     'Author: Unknown
     'Last Modification: -
@@ -263,7 +263,7 @@ Sub EnviarSpawnList(ByVal userIndex As Integer)
         npcNames(K) = SpawnList(K).NpcName
     Next K
     
-    Call WriteSpawnList(userIndex, npcNames())
+    Call WriteSpawnList(UserIndex, npcNames())
 
 End Sub
 
@@ -329,15 +329,6 @@ Sub Main()
     ' Hechizos.dat
     frmCargando.Label1(2).Caption = "Cargando Hechizos.Dat"
     Call CargarHechizos
-        
-    ' Objetos de Herreria
-    frmCargando.Label1(2).Caption = "Cargando Objetos de Herreria"
-    Call LoadArmasHerreria
-    Call LoadArmadurasHerreria
-    
-    ' Objetos de Capinteria
-    frmCargando.Label1(2).Caption = "Cargando Objetos de Carpinteria"
-    Call LoadObjCarpintero
     
     ' Objetos del Artesano
     frmCargando.Label1(2).Caption = "Cargando Objetos del Artesano"
@@ -493,7 +484,7 @@ Private Sub LoadConstants()
     SkillsNames(eSkill.pesca) = "Pesca"
     SkillsNames(eSkill.Mineria) = "Mineria"
     SkillsNames(eSkill.Carpinteria) = "Carpinteria"
-    SkillsNames(eSkill.Herreria) = "Herreria"
+    SkillsNames(eSkill.herreria) = "Herreria"
     SkillsNames(eSkill.Liderazgo) = "Liderazgo"
     SkillsNames(eSkill.Domar) = "Domar animales"
     SkillsNames(eSkill.Proyectiles) = "Combate a distancia"
@@ -804,7 +795,7 @@ Sub Restart()
   
 End Sub
 
-Public Function Intemperie(ByVal userIndex As Integer) As Boolean
+Public Function Intemperie(ByVal UserIndex As Integer) As Boolean
     '**************************************************************
     'Author: Unknown
     'Last Modify Date: 15/11/2009
@@ -812,7 +803,7 @@ Public Function Intemperie(ByVal userIndex As Integer) As Boolean
     '23/11/2009: ZaMa - Optimizacion de codigo.
     '**************************************************************
 
-    With UserList(userIndex)
+    With UserList(UserIndex)
 
         If MapInfo(.Pos.Map).Zona <> "DUNGEON" Then
             If MapData(.Pos.Map, .Pos.X, .Pos.Y).Trigger <> eTrigger.BAJOTECHO And _
@@ -827,11 +818,11 @@ Public Function Intemperie(ByVal userIndex As Integer) As Boolean
     End With
     
     'En las arenas no te afecta la lluvia
-    If IsArena(userIndex) Then Intemperie = False
+    If IsArena(UserIndex) Then Intemperie = False
 
 End Function
 
-Public Sub TiempoInvocacion(ByVal userIndex As Integer)
+Public Sub TiempoInvocacion(ByVal UserIndex As Integer)
     '***************************************************
     'Author: Unknown
     'Last Modification: -
@@ -842,7 +833,7 @@ Public Sub TiempoInvocacion(ByVal userIndex As Integer)
 
     For i = 1 To MAXMASCOTAS
 
-        With UserList(userIndex)
+        With UserList(UserIndex)
 
             If .MascotasIndex(i) > 0 Then
                 If Npclist(.MascotasIndex(i)).Contadores.TiempoExistencia > 0 Then
@@ -860,7 +851,7 @@ Public Sub TiempoInvocacion(ByVal userIndex As Integer)
 
 End Sub
 
-Public Sub EfectoFrio(ByVal userIndex As Integer)
+Public Sub EfectoFrio(ByVal UserIndex As Integer)
 
     '***************************************************
     'Autor: Unkonwn
@@ -870,29 +861,29 @@ Public Sub EfectoFrio(ByVal userIndex As Integer)
     '***************************************************
     Dim modifi As Integer
     
-    With UserList(userIndex)
+    With UserList(UserIndex)
 
         If .Counters.Frio < IntervaloFrio Then
             .Counters.Frio = .Counters.Frio + 1
         Else '
 
             If TerrainStringToByte(MapInfo(.Pos.Map).Terreno) = eTerrain.terrain_nieve Then
-                Call WriteConsoleMsg(userIndex, "Estas muriendo de frio, abrigate o moriras!!", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "Estas muriendo de frio, abrigate o moriras!!", FontTypeNames.FONTTYPE_INFO)
                 modifi = Porcentaje(.Stats.MaxHp, 5)
                 .Stats.MinHp = .Stats.MinHp - modifi
                 
                 If .Stats.MinHp < 1 Then
-                    Call WriteConsoleMsg(userIndex, "Has muerto de frio!!", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "Has muerto de frio!!", FontTypeNames.FONTTYPE_INFO)
                     .Stats.MinHp = 0
-                    Call UserDie(userIndex)
+                    Call UserDie(UserIndex)
 
                 End If
                 
-                Call WriteUpdateHP(userIndex)
+                Call WriteUpdateHP(UserIndex)
             Else
                 modifi = Porcentaje(.Stats.MaxSta, 5)
-                Call QuitarSta(userIndex, modifi)
-                Call WriteUpdateSta(userIndex)
+                Call QuitarSta(UserIndex, modifi)
+                Call WriteUpdateSta(UserIndex)
 
             End If
             
@@ -904,7 +895,7 @@ Public Sub EfectoFrio(ByVal userIndex As Integer)
 
 End Sub
 
-Public Sub EfectoLava(ByVal userIndex As Integer)
+Public Sub EfectoLava(ByVal UserIndex As Integer)
 
     '***************************************************
     'Autor: Nacho (Integer)
@@ -912,24 +903,24 @@ Public Sub EfectoLava(ByVal userIndex As Integer)
     'If user is standing on lava, take health points from him
     '23/11/2009: ZaMa - Optimizacion de codigo.
     '***************************************************
-    With UserList(userIndex)
+    With UserList(UserIndex)
 
         If .Counters.Lava < IntervaloFrio Then 'Usamos el mismo intervalo que el del frio
             .Counters.Lava = .Counters.Lava + 1
         Else
 
             If HayLava(.Pos.Map, .Pos.X, .Pos.Y) Then
-                Call WriteConsoleMsg(userIndex, "Quitate de la lava, te estas quemando!!", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "Quitate de la lava, te estas quemando!!", FontTypeNames.FONTTYPE_INFO)
                 .Stats.MinHp = .Stats.MinHp - Porcentaje(.Stats.MaxHp, 5)
                     
                 If .Stats.MinHp < 1 Then
-                    Call WriteConsoleMsg(userIndex, "Has muerto quemado!!", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "Has muerto quemado!!", FontTypeNames.FONTTYPE_INFO)
                     .Stats.MinHp = 0
-                    Call UserDie(userIndex)
+                    Call UserDie(UserIndex)
 
                 End If
                     
-                Call WriteUpdateHP(userIndex)
+                Call WriteUpdateHP(UserIndex)
     
             End If
                 
@@ -947,7 +938,7 @@ End Sub
 ' @param UserIndex  El index del usuario a ser afectado por el estado atacable
 '
 
-Public Sub EfectoEstadoAtacable(ByVal userIndex As Integer)
+Public Sub EfectoEstadoAtacable(ByVal UserIndex As Integer)
     '******************************************************
     'Author: ZaMa
     'Last Update: 18/09/2010 (ZaMa)
@@ -955,18 +946,18 @@ Public Sub EfectoEstadoAtacable(ByVal userIndex As Integer)
     '******************************************************
 
     ' Si ya paso el tiempo de penalizacion
-    If Not IntervaloEstadoAtacable(userIndex) Then
+    If Not IntervaloEstadoAtacable(UserIndex) Then
         ' Deja de poder ser atacado
-        UserList(userIndex).flags.AtacablePor = 0
+        UserList(UserIndex).flags.AtacablePor = 0
         
         ' Activo el seguro si deja de estar atacable
-        If Not UserList(userIndex).flags.Seguro Then
-            Call WriteMultiMessage(userIndex, eMessages.SafeModeOn)
+        If Not UserList(UserIndex).flags.Seguro Then
+            Call WriteMultiMessage(UserIndex, eMessages.SafeModeOn)
 
         End If
         
         ' Send nick normal
-        Call RefreshCharStatus(userIndex)
+        Call RefreshCharStatus(UserIndex)
 
     End If
     
@@ -978,7 +969,7 @@ End Sub
 ' @param UserIndex  El index del usuario a ser afectado por el mimetismo
 '
 
-Public Sub EfectoMimetismo(ByVal userIndex As Integer)
+Public Sub EfectoMimetismo(ByVal UserIndex As Integer)
 
     '******************************************************
     'Author: Unknown
@@ -988,17 +979,17 @@ Public Sub EfectoMimetismo(ByVal userIndex As Integer)
     '******************************************************
     Dim Barco As ObjData
     
-    With UserList(userIndex)
+    With UserList(UserIndex)
 
         If .Counters.Mimetismo < IntervaloInvisible Then
             .Counters.Mimetismo = .Counters.Mimetismo + 1
         Else
             'restore old char
-            Call WriteConsoleMsg(userIndex, "Recuperas tu apariencia normal.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Recuperas tu apariencia normal.", FontTypeNames.FONTTYPE_INFO)
             
             If .flags.Navegando Then
                 If .flags.Muerto = 0 Then
-                    Call ToggleBoatBody(userIndex)
+                    Call ToggleBoatBody(UserIndex)
                 Else
                     .Char.body = iFragataFantasmal
                     .Char.ShieldAnim = NingunEscudo
@@ -1021,7 +1012,7 @@ Public Sub EfectoMimetismo(ByVal userIndex As Integer)
             End If
             
             With .Char
-                Call ChangeUserChar(userIndex, .body, .Head, .Heading, .WeaponAnim, .ShieldAnim, .CascoAnim, .AuraAnim, .AuraColor)
+                Call ChangeUserChar(UserIndex, .body, .Head, .Heading, .WeaponAnim, .ShieldAnim, .CascoAnim, .AuraAnim, .AuraColor)
 
             End With
             
@@ -1036,14 +1027,14 @@ Public Sub EfectoMimetismo(ByVal userIndex As Integer)
 
 End Sub
 
-Public Sub EfectoInvisibilidad(ByVal userIndex As Integer)
+Public Sub EfectoInvisibilidad(ByVal UserIndex As Integer)
     '***************************************************
     'Author: Unknown
     'Last Modification: 16/09/2010 (ZaMa)
     '16/09/2010: ZaMa - Al perder el invi cuando navegas, no se manda el mensaje de sacar invi (ya estas visible).
     '***************************************************
 
-    With UserList(userIndex)
+    With UserList(UserIndex)
 
         If .Counters.Invisibilidad < IntervaloInvisible Then
             .Counters.Invisibilidad = .Counters.Invisibilidad + 1
@@ -1052,11 +1043,11 @@ Public Sub EfectoInvisibilidad(ByVal userIndex As Integer)
             .flags.invisible = 0
 
             If .flags.Oculto = 0 Then
-                Call WriteConsoleMsg(userIndex, "Has vuelto a ser visible.", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "Has vuelto a ser visible.", FontTypeNames.FONTTYPE_INFO)
                 
                 ' Si navega ya esta visible..
                 If Not .flags.Navegando = 1 Then
-                    Call SetInvisible(userIndex, .Char.CharIndex, False)
+                    Call SetInvisible(UserIndex, .Char.CharIndex, False)
 
                 End If
                 
@@ -1089,14 +1080,14 @@ Public Sub EfectoParalisisNpc(ByVal NPCIndex As Integer)
 
 End Sub
 
-Public Sub EfectoCegueEstu(ByVal userIndex As Integer)
+Public Sub EfectoCegueEstu(ByVal UserIndex As Integer)
     '***************************************************
     'Author: Unknown
     'Last Modification: -
     '
     '***************************************************
 
-    With UserList(userIndex)
+    With UserList(UserIndex)
 
         If .Counters.Ceguera > 0 Then
             .Counters.Ceguera = .Counters.Ceguera - 1
@@ -1104,13 +1095,13 @@ Public Sub EfectoCegueEstu(ByVal userIndex As Integer)
 
             If .flags.Ceguera = 1 Then
                 .flags.Ceguera = 0
-                Call WriteBlindNoMore(userIndex)
+                Call WriteBlindNoMore(UserIndex)
 
             End If
 
             If .flags.Estupidez = 1 Then
                 .flags.Estupidez = 0
-                Call WriteDumbNoMore(userIndex)
+                Call WriteDumbNoMore(UserIndex)
 
             End If
         
@@ -1120,14 +1111,14 @@ Public Sub EfectoCegueEstu(ByVal userIndex As Integer)
 
 End Sub
 
-Public Sub EfectoParalisisUser(ByVal userIndex As Integer)
+Public Sub EfectoParalisisUser(ByVal UserIndex As Integer)
     '***************************************************
     'Author: Unknown
     'Last Modification: 02/12/2010
     '02/12/2010: ZaMa - Now non-magic clases lose paralisis effect under certain circunstances.
     '***************************************************
 
-    With UserList(userIndex)
+    With UserList(UserIndex)
     
         If .Counters.Paralisis > 0 Then
         
@@ -1143,18 +1134,18 @@ Public Sub EfectoParalisisUser(ByVal userIndex As Integer)
                 
                     ' Close? => Remove Paralisis
                     If UserList(CasterIndex).Name <> .flags.ParalizedBy Then
-                        Call RemoveParalisis(userIndex)
+                        Call RemoveParalisis(UserIndex)
                         Exit Sub
                         
                         ' Caster dead? => Remove Paralisis
                     ElseIf UserList(CasterIndex).flags.Muerto = 1 Then
-                        Call RemoveParalisis(userIndex)
+                        Call RemoveParalisis(UserIndex)
                         Exit Sub
                     
                     ElseIf .Counters.Paralisis > IntervaloParalizadoReducido Then
 
                         ' Out of vision range? => Reduce paralisis counter
-                        If Not InVisionRangeAndMap(userIndex, UserList(CasterIndex).Pos) Then
+                        If Not InVisionRangeAndMap(UserIndex, UserList(CasterIndex).Pos) Then
                             ' Aprox. 1500 ms
                             .Counters.Paralisis = IntervaloParalizadoReducido
                             Exit Sub
@@ -1173,7 +1164,7 @@ Public Sub EfectoParalisisUser(ByVal userIndex As Integer)
                         If .Counters.Paralisis > IntervaloParalizadoReducido Then
 
                             ' Out of vision range? => Reduce paralisis counter
-                            If Not InVisionRangeAndMap(userIndex, Npclist(CasterIndex).Pos) Then
+                            If Not InVisionRangeAndMap(UserIndex, Npclist(CasterIndex).Pos) Then
                                 ' Aprox. 1500 ms
                                 .Counters.Paralisis = IntervaloParalizadoReducido
                                 Exit Sub
@@ -1191,7 +1182,7 @@ Public Sub EfectoParalisisUser(ByVal userIndex As Integer)
             .Counters.Paralisis = .Counters.Paralisis - 1
 
         Else
-            Call RemoveParalisis(userIndex)
+            Call RemoveParalisis(UserIndex)
 
         End If
 
@@ -1199,27 +1190,27 @@ Public Sub EfectoParalisisUser(ByVal userIndex As Integer)
 
 End Sub
 
-Public Sub RemoveParalisis(ByVal userIndex As Integer)
+Public Sub RemoveParalisis(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: ZaMa
     'Last Modification: 20/11/2010
     'Removes paralisis effect from user.
     '***************************************************
-    With UserList(userIndex)
+    With UserList(UserIndex)
         .flags.Paralizado = 0
         .flags.Inmovilizado = 0
         .flags.ParalizedBy = vbNullString
         .flags.ParalizedByIndex = 0
         .flags.ParalizedByNpcIndex = 0
         .Counters.Paralisis = 0
-        Call WriteParalizeOK(userIndex)
+        Call WriteParalizeOK(UserIndex)
 
     End With
 
 End Sub
 
-Public Sub RecStamina(ByVal userIndex As Integer, _
+Public Sub RecStamina(ByVal UserIndex As Integer, _
                       ByRef EnviarStats As Boolean, _
                       ByVal Intervalo As Integer)
     '***************************************************
@@ -1228,7 +1219,7 @@ Public Sub RecStamina(ByVal userIndex As Integer, _
     '
     '***************************************************
 
-    With UserList(userIndex)
+    With UserList(UserIndex)
 
         Dim massta As Integer
 
@@ -1257,7 +1248,7 @@ Public Sub RecStamina(ByVal userIndex As Integer, _
     
 End Sub
 
-Public Sub EfectoVeneno(ByVal userIndex As Integer)
+Public Sub EfectoVeneno(ByVal UserIndex As Integer)
     '***************************************************
     'Author: Unknown
     'Last Modification: -
@@ -1266,18 +1257,18 @@ Public Sub EfectoVeneno(ByVal userIndex As Integer)
 
     Dim n As Integer
     
-    With UserList(userIndex)
+    With UserList(UserIndex)
 
         If .Counters.Veneno < IntervaloVeneno Then
             .Counters.Veneno = .Counters.Veneno + 1
         Else
-            Call WriteConsoleMsg(userIndex, "Estas envenenado, si no te curas moriras.", FontTypeNames.FONTTYPE_VENENO)
+            Call WriteConsoleMsg(UserIndex, "Estas envenenado, si no te curas moriras.", FontTypeNames.FONTTYPE_VENENO)
             .Counters.Veneno = 0
             n = RandomNumber(1, 5)
             .Stats.MinHp = .Stats.MinHp - n
 
-            If .Stats.MinHp < 1 Then Call UserDie(userIndex)
-            Call WriteUpdateHP(userIndex)
+            If .Stats.MinHp < 1 Then Call UserDie(UserIndex)
+            Call WriteUpdateHP(UserIndex)
 
         End If
 
@@ -1285,14 +1276,14 @@ Public Sub EfectoVeneno(ByVal userIndex As Integer)
 
 End Sub
 
-Public Sub DuracionPociones(ByVal userIndex As Integer)
+Public Sub DuracionPociones(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: ??????
     'Last Modification: 11/27/09 (Budi)
     'Cuando se pierde el efecto de la pocion updatea fz y agi (No me gusta que ambos atributos aunque se haya modificado solo uno, pero bueno :p)
     '***************************************************
-    With UserList(userIndex)
+    With UserList(UserIndex)
 
         'Controla la duracion de las pociones
         If .flags.DuracionEfecto > 0 Then
@@ -1309,7 +1300,7 @@ Public Sub DuracionPociones(ByVal userIndex As Integer)
                     .Stats.UserAtributos(loopX) = .Stats.UserAtributosBackUP(loopX)
                 Next loopX
                 
-                Call WriteUpdateStrenghtAndDexterity(userIndex)
+                Call WriteUpdateStrenghtAndDexterity(UserIndex)
 
             End If
 
@@ -1319,14 +1310,14 @@ Public Sub DuracionPociones(ByVal userIndex As Integer)
 
 End Sub
 
-Public Sub HambreYSed(ByVal userIndex As Integer, ByRef fenviarAyS As Boolean)
+Public Sub HambreYSed(ByVal UserIndex As Integer, ByRef fenviarAyS As Boolean)
     '***************************************************
     'Author: Unknown
     'Last Modification: -
     '
     '***************************************************
 
-    With UserList(userIndex)
+    With UserList(UserIndex)
 
         If Not .flags.Privilegios And PlayerType.User Then Exit Sub
         
@@ -1339,7 +1330,7 @@ Public Sub HambreYSed(ByVal userIndex As Integer, ByRef fenviarAyS As Boolean)
                 
                 If Lloviendo And TerrainStringToByte(MapInfo(.Pos.Map).Terreno) = eTerrain.terrain_desierto And MapInfo(.Pos.Map).Zona = "BOSQUE" Then
                     .Stats.MinAGU = .Stats.MinAGU - 20
-                    Call WriteConsoleMsg(userIndex, "Estas en una tormenta de arena, sientes el doble de sed.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "Estas en una tormenta de arena, sientes el doble de sed.", FontTypeNames.FONTTYPE_INFO)
                 Else
                     .Stats.MinAGU = .Stats.MinAGU - 10
                 End If
@@ -1365,7 +1356,7 @@ Public Sub HambreYSed(ByVal userIndex As Integer, ByRef fenviarAyS As Boolean)
                 
                 If Lloviendo And TerrainStringToByte(MapInfo(.Pos.Map).Terreno) = eTerrain.terrain_nieve And MapInfo(.Pos.Map).Zona = "BOSQUE" Then
                     .Stats.MinHam = .Stats.MinHam - 20
-                    Call WriteConsoleMsg(userIndex, "Estas en una tormenta de nieve, sientes el doble de hambre.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "Estas en una tormenta de nieve, sientes el doble de hambre.", FontTypeNames.FONTTYPE_INFO)
                 Else
                     .Stats.MinHam = .Stats.MinHam - 10
                 End If
@@ -1386,7 +1377,7 @@ Public Sub HambreYSed(ByVal userIndex As Integer, ByRef fenviarAyS As Boolean)
 
 End Sub
 
-Public Sub Sanar(ByVal userIndex As Integer, _
+Public Sub Sanar(ByVal UserIndex As Integer, _
                  ByRef EnviarStats As Boolean, _
                  ByVal Intervalo As Integer)
     '***************************************************
@@ -1395,7 +1386,7 @@ Public Sub Sanar(ByVal userIndex As Integer, _
     '
     '***************************************************
 
-    With UserList(userIndex)
+    With UserList(UserIndex)
     
         Dim mashit As Integer
 
@@ -1410,7 +1401,7 @@ Public Sub Sanar(ByVal userIndex As Integer, _
                 .Stats.MinHp = .Stats.MinHp + mashit
 
                 If .Stats.MinHp > .Stats.MaxHp Then .Stats.MinHp = .Stats.MaxHp
-                Call WriteConsoleMsg(userIndex, "Has sanado.", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "Has sanado.", FontTypeNames.FONTTYPE_INFO)
                 EnviarStats = True
 
             End If
@@ -1512,7 +1503,7 @@ Sub GuardarUsuarios()
 
 End Sub
 
-Sub SaveUser(ByVal userIndex As Integer, Optional ByVal SaveTimeOnline As Boolean = True)
+Sub SaveUser(ByVal UserIndex As Integer, Optional ByVal SaveTimeOnline As Boolean = True)
     '*************************************************
     'Author: Juan Andres Dalmasso (CHOTS)
     'Last modified: 06/12/2018 (CHOTS)
@@ -1521,7 +1512,7 @@ Sub SaveUser(ByVal userIndex As Integer, Optional ByVal SaveTimeOnline As Boolea
 
     On Error GoTo ErrorHandler
 
-    With UserList(userIndex)
+    With UserList(UserIndex)
 
         If .clase = 0 Or .Stats.ELV = 0 Then
             Call LogCriticEvent("Estoy intentantdo guardar un usuario nulo de nombre: " & .Name)
@@ -1550,20 +1541,20 @@ Sub SaveUser(ByVal userIndex As Integer, Optional ByVal SaveTimeOnline As Boolea
         Prom = Prom / 6
         .Reputacion.Promedio = Prom
         
-        Call SaveUserToDatabase(userIndex, SaveTimeOnline)
+        Call SaveUserToDatabase(UserIndex, SaveTimeOnline)
         
-        Call UpdateUserQuest(userIndex)
+        Call UpdateUserQuest(UserIndex)
 
     End With
 
     Exit Sub
 
 ErrorHandler:
-    Call LogError("Error en SaveUser - Userindex: " & userIndex)
+    Call LogError("Error en SaveUser - Userindex: " & UserIndex)
 
 End Sub
 
-Sub LoadUser(ByVal userIndex As Integer)
+Sub LoadUser(ByVal UserIndex As Integer)
     '*************************************************
     'Author: Juan Andres Dalmasso (CHOTS)
     'Last modified: 09/10/2018 (CHOTS)
@@ -1572,11 +1563,11 @@ Sub LoadUser(ByVal userIndex As Integer)
 
     On Error GoTo ErrorHandler
 
-    Call LoadUserFromDatabase(userIndex)
+    Call LoadUserFromDatabase(UserIndex)
     
-    Call LoadQuestStats(userIndex)
+    Call LoadQuestStats(UserIndex)
 
-    With UserList(userIndex)
+    With UserList(UserIndex)
 
         If .flags.Paralizado = 1 Then
             .Counters.Paralisis = IntervaloParalizado
@@ -1654,7 +1645,7 @@ Sub LoadUser(ByVal userIndex As Integer)
     Exit Sub
 
 ErrorHandler:
-    Call LogError("Error en LoadUser: " & UserList(userIndex).Name & " - " & Err.Number & " - " & Err.description)
+    Call LogError("Error en LoadUser: " & UserList(UserIndex).Name & " - " & Err.Number & " - " & Err.description)
 
 End Sub
 

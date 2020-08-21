@@ -469,6 +469,8 @@ Public Const SERRUCHO_CARPINTERO            As Integer = 198
 
 Public Const KIT_DE_COSTURA                 As Integer = 1298
 
+Public Const OLLA_ALQUIMISTA                As Integer = 1299
+
 Public Const ObjArboles                     As Integer = 4
 
 Public Const RED_PESCA                      As Integer = 543
@@ -608,7 +610,7 @@ Public Enum eSkill
     pesca = 18
     Mineria = 19
     Carpinteria = 20
-    Herreria = 21
+    herreria = 21
     Sastreria = 22
     Herboristeria = 23
     Alquimia = 24

@@ -279,13 +279,6 @@ Private Function PuedeCarpinteria(ByVal UserIndex As Integer, ByVal Cantidad As 
             Exit Function
         End If
         
-        '¿Puede construir el item?
-        If Not PuedeConstruirCarpintero(Item) Then
-            Call DejardeTrabajar(UserIndex)
-            PuedeCarpinteria = False
-            Exit Function
-        End If
-        
         '¿Tiene el serrucho equipado?
         If Not UserList(UserIndex).Invent.WeaponEqpObjIndex = SERRUCHO_CARPINTERO Then
             Call DejardeTrabajar(UserIndex)

@@ -6859,7 +6859,7 @@ RecursoIndex=58
 
 [OBJ562]
 Name=Herreria: Planos Daga Envenenada
-GrhIndex=538
+GrhIndex=5743
 ObjType=40
 Agarrable=0
 Valor=2000
@@ -6868,7 +6868,7 @@ Profesion=21 'Skill de la profesion
 
 [OBJ563]
 Name=Herreria: Planos Daga +1
-GrhIndex=538
+GrhIndex=5743
 ObjType=40
 Agarrable=0
 Valor=1000
@@ -6877,7 +6877,7 @@ Profesion=21 'Skill de la profesion
 
 [OBJ564]
 Name=Herreria: Planos Daga +2
-GrhIndex=538
+GrhIndex=5743
 ObjType=40
 Agarrable=0
 Valor=2000
@@ -6886,7 +6886,7 @@ Profesion=21 'Skill de la profesion
 
 [OBJ565]
 Name=Herreria: Planos Daga +3
-GrhIndex=538
+GrhIndex=5743
 ObjType=40
 Agarrable=0
 Valor=5000
@@ -16085,7 +16085,7 @@ Crucial=1
 
 [OBJ1294]
 Name=Carpinteria: Planos Barca
-GrhIndex=538
+GrhIndex=5743
 ObjType=40
 Agarrable=0
 Valor=5000
@@ -16094,7 +16094,7 @@ Profesion=20 'Skill de la profesion
 
 [OBJ1295]
 Name=Carpinteria: Planos Galera
-GrhIndex=538
+GrhIndex=5743
 ObjType=40
 Agarrable=0
 Valor=0
@@ -16103,7 +16103,7 @@ Profesion=20 'Skill de la profesion
 
 [OBJ1296]
 Name=Carpinteria: Planos Galeon
-GrhIndex=538
+GrhIndex=5743
 ObjType=40
 Agarrable=0
 Valor=0
@@ -16194,3 +16194,17 @@ ObjType=14
 Agarrable=0
 Valor=50
 Crucial=0
+
+[OBJ1299]
+Name=Olla de Alquimista
+GrhIndex=5730
+ObjType=2
+Agarrable=0
+Anim=2
+RazaEnanaAnim=2
+MinHit=2
+MaxHit=2
+Valor=140
+Crucial=1
+Herramienta=22-1
+

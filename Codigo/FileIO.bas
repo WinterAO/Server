@@ -871,52 +871,6 @@ Public Sub GrabarMapa(ByVal Map As Long, ByRef MAPFILE As String)
 
 End Sub
 
-Sub LoadArmasHerreria()
-    '***************************************************
-    'Author: Unknown
-    'Last Modification: -
-    '
-    '***************************************************
-    
-    If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando armas crafteables por Herreria."
-    
-    Dim n As Integer, lc As Integer
-    
-    n = val(GetVar(DatPath & "ArmasHerrero.dat", "INIT", "NumArmas"))
-    
-    ReDim Preserve ArmasHerrero(1 To n) As Integer
-    
-    For lc = 1 To n
-        ArmasHerrero(lc) = val(GetVar(DatPath & "ArmasHerrero.dat", "Arma" & lc, "Index"))
-    Next lc
-    
-    If frmMain.Visible Then frmMain.txtStatus.Text = Date & " " & time & " - Se cargo las armas crafteables por Herreria. Operacion Realizada con exito."
-    
-End Sub
-
-Sub LoadArmadurasHerreria()
-    '***************************************************
-    'Author: Unknown
-    'Last Modification: -
-    '
-    '***************************************************
-        
-    If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando armaduras crafteables por Herreria."
-
-    Dim n As Integer, lc As Integer
-    
-    n = val(GetVar(DatPath & "ArmadurasHerrero.dat", "INIT", "NumArmaduras"))
-    
-    ReDim Preserve ArmadurasHerrero(1 To n) As Integer
-    
-    For lc = 1 To n
-        ArmadurasHerrero(lc) = val(GetVar(DatPath & "ArmadurasHerrero.dat", "Armadura" & lc, "Index"))
-    Next lc
-    
-    If frmMain.Visible Then frmMain.txtStatus.Text = Date & " " & time & " - Se cargo las armaduras crafteables por Herreria. Operacion Realizada con exito."
-    
-End Sub
-
 Sub LoadBalance()
     '***************************************************
     'Author: Unknown
@@ -985,29 +939,6 @@ Sub LoadBalance()
     Next i
     
     If frmMain.Visible Then frmMain.txtStatus.Text = Date & " " & time & " - Se cargo con exito el archivo Balance.dat"
-
-End Sub
-
-Sub LoadObjCarpintero()
-    '***************************************************
-    'Author: Unknown
-    'Last Modification: -
-    '
-    '***************************************************
-    
-    If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando los objetos crafteables via Carpinteria"
-    
-    Dim n As Integer, lc As Integer
-    
-    n = val(GetVar(DatPath & "ObjCarpintero.dat", "INIT", "NumObjs"))
-    
-    ReDim Preserve ObjCarpintero(1 To n) As Integer
-    
-    For lc = 1 To n
-        ObjCarpintero(lc) = val(GetVar(DatPath & "ObjCarpintero.dat", "Obj" & lc, "Index"))
-    Next lc
-    
-    If frmMain.Visible Then frmMain.txtStatus.Text = Date & " " & time & " - Se cargo con exito los objetos crafteables via Carpinteria."
 
 End Sub
 
