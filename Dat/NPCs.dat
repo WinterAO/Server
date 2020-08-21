@@ -6400,7 +6400,8 @@ PoderAtaque=260
 PoderEvasion=150
 Nroitems=1
 BackUp=0
-NROITEMS=0
+NROITEMS=1
+Obj1=192-50-30
 
 [NPC1004] 
 Name=Gran Demonio Behemoth
@@ -6490,7 +6491,7 @@ snd2=78
 BackUp=0
 Invocacion=1
 NROITEMS=1
-Obj1=1254-1
+Obj1=1254-1-100
 
 [NPC1002]
 Name=Titan de Agua
@@ -6520,7 +6521,7 @@ snd2=78
 BackUp=0
 Invocacion=1
 NROITEMS=1
-Obj1=1253-1
+Obj1=1253-1-100
 
 [NPC1003]
 Name=Titan de Tierra
@@ -6551,7 +6552,7 @@ BackUp=0
 NoShadow=1
 Invocacion=1
 NROITEMS=1
-Obj1=1252-1
+Obj1=1252-1-100
 
 [NPC1004] 
 Name=Dragon Legendario

@@ -6076,7 +6076,7 @@ CP3=ASESINO
 CP4=BARDO
 CP5=CAZADOR
 CP6=DRUIDA
-Materiales=3860-0-0
+Materiales=386-0-0-0
 CantMateriales=360-0-0-0
 SkHerreria=80
 
@@ -6760,7 +6760,7 @@ CP7=BANDIDO
 CP8=BRUJO
 CP9=BARDO
 Materiales=58-1006-0-0
-CantMateriales=1-2-0-0
+CantMateriales=4-2-0-0
 SkCarpinteria=90
 
 [OBJ554]
