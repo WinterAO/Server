@@ -79,7 +79,7 @@ Public Function PuedeExtraer(ByVal UserIndex As Integer, ByVal Skill As Byte) As
         'Check interval
         If Not IntervaloPermiteTrabajar(UserIndex) Then Exit Function
         
-        If Not ConoceProfesion(UserIndex, Skill) Then
+        If ConoceProfesion(UserIndex, Skill) < 0 Then
             Call WriteConsoleMsg(UserIndex, "No conoces esa profesion.", FontTypeNames.FONTTYPE_INFOBOLD)
             PuedeExtraer = False
             Exit Function
@@ -132,7 +132,7 @@ Public Function PuedeLingotear(ByVal UserIndex As Integer) As Boolean
 
     With UserList(UserIndex)
     
-        If Not ConoceProfesion(UserIndex, eSkill.Mineria) Then
+        If ConoceProfesion(UserIndex, eSkill.Mineria) < 0 Then
             Call WriteConsoleMsg(UserIndex, "No conoces esa profesion.", FontTypeNames.FONTTYPE_INFOBOLD)
             PuedeLingotear = False
             Exit Function
@@ -213,7 +213,7 @@ Private Function PuedeCarpinteria(ByVal UserIndex As Integer, ByVal Cantidad As 
 
     With UserList(UserIndex)
         
-        If Not ConoceProfesion(UserIndex, eSkill.Carpinteria) Then
+        If ConoceProfesion(UserIndex, eSkill.Carpinteria) < 0 Then
             Call WriteConsoleMsg(UserIndex, "No conoces esa profesion.", FontTypeNames.FONTTYPE_INFOBOLD)
             PuedeCarpinteria = False
             Exit Function
@@ -288,7 +288,7 @@ Private Function PuedeHerreria(ByVal UserIndex As Integer, ByVal Cantidad As Int
 
     With UserList(UserIndex)
     
-        If Not ConoceProfesion(UserIndex, eSkill.Herreria) Then
+        If ConoceProfesion(UserIndex, eSkill.Herreria) < 0 Then
             Call WriteConsoleMsg(UserIndex, "No conoces esa profesion.", FontTypeNames.FONTTYPE_INFOBOLD)
             PuedeHerreria = False
             Exit Function

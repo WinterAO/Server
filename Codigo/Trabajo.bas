@@ -32,7 +32,6 @@ Option Explicit
 Private Const GASTO_ENERGIA As Byte = 6
 
 Private Const PRECIOINSTRUCCION As Long = 50000
-
 Public Sub DoPermanecerOculto(ByVal UserIndex As Integer)
 
     '********************************************************
@@ -2721,11 +2720,11 @@ Public Sub AccionInstructor(ByVal UserIndex As Integer, ByVal NPCIndex As Intege
         End If
         
         '¿Desea aprender?
-        If ConoceProfesion(UserIndex, Npclist(NPCIndex).Instruye) = False Then
+        If ConoceProfesion(UserIndex, Npclist(NPCIndex).Instruye) < 0 Then
         
             '¿Tiene slot libre para aprender una profesion?
             For i = 0 To 1
-                If .Profesion(i) = 0 Then SlotLibre = True
+                If .Profesion(i).Profesion = 0 Then SlotLibre = True
             Next i
             
             If SlotLibre = False Then
@@ -2773,10 +2772,10 @@ Public Sub AccionProfesion(ByVal UserIndex As Integer)
         
         'Buscamos un hueco libre
         For i = 0 To 1
-            If .Profesion(i) = 0 Then SlotLibre = i
+            If .Profesion(i).Profesion = 0 Then SlotLibre = i
         Next i
         
-        .Profesion(SlotLibre) = .flags.ProfInstruyendo
+        .Profesion(SlotLibre).Profesion = .flags.ProfInstruyendo
         
         'Restamos el oro
         .Stats.Gld = .Stats.Gld - PRECIOINSTRUCCION
@@ -2792,7 +2791,7 @@ Public Sub AccionProfesion(ByVal UserIndex As Integer)
     
         'Buscamos y olvidamos la profesion
         For i = 0 To 1
-            If .flags.ProfInstruyendo = .Profesion(i) Then .Profesion(i) = 0
+            If .flags.ProfInstruyendo = .Profesion(i).Profesion Then .Profesion(i).Profesion = 0
         Next i
     
         Call WriteConsoleMsg(UserIndex, "Es una lastima que hayas decidido abandonar el gremio de " & SkillsNames(.flags.ProfInstruyendo) & ".", FontTypeNames.FONTTYPE_INFO)
@@ -2810,22 +2809,104 @@ Public Sub AccionProfesion(ByVal UserIndex As Integer)
     
 End Sub
 
-Public Function ConoceProfesion(ByVal UserIndex As Integer, ByVal Profesion As Byte) As Boolean
+Public Function ConoceProfesion(ByVal UserIndex As Integer, ByVal Profesion As Byte) As Integer
 '***************************************************
 'Autor: Lorwik
 'Fecha: 19/08/2020
-'Descripción: Comprueba si conoce una profesion
+'Descripción: Obtiene el Slot de la profesion, si no la consigue es que no la tiene
 '***************************************************
 
     Dim i As Byte
     
     For i = 0 To 1
-        If UserList(UserIndex).Profesion(i) = Profesion Then
-            ConoceProfesion = True
+        If UserList(UserIndex).Profesion(i).Profesion = Profesion Then
+            ConoceProfesion = i
             Exit Function
         End If
     Next i
 
-    ConoceProfesion = False
+    ConoceProfesion = -1
+
+End Function
+
+Sub AgregarReceta(ByVal UserIndex As Integer, ByVal Slot As Integer)
+    '***************************************************
+    'Autor: Lorwik
+    'Fecha: 21/08/2020
+    'Descripción: Agregamos una receta, patron o lo que sea de una profesion al conocimiento del user
+    '***************************************************
+
+    Dim rIndex          As Integer
+    Dim j               As Integer
+    Dim SlotProfesion   As Integer
+
+    With UserList(UserIndex)
+    
+        SlotProfesion = ConoceProfesion(UserIndex, ObjData(.Invent.Object(Slot).ObjIndex).Profesion)
+    
+        '¿Tiene la profesion de la receta?
+        If SlotProfesion < 0 Then
+            Call WriteConsoleMsg(UserIndex, "Intentas leer el pergamino, pero todo te resulta desconocido. No conoces esa profesión.", FontTypeNames.FONTTYPE_INFO)
+            Exit Sub
+        End If
+        
+        rIndex = ObjData(.Invent.Object(Slot).ObjIndex).RecetaIndex
+    
+        If TieneReceta(rIndex, UserIndex, SlotProfesion) = False Then
+
+            'Buscamos un slot vacio
+            For j = 1 To MAXUSERRECETAS
+
+                If .Profesion(SlotProfesion).Recetas(j) = 0 Then Exit For
+            Next j
+            
+            If .Profesion(SlotProfesion).Recetas(j) <> 0 Then
+                Call WriteConsoleMsg(UserIndex, "No tienes espacio para mas recetas.", FontTypeNames.FONTTYPE_INFO)
+                
+            Else
+                .Profesion(SlotProfesion).Recetas(j) = rIndex
+
+                'Quitamos del inv el item
+                Call QuitarUserInvItem(UserIndex, CByte(Slot), 1)
+
+            End If
+
+        Else
+            Call WriteConsoleMsg(UserIndex, "Ya tienes esa receta.", FontTypeNames.FONTTYPE_INFO)
+
+        End If
+
+    End With
+
+End Sub
+
+Function TieneReceta(ByVal i As Integer, ByVal UserIndex As Integer, ByVal SlotProfesion As Byte) As Boolean
+    '***************************************************
+    'Autor: Lorwik
+    'Fecha: 21/08/2020
+    'Descripcion: Busca una receta entre las conocidas
+    '***************************************************
+
+    On Error GoTo errHandler
+    
+    Dim j As Integer
+
+    With UserList(UserIndex)
+    
+        For j = 1 To MAXUSERRECETAS
+
+            If .Profesion(SlotProfesion).Recetas(j) = i Then
+                TieneReceta = True
+                Exit Function
+    
+            End If
+    
+        Next
+        
+    End With
+    
+    TieneReceta = False
+    Exit Function
+errHandler:
 
 End Function

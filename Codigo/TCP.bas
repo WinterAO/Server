@@ -423,7 +423,7 @@ Sub ConnectNewUser(ByVal UserIndex As Integer, _
         .Hogar = eCiudad.cRamx
         
         For i = 0 To 1
-            .Profesion(i) = 0
+            .Profesion(i).Profesion = 0
         Next i
         
         'Nuevo sistema de atributos, todos parten de 18

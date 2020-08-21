@@ -1218,9 +1218,11 @@ Sub LoadOBJData()
             .Ropaje = val(Leer.GetValue("OBJ" & Object, "NumRopaje"))
             .HechizoIndex = val(Leer.GetValue("OBJ" & Object, "HechizoIndex"))
             
-            .LingoteIndex = val(Leer.GetValue("OBJ" & Object, "LingoteIndex"))
+            .LingoteIndex = val(Leer.GetValue("OBJ" & Object, "LingoteIndex")) 'Para los Yacimientos (quizas cambie a un concepto mas global)
             
             .RecursoIndex = val(Leer.GetValue("OBJ" & Object, "RecursoIndex"))
+            .RecetaIndex = val(Leer.GetValue("OBJ" & Object, "RecetaIndex"))
+            .Profesion = val(Leer.GetValue("OBJ" & Object, "Profesion"))
             
             .MaxHp = val(Leer.GetValue("OBJ" & Object, "MaxHP"))
             .MinHp = val(Leer.GetValue("OBJ" & Object, "MinHP"))

@@ -1614,7 +1614,7 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                             
                         Case HACHA_LENADOR, HACHA_LENA_ELFICA
                             
-                            If Not ConoceProfesion(UserIndex, eSkill.Talar) Then
+                            If ConoceProfesion(UserIndex, eSkill.Talar) < 0 Then
                                 Call WriteConsoleMsg(UserIndex, "No conoces esa profesion.", FontTypeNames.FONTTYPE_INFOBOLD)
                                 Exit Sub
                             End If
@@ -1629,7 +1629,7 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                             
                         Case PIQUETE_MINERO
                         
-                            If Not ConoceProfesion(UserIndex, eSkill.Mineria) Then
+                            If ConoceProfesion(UserIndex, eSkill.Mineria) < 0 Then
                                 Call WriteConsoleMsg(UserIndex, "No conoces esa profesion.", FontTypeNames.FONTTYPE_INFOBOLD)
                                 Exit Sub
                             End If
@@ -1644,7 +1644,7 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                             
                         Case MARTILLO_HERRERO
                         
-                            If Not ConoceProfesion(UserIndex, eSkill.Herreria) Then
+                            If ConoceProfesion(UserIndex, eSkill.Herreria) < 0 Then
                                 Call WriteConsoleMsg(UserIndex, "No conoces esa profesion.", FontTypeNames.FONTTYPE_INFOBOLD)
                                 Exit Sub
                             End If
@@ -1659,7 +1659,7 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                             
                         Case SERRUCHO_CARPINTERO
                             
-                            If Not ConoceProfesion(UserIndex, eSkill.Carpinteria) Then
+                            If ConoceProfesion(UserIndex, eSkill.Carpinteria) < 0 Then
                                 Call WriteConsoleMsg(UserIndex, "No conoces esa profesion.", FontTypeNames.FONTTYPE_INFOBOLD)
                                 Exit Sub
                             End If
@@ -2227,6 +2227,30 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                     Call WriteConsoleMsg(UserIndex, "La piedra no funciona si estas vivo.", FontTypeNames.FONTTYPE_INFO)
     
                 End If
+                
+            Case eOBJType.otInstruye
+
+                If .flags.Muerto = 1 Then
+                    'Call WriteConsoleMsg(UserIndex, "Estas muerto!! Solo puedes usar items cuando estas vivo.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
+                    Exit Sub
+
+                End If
+                
+                If .flags.Hambre = 0 And .flags.Sed = 0 Then
+
+                    If Not ClasePuedeUsarItem(UserIndex, ObjIndex, sMotivo) Then
+                        Call WriteConsoleMsg(UserIndex, sMotivo, FontTypeNames.FONTTYPE_INFO)
+                        Exit Sub
+                    End If
+
+                    Call AgregarReceta(UserIndex, Slot)
+                    Call UpdateUserInv(False, UserIndex, Slot)
+                Else
+                        Call WriteConsoleMsg(UserIndex, "Estas demasiado hambriento y sediento.", FontTypeNames.FONTTYPE_INFO)
+
+                End If
+
                     
             End Select
     

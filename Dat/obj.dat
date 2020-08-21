@@ -41,7 +41,7 @@
 ' 37: Mochilas
 ' 38: YacimientoPez
 ' 39: Piedra de Hogar
-' 40: Cajas Loot
+' 40: Instruye
 
 
 ##############################################
@@ -141,7 +141,7 @@ Madera Magica: 1006
 [INIT]
 'aca va el numero de OBJ mas alto, NO la cantidad de OBJs.
 'esto sirve para que los GMS puedan ver la lista completa de items para crear en una ventanita.
-NumOBJs=1293
+NumOBJs=1296
 
 
 [OBJ1]
@@ -6855,56 +6855,40 @@ Recurso=17-1
 RecursoIndex=58
 
 [OBJ562]
-Name=Piquete de Minero (Newbie)
-GrhIndex=608
-ObjType=2
+Name=Herreria: Planos Daga Envenenada
+GrhIndex=538
+ObjType=40
 Agarrable=0
-Anim=30
-RazaEnanaAnim=74
-MinHit=1
-MaxHit=2
-Valor=150
-Newbie=1
-Crucial=1
+Valor=2000
+RecetaIndex=619 'Indice del objeto
+Profesion=21 'Skill de la profesion
 
 [OBJ563]
-Name=Equipo de pescar (Newbie)
-GrhIndex=574
-ObjType=2
+Name=Herreria: Planos Daga +1
+GrhIndex=538
+ObjType=40
 Agarrable=0
-Anim=20
-RazaEnanaAnim=76
-MinHit=1
-MaxHit=2
-Valor=150
-Newbie=1
-Crucial=1
+Valor=1000
+RecetaIndex=165 'Indice del objeto
+Profesion=21 'Skill de la profesion
 
 [OBJ564]
-Name=Serrucho (Newbie)
-GrhIndex=607
-ObjType=2
+Name=Herreria: Planos Daga +2
+GrhIndex=538
+ObjType=40
 Agarrable=0
-Anim=31
-RazaEnanaAnim=73
-MinHit=1
-MaxHit=2
-Valor=150
-Newbie=1
-Crucial=1
+Valor=2000
+RecetaIndex=365 'Indice del objeto
+Profesion=21 'Skill de la profesion
 
 [OBJ565]
-Name=Martillo de Herrero (Newbie)
-GrhIndex=726
-ObjType=2
+Name=Herreria: Planos Daga +3
+GrhIndex=538
+ObjType=40
 Agarrable=0
-Anim=29
-RazaEnanaAnim=75
-MinHit=1
-MaxHit=2
-Valor=150
-Newbie=1
-Crucial=1
+Valor=5000
+RecetaIndex=366 'Indice del objeto
+Profesion=21 'Skill de la profesion
 
 [OBJ566]
 Name=Flores
@@ -14168,7 +14152,6 @@ Agarrable=0
 Valor=90000
 IndiceSkill=21
 CuantosSkill=100
-SkNecesarios=0
 
 [OBJ1123]
 Name=Vestimenta de Campeon (E/G)
@@ -16096,3 +16079,30 @@ MaxDef=5
 MinDef=2
 Valor=600
 Crucial=1
+
+[OBJ1294]
+Name=Carpinteria: Planos Barca
+GrhIndex=538
+ObjType=40
+Agarrable=0
+Valor=5000
+RecetaIndex=474 'Indice del objeto
+Profesion=20 'Skill de la profesion
+
+[OBJ1295]
+Name=Carpinteria: Planos Galera
+GrhIndex=538
+ObjType=40
+Agarrable=0
+Valor=0
+RecetaIndex=475 'Indice del objeto
+Profesion=20 'Skill de la profesion
+
+[OBJ1296]
+Name=Carpinteria: Planos Galeon
+GrhIndex=538
+ObjType=40
+Agarrable=0
+Valor=0
+RecetaIndex=476 'Indice del objeto
+Profesion=20 'Skill de la profesion

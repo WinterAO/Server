@@ -403,6 +403,8 @@ Public Enum PartesCuerpo
 
 End Enum
 
+Public Const MAXUSERRECETAS                 As Integer = 200 'Un usuario puede aprender 200 recetas de una profesion como maximo
+
 Public Const Guardias                       As Integer = 6
 
 Public Const MAX_ORO_EDIT                   As Long = 500000
@@ -745,6 +747,7 @@ Public Enum eOBJType
     otMochilas = 37
     otYacimientoPez = 38
     otPiedraHogar = 39
+    otInstruye = 40
     otCualquiera = 1000
 
 End Enum
@@ -1023,6 +1026,8 @@ Public Type ObjData
     
     RecursoIndex As Integer
     LingoteInex As Integer
+    RecetaIndex As Integer 'Manuales de profesiones
+    Profesion As Byte 'Indica la profesion a la que va dirigida el item
     
     proyectil As Integer
     Municion As Integer
@@ -1635,6 +1640,11 @@ index As Integer
 
 End Type
 
+Public Type tUserProfesion
+    Profesion As Byte 'Indica la profesion
+    Recetas(1 To MAXUSERRECETAS) As Long 'Indica la receta
+End Type
+
 'Tipo de los Usuarios
 Public Type User
     PosAnt As WorldPos
@@ -1725,7 +1735,7 @@ Public Type User
     PortalPos As WorldPos
     PortalTiempo As Integer
     
-    Profesion(0 To 1) As Byte
+    Profesion(0 To 1) As tUserProfesion
 
 End Type
 

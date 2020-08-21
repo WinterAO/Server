@@ -3625,7 +3625,7 @@ Private Sub HandleWorkLeftClick(ByVal UserIndex As Integer)
                 'Target wehatever is in that tile
                 Call LookatTile(UserIndex, .Pos.Map, X, Y)
                 
-                If Not ConoceProfesion(UserIndex, eSkill.Herreria) Then
+                If ConoceProfesion(UserIndex, eSkill.Herreria) < 0 Then
                     Call WriteConsoleMsg(UserIndex, "No conoces esa profesion.", FontTypeNames.FONTTYPE_INFOBOLD)
                     Exit Sub
                 End If
@@ -19103,50 +19103,57 @@ Public Sub WriteInitCarpenting(ByVal UserIndex As Integer)
     '***************************************************
     On Error GoTo errHandler
 
-    Dim i              As Long
-    Dim j              As Byte
-    Dim obj            As ObjData
-    Dim validIndexes() As Integer
-    Dim Count          As Integer
+    Dim i                           As Long
+    Dim j                           As Byte
+    Dim obj(1 To MAXUSERRECETAS)    As Long
+    Dim validIndexes()              As Integer
+    Dim Count                       As Integer
+    Dim SlotProfesion               As Integer
     
-    ReDim validIndexes(1 To UBound(ObjCarpintero()))
+    With UserList(UserIndex)
     
-    With UserList(UserIndex).outgoingData
-        Call .WriteByte(ServerPacketID.InitCarpenting)
+        'Obtenemos el slot de la profesion
+        SlotProfesion = ConoceProfesion(UserIndex, eSkill.Carpinteria)
+        
+        'Si por un casual nos llegara que no la conoce...
+        If SlotProfesion < 0 Then Exit Sub
+    
+        Call .outgoingData.WriteByte(ServerPacketID.InitCarpenting)
 
-        For i = 1 To UBound(ObjCarpintero())
+        For i = 1 To MAXUSERRECETAS
 
             ' Can the user create this object? If so add it to the list....
-            If ObjData(ObjCarpintero(i)).SkCarpinteria <= UserList(UserIndex).Stats.UserSkills(eSkill.Carpinteria) Then
+            If .Profesion(SlotProfesion).Recetas(i) > 0 Then
                 Count = Count + 1
-                validIndexes(Count) = i
+                obj(Count) = .Profesion(SlotProfesion).Recetas(i)
 
             End If
 
         Next i
         
         ' Write the number of objects in the list
-        Call .WriteInteger(Count)
+        Call .outgoingData.WriteInteger(Count)
         
         ' Write the needed data of each object
         For i = 1 To Count
-            obj = ObjData(ObjCarpintero(validIndexes(i)))
-            Call .WriteASCIIString(obj.Name)
-            Call .WriteLong(obj.GrhIndex)
+            Call .outgoingData.WriteASCIIString(ObjData(obj(i)).Name)
+            Call .outgoingData.WriteLong(ObjData(obj(i)).GrhIndex)
             
             For j = 1 To MAXMATERIALES
-                If obj.Materiales(j) > 0 Then
-                    Call .WriteLong(ObjData(obj.Materiales(j)).GrhIndex)
-                    Call .WriteInteger(obj.CantMateriales(j))
-                    Call .WriteASCIIString(ObjData(obj.Materiales(j)).Name)
+                If ObjData(obj(i)).Materiales(j) > 0 Then
+                    Call .outgoingData.WriteLong(ObjData(ObjData(obj(i)).Materiales(j)).GrhIndex)
+                    Call .outgoingData.WriteInteger(ObjData(obj(i)).CantMateriales(j))
+                    Call .outgoingData.WriteASCIIString(ObjData(ObjData(obj(i)).Materiales(j)).Name)
+                    
                 Else
-                    Call .WriteLong(0)
-                    Call .WriteInteger(0)
-                    Call .WriteASCIIString("Nada")
+                    Call .outgoingData.WriteLong(0)
+                    Call .outgoingData.WriteInteger(0)
+                    Call .outgoingData.WriteASCIIString("Nada")
+                    
                 End If
             Next j
             
-            Call .WriteInteger(ObjCarpintero(validIndexes(i)))
+            Call .outgoingData.WriteInteger(obj(i))
         Next i
         
     End With

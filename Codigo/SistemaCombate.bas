@@ -1139,7 +1139,7 @@ Public Function UsuarioAtacaNpc(ByVal UserIndex As Integer, _
         If Npclist(NPCIndex).NPCtype = Recurso Then
             
             '¿El usuario tiene la profesion requerida para matar al NPC?
-            If Not ConoceProfesion(UserIndex, Npclist(NPCIndex).flags.Recurso.Profesion) Then
+            If ConoceProfesion(UserIndex, Npclist(NPCIndex).flags.Recurso.Profesion) < 0 Then
                 Call WriteConsoleMsg(UserIndex, "No conoces esa profesion. Visita un instructor para aprenderla.", FontTypeNames.FONTTYPE_INFO)
                 UsuarioAtacaNpc = False
                 Exit Function
