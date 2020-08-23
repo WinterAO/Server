@@ -372,7 +372,7 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=3
-NROITEMS=9
+NROITEMS=13
 Obj1=31-1000 'Vestimentas Comunes
 Obj2=32-1000 'Vestimentas Comunes
 Obj3=35-1000 'Vestimentas Comunes
@@ -382,6 +382,10 @@ Obj6=135-1000 'Tunica Roja Burda
 obj7=238-1000 'Tunica Azul
 obj8=239-1000 'Tunica Roja
 obj9=873-1000 'Guantes de hurto
+obj10=1298-1000 'Kit de Costura
+Obj11=1300-1000 'Hilo Burdo
+Obj12=1299-1000 'Hilo
+Obj13=1301-1000 'Ovillo de lana
 BackUp=1
 
 [NPC17] 'Armaduras Ramx
@@ -658,6 +662,52 @@ Alineacion=0
 BackUp=1
 Instruye=21
 
+[NPC30] 'Instructor de Sastreria
+Name=Instructor de Sastreria
+NpcType=18
+Desc=Mantenerse a la moda es fundamental ¿Quieres unirte al gremio de sastreria?
+Head=76
+Heading=1
+Body=199
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+BackUp=1
+Instruye=22
+
+[NPC31] 'Instructor de Alquimia
+Name=Instructor de Alquimia
+Desc=La alquimia no es solo crear pociones, es el arte de saber mezclar las hierbas adecuadas para obtener los mejores resultados ¿Quieres unirte al gremio de alquimia?
+Head=78
+Heading=1
+Body=199
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+BackUp=1
+Instruye=24
+
+[NPC32]
+Name=Artesano
+NpcType=9
+Desc=Hola, viajero! Traeme los materiales que necesito y puedo crearte unos objetos muy interesantes
+Head=307
+Heading=3
+Body=359
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=0
+
 ##############################################################
 ############## NPCS VENDEDORES DE SHAKOUD ####################
 ##############################################################
@@ -779,7 +829,11 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=3
-NROITEMS=0
+NROITEMS=4
+obj1=1298-1000 'Kit de Costura
+Obj2=1300-1000 'Hilo Burdo
+Obj3=1299-1000 'Hilo
+Obj4=1301-1000 'Ovillo de lana
 BackUp=1
 
 [NPC57] 'Armaduras Shakoud
@@ -1227,7 +1281,11 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=3
-NROITEMS=0
+NROITEMS=4
+obj1=1298-1000 'Kit de Costura
+Obj2=1300-1000 'Hilo Burdo
+Obj3=1299-1000 'Hilo
+Obj4=1301-1000 'Ovillo de lana
 BackUp=1
 
 [NPC113] 'Armaduras Belleuve
@@ -1492,7 +1550,11 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=3
-NROITEMS=0
+NROITEMS=4
+obj1=1298-1000 'Kit de Costura
+Obj2=1300-1000 'Hilo Burdo
+Obj3=1299-1000 'Hilo
+Obj4=1301-1000 'Ovillo de lana
 BackUp=1
 
 [NPC157] 'Armaduras Isla Zharkel
@@ -1760,7 +1822,11 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=3
-NROITEMS=0
+NROITEMS=4
+obj1=1298-1000 'Kit de Costura
+Obj2=1300-1000 'Hilo Burdo
+Obj3=1299-1000 'Hilo
+Obj4=1301-1000 'Ovillo de lana
 BackUp=1
 
 [NPC207] 'Armaduras Haverwood
@@ -7702,3 +7768,93 @@ Recurso=17-1
 NROITEMS=1
 Obj1=58-30-50 'Madera
 Obj2=1005-30-100
+
+[NPC1308]
+Name=Hongo
+NpcType=17
+Head=0
+Heading=1
+Body=425
+Movement=1
+AguaValida=0
+Attackable=1
+Respawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=0
+GiveGLD=0
+MinHP=100
+MaxHP=100
+MaxHIT=0
+MinHIT=0
+ELV=5
+DEF=0
+PoderAtaque=0
+PoderEvasion=0
+Snd1=13
+BackUp=0
+Recurso=17-1
+NROITEMS=1
+Obj1=1307-2-100 'Hongo
+
+[NPC1309]
+Name=Hongo
+NpcType=17
+Head=0
+Heading=1
+Body=426
+Movement=1
+AguaValida=0
+Attackable=1
+Respawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=0
+GiveGLD=0
+MinHP=100
+MaxHP=100
+MaxHIT=0
+MinHIT=0
+ELV=5
+DEF=0
+PoderAtaque=0
+PoderEvasion=0
+Snd1=13
+BackUp=0
+Recurso=17-1
+NROITEMS=1
+Obj1=1307-2-100 'Hongo
+
+[NPC1310]
+Name=Hongo
+NpcType=17
+Head=0
+Heading=1
+Body=36
+Movement=1
+AguaValida=0
+Attackable=1
+Respawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=0
+GiveGLD=0
+MinHP=100
+MaxHP=100
+MaxHIT=0
+MinHIT=0
+ELV=5
+DEF=0
+PoderAtaque=0
+PoderEvasion=0
+Snd1=13
+BackUp=0
+Recurso=17-1
+NROITEMS=1
+Obj1=1307-2-100 'Hongo

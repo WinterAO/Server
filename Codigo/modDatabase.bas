@@ -266,6 +266,27 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
         Next LoopC
 
         Call Database_Connection.Execute(query)
+        
+        'User Boveda
+        query = "INSERT INTO bank_item (user_id, number, item_id, amount) VALUES "
+
+        For LoopC = 1 To MAX_BANCOINVENTORY_SLOTS
+            query = query & "("
+            query = query & .ID & ", "
+            query = query & LoopC & ", "
+            query = query & .BancoInvent.Object(LoopC).ObjIndex & ", "
+            query = query & .BancoInvent.Object(LoopC).Amount & ")"
+
+            If LoopC < MAX_BANCOINVENTORY_SLOTS Then
+                query = query & ", "
+            Else
+                query = query & ";"
+
+            End If
+
+        Next LoopC
+
+        Call Database_Connection.Execute(query)
 
         'User skills
         query = "INSERT INTO skillpoint (user_id, number, value, exp, elu) VALUES "

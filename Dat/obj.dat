@@ -144,7 +144,7 @@ Madera Magica: 1006
 [INIT]
 'aca va el numero de OBJ mas alto, NO la cantidad de OBJs.
 'esto sirve para que los GMS puedan ver la lista completa de items para crear en una ventanita.
-NumOBJs=1305
+NumOBJs=1308
 
 
 [OBJ1]
@@ -4778,8 +4778,8 @@ MinHit=100
 MaxHit=100
 Valor=188000
 Crucial=0
-Materiales=386-387-388-0
-CantMateriales=600-500-700-0
+Materiales=386-387-388-1302
+CantMateriales=600-500-700-250
 SkHerreria=100
 Log=1
 
@@ -7842,6 +7842,9 @@ MaxDef=1
 MinDef=1
 Valor=110
 Crucial=1
+SkSastreria=1
+Materiales=414-1300-0-0
+CantMateriales=5-5-0-0
 
 [OBJ642]
 Name=Tumba de Calixto
@@ -16195,7 +16198,7 @@ Agarrable=0
 Valor=50
 Crucial=0
 
-[OBJ1299]
+[OBJ1306]
 Name=Olla de Alquimista
 GrhIndex=5730
 ObjType=2
@@ -16208,3 +16211,19 @@ Valor=140
 Crucial=1
 Herramienta=22-1
 
+[OBJ1307]
+Name=Hongo
+GrhIndex=20193
+ObjType=14
+Agarrable=0
+Valor=50
+Crucial=0
+
+[OBJ1308]
+Name=Herreria: Planos Espada Mata Dragones
+GrhIndex=5743
+ObjType=40
+Agarrable=0
+Valor=0
+RecetaIndex=402 'Indice del objeto
+Profesion=21 'Skill de la profesion

@@ -469,7 +469,7 @@ Public Const SERRUCHO_CARPINTERO            As Integer = 198
 
 Public Const KIT_DE_COSTURA                 As Integer = 1298
 
-Public Const OLLA_ALQUIMISTA                As Integer = 1299
+Public Const OLLA_ALQUIMISTA                As Integer = 1306
 
 Public Const ObjArboles                     As Integer = 4
 
