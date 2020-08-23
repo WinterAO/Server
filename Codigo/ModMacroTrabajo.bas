@@ -602,7 +602,7 @@ Public Sub MacroTrabajo(ByVal UserIndex As Integer, ByRef Tarea As eMacroTrabajo
 'Autor: Lorwik
 'Inicia la actividad
 '************************************
-Debug.Print Tarea
+
     With UserList(UserIndex)
         Select Case Tarea
         

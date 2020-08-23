@@ -1223,6 +1223,9 @@ Public Sub RecStamina(ByVal UserIndex As Integer, _
 
         Dim massta As Integer
 
+        'Si esta trabajando no recupera energia
+        If .flags.MacroTrabajo Then Exit Sub
+
         If .Stats.MinSta < .Stats.MaxSta Then
             If .Counters.STACounter < Intervalo Then
                 .Counters.STACounter = .Counters.STACounter + 1
