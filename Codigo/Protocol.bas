@@ -3528,6 +3528,11 @@ Private Sub HandleWorkLeftClick(ByVal UserIndex As Integer)
                 End If
                 
                 If HayAgua(.Pos.Map, X, Y) Then
+                
+                    If Abs(.Pos.X - X) + Abs(.Pos.Y - Y) > 2 Then
+                        Call WriteConsoleMsg(UserIndex, "No puedes pescar desde donde te encuentras.", FontTypeNames.FONTTYPE_INFO)
+                        Exit Sub
+                    End If
 
                     Select Case WeaponIndex
 
