@@ -329,15 +329,6 @@ Sub Main()
     ' Hechizos.dat
     frmCargando.Label1(2).Caption = "Cargando Hechizos.Dat"
     Call CargarHechizos
-        
-    ' Objetos de Herreria
-    frmCargando.Label1(2).Caption = "Cargando Objetos de Herreria"
-    Call LoadArmasHerreria
-    Call LoadArmadurasHerreria
-    
-    ' Objetos de Capinteria
-    frmCargando.Label1(2).Caption = "Cargando Objetos de Carpinteria"
-    Call LoadObjCarpintero
     
     ' Objetos del Artesano
     frmCargando.Label1(2).Caption = "Cargando Objetos del Artesano"
@@ -493,7 +484,7 @@ Private Sub LoadConstants()
     SkillsNames(eSkill.pesca) = "Pesca"
     SkillsNames(eSkill.Mineria) = "Mineria"
     SkillsNames(eSkill.Carpinteria) = "Carpinteria"
-    SkillsNames(eSkill.Herreria) = "Herreria"
+    SkillsNames(eSkill.herreria) = "Herreria"
     SkillsNames(eSkill.Liderazgo) = "Liderazgo"
     SkillsNames(eSkill.Domar) = "Domar animales"
     SkillsNames(eSkill.Proyectiles) = "Combate a distancia"
@@ -1232,6 +1223,9 @@ Public Sub RecStamina(ByVal UserIndex As Integer, _
 
         Dim massta As Integer
 
+        'Si esta trabajando no recupera energia
+        If .flags.MacroTrabajo Then Exit Sub
+
         If .Stats.MinSta < .Stats.MaxSta Then
             If .Counters.STACounter < Intervalo Then
                 .Counters.STACounter = .Counters.STACounter + 1
@@ -1337,7 +1331,7 @@ Public Sub HambreYSed(ByVal UserIndex As Integer, ByRef fenviarAyS As Boolean)
             Else
                 .Counters.AGUACounter = 0
                 
-                If Lloviendo And TerrainStringToByte(MapInfo(.Pos.Map).Terreno) = eTerrain.terrain_desierto And MapInfo(.Pos.Map).Zona <> ("DUNGEON" Or "CIUDAD") Then
+                If Lloviendo And TerrainStringToByte(MapInfo(.Pos.Map).Terreno) = eTerrain.terrain_desierto And MapInfo(.Pos.Map).Zona = "BOSQUE" Then
                     .Stats.MinAGU = .Stats.MinAGU - 20
                     Call WriteConsoleMsg(UserIndex, "Estas en una tormenta de arena, sientes el doble de sed.", FontTypeNames.FONTTYPE_INFO)
                 Else
@@ -1363,7 +1357,7 @@ Public Sub HambreYSed(ByVal UserIndex As Integer, ByRef fenviarAyS As Boolean)
             Else
                 .Counters.COMCounter = 0
                 
-                If Lloviendo And TerrainStringToByte(MapInfo(.Pos.Map).Terreno) = eTerrain.terrain_nieve And MapInfo(.Pos.Map).Zona <> ("DUNGEON" Or "CIUDAD") Then
+                If Lloviendo And TerrainStringToByte(MapInfo(.Pos.Map).Terreno) = eTerrain.terrain_nieve And MapInfo(.Pos.Map).Zona = "BOSQUE" Then
                     .Stats.MinHam = .Stats.MinHam - 20
                     Call WriteConsoleMsg(UserIndex, "Estas en una tormenta de nieve, sientes el doble de hambre.", FontTypeNames.FONTTYPE_INFO)
                 Else
@@ -1733,8 +1727,8 @@ Private Sub InicializarSonidos()
 
     SND_SWING = 2
     SND_TALAR = 13
-    SND_PESCAR = 14
-    SND_MINERO = 15
+    SND_PESCAR = 71
+    SND_MINERO = 261
     SND_WARP = 3
     SND_PUERTA = 5
     SND_NIVEL = 128
@@ -1753,8 +1747,8 @@ Private Sub InicializarSonidos()
     SND_ESCUDO(2) = 212
     SND_ESCUDO(3) = 213
     SND_ESCUDO(4) = 214
-    SND_TRABAJO_HERRERO = 41
-    SND_TRABAJO_CARPINTERO = 42
+    SND_TRABAJO_HERRERO = 150
+    SND_TRABAJO_CARPINTERO = 168
     SND_BEBER = 135
     SND_RESUCITAR_SACERDOTE = 103
     SND_CURAR_SACERDOTE = 104

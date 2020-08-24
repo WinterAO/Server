@@ -569,12 +569,6 @@ Private Sub listDats_Click()
         
         Case "APUESTAS.DAT"
             Call CargaApuestas
-            
-        Case "ARMASHERRERO.DAT"
-            Call LoadArmasHerreria
-        
-        Case "ARMADURASHERRERO.DAT"
-            Call LoadArmadurasHerreria
         
         Case "ARMADURASFACCIONARIAS.DAT"
             Call LoadArmadurasFaccion
@@ -608,9 +602,6 @@ Private Sub listDats_Click()
             
         Case "GLOBAL_DROP.dat"
             Call LoadGlobalDrop
-        
-        Case "OBJCARPINTERO.DAT"
-            Call LoadObjCarpintero
             
         Case "OBJARTESANO.DAT"
             Call LoadObjArtesano

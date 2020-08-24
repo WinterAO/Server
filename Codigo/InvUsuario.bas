@@ -860,6 +860,12 @@ Public Sub Desequipar(ByVal UserIndex As Integer, ByVal Slot As Byte)
                     End With
 
                 End If
+                
+                '¿Esta trabajando?
+                'Las herramientas estan dateadas como armas, asi que estoy va aqui.
+                If .flags.MacroTrabajo <> 0 Then
+                    Call DejardeTrabajar(UserIndex)
+                End If
             
             Case eOBJType.otFlechas
 
@@ -1466,6 +1472,12 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
 
         End If
         
+        '¿Está trabajando?
+        If .flags.MacroTrabajo <> 0 Then
+            Call WriteConsoleMsg(UserIndex, "¡No puedes usar objetos mientras estas trabajando!", FontTypeNames.FONTTYPE_INFO)
+            Exit Sub
+        End If
+        
         If obj.OBJType = eOBJType.otWeapon Then
             If obj.proyectil = 1 Then
                 
@@ -1590,7 +1602,7 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                     
                     Select Case ObjIndex
                     
-                        Case CANA_PESCA, RED_PESCA, CANA_PESCA_NEWBIE
+                        Case CANA_PESCA, RED_PESCA
                             
                             ' Lo tiene equipado?
                             If .Invent.WeaponEqpObjIndex = ObjIndex Then
@@ -1600,7 +1612,12 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
 
                             End If
                             
-                        Case HACHA_LENADOR, HACHA_LENA_ELFICA, HACHA_LENADOR_NEWBIE
+                        Case HACHA_LENADOR, HACHA_LENA_ELFICA
+                            
+                            If ConoceProfesion(UserIndex, eSkill.Talar) < 0 Then
+                                Call WriteConsoleMsg(UserIndex, "No conoces esa profesion.", FontTypeNames.FONTTYPE_INFOBOLD)
+                                Exit Sub
+                            End If
                             
                             ' Lo tiene equipado?
                             If .Invent.WeaponEqpObjIndex = ObjIndex Then
@@ -1610,7 +1627,12 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
 
                             End If
                             
-                        Case PIQUETE_MINERO, PIQUETE_MINERO_NEWBIE
+                        Case PIQUETE_MINERO
+                        
+                            If ConoceProfesion(UserIndex, eSkill.Mineria) < 0 Then
+                                Call WriteConsoleMsg(UserIndex, "No conoces esa profesion.", FontTypeNames.FONTTYPE_INFOBOLD)
+                                Exit Sub
+                            End If
                         
                             ' Lo tiene equipado?
                             If .Invent.WeaponEqpObjIndex = ObjIndex Then
@@ -1620,21 +1642,61 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
 
                             End If
                             
-                        Case MARTILLO_HERRERO, MARTILLO_HERRERO_NEWBIE
+                        Case MARTILLO_HERRERO
+                        
+                            If ConoceProfesion(UserIndex, eSkill.herreria) < 0 Then
+                                Call WriteConsoleMsg(UserIndex, "No conoces esa profesion.", FontTypeNames.FONTTYPE_INFOBOLD)
+                                Exit Sub
+                            End If
                         
                             ' Lo tiene equipado?
                             If .Invent.WeaponEqpObjIndex = ObjIndex Then
-                                Call WriteMultiMessage(UserIndex, eMessages.WorkRequestTarget, eSkill.Herreria)
+                                Call WriteMultiMessage(UserIndex, eMessages.WorkRequestTarget, eSkill.herreria)
                             Else
                                 Call WriteConsoleMsg(UserIndex, "Debes tener equipada la herramienta para trabajar.", FontTypeNames.FONTTYPE_INFO)
 
                             End If
                             
-                        Case SERRUCHO_CARPINTERO, SERRUCHO_CARPINTERO_NEWBIE
+                        Case SERRUCHO_CARPINTERO
+                            
+                            If ConoceProfesion(UserIndex, eSkill.Carpinteria) < 0 Then
+                                Call WriteConsoleMsg(UserIndex, "No conoces esa profesion.", FontTypeNames.FONTTYPE_INFOBOLD)
+                                Exit Sub
+                            End If
                             
                             ' Lo tiene equipado?
                             If .Invent.WeaponEqpObjIndex = ObjIndex Then
-                                Call EnivarObjConstruibles(UserIndex)
+                                Call WriteInitTrabajo(UserIndex, eSkill.Carpinteria)
+                            Else
+                                Call WriteConsoleMsg(UserIndex, "Debes tener equipada la herramienta para trabajar.", FontTypeNames.FONTTYPE_INFO)
+
+                            End If
+                            
+                        Case KIT_DE_COSTURA
+                            If ConoceProfesion(UserIndex, eSkill.Sastreria) < 0 Then
+                                Call WriteConsoleMsg(UserIndex, "No conoces esa profesion.", FontTypeNames.FONTTYPE_INFOBOLD)
+                                Exit Sub
+                            End If
+                            
+                            ' Lo tiene equipado?
+                            If .Invent.WeaponEqpObjIndex = ObjIndex Then
+                                Call WriteInitTrabajo(UserIndex, eSkill.Sastreria)
+                                
+                            Else
+                                Call WriteConsoleMsg(UserIndex, "Debes tener equipada la herramienta para trabajar.", FontTypeNames.FONTTYPE_INFO)
+
+                            End If
+                            
+                        Case OLLA_ALQUIMISTA
+                            If ConoceProfesion(UserIndex, eSkill.Alquimia) < 0 Then
+                                Call WriteConsoleMsg(UserIndex, "No conoces esa profesion.", FontTypeNames.FONTTYPE_INFOBOLD)
+                                Exit Sub
+                            End If
+                            
+                            ' Lo tiene equipado?
+                            If .Invent.WeaponEqpObjIndex = ObjIndex Then
+                                Call WriteInitTrabajo(UserIndex, eSkill.Alquimia)
+                                
                             Else
                                 Call WriteConsoleMsg(UserIndex, "Debes tener equipada la herramienta para trabajar.", FontTypeNames.FONTTYPE_INFO)
 
@@ -1645,7 +1707,7 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                             If ObjData(ObjIndex).SkHerreria > 0 Then
                                 ' Solo objetos que pueda hacer el herrero
                                 Call WriteMultiMessage(UserIndex, eMessages.WorkRequestTarget, FundirMetal) 'Call WriteWorkRequestTarget(UserIndex, FundirMetal)
-
+                                Exit Sub
                             End If
 
                     End Select
@@ -2195,43 +2257,34 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                     Call WriteConsoleMsg(UserIndex, "La piedra no funciona si estas vivo.", FontTypeNames.FONTTYPE_INFO)
     
                 End If
+                
+            Case eOBJType.otInstruye
+
+                If .flags.Muerto = 1 Then
+                    'Call WriteConsoleMsg(UserIndex, "Estas muerto!! Solo puedes usar items cuando estas vivo.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
+                    Exit Sub
+
+                End If
+                
+                If .flags.Hambre = 0 And .flags.Sed = 0 Then
+
+                    If Not ClasePuedeUsarItem(UserIndex, ObjIndex, sMotivo) Then
+                        Call WriteConsoleMsg(UserIndex, sMotivo, FontTypeNames.FONTTYPE_INFO)
+                        Exit Sub
+                    End If
+
+                    Call AgregarReceta(UserIndex, Slot)
+                    Call UpdateUserInv(False, UserIndex, Slot)
+                Else
+                        Call WriteConsoleMsg(UserIndex, "Estas demasiado hambriento y sediento.", FontTypeNames.FONTTYPE_INFO)
+
+                End If
+
                     
             End Select
     
     End With
-
-End Sub
-
-Sub EnivarArmasConstruibles(ByVal UserIndex As Integer)
-    '***************************************************
-    'Author: Unknown
-    'Last Modification: -
-    '
-    '***************************************************
-
-    Call WriteBlacksmithWeapons(UserIndex)
-
-End Sub
- 
-Sub EnivarObjConstruibles(ByVal UserIndex As Integer)
-    '***************************************************
-    'Author: Unknown
-    'Last Modification: -
-    '
-    '***************************************************
-
-    Call WriteInitCarpenting(UserIndex)
-
-End Sub
-
-Sub EnivarArmadurasConstruibles(ByVal UserIndex As Integer)
-    '***************************************************
-    'Author: Unknown
-    'Last Modification: -
-    '
-    '***************************************************
-
-    Call WriteBlacksmithArmors(UserIndex)
 
 End Sub
 

@@ -878,6 +878,11 @@ Public Function NpcAtacaUser(ByVal NPCIndex As Integer, _
         If .flags.AdminInvisible = 1 Then Exit Function
         If (Not .flags.Privilegios And PlayerType.User) <> 0 And Not .flags.AdminPerseguible Then Exit Function
         
+        '¿Esta trabajando?
+        If UserList(UserIndex).flags.MacroTrabajo <> 0 Then
+            Call DejardeTrabajar(UserIndex)
+        End If
+        
         '<<<< Equitando >>>
         If .flags.Equitando = 1 Then
             Call UnmountMontura(UserIndex)
@@ -1129,10 +1134,41 @@ Public Function UsuarioAtacaNpc(ByVal UserIndex As Integer, _
             Call WriteEquitandoToggle(UserIndex)
             
         End If
+    
+        '¿El NPC es un recurso?
+        If Npclist(NPCIndex).NPCtype = Recurso Then
+            
+            '¿El usuario tiene la profesion requerida para matar al NPC?
+            If ConoceProfesion(UserIndex, Npclist(NPCIndex).flags.Recurso.Profesion) < 0 Then
+                Call WriteConsoleMsg(UserIndex, "No conoces esa profesion. Visita un instructor para aprenderla.", FontTypeNames.FONTTYPE_INFO)
+                UsuarioAtacaNpc = False
+                Exit Function
+            End If
+            
+            '¿Tiene la herramienta?
+            If .Invent.WeaponEqpObjIndex = 0 Then
+                Call WriteConsoleMsg(UserIndex, "Necesitas una herramienta para trabajar.", FontTypeNames.FONTTYPE_INFO)
+                UsuarioAtacaNpc = False
+                Exit Function
+            End If
+            
+            '¿Tiene la herramienta adecuada equipada?
+            If ObjData(.Invent.WeaponEqpObjIndex).Herramienta.Profesion <> Npclist(NPCIndex).flags.Recurso.Profesion Then
+                Call WriteConsoleMsg(UserIndex, "No puedes extraer este recurso con esa herramienta.", FontTypeNames.FONTTYPE_INFO)
+                UsuarioAtacaNpc = False
+                Exit Function
+            End If
+            
+            '¿La herramienta tiene la categoria adecuada?
+            If ObjData(.Invent.WeaponEqpObjIndex).Herramienta.Categoria < Npclist(NPCIndex).flags.Recurso.Categoria Then
+                Call WriteConsoleMsg(UserIndex, "El recurso que intentas extraer es demasiado duro para esa herramienta.", FontTypeNames.FONTTYPE_INFO)
+                UsuarioAtacaNpc = False
+                Exit Function
+            End If
+            
+        End If
     End With
     
-    
-
     Call NPCAtacado(NPCIndex, UserIndex)
     
     If UserImpactoNpc(UserIndex, NPCIndex) Then
@@ -1868,6 +1904,13 @@ Public Function PuedeAtacar(ByVal AttackerIndex As Integer, _
 
     End If
     
+    '¿Está trabajando?
+    If UserList(AttackerIndex).flags.MacroTrabajo <> 0 Then
+        Call WriteConsoleMsg(AttackerIndex, "¡Estas trabajando!", FontTypeNames.FONTTYPE_INFO)
+        PuedeAtacar = False
+        Exit Function
+    End If
+    
     ' No podes atacar si estas en consulta
     If UserList(AttackerIndex).flags.EnConsulta Then
         Call WriteConsoleMsg(AttackerIndex, "No puedes atacar usuarios mientras estas en consulta.", FontTypeNames.FONTTYPE_INFO)
@@ -2077,6 +2120,12 @@ Public Function PuedeAtacarNPC(ByVal AttackerIndex As Integer, _
             Call WriteConsoleMsg(AttackerIndex, "No puedes atacar esta criatura.", FontTypeNames.FONTTYPE_INFO)
             Exit Function
 
+        End If
+        
+        '¿Está trabajando?
+        If UserList(AttackerIndex).flags.MacroTrabajo <> 0 Then
+            Call WriteConsoleMsg(AttackerIndex, "¡Estas trabajando!", FontTypeNames.FONTTYPE_INFO)
+            Exit Function
         End If
         
         'Es valida la distancia a la cual estamos atacando?
@@ -2565,6 +2614,10 @@ Sub CalcularDarExp(ByVal UserIndex As Integer, _
 
     If ExpaDar <= 0 Then Exit Sub
     
+    'Si hay una diferencia de 7 niveles por encima, el bicho solo dara el 10% de la experiencia
+    If (Npclist(NPCIndex).Stats.ELV - 7) > UserList(UserIndex).Stats.ELV Then _
+        ExpaDar = Porcentaje(ExpaDar, 10)
+    
     '[Nacho] Vamos contando cuanta experiencia sacamos, porque se da toda la que no se dio al user que mata al NPC
     'Esto es porque cuando un elemental ataca, no se da exp, y tambien porque la cuenta que hicimos antes
     'Podria dar un numero fraccionario, esas fracciones se acumulan hasta formar enteros ;P
@@ -2690,7 +2743,7 @@ Public Sub LanzarProyectil(ByVal UserIndex As Integer, ByVal X As Byte, ByVal Y 
 
     Dim TargetNpcIndex  As Integer
 
-    Dim DummyInt        As Integer
+    Dim DummyINT        As Integer
     
     Dim Threw           As Boolean
 
@@ -2709,12 +2762,12 @@ Public Sub LanzarProyectil(ByVal UserIndex As Integer, ByVal X As Byte, ByVal Y 
         
         ' Tiene arma equipada?
         If WeaponIndex = 0 Then
-            DummyInt = 1
+            DummyINT = 1
             Call WriteConsoleMsg(UserIndex, "No tienes un arco o cuchilla equipada.", FontTypeNames.FONTTYPE_INFO)
             
             ' En un slot valido?
         ElseIf WeaponSlot < 1 Or WeaponSlot > .CurrentInventorySlots Then
-            DummyInt = 1
+            DummyINT = 1
             Call WriteConsoleMsg(UserIndex, "No tienes un arco o cuchilla equipada.", FontTypeNames.FONTTYPE_INFO)
             
             ' Usa municion? (Si no la usa, puede ser un arma arrojadiza)
@@ -2722,34 +2775,34 @@ Public Sub LanzarProyectil(ByVal UserIndex As Integer, ByVal X As Byte, ByVal Y 
         
             ' La municion esta equipada en un slot valido?
             If MunicionSlot < 1 Or MunicionSlot > .CurrentInventorySlots Then
-                DummyInt = 1
+                DummyINT = 1
                 Call WriteConsoleMsg(UserIndex, "No tienes municiones equipadas.", FontTypeNames.FONTTYPE_INFO)
                 
                 ' Tiene municion?
             ElseIf MunicionIndex = 0 Then
-                DummyInt = 1
+                DummyINT = 1
                 Call WriteConsoleMsg(UserIndex, "No tienes municiones equipadas.", FontTypeNames.FONTTYPE_INFO)
                 
                 ' Son flechas?
             ElseIf ObjData(MunicionIndex).OBJType <> eOBJType.otFlechas Then
-                DummyInt = 1
+                DummyINT = 1
                 Call WriteConsoleMsg(UserIndex, "No tienes municiones.", FontTypeNames.FONTTYPE_INFO)
                 
                 ' Tiene suficientes?
             ElseIf .Invent.Object(MunicionSlot).Amount < 1 Then
-                DummyInt = 1
+                DummyINT = 1
                 Call WriteConsoleMsg(UserIndex, "No tienes municiones.", FontTypeNames.FONTTYPE_INFO)
 
             End If
             
             ' Es un arma de proyectiles?
         ElseIf ObjData(WeaponIndex).proyectil <> 1 Then
-            DummyInt = 2
+            DummyINT = 2
 
         End If
         
-        If DummyInt <> 0 Then
-            If DummyInt = 1 Then
+        If DummyINT <> 0 Then
+            If DummyINT = 1 Then
                 Call Desequipar(UserIndex, WeaponSlot)
 
             End If

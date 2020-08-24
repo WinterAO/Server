@@ -172,6 +172,15 @@ Public Sub GameTimer()
                         
                         If .flags.Mimetizado = 1 Then Call EfectoMimetismo(iUserIndex)
                         
+                        'Macro de Trabajo
+                        If .flags.MacroTrabajo <> 0 Then
+                            .Counters.MacroTrabajo = .Counters.MacroTrabajo + 1
+                            If .Counters.MacroTrabajo >= IntervaloPuedeMakrear Then
+                                .Counters.MacroTrabajo = 0
+                                MacroTrabajo iUserIndex, .flags.MacroTrabajo
+                            End If
+                        End If
+                        
                         If .flags.AtacablePor <> 0 Then Call EfectoEstadoAtacable(iUserIndex)
                         
                         Call DuracionPociones(iUserIndex)

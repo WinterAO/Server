@@ -29,43 +29,7 @@ Begin VB.Form FrmInterv
       TabIndex        =   55
       Top             =   4320
       Width           =   2055
-      Begin VB.TextBox txtMinarSuerte 
-         BackColor       =   &H00C0FFFF&
-         BeginProperty Font 
-            Name            =   "MS Sans Serif"
-            Size            =   8.25
-            Charset         =   0
-            Weight          =   700
-            Underline       =   0   'False
-            Italic          =   0   'False
-            Strikethrough   =   0   'False
-         EndProperty
-         Height          =   285
-         Left            =   1320
-         TabIndex        =   58
-         Text            =   "6"
-         Top             =   720
-         Width           =   450
-      End
-      Begin VB.TextBox txtTalarSuerte 
-         BackColor       =   &H00C0FFFF&
-         BeginProperty Font 
-            Name            =   "MS Sans Serif"
-            Size            =   8.25
-            Charset         =   0
-            Weight          =   700
-            Underline       =   0   'False
-            Italic          =   0   'False
-            Strikethrough   =   0   'False
-         EndProperty
-         Height          =   285
-         Left            =   720
-         TabIndex        =   57
-         Text            =   "6"
-         Top             =   720
-         Width           =   450
-      End
-      Begin VB.TextBox txtPescarSuerte 
+      Begin VB.TextBox txtExtraerSuerte 
          BackColor       =   &H00C0FFFF&
          BeginProperty Font 
             Name            =   "MS Sans Serif"
@@ -83,45 +47,9 @@ Begin VB.Form FrmInterv
          Top             =   720
          Width           =   450
       End
-      Begin VB.Label Label27 
+      Begin VB.Label extraer 
          BackColor       =   &H00FFC0C0&
-         Caption         =   "Mineria"
-         BeginProperty Font 
-            Name            =   "MS Sans Serif"
-            Size            =   8.25
-            Charset         =   0
-            Weight          =   700
-            Underline       =   0   'False
-            Italic          =   0   'False
-            Strikethrough   =   0   'False
-         EndProperty
-         Height          =   255
-         Left            =   1320
-         TabIndex        =   61
-         Top             =   360
-         Width           =   615
-      End
-      Begin VB.Label Label26 
-         BackColor       =   &H00FFC0C0&
-         Caption         =   "Talar"
-         BeginProperty Font 
-            Name            =   "MS Sans Serif"
-            Size            =   8.25
-            Charset         =   0
-            Weight          =   700
-            Underline       =   0   'False
-            Italic          =   0   'False
-            Strikethrough   =   0   'False
-         EndProperty
-         Height          =   255
-         Left            =   720
-         TabIndex        =   60
-         Top             =   360
-         Width           =   495
-      End
-      Begin VB.Label pesca 
-         BackColor       =   &H00FFC0C0&
-         Caption         =   "Pesca"
+         Caption         =   "Extraer"
          BeginProperty Font 
             Name            =   "MS Sans Serif"
             Size            =   8.25
@@ -133,7 +61,7 @@ Begin VB.Form FrmInterv
          EndProperty
          Height          =   255
          Left            =   120
-         TabIndex        =   59
+         TabIndex        =   57
          Top             =   360
          Width           =   615
       End
@@ -1213,9 +1141,8 @@ Public Sub AplicarIntervalos()
     
     '///////////////////Suerte \\\\\\\\\\\\\\\\\\
     
-    DificultadPescar = val(txtPescarSuerte.Text)
-    DificultadTalar = val(txtTalarSuerte.Text)
-    DificultadMinar = val(txtMinarSuerte.Text)
+    DificultadExtraer = val(txtExtraerSuerte.Text)
+    
 End Sub
 
 Private Sub Command1_Click()
@@ -1231,31 +1158,29 @@ Private Sub Command2_Click()
     On Error GoTo Err
 
     'Intervalos
-    Call WriteVar(IniPath & "Server.ini", "INTERVALOS", "SanaIntervaloSinDescansar", str(SanaIntervaloSinDescansar))
-    Call WriteVar(IniPath & "Server.ini", "INTERVALOS", "StaminaIntervaloSinDescansar", str(StaminaIntervaloSinDescansar))
-    Call WriteVar(IniPath & "Server.ini", "INTERVALOS", "SanaIntervaloDescansar", str(SanaIntervaloDescansar))
-    Call WriteVar(IniPath & "Server.ini", "INTERVALOS", "StaminaIntervaloDescansar", str(StaminaIntervaloDescansar))
-    Call WriteVar(IniPath & "Server.ini", "INTERVALOS", "IntervaloSed", str(IntervaloSed))
-    Call WriteVar(IniPath & "Server.ini", "INTERVALOS", "IntervaloHambre", str(IntervaloHambre))
-    Call WriteVar(IniPath & "Server.ini", "INTERVALOS", "IntervaloVeneno", str(IntervaloVeneno))
-    Call WriteVar(IniPath & "Server.ini", "INTERVALOS", "IntervaloParalizado", str(IntervaloParalizado))
-    Call WriteVar(IniPath & "Server.ini", "INTERVALOS", "IntervaloInvisible", str(IntervaloInvisible))
-    Call WriteVar(IniPath & "Server.ini", "INTERVALOS", "IntervaloFrio", str(IntervaloFrio))
-    Call WriteVar(IniPath & "Server.ini", "INTERVALOS", "IntervaloWAVFX", str(IntervaloWavFx))
-    Call WriteVar(IniPath & "Server.ini", "INTERVALOS", "IntervaloInvocacion", str(IntervaloInvocacion))
-    Call WriteVar(IniPath & "Server.ini", "INTERVALOS", "IntervaloParaConexion", str(IntervaloParaConexion))
+    Call WriteVar(IniPath & "Server.ini", "INTERVALOS", "SanaIntervaloSinDescansar", Str(SanaIntervaloSinDescansar))
+    Call WriteVar(IniPath & "Server.ini", "INTERVALOS", "StaminaIntervaloSinDescansar", Str(StaminaIntervaloSinDescansar))
+    Call WriteVar(IniPath & "Server.ini", "INTERVALOS", "SanaIntervaloDescansar", Str(SanaIntervaloDescansar))
+    Call WriteVar(IniPath & "Server.ini", "INTERVALOS", "StaminaIntervaloDescansar", Str(StaminaIntervaloDescansar))
+    Call WriteVar(IniPath & "Server.ini", "INTERVALOS", "IntervaloSed", Str(IntervaloSed))
+    Call WriteVar(IniPath & "Server.ini", "INTERVALOS", "IntervaloHambre", Str(IntervaloHambre))
+    Call WriteVar(IniPath & "Server.ini", "INTERVALOS", "IntervaloVeneno", Str(IntervaloVeneno))
+    Call WriteVar(IniPath & "Server.ini", "INTERVALOS", "IntervaloParalizado", Str(IntervaloParalizado))
+    Call WriteVar(IniPath & "Server.ini", "INTERVALOS", "IntervaloInvisible", Str(IntervaloInvisible))
+    Call WriteVar(IniPath & "Server.ini", "INTERVALOS", "IntervaloFrio", Str(IntervaloFrio))
+    Call WriteVar(IniPath & "Server.ini", "INTERVALOS", "IntervaloWAVFX", Str(IntervaloWavFx))
+    Call WriteVar(IniPath & "Server.ini", "INTERVALOS", "IntervaloInvocacion", Str(IntervaloInvocacion))
+    Call WriteVar(IniPath & "Server.ini", "INTERVALOS", "IntervaloParaConexion", Str(IntervaloParaConexion))
 
     '&&&&&&&&&&&&&&&&&&&&& TIMERS &&&&&&&&&&&&&&&&&&&&&&&
 
-    Call WriteVar(IniPath & "Server.ini", "INTERVALOS", "IntervaloLanzaHechizo", str(IntervaloUserPuedeCastear))
-    Call WriteVar(IniPath & "Server.ini", "INTERVALOS", "IntervaloTrabajo", str(IntervaloUserPuedeTrabajar))
-    Call WriteVar(IniPath & "Server.ini", "INTERVALOS", "IntervaloUserPuedeAtacar", str(IntervaloUserPuedeAtacar))
+    Call WriteVar(IniPath & "Server.ini", "INTERVALOS", "IntervaloLanzaHechizo", Str(IntervaloUserPuedeCastear))
+    Call WriteVar(IniPath & "Server.ini", "INTERVALOS", "IntervaloTrabajo", Str(IntervaloUserPuedeTrabajar))
+    Call WriteVar(IniPath & "Server.ini", "INTERVALOS", "IntervaloUserPuedeAtacar", Str(IntervaloUserPuedeAtacar))
     
     '&&&&&&&&&&&&&&&&&&&& Suerte desde INIT &&&&&&&&&&&&&&&&&&&&&&&&&
     
-    Call WriteVar(IniPath & "Server.ini", "DIFICULTAD", "DificultadPescar", str(DificultadPescar))
-    Call WriteVar(IniPath & "Server.ini", "DIFICULTAD", "DificultadTalar", str(DificultadTalar))
-    Call WriteVar(IniPath & "Server.ini", "DIFICULTAD", "DificultadMinar", str(DificultadMinar))
+    Call WriteVar(IniPath & "Server.ini", "DIFICULTAD", "DificultadExtraer", Str(DificultadExtraer))
     
     
     MsgBox "Los intervalos se han guardado sin problemas."
@@ -1268,9 +1193,7 @@ End Sub
 
 Private Sub Form_Load()
     With Me
-        .txtPescarSuerte.Text = DificultadPescar
-        .txtTalarSuerte.Text = DificultadTalar
-        .txtMinarSuerte.Text = DificultadMinar
+        .txtExtraerSuerte.Text = DificultadExtraer
         .txtSanaIntervaloSinDescansar.Text = SanaIntervaloSinDescansar
         .txtStaminaIntervaloSinDescansar.Text = StaminaIntervaloSinDescansar
         .txtSanaIntervaloDescansar.Text = SanaIntervaloDescansar

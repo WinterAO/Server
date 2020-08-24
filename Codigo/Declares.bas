@@ -61,6 +61,8 @@ Public tickLimpieza      As Integer
 ' Modulo de declaraciones. Aca hay de todo.
 '
 
+Public Const MAXMATERIALES As Byte = 4 '4 materiales maximo para construir un item con profesiones
+
 Public aClon          As clsAntiMassClon
 
 Public TrashCollector As Collection
@@ -385,15 +387,9 @@ Public Const MAXUSERHECHIZOS               As Byte = 35
 
 ' TODO: Y ESTO ? LO CONOCE GD ?
 
-Public Const EsfuerzoTalar                 As Byte = 2
-
-Public Const EsfuerzoPescar                As Byte = 3
-
-Public Const EsfuerzoExcavar               As Byte = 3
+Public Const EsfuerzoExtraer               As Byte = 3
 
 Public Const FX_TELEPORT_INDEX             As Integer = 25
-
-Public Const PORCENTAJE_MATERIALES_UPGRADE As Single = 0.85
 
 ' La utilidad de esto es casi nula, solo se revisa si fue a la cabeza...
 Public Enum PartesCuerpo
@@ -406,6 +402,8 @@ Public Enum PartesCuerpo
     bTorso = 6
 
 End Enum
+
+Public Const MAXUSERRECETAS                 As Integer = 200 'Un usuario puede aprender 200 recetas de una profesion como maximo
 
 Public Const Guardias                       As Integer = 6
 
@@ -453,16 +451,6 @@ Public Const HACHA_LENA_ELFICA              As Integer = 1005
 
 Public Const PIQUETE_MINERO                 As Integer = 187
 
-Public Const HACHA_LENADOR_NEWBIE           As Integer = 561
-
-Public Const PIQUETE_MINERO_NEWBIE          As Integer = 562
-
-Public Const CANA_PESCA_NEWBIE              As Integer = 563
-
-Public Const SERRUCHO_CARPINTERO_NEWBIE     As Integer = 564
-
-Public Const MARTILLO_HERRERO_NEWBIE        As Integer = 565
-
 Public Const DAGA                           As Integer = 15
 
 Public Const FOGATA_APAG                    As Integer = 136
@@ -478,6 +466,10 @@ Public Const HIERRO_MINA                    As Integer = 192
 Public Const MARTILLO_HERRERO               As Integer = 389
 
 Public Const SERRUCHO_CARPINTERO            As Integer = 198
+
+Public Const KIT_DE_COSTURA                 As Integer = 1298
+
+Public Const OLLA_ALQUIMISTA                As Integer = 1306
 
 Public Const ObjArboles                     As Integer = 4
 
@@ -506,6 +498,8 @@ Public Enum eNPCType
     Quest = 14
     Marinero = 15
     Subastador = 16
+    Recurso = 17
+    Instructor = 18
     
 End Enum
 
@@ -515,7 +509,7 @@ Public Const MIN_APUNALAR   As Byte = 10
 
 ''
 ' Cantidad de skills
-Public Const NUMSKILLS      As Byte = 21
+Public Const NUMSKILLS      As Byte = 24
 
 ''
 ' Cantidad de Atributos
@@ -595,7 +589,6 @@ Public ListaPeces(1 To NUM_PECES) As Integer
 
 '%%%%%%%%%% CONSTANTES DE INDICES %%%%%%%%%%%%%%%
 Public Enum eSkill
-
     Magia = 1
     Robar = 2
     Tacticas = 3
@@ -604,19 +597,23 @@ Public Enum eSkill
     Apunalar = 6
     Ocultarse = 7
     Supervivencia = 8
-    Talar = 9
-    Comerciar = 10
-    Defensa = 11
-    pesca = 12
-    Mineria = 13
-    Carpinteria = 14
-    Herreria = 15
-    Liderazgo = 16
-    Domar = 17
-    Proyectiles = 18
-    Wrestling = 19
-    Navegacion = 20
-    Equitacion = 21
+    Defensa = 9
+    Proyectiles = 10
+    Wrestling = 11
+    Comerciar = 12
+    Domar = 13
+    '<--Fijos-->
+    Liderazgo = 14
+    Navegacion = 15
+    Equitacion = 16
+    Talar = 17
+    pesca = 18
+    Mineria = 19
+    Carpinteria = 20
+    herreria = 21
+    Sastreria = 22
+    Herboristeria = 23
+    Alquimia = 24
 End Enum
 
 Public Enum eMochilas
@@ -659,7 +656,7 @@ Public SND_TALAR                        As Byte
 
 Public SND_PESCAR                       As Byte
 
-Public SND_MINERO                       As Byte
+Public SND_MINERO                       As Integer
 
 Public SND_WARP                         As Byte
 
@@ -757,6 +754,7 @@ Public Enum eOBJType
     otMochilas = 37
     otYacimientoPez = 38
     otPiedraHogar = 39
+    otInstruye = 40
     otCualquiera = 1000
 
 End Enum
@@ -1003,6 +1001,11 @@ End Type
 
 Public Const MAX_ITEMS_CRAFTEO As Byte = 4
 
+Public Type tProfesion
+    Profesion As Byte 'Indica el skill
+    Categoria As Byte 'Indica la categoria
+End Type
+
 'Tipos de objetos
 Public Type ObjData
 
@@ -1028,8 +1031,10 @@ Public Type ObjData
     MinHp As Integer ' Minimo puntos de vida
     MaxHp As Integer ' Maximo puntos de vida
     
-    MineralIndex As Integer
+    RecursoIndex As Integer
     LingoteInex As Integer
+    RecetaIndex As Integer 'Manuales de profesiones
+    Profesion As Byte 'Indica la profesion a la que va dirigida el item
     
     proyectil As Integer
     Municion As Integer
@@ -1096,14 +1101,13 @@ Public Type ObjData
     
     Agarrable As Byte
     
-    LingH As Integer
-    LingO As Integer
-    LingP As Integer
-    Madera As Integer
-    MaderaElfica As Integer
+    Materiales(1 To MAXMATERIALES)
+    CantMateriales(1 To MAXMATERIALES)
     
     SkHerreria As Integer
     SkCarpinteria As Integer
+    SkSastreria As Integer
+    SkAlquimia As Integer
     
     ItemCrafteo() As CraftingItem
 
@@ -1143,8 +1147,6 @@ Public Type ObjData
     Log As Byte 'es un objeto que queremos loguear? Pablo (ToxicWaste) 07/09/07
     NoLog As Byte 'es un objeto que esta prohibido loguear?
     
-    Upgrade As Integer
-    
     MontTipo As Byte 'Tipo de Montura
     
     IndiceSkill As Byte 'El indice del Skills
@@ -1164,6 +1166,9 @@ Public Type ObjData
     'Auras
     GrhAura As Long
     AuraColor As Long
+    
+    Herramienta As tProfesion
+    Recurso As tProfesion
 End Type
 
 Public Type obj
@@ -1497,10 +1502,21 @@ Public Type UserFlags
     ParalizedByIndex As Integer
     ParalizedByNpcIndex As Integer
     
+    Subastando As Boolean
+    
     Global As Byte 'Indica si el usuario puede usar el global
     
     CasteoSpell As tCasteoSpell
-
+    
+    MacroTrabajo As eMacroTrabajo
+    MacroTrabajaObj As Integer
+    MacroCountObj As Integer
+    
+    ProfInstruyendo As Byte
+    Instruyendo As Byte
+    
+    Trabajando As Byte
+    
 End Type
 
 Public Type UserCounters
@@ -1513,6 +1529,7 @@ Public Type UserCounters
     Lava As Integer
     COMCounter As Integer
     AGUACounter As Integer
+    MacroTrabajo As Integer
     Veneno As Integer
     Paralisis As Integer
     Ceguera As Integer
@@ -1584,13 +1601,6 @@ Public Type tFacciones
 
 End Type
 
-Public Type tCrafting
-
-    Cantidad As Long
-    PorCiclo As Integer
-
-End Type
-
 Public Type AccountCharacters
     ID As String
     Name As String
@@ -1641,6 +1651,11 @@ index As Integer
 
 End Type
 
+Public Type tUserProfesion
+    Profesion As Byte 'Indica la profesion
+    Recetas(1 To MAXUSERRECETAS) As Long 'Indica la receta
+End Type
+
 'Tipo de los Usuarios
 Public Type User
     PosAnt As WorldPos
@@ -1681,8 +1696,6 @@ Public Type User
     '[/KEVIN]
     
     Counters As UserCounters
-    
-    Construir As tCrafting
     
     MascotasIndex(1 To MAXMASCOTAS) As Integer
     MascotasType(1 To MAXMASCOTAS) As Integer
@@ -1732,6 +1745,8 @@ Public Type User
     CreoPortal As Boolean
     PortalPos As WorldPos
     PortalTiempo As Integer
+    
+    Profesion(0 To 1) As tUserProfesion
 
 End Type
 
@@ -1815,6 +1830,8 @@ Public Type NPCFlags
     Tepeable As Byte
     
     Invocacion As Byte
+    
+    Recurso As tProfesion
     
 End Type
 
@@ -1911,6 +1928,7 @@ Public Type NPC
     ClanIndex As Integer
     
     NoShadow As Byte
+    Instruye As Byte 'Instruye un profesion
 
 End Type
 

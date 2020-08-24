@@ -115,6 +115,8 @@ Public IntervaloUserPuedeUsar            As Long
 
 Public IntervaloFlechasCazadores         As Long
 
+Public IntervaloPuedeMakrear             As Integer
+
 Public IntervaloPuedeSerAtacado          As Long
 
 Public IntervaloAtacable                 As Long
@@ -139,11 +141,7 @@ Public Lloviendo                         As Boolean
 
 Public DeNoche                           As Boolean
 
-Public DificultadPescar                      As Integer
-
-Public DificultadTalar                       As Integer
-
-Public DificultadMinar                       As Integer
+Public DificultadExtraer                 As Integer
 
 
 Function VersionOK(ByVal Ver As String) As Boolean
@@ -170,7 +168,7 @@ Sub ReSpawnOrigPosNpcs()
 
     Dim i     As Integer
 
-    Dim MiNPC As npc
+    Dim MiNPC As NPC
        
     For i = 1 To LastNPC
 
@@ -260,7 +258,7 @@ Sub WorldSave()
 
 End Sub
 
-Public Sub Encarcelar(ByVal UserIndex As Integer, _
+Public Sub Encarcelar(ByVal userIndex As Integer, _
                       ByVal Minutos As Long, _
                       Optional ByVal GmName As String = vbNullString)
     '***************************************************
@@ -270,20 +268,20 @@ Public Sub Encarcelar(ByVal UserIndex As Integer, _
     'Recox: Arreglado problema de tiempo en carcel
     '***************************************************
 
-    UserList(UserIndex).Counters.Pena = Minutos * 60
+    UserList(userIndex).Counters.Pena = Minutos * 60
     
-    Call WarpUserChar(UserIndex, Prision.Map, Prision.X, Prision.Y, True)
+    Call WarpUserChar(userIndex, Prision.Map, Prision.X, Prision.Y, True)
     
     If LenB(GmName) = 0 Then
-        Call WriteConsoleMsg(UserIndex, "Has sido encarcelado, deberas permanecer en la carcel " & Minutos & " minutos.", FontTypeNames.FONTTYPE_INFO)
+        Call WriteConsoleMsg(userIndex, "Has sido encarcelado, deberas permanecer en la carcel " & Minutos & " minutos.", FontTypeNames.FONTTYPE_INFO)
     Else
-        Call WriteConsoleMsg(UserIndex, GmName & " te ha encarcelado, deberas permanecer en la carcel " & Minutos & " minutos.", FontTypeNames.FONTTYPE_INFO)
+        Call WriteConsoleMsg(userIndex, GmName & " te ha encarcelado, deberas permanecer en la carcel " & Minutos & " minutos.", FontTypeNames.FONTTYPE_INFO)
 
     End If
 
 End Sub
 
-Public Function BorrarUsuario(ByVal UserIndex As Integer, ByVal UserName As String) As Boolean
+Public Function BorrarUsuario(ByVal userIndex As Integer, ByVal UserName As String) As Boolean
 
     '********************************************************************************
     'Author: Lorwik

@@ -1337,6 +1337,9 @@ Public Function OpenNPC(ByVal NpcNumber As Integer, _
             .Tepeable = val(Leer.GetValue("NPC" & NpcNumber, "Tepeable"))
             
             .Invocacion = val(Leer.GetValue("NPC" & NpcNumber, "Invocacion"))
+            
+            .Recurso.Profesion = val(ReadField(1, Leer.GetValue("NPC" & NpcNumber, "Recurso"), Asc("-")))
+            .Recurso.Categoria = val(ReadField(2, Leer.GetValue("NPC" & NpcNumber, "Recurso"), Asc("-")))
         End With
         
         '<<<<<<<<<<<<<< Expresiones >>>>>>>>>>>>>>>>
@@ -1356,6 +1359,8 @@ Public Function OpenNPC(ByVal NpcNumber As Integer, _
         .Ciudad = val(Leer.GetValue("NPC" & NpcNumber, "Ciudad"))
         
         .NoShadow = val(Leer.GetValue("NPC" & NpcNumber, "NoShadow"))
+        
+        .Instruye = val(Leer.GetValue("NPC" & NpcNumber, "Instruye"))
 
     End With
     

@@ -99,9 +99,7 @@ Private Enum ServerPacketID
     ChangeBankSlot               ' SBO
     ChangeSpellSlot              ' SHS
     Atributes                    ' ATR
-    BlacksmithWeapons            ' LAH
-    BlacksmithArmors             ' LAR
-    InitCarpenting               ' OBR
+    InitTrabajo
     RestOK                       ' DOK
     errorMsg                     ' ERR
     Blind                        ' CEGU
@@ -174,6 +172,7 @@ Private Enum ServerPacketID
     ShowProcess
     CharParticle
     IniciarSubastaConsulta
+    ConfirmarInstruccion
 End Enum
 
 Private Enum ClientPacketID
@@ -207,8 +206,8 @@ Private Enum ClientPacketID
     Work                            'UK
     UseSpellMacro                   'UMH
     UseItem                         'USA
-    CraftBlacksmith                 'CNS
-    CraftCarpenter                  'CNC
+    CraftearItem
+    WorkClose
     WorkLeftClick                   'WLC
     CreateNewGuild                  'CIG
     EquipItem                      'EQUI
@@ -294,9 +293,7 @@ Private Enum ClientPacketID
     PartyAcceptMember             '/ACCEPTPARTY
     Ping                          '/PING
     RequestPartyForm
-    ItemUpgrade
     GMCommands
-    InitCrafting
     Home
     ShowGuildNews
     ShareNpc                      '/COMPARTIR
@@ -330,8 +327,10 @@ Private Enum ClientPacketID
     AccionInventario
     invocar                     '/INVOCAR
     IniciarSubasta 'Iniciamos una subasta
+    CancelarSubasta
     OfertarSubasta 'Ofertamos en la subasta
     ConsultaSubasta 'Si existe una subasta enviamos la Info, sino Abrimos el panel para iniciar una subasta.
+    RespuestaInstruccion
 End Enum
 
 ''
@@ -561,11 +560,11 @@ Public Function HandleIncomingData(ByVal UserIndex As Integer) As Boolean
         Case ClientPacketID.UseItem                 'USA
             Call HandleUseItem(UserIndex)
         
-        Case ClientPacketID.CraftBlacksmith         'CNS
-            Call HandleCraftBlacksmith(UserIndex)
-        
-        Case ClientPacketID.CraftCarpenter          'CNC
-            Call HandleCraftCarpenter(UserIndex)
+        Case ClientPacketID.CraftearItem
+            Call HandleCraftearItem(UserIndex)
+            
+        Case ClientPacketID.WorkClose
+            Call HandleWorkClose(UserIndex)
         
         Case ClientPacketID.WorkLeftClick           'WLC
             Call HandleWorkLeftClick(UserIndex)
@@ -821,15 +820,9 @@ Public Function HandleIncomingData(ByVal UserIndex As Integer) As Boolean
             
         Case ClientPacketID.RequestPartyForm
             Call HandlePartyForm(UserIndex)
-            
-        Case ClientPacketID.ItemUpgrade
-            Call HandleItemUpgrade(UserIndex)
         
         Case ClientPacketID.GMCommands              'GM Messages
             Call HandleGMCommands(UserIndex)
-            
-        Case ClientPacketID.InitCrafting
-            Call HandleInitCrafting(UserIndex)
         
         Case ClientPacketID.Home
             Call HandleHome(UserIndex)
@@ -926,12 +919,18 @@ Public Function HandleIncomingData(ByVal UserIndex As Integer) As Boolean
             
         Case ClientPacketID.IniciarSubasta
             Call HandleIniciaSubasta(UserIndex)
+            
+        Case ClientPacketID.CancelarSubasta
+             Call HandleCancelarSubasta(UserIndex)
            
         Case ClientPacketID.OfertarSubasta
             Call HandleOfertaSubasta(UserIndex)
   
         Case ClientPacketID.ConsultaSubasta
             Call HandleConsultarSubasta(UserIndex)
+            
+        Case ClientPacketID.RespuestaInstruccion
+            Call HandleRespuestaInstruccion(UserIndex)
             
         Case Else
             'ERROR : Abort!
@@ -2240,6 +2239,11 @@ Private Sub HandleWalk(ByVal UserIndex As Integer)
         Call .incomingData.ReadByte
         
         Heading = .incomingData.ReadByte()
+        
+        '¿Está trabajando?
+        If .flags.MacroTrabajo <> 0 Then
+            Call DejardeTrabajar(UserIndex)
+        End If
 
         Dim TiempoDeWalk As Byte
         If .flags.Equitando = 1 Then
@@ -2412,6 +2416,13 @@ Private Sub HandleAttack(ByVal UserIndex As Integer)
             Exit Sub
 
         End If
+        
+        '¿Está trabajando?
+        If .flags.MacroTrabajo <> 0 Then
+            Call WriteConsoleMsg(UserIndex, "¡Estas trabajando!", FontTypeNames.FONTTYPE_INFO)
+            Exit Sub
+        End If
+        
         'If equiped weapon is ranged, can't attack this way
         If .Invent.WeaponEqpObjIndex > 0 Then
             If ObjData(.Invent.WeaponEqpObjIndex).proyectil = 1 Then
@@ -2903,6 +2914,12 @@ Private Sub HandleDrop(ByVal UserIndex As Integer)
         'low rank admins can't drop item. Neither can the dead nor those sailing.
         If .flags.Navegando = 1 Or .flags.Muerto = 1 Or ((.flags.Privilegios And PlayerType.Consejero) <> 0 And (Not .flags.Privilegios And PlayerType.RoleMaster) <> 0) Then Exit Sub
 
+        '¿Está trabajando?
+        If .flags.MacroTrabajo <> 0 Then
+            Call WriteConsoleMsg(UserIndex, "¡Estas trabajando!", FontTypeNames.FONTTYPE_INFO)
+            Exit Sub
+        End If
+
         'If the user is trading, he can't drop items => He's cheating, we kick him.
         If .flags.Comerciando Then Exit Sub
 
@@ -2963,6 +2980,12 @@ Private Sub HandleCastSpell(ByVal UserIndex As Integer)
             Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
             Exit Sub
 
+        End If
+        
+        '¿Está trabajando?
+        If .flags.MacroTrabajo <> 0 Then
+            Call WriteConsoleMsg(UserIndex, "¡Estas trabajando!", FontTypeNames.FONTTYPE_INFOBOLD)
+            Exit Sub
         End If
         
         'Now you can be atacked
@@ -3152,40 +3175,6 @@ errHandler:
 End Sub
 
 ''
-' Handles the "InitCrafting" message.
-'
-' @param    userIndex The index of the user sending the message.
-
-Private Sub HandleInitCrafting(ByVal UserIndex As Integer)
-
-    '***************************************************
-    'Author: ZaMa
-    'Last Modification: 29/01/2010
-    '
-    '***************************************************
-    Dim TotalItems    As Long
-
-    Dim ItemsPorCiclo As Integer
-    
-    With UserList(UserIndex)
-        'Remove packet ID
-        Call .incomingData.ReadByte
-        
-        TotalItems = .incomingData.ReadLong
-        ItemsPorCiclo = .incomingData.ReadInteger
-        
-        If TotalItems > 0 Then
-            
-            .Construir.Cantidad = TotalItems
-            .Construir.PorCiclo = MinimoInt(MaxItemsConstruibles(UserIndex), ItemsPorCiclo)
-
-        End If
-
-    End With
-
-End Sub
-
-''
 ' Handles the "UseSpellMacro" message.
 '
 ' @param    userIndex The index of the user sending the message.
@@ -3253,11 +3242,11 @@ Private Sub HandleUseItem(ByVal UserIndex As Integer)
 End Sub
 
 ''
-' Handles the "CraftBlacksmith" message.
+' Handles the "CraftearItem" message.
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleCraftBlacksmith(ByVal UserIndex As Integer)
+Private Sub HandleCraftearItem(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -3270,23 +3259,41 @@ Private Sub HandleCraftBlacksmith(ByVal UserIndex As Integer)
 
     End If
     
-    With UserList(UserIndex).incomingData
+    With UserList(UserIndex)
         'Remove packet ID
-        Call .ReadByte
+        Call .incomingData.ReadByte
         
-        Dim Item As Integer
+        Dim Item As Long
+        Dim Cantidad As Integer
+        Dim Profesion As Byte
         
-        Item = .ReadInteger()
+        Item = .incomingData.ReadLong()
+        Cantidad = .incomingData.ReadInteger()
+        Profesion = .incomingData.ReadByte()
         
-        If Item < 1 Then Exit Sub
+        If Item < 1 Or Cantidad < 1 Then Exit Sub
         
-        If ObjData(Item).SkHerreria = 0 Then Exit Sub
-        
-        If Not IntervaloPermiteTrabajar(UserIndex) Then Exit Sub
-        Call HerreroConstruirItem(UserIndex, Item)
-
+        Call ComenzarCrafteo(UserIndex, Item, Cantidad, Profesion)
     End With
 
+End Sub
+
+Private Sub HandleWorkClose(ByVal UserIndex As Integer)
+    '***************************************************
+    'Author: Lorwik
+    'Last Modification: 21/08/2020
+    '
+    '***************************************************
+    With UserList(UserIndex)
+    
+        'Remove packet ID
+        Call .incomingData.ReadByte
+
+        .flags.Trabajando = 0
+    
+    End With
+    
+    
 End Sub
 
 ''
@@ -3309,20 +3316,30 @@ Private Sub HandleCraftCarpenter(ByVal UserIndex As Integer)
     
     On Error GoTo errHandler
     
-    With UserList(UserIndex).incomingData
+    With UserList(UserIndex)
         'Remove packet ID
-        Call .ReadByte
+        Call .incomingData.ReadByte
         
         Dim Item As Integer
+        Dim Cantidad As Integer
         
-        Item = .ReadInteger()
+        Item = .incomingData.ReadInteger()
+        Cantidad = .incomingData.ReadInteger()
         
         If Item < 1 Then Exit Sub
         
         If ObjData(Item).SkCarpinteria = 0 Then Exit Sub
         
         If Not IntervaloPermiteTrabajar(UserIndex) Then Exit Sub
-        Call CarpinteroConstruirItem(UserIndex, Item)
+        'Comprobamos que no se encuentra trabajando, para prevenir bugs y hacks
+        If .flags.MacroTrabajo = 0 Then
+            .flags.MacroTrabajaObj = Item
+            .flags.MacroCountObj = Cantidad
+            .flags.MacroTrabajo = eMacroTrabajo.Carpinteando
+            Call WriteConsoleMsg(UserIndex, "Comienzas a trabajar.", FontTypeNames.FONTTYPE_INFO)
+        Else
+            Call WriteConsoleMsg(UserIndex, "Ya te encuentras trabajando.", FontTypeNames.FONTTYPE_INFO)
+        End If
 
     End With
     
@@ -3361,7 +3378,7 @@ Private Sub HandleWorkLeftClick(ByVal UserIndex As Integer)
 
         Dim Skill       As eSkill
 
-        Dim DummyInt    As Integer
+        Dim DummyINT    As Integer
 
         Dim tU          As Integer   'Target user
 
@@ -3442,73 +3459,6 @@ Private Sub HandleWorkLeftClick(ByVal UserIndex As Integer)
 
                 End If
             
-            Case eSkill.pesca
-                WeaponIndex = .Invent.WeaponEqpObjIndex
-
-                If WeaponIndex = 0 Then Exit Sub
-                
-                'Check interval
-                If Not IntervaloPermiteTrabajar(UserIndex) Then Exit Sub
-                
-                'Basado en la idea de Barrin
-                'Comentario por Barrin: jah, "basado", caradura ! ^^
-                If MapData(.Pos.Map, .Pos.X, .Pos.Y).Trigger = eTrigger.BAJOTECHO Or MapData(.Pos.Map, .Pos.X, .Pos.Y).Trigger = eTrigger.CASA Then
-                    Call WriteConsoleMsg(UserIndex, "No puedes pescar desde donde te encuentras.", FontTypeNames.FONTTYPE_INFO)
-                    Exit Sub
-
-                End If
-                
-                If HayAgua(.Pos.Map, X, Y) Then
-
-                    Select Case WeaponIndex
-
-                        Case CANA_PESCA, CANA_PESCA_NEWBIE
-                            Call DoPescar(UserIndex)
-                        
-                        Case RED_PESCA
-                            
-                            DummyInt = MapData(.Pos.Map, X, Y).ObjInfo.ObjIndex
-                
-                            If DummyInt = 0 Then
-                                Call WriteConsoleMsg(UserIndex, "No hay un yacimiento de peces donde pescar.", FontTypeNames.FONTTYPE_INFO)
-                                Exit Sub
-
-                            End If
-                            
-                            If Abs(.Pos.X - X) + Abs(.Pos.Y - Y) > 2 Then
-                                Call WriteConsoleMsg(UserIndex, "Estas demasiado lejos para pescar.", FontTypeNames.FONTTYPE_INFO)
-                                Exit Sub
-
-                            End If
-                            
-                            If .Pos.X = X And .Pos.Y = Y Then
-                                Call WriteConsoleMsg(UserIndex, "No puedes pescar desde alli.", FontTypeNames.FONTTYPE_INFO)
-                                Exit Sub
-
-                            End If
-                            
-                            'Hay un arbol normal donde clickeo?
-                            If ObjData(DummyInt).OBJType = eOBJType.otYacimientoPez Then
-                                Call DoPescarRed(UserIndex)
-                            Else
-                                Call WriteConsoleMsg(UserIndex, "No hay un yacimiento de peces donde pescar.", FontTypeNames.FONTTYPE_INFO)
-                                Exit Sub
-
-                            End If
-                              
-                        Case Else
-
-                            Exit Sub    'Invalid item!
-
-                    End Select
-                    
-                    'Play sound!
-                    Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_PESCAR, .Pos.X, .Pos.Y))
-                Else
-                    Call WriteConsoleMsg(UserIndex, "No hay agua donde pescar. Busca un lago, rio o mar.", FontTypeNames.FONTTYPE_INFO)
-
-                End If
-            
             Case eSkill.Robar
 
                 'Does the map allow us to steal here?
@@ -3562,46 +3512,84 @@ Private Sub HandleWorkLeftClick(ByVal UserIndex As Integer)
                     Call WriteConsoleMsg(UserIndex, "No puedes robar en zonas seguras!", FontTypeNames.FONTTYPE_INFO)
 
                 End If
-            
-            Case eSkill.Mineria
-
-                If Not IntervaloPermiteTrabajar(UserIndex) Then Exit Sub
-                                
+                
+            Case eSkill.pesca
                 WeaponIndex = .Invent.WeaponEqpObjIndex
-                                
+
                 If WeaponIndex = 0 Then Exit Sub
                 
-                If WeaponIndex <> PIQUETE_MINERO And WeaponIndex <> PIQUETE_MINERO_NEWBIE Then
-                    ' Podemos llegar aca si el user equipo el anillo dsp de la U y antes del click
+                'Check interval
+                If Not IntervaloPermiteTrabajar(UserIndex) Then Exit Sub
+                
+                If MapData(.Pos.Map, .Pos.X, .Pos.Y).Trigger = eTrigger.BAJOTECHO Or MapData(.Pos.Map, .Pos.X, .Pos.Y).Trigger = eTrigger.CASA Then
+                    Call WriteConsoleMsg(UserIndex, "No puedes pescar desde donde te encuentras.", FontTypeNames.FONTTYPE_INFO)
                     Exit Sub
 
                 End If
                 
+                If HayAgua(.Pos.Map, X, Y) Then
+                
+                    If Abs(.Pos.X - X) + Abs(.Pos.Y - Y) > 2 Then
+                        Call WriteConsoleMsg(UserIndex, "No puedes pescar desde donde te encuentras.", FontTypeNames.FONTTYPE_INFO)
+                        Exit Sub
+                    End If
+
+                    Select Case WeaponIndex
+
+                        Case CANA_PESCA
+                            .flags.MacroTrabajo = eMacroTrabajo.PESCAR
+                        
+                        Case RED_PESCA
+                        
+                            If .Stats.UserSkills(eSkill.pesca) < ObjData(WeaponIndex).MinSkill Then
+                                Call WriteConsoleMsg(UserIndex, "No tienes conocimientos en Pesca suficiente para usar la red. Necesitas al menos " & ObjData(WeaponIndex).MinSkill & " Skills.", FontTypeNames.FONTTYPE_INFO)
+                                Exit Sub
+                            End If
+                            
+                            .flags.MacroTrabajo = eMacroTrabajo.PescarRed
+   
+                        Case Else
+
+                            Exit Sub    'Invalid item!
+
+                    End Select
+                    
+                    Call WriteConsoleMsg(UserIndex, "Comienzas a trabajar.", FontTypeNames.FONTTYPE_INFO)
+                    
+                Else
+                    Call WriteConsoleMsg(UserIndex, "No hay agua donde pescar. Busca un lago, rio o mar.", FontTypeNames.FONTTYPE_INFO)
+
+                End If
+            
+            Case eSkill.Mineria, eSkill.Talar
                 'Target whatever is in the tile
                 Call LookatTile(UserIndex, .Pos.Map, X, Y)
                 
-                DummyInt = MapData(.Pos.Map, X, Y).ObjInfo.ObjIndex
+                DummyINT = MapData(.Pos.Map, X, Y).ObjInfo.ObjIndex
                 
-                If DummyInt > 0 Then
-
+                If DummyINT > 0 Then
                     'Check distance
-                    If Abs(.Pos.X - X) + Abs(.Pos.Y - Y) > 2 Then
-                        Call WriteConsoleMsg(UserIndex, "Estas demasiado lejos.", FontTypeNames.FONTTYPE_INFO)
+                    If Abs(.Pos.X - X) + Abs(.Pos.Y - Y) > 1 Then
+                        Call WriteConsoleMsg(UserIndex, "Estás demasiado lejos.", FontTypeNames.FONTTYPE_INFO)
                         Exit Sub
-
                     End If
                     
-                    'Hay un yacimiento donde clickeo?
-                    If ObjData(DummyInt).OBJType = eOBJType.otYacimiento Then
-                        Call DoMineria(UserIndex)
+                    DummyINT = MapData(.Pos.Map, X, Y).ObjInfo.ObjIndex 'CHECK
+                    
+                    '¿Hay un yacimiento donde clickeo?
+                    If ObjData(DummyINT).Recurso.Profesion = Skill Then
+                        If PuedeExtraer(UserIndex, Skill) Then
+                            .flags.MacroTrabajo = Skill
+                            Call WriteConsoleMsg(UserIndex, "Comienzas a trabajar.", FontTypeNames.FONTTYPE_INFO)
+                        End If
+                        
                     Else
-                        Call WriteConsoleMsg(UserIndex, "Ahi no hay ningUn yacimiento.", FontTypeNames.FONTTYPE_INFO)
-
+                        Call WriteConsoleMsg(UserIndex, "Ahí no hay ninguna fuente de recursos que puedas extraer con esa herramienta.", FontTypeNames.FONTTYPE_INFO)
+                        
                     End If
-
                 Else
-                    Call WriteConsoleMsg(UserIndex, "Ahi no hay ningUn yacimiento.", FontTypeNames.FONTTYPE_INFO)
-
+                    Call WriteConsoleMsg(UserIndex, "Ahí no hay ninguna fuente de recursos.", FontTypeNames.FONTTYPE_INFO)
+                    
                 End If
             
             Case eSkill.Domar
@@ -3639,60 +3627,24 @@ Private Sub HandleWorkLeftClick(ByVal UserIndex As Integer)
                 End If
             
             Case FundirMetal    'UGLY!!! This is a constant, not a skill!!
-
-                'Check interval
-                If Not IntervaloPermiteTrabajar(UserIndex) Then Exit Sub
-                
-                'Check there is a proper item there
-                If .flags.TargetObj > 0 Then
-                    If ObjData(.flags.TargetObj).OBJType = eOBJType.otFragua Then
-
-                        'Validate other items
-                        If .flags.TargetObjInvSlot < 1 Or .flags.TargetObjInvSlot > .CurrentInventorySlots Then
-                            Exit Sub
-
-                        End If
-                        
-                        ''chequeamos que no se zarpe duplicando oro
-                        If .Invent.Object(.flags.TargetObjInvSlot).ObjIndex <> .flags.TargetObjInvIndex Then
-                            If .Invent.Object(.flags.TargetObjInvSlot).ObjIndex = 0 Or .Invent.Object(.flags.TargetObjInvSlot).Amount = 0 Then
-                                Call WriteConsoleMsg(UserIndex, "No tienes mas minerales.", FontTypeNames.FONTTYPE_INFO)
-                                Exit Sub
-
-                            End If
-                            
-                            ''FUISTE
-                            Call WriteErrorMsg(UserIndex, "Has sido expulsado por el sistema anti cheats.")
-                            Call CloseUser(UserIndex)
-                            Exit Sub
-
-                        End If
-
-                        If ObjData(.flags.TargetObjInvIndex).OBJType = eOBJType.otMinerales Then
-                            Call FundirMineral(UserIndex)
-                        ElseIf ObjData(.flags.TargetObjInvIndex).OBJType = eOBJType.otWeapon Then
-                            Call FundirArmas(UserIndex)
-
-                        End If
-
-                    Else
-                        Call WriteConsoleMsg(UserIndex, "Ahi no hay ninguna fragua.", FontTypeNames.FONTTYPE_INFO)
-
-                    End If
-
-                Else
-                    Call WriteConsoleMsg(UserIndex, "Ahi no hay ninguna fragua.", FontTypeNames.FONTTYPE_INFO)
-
+                If PuedeLingotear(UserIndex) Then
+                    .flags.MacroTrabajo = eMacroTrabajo.Lingotear
+                    Call WriteConsoleMsg(UserIndex, "Comienzas a trabajar.", FontTypeNames.FONTTYPE_INFO)
                 End If
             
-            Case eSkill.Herreria
+            Case eSkill.herreria
                 'Target wehatever is in that tile
                 Call LookatTile(UserIndex, .Pos.Map, X, Y)
                 
+                If ConoceProfesion(UserIndex, eSkill.herreria) < 0 Then
+                    Call WriteConsoleMsg(UserIndex, "No conoces esa profesion.", FontTypeNames.FONTTYPE_INFOBOLD)
+                    Exit Sub
+                End If
+                
                 If .flags.TargetObj > 0 Then
                     If ObjData(.flags.TargetObj).OBJType = eOBJType.otYunque Then
-                        Call EnivarArmasConstruibles(UserIndex)
-                        Call EnivarArmadurasConstruibles(UserIndex)
+                        Call WriteInitTrabajo(UserIndex, eSkill.herreria)
+                        
                     Else
                         Call WriteConsoleMsg(UserIndex, "Ahi no hay ningUn yunque.", FontTypeNames.FONTTYPE_INFO)
 
@@ -3959,7 +3911,7 @@ Private Sub HandleModifySkills(ByVal UserIndex As Integer)
         For i = 1 To NUMSKILLS
             If points(i) > 0 Then
                 '¿El skill asignado es uno de los fijos?
-                If i = eSkill.Talar Or i = eSkill.Mineria Or i = eSkill.Carpinteria Or i = eSkill.Herreria Or _
+                If i = eSkill.Talar Or i = eSkill.Mineria Or i = eSkill.Carpinteria Or i = eSkill.herreria Or _
                     i = eSkill.Liderazgo Or i = eSkill.Navegacion Or i = eSkill.Equitacion Or i = eSkill.pesca Then
                     
                     Call LogHackAttemp(.Name & " IP:" & .IP & " trato de hackear los skills.")
@@ -9776,37 +9728,6 @@ Private Sub HandlePartyForm(ByVal UserIndex As Integer)
             Call WriteConsoleMsg(UserIndex, "No perteneces a ningun grupo!", FontTypeNames.FONTTYPE_INFOBOLD)
 
         End If
-
-    End With
-
-End Sub
-
-''
-' Handles the "ItemUpgrade" message.
-'
-' @param    UserIndex The index of the user sending the message.
-
-Private Sub HandleItemUpgrade(ByVal UserIndex As Integer)
-
-    '***************************************************
-    'Author: Torres Patricio
-    'Last Modification: 12/09/09
-    '
-    '***************************************************
-    With UserList(UserIndex)
-
-        Dim ItemIndex As Integer
-        
-        'Remove packet ID
-        Call .incomingData.ReadByte
-        
-        ItemIndex = .incomingData.ReadInteger()
-        
-        If ItemIndex <= 0 Then Exit Sub
-        If Not TieneObjetos(ItemIndex, 1, UserIndex) Then Exit Sub
-        
-        If Not IntervaloPermiteTrabajar(UserIndex) Then Exit Sub
-        Call DoUpgrade(UserIndex, ItemIndex)
 
     End With
 
@@ -19034,7 +18955,7 @@ End Sub
 ' @param    UserIndex User to which the message is intended.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteBlacksmithWeapons(ByVal UserIndex As Integer)
+Public Sub WriteInitTrabajo(ByVal UserIndex As Integer, ByVal Profesion As Byte)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -19043,171 +18964,62 @@ Public Sub WriteBlacksmithWeapons(ByVal UserIndex As Integer)
     '***************************************************
     On Error GoTo errHandler
 
-    Dim i              As Long
-    Dim obj            As ObjData
-    Dim validIndexes() As Integer
-    Dim Count          As Integer
+    Dim i                           As Long
+    Dim j                           As Byte
+    Dim obj(1 To MAXUSERRECETAS)    As Long
+    Dim validIndexes()              As Integer
+    Dim Count                       As Integer
+    Dim SlotProfesion               As Integer
     
-    ReDim validIndexes(1 To UBound(ArmasHerrero()))
+    With UserList(UserIndex)
     
-    With UserList(UserIndex).outgoingData
-        Call .WriteByte(ServerPacketID.BlacksmithWeapons)
+        'Obtenemos el slot de la profesion
+        SlotProfesion = ConoceProfesion(UserIndex, Profesion)
         
-        For i = 1 To UBound(ArmasHerrero())
+        'Si por un casual nos llegara que no la conoce...
+        If SlotProfesion < 0 Then Exit Sub
+    
+        Call .outgoingData.WriteByte(ServerPacketID.InitTrabajo)
+        Call .outgoingData.WriteByte(Profesion) 'Mando la profesion
+        
+        For i = 1 To MAXUSERRECETAS
 
             ' Can the user create this object? If so add it to the list....
-            If ObjData(ArmasHerrero(i)).SkHerreria <= Round(UserList(UserIndex).Stats.UserSkills(eSkill.Herreria) / ModHerreriA(UserList(UserIndex).clase), 0) Then
+            If .Profesion(SlotProfesion).Recetas(i) > 0 Then
                 Count = Count + 1
-                validIndexes(Count) = i
+                obj(Count) = .Profesion(SlotProfesion).Recetas(i)
 
             End If
 
         Next i
         
         ' Write the number of objects in the list
-        Call .WriteInteger(Count)
+        Call .outgoingData.WriteInteger(Count)
         
         ' Write the needed data of each object
         For i = 1 To Count
-            obj = ObjData(ArmasHerrero(validIndexes(i)))
-            Call .WriteASCIIString(obj.Name)
-            Call .WriteLong(obj.GrhIndex)
-            Call .WriteInteger(obj.LingH)
-            Call .WriteInteger(obj.LingP)
-            Call .WriteInteger(obj.LingO)
-            Call .WriteInteger(ArmasHerrero(validIndexes(i)))
-            Call .WriteInteger(obj.Upgrade)
-        Next i
-
-    End With
-
-    Exit Sub
-
-errHandler:
-
-    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(UserIndex)
-        Resume
-
-    End If
-
-End Sub
-
-''
-' Writes the "BlacksmithArmors" message to the given user's outgoing data buffer.
-'
-' @param    UserIndex User to which the message is intended.
-' @remarks  The data is not actually sent until the buffer is properly flushed.
-
-Public Sub WriteBlacksmithArmors(ByVal UserIndex As Integer)
-
-    '***************************************************
-    'Author: Juan Martin Sotuyo Dodero (Maraxus)
-    'Last Modification: 04/15/2008 (NicoNZ) Habia un error al fijarse los skills del personaje
-    'Writes the "BlacksmithArmors" message to the given user's outgoing data buffer
-    '***************************************************
-    On Error GoTo errHandler
-
-    Dim i              As Long
-    Dim obj            As ObjData
-    Dim validIndexes() As Integer
-    Dim Count          As Integer
-    
-    ReDim validIndexes(1 To UBound(ArmadurasHerrero()))
-    
-    With UserList(UserIndex).outgoingData
-        Call .WriteByte(ServerPacketID.BlacksmithArmors)
-        
-        For i = 1 To UBound(ArmadurasHerrero())
-
-            ' Can the user create this object? If so add it to the list....
-            If ObjData(ArmadurasHerrero(i)).SkHerreria <= Round(UserList(UserIndex).Stats.UserSkills(eSkill.Herreria) / ModHerreriA(UserList(UserIndex).clase), 0) Then
-                Count = Count + 1
-                validIndexes(Count) = i
-
-            End If
-
+            Call .outgoingData.WriteASCIIString(ObjData(obj(i)).Name)
+            Call .outgoingData.WriteLong(ObjData(obj(i)).GrhIndex)
+            
+            For j = 1 To MAXMATERIALES
+                If ObjData(obj(i)).Materiales(j) > 0 Then
+                    Call .outgoingData.WriteLong(ObjData(ObjData(obj(i)).Materiales(j)).GrhIndex)
+                    Call .outgoingData.WriteInteger(ObjData(obj(i)).CantMateriales(j))
+                    Call .outgoingData.WriteASCIIString(ObjData(ObjData(obj(i)).Materiales(j)).Name)
+                    
+                Else
+                    Call .outgoingData.WriteLong(0)
+                    Call .outgoingData.WriteInteger(0)
+                    Call .outgoingData.WriteASCIIString("Nada")
+                    
+                End If
+            Next j
+            
+            Call .outgoingData.WriteInteger(obj(i))
         Next i
         
-        ' Write the number of objects in the list
-        Call .WriteInteger(Count)
-        
-        ' Write the needed data of each object
-        For i = 1 To Count
-            obj = ObjData(ArmadurasHerrero(validIndexes(i)))
-            Call .WriteASCIIString(obj.Name)
-            Call .WriteLong(obj.GrhIndex)
-            Call .WriteInteger(obj.LingH)
-            Call .WriteInteger(obj.LingP)
-            Call .WriteInteger(obj.LingO)
-            Call .WriteInteger(ArmadurasHerrero(validIndexes(i)))
-            Call .WriteInteger(obj.Upgrade)
-        Next i
+        .flags.Trabajando = Profesion
 
-    End With
-
-    Exit Sub
-
-errHandler:
-
-    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(UserIndex)
-        Resume
-
-    End If
-
-End Sub
-
-''
-' Writes the "InitCarpenting" message to the given user's outgoing data buffer.
-'
-' @param    UserIndex User to which the message is intended.
-' @remarks  The data is not actually sent until the buffer is properly flushed.
-
-Public Sub WriteInitCarpenting(ByVal UserIndex As Integer)
-
-    '***************************************************
-    'Author: Juan Martin Sotuyo Dodero (Maraxus)
-    'Last Modification: 05/17/06
-    'Writes the "InitCarpenting" message to the given user's outgoing data buffer
-    '***************************************************
-    On Error GoTo errHandler
-
-    Dim i              As Long
-    Dim obj            As ObjData
-    Dim validIndexes() As Integer
-    Dim Count          As Integer
-    
-    ReDim validIndexes(1 To UBound(ObjCarpintero()))
-    
-    With UserList(UserIndex).outgoingData
-        Call .WriteByte(ServerPacketID.InitCarpenting)
-
-        For i = 1 To UBound(ObjCarpintero())
-
-            ' Can the user create this object? If so add it to the list....
-            If ObjData(ObjCarpintero(i)).SkCarpinteria <= UserList(UserIndex).Stats.UserSkills(eSkill.Carpinteria) \ ModCarpinteria(UserList(UserIndex).clase) Then
-                Count = Count + 1
-                validIndexes(Count) = i
-
-            End If
-
-        Next i
-        
-        ' Write the number of objects in the list
-        Call .WriteInteger(Count)
-        
-        ' Write the needed data of each object
-        For i = 1 To Count
-            obj = ObjData(ObjCarpintero(validIndexes(i)))
-            Call .WriteASCIIString(obj.Name)
-            Call .WriteLong(obj.GrhIndex)
-            Call .WriteInteger(obj.Madera)
-            Call .WriteInteger(obj.MaderaElfica)
-            Call .WriteInteger(ObjCarpintero(validIndexes(i)))
-            Call .WriteInteger(obj.Upgrade)
-        Next i
-        
     End With
 
     Exit Sub
@@ -23721,6 +23533,20 @@ Public Sub HandleIniciaSubasta(ByVal UserIndex As Integer)
         Call Iniciar_Subasta(UserIndex, .ReadInteger, .ReadInteger, .ReadLong)
     End With
 End Sub
+
+Public Sub HandleCancelarSubasta(ByVal UserIndex As Integer)
+'***************************************************
+'Author: Lorwik
+'Last Modification: 19/08/2020
+'Descripción: El user no subasta y cierra el form
+'***************************************************
+    With UserList(UserIndex)
+        'Remove Packet ID
+        Call .incomingData.ReadByte
+        
+        .flags.Subastando = False
+    End With
+End Sub
  
 Public Sub HandleConsultarSubasta(ByVal UserIndex As Integer)
 '***************************************************
@@ -23750,4 +23576,48 @@ Public Sub WriteIniciarSubastasOrConsulta(ByVal UserIndex As Integer)
     With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.IniciarSubastaConsulta)
     End With
+End Sub
+
+Public Sub WriteConfirmarInstruccion(ByVal UserIndex As Integer, ByVal Mensaje As String)
+'***************************************************
+'Autor: Lorwik
+'Fecha: 19/08/2020
+'Descripcion: Pide confirmacion para aprender u olvidar una profesion
+'***************************************************
+
+    With UserList(UserIndex).outgoingData
+    
+        Call .WriteByte(ServerPacketID.ConfirmarInstruccion)
+        
+        .WriteASCIIString (Mensaje)
+        
+    End With
+End Sub
+
+Public Sub HandleRespuestaInstruccion(ByVal UserIndex As Integer)
+'***************************************************
+'Autor: Lorwik
+'Fecha: 19/08/2020
+'Descripcion: Recibe respuesta de la instruccion
+'***************************************************
+    Dim Respuesta As Boolean
+    
+    With UserList(UserIndex)
+        'Remove Packet ID
+        Call .incomingData.ReadByte
+        
+        Respuesta = .incomingData.ReadBoolean
+        
+        If Respuesta Then
+            Call AccionProfesion(UserIndex)
+            
+        Else
+            'Reseteamos los flags
+            .flags.ProfInstruyendo = 0
+            .flags.Instruyendo = 0
+            
+        End If
+        
+    End With
+    
 End Sub

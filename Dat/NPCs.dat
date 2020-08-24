@@ -22,6 +22,8 @@ TODOS LOS NPC CON RETARDO Y WORLDBOSS TIENEN QUE TENER PosOrig
 14 ====== Quest
 15 ====== Marinero
 16 ====== Subastador
+17 ====== Recurso
+18 ====== Instructor
 
 ##############################################
 ############## EFECTOS DE NPC ################
@@ -82,6 +84,21 @@ Se indicara el indice de objeto - cantidad a dropear - probabilidad de drop
 En todos los casos hay que especificar la cantidad de objetos en el inventario con NROITEMS=
 
 ##############################################
+################INSTRUCTORES##################
+##############################################
+
+Los instructores son NPC que instruyen en una profesion, deben tener el NPCType 18,
+y la propiedad Instruye= Skill de la profesion que va a instruir.
+
+Skills Profesiones:
+
+'    Talar = 17
+'    pesca = 18
+'    Mineria = 19
+'    Carpinteria = 20
+'    Herreria = 21
+
+##############################################
 ##############################################
 ##############################################
 
@@ -89,7 +106,7 @@ En todos los casos hay que especificar la cantidad de objetos en el inventario c
 [INIT]
 'aca va el numero de NPC mas alto, NO la cantidad de NPCs.
 'esto sirve para que los GMS puedan ver la lista completa de npcs a invocar en una ventanita.
-NumNPCs=1223
+NumNPCs=1312
 
 ##############################################################
 ################ NPCS VENDEDORES DE ISLA NEWBIE #####################
@@ -315,7 +332,7 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=2
-NROITEMS=18
+NROITEMS=22
 Obj1=389-1000 	'Martillo de Herrero
 Obj2=1009-10000 'Cuchillas
 Obj3=15-1000 	'Daga
@@ -334,6 +351,10 @@ Obj15=159-1000 	'Hacha de Barbaro
 Obj16=399-1000 	'Cimitarra
 Obj17=990-1000 	'Mazo del Juicio
 Obj18=403-1000 	'Espada de Plata
+Obj19=562-1000  'Plano de Daga envenenada
+Obj20=563-1000  'Plano de Daga +1
+Obj21=564-1000  'Plano de Daga +2
+Obj22=565-1000  'Plano de Daga 3
 BackUp=1
 
 [NPC16] 'Sastre Ramx
@@ -351,7 +372,7 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=3
-NROITEMS=9
+NROITEMS=13
 Obj1=31-1000 'Vestimentas Comunes
 Obj2=32-1000 'Vestimentas Comunes
 Obj3=35-1000 'Vestimentas Comunes
@@ -361,6 +382,10 @@ Obj6=135-1000 'Tunica Roja Burda
 obj7=238-1000 'Tunica Azul
 obj8=239-1000 'Tunica Roja
 obj9=873-1000 'Guantes de hurto
+obj10=1298-1000 'Kit de Costura
+Obj11=1300-1000 'Hilo Burdo
+Obj12=1299-1000 'Hilo
+Obj13=1301-1000 'Ovillo de lana
 BackUp=1
 
 [NPC17] 'Armaduras Ramx
@@ -573,6 +598,116 @@ Comercia=0
 BackUp=0
 Ciudad=1
 
+[NPC26] 'Instructor de Mineria
+Name=Instructor de Mineria
+NpcType=18
+Desc=¿Te interesa aprender el apasionante mundo de la mineria y conocer todas las piedras, minerales y cristales preciosos?
+Head=5
+Heading=1
+Body=1
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+BackUp=1
+Instruye=19
+
+[NPC27] 'Instructor de Taladores
+Name=Instructor de Taladores
+NpcType=18
+Desc=Talar arboles requiere de unos brazos y espalda fuerte. ¿Quieres unirte al gremio de taladores?
+Head=72
+Heading=1
+Body=1
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+BackUp=1
+Instruye=17
+
+[NPC28] 'Instructor de Carpinteros
+Name=Instructor de Carpinteros
+NpcType=18
+Desc=Hijo, la artesania es un arte, ¿te interesa unirte al gremio de carpinteros y aprender dar forma a la madera con tus manos?
+Head=70
+Heading=1
+Body=1
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+BackUp=1
+Instruye=20
+
+[NPC29] 'Instructor de Herreria
+Name=Instructor de Herreria
+NpcType=18
+Desc=Eh muchacho, debes avivar la caldera! Golpear y Golpear, siente la satisfacción de construir las mejores armas y armaduras de todo el imperio ¿Quieres unirte al gremio?
+Head=68
+Heading=1
+Body=199
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+BackUp=1
+Instruye=21
+
+[NPC30] 'Instructor de Sastreria
+Name=Instructor de Sastreria
+NpcType=18
+Desc=Mantenerse a la moda es fundamental ¿Quieres unirte al gremio de sastreria?
+Head=76
+Heading=1
+Body=199
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+BackUp=1
+Instruye=22
+
+[NPC31] 'Instructor de Alquimia
+Name=Instructor de Alquimia
+Desc=La alquimia no es solo crear pociones, es el arte de saber mezclar las hierbas adecuadas para obtener los mejores resultados ¿Quieres unirte al gremio de alquimia?
+Head=78
+Heading=1
+Body=199
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+BackUp=1
+Instruye=24
+
+[NPC32]
+Name=Artesano
+NpcType=9
+Desc=Hola, viajero! Traeme los materiales que necesito y puedo crearte unos objetos muy interesantes
+Head=307
+Heading=3
+Body=359
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=0
+
 ##############################################################
 ############## NPCS VENDEDORES DE SHAKOUD ####################
 ##############################################################
@@ -694,7 +829,11 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=3
-NROITEMS=0
+NROITEMS=4
+obj1=1298-1000 'Kit de Costura
+Obj2=1300-1000 'Hilo Burdo
+Obj3=1299-1000 'Hilo
+Obj4=1301-1000 'Ovillo de lana
 BackUp=1
 
 [NPC57] 'Armaduras Shakoud
@@ -925,7 +1064,7 @@ Name=Guardia Imperial
 NpcType=2
 Desc=Dare carcel a todos los que osen rebelarse contra el Lord Legislador!
 Head=0
-Heading=3
+Heading=1
 Body=15
 Movement=5
 PosOrig=1
@@ -952,7 +1091,7 @@ Name=Guardia Imperial
 NpcType=2
 Desc=¡Por el Lord Legislador! Juro mantener el orden en el imperio
 Head=0
-Heading=3
+Heading=1
 Body=15
 Movement=2
 PosOrig=1
@@ -979,7 +1118,7 @@ Name=Arquera Real
 NpcType=2
 Desc=Ningun rebelde escapara de mi punteria.
 Head=172
-Heading=3
+Heading=1
 Body=131
 Movement=5
 PosOrig=1
@@ -1009,7 +1148,7 @@ Name=Sacerdote Imperial
 NpcType=2
 Desc=Ohhh hijo mio!! que la llama de la virtud arda en tu corazon!!!
 Head=4
-Heading=3
+Heading=1
 Body=101
 Movement=5
 PosOrig=1
@@ -1038,7 +1177,7 @@ Name=Druida Imperial
 NpcType=2
 Desc=La naturaleza esta conmigo y me ayudara a dar carcel a todos los rebeldes del imperio.
 Head=102
-Heading=3
+Heading=1
 Body=56
 Movement=2
 PosOrig=1
@@ -1068,7 +1207,7 @@ Name=Mago Imperial
 NpcType=2
 Desc=Pongo a disposicion mi poder arkano al servicio del Lord Legislador y el imperio.
 Head=6
-Heading=3
+Heading=1
 Body=130
 Movement=2
 PosOrig=1
@@ -1142,7 +1281,11 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=3
-NROITEMS=0
+NROITEMS=4
+obj1=1298-1000 'Kit de Costura
+Obj2=1300-1000 'Hilo Burdo
+Obj3=1299-1000 'Hilo
+Obj4=1301-1000 'Ovillo de lana
 BackUp=1
 
 [NPC113] 'Armaduras Belleuve
@@ -1274,8 +1417,8 @@ BackUp=1
 Name=Lord Legislador
 NpcType=5
 Desc=Es importante mantener el orden en el imperio y enseñar al pueblo cual es su lugar a toda costa. Si quieres estar entre mis filas y bajo mis ordenes, tan solo escribe /ENLISTAR.
-Head=510
-Heading=3
+Head=542
+Heading=1
 Body=409
 Movement=1
 Attackable=0
@@ -1407,7 +1550,11 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=3
-NROITEMS=0
+NROITEMS=4
+obj1=1298-1000 'Kit de Costura
+Obj2=1300-1000 'Hilo Burdo
+Obj3=1299-1000 'Hilo
+Obj4=1301-1000 'Ovillo de lana
 BackUp=1
 
 [NPC157] 'Armaduras Isla Zharkel
@@ -1675,7 +1822,11 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=3
-NROITEMS=0
+NROITEMS=4
+obj1=1298-1000 'Kit de Costura
+Obj2=1300-1000 'Hilo Burdo
+Obj3=1299-1000 'Hilo
+Obj4=1301-1000 'Ovillo de lana
 BackUp=1
 
 [NPC207] 'Armaduras Haverwood
@@ -2142,7 +2293,9 @@ ELV=5
 DEF=0
 PoderAtaque=10
 PoderEvasion=0
-SND2=103
+Snd1=29
+Snd2=34
+Snd3=215
 BackUp=0
 NROITEMS=0
 
@@ -2753,6 +2906,9 @@ DEF=19
 PoderAtaque=60
 PoderEvasion=20
 BackUp=0
+Snd1=29
+Snd2=34
+Snd3=215
 NROITEMS=0
 
 [NPC602]
@@ -2888,6 +3044,7 @@ MaxHIT=45
 MinHIT=30
 DEF=0
 ELV=15
+AguaValida=1
 PoderAtaque=64
 PoderEvasion=60
 BackUp=0
@@ -3148,6 +3305,7 @@ ELV=20
 DEF=8
 PoderAtaque=80
 PoderEvasion=25
+AguaValida=1
 Snd1=35
 Snd2=9
 BackUp=0
@@ -3710,6 +3868,9 @@ PoderAtaque=200
 PoderEvasion=70
 Veneno=1
 BackUp=0
+Snd1=29
+Snd2=34
+Snd3=215
 NROITEMS=0
 
 [NPC702]
@@ -4608,6 +4769,9 @@ PoderAtaque=260
 PoderEvasion=150
 Nroitems=1
 BackUp=0
+Snd1=29
+Snd2=34
+Snd3=215
 NROITEMS=0
 
 [NPC758] 
@@ -5906,7 +6070,8 @@ PoderAtaque=0
 PoderEvasion=0
 Nroitems=1
 BackUp=0
-NROITEMS=0
+NROITEMS=1
+Obj1=1302-2-80
 
 [NPC868] 
 Name=Octopus
@@ -6306,7 +6471,8 @@ PoderAtaque=260
 PoderEvasion=150
 Nroitems=1
 BackUp=0
-NROITEMS=0
+NROITEMS=1
+Obj1=192-50-30
 
 [NPC1004] 
 Name=Gran Demonio Behemoth
@@ -6396,7 +6562,7 @@ snd2=78
 BackUp=0
 Invocacion=1
 NROITEMS=1
-Obj1=1254-1
+Obj1=1254-1-100
 
 [NPC1002]
 Name=Titan de Agua
@@ -6426,7 +6592,7 @@ snd2=78
 BackUp=0
 Invocacion=1
 NROITEMS=1
-Obj1=1253-1
+Obj1=1253-1-100
 
 [NPC1003]
 Name=Titan de Tierra
@@ -6457,7 +6623,7 @@ BackUp=0
 NoShadow=1
 Invocacion=1
 NROITEMS=1
-Obj1=1252-1
+Obj1=1252-1-100
 
 [NPC1004] 
 Name=Dragon Legendario
@@ -6485,7 +6651,8 @@ PoderAtaque=260
 PoderEvasion=150
 Nroitems=1
 BackUp=0
-NROITEMS=0
+NROITEMS=1
+Obj1=1302-100-100
 
 ##############################################
 ##############NPC PRETORIANOS#################
@@ -7356,3 +7523,398 @@ Obj1=12-10000-100 ' Oro
 Obj2=873-1-100    ' Guantes de hurto
 Obj3=132-1-100    ' Casco de Hierro
 BackUp=0
+
+##############################################
+#############RECURSOS NATURALES###############
+##############################################
+
+[NPC1300]
+Name=Arbol
+NpcType=17
+Head=0
+Heading=1
+Body=24
+Movement=1
+AguaValida=0
+Attackable=1
+Respawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=0
+GiveGLD=0
+MinHP=100
+MaxHP=100
+MaxHIT=0
+MinHIT=0
+ELV=5
+DEF=0
+PoderAtaque=0
+PoderEvasion=0
+Snd1=13
+BackUp=0
+Recurso=17-1
+NROITEMS=1
+Obj1=58-50-100 'Madera
+
+[NPC1301]
+Name=Arbol
+NpcType=17
+Head=0
+Heading=1
+Body=25
+Movement=1
+AguaValida=0
+Attackable=1
+Respawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=0
+GiveGLD=0
+MinHP=100
+MaxHP=100
+MaxHIT=0
+MinHIT=0
+ELV=5
+DEF=0
+PoderAtaque=0
+PoderEvasion=0
+Snd1=13
+BackUp=0
+Recurso=17-1
+NROITEMS=1
+Obj1=58-50-100 'Madera
+
+[NPC1302]
+Name=Arbol
+NpcType=17
+Head=0
+Heading=1
+Body=26
+Movement=1
+AguaValida=0
+Attackable=1
+Respawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=0
+GiveGLD=0
+MinHP=100
+MaxHP=100
+MaxHIT=0
+MinHIT=0
+ELV=5
+DEF=0
+PoderAtaque=0
+PoderEvasion=0
+Snd1=13
+BackUp=0
+Recurso=17-1
+NROITEMS=1
+Obj1=58-50-100 'Madera
+
+[NPC1303]
+Name=Arbol
+NpcType=17
+Head=0
+Heading=1
+Body=27
+Movement=1
+AguaValida=0
+Attackable=1
+Respawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=0
+GiveGLD=0
+MinHP=100
+MaxHP=100
+MaxHIT=0
+MinHIT=0
+ELV=5
+DEF=0
+PoderAtaque=0
+PoderEvasion=0
+Snd1=13
+BackUp=0
+Recurso=17-1
+NROITEMS=1
+Obj1=58-50-100 'Madera
+
+[NPC1304]
+Name=Arbol
+NpcType=17
+Head=0
+Heading=1
+Body=29
+Movement=1
+AguaValida=0
+Attackable=1
+Respawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=0
+GiveGLD=0
+MinHP=100
+MaxHP=100
+MaxHIT=0
+MinHIT=0
+ELV=5
+DEF=0
+PoderAtaque=0
+PoderEvasion=0
+Snd1=13
+BackUp=0
+Recurso=17-1
+NROITEMS=1
+Obj1=58-50-100 'Madera
+
+[NPC1305]
+Name=Arbol
+NpcType=17
+Head=0
+Heading=1
+Body=30
+Movement=1
+AguaValida=0
+Attackable=1
+Respawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=0
+GiveGLD=0
+MinHP=100
+MaxHP=100
+MaxHIT=0
+MinHIT=0
+ELV=5
+DEF=0
+PoderAtaque=0
+PoderEvasion=0
+Snd1=13
+BackUp=0
+Recurso=17-1
+NROITEMS=1
+Obj1=58-50-100 'Madera
+
+[NPC1306]
+Name=Arbol
+NpcType=17
+Head=0
+Heading=1
+Body=31
+Movement=1
+AguaValida=0
+Attackable=1
+Respawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=0
+GiveGLD=0
+MinHP=100
+MaxHP=100
+MaxHIT=0
+MinHIT=0
+ELV=5
+DEF=0
+PoderAtaque=0
+PoderEvasion=0
+Snd1=13
+BackUp=0
+Recurso=17-1
+NROITEMS=1
+Obj1=58-50-100 'Madera
+
+[NPC1307]
+Name=Arbol Mágico
+NpcType=17
+Head=0
+Heading=1
+Body=28
+Movement=1
+AguaValida=0
+Attackable=1
+Respawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=0
+GiveGLD=0
+MinHP=100
+MaxHP=100
+MaxHIT=0
+MinHIT=0
+ELV=5
+DEF=0
+PoderAtaque=0
+PoderEvasion=0
+Snd1=13
+BackUp=0
+Recurso=17-1
+NROITEMS=1
+Obj1=58-30-50 'Madera
+Obj2=1005-30-100
+
+[NPC1308]
+Name=Hongo
+NpcType=17
+Head=0
+Heading=1
+Body=425
+Movement=1
+AguaValida=0
+Attackable=1
+Respawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=0
+GiveGLD=0
+MinHP=100
+MaxHP=100
+MaxHIT=0
+MinHIT=0
+ELV=5
+DEF=0
+PoderAtaque=0
+PoderEvasion=0
+Snd1=13
+BackUp=0
+Recurso=17-1
+NROITEMS=1
+Obj1=1307-2-100 'Hongo
+
+[NPC1309]
+Name=Hongo
+NpcType=17
+Head=0
+Heading=1
+Body=426
+Movement=1
+AguaValida=0
+Attackable=1
+Respawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=0
+GiveGLD=0
+MinHP=100
+MaxHP=100
+MaxHIT=0
+MinHIT=0
+ELV=5
+DEF=0
+PoderAtaque=0
+PoderEvasion=0
+Snd1=13
+BackUp=0
+Recurso=17-1
+NROITEMS=1
+Obj1=1307-2-100 'Hongo
+
+[NPC1310]
+Name=Hongo
+NpcType=17
+Head=0
+Heading=1
+Body=36
+Movement=1
+AguaValida=0
+Attackable=1
+Respawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=0
+GiveGLD=0
+MinHP=100
+MaxHP=100
+MaxHIT=0
+MinHIT=0
+ELV=5
+DEF=0
+PoderAtaque=0
+PoderEvasion=0
+Snd1=13
+BackUp=0
+Recurso=17-1
+NROITEMS=1
+Obj1=1307-2-100 'Hongo
+
+[NPC1311]
+Name=Yacimiento de Duralumin
+NpcType=17
+Head=0
+Heading=1
+Body=478
+Movement=1
+AguaValida=0
+Attackable=1
+Respawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=0
+GiveGLD=0
+MinHP=100
+MaxHP=100
+MaxHIT=0
+MinHIT=0
+ELV=5
+DEF=0
+PoderAtaque=0
+PoderEvasion=0
+Snd1=13
+BackUp=0
+Recurso=21-2
+NROITEMS=1
+Obj1=1309-1-90 'Cristal de Duralunin
+
+[NPC1312]
+Name=Yacimiento de Duralumin Grande
+NpcType=17
+Head=0
+Heading=1
+Body=477
+Movement=1
+AguaValida=0
+Attackable=1
+Respawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=0
+GiveGLD=0
+MinHP=100
+MaxHP=100
+MaxHIT=0
+MinHIT=0
+ELV=5
+DEF=0
+PoderAtaque=0
+PoderEvasion=0
+Snd1=13
+BackUp=0
+Recurso=21-2
+NROITEMS=1
+Obj1=1309-6-100 'Cristal de Duralunin

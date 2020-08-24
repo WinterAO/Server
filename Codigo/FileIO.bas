@@ -871,52 +871,6 @@ Public Sub GrabarMapa(ByVal Map As Long, ByRef MAPFILE As String)
 
 End Sub
 
-Sub LoadArmasHerreria()
-    '***************************************************
-    'Author: Unknown
-    'Last Modification: -
-    '
-    '***************************************************
-    
-    If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando armas crafteables por Herreria."
-    
-    Dim n As Integer, lc As Integer
-    
-    n = val(GetVar(DatPath & "ArmasHerrero.dat", "INIT", "NumArmas"))
-    
-    ReDim Preserve ArmasHerrero(1 To n) As Integer
-    
-    For lc = 1 To n
-        ArmasHerrero(lc) = val(GetVar(DatPath & "ArmasHerrero.dat", "Arma" & lc, "Index"))
-    Next lc
-    
-    If frmMain.Visible Then frmMain.txtStatus.Text = Date & " " & time & " - Se cargo las armas crafteables por Herreria. Operacion Realizada con exito."
-    
-End Sub
-
-Sub LoadArmadurasHerreria()
-    '***************************************************
-    'Author: Unknown
-    'Last Modification: -
-    '
-    '***************************************************
-        
-    If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando armaduras crafteables por Herreria."
-
-    Dim n As Integer, lc As Integer
-    
-    n = val(GetVar(DatPath & "ArmadurasHerrero.dat", "INIT", "NumArmaduras"))
-    
-    ReDim Preserve ArmadurasHerrero(1 To n) As Integer
-    
-    For lc = 1 To n
-        ArmadurasHerrero(lc) = val(GetVar(DatPath & "ArmadurasHerrero.dat", "Armadura" & lc, "Index"))
-    Next lc
-    
-    If frmMain.Visible Then frmMain.txtStatus.Text = Date & " " & time & " - Se cargo las armaduras crafteables por Herreria. Operacion Realizada con exito."
-    
-End Sub
-
 Sub LoadBalance()
     '***************************************************
     'Author: Unknown
@@ -985,29 +939,6 @@ Sub LoadBalance()
     Next i
     
     If frmMain.Visible Then frmMain.txtStatus.Text = Date & " " & time & " - Se cargo con exito el archivo Balance.dat"
-
-End Sub
-
-Sub LoadObjCarpintero()
-    '***************************************************
-    'Author: Unknown
-    'Last Modification: -
-    '
-    '***************************************************
-    
-    If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando los objetos crafteables via Carpinteria"
-    
-    Dim n As Integer, lc As Integer
-    
-    n = val(GetVar(DatPath & "ObjCarpintero.dat", "INIT", "NumObjs"))
-    
-    ReDim Preserve ObjCarpintero(1 To n) As Integer
-    
-    For lc = 1 To n
-        ObjCarpintero(lc) = val(GetVar(DatPath & "ObjCarpintero.dat", "Obj" & lc, "Index"))
-    Next lc
-    
-    If frmMain.Visible Then frmMain.txtStatus.Text = Date & " " & time & " - Se cargo con exito los objetos crafteables via Carpinteria."
 
 End Sub
 
@@ -1108,28 +1039,16 @@ Sub LoadOBJData()
                 Case eOBJType.otArmadura
                     .Real = val(Leer.GetValue("OBJ" & Object, "Real"))
                     .Caos = val(Leer.GetValue("OBJ" & Object, "Caos"))
-                    .LingH = val(Leer.GetValue("OBJ" & Object, "LingH"))
-                    .LingP = val(Leer.GetValue("OBJ" & Object, "LingP"))
-                    .LingO = val(Leer.GetValue("OBJ" & Object, "LingO"))
-                    .SkHerreria = val(Leer.GetValue("OBJ" & Object, "SkHerreria"))
                     .MinLevel = val(Leer.GetValue("OBJ" & Object, "MinLevel"))
                 
                 Case eOBJType.otEscudo
                     .ShieldAnim = val(Leer.GetValue("OBJ" & Object, "Anim"))
-                    .LingH = val(Leer.GetValue("OBJ" & Object, "LingH"))
-                    .LingP = val(Leer.GetValue("OBJ" & Object, "LingP"))
-                    .LingO = val(Leer.GetValue("OBJ" & Object, "LingO"))
-                    .SkHerreria = val(Leer.GetValue("OBJ" & Object, "SkHerreria"))
                     .Real = val(Leer.GetValue("OBJ" & Object, "Real"))
                     .Caos = val(Leer.GetValue("OBJ" & Object, "Caos"))
                     .MinLevel = val(Leer.GetValue("OBJ" & Object, "MinLevel"))
                 
                 Case eOBJType.otCasco
                     .CascoAnim = val(Leer.GetValue("OBJ" & Object, "Anim"))
-                    .LingH = val(Leer.GetValue("OBJ" & Object, "LingH"))
-                    .LingP = val(Leer.GetValue("OBJ" & Object, "LingP"))
-                    .LingO = val(Leer.GetValue("OBJ" & Object, "LingO"))
-                    .SkHerreria = val(Leer.GetValue("OBJ" & Object, "SkHerreria"))
                     .Real = val(Leer.GetValue("OBJ" & Object, "Real"))
                     .Caos = val(Leer.GetValue("OBJ" & Object, "Caos"))
                     .MinLevel = val(Leer.GetValue("OBJ" & Object, "MinLevel"))
@@ -1146,10 +1065,6 @@ Sub LoadOBJData()
                     .StaffDamageBonus = val(Leer.GetValue("OBJ" & Object, "StaffDamageBonus"))
                     .Refuerzo = val(Leer.GetValue("OBJ" & Object, "Refuerzo"))
                     
-                    .LingH = val(Leer.GetValue("OBJ" & Object, "LingH"))
-                    .LingP = val(Leer.GetValue("OBJ" & Object, "LingP"))
-                    .LingO = val(Leer.GetValue("OBJ" & Object, "LingO"))
-                    .SkHerreria = val(Leer.GetValue("OBJ" & Object, "SkHerreria"))
                     .Real = val(Leer.GetValue("OBJ" & Object, "Real"))
                     .Caos = val(Leer.GetValue("OBJ" & Object, "Caos"))
                     
@@ -1176,8 +1091,6 @@ Sub LoadOBJData()
                     .DuracionEfecto = val(Leer.GetValue("OBJ" & Object, "DuracionEfecto"))
                 
                 Case eOBJType.otBarcos
-                    .MinSkill = val(Leer.GetValue("OBJ" & Object, "MinSkill"))
-                    .MinLevel = val(Leer.GetValue("OBJ" & Object, "MinLevel"))
                     .MaxHIT = val(Leer.GetValue("OBJ" & Object, "MaxHIT"))
                     .MinHIT = val(Leer.GetValue("OBJ" & Object, "MinHIT"))
                     .Real = val(Leer.GetValue("OBJ" & Object, "Real"))
@@ -1192,20 +1105,11 @@ Sub LoadOBJData()
                     .MinLevel = val(Leer.GetValue("OBJ" & Object, "MinLevel"))
 
                 Case eOBJType.otMonturas
-                    .MinSkill = val(Leer.GetValue("OBJ" & Object, "MinSkill"))
-                    .MinLevel = val(Leer.GetValue("OBJ" & Object, "MinLevel"))
                     .MaxHIT = val(Leer.GetValue("OBJ" & Object, "MaxHIT"))
                     .MinHIT = val(Leer.GetValue("OBJ" & Object, "MinHIT"))
                     .MontTipo = val(Leer.GetValue("OBJ" & Object, "MontTipo"))
 
-                Case eOBJType.otMinerales
-                    .MinSkill = val(Leer.GetValue("OBJ" & Object, "MinSkill"))
-
                 Case eOBJType.otAnillo 'Pablo (ToxicWaste)
-                    .LingH = val(Leer.GetValue("OBJ" & Object, "LingH"))
-                    .LingP = val(Leer.GetValue("OBJ" & Object, "LingP"))
-                    .LingO = val(Leer.GetValue("OBJ" & Object, "LingO"))
-                    .SkHerreria = val(Leer.GetValue("OBJ" & Object, "SkHerreria"))
                     .MaxHIT = val(Leer.GetValue("OBJ" & Object, "MaxHIT"))
                     .MinHIT = val(Leer.GetValue("OBJ" & Object, "MinHIT"))
                     .MinLevel = val(Leer.GetValue("OBJ" & Object, "MinLevel"))
@@ -1245,9 +1149,11 @@ Sub LoadOBJData()
             .Ropaje = val(Leer.GetValue("OBJ" & Object, "NumRopaje"))
             .HechizoIndex = val(Leer.GetValue("OBJ" & Object, "HechizoIndex"))
             
-            .LingoteIndex = val(Leer.GetValue("OBJ" & Object, "LingoteIndex"))
+            .LingoteIndex = val(Leer.GetValue("OBJ" & Object, "LingoteIndex")) 'Para los Yacimientos (quizas cambie a un concepto mas global)
             
-            .MineralIndex = val(Leer.GetValue("OBJ" & Object, "MineralIndex"))
+            .RecursoIndex = val(Leer.GetValue("OBJ" & Object, "RecursoIndex"))
+            .RecetaIndex = val(Leer.GetValue("OBJ" & Object, "RecetaIndex"))
+            .Profesion = val(Leer.GetValue("OBJ" & Object, "Profesion"))
             
             .MaxHp = val(Leer.GetValue("OBJ" & Object, "MaxHP"))
             .MinHp = val(Leer.GetValue("OBJ" & Object, "MinHP"))
@@ -1269,6 +1175,9 @@ Sub LoadOBJData()
             .RazaHumana = val(Leer.GetValue("OBJ" & Object, "RazaHumana"))
             
             .Valor = val(Leer.GetValue("OBJ" & Object, "Valor"))
+            
+            .MinSkill = val(Leer.GetValue("OBJ" & Object, "MinSkill"))
+            .MinLevel = val(Leer.GetValue("OBJ" & Object, "MinLevel"))
             
             .Crucial = val(Leer.GetValue("OBJ" & Object, "Crucial"))
             
@@ -1314,9 +1223,16 @@ Sub LoadOBJData()
             .DefensaMagicaMin = val(Leer.GetValue("OBJ" & Object, "DefensaMagicaMin"))
             
             .SkCarpinteria = val(Leer.GetValue("OBJ" & Object, "SkCarpinteria"))
+            .SkHerreria = val(Leer.GetValue("OBJ" & Object, "SkHerreria"))
+            .SkSastreria = val(Leer.GetValue("OBJ" & Object, "SkSastreria"))
+            .SkAlquimia = val(Leer.GetValue("OBJ" & Object, "SkAlquimia"))
             
-            If .SkCarpinteria > 0 Then .Madera = val(Leer.GetValue("OBJ" & Object, "Madera"))
-            .MaderaElfica = val(Leer.GetValue("OBJ" & Object, "MaderaElfica"))
+            If .SkCarpinteria > 0 Or .SkHerreria > 0 Or .SkSastreria > 0 Or .SkAlquimia > 0 Then
+                For i = 1 To MAXMATERIALES
+                    .Materiales(i) = val(ReadField(i, Leer.GetValue("OBJ" & Object, "Materiales"), Asc("-")))
+                    .CantMateriales(i) = val(ReadField(i, Leer.GetValue("OBJ" & Object, "CantMateriales"), Asc("-")))
+                Next i
+            End If
             
             ReDim .ItemCrafteo(1 To MAX_ITEMS_CRAFTEO) As CraftingItem
             
@@ -1361,7 +1277,11 @@ Sub LoadOBJData()
             
             .NoRobable = val(Leer.GetValue("OBJ" & Object, "NoRobable"))
             
-            .Upgrade = val(Leer.GetValue("OBJ" & Object, "Upgrade"))
+            .Herramienta.Profesion = val(ReadField(1, Leer.GetValue("OBJ" & Object, "Herramienta"), Asc("-"))) 'Profesion a la que pertenece
+            .Herramienta.Categoria = val(ReadField(2, Leer.GetValue("OBJ" & Object, "Herramienta"), Asc("-"))) 'Categoria de la herramienta
+            
+            .Recurso.Profesion = val(ReadField(1, Leer.GetValue("OBJ" & Object, "Recurso"), Asc("-"))) 'Profesion a la que pertenece
+            .Recurso.Categoria = val(ReadField(2, Leer.GetValue("OBJ" & Object, "Recurso"), Asc("-"))) 'Categoria del recurso
             
             frmCargando.cargar.Value = frmCargando.cargar.Value + 1
 
@@ -1864,6 +1784,7 @@ Sub LoadSini()
     IntervaloUserPuedeTrabajar = val(Lector.GetValue("INTERVALOS", "IntervaloTrabajo"))
     IntervaloUserPuedeAtacar = val(Lector.GetValue("INTERVALOS", "IntervaloUserPuedeAtacar"))
     INTERVALO_GLOBAL = val(Lector.GetValue("INTERVALOS", "IntervaloGlobal"))
+    IntervaloPuedeMakrear = val(Lector.GetValue("INTERVALOS", "IntervaloMakreo"))
     
     'TODO : Agregar estos intervalos al form!!!
     IntervaloMagiaGolpe = val(Lector.GetValue("INTERVALOS", "IntervaloMagiaGolpe"))
@@ -1888,9 +1809,7 @@ Sub LoadSini()
     IntervaloOculto = val(Lector.GetValue("INTERVALOS", "IntervaloOculto"))
     
     '&&&&&&&&&&&&&&&&&&&&& SUERTE &&&&&&&&&&&&&&&&&&&&&&&
-    DificultadPescar = val(Lector.GetValue("DIFICULTAD", "DificultadPescar"))
-    DificultadTalar = val(Lector.GetValue("DIFICULTAD", "DificultadTalar"))
-    DificultadMinar = val(Lector.GetValue("DIFICULTAD", "DificultadMinar"))
+    DificultadExtraer = val(Lector.GetValue("DIFICULTAD", "DificultadExtraer"))
     '&&&&&&&&&&&&&&&&&&&&& FIN TIMERS &&&&&&&&&&&&&&&&&&&&&&&
       
     RecordUsuariosOnline = val(Lector.GetValue("INIT", "Record"))
