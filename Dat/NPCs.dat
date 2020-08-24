@@ -106,7 +106,7 @@ Skills Profesiones:
 [INIT]
 'aca va el numero de NPC mas alto, NO la cantidad de NPCs.
 'esto sirve para que los GMS puedan ver la lista completa de npcs a invocar en una ventanita.
-NumNPCs=1300
+NumNPCs=1312
 
 ##############################################################
 ################ NPCS VENDEDORES DE ISLA NEWBIE #####################
@@ -7858,3 +7858,63 @@ BackUp=0
 Recurso=17-1
 NROITEMS=1
 Obj1=1307-2-100 'Hongo
+
+[NPC1311]
+Name=Yacimiento de Duralumin
+NpcType=17
+Head=0
+Heading=1
+Body=478
+Movement=1
+AguaValida=0
+Attackable=1
+Respawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=0
+GiveGLD=0
+MinHP=100
+MaxHP=100
+MaxHIT=0
+MinHIT=0
+ELV=5
+DEF=0
+PoderAtaque=0
+PoderEvasion=0
+Snd1=13
+BackUp=0
+Recurso=21-2
+NROITEMS=1
+Obj1=1309-1-90 'Cristal de Duralunin
+
+[NPC1312]
+Name=Yacimiento de Duralumin Grande
+NpcType=17
+Head=0
+Heading=1
+Body=477
+Movement=1
+AguaValida=0
+Attackable=1
+Respawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=0
+GiveGLD=0
+MinHP=100
+MaxHP=100
+MaxHIT=0
+MinHIT=0
+ELV=5
+DEF=0
+PoderAtaque=0
+PoderEvasion=0
+Snd1=13
+BackUp=0
+Recurso=21-2
+NROITEMS=1
+Obj1=1309-6-100 'Cristal de Duralunin

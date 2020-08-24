@@ -144,7 +144,7 @@ Madera Magica: 1006
 [INIT]
 'aca va el numero de OBJ mas alto, NO la cantidad de OBJs.
 'esto sirve para que los GMS puedan ver la lista completa de items para crear en una ventanita.
-NumOBJs=1308
+NumOBJs=1309
 
 
 [OBJ1]
@@ -6623,7 +6623,7 @@ MinSkill=60
 MinLevel=25
 
 [OBJ544]
-Name=Pez Dorado
+Name=Lisa
 GrhIndex=845
 ObjType=1
 Agarrable=0
@@ -16227,3 +16227,11 @@ Agarrable=0
 Valor=0
 RecetaIndex=402 'Indice del objeto
 Profesion=21 'Skill de la profesion
+
+[OBJ1309]
+Name=Cristal de Duralumin
+GrhIndex=2850
+ObjType=14
+Agarrable=0
+Valor=50
+Crucial=0
