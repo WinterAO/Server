@@ -144,7 +144,7 @@ Madera Magica: 1006
 [INIT]
 'aca va el numero de OBJ mas alto, NO la cantidad de OBJs.
 'esto sirve para que los GMS puedan ver la lista completa de items para crear en una ventanita.
-NumOBJs=1309
+NumOBJs=1310
 
 
 [OBJ1]
@@ -16290,3 +16290,23 @@ ObjType=14
 Agarrable=0
 Valor=50
 Crucial=0
+
+[OBJ1310]
+Name=Palabra de los dioses [CLERIGOS]
+GrhIndex=609
+ObjType=24
+Agarrable=0
+Valor=150000
+Crucial=1
+HechizoIndex=53
+CP1=Mago
+CP2=BRUJO
+CP3=Guerrero
+CP4=Asesino
+CP5=Ladron
+CP6=Bardo
+CP7=Druida
+CP8=Bandido
+CP9=Paladin
+CP10=CAZADOR
+CP11=PIRATA
