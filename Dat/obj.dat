@@ -4457,13 +4457,24 @@ CantMateriales=43-0-0-0
 SkHerreria=35
 
 [OBJ380]
-Name=Invocacion de Ultratumba
+Name=Invocacion de Ultratumba [BRUJOS]
 GrhIndex=609
 ObjType=24
 Agarrable=0
 Valor=100000
 Crucial=1
 HechizoIndex=33
+CP1=Mago
+CP2=Clerigo
+CP3=Guerrero
+CP4=Asesino
+CP5=Ladron
+CP6=Bardo
+CP7=Druida
+CP8=Bandido
+CP9=Paladin
+CP10=CAZADOR
+CP11=PIRATA
 
 [OBJ381]
 Name=Tunica Antigua
@@ -4661,13 +4672,24 @@ Crucial=1
 HechizoIndex=16
 
 [OBJ395]
-Name=Llamado Nigromante
+Name=Llamado Nigromante [BRUJOS]
 GrhIndex=609
 ObjType=24
 Agarrable=0
 Valor=40000
 Crucial=1
 HechizoIndex=17
+CP1=Mago
+CP2=Clerigo
+CP3=Guerrero
+CP4=Asesino
+CP5=Ladron
+CP6=Bardo
+CP7=Druida
+CP8=Bandido
+CP9=Paladin
+CP10=CAZADOR
+CP11=PIRATA
 
 [OBJ396]
 Name=Celeridad
@@ -6543,16 +6565,27 @@ Agarrable=1
 Texto=Lapida en homenaje a nuestro gran demiurgo, Gulfas Morgolock, quien desaparecio fisicamente de estas tierras para salvarnos del oscuro poder del mal.
 
 [OBJ536]
-Name=Invocar Elemental de Fuego
+Name=Invocar Elemental de Fuego [MAGOS]
 GrhIndex=609
 ObjType=24
 Agarrable=0
 Valor=950000
 Crucial=1
 HechizoIndex=26
+CP1=Brujo
+CP2=Clerigo
+CP3=Guerrero
+CP4=Asesino
+CP5=Ladron
+CP6=Bardo
+CP7=Druida
+CP8=Bandido
+CP9=Paladin
+CP10=CAZADOR
+CP11=PIRATA
 
 [OBJ537]
-Name=Invocar Elemental de Agua
+Name=Invocar Elemental de Agua [MAGOS]
 GrhIndex=609
 ObjType=24
 Agarrable=0
@@ -6560,15 +6593,37 @@ Valor=350000
 Crucial=1
 HechizoIndex=27
 Log=1
+CP1=Brujo
+CP2=Clerigo
+CP3=Guerrero
+CP4=Asesino
+CP5=Ladron
+CP6=Bardo
+CP7=Druida
+CP8=Bandido
+CP9=Paladin
+CP10=CAZADOR
+CP11=PIRATA
 
 [OBJ538]
-Name=Invocar Elemental de Tierra
+Name=Invocar Elemental de Tierra [MAGOS]
 GrhIndex=609
 ObjType=24
 Agarrable=0
 Valor=500000
 Crucial=1
 HechizoIndex=28
+CP1=Brujo
+CP2=Clerigo
+CP3=Guerrero
+CP4=Asesino
+CP5=Ladron
+CP6=Bardo
+CP7=Druida
+CP8=Bandido
+CP9=Paladin
+CP10=CAZADOR
+CP11=PIRATA
 
 [OBJ539]
 Name=Implorar Ayuda
