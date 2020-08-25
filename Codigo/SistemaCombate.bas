@@ -209,6 +209,9 @@ Public Function UserImpactoNpc(ByVal UserIndex As Integer, _
             If MunicionObjIndex <> 0 Then
                 Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageProyectil(UserIndex, UserList(UserIndex).Char.CharIndex, Npclist(NPCIndex).Char.CharIndex, ObjData(UserList(UserIndex).Invent.MunicionEqpObjIndex).GrhIndex))
             End If
+            If ObjData(UserList(UserIndex).Invent.WeaponEqpObjIndex).Acuchilla = 1 Then
+                    Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageProyectil(UserIndex, UserList(UserIndex).Char.CharIndex, Npclist(NPCIndex).Char.CharIndex, ObjData(UserList(UserIndex).Invent.WeaponEqpObjIndex).GrhIndex))
+            End If
         Else
             PoderAtaque = PoderAtaqueArma(UserIndex)
             Skill = eSkill.Armas
