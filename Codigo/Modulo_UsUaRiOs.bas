@@ -968,7 +968,7 @@ Public Sub CheckUserLevel(ByVal UserIndex As Integer, Optional ByVal PrintInCons
     Call WriteUpdateUserStats(UserIndex)
     
     'Si subio de nivel guardamos los datos del usuario.
-    If SubiodeLvL Then _
+    'If SubiodeLvL Then _
         Call SaveUser(UserIndex, True)
     
     Exit Sub

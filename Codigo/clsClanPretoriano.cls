@@ -1076,18 +1076,15 @@ Errhandler:
 
 End Function
 
-Private Sub HealerPerformAction(ByVal NpcIndex As Integer, _
-                                ByVal BestTarget As Integer, _
-                                ByVal Accion As Byte, _
+Private Sub HealerPerformAction(ByVal NpcIndex As Integer, ByVal BestTarget As Integer, ByVal Accion As Byte, _
                                 ByRef CanMove As Boolean)
-    '***************************************************
-    'Author: ZaMa
-    'Last Modification: 09/07/2010
-    'Performs the required action. Determines if the npc can move after perfoming the selected action.
-    '***************************************************
+'***************************************************
+'Author: ZaMa
+'Last Modification: 09/07/2010
+'Performs the required action. Determines if the npc can move after perfoming the selected action.
+'***************************************************
     
     With Npclist(NpcIndex)
-
         Select Case Accion
             
             Case eHealerAction.HealAllyParalisis
@@ -1099,8 +1096,8 @@ Private Sub HealerPerformAction(ByVal NpcIndex As Integer, _
                 CanMove = True
                 
             Case eHealerAction.ParalizeUser
-                Call SendData(SendTarget.ToNPCArea, NpcIndex, PrepareMessagePalabrasMagicas(.Spells(eHealerSpells.ParalizeUser), .Char.CharIndex))
-                    
+                Call SendData(SendTarget.ToNPCArea, NpcIndex, _
+                    PrepareMessageChatOverHead(Hechizos(.Spells(eHealerSpells.ParalizeUser)).PalabrasMagicas, .Char.CharIndex, vbCyan))
                 Call NpcLanzaSpellSobreUser(NpcIndex, BestTarget, .Spells(eHealerSpells.ParalizeUser), True)
                 CanMove = False
                 
@@ -1120,7 +1117,6 @@ Private Sub HealerPerformAction(ByVal NpcIndex As Integer, _
                 CanMove = True
                 
         End Select
-
     End With
 
 End Sub

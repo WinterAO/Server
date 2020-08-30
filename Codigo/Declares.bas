@@ -237,7 +237,7 @@ Public Const LimiteNewbie As Byte = 12
 
 Public Type tCabecera 'Cabecera de los con
 
-    Desc As String * 255
+    desc As String * 255
     crc As Long
     MagicWord As Long
 
@@ -819,13 +819,13 @@ End Type
 
 Public Type tHechizo
 
-    'Nombre As String
-    'desc As String
-    'PalabrasMagicas As String
+    Nombre As String
+    desc As String
+    PalabrasMagicas As String
     
-    'HechizeroMsg As String
-    'TargetMsg As String
-    'PropioMsg As String
+    HechizeroMsg As String
+    TargetMsg As String
+    PropioMsg As String
     
     '    Resis As Byte
     
@@ -1180,7 +1180,7 @@ End Type
 
 Public Type tQuestNpc
 
-    NPCIndex As Integer
+    NpcIndex As Integer
     Amount As Integer
 
 End Type
@@ -1303,7 +1303,7 @@ End Type
 Public Type tQuest
 
     Nombre As String
-    Desc As String
+    desc As String
     RequiredLevel As Byte
     
     RequiredOBJs As Byte
@@ -1675,7 +1675,7 @@ Public Type User
     CharMimetizado As Char
     OrigChar As Char
     
-    Desc As String ' Descripcion
+    desc As String ' Descripcion
     DescRM As String
     
     clase As eClass
@@ -1837,7 +1837,7 @@ End Type
 
 Public Type tCriaturasEntrenador
 
-    NPCIndex As Integer
+    NpcIndex As Integer
     NpcName As String
     tmpIndex As Integer
 
@@ -1867,7 +1867,7 @@ Public Type NPC
 
     Name As String
     Char As Char 'Define como se vera
-    Desc As String
+    desc As String
 
     NPCtype As eNPCType
     Numero As Integer
@@ -1943,7 +1943,7 @@ Public Type MapBlock
     Blocked As Byte
     Graphic(1 To 4) As Long
     UserIndex As Integer
-    NPCIndex As Integer
+    NpcIndex As Integer
     ObjInfo As obj
     TileExit As WorldPos
     Trigger As eTrigger
