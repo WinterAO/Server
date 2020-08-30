@@ -23,7 +23,7 @@
 '#######################################
 
 [INIT]
-NumeroHechizos=52
+NumeroHechizos=53
 
 
 [HECHIZO1]
@@ -2618,6 +2618,7 @@ itemindex=0
 StaffAffected=0
 NeedStaff=0
 Resis=0
+RadioArea=8
 
 '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
@@ -3048,13 +3049,13 @@ Tipo=1
 WAV=97
 FXgrh=11
 Loops=0
-MinSkill=85
-ManaRequerido=460
+MinSkill=30
+ManaRequerido=400
 StaRequerido=67
-Target=3
+Target=4
 SubeHP=2
-MinHP=62
-MaxHP=75
+MinHP=10
+MaxHP=20
 SubeMana=0
 MinMana=0
 MaxMana=0
@@ -3096,4 +3097,65 @@ itemindex=0
 StaffAffected=1
 NeedStaff=0
 Resis=1
-RadioArea=5
+RadioArea=2
+
+[HECHIZO53]
+Nombre=Palabra de los dioses
+Desc=Recitas una plegaria a los dioses para sanar a multiples objetivos
+PalabrasMagicas=EN CORP SANCTIS
+HechizeroMsg=Le has sanado a 
+TargetMsg=te ha sanado.
+PropioMsg=Te has sanado.
+Tipo=1
+WAV=99
+FXgrh=9
+Loops=0
+MinSkill=100
+ManaRequerido=1550
+StaRequerido=375
+Target=4
+SubeHP=1
+MinHP=70
+MaxHP=80
+SubeMana=0
+MinMana=0
+MaxMana=0
+SubeSta=0
+MinSta=0
+MaxSta=0
+SubeHam=0
+MinHam=0
+MaxHam=0
+SubeSed=0
+MinSed=0
+MaxSed=0
+SubeAG=0
+MinAG=0
+MaxAG=0
+SubeFU=0
+MinFU=0
+MaxFU=0
+SubeCA=0
+MinCA=0
+MaxCA=0
+Invisibilidad=0
+Paraliza=0
+Inmoviliza=0
+RemoverParalisis=0
+RemoverEstupidez=0
+RemueveInvisibilidadParcial=0
+CuraVeneno=0
+Envenena=0
+Revivir=0
+Ceguera=0
+Estupidez=0
+Invoca=0
+NumNpc=0
+Cant=0
+Mimetiza=0
+Materializa=0
+itemindex=0
+StaffAffected=0
+NeedStaff=0
+Resis=0
+RadioArea=3

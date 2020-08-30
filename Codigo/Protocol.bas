@@ -153,7 +153,6 @@ Private Enum ServerPacketID
     MultiMessage
     StopWorking
     CancelOfferItem
-    PalabrasMagicas
     PlayAttackAnim
     FXtoMap
     AccountLogged  'CHOTS | Accounts
@@ -210,6 +209,7 @@ Private Enum ClientPacketID
     WorkClose
     WorkLeftClick                   'WLC
     CreateNewGuild                  'CIG
+    SpellInfo                      'INFS
     EquipItem                      'EQUI
     ChangeHeading                  'CHEA
     ModifySkills                   'SKSE
@@ -571,6 +571,9 @@ Public Function HandleIncomingData(ByVal UserIndex As Integer) As Boolean
         
         Case ClientPacketID.CreateNewGuild          'CIG
             Call HandleCreateNewGuild(UserIndex)
+            
+        Case ClientPacketID.SpellInfo               'INFS
+            Call HandleSpellInfo(UserIndex)
         
         Case ClientPacketID.EquipItem               'EQUI
             Call HandleEquipItem(UserIndex)
@@ -2971,9 +2974,9 @@ Private Sub HandleCastSpell(ByVal UserIndex As Integer)
         'Remove packet ID
         Call .incomingData.ReadByte
         
-        Dim spell As Byte
+        Dim Spell As Byte
         
-        spell = .incomingData.ReadByte()
+        Spell = .incomingData.ReadByte()
         
         If .flags.Muerto = 1 Then
             'Call WriteConsoleMsg(UserIndex, "Estas muerto!!", FontTypeNames.FONTTYPE_INFO)
@@ -2991,16 +2994,16 @@ Private Sub HandleCastSpell(ByVal UserIndex As Integer)
         'Now you can be atacked
         .flags.NoPuedeSerAtacado = False
         
-        If spell < 1 Then
+        If Spell < 1 Then
             .flags.Hechizo = 0
             Exit Sub
-        ElseIf spell > MAXUSERHECHIZOS Then
+        ElseIf Spell > MAXUSERHECHIZOS Then
             .flags.Hechizo = 0
             Exit Sub
 
         End If
         
-        .flags.Hechizo = .Stats.UserHechizos(spell)
+        .flags.Hechizo = .Stats.UserHechizos(Spell)
 
     End With
 
@@ -3094,8 +3097,6 @@ Private Sub HandleWork(ByVal UserIndex As Integer)
 
     End If
     
-    On Error GoTo errHandler
-    
     With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
@@ -3168,9 +3169,6 @@ Private Sub HandleWork(ByVal UserIndex As Integer)
         End Select
         
     End With
-    
-errHandler:
-    Call LogError("Error en HandleWork en " & Erl & " - Skill: " & Skill & ". Err: " & Err.Number & " " & Err.description)
 
 End Sub
 
@@ -3746,6 +3744,54 @@ errHandler:
     
     If Error <> 0 Then Err.Raise Error
 
+End Sub
+
+''
+' Handles the "SpellInfo" message.
+'
+' @param    userIndex The index of the user sending the message.
+
+Private Sub HandleSpellInfo(ByVal UserIndex As Integer)
+'***************************************************
+'Author: Juan Martín Sotuyo Dodero (Maraxus)
+'Last Modification: 05/17/06
+'
+'***************************************************
+    If UserList(UserIndex).incomingData.Length < 2 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
+        Exit Sub
+    End If
+    
+    With UserList(UserIndex)
+        'Remove packet ID
+        Call .incomingData.ReadByte
+        
+        Dim spellSlot As Byte
+        Dim Spell As Integer
+        
+        spellSlot = .incomingData.ReadByte()
+        
+        'Validate slot
+        If spellSlot < 1 Or spellSlot > MAXUSERHECHIZOS Then
+            Call WriteConsoleMsg(UserIndex, "¡Primero selecciona el hechizo.!", FontTypeNames.FONTTYPE_INFO)
+            Exit Sub
+        End If
+        
+        'Validate spell in the slot
+        Spell = .Stats.UserHechizos(spellSlot)
+        If Spell > 0 And Spell < NumeroHechizos + 1 Then
+            With Hechizos(Spell)
+                'Send information
+                Call WriteConsoleMsg(UserIndex, "%%%%%%%%%%%% INFO DEL HECHIZO %%%%%%%%%%%%" & vbCrLf _
+                                               & "Nombre:" & .Nombre & vbCrLf _
+                                               & "Descripción:" & .Desc & vbCrLf _
+                                               & "Skill requerido: " & .MinSkill & " de magia." & vbCrLf _
+                                               & "Mana necesario: " & .ManaRequerido & vbCrLf _
+                                               & "Stamina necesaria: " & .StaRequerido & vbCrLf _
+                                               & "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%", FontTypeNames.FONTTYPE_INFO)
+            End With
+        End If
+    End With
 End Sub
 
 ''
@@ -18884,32 +18930,30 @@ End Sub
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
 Public Sub WriteChangeSpellSlot(ByVal UserIndex As Integer, ByVal Slot As Integer)
-
-    '***************************************************
-    'Author: Juan Martin Sotuyo Dodero (Maraxus)
-    'Last Modification: 27/08/2016
-    'Writes the "ChangeSpellSlot" message to the given user's outgoing data buffer
-    '27-08-2016: Shak@ Gracias a la optimizacion, enviamos menos datos :P
-    '***************************************************
-    On Error GoTo errHandler
-
+'***************************************************
+'Author: Juan Martín Sotuyo Dodero (Maraxus)
+'Last Modification: 05/17/06
+'Writes the "ChangeSpellSlot" message to the given user's outgoing data buffer
+'***************************************************
+On Error GoTo errHandler
     With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.ChangeSpellSlot)
         Call .WriteByte(Slot)
         Call .WriteInteger(UserList(UserIndex).Stats.UserHechizos(Slot))
-
+        
+        If UserList(UserIndex).Stats.UserHechizos(Slot) > 0 Then
+            Call .WriteASCIIString(Hechizos(UserList(UserIndex).Stats.UserHechizos(Slot)).Nombre)
+        Else
+            Call .WriteASCIIString("(None)")
+        End If
     End With
+Exit Sub
 
-    Exit Sub
- 
 errHandler:
-
     If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
         Call FlushBuffer(UserIndex)
         Resume
-
     End If
-
 End Sub
 
 ''
@@ -22259,24 +22303,6 @@ errHandler:
     End If
 
 End Sub
-
-Public Function PrepareMessagePalabrasMagicas(ByVal spellIndex As Byte, _
-                                              ByVal CharIndex As Integer) As String
-
-    '***************************************************
-    '@Shak: Creada el dia 27-08-2016
-    'Utilizamos esto para enviar las palabras magicas
-    '***************************************************
-    With auxiliarBuffer
-        Call .WriteByte(ServerPacketID.PalabrasMagicas)
-        Call .WriteByte(spellIndex)
-        Call .WriteInteger(CharIndex)
-     
-        PrepareMessagePalabrasMagicas = .ReadASCIIStringFixed(.Length)
-
-    End With
-
-End Function
 
 Public Function PrepareMessageCharacterAttackAnim(ByVal CharIndex As Integer) As String
 

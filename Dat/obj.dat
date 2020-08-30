@@ -144,7 +144,7 @@ Madera Magica: 1006
 [INIT]
 'aca va el numero de OBJ mas alto, NO la cantidad de OBJs.
 'esto sirve para que los GMS puedan ver la lista completa de items para crear en una ventanita.
-NumOBJs=1309
+NumOBJs=1311
 
 
 [OBJ1]
@@ -9996,7 +9996,7 @@ Agarrable=0
 TipoPocion=4
 MaxModificador=20
 MinModificador=12
-Valor=10
+Valor=5
 Newbie=1
 Crucial=1
 
@@ -16051,7 +16051,7 @@ Name=Portal Abissal [BRUJOS]
 GrhIndex=609
 ObjType=24
 Agarrable=0
-Valor=150000
+Valor=3000000
 Crucial=1
 HechizoIndex=51
 CP1=Mago
@@ -16290,3 +16290,39 @@ ObjType=14
 Agarrable=0
 Valor=50
 Crucial=0
+
+[OBJ1310]
+Name=Palabra de los dioses [CLERIGOS]
+GrhIndex=609
+ObjType=24
+Agarrable=0
+Valor=1000000
+Crucial=1
+HechizoIndex=53
+CP1=Mago
+CP2=BRUJO
+CP3=Guerrero
+CP4=Asesino
+CP5=Ladron
+CP6=Bardo
+CP7=Druida
+CP8=Bandido
+CP9=Paladin
+CP10=CAZADOR
+CP11=PIRATA
+
+[OBJ1311]
+Name=Piquete de Minero Reforzado
+GrhIndex=608
+ObjType=2
+Agarrable=0
+Anim=30
+RazaEnanaAnim=74
+MinHit=2
+MaxHit=3
+Valor=210
+Crucial=1
+Materiales=386-387-0-0
+CantMateriales=50-20-0-0
+SkHerreria=12
+Herramienta=19-2
