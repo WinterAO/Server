@@ -90,13 +90,13 @@ Resis=0
 '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 [HECHIZO2]
-Nombre=Dardo Mágico
+Nombre=Dardo Magico
 Desc=Éste es uno de los más elementales y sencillos hechizos de ataque que podrás aprender. No causa un gran daño a la víctima, pero al consumir muy pocos recursos, resulta una herramienta muy útil para el entrenamiento de los jóvenes hechiceros.
 PalabrasMagicas=OHL VOR PEK
 HechizeroMsg=Has lanzado un dardo mágico sobre
 TargetMsg=ha lanzado un dardo mágico sobre ti.
 Tipo=1
-WAV=114
+WAV=233
 FXgrh=15
 Loops=2
 MinSkill=6

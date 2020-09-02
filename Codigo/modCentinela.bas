@@ -51,18 +51,18 @@ Sub CambiarEstado(ByVal gmIndex As Integer)
     Call WriteVar(IniPath & "Server.ini", "INIT", "CentinelaAuditoriaTrabajoActivo", IIf(isCentinelaActivated, 1, 0))
 
     'Preparamos el aviso por consola.
-    Dim message As String
-    message = UserList(gmIndex).Name & " cambio el estado del Centinela a " & IIf(isCentinelaActivated, " ACTIVADO.", " DESACTIVADO.")
+    Dim Message As String
+    Message = UserList(gmIndex).Name & " cambio el estado del Centinela a " & IIf(isCentinelaActivated, " ACTIVADO.", " DESACTIVADO.")
     
     'Mandamos el aviso por consola.
-    Call modSendData.SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(message, FontTypeNames.FONTTYPE_CENTINELA))
+    Call modSendData.SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(Message, FontTypeNames.FONTTYPE_CENTINELA))
     
     'Lo registramos en los logs.
-    Call LogGM(UserList(gmIndex).Name, message)
+    Call LogGM(UserList(gmIndex).Name, Message)
  
 End Sub
  
-Sub EnviarAUsuario(ByVal Userindex As Integer, ByVal CIndex As Byte)
+Sub EnviarAUsuario(ByVal UserIndex As Integer, ByVal CIndex As Byte)
  
     ' @ Envia centinela a un usuario.
  
@@ -72,7 +72,7 @@ Sub EnviarAUsuario(ByVal Userindex As Integer, ByVal CIndex As Byte)
         .CodigoCheck = GenerarClave
      
         'Spawnea.
-        .MiNpcIndex = SpawnNpc(NUM_NPC, DarPosicion(Userindex), True, False)
+        .MiNpcIndex = SpawnNpc(NUM_NPC, DarPosicion(UserIndex), True, False)
      
         'Setea el flag.
         .Invocado = (.MiNpcIndex <> 0)
@@ -85,18 +85,20 @@ Sub EnviarAUsuario(ByVal Userindex As Integer, ByVal CIndex As Byte)
 
      
         'Avisa al usuario sobre el char del centinela.
-        Call AvisarUsuario(Userindex, CIndex)
+        Call AvisarUsuario(UserIndex, CIndex)
+        
+        Call DejardeTrabajar(UserIndex)
      
         'Setea el tiempo.
         .TiempoInicio = GetTickCount()
      
         'Setea UI del usuario
-        .RevisandoSlot = Userindex
+        .RevisandoSlot = UserIndex
      
     End With
  
     'Setea los datos del user.
-    With UserList(Userindex).CentinelaUsuario
+    With UserList(UserIndex).CentinelaUsuario
         .CentinelaCheck = False                    'Por defecto, no ingreso la clave.
         .centinelaIndex = CIndex                   'Setea el index del mismo.
         .Codigo = Centinelas(CIndex).CodigoCheck   'Setea el codigo.
@@ -204,7 +206,7 @@ Sub ChekearUsuarios()
  
 End Sub
  
-Sub IngresaClave(ByVal Userindex As Integer, ByRef Clave As String)
+Sub IngresaClave(ByVal UserIndex As Integer, ByRef Clave As String)
  
     ' @ Checkea la clave que ingreso el usuario.
  
@@ -212,33 +214,33 @@ Sub IngresaClave(ByVal Userindex As Integer, ByRef Clave As String)
  
     Dim centinelaIndex As Byte
  
-    centinelaIndex = UserList(Userindex).CentinelaUsuario.centinelaIndex
+    centinelaIndex = UserList(UserIndex).CentinelaUsuario.centinelaIndex
  
     'No tiene centinela.
     If Not centinelaIndex <> 0 Then Exit Sub
  
     'No esta revisandolo.
-    If Not UserList(Userindex).CentinelaUsuario.Revisando Then Exit Sub
+    If Not UserList(UserIndex).CentinelaUsuario.Revisando Then Exit Sub
  
     'Checkea el codigo
     If CheckCodigo(Clave, centinelaIndex) Then
         'Quita el centinela.
-        Call AprobarUsuario(Userindex, centinelaIndex)
+        Call AprobarUsuario(UserIndex, centinelaIndex)
     Else
         'Avisa.
-        Call AvisarUsuario(Userindex, centinelaIndex, True)
+        Call AvisarUsuario(UserIndex, centinelaIndex, True)
 
     End If
  
 End Sub
  
-Sub AprobarUsuario(ByVal Userindex As Integer, ByVal CIndex As Byte)
+Sub AprobarUsuario(ByVal UserIndex As Integer, ByVal CIndex As Byte)
  
     ' @ Aprueba el control de un usuario.
  
     'Dim ClearType  as centinelaUser
  
-    With UserList(Userindex)
+    With UserList(UserIndex)
      
         '.CentinelaUsuario = ClearType
      
@@ -253,7 +255,7 @@ Sub AprobarUsuario(ByVal Userindex As Integer, ByVal CIndex As Byte)
             .UltimaRevision = GetTickCount()
         End With
  
-        Call Protocol.WriteConsoleMsg(Userindex, "El control ha finalizado.", FontTypeNames.FONTTYPE_DIOS)
+        Call Protocol.WriteConsoleMsg(UserIndex, "El control ha finalizado.", FontTypeNames.FONTTYPE_DIOS)
      
     End With
  
@@ -279,13 +281,13 @@ Sub LimpiarIndice(ByVal centinelaIndex As Byte)
  
 End Sub
  
-Sub TiempoUsuario(ByVal Userindex As Integer)
+Sub TiempoUsuario(ByVal UserIndex As Integer)
  
     ' @ Checkea el tiempo para contestar de un usuario.
  
     Dim centinelaIndex As Byte
  
-    With UserList(Userindex).CentinelaUsuario
+    With UserList(UserIndex).CentinelaUsuario
  
         centinelaIndex = .centinelaIndex
      
@@ -294,19 +296,19 @@ Sub TiempoUsuario(ByVal Userindex As Integer)
      
         'Acabo el tiempo y no ingreso la clave.
         If (GetTickCount - Centinelas(centinelaIndex).TiempoInicio) > LIMITE_TIEMPO Then
-            Call UsuarioInActivo(Userindex)
+            Call UsuarioInActivo(UserIndex)
         End If
  
     End With
  
 End Sub
  
-Sub UsuarioInActivo(ByVal Userindex As Integer)
+Sub UsuarioInActivo(ByVal UserIndex As Integer)
  
     ' @ No contesto el usuario, se lo pena.
  
     'Telep al mapa.
-    Call WarpUserChar(Userindex, MAPA_EXPLOTAR, X_EXPLOTAR, Y_EXPLOTAR, True)
+    Call WarpUserChar(UserIndex, MAPA_EXPLOTAR, X_EXPLOTAR, Y_EXPLOTAR, True)
  
 
     'No creo que tirar los items sea justo, con encarcelarlo y matarlo es mas que suficiente. (Recox)
@@ -318,22 +320,22 @@ Sub UsuarioInActivo(ByVal Userindex As Integer)
     'Call TirarTodosLosItems(Userindex)
  
     'Lo encarcela.
-    Call Encarcelar(Userindex, CARCEL_TIEMPO, "El centinela")
+    Call Encarcelar(UserIndex, CARCEL_TIEMPO, "El centinela")
  
     'Borra el centinela.
-    If UserList(Userindex).CentinelaUsuario.centinelaIndex <> 0 Then
-        Call LimpiarIndice(UserList(Userindex).CentinelaUsuario.centinelaIndex)
+    If UserList(UserIndex).CentinelaUsuario.centinelaIndex <> 0 Then
+        Call LimpiarIndice(UserList(UserIndex).CentinelaUsuario.centinelaIndex)
     End If
  
     'Deja un mensaje.
-    Call Protocol.WriteConsoleMsg(Userindex, "El centinela te ha ejecutado y encarcelado por Macro Inasistido.", FontTypeNames.FONTTYPE_DIOS)
+    Call Protocol.WriteConsoleMsg(UserIndex, "El centinela te ha ejecutado y encarcelado por Macro Inasistido.", FontTypeNames.FONTTYPE_DIOS)
  
     'Limpia el tipo del usuario.
     Dim ClearType As CentinelaUser
  
-    UserList(Userindex).CentinelaUsuario = ClearType
+    UserList(UserIndex).CentinelaUsuario = ClearType
  
-    UserList(Userindex).CentinelaUsuario.CentinelaCheck = True
+    UserList(UserIndex).CentinelaUsuario.CentinelaCheck = True
  
 End Sub
  
@@ -366,16 +368,16 @@ Function GenerarClave() As String
  
 End Function
  
-Function DarPosicion(ByVal Userindex As Integer) As WorldPos
+Function DarPosicion(ByVal UserIndex As Integer) As WorldPos
  
     ' @ Devuelve la posicion para spawnear al centinela.
  
-    With UserList(Userindex)
+    With UserList(UserIndex)
         'Posicion del usuario original.
         DarPosicion = .Pos
      
         'Mueve una posicion a la derecha
-        DarPosicion.x = .Pos.x + 1
+        DarPosicion.X = .Pos.X + 1
      
     End With
  

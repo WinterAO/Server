@@ -1476,6 +1476,8 @@ Public Sub DoPescar(ByVal UserIndex As Integer, ByVal Red As Boolean)
         
         'Sonido
         Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_PESCAR, .Pos.X, .Pos.Y))
+        
+        .Counters.Trabajando = .Counters.Trabajando + 1
     
     End With
     

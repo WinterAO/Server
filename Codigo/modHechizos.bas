@@ -29,7 +29,7 @@ Attribute VB_Name = "modHechizos"
 
 Option Explicit
 
-Sub NpcLanzaSpellSobreUser(ByVal NpcIndex As Integer, _
+Sub NpcLanzaSpellSobreUser(ByVal NPCIndex As Integer, _
                            ByVal UserIndex As Integer, _
                            ByVal Spell As Integer, _
                            Optional ByVal DecirPalabras As Boolean = False, _
@@ -45,7 +45,7 @@ Sub NpcLanzaSpellSobreUser(ByVal NpcIndex As Integer, _
     '06/04/2020: FrankoH298 - Si te lanzan un hechizo te desmonta
     '***************************************************
 
-    If Not IntervaloPermiteAtacarNpc(NpcIndex) Then Exit Sub
+    If Not IntervaloPermiteAtacarNpc(NPCIndex) Then Exit Sub
 
     With UserList(UserIndex)
     
@@ -70,7 +70,7 @@ Sub NpcLanzaSpellSobreUser(ByVal NpcIndex As Integer, _
         ' Heal HP
         If Hechizos(Spell).SubeHP = 1 Then
         
-            Call SendSpellEffects(UserIndex, NpcIndex, Spell, DecirPalabras)
+            Call SendSpellEffects(UserIndex, NPCIndex, Spell, DecirPalabras)
         
             dano = RandomNumber(Hechizos(Spell).MinHp, Hechizos(Spell).MaxHp)
         
@@ -78,7 +78,7 @@ Sub NpcLanzaSpellSobreUser(ByVal NpcIndex As Integer, _
 
             If .Stats.MinHp > .Stats.MaxHp Then .Stats.MinHp = .Stats.MaxHp
             
-            Call WriteConsoleMsg(UserIndex, Npclist(NpcIndex).Name & " te ha quitado " & dano & " puntos de vida.", FontTypeNames.FONTTYPE_FIGHT)
+            Call WriteConsoleMsg(UserIndex, Npclist(NPCIndex).Name & " te ha quitado " & dano & " puntos de vida.", FontTypeNames.FONTTYPE_FIGHT)
             
             Call WriteUpdateUserStats(UserIndex)
         
@@ -87,7 +87,7 @@ Sub NpcLanzaSpellSobreUser(ByVal NpcIndex As Integer, _
             
             If .flags.Privilegios And PlayerType.User Then
             
-                Call SendSpellEffects(UserIndex, NpcIndex, Spell, DecirPalabras)
+                Call SendSpellEffects(UserIndex, NPCIndex, Spell, DecirPalabras)
             
                 dano = RandomNumber(Hechizos(Spell).MinHp, Hechizos(Spell).MaxHp)
                 
@@ -105,7 +105,7 @@ Sub NpcLanzaSpellSobreUser(ByVal NpcIndex As Integer, _
             
                 .Stats.MinHp = .Stats.MinHp - dano
                 
-                Call WriteConsoleMsg(UserIndex, Npclist(NpcIndex).Name & " te ha quitado " & dano & " puntos de vida.", FontTypeNames.FONTTYPE_FIGHT)
+                Call WriteConsoleMsg(UserIndex, Npclist(NPCIndex).Name & " te ha quitado " & dano & " puntos de vida.", FontTypeNames.FONTTYPE_FIGHT)
                 
                 'Renderizo el dano en render.
                 Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageCreateDamage(.Pos.X, .Pos.Y, dano, DAMAGE_NORMAL))
@@ -116,14 +116,14 @@ Sub NpcLanzaSpellSobreUser(ByVal NpcIndex As Integer, _
                 If .Stats.MinHp < 1 Then
                     .Stats.MinHp = 0
 
-                    If Npclist(NpcIndex).NPCtype = eNPCType.GuardiaReal Then
+                    If Npclist(NPCIndex).NPCtype = eNPCType.GuardiaReal Then
                         RestarCriminalidad (UserIndex)
 
                     End If
                     
                     Dim MasterIndex As Integer
 
-                    MasterIndex = Npclist(NpcIndex).MaestroUser
+                    MasterIndex = Npclist(NPCIndex).MaestroUser
                     
                     '[Barrin 1-12-03]
                     If MasterIndex > 0 Then
@@ -156,7 +156,7 @@ Sub NpcLanzaSpellSobreUser(ByVal NpcIndex As Integer, _
         
             If .flags.Paralizado = 0 Then
                 
-                Call SendSpellEffects(UserIndex, NpcIndex, Spell, DecirPalabras)
+                Call SendSpellEffects(UserIndex, NPCIndex, Spell, DecirPalabras)
                 
                 If .Invent.AnilloEqpObjIndex > 0 Then
                     If ObjData(.Invent.AnilloEqpObjIndex).ImpideParalizar Then
@@ -184,7 +184,7 @@ Sub NpcLanzaSpellSobreUser(ByVal NpcIndex As Integer, _
              
             If .flags.Estupidez = 0 Then
             
-                Call SendSpellEffects(UserIndex, NpcIndex, Spell, DecirPalabras)
+                Call SendSpellEffects(UserIndex, NPCIndex, Spell, DecirPalabras)
             
                 If .Invent.AnilloEqpObjIndex > 0 Then
                     If ObjData(.Invent.AnilloEqpObjIndex).ImpideAturdir Then
@@ -207,7 +207,7 @@ Sub NpcLanzaSpellSobreUser(ByVal NpcIndex As Integer, _
              
             If .flags.Ceguera = 0 Then
             
-                Call SendSpellEffects(UserIndex, NpcIndex, Spell, DecirPalabras)
+                Call SendSpellEffects(UserIndex, NPCIndex, Spell, DecirPalabras)
             
                 If .Invent.AnilloEqpObjIndex > 0 Then
                     If ObjData(.Invent.AnilloEqpObjIndex).ImpideCegar Then
@@ -228,7 +228,7 @@ Sub NpcLanzaSpellSobreUser(ByVal NpcIndex As Integer, _
         ' Remove Invisibility/Hidden
         If Hechizos(Spell).RemueveInvisibilidadParcial = 1 Then
                  
-            Call SendSpellEffects(UserIndex, NpcIndex, Spell, DecirPalabras)
+            Call SendSpellEffects(UserIndex, NPCIndex, Spell, DecirPalabras)
                  
             'Sacamos el efecto de ocultarse
             If .flags.Oculto = 1 Then
@@ -250,7 +250,7 @@ Sub NpcLanzaSpellSobreUser(ByVal NpcIndex As Integer, _
 End Sub
 
 Private Sub SendSpellEffects(ByVal UserIndex As Integer, _
-                             ByVal NpcIndex As Integer, _
+                             ByVal NPCIndex As Integer, _
                              ByVal Spell As Integer, _
                              ByVal DecirPalabras As Boolean)
 
@@ -269,15 +269,15 @@ Private Sub SendSpellEffects(ByVal UserIndex As Integer, _
     
         ' Spell Words
         If DecirPalabras Then
-            Call SendData(SendTarget.ToNPCArea, NpcIndex, _
-                PrepareMessageChatOverHead(Hechizos(Spell).PalabrasMagicas, Npclist(NpcIndex).Char.CharIndex, vbCyan))
+            Call SendData(SendTarget.ToNPCArea, NPCIndex, _
+                PrepareMessageChatOverHead(Hechizos(Spell).PalabrasMagicas, Npclist(NPCIndex).Char.CharIndex, vbCyan))
         End If
 
     End With
 
 End Sub
 
-Public Sub NpcLanzaSpellSobreNpc(ByVal NpcIndex As Integer, _
+Public Sub NpcLanzaSpellSobreNpc(ByVal NPCIndex As Integer, _
                                  ByVal TargetNPC As Integer, _
                                  ByVal spellIndex As Integer, _
                                  Optional ByVal DecirPalabras As Boolean = False)
@@ -287,7 +287,7 @@ Public Sub NpcLanzaSpellSobreNpc(ByVal NpcIndex As Integer, _
     '21/09/2010: ZaMa - Now npcs can cast a wider range of spells.
     '***************************************************
 
-    If Not IntervaloPermiteAtacarNpc(NpcIndex) Then Exit Sub
+    If Not IntervaloPermiteAtacarNpc(NPCIndex) Then Exit Sub
     
     Dim Danio As Integer
     
@@ -300,8 +300,8 @@ Public Sub NpcLanzaSpellSobreNpc(ByVal NpcIndex As Integer, _
     
         ' Decir las palabras magicas?
         If DecirPalabras Then
-            Call SendData(SendTarget.ToNPCArea, NpcIndex, _
-                PrepareMessageChatOverHead(Hechizos(spellIndex).PalabrasMagicas, Npclist(NpcIndex).Char.CharIndex, vbCyan))
+            Call SendData(SendTarget.ToNPCArea, NPCIndex, _
+                PrepareMessageChatOverHead(Hechizos(spellIndex).PalabrasMagicas, Npclist(NPCIndex).Char.CharIndex, vbCyan))
         End If
     
         ' Spell deals damage??
@@ -316,8 +316,8 @@ Public Sub NpcLanzaSpellSobreNpc(ByVal NpcIndex As Integer, _
             If .Stats.MinHp < 1 Then
                 .Stats.MinHp = 0
 
-                If Npclist(NpcIndex).MaestroUser > 0 Then
-                    Call MuereNpc(TargetNPC, Npclist(NpcIndex).MaestroUser)
+                If Npclist(NPCIndex).MaestroUser > 0 Then
+                    Call MuereNpc(TargetNPC, Npclist(NPCIndex).MaestroUser)
                 Else
                     Call MuereNpc(TargetNPC, 0)
 
@@ -381,7 +381,7 @@ Function TieneHechizo(ByVal i As Integer, ByVal UserIndex As Integer) As Boolean
     '
     '***************************************************
 
-    On Error GoTo ErrHandler
+    On Error GoTo errHandler
     
     Dim j As Integer
 
@@ -396,7 +396,7 @@ Function TieneHechizo(ByVal i As Integer, ByVal UserIndex As Integer) As Boolean
     Next
 
     Exit Function
-ErrHandler:
+errHandler:
 
 End Function
 
@@ -446,7 +446,7 @@ Sub DecirPalabrasMagicas(ByVal SpellWords As String, ByVal UserIndex As Integer)
 'Author: Unknownn
 'Last Modification: 27/07/2012 - ^[GS]^
 '***************************************************
-On Error GoTo ErrHandler
+On Error GoTo errHandler
 
     With UserList(UserIndex)
         If .flags.AdminInvisible <> 1 Then
@@ -467,7 +467,7 @@ On Error GoTo ErrHandler
     
     Exit Sub
     
-ErrHandler:
+errHandler:
     Call LogError("Error en DecirPalabrasMagicas. Error: " & Err.Number & " - " & Err.description)
     
 End Sub
@@ -672,10 +672,10 @@ Sub HechizoTerrenoEstado(ByVal UserIndex As Integer, ByRef b As Boolean)
                         Call UserHechizoDanoUser(UserIndex, MapData(PosCasteadaM, TempX, TempY).UserIndex, h, True)
                         Count = Count + 1
                         
-                    ElseIf MapData(PosCasteadaM, TempX, TempY).NpcIndex > 0 Then '¿Hay un NPC en esa posicion?
+                    ElseIf MapData(PosCasteadaM, TempX, TempY).NPCIndex > 0 Then '¿Hay un NPC en esa posicion?
                         'Si no es atacable no hacemos nada
-                        If Npclist(MapData(PosCasteadaM, TempX, TempY).NpcIndex).Attackable > 0 Then
-                            Call UserHechizoDanoNPC(UserIndex, MapData(PosCasteadaM, TempX, TempY).NpcIndex, h, True)
+                        If Npclist(MapData(PosCasteadaM, TempX, TempY).NPCIndex).Attackable > 0 Then
+                            Call UserHechizoDanoNPC(UserIndex, MapData(PosCasteadaM, TempX, TempY).NPCIndex, h, True)
                             Count = Count + 1
                         End If
                         
@@ -730,7 +730,7 @@ Sub HechizoInvocacion(ByVal UserIndex As Integer, ByRef HechizoCasteado As Boole
 
         End If
     
-        Dim spellIndex As Integer, NroNpcs As Integer, NpcIndex As Integer, PetIndex As Integer
+        Dim spellIndex As Integer, NroNpcs As Integer, NPCIndex As Integer, PetIndex As Integer
 
         Dim TargetPos  As WorldPos
     
@@ -758,24 +758,24 @@ Sub HechizoInvocacion(ByVal UserIndex As Integer, ByRef HechizoCasteado As Boole
             For NroNpcs = 1 To Hechizos(spellIndex).cant
             
                 If .NroMascotas < MAXMASCOTAS Then
-                    NpcIndex = SpawnNpc(Hechizos(spellIndex).NumNpc, TargetPos, True, False)
+                    NPCIndex = SpawnNpc(Hechizos(spellIndex).NumNpc, TargetPos, True, False)
 
-                    If NpcIndex > 0 Then
+                    If NPCIndex > 0 Then
                         .NroMascotas = .NroMascotas + 1
                     
                         PetIndex = FreeMascotaIndex(UserIndex)
                     
-                        .MascotasIndex(PetIndex) = NpcIndex
-                        .MascotasType(PetIndex) = Npclist(NpcIndex).Numero
+                        .MascotasIndex(PetIndex) = NPCIndex
+                        .MascotasType(PetIndex) = Npclist(NPCIndex).Numero
                     
-                        With Npclist(NpcIndex)
+                        With Npclist(NPCIndex)
                             .MaestroUser = UserIndex
                             .Contadores.TiempoExistencia = IntervaloInvocacion
                             .GiveGLD = 0
 
                         End With
                     
-                        Call FollowAmo(NpcIndex)
+                        Call FollowAmo(NPCIndex)
                     Else
                         Exit Sub
 
@@ -1052,7 +1052,7 @@ Sub LanzarHechizo(ByVal spellIndex As Integer, ByVal UserIndex As Integer)
     '02/16/2010: Marco - Now .flags.hechizo makes reference to global spell index instead of user's spell index
     '15/03/2020: WyroX - Remuevo los chequeos de distancia, porque ya se comprueba si lanzo a un tile que ve
     '***************************************************
-    On Error GoTo ErrHandler
+    On Error GoTo errHandler
 
     With UserList(UserIndex)
     
@@ -1122,7 +1122,7 @@ Sub LanzarHechizo(ByVal spellIndex As Integer, ByVal UserIndex As Integer)
 
     Exit Sub
 
-ErrHandler:
+errHandler:
     Call LogError("Error en LanzarHechizo. Error " & Err.Number & " : " & Err.description & " Hechizo: " & spellIndex & "(" & spellIndex & "). Casteado por: " & UserList(UserIndex).Name & "(" & UserIndex & ").")
     
 End Sub
@@ -1652,7 +1652,7 @@ Sub HechizoEstadoUsuario(ByVal UserIndex As Integer, ByRef HechizoCasteado As Bo
 
 End Sub
 
-Sub HechizoEstadoNPC(ByVal NpcIndex As Integer, _
+Sub HechizoEstadoNPC(ByVal NPCIndex As Integer, _
                      ByVal spellIndex As Integer, _
                      ByRef HechizoCasteado As Boolean, _
                      ByVal UserIndex As Integer)
@@ -1665,7 +1665,7 @@ Sub HechizoEstadoNPC(ByVal NpcIndex As Integer, _
     '07/07/2008: NicoNZ - Solo se puede mimetizar con npcs si es druida
     '***************************************************
 
-    With Npclist(NpcIndex)
+    With Npclist(NPCIndex)
 
         If Hechizos(spellIndex).Invisibilidad = 1 Then
             Call InfoHechizo(UserIndex)
@@ -1675,13 +1675,13 @@ Sub HechizoEstadoNPC(ByVal NpcIndex As Integer, _
         End If
     
         If Hechizos(spellIndex).Envenena = 1 Then
-            If Not PuedeAtacarNPC(UserIndex, NpcIndex) Then
+            If Not PuedeAtacarNPC(UserIndex, NPCIndex) Then
                 HechizoCasteado = False
                 Exit Sub
 
             End If
 
-            Call NPCAtacado(NpcIndex, UserIndex)
+            Call NPCAtacado(NPCIndex, UserIndex)
             Call InfoHechizo(UserIndex)
             .flags.Envenenado = 1
             HechizoCasteado = True
@@ -1696,13 +1696,13 @@ Sub HechizoEstadoNPC(ByVal NpcIndex As Integer, _
         End If
     
         If Hechizos(spellIndex).Maldicion = 1 Then
-            If Not PuedeAtacarNPC(UserIndex, NpcIndex) Then
+            If Not PuedeAtacarNPC(UserIndex, NPCIndex) Then
                 HechizoCasteado = False
                 Exit Sub
 
             End If
 
-            Call NPCAtacado(NpcIndex, UserIndex)
+            Call NPCAtacado(NPCIndex, UserIndex)
             Call InfoHechizo(UserIndex)
             .flags.Maldicion = 1
             HechizoCasteado = True
@@ -1725,7 +1725,7 @@ Sub HechizoEstadoNPC(ByVal NpcIndex As Integer, _
     
         If Hechizos(spellIndex).Paraliza = 1 Then
             If .flags.AfectaParalisis = 0 Then
-                If MapData(Npclist(NpcIndex).Pos.Map, Npclist(NpcIndex).Pos.X, Npclist(NpcIndex).Pos.Y).TileExit.Map > 0 Then
+                If MapData(Npclist(NPCIndex).Pos.Map, Npclist(NPCIndex).Pos.X, Npclist(NPCIndex).Pos.Y).TileExit.Map > 0 Then
                     If Not EsGm(UserIndex) Then
                         Call WriteConsoleMsg(UserIndex, "No puedes paralizar criaturas en esa posicion.", FontTypeNames.FONTTYPE_INFOBOLD)   '"El NPC es inmune al hechizo."
                         HechizoCasteado = False
@@ -1735,13 +1735,13 @@ Sub HechizoEstadoNPC(ByVal NpcIndex As Integer, _
 
                 End If
                                                                                                                       
-                If Not PuedeAtacarNPC(UserIndex, NpcIndex, True) Then
+                If Not PuedeAtacarNPC(UserIndex, NPCIndex, True) Then
                     HechizoCasteado = False
                     Exit Sub
 
                 End If
 
-                Call NPCAtacado(NpcIndex, UserIndex)
+                Call NPCAtacado(NPCIndex, UserIndex)
                 Call InfoHechizo(UserIndex)
                 .flags.Paralizado = 1
                 .flags.Inmovilizado = 0
@@ -1816,7 +1816,7 @@ Sub HechizoEstadoNPC(ByVal NpcIndex As Integer, _
      
         If Hechizos(spellIndex).Inmoviliza = 1 Then
             If .flags.AfectaParalisis = 0 Then
-                If Not PuedeAtacarNPC(UserIndex, NpcIndex, True) Then
+                If Not PuedeAtacarNPC(UserIndex, NPCIndex, True) Then
                     HechizoCasteado = False
                     Exit Sub
 
@@ -1831,7 +1831,7 @@ Sub HechizoEstadoNPC(ByVal NpcIndex As Integer, _
                     End If
                 End With
 
-                If MapData(Npclist(NpcIndex).Pos.Map, Npclist(NpcIndex).Pos.X, Npclist(NpcIndex).Pos.Y).TileExit.Map > 0 Then
+                If MapData(Npclist(NPCIndex).Pos.Map, Npclist(NPCIndex).Pos.X, Npclist(NPCIndex).Pos.Y).TileExit.Map > 0 Then
                     If Not EsGm(UserIndex) Then
                         Call WriteConsoleMsg(UserIndex, "No puedes paralizar criaturas en esa posicion.", FontTypeNames.FONTTYPE_INFOBOLD)   '"El NPC es inmune al hechizo."
                         HechizoCasteado = False
@@ -1841,7 +1841,7 @@ Sub HechizoEstadoNPC(ByVal NpcIndex As Integer, _
 
                 End If
                                                                                                                                             
-                Call NPCAtacado(NpcIndex, UserIndex)
+                Call NPCAtacado(NPCIndex, UserIndex)
                 .flags.Inmovilizado = 1
                 .flags.Paralizado = 0
                 .Contadores.Paralisis = IntervaloParalizado
@@ -1881,8 +1881,8 @@ Sub HechizoEstadoNPC(ByVal NpcIndex As Integer, _
                 .flags.Mimetizado = 1
             
                 'ahora pongo lo del NPC.
-                .Char.body = Npclist(NpcIndex).Char.body
-                .Char.Head = Npclist(NpcIndex).Char.Head
+                .Char.body = Npclist(NPCIndex).Char.body
+                .Char.Head = Npclist(NPCIndex).Char.Head
                 .Char.CascoAnim = NingunCasco
                 .Char.ShieldAnim = NingunEscudo
                 .Char.WeaponAnim = NingunArma
@@ -1905,7 +1905,7 @@ Sub HechizoEstadoNPC(ByVal NpcIndex As Integer, _
 End Sub
 
 Sub HechizoPropNPC(ByVal spellIndex As Integer, _
-                   ByVal NpcIndex As Integer, _
+                   ByVal NPCIndex As Integer, _
                    ByVal UserIndex As Integer, _
                    ByRef HechizoCasteado As Boolean)
     '***************************************************
@@ -1919,7 +1919,7 @@ Sub HechizoPropNPC(ByVal spellIndex As Integer, _
 
     Dim dano As Long
 
-    With Npclist(NpcIndex)
+    With Npclist(NPCIndex)
     
         Dim TempX, TempY As Integer
 
@@ -1928,7 +1928,7 @@ Sub HechizoPropNPC(ByVal spellIndex As Integer, _
         'Salud
         If Hechizos(spellIndex).SubeHP = 1 Then
         
-            HechizoCasteado = CanSupportNpc(UserIndex, NpcIndex)
+            HechizoCasteado = CanSupportNpc(UserIndex, NPCIndex)
         
             If HechizoCasteado Then
                 dano = RandomNumber(Hechizos(spellIndex).MinHp, Hechizos(spellIndex).MaxHp)
@@ -1947,7 +1947,7 @@ Sub HechizoPropNPC(ByVal spellIndex As Integer, _
         
         ElseIf Hechizos(spellIndex).SubeHP = 2 Then
 
-            HechizoCasteado = UserHechizoDanoNPC(UserIndex, NpcIndex, spellIndex)
+            HechizoCasteado = UserHechizoDanoNPC(UserIndex, NPCIndex, spellIndex)
 
         End If
 
@@ -1994,11 +1994,11 @@ Sub InfoHechizo(ByVal UserIndex As Integer, Optional ByVal NoFX As Boolean = Fal
 
             End If
 
-        ElseIf tNPC > 0 Then
+        ElseIf tNPC > 0 Then 'Si hay NPC lo reproducimos en el NPC
             Call SendData(SendTarget.ToNPCArea, tNPC, PrepareMessageCreateFX(Npclist(tNPC).Char.CharIndex, Hechizos(spellIndex).FXgrh, Hechizos(spellIndex).loops))
             Call SendData(SendTarget.ToNPCArea, tNPC, PrepareMessagePlayWave(Hechizos(spellIndex).WAV, Npclist(tNPC).Pos.X, Npclist(tNPC).Pos.Y))
             
-        Else
+        Else 'Si no, lo hacemos donde estaba
         
             Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageFXtoMap(Hechizos(spellIndex).FXgrh, Hechizos(spellIndex).loops, .flags.TargetX, .flags.TargetY))
             Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(Hechizos(spellIndex).WAV, .flags.TargetX, .flags.TargetY))
@@ -2008,21 +2008,16 @@ Sub InfoHechizo(ByVal UserIndex As Integer, Optional ByVal NoFX As Boolean = Fal
         If tUser > 0 Then
             If UserIndex <> tUser Then
                 If .showName Then
-                    Call WriteMultiMessage(UserIndex, eMessages.Hechizo_HechiceroMSG_NOMBRE, spellIndex, , , UserList(tUser).Name)
+                    Call WriteConsoleMsg(UserIndex, Hechizos(spellIndex).HechizeroMsg & " " & UserList(tUser).Name, FontTypeNames.FONTTYPE_FIGHT)
                 Else
-                    Call WriteMultiMessage(UserIndex, eMessages.Hechizo_HechiceroMSG_ALGUIEN, spellIndex)
-
+                    Call WriteConsoleMsg(UserIndex, Hechizos(spellIndex).HechizeroMsg & " alguien.", FontTypeNames.FONTTYPE_FIGHT)
                 End If
-
-                Call WriteMultiMessage(tUser, eMessages.Hechizo_TargetMSG, spellIndex, , , .Name)
+                Call WriteConsoleMsg(tUser, .Name & " " & Hechizos(spellIndex).TargetMsg, FontTypeNames.FONTTYPE_FIGHT)
             Else
-                Call WriteMultiMessage(UserIndex, eMessages.Hechizo_PropioMSG, spellIndex)
-
+                Call WriteConsoleMsg(UserIndex, Hechizos(spellIndex).PropioMsg, FontTypeNames.FONTTYPE_FIGHT)
             End If
-
         ElseIf tNPC > 0 Then
-            Call WriteMultiMessage(UserIndex, eMessages.Hechizo_HechiceroMSG_CRIATURA, spellIndex)
-
+            Call WriteConsoleMsg(UserIndex, Hechizos(spellIndex).HechizeroMsg & " " & "la criatura.", FontTypeNames.FONTTYPE_FIGHT)
         End If
 
     End With
@@ -2375,7 +2370,7 @@ Public Function CanSupportUser(ByVal CasterIndex As Integer, _
     'Checks if caster can cast support magic on target user.
     '***************************************************
      
-    On Error GoTo ErrHandler
+    On Error GoTo errHandler
  
     With UserList(CasterIndex)
         
@@ -2478,7 +2473,7 @@ Public Function CanSupportUser(ByVal CasterIndex As Integer, _
 
     Exit Function
     
-ErrHandler:
+errHandler:
     Call LogError("Error en CanSupportUser, Error: " & Err.Number & " - " & Err.description & " CasterIndex: " & CasterIndex & ", TargetIndex: " & targetIndex)
 
 End Function
@@ -2536,7 +2531,7 @@ Public Function CanSupportNpc(ByVal CasterIndex As Integer, _
     'Checks if caster can cast support magic on target Npc.
     '***************************************************
      
-    On Error GoTo ErrHandler
+    On Error GoTo errHandler
  
     Dim OwnerIndex As Integer
  
@@ -2638,7 +2633,7 @@ Public Function CanSupportNpc(ByVal CasterIndex As Integer, _
 
     Exit Function
     
-ErrHandler:
+errHandler:
     Call LogError("Error en CanSupportNpc, Error: " & Err.Number & " - " & Err.description & " CasterIndex: " & CasterIndex & ", OwnerIndex: " & OwnerIndex)
 
 End Function
@@ -2769,7 +2764,7 @@ Public Function Puede_Crear_Portal(ByVal UserIndex As Integer, ByVal Map As Inte
     With MapData(Map, X, Y)
     
         '¿Ubicacion valida?
-        If .NpcIndex > 0 Or .UserIndex > 0 Or .ObjInfo.ObjIndex > 0 Or .Blocked > 0 Or .TileExit.Map > 0 Or HayAgua(Map, X, Y) = True Then
+        If .NPCIndex > 0 Or .UserIndex > 0 Or .ObjInfo.ObjIndex > 0 Or .Blocked > 0 Or .TileExit.Map > 0 Or HayAgua(Map, X, Y) = True Then
             Call WriteConsoleMsg(UserIndex, "No puedes crear un portal ahi.", FontTypeNames.FONTTYPE_INFO)
             Puede_Crear_Portal = False
             Exit Function
@@ -2782,7 +2777,7 @@ Public Function Puede_Crear_Portal(ByVal UserIndex As Integer, ByVal Map As Inte
             If InMapBounds(Map, TempX, TempY) Then
                 With MapData(Map, TempX, TempY)
                 
-                    If .Blocked <> 0 Or .NpcIndex <> 0 Or .ObjInfo.ObjIndex <> 0 Or .TileExit.Map <> 0 Or .UserIndex <> 0 Then
+                    If .Blocked <> 0 Or .NPCIndex <> 0 Or .ObjInfo.ObjIndex <> 0 Or .TileExit.Map <> 0 Or .UserIndex <> 0 Then
                         Call WriteConsoleMsg(UserIndex, "No puedes crear un portal ahi.", FontTypeNames.FONTTYPE_INFO)
                         Puede_Crear_Portal = False
                         Exit Function
@@ -3102,7 +3097,7 @@ Private Function UserHechizoCuraUser(ByVal UserIndex As Integer, ByVal targetInd
     End With
 End Function
 
-Private Function UserHechizoDanoNPC(ByVal UserIndex As Integer, ByVal NpcIndex As Integer, ByVal spellIndex As Integer, Optional ByVal NoFX As Boolean = False) As Boolean
+Private Function UserHechizoDanoNPC(ByVal UserIndex As Integer, ByVal NPCIndex As Integer, ByVal spellIndex As Integer, Optional ByVal NoFX As Boolean = False) As Boolean
 '***************************************
 'Autor: Lorwik
 'Fecha: 25/08/2020
@@ -3111,9 +3106,9 @@ Private Function UserHechizoDanoNPC(ByVal UserIndex As Integer, ByVal NpcIndex A
 
     Dim dano        As Long
 
-    With Npclist(NpcIndex)
+    With Npclist(NPCIndex)
     
-        If Not PuedeAtacarNPC(UserIndex, NpcIndex) Then
+        If Not PuedeAtacarNPC(UserIndex, NPCIndex) Then
             UserHechizoDanoNPC = False
             Exit Function
 
@@ -3128,7 +3123,7 @@ Private Function UserHechizoDanoNPC(ByVal UserIndex As Integer, ByVal NpcIndex A
             End If
         End With
 
-        Call NPCAtacado(NpcIndex, UserIndex)
+        Call NPCAtacado(NPCIndex, UserIndex)
         dano = RandomNumber(Hechizos(spellIndex).MinHp, Hechizos(spellIndex).MaxHp)
         dano = dano + Porcentaje(dano, 3 * UserList(UserIndex).Stats.ELV)
     
@@ -3159,28 +3154,28 @@ Private Function UserHechizoDanoNPC(ByVal UserIndex As Integer, ByVal NpcIndex A
             Call InfoHechizo(UserIndex, NoFX)
         
         If .flags.Snd2 > 0 Then _
-            Call SendData(SendTarget.ToNPCArea, NpcIndex, PrepareMessagePlayWave(.flags.Snd2, .Pos.X, .Pos.Y))
+            Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessagePlayWave(.flags.Snd2, .Pos.X, .Pos.Y))
 
         'Quizas tenga defenza magica el NPC. Pablo (ToxicWaste)
         dano = dano - .Stats.defM
 
         If dano < 0 Then dano = 0
         
-        Call EventosDano(UserIndex, NpcIndex, dano)
+        Call EventosDano(UserIndex, NPCIndex, dano)
         
         .Stats.MinHp = .Stats.MinHp - dano
-        Call SendData(SendTarget.ToNPCArea, NpcIndex, PrepareMessageCreateDamage(.Pos.X, .Pos.Y, dano, DAMAGE_NORMAL))
+        Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessageCreateDamage(.Pos.X, .Pos.Y, dano, DAMAGE_NORMAL))
         'Call WriteConsoleMsg(UserIndex, "Le has quitado " & dano & " puntos de vida a la criatura!", FontTypeNames.FONTTYPE_FIGHT)
         Call WriteMultiMessage(UserIndex, eMessages.UserHitNPC, dano)
-        Call CalcularDarExp(UserIndex, NpcIndex, dano)
+        Call CalcularDarExp(UserIndex, NPCIndex, dano)
     
         '¿Es un NPC de invocacion? Reseteamos la inactividad
-        If Npclist(NpcIndex).flags.Invocacion = 1 Then _
-            Call ResetearInactividadInvoc(NpcIndex)
+        If Npclist(NPCIndex).flags.Invocacion = 1 Then _
+            Call ResetearInactividadInvoc(NPCIndex)
     
         If .Stats.MinHp < 1 Then
             .Stats.MinHp = 0
-            Call MuereNpc(NpcIndex, UserIndex)
+            Call MuereNpc(NPCIndex, UserIndex)
             
             If NoFX = False Then _
                 Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageFXtoMap(Hechizos(spellIndex).FXgrh, Hechizos(spellIndex).loops, .Pos.X, .Pos.Y))
