@@ -1428,7 +1428,7 @@ Public Sub SacerdoteHealUser(ByVal UserIndex As Integer)
     With UserList(UserIndex)
 
         'Si ya esta a full, no hacemos nada
-        If .Stats.MinHp = .Stats.MaxHp And .Stats.MinMAN = .Stats.MaxMAN And .flags.Maldicion = 0 And .flags.Ceguera = 0 And .flags.Envenenado = 0 Then
+        If .Stats.MinHp = .Stats.MaxHp And .Stats.MinMAN = .Stats.MaxMAN And .flags.Maldicion = 0 And .flags.Ceguera = 0 And .flags.Envenenado = 0 And .flags.incinerado = 0 Then
             Call WriteChatOverHead(UserIndex, "Hijo mio, los dioses ya han sanado todas tus heridas.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
             Exit Sub
         End If
@@ -1484,6 +1484,12 @@ Private Sub SacerdoteHealEffectsAndRestoreMana(ByVal UserIndex As Integer)
         If .flags.Envenenado = 1 Then
             .flags.Envenenado = 0
             Call WriteConsoleMsg(UserIndex, "El sacerdote te ha curado del envenenamiento.", FontTypeNames.FONTTYPE_INFO)
+        End If
+        
+        ' Curamos su incineramiento
+        If .flags.incinerado = 1 Then
+            .flags.incinerado = 0
+            Call WriteConsoleMsg(UserIndex, "El sacerdote apago tus llamas.", FontTypeNames.FONTTYPE_INFO)
         End If
 
         ' Restauramos su mana.

@@ -1716,6 +1716,7 @@ Sub ResetUserFlags(ByVal UserIndex As Integer)
         .Equitando = 0
         .Oculto = 0
         .Envenenado = 0
+        .Incinerado = 0
         .invisible = 0
         .Paralizado = 0
         .Inmovilizado = 0

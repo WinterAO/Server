@@ -1843,6 +1843,25 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                             Call WriteConsoleMsg(UserIndex, "Sientes un gran mareo y pierdes el conocimiento.", FontTypeNames.FONTTYPE_FIGHT)
 
                         End If
+                        
+                    Case 7 ' Pocion Apagar quemaduras
+
+                        If .flags.Incinerado = 1 Then
+                            .flags.Incinerado = 0
+                            Call WriteConsoleMsg(UserIndex, "Tus llamas se han apagado.", FontTypeNames.FONTTYPE_INFO)
+
+                        End If
+
+                        'Quitamos del inv el item
+                        Call QuitarUserInvItem(UserIndex, Slot, 1)
+                        
+                        ' Los admin invisibles solo producen sonidos a si mismos
+                        If .flags.AdminInvisible = 1 Then
+                            Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessagePlayWave(SND_BEBER, .Pos.X, .Pos.Y))
+                        Else
+                            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_BEBER, .Pos.X, .Pos.Y))
+
+                        End If
 
                 End Select
 

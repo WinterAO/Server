@@ -874,6 +874,8 @@ Public Type tHechizo
     RemoverEstupidez As Byte
     CuraVeneno As Byte
     Envenena As Byte
+    CuraQuemaduras As Byte
+    Incinera As Byte
     Maldicion As Byte
     RemoverMaldicion As Byte
     Bendicion As Byte
@@ -1097,6 +1099,7 @@ Public Type ObjData
     Hombre As Byte
     
     Envenena As Byte
+    Incinera As Byte
     Paraliza As Byte
     
     Agarrable As Byte
@@ -1411,6 +1414,7 @@ Public Type UserFlags
     TimerLanzarSpell As Long
     PuedeTrabajar As Byte
     Envenenado As Byte
+    Incinerado As Byte
     Paralizado As Byte
     Inmovilizado As Byte
     Estupidez As Byte
@@ -1531,6 +1535,7 @@ Public Type UserCounters
     AGUACounter As Integer
     MacroTrabajo As Integer
     Veneno As Integer
+    Quema As Integer
     Paralisis As Integer
     Ceguera As Integer
     Estupidez As Integer
@@ -1807,6 +1812,7 @@ Public Type NPCFlags
     RespawnOrigPos As Byte
     
     Envenenado As Byte
+    Incinerado As Byte
     Paralizado As Byte
     Inmovilizado As Byte
     invisible As Byte
@@ -1880,6 +1886,7 @@ Public Type NPC
     TipoItems As Integer
 
     Veneno As Byte
+    Quema As Byte
 
     Pos As WorldPos 'Posicion
     Orig As WorldPos

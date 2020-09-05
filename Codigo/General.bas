@@ -1279,6 +1279,34 @@ Public Sub EfectoVeneno(ByVal UserIndex As Integer)
 
 End Sub
 
+Public Sub EfectoIncinerado(ByVal UserIndex As Integer)
+    '***************************************************
+    'Author: Lorwik
+    'Last Modification: 05/09/2020
+    '
+    '***************************************************
+
+    Dim n As Integer
+    
+    With UserList(UserIndex)
+
+        If .Counters.Quema < IntervaloIncinerado Then
+            .Counters.Quema = .Counters.Quema + 1
+        Else
+            Call WriteConsoleMsg(UserIndex, "Estas ardiendo, si no te apagas moriras.", FontTypeNames.FONTTYPE_WARNING)
+            .Counters.Quema = 0
+            n = RandomNumber(5, 20)
+            .Stats.MinHp = .Stats.MinHp - n
+
+            If .Stats.MinHp < 1 Then Call UserDie(UserIndex)
+            Call WriteUpdateHP(UserIndex)
+
+        End If
+
+    End With
+
+End Sub
+
 Public Sub DuracionPociones(ByVal UserIndex As Integer)
 
     '***************************************************

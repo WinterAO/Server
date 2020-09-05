@@ -144,7 +144,7 @@ Madera Magica: 1006
 [INIT]
 'aca va el numero de OBJ mas alto, NO la cantidad de OBJs.
 'esto sirve para que los GMS puedan ver la lista completa de items para crear en una ventanita.
-NumOBJs=1311
+NumOBJs=1327
 
 
 [OBJ1]
@@ -9789,6 +9789,7 @@ HastaMap=92
 HastaX=28
 HastaY=38
 CantidadSkill=40
+Valor=10000
 
 [OBJ830]
 Name=Pasaje de Ramx a Belleuve
@@ -9800,6 +9801,7 @@ HastaMap=55
 HastaX=43
 HastaY=74
 CantidadSkill=20
+Valor=5000
 
 [OBJ831]
 Name=Arbusto
@@ -12314,9 +12316,10 @@ ObjType=36
 Agarrable=1
 DesdeMap=13
 HastaMap=97
-HastaX=13
-HastaY=86
+HastaX=83
+HastaY=38
 CantidadSkill=60
+Valor=15000
 
 [OBJ1009]
 Name=Cuchillas
@@ -12975,9 +12978,10 @@ ObjType=36
 Agarrable=1
 DesdeMap=13
 HastaMap=29
-HastaX=88
+HastaX=86
 HastaY=47
 CantidadSkill=60
+Valor=15000
 
 [OBJ1059]
 Name=Cuadro
@@ -16326,3 +16330,208 @@ Materiales=386-387-0-0
 CantMateriales=50-20-0-0
 SkHerreria=12
 Herramienta=19-2
+
+'<--- PASAJES DESDE BELLEUVE ---->
+
+[OBJ1312]
+Name=Pasaje de Belleuve a Shakoud
+GrhIndex=609
+ObjType=36
+Agarrable=1
+DesdeMap=55
+HastaMap=92
+HastaX=28
+HastaY=38
+CantidadSkill=40
+Valor=5000
+
+[OBJ1313]
+Name=Pasaje de Belleuve a Ramx
+GrhIndex=609
+ObjType=36
+Agarrable=1
+DesdeMap=55
+HastaMap=13
+HastaX=81
+HastaY=52
+CantidadSkill=20
+Valor=5000
+
+[OBJ1314]
+Name=Pasaje de Belleuve a Haverwood
+GrhIndex=609
+ObjType=36
+Agarrable=55
+DesdeMap=13
+HastaMap=29
+HastaX=86
+HastaY=47
+CantidadSkill=60
+Valor=15000
+
+'<--- PASAJES DESDE SHAKOUD ---->
+
+[OBJ1315]
+Name=Pasaje de Shakoud a Ramx
+GrhIndex=609
+ObjType=36
+Agarrable=1
+DesdeMap=92
+HastaMap=13
+HastaX=81
+HastaY=52
+CantidadSkill=20
+Valor=10000
+
+[OBJ1316]
+Name=Pasaje de Shakoud a Belleuve
+GrhIndex=609
+ObjType=36
+Agarrable=1
+DesdeMap=92
+HastaMap=55
+HastaX=43
+HastaY=74
+CantidadSkill=20
+Valor=5000
+
+[OBJ1317]
+Name=Pasaje de Shakoud a Isla Zharkel
+GrhIndex=609
+ObjType=36
+Agarrable=1
+DesdeMap=92
+HastaMap=97
+HastaX=83
+HastaY=38
+CantidadSkill=60
+Valor=8000
+
+[OBJ1318]
+Name=Pasaje de Shakoud a Haverwood
+GrhIndex=609
+ObjType=36
+Agarrable=1
+DesdeMap=92
+HastaMap=29
+HastaX=86
+HastaY=47
+CantidadSkill=60
+Valor=20000
+
+'<--- PASAJES DESDE ISLA ZHARKEL ---->
+
+[OBJ1319]
+Name=Pasaje de Isla Zharkel a Ramx
+GrhIndex=609
+ObjType=36
+Agarrable=1
+DesdeMap=97
+HastaMap=13
+HastaX=81
+HastaY=52
+CantidadSkill=20
+Valor=15000
+
+[OBJ1320]
+Name=Pasaje de Isla Zharkel a Shakoud
+GrhIndex=609
+ObjType=36
+Agarrable=1
+DesdeMap=97
+HastaMap=92
+HastaX=28
+HastaY=38
+CantidadSkill=70
+Valor=8000
+
+[OBJ1321]
+Name=Pasaje de Isla Zharkel a Haverwood
+GrhIndex=609
+ObjType=36
+Agarrable=1
+DesdeMap=97
+HastaMap=29
+HastaX=86
+HastaY=47
+CantidadSkill=60
+Valor=10000
+
+'<--- PASAJES DESDE HAVERWOOD ---->
+
+[OBJ1322]
+Name=Pasaje de Haverwood a Shakoud
+GrhIndex=609
+ObjType=36
+Agarrable=1
+DesdeMap=29
+HastaMap=92
+HastaX=28
+HastaY=38
+CantidadSkill=40
+Valor=20000
+
+[OBJ1323]
+Name=Pasaje de Haverwood a Belleuve
+GrhIndex=609
+ObjType=36
+Agarrable=1
+DesdeMap=29
+HastaMap=55
+HastaX=43
+HastaY=74
+CantidadSkill=20
+Valor=8000
+
+[OBJ1324]
+Name=Pasaje de Haverwood a Isla Zharkel
+GrhIndex=609
+ObjType=36
+Agarrable=1
+DesdeMap=29
+HastaMap=97
+HastaX=83
+HastaY=38
+CantidadSkill=60
+Valor=12000
+
+[OBJ1325]
+Name=Pasaje de Haverwood a Ramx
+GrhIndex=609
+ObjType=36
+Agarrable=1
+DesdeMap=29
+HastaMap=13
+HastaX=81
+HastaY=52
+CantidadSkill=20
+Valor=8000
+
+[OBJ1326]
+Name=Incinerar
+GrhIndex=609
+ObjType=24
+Agarrable=0
+Valor=35000
+Crucial=1
+HechizoIndex=54
+
+[OBJ1327]
+Name=Curar Quemaduras [CLERIGOS]
+GrhIndex=609
+ObjType=24
+Agarrable=0
+Valor=75000
+Crucial=1
+HechizoIndex=55
+CP1=Mago
+CP2=Brujo
+CP3=Guerrero
+CP4=Asesino
+CP5=Ladron
+CP6=Bardo
+CP7=Druida
+CP8=Bandido
+CP9=Paladin
+CP10=CAZADOR
+CP11=PIRATA

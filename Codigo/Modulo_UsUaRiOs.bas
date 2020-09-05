@@ -1687,6 +1687,7 @@ Public Sub UserDie(ByVal UserIndex As Integer, Optional ByVal AttackerIndex As I
         .Stats.MinSta = 0
         .flags.AtacadoPorUser = 0
         .flags.Envenenado = 0
+        .flags.Incinerado = 0
         .flags.Muerto = 1
 
         .Counters.Trabajando = 0

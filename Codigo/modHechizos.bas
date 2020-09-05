@@ -347,6 +347,14 @@ Public Sub NpcLanzaSpellSobreNpc(ByVal NPCIndex As Integer, _
             .flags.Envenenado = 0
 
         End If
+        
+        'Spell Adds/Removes incinerado?
+        If Hechizos(spellIndex).Incinera = 1 Then
+            .flags.Incinerado = 1
+        ElseIf Hechizos(spellIndex).Curaquemaduras = 1 Then
+            .flags.Incinerado = 0
+
+        End If
 
         ' Spells Adds/Removes Paralisis/Inmobility?
         If Hechizos(spellIndex).Paraliza = 1 Then
@@ -1312,6 +1320,56 @@ Sub HechizoEstadoUsuario(ByVal UserIndex As Integer, ByRef HechizoCasteado As Bo
             HechizoCasteado = True
 
         End If
+        
+        ' <-------- Agrega Incinerar ---------->
+        If Hechizos(HechizoIndex).Incinera = 1 Then
+            If UserIndex = targetIndex Then
+                Call WriteConsoleMsg(UserIndex, "No puedes atacarte a vos mismo.", FontTypeNames.FONTTYPE_FIGHT)
+                Exit Sub
+
+            End If
+            
+            'Si sos user, no uses este hechizo con GMS.
+            If EsGm(targetIndex) Then
+                Call WriteConsoleMsg(UserIndex, "Los Game Masters son inmunes a las alteraciones de estado.", FontTypeNames.FONTTYPE_FIGHT)
+                Exit Sub
+            End If
+            
+            If Not PuedeAtacar(UserIndex, targetIndex) Then Exit Sub
+            If UserIndex <> targetIndex Then
+                Call UsuarioAtacadoPorUsuario(UserIndex, targetIndex)
+
+            End If
+
+            UserList(targetIndex).flags.Incinerado = 1
+            Call InfoHechizo(UserIndex)
+            HechizoCasteado = True
+
+        End If
+    
+        ' <-------- Cura Quemaduras ---------->
+        If Hechizos(HechizoIndex).Curaquemaduras = 1 Then
+    
+            'Verificamos que el usuario no este muerto
+            If UserList(targetIndex).flags.Muerto = 1 Then
+                Call WriteConsoleMsg(UserIndex, "El usuario esta muerto!", FontTypeNames.FONTTYPE_INFO)
+                HechizoCasteado = False
+                Exit Sub
+
+            End If
+            
+            ' Chequea si el status permite ayudar al otro usuario
+            HechizoCasteado = CanSupportUser(UserIndex, targetIndex)
+
+            If Not HechizoCasteado Then Exit Sub
+            
+            UserList(targetIndex).flags.Incinerado = 0
+            
+            Call InfoHechizo(UserIndex)
+            
+            HechizoCasteado = True
+
+        End If
     
         ' <-------- Agrega Maldicion ---------->
         If Hechizos(HechizoIndex).Maldicion = 1 Then
@@ -1691,6 +1749,27 @@ Sub HechizoEstadoNPC(ByVal NPCIndex As Integer, _
         If Hechizos(spellIndex).CuraVeneno = 1 Then
             Call InfoHechizo(UserIndex)
             .flags.Envenenado = 0
+            HechizoCasteado = True
+
+        End If
+        
+        If Hechizos(spellIndex).Incinera = 1 Then
+            If Not PuedeAtacarNPC(UserIndex, NPCIndex) Then
+                HechizoCasteado = False
+                Exit Sub
+
+            End If
+
+            Call NPCAtacado(NPCIndex, UserIndex)
+            Call InfoHechizo(UserIndex)
+            .flags.Incinerado = 1
+            HechizoCasteado = True
+
+        End If
+    
+        If Hechizos(spellIndex).Curaquemaduras = 1 Then
+            Call InfoHechizo(UserIndex)
+            .flags.Incinerado = 0
             HechizoCasteado = True
 
         End If

@@ -470,6 +470,7 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
         query = query & "rep_average = " & .Reputacion.Promedio & ", "
         query = query & "is_naked = " & .flags.Desnudo & ", "
         query = query & "is_poisoned = " & .flags.Envenenado & ", "
+        query = query & "is_incinerado = " & .flags.Incinerado & ", "
         query = query & "is_hidden = " & .flags.Escondido & ", "
         query = query & "is_hungry = " & .flags.Hambre & ", "
         query = query & "is_thirsty = " & .flags.Sed & ", "
@@ -762,6 +763,7 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
         .Reputacion.Promedio = Database_RecordSet!rep_average
         .flags.Desnudo = Database_RecordSet!is_naked
         .flags.Envenenado = Database_RecordSet!is_poisoned
+        .flags.Incinerado = Database_RecordSet!is_incinerado
         .flags.Escondido = Database_RecordSet!is_hidden
         .flags.Hambre = Database_RecordSet!is_hungry
         .flags.Sed = Database_RecordSet!is_thirsty
