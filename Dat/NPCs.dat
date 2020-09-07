@@ -6750,7 +6750,7 @@ NROITEMS=0
 ####LEVEL 55######
 ##################
 
-[NPC1000] 
+[NPC1050] 
 Name=Rey Examine Word Boss
 NpcType=0
 Head=0
@@ -6778,7 +6778,7 @@ Nroitems=1
 BackUp=0
 NROITEMS=0
 
-[NPC1001]
+[NPC1051]
 Name=Titan de Fuego
 NpcType=0
 Head=0
@@ -6808,7 +6808,7 @@ Invocacion=1
 NROITEMS=1
 Obj1=1254-1-100
 
-[NPC1002]
+[NPC1052]
 Name=Titan de Agua
 NpcType=0
 Head=0
@@ -6838,7 +6838,7 @@ Invocacion=1
 NROITEMS=1
 Obj1=1253-1-100
 
-[NPC1003]
+[NPC1053]
 Name=Titan de Tierra
 NpcType=0
 Head=0
@@ -6869,7 +6869,7 @@ Invocacion=1
 NROITEMS=1
 Obj1=1252-1-100
 
-[NPC1004] 
+[NPC1054] 
 Name=Dragon Legendario
 NpcType=0
 Head=0
