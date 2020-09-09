@@ -36,7 +36,7 @@ Public Sub LoginAccountDatabase(ByVal UserIndex As Integer, ByVal UserName As St
         .AccountInfo.UserName = Database_RecordSet!UserName
         .AccountInfo.Email = Database_RecordSet!Email
         .AccountInfo.Password = Database_RecordSet!Password
-        .AccountInfo.salt = Database_RecordSet!salt
+        .AccountInfo.Salt = Database_RecordSet!Salt
         .AccountInfo.Gemas = CLng(Database_RecordSet!Gemas)
         .AccountInfo.status = CBool(Database_RecordSet!status)
         
@@ -70,7 +70,7 @@ Public Sub LoginAccountDatabase(ByVal UserIndex As Integer, ByVal UserName As St
                 .AccountInfo.AccountPJ(.AccountInfo.NumChars).Class = Database_RecordSet!class_id
                 .AccountInfo.AccountPJ(.AccountInfo.NumChars).race = Database_RecordSet!race_id
                 .AccountInfo.AccountPJ(.AccountInfo.NumChars).Map = Database_RecordSet!pos_map
-                .AccountInfo.AccountPJ(.AccountInfo.NumChars).Level = Database_RecordSet!Level
+                .AccountInfo.AccountPJ(.AccountInfo.NumChars).level = Database_RecordSet!level
                 .AccountInfo.AccountPJ(.AccountInfo.NumChars).Gold = Database_RecordSet!Gold
                 .AccountInfo.AccountPJ(.AccountInfo.NumChars).criminal = (Database_RecordSet!rep_average < 0)
                 .AccountInfo.AccountPJ(.AccountInfo.NumChars).dead = Database_RecordSet!is_dead
@@ -126,7 +126,7 @@ Public Sub CloseAccount(ByVal UserIndex As Integer)
         .AccountInfo.ID = 0
         .AccountInfo.UserName = vbNullString
         .AccountInfo.Password = vbNullString
-        .AccountInfo.salt = vbNullString
+        .AccountInfo.Salt = vbNullString
         .AccountInfo.Gemas = 0
         .AccountInfo.status = False
         
@@ -144,7 +144,7 @@ Public Sub CloseAccount(ByVal UserIndex As Integer)
             .AccountInfo.AccountPJ(.AccountInfo.NumChars).Class = 0
             .AccountInfo.AccountPJ(.AccountInfo.NumChars).race = 0
             .AccountInfo.AccountPJ(.AccountInfo.NumChars).Map = 0
-            .AccountInfo.AccountPJ(.AccountInfo.NumChars).Level = 0
+            .AccountInfo.AccountPJ(.AccountInfo.NumChars).level = 0
             .AccountInfo.AccountPJ(.AccountInfo.NumChars).Gold = 0
             .AccountInfo.AccountPJ(.AccountInfo.NumChars).criminal = False
             .AccountInfo.AccountPJ(.AccountInfo.NumChars).dead = False
@@ -376,7 +376,7 @@ Public Function GetAccountSalt(ByVal AccountName As String) As String
 
     End If
 
-    GetAccountSalt = Database_RecordSet!salt
+    GetAccountSalt = Database_RecordSet!Salt
     Set Database_RecordSet = Nothing
     
 #If DBConexionUnica = 0 Then
@@ -413,7 +413,7 @@ Public Function GetUserSalt(ByVal UserName As String) As String
 
     End If
 
-    GetUserSalt = Database_RecordSet!salt
+    GetUserSalt = Database_RecordSet!Salt
     Set Database_RecordSet = Nothing
     
 #If DBConexionUnica = 0 Then
@@ -536,3 +536,42 @@ ErrorHandler:
     Call LogDatabaseError("Error in GetUserEmail: " & UserName & ". " & Err.Number & " - " & Err.description)
 
 End Function
+
+Public Function SaveNewAccount(ByVal UserName As String, _
+                                  ByVal Email As String, _
+                                  ByVal Password As String, _
+                                  ByVal Salt As String) As Boolean
+
+    '***************************************************
+    'Author: Juan Andres Dalmasso (CHOTS)
+    'Last Modification: 12/10/2018
+    '***************************************************
+    On Error GoTo ErrorHandler
+
+    Dim query As String
+
+    Call Database_Connect
+
+    query = "INSERT INTO account SET "
+    query = query & "username = '" & UserName & "', "
+    query = query & "email = '" & Email & "', "
+    query = query & "password = '" & Password & "', "
+    query = query & "salt = '" & Salt & "', "
+    query = query & "id_confirmacion = 'VERIFICADA', "
+    query = query & "status = '1', "
+    query = query & "date_created = NOW(), "
+    query = query & "date_last_login = NOW();"
+
+    Database_Connection.Execute (query)
+
+    Call Database_Close
+
+    SaveNewAccount = True
+    
+    Exit Function
+ErrorHandler:
+    Call LogDatabaseError("Error in SaveNewAccountDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
+    SaveNewAccount = False
+
+End Function
+
