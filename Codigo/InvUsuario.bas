@@ -804,7 +804,12 @@ Sub GetObj(ByVal UserIndex As Integer)
             End If
 
         Else
-            Call WriteConsoleMsg(UserIndex, "No hay nada aqui.", FontTypeNames.FONTTYPE_INFO)
+            If Not .flags.UltimoMensaje = 99 Then
+                .flags.UltimoMensaje = 99
+                
+                Call WriteConsoleMsg(UserIndex, "No hay nada aqui.", FontTypeNames.FONTTYPE_INFO)
+
+            End If
 
         End If
 

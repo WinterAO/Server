@@ -156,7 +156,7 @@ Public Sub CloseAccount(ByVal UserIndex As Integer)
             Call Cerrar_Usuario(UserIndex)
         End If
         
-        NumCuentas = NumCuentas - 1
+        If NumCuentas > 0 Then NumCuentas = NumCuentas - 1
         Call MostrarNumCuentas
         .flags.AccountLogged = False
         

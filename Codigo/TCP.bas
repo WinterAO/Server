@@ -580,14 +580,8 @@ Private Sub SetAttributesToNewUser(ByVal UserIndex As Integer, ByVal UserClase A
         .Stats.Gld = 0
     
         .Stats.Exp = 0
-        If Not EXP_X_LVL(1) > 0 Then
-            .Stats.ELU = EXP_X_LVL(1)
-        Else
-            .Stats.ELU = 200
-            Call LogError("Error en SetAttributesToNewUser: Falta la experiencia en la tabla de experiencia para el nivel 1")
-        End If
-        
         .Stats.ELV = 1
+        .Stats.ELU = EXP_X_LVL(.Stats.ELV)
     End With
 
 End Sub
@@ -754,7 +748,7 @@ Sub ConnectAccount(ByVal UserIndex As Integer, _
 'SHA256
     Dim oSHA256 As CSHA256
 
-    Dim salt    As String
+    Dim Salt    As String
 
     Set oSHA256 = New CSHA256
 
@@ -789,9 +783,9 @@ Sub ConnectAccount(ByVal UserIndex As Integer, _
         
     'Aca Guardamos y Hasheamos el password + Salt
     'Es el passwd valido?
-    salt = GetAccountSalt(UserName) ' Obtenemos la Salt
+    Salt = GetAccountSalt(UserName) ' Obtenemos la Salt
 
-    If oSHA256.SHA256(Password & salt) <> GetAccountPassword(UserName) Then
+    If oSHA256.SHA256(Password & Salt) <> GetAccountPassword(UserName) Then
         Call WriteErrorMsg(UserIndex, "Password incorrecto.")
         Call CloseSocket(UserIndex)
         Exit Sub
@@ -1881,6 +1875,7 @@ Sub ResetUserSlot(ByVal UserIndex As Integer)
     Call ResetUserBanco(UserIndex)
     Call ResetQuestStats(UserIndex)
     Call ResetUserExtras(UserIndex)
+    Call CloseAccount(UserIndex)
 
     With UserList(UserIndex).ComUsu
         .Acepto = False
