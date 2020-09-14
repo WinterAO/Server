@@ -431,13 +431,13 @@ Sub ConnectNewUser(ByVal UserIndex As Integer, _
             .Stats.UserAtributos(i) = 18
         Next i
 
+        '???????????????? ATRIBUTOS
+        Call SetAttributesToNewUser(UserIndex, UserClase, UserRaza)
+
         'Primero agregamos los items, ya que en caso de que el nivel
         'Inicial sea mayor al de un newbie, los items se borran automaticamente.
         '???????????????? INVENTARIO
         Call AddItemsToNewUser(UserIndex, UserClase, UserRaza)
-
-        '???????????????? ATRIBUTOS
-        Call SetAttributesToNewUser(UserIndex, UserClase, UserRaza)
 
         If EstadisticasInicialesUsarConfiguracionPersonalizada Then
             Call SetAttributesCustomToNewUser(UserIndex)
@@ -1570,6 +1570,45 @@ Sub ResetCharInfo(ByVal UserIndex As Integer)
 
 End Sub
 
+Sub ResetUseRaccount(ByVal UserIndex As Integer)
+'*****************************************
+'Autor: lorwik
+'Fecha: 13/09/2020
+'Descripcion: Borramos todos los datos almacenados de una cuenta
+'*****************************************
+    Dim i As Byte
+
+    With UserList(UserIndex)
+    
+        'Borro la información de la cuenta
+        .AccountInfo.ID = 0
+        .AccountInfo.UserName = vbNullString
+        .AccountInfo.Password = vbNullString
+        .AccountInfo.Salt = vbNullString
+        .AccountInfo.Gemas = 0
+        .AccountInfo.status = False
+        
+        For i = 1 To .AccountInfo.NumChars
+            .AccountInfo.AccountPJ(.AccountInfo.NumChars).ID = 0
+            .AccountInfo.AccountPJ(.AccountInfo.NumChars).Name = vbNullString
+            .AccountInfo.AccountPJ(.AccountInfo.NumChars).body = 0
+            .AccountInfo.AccountPJ(.AccountInfo.NumChars).Head = 0
+            .AccountInfo.AccountPJ(.AccountInfo.NumChars).weapon = 0
+            .AccountInfo.AccountPJ(.AccountInfo.NumChars).shield = 0
+            .AccountInfo.AccountPJ(.AccountInfo.NumChars).helmet = 0
+            .AccountInfo.AccountPJ(.AccountInfo.NumChars).Class = 0
+            .AccountInfo.AccountPJ(.AccountInfo.NumChars).race = 0
+            .AccountInfo.AccountPJ(.AccountInfo.NumChars).Map = 0
+            .AccountInfo.AccountPJ(.AccountInfo.NumChars).level = 0
+            .AccountInfo.AccountPJ(.AccountInfo.NumChars).Gold = 0
+            .AccountInfo.AccountPJ(.AccountInfo.NumChars).criminal = False
+            .AccountInfo.AccountPJ(.AccountInfo.NumChars).dead = False
+            .AccountInfo.AccountPJ(.AccountInfo.NumChars).gameMaster = False
+        Next i
+    
+    End With
+End Sub
+
 Sub ResetBasicUserInfo(ByVal UserIndex As Integer)
 
     '*************************************************
@@ -1875,8 +1914,7 @@ Sub ResetUserSlot(ByVal UserIndex As Integer)
     Call ResetUserBanco(UserIndex)
     Call ResetQuestStats(UserIndex)
     Call ResetUserExtras(UserIndex)
-    Call CloseAccount(UserIndex)
-
+    
     With UserList(UserIndex).ComUsu
         .Acepto = False
     

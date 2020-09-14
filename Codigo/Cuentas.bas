@@ -11,9 +11,12 @@ Public Sub LoginAccountDatabase(ByVal UserIndex As Integer, ByVal UserName As St
     Dim query              As String
     Dim TieneGM            As Boolean
     
-#If DBConexionUnica = 0 Then
-    Call Database_Connect
-#End If
+    #If DBConexionUnica = 0 Then
+        Call Database_Connect
+    #Else
+        'Si perdimos la conexion reconectamos
+        If CheckSQLStatus = False Then Database_Reconnect
+    #End If
     
     With UserList(UserIndex)
     
@@ -97,9 +100,9 @@ Public Sub LoginAccountDatabase(ByVal UserIndex As Integer, ByVal UserName As St
 
     Set Database_RecordSet = Nothing
     
-#If DBConexionUnica = 0 Then
-    Call Database_Close
-#End If
+    #If DBConexionUnica = 0 Then
+        Call Database_Close
+    #End If
     
     Call WriteUserAccountLogged(UserIndex, Refresh)
 
@@ -113,48 +116,23 @@ Public Sub CloseAccount(ByVal UserIndex As Integer)
 '*****************************************
 'Autor: lorwik
 'Fecha: 20/05/2020
-'Descripcion: Borramos todos los datos almacenados de una cuenta
+'Descripcion: Cierra la cuenta
 '*****************************************
-    Dim i As Byte
-    
+
     With UserList(UserIndex)
     
         .ConnIDValida = False
         .ConnID = -1
         
-        'Guardo la información de la cuenta
-        .AccountInfo.ID = 0
-        .AccountInfo.UserName = vbNullString
-        .AccountInfo.Password = vbNullString
-        .AccountInfo.Salt = vbNullString
-        .AccountInfo.Gemas = 0
-        .AccountInfo.status = False
-        
-        'Reseteo la IP
-        .IP = vbNullString
-        
-        For i = 1 To .AccountInfo.NumChars
-            .AccountInfo.AccountPJ(.AccountInfo.NumChars).ID = 0
-            .AccountInfo.AccountPJ(.AccountInfo.NumChars).Name = vbNullString
-            .AccountInfo.AccountPJ(.AccountInfo.NumChars).body = 0
-            .AccountInfo.AccountPJ(.AccountInfo.NumChars).Head = 0
-            .AccountInfo.AccountPJ(.AccountInfo.NumChars).weapon = 0
-            .AccountInfo.AccountPJ(.AccountInfo.NumChars).shield = 0
-            .AccountInfo.AccountPJ(.AccountInfo.NumChars).helmet = 0
-            .AccountInfo.AccountPJ(.AccountInfo.NumChars).Class = 0
-            .AccountInfo.AccountPJ(.AccountInfo.NumChars).race = 0
-            .AccountInfo.AccountPJ(.AccountInfo.NumChars).Map = 0
-            .AccountInfo.AccountPJ(.AccountInfo.NumChars).level = 0
-            .AccountInfo.AccountPJ(.AccountInfo.NumChars).Gold = 0
-            .AccountInfo.AccountPJ(.AccountInfo.NumChars).criminal = False
-            .AccountInfo.AccountPJ(.AccountInfo.NumChars).dead = False
-            .AccountInfo.AccountPJ(.AccountInfo.NumChars).gameMaster = False
-        Next i
+        Call ResetUseRaccount(UserIndex)
         
         '¿Tiene algun personaje conectado?
         If .flags.UserLogged Then
             Call Cerrar_Usuario(UserIndex)
         End If
+        
+        'Reseteo la IP
+        .IP = vbNullString
         
         If NumCuentas > 0 Then NumCuentas = NumCuentas - 1
         Call MostrarNumCuentas
@@ -174,9 +152,12 @@ Public Function CuentaExisteDatabase(ByVal UserName As String) As Boolean
 
     Dim query As String
 
-#If DBConexionUnica = 0 Then
-    Call Database_Connect
-#End If
+    #If DBConexionUnica = 0 Then
+        Call Database_Connect
+    #Else
+        'Si perdimos la conexion reconectamos
+        If CheckSQLStatus = False Then Database_Reconnect
+    #End If
 
     query = "SELECT id FROM account WHERE UPPER(username) = '" & UCase$(UserName) & "';"
 
@@ -191,9 +172,9 @@ Public Function CuentaExisteDatabase(ByVal UserName As String) As Boolean
     CuentaExisteDatabase = (Database_RecordSet.RecordCount > 0)
     Set Database_RecordSet = Nothing
     
-#If DBConexionUnica = 0 Then
-    Call Database_Close
-#End If
+    #If DBConexionUnica = 0 Then
+        Call Database_Close
+    #End If
 
     Exit Function
 
@@ -212,9 +193,12 @@ Public Function CuentaVerificada(ByVal UserName As String) As Boolean
 
     Dim query As String
 
-#If DBConexionUnica = 0 Then
-    Call Database_Connect
-#End If
+    #If DBConexionUnica = 0 Then
+        Call Database_Connect
+    #Else
+        'Si perdimos la conexion reconectamos
+        If CheckSQLStatus = False Then Database_Reconnect
+    #End If
 
     query = "SELECT status FROM account WHERE UPPER(username) = '" & UCase$(UserName) & "';"
 
@@ -230,9 +214,9 @@ Public Function CuentaVerificada(ByVal UserName As String) As Boolean
 
     Set Database_RecordSet = Nothing
     
-#If DBConexionUnica = 0 Then
-    Call Database_Close
-#End If
+    #If DBConexionUnica = 0 Then
+        Call Database_Close
+    #End If
 
     Exit Function
 
@@ -255,9 +239,12 @@ Public Function PersonajePerteneceCuenta(ByVal UserIndex As Integer, ByVal UserN
 
     Dim query As String
 
-#If DBConexionUnica = 0 Then
-    Call Database_Connect
-#End If
+    #If DBConexionUnica = 0 Then
+        Call Database_Connect
+    #Else
+        'Si perdimos la conexion reconectamos
+        If CheckSQLStatus = False Then Database_Reconnect
+    #End If
 
     query = "SELECT id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "' AND account_id = '" & UserList(UserIndex).AccountInfo.ID & "';"
 
@@ -272,9 +259,9 @@ Public Function PersonajePerteneceCuenta(ByVal UserIndex As Integer, ByVal UserN
     PersonajePerteneceCuenta = (Database_RecordSet.RecordCount > 0)
     Set Database_RecordSet = Nothing
     
-#If DBConexionUnica = 0 Then
-    Call Database_Close
-#End If
+    #If DBConexionUnica = 0 Then
+        Call Database_Close
+    #End If
 
     Exit Function
 
@@ -296,9 +283,12 @@ Public Function GetCountUserAccount(ByVal UserIndex As Integer) As Byte
 
     Dim query As String
 
-#If DBConexionUnica = 0 Then
-    Call Database_Connect
-#End If
+    #If DBConexionUnica = 0 Then
+        Call Database_Connect
+    #Else
+        'Si perdimos la conexion reconectamos
+        If CheckSQLStatus = False Then Database_Reconnect
+    #End If
 
     query = "SELECT COUNT(*) FROM usuario WHERE deleted = 0 and account_id = '" & UserList(UserIndex).AccountInfo.ID & "';"
 
@@ -313,9 +303,9 @@ Public Function GetCountUserAccount(ByVal UserIndex As Integer) As Byte
     GetCountUserAccount = val(Database_RecordSet.Fields(0).Value)
     Set Database_RecordSet = Nothing
     
-#If DBConexionUnica = 0 Then
-    Call Database_Close
-#End If
+    #If DBConexionUnica = 0 Then
+        Call Database_Close
+    #End If
 
     Exit Function
 ErrorHandler:
@@ -333,17 +323,20 @@ Public Sub BorrarUsuarioDatabase(ByVal UserName As String)
 
     Dim query As String
 
-#If DBConexionUnica = 0 Then
-    Call Database_Connect
-#End If
+    #If DBConexionUnica = 0 Then
+        Call Database_Connect
+    #Else
+        'Si perdimos la conexion reconectamos
+        If CheckSQLStatus = False Then Database_Reconnect
+    #End If
 
     query = "UPDATE usuario SET name = '" & UCase$(UserName) & "_deleted', deleted = TRUE WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
     Database_Connection.Execute (query)
 
-#If DBConexionUnica = 0 Then
-    Call Database_Close
-#End If
+    #If DBConexionUnica = 0 Then
+        Call Database_Close
+    #End If
 
     Exit Sub
 
@@ -362,9 +355,12 @@ Public Function GetAccountSalt(ByVal AccountName As String) As String
 
     Dim query As String
 
-#If DBConexionUnica = 0 Then
-    Call Database_Connect
-#End If
+    #If DBConexionUnica = 0 Then
+        Call Database_Connect
+    #Else
+        'Si perdimos la conexion reconectamos
+        If CheckSQLStatus = False Then Database_Reconnect
+    #End If
 
     query = "SELECT salt FROM account WHERE UPPER(username) = '" & UCase$(AccountName) & "';"
 
@@ -379,9 +375,9 @@ Public Function GetAccountSalt(ByVal AccountName As String) As String
     GetAccountSalt = Database_RecordSet!Salt
     Set Database_RecordSet = Nothing
     
-#If DBConexionUnica = 0 Then
-    Call Database_Close
-#End If
+    #If DBConexionUnica = 0 Then
+        Call Database_Close
+    #End If
 
     Exit Function
 ErrorHandler:
@@ -399,9 +395,12 @@ Public Function GetUserSalt(ByVal UserName As String) As String
 
     Dim query As String
 
-#If DBConexionUnica = 0 Then
-    Call Database_Connect
-#End If
+    #If DBConexionUnica = 0 Then
+        Call Database_Connect
+    #Else
+        'Si perdimos la conexion reconectamos
+        If CheckSQLStatus = False Then Database_Reconnect
+    #End If
 
     query = "SELECT salt FROM account WHERE id = (SELECT account_id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "');"
 
@@ -416,9 +415,9 @@ Public Function GetUserSalt(ByVal UserName As String) As String
     GetUserSalt = Database_RecordSet!Salt
     Set Database_RecordSet = Nothing
     
-#If DBConexionUnica = 0 Then
-    Call Database_Close
-#End If
+    #If DBConexionUnica = 0 Then
+        Call Database_Close
+    #End If
 
     Exit Function
 ErrorHandler:
@@ -436,9 +435,12 @@ Public Function GetAccountPassword(ByVal AccountName As String) As String
 
     Dim query As String
 
-#If DBConexionUnica = 0 Then
-    Call Database_Connect
-#End If
+    #If DBConexionUnica = 0 Then
+        Call Database_Connect
+    #Else
+        'Si perdimos la conexion reconectamos
+        If CheckSQLStatus = False Then Database_Reconnect
+    #End If
 
     query = "SELECT password FROM account WHERE UPPER(username) = '" & UCase$(AccountName) & "';"
 
@@ -453,9 +455,9 @@ Public Function GetAccountPassword(ByVal AccountName As String) As String
     GetAccountPassword = Database_RecordSet!Password
     Set Database_RecordSet = Nothing
     
-#If DBConexionUnica = 0 Then
-    Call Database_Close
-#End If
+    #If DBConexionUnica = 0 Then
+        Call Database_Close
+    #End If
 
     Exit Function
 ErrorHandler:
@@ -473,9 +475,12 @@ Public Function GetUserPassword(ByVal UserName As String) As String
 
     Dim query As String
 
-#If DBConexionUnica = 0 Then
-    Call Database_Connect
-#End If
+    #If DBConexionUnica = 0 Then
+        Call Database_Connect
+    #Else
+        'Si perdimos la conexion reconectamos
+        If CheckSQLStatus = False Then Database_Reconnect
+    #End If
 
     query = "SELECT password FROM account WHERE id = (SELECT account_id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "');"
 
@@ -490,9 +495,9 @@ Public Function GetUserPassword(ByVal UserName As String) As String
     GetUserPassword = Database_RecordSet!Password
     Set Database_RecordSet = Nothing
     
-#If DBConexionUnica = 0 Then
-    Call Database_Close
-#End If
+    #If DBConexionUnica = 0 Then
+        Call Database_Close
+    #End If
 
     Exit Function
 ErrorHandler:
@@ -510,9 +515,12 @@ Public Function GetUserEmail(ByVal UserName As String) As String
 
     Dim query As String
 
-#If DBConexionUnica = 0 Then
-    Call Database_Connect
-#End If
+    #If DBConexionUnica = 0 Then
+        Call Database_Connect
+    #Else
+        'Si perdimos la conexion reconectamos
+        If CheckSQLStatus = False Then Database_Reconnect
+    #End If
 
     query = "SELECT username FROM account WHERE id = (SELECT account_id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "');"
 
@@ -527,9 +535,9 @@ Public Function GetUserEmail(ByVal UserName As String) As String
     GetUserEmail = Database_RecordSet!UserName
     Set Database_RecordSet = Nothing
     
-#If DBConexionUnica = 0 Then
-    Call Database_Close
-#End If
+    #If DBConexionUnica = 0 Then
+        Call Database_Close
+    #End If
 
     Exit Function
 ErrorHandler:
@@ -550,7 +558,8 @@ Public Function SaveNewAccount(ByVal UserName As String, _
 
     Dim query As String
 
-    Call Database_Connect
+    'Si perdimos la conexion reconectamos
+    If CheckSQLStatus = False Then Database_Reconnect
 
     query = "INSERT INTO account SET "
     query = query & "username = '" & UserName & "', "
@@ -563,8 +572,6 @@ Public Function SaveNewAccount(ByVal UserName As String, _
     query = query & "date_last_login = NOW();"
 
     Database_Connection.Execute (query)
-
-    Call Database_Close
 
     SaveNewAccount = True
     
