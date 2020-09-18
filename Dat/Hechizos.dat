@@ -913,9 +913,9 @@ WAV=27
 FXgrh=7
 Loops=0
 MinSkill=60
-ManaRequerido=250
+ManaRequerido=350
 StaRequerido=29
-Target=3
+Target=4
 SubeHP=2
 MinHP=47
 MaxHP=55
@@ -960,6 +960,7 @@ itemindex=0
 StaffAffected=1
 NeedStaff=0
 Resis=1
+RadioArea=2
 
 '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
