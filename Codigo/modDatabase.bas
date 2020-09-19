@@ -107,13 +107,14 @@ Public Function CheckSQLStatus() As Boolean
         Exit Function
     End If
     
-    If Database_Connection.State <> 1 Then
+    If Database_Connection.State = 0 Then
         CheckSQLStatus = False
         Exit Function
     End If
     
     'La conexion es correcta
     CheckSQLStatus = True
+
 End Function
 
 Sub SaveUserToDatabase(ByVal UserIndex As Integer, _

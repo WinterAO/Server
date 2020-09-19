@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{48E59290-9880-11CF-9754-00AA00C00908}#1.0#0"; "MSINET.OCX"
+Object = "{48E59290-9880-11CF-9754-00AA00C00908}#1.0#0"; "MSINET.ocx"
 Begin VB.Form frmMain 
    BackColor       =   &H00000000&
    BorderStyle     =   3  'Fixed Dialog
@@ -37,7 +37,7 @@ Begin VB.Form frmMain
       Left            =   7800
       Style           =   1  'Graphical
       TabIndex        =   29
-      Top             =   5280
+      Top             =   5040
       Width           =   1335
    End
    Begin VB.Frame FraBaseDe 
@@ -53,10 +53,10 @@ Begin VB.Form frmMain
          Strikethrough   =   0   'False
       EndProperty
       ForeColor       =   &H00FFFFFF&
-      Height          =   735
+      Height          =   975
       Left            =   5160
       TabIndex        =   25
-      Top             =   5040
+      Top             =   4800
       Width           =   5535
       Begin VB.CommandButton cmdDB 
          BackColor       =   &H00E0E0E0&
@@ -90,6 +90,19 @@ Begin VB.Form frmMain
          TabIndex        =   26
          Top             =   240
          Width           =   1095
+      End
+      Begin VB.Label lblTiempoPara 
+         Appearance      =   0  'Flat
+         AutoSize        =   -1  'True
+         BackColor       =   &H00000000&
+         BackStyle       =   0  'Transparent
+         Caption         =   "Tiempo para la reconexion de la DB: Cargando..."
+         ForeColor       =   &H00FFFF80&
+         Height          =   210
+         Left            =   120
+         TabIndex        =   30
+         Top             =   720
+         Width           =   3900
       End
    End
    Begin VB.TextBox txtNumCuentas 
@@ -131,7 +144,7 @@ Begin VB.Form frmMain
       MultiLine       =   -1  'True
       TabIndex        =   15
       Text            =   "frmMain.frx":1042
-      Top             =   3480
+      Top             =   3240
       Width           =   5655
    End
    Begin InetCtlsObjects.Inet Inet1 
@@ -148,7 +161,7 @@ Begin VB.Form frmMain
       Left            =   5160
       Style           =   1  'Graphical
       TabIndex        =   13
-      Top             =   4560
+      Top             =   4320
       Width           =   5655
    End
    Begin VB.CheckBox chkServerHabilitado 
@@ -335,7 +348,7 @@ Begin VB.Form frmMain
       Height          =   255
       Left            =   5160
       TabIndex        =   22
-      Top             =   3120
+      Top             =   2880
       Width           =   4455
    End
    Begin VB.Label lblRespawnNpcs 
@@ -346,7 +359,7 @@ Begin VB.Form frmMain
       Height          =   255
       Left            =   5160
       TabIndex        =   21
-      Top             =   2400
+      Top             =   2290
       Width           =   4455
    End
    Begin VB.Label lblCharSave 
@@ -368,7 +381,7 @@ Begin VB.Form frmMain
       Height          =   255
       Left            =   5160
       TabIndex        =   19
-      Top             =   2760
+      Top             =   2590
       Width           =   4455
    End
    Begin VB.Label lblIpHelpText 
@@ -770,6 +783,8 @@ Private Sub AutoSave_Timer()
     Static Minutos          As Long
 
     Static MinutosLatsClean As Long
+    
+    Static MinutosReconexion As Long
 
     Static MinsPjesSave     As Long
 
@@ -818,12 +833,24 @@ Private Sub AutoSave_Timer()
         MinutosLatsClean = MinutosLatsClean + 1
 
     End If
+    
+    'Reconexion a la base de datos
+    If MinutosReconexion >= IntervaloReconexionDB Then
+        MinutosReconexion = 0
+        
+        'Nos aseguramos que no hay usuarios jugando
+        If NumCuentas < 1 Then _
+            Call Database_Reconnect
+    Else
+        MinutosReconexion = MinutosReconexion + 1
+    End If
 
     Call CheckIdleUser
 
     frmMain.lblWorldSave.Caption = "Proximo WorldSave: " & MinutosWs - Minutos & " Minutos"
     frmMain.lblCharSave.Caption = "Proximo CharSave: " & MinutosGuardarUsuarios - MinsPjesSave & " Minutos"
     frmMain.lblRespawnNpcs.Caption = "Respawn Npcs a POS originales: " & 15 - MinutosLatsClean & " Minutos"
+    frmMain.lblTiempoPara.Caption = "Tiempo para la reconexión de la DB: " & IntervaloReconexionDB - MinutosReconexion
 
     '<<<<<-------- Log the number of users online ------>>>
     Dim n As Integer
@@ -881,14 +908,14 @@ Private Sub cmdConfiguracion_Click()
 
 End Sub
 
-Private Sub cmdDB_Click(Index As Integer)
+Private Sub cmdDB_Click(index As Integer)
 
 #If DBConexionUnica = 0 Then
     MsgBox ("El server esta configurado para conexion/desconexion por cada query, no es posible conectar ni desconectar en este modo. Cambie la configuracion desde los argunmentos en el codigo.")
     Exit Sub
 #End If
 
-    Select Case Index
+    Select Case index
     
         Case 0 'Conectar
             If MsgBox("¿Desea CONECTAR a la base de datos MYSQL? ¡Si ya esta conectada podria provocar errores!!!", vbYesNo, "¡CONEXION A LA MYSQL!") = vbNo Then Exit Sub

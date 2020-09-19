@@ -844,6 +844,7 @@ Sub CloseSocket(ByVal UserIndex As Integer)
             
         Else
             Call ResetUserSlot(UserIndex)
+            If NumCuentas > 0 Then NumCuentas = NumCuentas - 1
         End If
         
         Call LiberarSlot(UserIndex)

@@ -135,6 +135,8 @@ Public MinutosWs                         As Long
 
 Public MinutosGuardarUsuarios            As Long
 
+Public IntervaloReconexionDB             As Long
+
 Public Puerto                            As Integer
 
 Public BootDelBackUp                     As Boolean

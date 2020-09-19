@@ -179,6 +179,9 @@ Public Function CuentaExisteDatabase(ByVal UserName As String) As Boolean
     Exit Function
 
 ErrorHandler:
+    If Err.Number = -1207576359 Then _
+        Call Database_Reconnect
+
     Call LogDatabaseError("Error in CuentaExisteDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
 
 End Function
