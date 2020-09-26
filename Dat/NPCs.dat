@@ -2270,6 +2270,22 @@ Sp1=24
 Sp2=23
 BackUp=0
 
+[NPC458] 'npc centinela
+Name=Centinela
+NpcType=0
+Head=0
+Heading=3
+Body=540
+Movement=1
+AguaValida=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=0
+BackUp=0
+
 ##############################################################
 ####################### HOSTILES #############################
 ##############################################################

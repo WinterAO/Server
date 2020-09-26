@@ -9,7 +9,7 @@ Public isCentinelaActivated As Boolean          'Esta activado?
  
 Const NUM_CENTINELAS   As Byte = 5         'Cantidad de centinelas.
 
-Const NUM_NPC          As Integer = 16     'NpcNum del centinela.
+Const NUM_NPC          As Integer = 458     'NpcNum del centinela.
  
 Const MAPA_EXPLOTAR    As Integer = 15     'Numero de mapa en la qe se pinchan usuarios.
 
