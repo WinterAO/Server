@@ -431,13 +431,13 @@ Sub ConnectNewUser(ByVal UserIndex As Integer, _
             .Stats.UserAtributos(i) = 18
         Next i
 
+        '???????????????? ATRIBUTOS
+        Call SetAttributesToNewUser(UserIndex, UserClase, UserRaza)
+
         'Primero agregamos los items, ya que en caso de que el nivel
         'Inicial sea mayor al de un newbie, los items se borran automaticamente.
         '???????????????? INVENTARIO
         Call AddItemsToNewUser(UserIndex, UserClase, UserRaza)
-
-        '???????????????? ATRIBUTOS
-        Call SetAttributesToNewUser(UserIndex, UserClase, UserRaza)
 
         If EstadisticasInicialesUsarConfiguracionPersonalizada Then
             Call SetAttributesCustomToNewUser(UserIndex)
@@ -580,14 +580,8 @@ Private Sub SetAttributesToNewUser(ByVal UserIndex As Integer, ByVal UserClase A
         .Stats.Gld = 0
     
         .Stats.Exp = 0
-        If Not EXP_X_LVL(1) > 0 Then
-            .Stats.ELU = EXP_X_LVL(1)
-        Else
-            .Stats.ELU = 200
-            Call LogError("Error en SetAttributesToNewUser: Falta la experiencia en la tabla de experiencia para el nivel 1")
-        End If
-        
         .Stats.ELV = 1
+        .Stats.ELU = 300
     End With
 
 End Sub
@@ -754,7 +748,7 @@ Sub ConnectAccount(ByVal UserIndex As Integer, _
 'SHA256
     Dim oSHA256 As CSHA256
 
-    Dim salt    As String
+    Dim Salt    As String
 
     Set oSHA256 = New CSHA256
 
@@ -789,9 +783,9 @@ Sub ConnectAccount(ByVal UserIndex As Integer, _
         
     'Aca Guardamos y Hasheamos el password + Salt
     'Es el passwd valido?
-    salt = GetAccountSalt(UserName) ' Obtenemos la Salt
+    Salt = GetAccountSalt(UserName) ' Obtenemos la Salt
 
-    If oSHA256.SHA256(Password & salt) <> GetAccountPassword(UserName) Then
+    If oSHA256.SHA256(Password & Salt) <> GetAccountPassword(UserName) Then
         Call WriteErrorMsg(UserIndex, "Password incorrecto.")
         Call CloseSocket(UserIndex)
         Exit Sub
@@ -850,6 +844,7 @@ Sub CloseSocket(ByVal UserIndex As Integer)
             
         Else
             Call ResetUserSlot(UserIndex)
+            If NumCuentas > 0 Then NumCuentas = NumCuentas - 1
         End If
         
         Call LiberarSlot(UserIndex)
@@ -1576,6 +1571,45 @@ Sub ResetCharInfo(ByVal UserIndex As Integer)
 
 End Sub
 
+Sub ResetUseRaccount(ByVal UserIndex As Integer)
+'*****************************************
+'Autor: lorwik
+'Fecha: 13/09/2020
+'Descripcion: Borramos todos los datos almacenados de una cuenta
+'*****************************************
+    Dim i As Byte
+
+    With UserList(UserIndex)
+    
+        'Borro la información de la cuenta
+        .AccountInfo.ID = 0
+        .AccountInfo.UserName = vbNullString
+        .AccountInfo.Password = vbNullString
+        .AccountInfo.Salt = vbNullString
+        .AccountInfo.Gemas = 0
+        .AccountInfo.status = False
+        
+        For i = 1 To .AccountInfo.NumChars
+            .AccountInfo.AccountPJ(.AccountInfo.NumChars).ID = 0
+            .AccountInfo.AccountPJ(.AccountInfo.NumChars).Name = vbNullString
+            .AccountInfo.AccountPJ(.AccountInfo.NumChars).body = 0
+            .AccountInfo.AccountPJ(.AccountInfo.NumChars).Head = 0
+            .AccountInfo.AccountPJ(.AccountInfo.NumChars).weapon = 0
+            .AccountInfo.AccountPJ(.AccountInfo.NumChars).shield = 0
+            .AccountInfo.AccountPJ(.AccountInfo.NumChars).helmet = 0
+            .AccountInfo.AccountPJ(.AccountInfo.NumChars).Class = 0
+            .AccountInfo.AccountPJ(.AccountInfo.NumChars).race = 0
+            .AccountInfo.AccountPJ(.AccountInfo.NumChars).Map = 0
+            .AccountInfo.AccountPJ(.AccountInfo.NumChars).level = 0
+            .AccountInfo.AccountPJ(.AccountInfo.NumChars).Gold = 0
+            .AccountInfo.AccountPJ(.AccountInfo.NumChars).criminal = False
+            .AccountInfo.AccountPJ(.AccountInfo.NumChars).dead = False
+            .AccountInfo.AccountPJ(.AccountInfo.NumChars).gameMaster = False
+        Next i
+    
+    End With
+End Sub
+
 Sub ResetBasicUserInfo(ByVal UserIndex As Integer)
 
     '*************************************************
@@ -1616,7 +1650,6 @@ Sub ResetBasicUserInfo(ByVal UserIndex As Integer)
             .NPCsMuertos = 0
             .UsuariosMatados = 0
             .SkillPts = 0
-            .ELU = 0
             .Gld = 0
             .UserAtributos(1) = 0
             .UserAtributos(2) = 0
@@ -1716,6 +1749,7 @@ Sub ResetUserFlags(ByVal UserIndex As Integer)
         .Equitando = 0
         .Oculto = 0
         .Envenenado = 0
+        .Incinerado = 0
         .invisible = 0
         .Paralizado = 0
         .Inmovilizado = 0
@@ -1880,7 +1914,7 @@ Sub ResetUserSlot(ByVal UserIndex As Integer)
     Call ResetUserBanco(UserIndex)
     Call ResetQuestStats(UserIndex)
     Call ResetUserExtras(UserIndex)
-
+    
     With UserList(UserIndex).ComUsu
         .Acepto = False
     

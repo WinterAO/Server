@@ -942,6 +942,9 @@ Public Function NpcAtacaUser(ByVal NPCIndex As Integer, _
             
             'Puede envenenar?
             If Npclist(NPCIndex).Veneno = 1 Then Call NpcEnvenenarUser(UserIndex)
+            
+            'Puede incinerar?
+            If Npclist(NPCIndex).Quema = 1 Then Call NpcIncineraUser(UserIndex)
 
         End With
         
@@ -1577,6 +1580,8 @@ Public Sub UserDanoUser(ByVal AtacanteIndex As Integer, ByVal VictimaIndex As In
     dano = CalcularDano(AtacanteIndex)
     
     Call UserEnvenena(AtacanteIndex, VictimaIndex)
+    
+    Call UserIncinera(AtacanteIndex, VictimaIndex)
     
     With UserList(AtacanteIndex)
         
@@ -2618,8 +2623,10 @@ Sub CalcularDarExp(ByVal UserIndex As Integer, _
     If ExpaDar <= 0 Then Exit Sub
     
     'Si hay una diferencia de 7 niveles por encima, el bicho solo dara el 10% de la experiencia
-    If (Npclist(NPCIndex).Stats.ELV - 7) > UserList(UserIndex).Stats.ELV Then _
+    If (Npclist(NPCIndex).Stats.ELV - 7) > UserList(UserIndex).Stats.ELV Then
         ExpaDar = Porcentaje(ExpaDar, 10)
+        Call WriteConsoleMsg(UserIndex, "La criatura es muy fuerte, no consigues obtener demasiada experiencia.", FontTypeNames.FONTTYPE_INFO)
+    End If
     
     '[Nacho] Vamos contando cuanta experiencia sacamos, porque se da toda la que no se dio al user que mata al NPC
     'Esto es porque cuando un elemental ataca, no se da exp, y tambien porque la cuenta que hicimos antes
@@ -2713,6 +2720,42 @@ Sub UserEnvenena(ByVal AtacanteIndex As Integer, ByVal VictimaIndex As Integer)
                     UserList(VictimaIndex).flags.Envenenado = 1
                     Call WriteConsoleMsg(VictimaIndex, "" & UserList(AtacanteIndex).Name & " te ha envenenado!!", FontTypeNames.FONTTYPE_FIGHT)
                     Call WriteConsoleMsg(AtacanteIndex, "Has envenenado a " & UserList(VictimaIndex).Name & "!!", FontTypeNames.FONTTYPE_FIGHT)
+
+                End If
+
+            End If
+
+        End If
+
+    End If
+    
+
+End Sub
+
+Sub UserIncinera(ByVal AtacanteIndex As Integer, ByVal VictimaIndex As Integer)
+    '***************************************************
+    'Author: Lorwik
+    'Last Modification: 05/09/2020
+    '
+    '***************************************************
+
+    Dim ObjInd As Integer
+    
+    ObjInd = UserList(AtacanteIndex).Invent.WeaponEqpObjIndex
+    
+    If ObjInd > 0 Then
+        If ObjData(ObjInd).proyectil = 1 Then
+            ObjInd = UserList(AtacanteIndex).Invent.MunicionEqpObjIndex
+
+        End If
+        
+        If ObjInd > 0 Then
+            If ObjData(ObjInd).Incinera = 1 Then
+                
+                If RandomNumber(1, 100) < 60 Then
+                    UserList(VictimaIndex).flags.Incinerado = 1
+                    Call WriteConsoleMsg(VictimaIndex, "" & UserList(AtacanteIndex).Name & " te ha incinerado!!", FontTypeNames.FONTTYPE_FIGHT)
+                    Call WriteConsoleMsg(AtacanteIndex, "Has incinerado a " & UserList(VictimaIndex).Name & "!!", FontTypeNames.FONTTYPE_FIGHT)
 
                 End If
 

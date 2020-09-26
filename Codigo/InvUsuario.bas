@@ -804,7 +804,12 @@ Sub GetObj(ByVal UserIndex As Integer)
             End If
 
         Else
-            Call WriteConsoleMsg(UserIndex, "No hay nada aqui.", FontTypeNames.FONTTYPE_INFO)
+            If Not .flags.UltimoMensaje = 99 Then
+                .flags.UltimoMensaje = 99
+                
+                Call WriteConsoleMsg(UserIndex, "No hay nada aqui.", FontTypeNames.FONTTYPE_INFO)
+
+            End If
 
         End If
 
@@ -1841,6 +1846,25 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                             Call QuitarUserInvItem(UserIndex, Slot, 1)
                             Call UserDie(UserIndex)
                             Call WriteConsoleMsg(UserIndex, "Sientes un gran mareo y pierdes el conocimiento.", FontTypeNames.FONTTYPE_FIGHT)
+
+                        End If
+                        
+                    Case 7 ' Pocion Apagar quemaduras
+
+                        If .flags.Incinerado = 1 Then
+                            .flags.Incinerado = 0
+                            Call WriteConsoleMsg(UserIndex, "Tus llamas se han apagado.", FontTypeNames.FONTTYPE_INFO)
+
+                        End If
+
+                        'Quitamos del inv el item
+                        Call QuitarUserInvItem(UserIndex, Slot, 1)
+                        
+                        ' Los admin invisibles solo producen sonidos a si mismos
+                        If .flags.AdminInvisible = 1 Then
+                            Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessagePlayWave(SND_BEBER, .Pos.X, .Pos.Y))
+                        Else
+                            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_BEBER, .Pos.X, .Pos.Y))
 
                         End If
 

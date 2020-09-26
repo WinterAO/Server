@@ -2,7 +2,7 @@ VERSION 5.00
 Begin VB.Form frmServidor 
    BackColor       =   &H00FFC0C0&
    Caption         =   "Configuracion del Servidor"
-   ClientHeight    =   6015
+   ClientHeight    =   6315
    ClientLeft      =   60
    ClientTop       =   345
    ClientWidth     =   6600
@@ -17,7 +17,7 @@ Begin VB.Form frmServidor
       Strikethrough   =   0   'False
    EndProperty
    LinkTopic       =   "Form1"
-   ScaleHeight     =   401
+   ScaleHeight     =   421
    ScaleMode       =   3  'Pixel
    ScaleWidth      =   440
    StartUpPosition =   2  'CenterScreen
@@ -36,17 +36,27 @@ Begin VB.Form frmServidor
       Left            =   1920
       Style           =   1  'Graphical
       TabIndex        =   10
-      Top             =   5520
+      Top             =   5880
       Width           =   1695
    End
    Begin VB.Frame Frame3 
       BackColor       =   &H00FFC0C0&
       Caption         =   "Administracion"
-      Height          =   2415
+      Height          =   2895
       Left            =   120
       TabIndex        =   9
       Top             =   2040
       Width           =   6375
+      Begin VB.CommandButton cmdCrearNueva 
+         BackColor       =   &H00FFC0C0&
+         Caption         =   "Crear Nueva Cuenta"
+         Height          =   375
+         Left            =   240
+         Style           =   1  'Graphical
+         TabIndex        =   25
+         Top             =   2400
+         Width           =   1935
+      End
       Begin VB.CommandButton cmdRecargarGuardiasPosOrig 
          BackColor       =   &H00FFC0C0&
          Caption         =   "Guardias en pos original"
@@ -176,7 +186,7 @@ Begin VB.Form frmServidor
       Left            =   120
       Style           =   1  'Graphical
       TabIndex        =   8
-      Top             =   5520
+      Top             =   5880
       Width           =   1695
    End
    Begin VB.CommandButton cmdForzarCierre 
@@ -186,7 +196,7 @@ Begin VB.Form frmServidor
       Left            =   3720
       Style           =   1  'Graphical
       TabIndex        =   7
-      Top             =   5520
+      Top             =   5880
       Width           =   2775
    End
    Begin VB.Frame Frame2 
@@ -195,7 +205,7 @@ Begin VB.Form frmServidor
       Height          =   735
       Left            =   120
       TabIndex        =   3
-      Top             =   4560
+      Top             =   5040
       Width           =   6375
       Begin VB.CommandButton cmdLoadWorldBackup 
          BackColor       =   &H00FFC0C0&
@@ -302,6 +312,11 @@ Attribute VB_Exposed = False
 'Pablo Ignacio Marquez
 
 Option Explicit
+
+Private Sub cmdCrearNueva_Click()
+    Unload Me
+    frmCrearCuenta.Show
+End Sub
 
 Private Sub cmdRecargarClanes_Click()
     Call LoadGuildsDB

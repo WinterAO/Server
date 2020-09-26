@@ -1,10 +1,10 @@
 VERSION 5.00
-Object = "{48E59290-9880-11CF-9754-00AA00C00908}#1.0#0"; "MSINET.OCX"
+Object = "{48E59290-9880-11CF-9754-00AA00C00908}#1.0#0"; "MSINET.ocx"
 Begin VB.Form frmMain 
    BackColor       =   &H00000000&
    BorderStyle     =   3  'Fixed Dialog
    Caption         =   "WinterAO Resurrection Server"
-   ClientHeight    =   5895
+   ClientHeight    =   5880
    ClientLeft      =   1950
    ClientTop       =   1515
    ClientWidth     =   10890
@@ -25,42 +25,85 @@ Begin VB.Form frmMain
    MaxButton       =   0   'False
    MinButton       =   0   'False
    PaletteMode     =   1  'UseZOrder
-   ScaleHeight     =   5895
+   ScaleHeight     =   5880
    ScaleWidth      =   10890
    StartUpPosition =   2  'CenterScreen
    WindowState     =   1  'Minimized
    Begin VB.CommandButton cmdDB 
       BackColor       =   &H00E0E0E0&
-      Caption         =   "Estado de la conexión"
+      Caption         =   "Reconectar"
       Height          =   375
-      Index           =   2
-      Left            =   8880
+      Index           =   3
+      Left            =   7800
       Style           =   1  'Graphical
-      TabIndex        =   27
-      Top             =   5400
-      Width           =   1935
+      TabIndex        =   29
+      Top             =   5040
+      Width           =   1335
    End
-   Begin VB.CommandButton cmdDB 
-      BackColor       =   &H00E0E0E0&
-      Caption         =   "Desconectar de la DB"
-      Height          =   375
-      Index           =   1
-      Left            =   6840
-      Style           =   1  'Graphical
-      TabIndex        =   26
-      Top             =   5400
-      Width           =   1935
-   End
-   Begin VB.CommandButton cmdDB 
-      BackColor       =   &H00E0E0E0&
-      Caption         =   "Conectar a la DB"
-      Height          =   375
-      Index           =   0
+   Begin VB.Frame FraBaseDe 
+      BackColor       =   &H00000000&
+      Caption         =   "Base de datos"
+      BeginProperty Font 
+         Name            =   "Tahoma"
+         Size            =   8.25
+         Charset         =   0
+         Weight          =   700
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      ForeColor       =   &H00FFFFFF&
+      Height          =   975
       Left            =   5160
-      Style           =   1  'Graphical
       TabIndex        =   25
-      Top             =   5400
-      Width           =   1575
+      Top             =   4800
+      Width           =   5535
+      Begin VB.CommandButton cmdDB 
+         BackColor       =   &H00E0E0E0&
+         Caption         =   "Estado"
+         Height          =   375
+         Index           =   2
+         Left            =   4080
+         Style           =   1  'Graphical
+         TabIndex        =   28
+         Top             =   240
+         Width           =   1335
+      End
+      Begin VB.CommandButton cmdDB 
+         BackColor       =   &H00E0E0E0&
+         Caption         =   "Desconectar"
+         Height          =   375
+         Index           =   1
+         Left            =   1320
+         Style           =   1  'Graphical
+         TabIndex        =   27
+         Top             =   240
+         Width           =   1215
+      End
+      Begin VB.CommandButton cmdDB 
+         BackColor       =   &H00E0E0E0&
+         Caption         =   "Conectar"
+         Height          =   375
+         Index           =   0
+         Left            =   120
+         Style           =   1  'Graphical
+         TabIndex        =   26
+         Top             =   240
+         Width           =   1095
+      End
+      Begin VB.Label lblTiempoPara 
+         Appearance      =   0  'Flat
+         AutoSize        =   -1  'True
+         BackColor       =   &H00000000&
+         BackStyle       =   0  'Transparent
+         Caption         =   "Tiempo para la reconexion de la DB: Cargando..."
+         ForeColor       =   &H00FFFF80&
+         Height          =   210
+         Left            =   120
+         TabIndex        =   30
+         Top             =   720
+         Width           =   3900
+      End
    End
    Begin VB.TextBox txtNumCuentas 
       Alignment       =   2  'Center
@@ -70,7 +113,7 @@ Begin VB.Form frmMain
       Locked          =   -1  'True
       TabIndex        =   24
       Text            =   "0"
-      Top             =   240
+      Top             =   120
       Width           =   975
    End
    Begin VB.TextBox txtRecordOnline 
@@ -81,7 +124,7 @@ Begin VB.Form frmMain
       Locked          =   -1  'True
       TabIndex        =   16
       Text            =   "0"
-      Top             =   960
+      Top             =   840
       Width           =   975
    End
    Begin VB.TextBox txtStatus 
@@ -101,7 +144,7 @@ Begin VB.Form frmMain
       MultiLine       =   -1  'True
       TabIndex        =   15
       Text            =   "frmMain.frx":1042
-      Top             =   3840
+      Top             =   3240
       Width           =   5655
    End
    Begin InetCtlsObjects.Inet Inet1 
@@ -118,7 +161,7 @@ Begin VB.Form frmMain
       Left            =   5160
       Style           =   1  'Graphical
       TabIndex        =   13
-      Top             =   4920
+      Top             =   4320
       Width           =   5655
    End
    Begin VB.CheckBox chkServerHabilitado 
@@ -139,7 +182,7 @@ Begin VB.Form frmMain
       Locked          =   -1  'True
       TabIndex        =   11
       Text            =   "0"
-      Top             =   600
+      Top             =   480
       Width           =   975
    End
    Begin VB.CommandButton cmdSystray 
@@ -294,7 +337,7 @@ Begin VB.Form frmMain
       Height          =   195
       Left            =   5280
       TabIndex        =   23
-      Top             =   240
+      Top             =   120
       Width           =   2820
    End
    Begin VB.Label lblLloviendoInfo 
@@ -305,7 +348,7 @@ Begin VB.Form frmMain
       Height          =   255
       Left            =   5160
       TabIndex        =   22
-      Top             =   3480
+      Top             =   2880
       Width           =   4455
    End
    Begin VB.Label lblRespawnNpcs 
@@ -316,7 +359,7 @@ Begin VB.Form frmMain
       Height          =   255
       Left            =   5160
       TabIndex        =   21
-      Top             =   2760
+      Top             =   2290
       Width           =   4455
    End
    Begin VB.Label lblCharSave 
@@ -327,7 +370,7 @@ Begin VB.Form frmMain
       Height          =   255
       Left            =   5160
       TabIndex        =   20
-      Top             =   2400
+      Top             =   2040
       Width           =   4455
    End
    Begin VB.Label lblWorldSave 
@@ -338,7 +381,7 @@ Begin VB.Form frmMain
       Height          =   255
       Left            =   5160
       TabIndex        =   19
-      Top             =   3120
+      Top             =   2590
       Width           =   4455
    End
    Begin VB.Label lblIpHelpText 
@@ -361,7 +404,7 @@ Begin VB.Form frmMain
       Height          =   225
       Left            =   5280
       TabIndex        =   18
-      Top             =   1920
+      Top             =   1680
       Width           =   2970
    End
    Begin VB.Label lblRecordOnline 
@@ -383,28 +426,28 @@ Begin VB.Form frmMain
       Height          =   195
       Left            =   5880
       TabIndex        =   17
-      Top             =   960
+      Top             =   840
       Width           =   1965
    End
    Begin VB.Label lblIp 
       Alignment       =   2  'Center
       BackColor       =   &H00C0FFC0&
       BorderStyle     =   1  'Fixed Single
-      Caption         =   "245.234.555.777:1234"
+      Caption         =   "0.0.0.0:7666"
       BeginProperty Font 
          Name            =   "Tahoma"
-         Size            =   18
+         Size            =   15.75
          Charset         =   0
          Weight          =   400
          Underline       =   0   'False
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      Height          =   495
+      Height          =   375
       Left            =   5760
       MousePointer    =   3  'I-Beam
       TabIndex        =   14
-      Top             =   1320
+      Top             =   1200
       Width           =   4335
    End
    Begin VB.Label Escuch 
@@ -424,7 +467,7 @@ Begin VB.Form frmMain
       Height          =   375
       Left            =   8280
       TabIndex        =   5
-      Top             =   1920
+      Top             =   1680
       Visible         =   0   'False
       Width           =   1695
    End
@@ -447,7 +490,7 @@ Begin VB.Form frmMain
       Height          =   195
       Left            =   5400
       TabIndex        =   0
-      Top             =   600
+      Top             =   480
       Width           =   2460
    End
    Begin VB.Menu mnuPopUp 
@@ -740,6 +783,8 @@ Private Sub AutoSave_Timer()
     Static Minutos          As Long
 
     Static MinutosLatsClean As Long
+    
+    Static MinutosReconexion As Long
 
     Static MinsPjesSave     As Long
 
@@ -788,12 +833,24 @@ Private Sub AutoSave_Timer()
         MinutosLatsClean = MinutosLatsClean + 1
 
     End If
+    
+    'Reconexion a la base de datos
+    If MinutosReconexion >= IntervaloReconexionDB Then
+        MinutosReconexion = 0
+        
+        'Nos aseguramos que no hay usuarios jugando
+        If NumCuentas < 1 Then _
+            Call Database_Reconnect
+    Else
+        MinutosReconexion = MinutosReconexion + 1
+    End If
 
     Call CheckIdleUser
 
     frmMain.lblWorldSave.Caption = "Proximo WorldSave: " & MinutosWs - Minutos & " Minutos"
     frmMain.lblCharSave.Caption = "Proximo CharSave: " & MinutosGuardarUsuarios - MinsPjesSave & " Minutos"
     frmMain.lblRespawnNpcs.Caption = "Respawn Npcs a POS originales: " & 15 - MinutosLatsClean & " Minutos"
+    frmMain.lblTiempoPara.Caption = "Tiempo para la reconexión de la DB: " & IntervaloReconexionDB - MinutosReconexion
 
     '<<<<<-------- Log the number of users online ------>>>
     Dim n As Integer
@@ -861,11 +918,11 @@ Private Sub cmdDB_Click(index As Integer)
     Select Case index
     
         Case 0 'Conectar
-            If MsgBox("Desea CONECTAR a la base de datos MYSQL? ¡Si ya esta conectada podria provocar errores!!!", vbYesNo, "¡CONEXION A LA MYSQL!") = vbNo Then Exit Sub
+            If MsgBox("¿Desea CONECTAR a la base de datos MYSQL? ¡Si ya esta conectada podria provocar errores!!!", vbYesNo, "¡CONEXION A LA MYSQL!") = vbNo Then Exit Sub
             Call Database_Connect
             
         Case 1 'Desconectar
-            If MsgBox("Desea DESCONECTAR de la base de datos MYSQL? ¡Si ya esta desconectada podria provocar errores!!!", vbYesNo, "¡DESCONEXION DE LA MYSQL!") = vbNo Then Exit Sub
+            If MsgBox("¿Desea DESCONECTAR de la base de datos MYSQL? ¡Si ya esta desconectada podria provocar errores!!!", vbYesNo, "¡DESCONEXION DE LA MYSQL!") = vbNo Then Exit Sub
             Call Database_Close
             
         Case 2 'Estado de la conexion
@@ -875,6 +932,10 @@ Private Sub cmdDB_Click(index As Integer)
             Else
                 MsgBox "No hay conexión con la Base de datos"
             End If
+            
+        Case 3 'Reconectar
+            If MsgBox("¿Desea RECONECTAR de la base de datos MYSQL? ¡Si ya esta conectada podria provocar errores!!!", vbYesNo, "¡RECONEXION DE LA MYSQL!") = vbNo Then Exit Sub
+            Call Database_Reconnect
             
     End Select
 End Sub

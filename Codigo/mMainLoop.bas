@@ -164,6 +164,8 @@ Public Sub GameTimer()
                         
                         If .flags.Envenenado <> 0 And (.flags.Privilegios And PlayerType.User) <> 0 Then Call EfectoVeneno(iUserIndex)
                         
+                        If .flags.incinerado <> 0 And (.flags.Privilegios And PlayerType.User) <> 0 Then Call EfectoIncinerado(iUserIndex)
+                        
                         If .flags.AdminInvisible <> 1 Then
                             If .flags.invisible = 1 Then Call EfectoInvisibilidad(iUserIndex)
                             If .flags.Oculto = 1 Then Call DoPermanecerOculto(iUserIndex)

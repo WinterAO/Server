@@ -23,7 +23,7 @@
 '#######################################
 
 [INIT]
-NumeroHechizos=53
+NumeroHechizos=55
 
 
 [HECHIZO1]
@@ -90,13 +90,13 @@ Resis=0
 '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 [HECHIZO2]
-Nombre=Dardo Mágico
+Nombre=Dardo Magico
 Desc=Éste es uno de los más elementales y sencillos hechizos de ataque que podrás aprender. No causa un gran daño a la víctima, pero al consumir muy pocos recursos, resulta una herramienta muy útil para el entrenamiento de los jóvenes hechiceros.
 PalabrasMagicas=OHL VOR PEK
 HechizeroMsg=Has lanzado un dardo mágico sobre
 TargetMsg=ha lanzado un dardo mágico sobre ti.
 Tipo=1
-WAV=114
+WAV=233
 FXgrh=15
 Loops=2
 MinSkill=6
@@ -913,9 +913,9 @@ WAV=27
 FXgrh=7
 Loops=0
 MinSkill=60
-ManaRequerido=250
+ManaRequerido=350
 StaRequerido=29
-Target=3
+Target=4
 SubeHP=2
 MinHP=47
 MaxHP=55
@@ -960,6 +960,7 @@ itemindex=0
 StaffAffected=1
 NeedStaff=0
 Resis=1
+RadioArea=2
 
 '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
@@ -3159,3 +3160,125 @@ StaffAffected=0
 NeedStaff=0
 Resis=0
 RadioArea=3
+
+[HECHIZO54]
+Nombre=Incinerar
+Desc=Con este hechizo avanzado, podrás envolver el cuerpo de la víctima entre las llamas, con el que lentamente irá perdiendo la vida hasta sucumbir.
+PalabrasMagicas=QUERM XUN CORPUS
+HechizeroMsg=Has incinerado a
+TargetMsg=te ha incinerado.
+PropioMsg=Te has incinerado.
+Tipo=2
+WAV=16
+FXgrh=3
+Loops=2
+MinSkill=20
+ManaRequerido=24
+StaRequerido=3
+Target=3
+SubeHP=0
+MinHP=0
+MaxHP=0
+SubeMana=0
+MinMana=0
+MaxMana=0
+SubeSta=0
+MinSta=0
+MaxSta=0
+SubeHam=0
+MinHam=0
+MaxHam=0
+SubeSed=0
+MinSed=0
+MaxSed=0
+SubeAG=0
+MinAG=0
+MaxAG=0
+SubeFU=0
+MinFU=0
+MaxFU=0
+SubeCA=0
+MinCA=0
+MaxCA=0
+Invisibilidad=0
+Paraliza=0
+Inmoviliza=0
+RemoverParalisis=0
+RemoverEstupidez=0
+RemueveInvisibilidadParcial=0
+CuraVeneno=0
+Envenena=0
+Incinerao=1
+Revivir=0
+Ceguera=0
+Estupidez=0
+Invoca=0
+NumNpc=0
+Cant=0
+Mimetiza=0
+Materializa=0
+itemindex=0
+StaffAffected=0
+NeedStaff=0
+Resis=1
+
+[HECHIZO55]
+Nombre=Apagar llamas
+Desc=Con este conjuro podrás invocar las aguas sagradas y lanzarlo sobre el objetivo, lo que apagara las llamas de su cuerpo. Se trata de un conjuro avanzado, pero necesario, puesto que, además de multiples criaturas en estas tierras provocan graves quemaduras.
+PalabrasMagicas=QUEM CORPUS SAN AQUA
+HechizeroMsg=Le has apagado las llamas a 
+PropioMsg=Te has apagado las llamas.
+TargetMsg=te ha apagado las llamas.
+Tipo=2
+WAV=239
+FXgrh=2
+Loops=2
+MinSkill=10
+ManaRequerido=12
+StaRequerido=1
+Target=1
+SubeHP=0
+MinHP=0
+MaxHP=0
+SubeMana=0
+MinMana=0
+MaxMana=0
+SubeSta=0
+MinSta=0
+MaxSta=0
+SubeHam=0
+MinHam=0
+MaxHam=0
+SubeSed=0
+MinSed=0
+MaxSed=0
+SubeAG=0
+MinAG=0
+MaxAG=0
+SubeFU=0
+MinFU=0
+MaxFU=0
+SubeCA=0
+MinCA=0
+MaxCA=0
+Invisibilidad=0
+Paraliza=0
+Inmoviliza=0
+RemoverParalisis=0
+RemoverEstupidez=0
+RemueveInvisibilidadParcial=0
+CuraVeneno=0
+CuraQuemaduras=1
+Envenena=0
+Revivir=0
+Ceguera=0
+Estupidez=0
+Invoca=0
+NumNpc=0
+Cant=0
+Mimetiza=0
+Materializa=0
+itemindex=0
+StaffAffected=0
+NeedStaff=0
+Resis=0

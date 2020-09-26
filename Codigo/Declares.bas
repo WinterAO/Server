@@ -237,7 +237,7 @@ Public Const LimiteNewbie As Byte = 12
 
 Public Type tCabecera 'Cabecera de los con
 
-    desc As String * 255
+    Desc As String * 255
     crc As Long
     MagicWord As Long
 
@@ -780,8 +780,6 @@ Public Const EXP_ACIERTO_SKILL        As Byte = 50
 
 Public Const EXP_FALLO_SKILL          As Byte = 20
 
-Public EXP_X_LVL() As Long
-
 ' **************************************************************
 ' **************************************************************
 ' ************************ TIPOS *******************************
@@ -820,7 +818,7 @@ End Type
 Public Type tHechizo
 
     Nombre As String
-    desc As String
+    Desc As String
     PalabrasMagicas As String
     
     HechizeroMsg As String
@@ -874,6 +872,8 @@ Public Type tHechizo
     RemoverEstupidez As Byte
     CuraVeneno As Byte
     Envenena As Byte
+    CuraQuemaduras As Byte
+    Incinera As Byte
     Maldicion As Byte
     RemoverMaldicion As Byte
     Bendicion As Byte
@@ -1097,6 +1097,7 @@ Public Type ObjData
     Hombre As Byte
     
     Envenena As Byte
+    Incinera As Byte
     Paraliza As Byte
     
     Agarrable As Byte
@@ -1180,7 +1181,7 @@ End Type
 
 Public Type tQuestNpc
 
-    NpcIndex As Integer
+    NPCIndex As Integer
     Amount As Integer
 
 End Type
@@ -1303,7 +1304,7 @@ End Type
 Public Type tQuest
 
     Nombre As String
-    desc As String
+    Desc As String
     RequiredLevel As Byte
     
     RequiredOBJs As Byte
@@ -1411,6 +1412,7 @@ Public Type UserFlags
     TimerLanzarSpell As Long
     PuedeTrabajar As Byte
     Envenenado As Byte
+    Incinerado As Byte
     Paralizado As Byte
     Inmovilizado As Byte
     Estupidez As Byte
@@ -1531,6 +1533,7 @@ Public Type UserCounters
     AGUACounter As Integer
     MacroTrabajo As Integer
     Veneno As Integer
+    Quema As Integer
     Paralisis As Integer
     Ceguera As Integer
     Estupidez As Integer
@@ -1626,7 +1629,7 @@ Public Type AccountUser
     UserName As String
     Password As String
     Email As String
-    salt As String
+    Salt As String
     status As Boolean
     Gemas As Long
     
@@ -1675,7 +1678,7 @@ Public Type User
     CharMimetizado As Char
     OrigChar As Char
     
-    desc As String ' Descripcion
+    Desc As String ' Descripcion
     DescRM As String
     
     clase As eClass
@@ -1807,6 +1810,7 @@ Public Type NPCFlags
     RespawnOrigPos As Byte
     
     Envenenado As Byte
+    Incinerado As Byte
     Paralizado As Byte
     Inmovilizado As Byte
     invisible As Byte
@@ -1837,7 +1841,7 @@ End Type
 
 Public Type tCriaturasEntrenador
 
-    NpcIndex As Integer
+    NPCIndex As Integer
     NpcName As String
     tmpIndex As Integer
 
@@ -1867,7 +1871,7 @@ Public Type NPC
 
     Name As String
     Char As Char 'Define como se vera
-    desc As String
+    Desc As String
 
     NPCtype As eNPCType
     Numero As Integer
@@ -1880,6 +1884,7 @@ Public Type NPC
     TipoItems As Integer
 
     Veneno As Byte
+    Quema As Byte
 
     Pos As WorldPos 'Posicion
     Orig As WorldPos
@@ -1943,7 +1948,7 @@ Public Type MapBlock
     Blocked As Byte
     Graphic(1 To 4) As Long
     UserIndex As Integer
-    NpcIndex As Integer
+    NPCIndex As Integer
     ObjInfo As obj
     TileExit As WorldPos
     Trigger As eTrigger
@@ -1963,7 +1968,6 @@ Type MapInfo
     MapVersion As Integer
     Pk As Boolean
     MagiaSinEfecto As Byte
-    NoEncriptarMP As Byte
     
     ' Anti Magias/Habilidades
     InviSinEfecto As Byte

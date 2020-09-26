@@ -77,6 +77,8 @@ Public IntervaloHambre                   As Integer
 
 Public IntervaloVeneno                   As Integer
 
+Public IntervaloIncinerado               As Integer
+
 Public IntervaloParalizado               As Integer
 
 Public Const IntervaloParalizadoReducido As Integer = 37
@@ -132,6 +134,8 @@ Public PorcentajeRecuperoMana            As Integer
 Public MinutosWs                         As Long
 
 Public MinutosGuardarUsuarios            As Long
+
+Public IntervaloReconexionDB             As Long
 
 Public Puerto                            As Integer
 
@@ -258,7 +262,7 @@ Sub WorldSave()
 
 End Sub
 
-Public Sub Encarcelar(ByVal userIndex As Integer, _
+Public Sub Encarcelar(ByVal UserIndex As Integer, _
                       ByVal Minutos As Long, _
                       Optional ByVal GmName As String = vbNullString)
     '***************************************************
@@ -268,20 +272,20 @@ Public Sub Encarcelar(ByVal userIndex As Integer, _
     'Recox: Arreglado problema de tiempo en carcel
     '***************************************************
 
-    UserList(userIndex).Counters.Pena = Minutos * 60
+    UserList(UserIndex).Counters.Pena = Minutos * 60
     
-    Call WarpUserChar(userIndex, Prision.Map, Prision.X, Prision.Y, True)
+    Call WarpUserChar(UserIndex, Prision.Map, Prision.X, Prision.Y, True)
     
     If LenB(GmName) = 0 Then
-        Call WriteConsoleMsg(userIndex, "Has sido encarcelado, deberas permanecer en la carcel " & Minutos & " minutos.", FontTypeNames.FONTTYPE_INFO)
+        Call WriteConsoleMsg(UserIndex, "Has sido encarcelado, deberas permanecer en la carcel " & Minutos & " minutos.", FontTypeNames.FONTTYPE_INFO)
     Else
-        Call WriteConsoleMsg(userIndex, GmName & " te ha encarcelado, deberas permanecer en la carcel " & Minutos & " minutos.", FontTypeNames.FONTTYPE_INFO)
+        Call WriteConsoleMsg(UserIndex, GmName & " te ha encarcelado, deberas permanecer en la carcel " & Minutos & " minutos.", FontTypeNames.FONTTYPE_INFO)
 
     End If
 
 End Sub
 
-Public Function BorrarUsuario(ByVal userIndex As Integer, ByVal UserName As String) As Boolean
+Public Function BorrarUsuario(ByVal UserIndex As Integer, ByVal UserName As String) As Boolean
 
     '********************************************************************************
     'Author: Lorwik

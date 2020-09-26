@@ -361,9 +361,6 @@ Sub Main()
     'Arenas de Retos
     Call LoadArenas
     
-    'Cargamos la experiencia requerida para cada nivel
-    Call CargarExpXLVL
-    
     'Invocaciones.dat
     frmCargando.Label1(2).Caption = "Cargando Invocaciones.dat"
     Call InitInvocaciones
@@ -1279,6 +1276,34 @@ Public Sub EfectoVeneno(ByVal UserIndex As Integer)
 
 End Sub
 
+Public Sub EfectoIncinerado(ByVal UserIndex As Integer)
+    '***************************************************
+    'Author: Lorwik
+    'Last Modification: 05/09/2020
+    '
+    '***************************************************
+
+    Dim n As Integer
+    
+    With UserList(UserIndex)
+
+        If .Counters.Quema < IntervaloIncinerado Then
+            .Counters.Quema = .Counters.Quema + 1
+        Else
+            Call WriteConsoleMsg(UserIndex, "Estas ardiendo, si no te apagas moriras.", FontTypeNames.FONTTYPE_WARNING)
+            .Counters.Quema = 0
+            n = RandomNumber(5, 20)
+            .Stats.MinHp = .Stats.MinHp - n
+
+            If .Stats.MinHp < 1 Then Call UserDie(UserIndex)
+            Call WriteUpdateHP(UserIndex)
+
+        End If
+
+    End With
+
+End Sub
+
 Public Sub DuracionPociones(ByVal UserIndex As Integer)
 
     '***************************************************
@@ -1876,29 +1901,4 @@ Public Sub BanGlobalChatGuardar()
     Next LoopC
 
     Close #ArchN
-End Sub
-
-Public Sub CargarExpXLVL()
-'****************************************
-'Autor: Lorwik
-'Fecha: 27/06/2020
-'Descripción: Cargamos en un Array la exp requerida para subir de nivel
-'****************************************
-
-    Dim LoopC As Long
-    Dim Leer As New clsIniManager
-    
-    If Not FileExist(App.Path & "\Dat\exp_por_nivel.dat", vbNormal) Then
-        MsgBox ("No se ha encontrado el archivo '\Dat\exp_por_nivel.dat'")
-        End
-    End If
-    
-    Call Leer.Initialize(App.Path & "\Dat\exp_por_nivel.dat")
-  
-    For LoopC = 1 To STAT_MAXELV
-    
-         EXP_X_LVL(LoopC) = CLng(Leer.GetValue("INIT", "Nivel" & LoopC))
-          
-    Next LoopC
-  
 End Sub

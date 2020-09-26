@@ -339,6 +339,7 @@ Private Sub ResetNpcFlags(ByVal NPCIndex As Integer)
         .Bendicion = 0
         .Domable = 0
         .Envenenado = 0
+        .Incinerado = 0
         .Faccion = 0
         .Follow = False
         .AtacaDoble = 0
@@ -998,6 +999,31 @@ Sub NpcEnvenenarUser(ByVal UserIndex As Integer)
     
 End Sub
 
+Sub NpcIncineraUser(ByVal UserIndex As Integer)
+    '***************************************************
+    'Author: Lorwik
+    'Last Modification: 05/09/2020
+    'Descripción: Un NPC provoca quemaduras a un usuario
+    '***************************************************
+
+    Dim n As Integer
+    
+    With UserList(UserIndex)
+
+        If .flags.Muerto = 1 Then Exit Sub
+        
+        n = RandomNumber(1, 100)
+
+        If n < 30 Then
+            .flags.Incinerado = 1
+            Call WriteConsoleMsg(UserIndex, "La criatura te ha incinerado!!", FontTypeNames.FONTTYPE_FIGHT)
+
+        End If
+
+    End With
+    
+End Sub
+
 Function SpawnNpc(ByVal NPCIndex As Integer, _
                   Pos As WorldPos, _
                   ByVal FX As Boolean, _
@@ -1258,6 +1284,7 @@ Public Function OpenNPC(ByVal NpcNumber As Integer, _
         .flags.ExpCount = .GiveEXP
         
         .Veneno = val(Leer.GetValue("NPC" & NpcNumber, "Veneno"))
+        .Quema = val(Leer.GetValue("NPC" & NpcNumber, "Quema"))
         
         .flags.Domable = val(Leer.GetValue("NPC" & NpcNumber, "Domable"))
         
