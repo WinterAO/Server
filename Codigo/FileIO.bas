@@ -1711,9 +1711,6 @@ Sub LoadSini()
     
     STAT_MAXELV = val(Lector.GetValue("INIT", "NivelMaximo"))
     
-    'Redimensionamos el array de experiencia por nivel
-    ReDim EXP_X_LVL(1 To STAT_MAXELV) As Long
-    
     ExpMultiplier = val(Lector.GetValue("INIT", "ExpMulti"))
     OroMultiplier = val(Lector.GetValue("INIT", "OroMulti"))
     OficioMultiplier = val(Lector.GetValue("INIT", "OficioMulti"))

@@ -581,7 +581,7 @@ Private Sub SetAttributesToNewUser(ByVal UserIndex As Integer, ByVal UserClase A
     
         .Stats.Exp = 0
         .Stats.ELV = 1
-        .Stats.ELU = EXP_X_LVL(.Stats.ELV)
+        .Stats.ELU = 300
     End With
 
 End Sub
@@ -1650,7 +1650,6 @@ Sub ResetBasicUserInfo(ByVal UserIndex As Integer)
             .NPCsMuertos = 0
             .UsuariosMatados = 0
             .SkillPts = 0
-            .ELU = 0
             .Gld = 0
             .UserAtributos(1) = 0
             .UserAtributos(2) = 0

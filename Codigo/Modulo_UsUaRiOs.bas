@@ -723,14 +723,21 @@ Public Sub CheckUserLevel(ByVal UserIndex As Integer, Optional ByVal PrintInCons
             .Stats.ELV = .Stats.ELV + 1
             
             .Stats.Exp = .Stats.Exp - .Stats.ELU
-            
-            If EXP_X_LVL(.Stats.ELV) > 0 Then
-                .Stats.ELU = EXP_X_LVL(.Stats.ELV)
-
+                  
+            'Nueva subida de exp x lvl. Pablo (ToxicWaste)
+            If .Stats.ELV < 15 Then
+                .Stats.ELU = .Stats.ELU * 1.4
+            ElseIf .Stats.ELV < 21 Then
+                .Stats.ELU = .Stats.ELU * 1.35
+            ElseIf .Stats.ELV < 26 Then
+                .Stats.ELU = .Stats.ELU * 1.3
+            ElseIf .Stats.ELV < 35 Then
+                .Stats.ELU = .Stats.ELU * 1.2
+            ElseIf .Stats.ELV < 40 Then
+                .Stats.ELU = .Stats.ELU * 1.3
             Else
-                .Stats.ELU = EXP_X_LVL(STAT_MAXELV)
-                Call LogError("Error en CheckUserLevel: Falta la experiencia en la tabla de experiencia para el nivel " & .Stats.ELV)
-                
+                .Stats.ELU = .Stats.ELU * 1.375
+
             End If
             
             'Calculo subida de vida

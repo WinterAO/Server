@@ -361,9 +361,6 @@ Sub Main()
     'Arenas de Retos
     Call LoadArenas
     
-    'Cargamos la experiencia requerida para cada nivel
-    Call CargarExpXLVL
-    
     'Invocaciones.dat
     frmCargando.Label1(2).Caption = "Cargando Invocaciones.dat"
     Call InitInvocaciones
@@ -1904,64 +1901,4 @@ Public Sub BanGlobalChatGuardar()
     Next LoopC
 
     Close #ArchN
-End Sub
-
-Public Sub CargarExpXLVL()
-'****************************************
-'Autor: Lorwik
-'Fecha: 27/06/2020
-'Descripción: Cargamos en un Array la exp requerida para subir de nivel
-'****************************************
-    
-    EXP_X_LVL(1) = 200
-    EXP_X_LVL(2) = 250
-    EXP_X_LVL(3) = 300
-    EXP_X_LVL(4) = 350
-    EXP_X_LVL(5) = 400
-    EXP_X_LVL(6) = 450
-    EXP_X_LVL(7) = 600
-    EXP_X_LVL(8) = 850
-    EXP_X_LVL(9) = 1050
-    EXP_X_LVL(10) = 1350
-    EXP_X_LVL(11) = 1550
-    EXP_X_LVL(12) = 1700
-    EXP_X_LVL(13) = 2000
-    EXP_X_LVL(14) = 2500
-    EXP_X_LVL(15) = 3100
-    EXP_X_LVL(16) = 4000
-    EXP_X_LVL(17) = 4300
-    EXP_X_LVL(18) = 5500
-    EXP_X_LVL(19) = 7500
-    EXP_X_LVL(20) = 9000
-    EXP_X_LVL(21) = 10500
-    EXP_X_LVL(22) = 12000
-    EXP_X_LVL(23) = 14900
-    EXP_X_LVL(24) = 16350
-    EXP_X_LVL(25) = 19150
-    EXP_X_LVL(26) = 22400
-    EXP_X_LVL(27) = 25950
-    EXP_X_LVL(28) = 29750
-    EXP_X_LVL(29) = 34000
-    EXP_X_LVL(30) = 39500
-    EXP_X_LVL(31) = 45000
-    EXP_X_LVL(32) = 51750
-    EXP_X_LVL(33) = 58750
-    EXP_X_LVL(34) = 65750
-    EXP_X_LVL(35) = 85750
-    EXP_X_LVL(36) = 97000
-    EXP_X_LVL(37) = 110250
-    EXP_X_LVL(38) = 135500
-    EXP_X_LVL(39) = 170500
-    EXP_X_LVL(40) = 250000
-    EXP_X_LVL(41) = 320000
-    EXP_X_LVL(42) = 420000
-    EXP_X_LVL(43) = 800000
-    EXP_X_LVL(44) = 1000000
-    EXP_X_LVL(45) = 1300000
-    EXP_X_LVL(46) = 1500000
-    EXP_X_LVL(47) = 1800000
-    EXP_X_LVL(48) = 2100000
-    EXP_X_LVL(49) = 3000000
-    EXP_X_LVL(50) = 5000000
-  
 End Sub

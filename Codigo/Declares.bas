@@ -780,8 +780,6 @@ Public Const EXP_ACIERTO_SKILL        As Byte = 50
 
 Public Const EXP_FALLO_SKILL          As Byte = 20
 
-Public EXP_X_LVL() As Long
-
 ' **************************************************************
 ' **************************************************************
 ' ************************ TIPOS *******************************
@@ -1631,7 +1629,7 @@ Public Type AccountUser
     UserName As String
     Password As String
     Email As String
-    salt As String
+    Salt As String
     status As Boolean
     Gemas As Long
     

@@ -351,7 +351,7 @@ Public Sub NpcLanzaSpellSobreNpc(ByVal NPCIndex As Integer, _
         'Spell Adds/Removes incinerado?
         If Hechizos(spellIndex).Incinera = 1 Then
             .flags.Incinerado = 1
-        ElseIf Hechizos(spellIndex).Curaquemaduras = 1 Then
+        ElseIf Hechizos(spellIndex).CuraQuemaduras = 1 Then
             .flags.Incinerado = 0
 
         End If
@@ -1348,7 +1348,7 @@ Sub HechizoEstadoUsuario(ByVal UserIndex As Integer, ByRef HechizoCasteado As Bo
         End If
     
         ' <-------- Cura Quemaduras ---------->
-        If Hechizos(HechizoIndex).Curaquemaduras = 1 Then
+        If Hechizos(HechizoIndex).CuraQuemaduras = 1 Then
     
             'Verificamos que el usuario no este muerto
             If UserList(targetIndex).flags.Muerto = 1 Then
@@ -1767,7 +1767,7 @@ Sub HechizoEstadoNPC(ByVal NPCIndex As Integer, _
 
         End If
     
-        If Hechizos(spellIndex).Curaquemaduras = 1 Then
+        If Hechizos(spellIndex).CuraQuemaduras = 1 Then
             Call InfoHechizo(UserIndex)
             .flags.Incinerado = 0
             HechizoCasteado = True
@@ -3045,7 +3045,7 @@ Private Sub UserHechizoDanoUser(ByVal UserIndex As Integer, ByVal targetIndex As
 
     Dim dano        As Long
 
-    With UserList(UserIndex)
+    With UserList(targetIndex)
     
         If UserIndex = targetIndex Then Exit Sub
         
