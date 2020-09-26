@@ -23465,9 +23465,11 @@ Private Sub HandleAccionInventario(ByVal UserIndex As Integer)
         .incomingData.ReadByte
         
         itemSlot = .incomingData.ReadByte
-        
-        'Esta el user muerto?
-        If .flags.Muerto = 1 Then
+
+        ObjIndex = .Invent.Object(itemSlot).ObjIndex
+
+        'Esta el user muerto y no esta usando una piedra de hogar?
+        If .flags.Muerto = 1 And ObjData(ObjIndex).OBJType <> otPiedraHogar Then
             Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
             Exit Sub
         End If
@@ -23476,8 +23478,6 @@ Private Sub HandleAccionInventario(ByVal UserIndex As Integer)
         
         'Validate item slot
         If itemSlot > .CurrentInventorySlots Or itemSlot < 1 Then Exit Sub
-        
-        ObjIndex = .Invent.Object(itemSlot).ObjIndex
         
         If ObjIndex = 0 Then Exit Sub
         
