@@ -1011,6 +1011,7 @@ Public Enum tEfectos
     Trabajador = 1
     Aventurero = 2
     Ultratumba = 3
+    Sabiduria = 4
 End Enum
 
 'Tipos de objetos

@@ -58,3 +58,9 @@ Amount=1-1
 ObjIndex=1130
 Prob=1.0
 Amount=1-1
+
+'Anillo de sabiduria
+[DROP9]
+ObjIndex=1131
+Prob=7.0
+Amount=1-1

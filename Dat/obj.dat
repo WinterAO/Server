@@ -75,6 +75,7 @@
 '1 Anillo del trabajador
 '2 Anillo de aventurero
 '3 Sortija de ultratumba
+'4 Anillo de sabiduria
 
 ##############################################
 #############NRO DE OBJS LIBRES###############
@@ -152,7 +153,7 @@ Madera Magica: 1006
 [INIT]
 'aca va el numero de OBJ mas alto, NO la cantidad de OBJs.
 'esto sirve para que los GMS puedan ver la lista completa de items para crear en una ventanita.
-NumOBJs=1330
+NumOBJs=1331
 
 
 [OBJ1]
@@ -16572,3 +16573,13 @@ Efecto=3
 Valor=0
 Crucial=0
 MinLevel=25
+
+[OBJ1331] 'Aumenta regeneracion de mana
+Name=Anillo de sabiduria
+GrhIndex=4900
+ObjType=18
+Agarrable=0
+Efecto=4
+Valor=0
+Crucial=0
+MinLevel=20

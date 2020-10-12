@@ -2318,6 +2318,12 @@ Public Sub DoMeditar(ByVal UserIndex As Integer)
         If res = 1 Then
             
             cant = Porcentaje(.Stats.MaxMAN, PorcentajeRecuperoMana)
+            
+            '¿Tiene anillo de sabiduria?
+            If UserList(UserIndex).Invent.AnilloEqpObjIndex > 0 Then
+                If ObjData(UserList(UserIndex).Invent.AnilloEqpObjIndex).Efecto = Sabiduria Then _
+                    cant = cant + 10
+            End If
 
             If cant <= 0 Then cant = 1
             .Stats.MinMAN = .Stats.MinMAN + cant
