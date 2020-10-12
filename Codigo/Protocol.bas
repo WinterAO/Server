@@ -10816,9 +10816,6 @@ Private Sub HandleEditChar(ByVal UserIndex As Integer)
                         If tUser <= 0 Then
                             Call WriteConsoleMsg(UserIndex, "El usuario esta offline o no existe.", FontTypeNames.FONTTYPE_INFO)
                             Call LogGM(.Name, "Intento editar un usuario inexistente u offline.")
-                        Else
-                            UserList(tUser).Stats.Banco = IIf(UserList(tUser).Stats.Banco + val(Arg1) <= 0, 0, UserList(tUser).Stats.Banco + val(Arg1))
-                            Call WriteConsoleMsg(tUser, STANDARD_BOUNTY_HUNTER_MESSAGE, FONTTYPE_TALK)
 
                         End If
 

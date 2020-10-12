@@ -413,8 +413,6 @@ Public Const MAX_EXP_EDIT                   As Long = 5000000
 
 Public Const MAX_VIDA_EDIT                  As Long = 30000
 
-Public Const STANDARD_BOUNTY_HUNTER_MESSAGE As String = "Se te ha otorgado un premio por ayudar al proyecto reportando bugs, el mismo esta disponible en tu boveda."
-
 Public Const TAG_USER_INVISIBLE             As String = "[INVISIBLE]"
 
 Public Const TAG_CONSULT_MODE               As String = "[CONSULTA]"

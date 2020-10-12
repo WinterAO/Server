@@ -8803,6 +8803,7 @@ CP7=BRUJO
 Materiales=386-0-0-0
 CantMateriales=50-0-0-0
 SkHerreria=50
+MinLevel=25
 
 [OBJ698]
 Name=Anillo de Resistencia Magica
@@ -8824,6 +8825,7 @@ CP8=CAZADOR
 Materiales=386-387-0-0
 CantMateriales=50-50-0-0
 SkHerreria=75
+MinLevel=35
 
 [OBJ699]
 Name=Anillo de Disolucion Magica
@@ -8846,6 +8848,7 @@ CP9=BRUJO
 Materiales=386-387-388-0
 CantMateriales=200-100-50-0
 SkHerreria=90
+MinLevel=45
     
 [OBJ700]
 Name=Anillo de los Dioses
@@ -14277,7 +14280,8 @@ GrhIndex=25332
 ObjType=29
 Agarrable=0
 Crucial=0
-Valor=100000
+Valor=0
+MinLevel=30
 
 [OBJ1127]
 Name=Secretos de Liderazgo
@@ -15738,8 +15742,8 @@ Valor=0
 Crucial=0
 
 [OBJ1251]
-Name=Anillo de la hermandad
-GrhIndex=17937
+Name=Amuleto de la hermandad
+GrhIndex=4785
 ObjType=30
 Agarrable=0
 Valor=0
@@ -16547,7 +16551,7 @@ CP11=PIRATA
 
 [OBJ1328] 'Reduce el consumo de energia al trabajar en un 50%
 Name=Anillo del trabajador
-GrhIndex=4900
+GrhIndex=4784
 ObjType=18
 Agarrable=0
 Efecto=1
@@ -16556,7 +16560,7 @@ Crucial=0
 
 [OBJ1329] 'Aumenta en +30 el golpe a melee contra npc
 Name=Anillo de aventurero
-GrhIndex=4900
+GrhIndex=4796
 ObjType=18
 Agarrable=0
 Efecto=2
@@ -16565,8 +16569,8 @@ Crucial=0
 MinLevel=25
 
 [OBJ1330] 'No pierde inventario al morir
-Name=Sortija de ultratumba
-GrhIndex=4900
+Name=Amuleto de ultratumba
+GrhIndex=4794
 ObjType=18
 Agarrable=0
 Efecto=3
@@ -16576,7 +16580,7 @@ MinLevel=25
 
 [OBJ1331] 'Aumenta regeneracion de mana
 Name=Anillo de sabiduria
-GrhIndex=4900
+GrhIndex=4797
 ObjType=18
 Agarrable=0
 Efecto=4
