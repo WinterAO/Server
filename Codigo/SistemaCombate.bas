@@ -474,6 +474,12 @@ Public Sub UserDanoNpc(ByVal UserIndex As Integer, ByVal NPCIndex As Integer)
     
     DanoBase = CalcularDano(UserIndex, NPCIndex)
     
+    '¿Tiene anillo del aventurero?
+    If UserList(UserIndex).Invent.AnilloEqpObjIndex > 0 Then
+        If ObjData(UserList(UserIndex).Invent.AnilloEqpObjIndex).Efecto = Aventurero Then _
+            DanoBase = DanoBase + 30
+    End If
+    
     'esta navegando? si es asi le sumamos el dano del barco
     If UserList(UserIndex).flags.Navegando = 1 Then
     

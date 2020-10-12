@@ -73,6 +73,8 @@
 ##############################################
 
 '1 Anillo del trabajador
+'2 Anillo de aventurero
+'3 Sortija de ultratumba
 
 ##############################################
 #############NRO DE OBJS LIBRES###############
@@ -150,7 +152,7 @@ Madera Magica: 1006
 [INIT]
 'aca va el numero de OBJ mas alto, NO la cantidad de OBJs.
 'esto sirve para que los GMS puedan ver la lista completa de items para crear en una ventanita.
-NumOBJs=1328
+NumOBJs=1330
 
 
 [OBJ1]
@@ -16542,7 +16544,7 @@ CP9=Paladin
 CP10=CAZADOR
 CP11=PIRATA
 
-[OBJ1328]
+[OBJ1328] 'Reduce el consumo de energia al trabajar en un 50%
 Name=Anillo del trabajador
 GrhIndex=4900
 ObjType=18
@@ -16550,3 +16552,23 @@ Agarrable=0
 Efecto=1
 Valor=0
 Crucial=0
+
+[OBJ1329] 'Aumenta en +30 el golpe a melee contra npc
+Name=Anillo de aventurero
+GrhIndex=4900
+ObjType=18
+Agarrable=0
+Efecto=2
+Valor=0
+Crucial=0
+MinLevel=25
+
+[OBJ1330] 'No pierde inventario al morir
+Name=Sortija de ultratumba
+GrhIndex=4900
+ObjType=18
+Agarrable=0
+Efecto=3
+Valor=0
+Crucial=0
+MinLevel=25

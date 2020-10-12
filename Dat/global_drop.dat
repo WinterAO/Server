@@ -9,7 +9,7 @@
 
 
 [GLOBAL]
-NumDrops=6
+NumDrops=8
 
 'Pocion roja
 [DROP1]
@@ -44,5 +44,17 @@ Amount=1-1
 'Anillo del trabajador
 [DROP6]
 ObjIndex=1128
-Prob=10.0
+Prob=5.0
+Amount=1-1
+
+'Anillo de aventurero
+[DROP7]
+ObjIndex=1129
+Prob=5.0
+Amount=1-1
+
+'Sortija de ultratumba
+[DROP8]
+ObjIndex=1130
+Prob=1.0
 Amount=1-1

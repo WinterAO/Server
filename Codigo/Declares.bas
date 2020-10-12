@@ -1009,6 +1009,8 @@ End Type
 'Efectos de los anillos magicos
 Public Enum tEfectos
     Trabajador = 1
+    Aventurero = 2
+    Ultratumba = 3
 End Enum
 
 'Tipos de objetos

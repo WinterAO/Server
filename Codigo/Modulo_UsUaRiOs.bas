@@ -1657,11 +1657,13 @@ Public Sub UserDie(ByVal UserIndex As Integer, Optional ByVal AttackerIndex As I
     '************************************************
     On Error GoTo ErrorHandler
 
-    Dim i           As Long
+    Dim i                   As Long
 
-    Dim aN          As Integer
+    Dim aN                  As Integer
     
-    Dim iSoundDeath As Integer
+    Dim iSoundDeath         As Integer
+    
+    Dim SortijaUltratumba   As Boolean
     
     With UserList(UserIndex)
 
@@ -1793,13 +1795,25 @@ Public Sub UserDie(ByVal UserIndex As Integer, Optional ByVal AttackerIndex As I
                 
                 ' Si estas en zona segura no se caen los items.
                 If MapInfo(.Pos.Map).Pk Then
-                
-                    ' << Si es newbie no pierde el inventario >>
-                    If Not EsNewbie(UserIndex) Then
-                        Call TirarTodo(UserIndex)
+                    
+                    '¿Tiene la sortija de ultratumba?
+                    If .Invent.AnilloEqpObjIndex > 0 Then
+                        If ObjData(.Invent.AnilloEqpObjIndex).Efecto = Ultratumba Then _
+                            SortijaUltratumba = True
+                    End If
+                        
+                    If SortijaUltratumba Then
+                        Call DropObj(UserIndex, UserList(UserIndex).Invent.AnilloEqpSlot, 1, .Pos.Map, .Pos.X, .Pos.Y)
+                            
                     Else
-                        Call TirarTodosLosItemsNoNewbies(UserIndex)
-    
+                        ' << Si es newbie no pierde el inventario >>
+                        If Not EsNewbie(UserIndex) Then
+                            Call TirarTodo(UserIndex) '
+                        Else
+                            Call TirarTodosLosItemsNoNewbies(UserIndex)
+        
+                        End If
+                        
                     End If
                     
                 End If
