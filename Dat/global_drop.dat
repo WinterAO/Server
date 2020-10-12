@@ -9,7 +9,7 @@
 
 
 [GLOBAL]
-NumDrops=5
+NumDrops=6
 
 'Pocion roja
 [DROP1]
@@ -39,4 +39,10 @@ Amount=1-5
 [DROP5]
 ObjIndex=1126
 Prob=0.1
-Amount=1-5
+Amount=1-1
+
+'Anillo del trabajador
+[DROP6]
+ObjIndex=1128
+Prob=10.0
+Amount=1-1

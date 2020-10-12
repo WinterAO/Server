@@ -1006,6 +1006,11 @@ Public Type tProfesion
     Categoria As Byte 'Indica la categoria
 End Type
 
+'Efectos de los anillos magicos
+Public Enum tEfectos
+    Trabajador = 1
+End Enum
+
 'Tipos de objetos
 Public Type ObjData
 
@@ -1170,6 +1175,8 @@ Public Type ObjData
     
     Herramienta As tProfesion
     Recurso As tProfesion
+    
+    Efecto As tEfectos
 End Type
 
 Public Type obj

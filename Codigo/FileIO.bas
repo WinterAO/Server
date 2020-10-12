@@ -1121,6 +1121,7 @@ Sub LoadOBJData()
                     .ImpideAturdir = val(Leer.GetValue("OBJ" & Object, "ImpideAturdir")) <> 0
                     .ImpideCegar = val(Leer.GetValue("OBJ" & Object, "ImpideCegar")) <> 0
                     '(/WyroX)
+                    .Efecto = val(Leer.GetValue("OBJ" & Object, "Efecto"))
                     
                 Case eOBJType.otTeleport
                     .Radio = val(Leer.GetValue("OBJ" & Object, "Radio"))

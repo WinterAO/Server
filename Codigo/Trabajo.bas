@@ -32,6 +32,7 @@ Option Explicit
 Private Const GASTO_ENERGIA As Byte = 6
 
 Private Const PRECIOINSTRUCCION As Long = 50000
+
 Public Sub DoPermanecerOculto(ByVal UserIndex As Integer)
 
     '********************************************************
@@ -2035,6 +2036,11 @@ Public Sub QuitarSta(ByVal UserIndex As Integer, ByVal Cantidad As Integer)
     '***************************************************
 
     On Error GoTo errHandler
+
+    If UserList(UserIndex).Invent.AnilloEqpObjIndex > 0 Then
+        If ObjData(UserList(UserIndex).Invent.AnilloEqpObjIndex).Efecto = Trabajador Then _
+            Cantidad = Porcentaje(Cantidad, 50)
+    End If
 
     UserList(UserIndex).Stats.MinSta = UserList(UserIndex).Stats.MinSta - Cantidad
 
