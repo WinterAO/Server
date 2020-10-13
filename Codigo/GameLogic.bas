@@ -1358,6 +1358,9 @@ Sub LookatTile(ByVal UserIndex As Integer, _
                             
                             If UserList(TempCharIndex).flags.Incinerado = 1 Then _
                                 Stat = Stat & " [Incinerado]"
+                                
+                            If UserList(TempCharIndex).flags.Envenenado = 1 Then _
+                                Stat = Stat & " [Envenenado]"
                                         
                             If .flags.Privilegios And PlayerType.RoyalCouncil Then
                                 Stat = Stat & " [CONSEJO DE BELLEUVE]"
@@ -1445,6 +1448,7 @@ Sub LookatTile(ByVal UserIndex As Integer, _
                     Dim sDesc              As String
                     Dim Paralisis          As String
                     Dim Incinerado         As String
+                    Dim Envenenado         As String
                 
                     If Npclist(TempCharIndex).Stats.ELV = 0 Or (Npclist(TempCharIndex).Stats.ELV - 7) > UserList(UserIndex).Stats.ELV Then
                         estatus = "- Nivel: ??"
@@ -1536,6 +1540,9 @@ Sub LookatTile(ByVal UserIndex As Integer, _
                     
                     If Npclist(TempCharIndex).flags.Incinerado = 1 Then _
                         Incinerado = " [Incinerado]"
+                        
+                    If Npclist(TempCharIndex).flags.Envenenado = 1 Then _
+                        Envenenado = " [Envenenado]"
                     
                     If Len(Npclist(TempCharIndex).Desc) > 1 Then
                         Stat = Npclist(TempCharIndex).Desc
@@ -1598,10 +1605,10 @@ Sub LookatTile(ByVal UserIndex As Integer, _
                     Else
 
                         If Npclist(TempCharIndex).MaestroUser > 0 Then
-                            Call WriteConsoleMsg(UserIndex, Npclist(TempCharIndex).Name & " es mascota de " & UserList(Npclist(TempCharIndex).MaestroUser).Name & " " & estatus & Paralisis & Incinerado, FontTypeNames.FONTTYPE_INFO)
+                            Call WriteConsoleMsg(UserIndex, Npclist(TempCharIndex).Name & " es mascota de " & UserList(Npclist(TempCharIndex).MaestroUser).Name & " " & estatus & Paralisis & Incinerado & Envenenado, FontTypeNames.FONTTYPE_INFO)
                         
                         Else
-                            Call WriteConsoleMsg(UserIndex, Npclist(TempCharIndex).Name & " " & estatus & Paralisis & Incinerado, FontTypeNames.FONTTYPE_INFO)
+                            Call WriteConsoleMsg(UserIndex, Npclist(TempCharIndex).Name & " " & estatus & Paralisis & Incinerado & Envenenado, FontTypeNames.FONTTYPE_INFO)
                             
                             If Len(Npclist(TempCharIndex).flags.AttackedFirstBy) > 0 And (UserList(UserIndex).flags.Privilegios And (PlayerType.Dios Or PlayerType.Admin)) Then
                                 Call WriteConsoleMsg(UserIndex, "Le pego primero: " & Npclist(TempCharIndex).flags.AttackedFirstBy & ".", FontTypeNames.FONTTYPE_INFO)
