@@ -343,6 +343,7 @@ Public Sub NpcLanzaSpellSobreNpc(ByVal NPCIndex As Integer, _
         ' Spell Adds/Removes poison?
         If Hechizos(spellIndex).Envenena = 1 Then
             .flags.Envenenado = 1
+            
         ElseIf Hechizos(spellIndex).CuraVeneno = 1 Then
             .flags.Envenenado = 0
 
@@ -351,6 +352,7 @@ Public Sub NpcLanzaSpellSobreNpc(ByVal NPCIndex As Integer, _
         'Spell Adds/Removes incinerado?
         If Hechizos(spellIndex).Incinera = 1 Then
             .flags.Incinerado = 1
+            
         ElseIf Hechizos(spellIndex).CuraQuemaduras = 1 Then
             .flags.Incinerado = 0
 

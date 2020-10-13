@@ -1347,6 +1347,17 @@ Sub LookatTile(ByVal UserIndex As Integer, _
                                     Stat = Stat & " Intacto)"
                                 End If
                             End If
+                            
+                            If UserList(TempCharIndex).flags.Paralizado = 1 Then
+                                Stat = Stat & " [Paralizado]"
+                                
+                            ElseIf UserList(TempCharIndex).flags.Inmovilizado = 1 Then
+                                Stat = Stat & " [Inmovilizado]"
+                                
+                            End If
+                            
+                            If UserList(TempCharIndex).flags.Incinerado = 1 Then _
+                                Stat = Stat & " [Incinerado]"
                                         
                             If .flags.Privilegios And PlayerType.RoyalCouncil Then
                                 Stat = Stat & " [CONSEJO DE BELLEUVE]"
@@ -1515,7 +1526,6 @@ Sub LookatTile(ByVal UserIndex As Integer, _
 
                     End If
                     
-                    'Lorwik> Esta paralizado o inmovilizado? Si lo esta miramos el tiempo que le queda.
                     If Npclist(TempCharIndex).flags.Paralizado = 1 Then
                         Paralisis = " [Paralizado]"
                         
