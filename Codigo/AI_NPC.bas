@@ -60,6 +60,9 @@ Private Const VISION_EXTRA         As Byte = 2
 Public Const RANGO_VISION_NPC_X    As Byte = RANGO_VISION_X + VISION_EXTRA
 Public Const RANGO_VISION_NPC_Y    As Byte = RANGO_VISION_Y + VISION_EXTRA
 
+Private Const MINI_RANGO_X         As Byte = 3
+Private Const MINI_RANGO_Y         As Byte = 3
+
 '????????????????????????????????????????????????????????
 '????????????????????????????????????????????????????????
 '????????????????????????????????????????????????????????
@@ -383,7 +386,7 @@ Private Sub IrUsuarioCercano(ByVal NPCIndex As Integer)
             For i = 1 To Areas.ConnGroups(.Pos.Map).Count()
                 UserIndex = Areas.ConnGroups(.Pos.Map).Item(i)
                 
-                'Is it in it's range of vision??
+                '¿Esta en el rango de vision?
                 If Abs(UserList(UserIndex).Pos.X - .Pos.X) <= RANGO_VISION_NPC_X And Sgn(UserList(UserIndex).Pos.X - .Pos.X) = SignoEO Then
                     If Abs(UserList(UserIndex).Pos.Y - .Pos.Y) <= RANGO_VISION_NPC_Y And Sgn(UserList(UserIndex).Pos.Y - .Pos.Y) = SignoNS Then
                         
@@ -427,7 +430,9 @@ Private Sub IrUsuarioCercano(ByVal NPCIndex As Integer)
                                 If .flags.LanzaSpells <> 0 Then Call NpcLanzaUnSpell(NPCIndex, OwnerIndex)
                                     
                             If Not .PFINFO.PathLenght > 0 Then tHeading = FindDirection(.Pos, UserList(OwnerIndex).Pos)
+                            
                             If tHeading = 0 Then
+                            
                                  If ReCalculatePath(NPCIndex) Then
                                      Call PathFindingAI(NPCIndex)
                                      'Existe el camino?
@@ -435,6 +440,7 @@ Private Sub IrUsuarioCercano(ByVal NPCIndex As Integer)
                                          'Move randomly
                                          Call MoveNPCChar(NPCIndex, RandomNumber(eHeading.SOUTH, eHeading.EAST))
                                      End If
+                                     
                                  Else
                                      If Not PathEnd(NPCIndex) Then
                                          Call FollowPath(NPCIndex)
@@ -442,9 +448,11 @@ Private Sub IrUsuarioCercano(ByVal NPCIndex As Integer)
                                          .PFINFO.PathLenght = 0
                                      End If
                                  End If
+                                 
                              Else
                                  If Not .PFINFO.PathLenght > 0 Then Call MoveNPCChar(NPCIndex, tHeading)
                                  Exit Sub
+                                 
                              End If
                                 Exit Sub
 
@@ -467,7 +475,7 @@ Private Sub IrUsuarioCercano(ByVal NPCIndex As Integer)
             For i = 1 To Areas.ConnGroups(.Pos.Map).Count()
                 UserIndex = Areas.ConnGroups(.Pos.Map).Item(i)
                 
-                'Is it in it's range of vision??
+                '¿Esta en el rango de vision?
                 If Abs(UserList(UserIndex).Pos.X - .Pos.X) <= RANGO_VISION_NPC_X Then
                     If Abs(UserList(UserIndex).Pos.Y - .Pos.Y) <= RANGO_VISION_NPC_Y Then
                         
@@ -1428,7 +1436,7 @@ Public Sub SacerdoteHealUser(ByVal UserIndex As Integer)
     With UserList(UserIndex)
 
         'Si ya esta a full, no hacemos nada
-        If .Stats.MinHp = .Stats.MaxHp And .Stats.MinMAN = .Stats.MaxMAN And .flags.Maldicion = 0 And .flags.Ceguera = 0 And .flags.Envenenado = 0 And .flags.incinerado = 0 Then
+        If .Stats.MinHp = .Stats.MaxHp And .Stats.MinMAN = .Stats.MaxMAN And .flags.Maldicion = 0 And .flags.Ceguera = 0 And .flags.Envenenado = 0 And .flags.Incinerado = 0 Then
             Call WriteChatOverHead(UserIndex, "Hijo mio, los dioses ya han sanado todas tus heridas.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
             Exit Sub
         End If
@@ -1487,8 +1495,8 @@ Private Sub SacerdoteHealEffectsAndRestoreMana(ByVal UserIndex As Integer)
         End If
         
         ' Curamos su incineramiento
-        If .flags.incinerado = 1 Then
-            .flags.incinerado = 0
+        If .flags.Incinerado = 1 Then
+            .flags.Incinerado = 0
             Call WriteConsoleMsg(UserIndex, "El sacerdote apago tus llamas.", FontTypeNames.FONTTYPE_INFO)
         End If
 

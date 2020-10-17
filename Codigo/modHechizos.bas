@@ -270,7 +270,7 @@ Private Sub SendSpellEffects(ByVal UserIndex As Integer, _
         ' Spell Words
         If DecirPalabras Then
             Call SendData(SendTarget.ToNPCArea, NPCIndex, _
-                PrepareMessageChatOverHead(Hechizos(Spell).PalabrasMagicas, Npclist(NPCIndex).Char.CharIndex, vbCyan))
+                PrepareMessageChatOverHead(Hechizos(Spell).PalabrasMagicas, Npclist(NPCIndex).Char.CharIndex, vbCyan, True))
         End If
 
     End With
@@ -301,7 +301,7 @@ Public Sub NpcLanzaSpellSobreNpc(ByVal NPCIndex As Integer, _
         ' Decir las palabras magicas?
         If DecirPalabras Then
             Call SendData(SendTarget.ToNPCArea, NPCIndex, _
-                PrepareMessageChatOverHead(Hechizos(spellIndex).PalabrasMagicas, Npclist(NPCIndex).Char.CharIndex, vbCyan))
+                PrepareMessageChatOverHead(Hechizos(spellIndex).PalabrasMagicas, Npclist(NPCIndex).Char.CharIndex, vbCyan, True))
         End If
     
         ' Spell deals damage??
@@ -460,7 +460,7 @@ On Error GoTo errHandler
 
     With UserList(UserIndex)
         If .flags.AdminInvisible <> 1 Then
-            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead(SpellWords, .Char.CharIndex, vbCyan))
+            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead(SpellWords, .Char.CharIndex, vbCyan, True))
             
             ' Si estaba oculto, se vuelve visible
             If .flags.Oculto = 1 Then
