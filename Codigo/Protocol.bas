@@ -185,7 +185,7 @@ Private Enum ClientPacketID
     Attack                          'AT
     PickUp                          'AG
     SafeToggle                      '/SEG & SEG  (SEG's behaviour has to be coded in the client)
-    ResuscitationSafeToggle
+    CombatSafeToggle
     RequestGuildLeaderInfo          'GLINFO
     RequestAtributes                'ATR
     RequestFame                     'FAMA
@@ -500,8 +500,8 @@ Public Function HandleIncomingData(ByVal UserIndex As Integer) As Boolean
         Case ClientPacketID.SafeToggle              '/SEG & SEG  (SEG's behaviour has to be coded in the client)
             Call HandleSafeToggle(UserIndex)
         
-        Case ClientPacketID.ResuscitationSafeToggle
-            Call HandleResuscitationToggle(UserIndex)
+        Case ClientPacketID.CombatSafeToggle
+            Call HandleCombatToggle(UserIndex)
         
         Case ClientPacketID.RequestGuildLeaderInfo  'GLINFO
             Call HandleRequestGuildLeaderInfo(UserIndex)
@@ -983,7 +983,7 @@ Public Sub WriteMultiMessage(ByVal UserIndex As Integer, _
         
         Select Case MessageIndex
 
-            Case eMessages.NPCSwing, eMessages.NPCKillUser, eMessages.BlockedWithShieldUser, eMessages.BlockedWithShieldother, eMessages.UserSwing, eMessages.SafeModeOn, eMessages.SafeModeOff, eMessages.ResuscitationSafeOff, eMessages.ResuscitationSafeOn, eMessages.NobilityLost, eMessages.CantUseWhileMeditating, eMessages.FinishHome
+            Case eMessages.NPCSwing, eMessages.NPCKillUser, eMessages.BlockedWithShieldUser, eMessages.BlockedWithShieldother, eMessages.UserSwing, eMessages.SafeModeOn, eMessages.SafeModeOff, eMessages.CombatSafeOff, eMessages.CombatSafeOn, eMessages.NobilityLost, eMessages.CantUseWhileMeditating, eMessages.FinishHome
             
             Case eMessages.NPCHitUser
                 Call .WriteByte(Arg1) 'Target
@@ -2549,25 +2549,25 @@ Private Sub HandleSafeToggle(ByVal UserIndex As Integer)
 End Sub
 
 ''
-' Handles the "ResuscitationSafeToggle" message.
+' Handles the "CombatSafeToggle" message.
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleResuscitationToggle(ByVal UserIndex As Integer)
+Private Sub HandleCombatToggle(ByVal UserIndex As Integer)
 
     '***************************************************
-    'Author: Rapsodius
-    'Creation Date: 10/10/07
+    'Author: Lorwik
+    'Creation Date: 23/10/2020
     '***************************************************
     With UserList(UserIndex)
         Call .incomingData.ReadByte
         
-        .flags.SeguroResu = Not .flags.SeguroResu
+        .flags.ModoCombate = Not .flags.ModoCombate
         
-        If .flags.SeguroResu Then
-            Call WriteMultiMessage(UserIndex, eMessages.ResuscitationSafeOn) 'Call WriteResuscitationSafeOn(UserIndex)
+        If .flags.ModoCombate Then
+            Call WriteMultiMessage(UserIndex, eMessages.CombatSafeOn) 'Call WriteCombatSafeOn(UserIndex)
         Else
-            Call WriteMultiMessage(UserIndex, eMessages.ResuscitationSafeOff) 'Call WriteResuscitationSafeOff(UserIndex)
+            Call WriteMultiMessage(UserIndex, eMessages.CombatSafeOff) 'Call WriteCombatSafeOff(UserIndex)
 
         End If
 

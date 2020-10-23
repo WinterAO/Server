@@ -1103,15 +1103,6 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
         If .Invent.WeaponEqpSlot = 0 Then .Char.WeaponAnim = NingunArma
     
         .CurrentInventorySlots = getMaxInventorySlots(UserIndex)
-
-        If (.flags.Muerto = 0) Then
-            .flags.SeguroResu = False
-            Call WriteMultiMessage(UserIndex, eMessages.ResuscitationSafeOff)
-        Else
-            .flags.SeguroResu = True
-            Call WriteMultiMessage(UserIndex, eMessages.ResuscitationSafeOn)
-
-        End If
     
         Call UpdateUserInv(True, UserIndex, 0)
         Call UpdateUserHechizos(True, UserIndex, 0)

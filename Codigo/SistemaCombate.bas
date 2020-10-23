@@ -1246,6 +1246,11 @@ Public Sub UsuarioAtaca(ByVal UserIndex As Integer)
     Dim AttackPos As WorldPos
     Dim bot_Index As Byte
     
+    If UserList(UserIndex).flags.ModoCombate = False Then
+        Call WriteConsoleMsg(UserIndex, "Para atacar debes activar el modo combate", FontTypeNames.FONTTYPE_INFO)
+        Exit Sub
+    End If
+    
     'Check bow's interval
     If Not IntervaloPermiteUsarArcos(UserIndex, False) Then Exit Sub
     

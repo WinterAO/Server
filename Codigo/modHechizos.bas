@@ -1071,6 +1071,12 @@ Sub LanzarHechizo(ByVal spellIndex As Integer, ByVal UserIndex As Integer)
             Exit Sub
 
         End If
+        
+        If .flags.ModoCombate = False Then
+            Call WriteConsoleMsg(UserIndex, "No puedes lanzar hechizos si con el modo combate desactivado.", FontTypeNames.FONTTYPE_INFO)
+            Exit Sub
+
+        End If
     
         If PuedeLanzar(UserIndex, spellIndex) Then
         
@@ -1506,8 +1512,8 @@ Sub HechizoEstadoUsuario(ByVal UserIndex As Integer, ByRef HechizoCasteado As Bo
             If UserList(targetIndex).flags.Muerto = 1 Then
             
                 'Seguro de resurreccion (solo afecta a los hechizos, no al sacerdote ni al comando de GM)
-                If UserList(targetIndex).flags.SeguroResu Then
-                    Call WriteConsoleMsg(UserIndex, "El espiritu no tiene intenciones de regresar al mundo de los vivos!", FontTypeNames.FONTTYPE_INFO)
+                If UserList(targetIndex).flags.ModoCombate Then
+                    Call WriteConsoleMsg(UserIndex, "El usuario debe desactivar el modo combate para ser resucitado!", FontTypeNames.FONTTYPE_INFO)
                     HechizoCasteado = False
                     Exit Sub
 

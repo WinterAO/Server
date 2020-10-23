@@ -1445,7 +1445,7 @@ Public Type UserFlags
     Navegando As Byte
     Equitando As Byte
     Seguro As Boolean
-    SeguroResu As Boolean
+    ModoCombate As Boolean
     
     DuracionEfecto As Long
     TargetNPC As Integer ' Npc senalado por el usuario
@@ -2223,8 +2223,8 @@ Public Enum eMessages
     UserSwing
     SafeModeOn
     SafeModeOff
-    ResuscitationSafeOff
-    ResuscitationSafeOn
+    CombatSafeOff
+    CombatSafeOn
     NobilityLost
     CantUseWhileMeditating
     NPCHitUser
