@@ -524,7 +524,9 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
         query = query & "guild_index = " & .GuildIndex & ", "
         query = query & "is_global = " & .flags.Global & ", "
         query = query & "profesionA = " & .Profesion(0).Profesion & ", "
-        query = query & "profesionB = " & .Profesion(1).Profesion & " "
+        query = query & "profesionB = " & .Profesion(1).Profesion & ", "
+        query = query & "modocombate = " & IIf(.flags.ModoCombate = True, "1", "0") & ", "
+        query = query & "seguro = " & IIf(.flags.Seguro = True, "1", "0") & " "
         query = query & "WHERE id = " & .ID & ";"
         Call Database_Connection.Execute(query)
 
@@ -800,6 +802,8 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
         .flags.Global = Database_RecordSet!is_global
         .Profesion(0).Profesion = Database_RecordSet!ProfesionA
         .Profesion(1).Profesion = Database_RecordSet!ProfesionB
+        .flags.ModoCombate = Database_RecordSet!ModoCombate
+        .flags.Seguro = Database_RecordSet!Seguro
         
         If Database_RecordSet!pertenece_consejo_real Then
             .flags.Privilegios = .flags.Privilegios Or PlayerType.RoyalCouncil

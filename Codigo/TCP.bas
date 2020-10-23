@@ -1370,15 +1370,6 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
 
         End If
     
-        If criminal(UserIndex) Then
-            Call WriteMultiMessage(UserIndex, eMessages.SafeModeOff) 'Call WriteSafeModeOff(UserIndex)
-            .flags.Seguro = False
-        Else
-            .flags.Seguro = True
-            Call WriteMultiMessage(UserIndex, eMessages.SafeModeOn) 'Call WriteSafeModeOn(UserIndex)
-
-        End If
-    
         If .GuildIndex > 0 Then
 
             'welcome to the show baby...
