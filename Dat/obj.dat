@@ -153,7 +153,7 @@ Madera Magica: 1006
 [INIT]
 'aca va el numero de OBJ mas alto, NO la cantidad de OBJs.
 'esto sirve para que los GMS puedan ver la lista completa de items para crear en una ventanita.
-NumOBJs=1331
+NumOBJs=1332
 
 
 [OBJ1]
@@ -16587,3 +16587,11 @@ Efecto=4
 Valor=0
 Crucial=0
 MinLevel=20
+
+[OBJ1332]
+Name=Espada Matadragones rota
+GrhIndex=17937
+ObjType=30
+Agarrable=0
+Valor=0
+Crucial=0

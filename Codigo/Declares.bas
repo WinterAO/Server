@@ -259,6 +259,8 @@ Public Const NingunAura              As Integer = 0
 
 Public Const EspadaMataDragonesIndex As Integer = 402
 
+Public Const EspadaMataDragonesROTA  As Integer = 1332
+
 Public Const LAUDMAGICO              As Integer = 696
 
 Public Const FLAUTAMAGICA            As Integer = 208

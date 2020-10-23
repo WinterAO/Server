@@ -364,7 +364,7 @@ Public Function CalcularDano(ByVal UserIndex As Integer, _
                         If Npclist(NPCIndex).NPCtype = DRAGON Then 'Ataca Dragon?
                             DanoArma = RandomNumber(Arma.MinHIT, Arma.MaxHIT)
                             DanoMaxArma = Arma.MaxHIT
-                            matoDragon = True ''sacar esto si no queremos q la matadracos mate el Dragon si o si
+                            matoDragon = False ''sacar esto si no queremos q la matadracos mate el Dragon si o si
                         Else ' Sino es Dragon dano es 1
                             DanoArma = 1
                             DanoMaxArma = 1
@@ -538,12 +538,20 @@ Public Sub UserDanoNpc(ByVal UserIndex As Integer, ByVal NPCIndex As Integer)
         
         If .Stats.MinHp <= 0 Then
 
-            ' Si era un Dragon perdemos la espada mataDragones
+            ' Si era un Dragon rompemos la espada mataDragones
             If .NPCtype = DRAGON Then
 
-                'Si tiene equipada la matadracos se la sacamos
+                'Si tiene equipada la matadracos la reemplazamos por una MD rota
                 If UserList(UserIndex).Invent.WeaponEqpObjIndex = EspadaMataDragonesIndex Then
                     Call QuitarObjetos(EspadaMataDragonesIndex, 1, UserIndex)
+                    
+                    Dim MDRota As obj
+            
+                    MDRota.Amount = 1
+                    MDRota.ObjIndex = EspadaMataDragonesROTA
+            
+                    If Not MeterItemEnInventario(UserIndex, MDRota) Then _
+                        Call TirarItemAlPiso(UserList(UserIndex).Pos, MDRota)
 
                 End If
 

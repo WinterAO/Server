@@ -29,7 +29,7 @@ TODOS LOS NPC CON RETARDO Y WORLDBOSS TIENEN QUE TENER PosOrig
 ############## EFECTOS DE NPC ################
 ##############################################
 
-Retardo ===== El NPC tendra un retardo de Respawn especificado en Minutos
+TiempoRetardoMin, TiempoRetardoMax ===== El NPC tendra un retardo de Respawn especificado en Minutos
 Explotar ===== El NPC tendra un 50% de explota haciendo el doble de su golpe minimo
 LanzaMensaje ===== El NPC mandara un mensaje cuando le quede un 10% de su vida
 ActivoPotencia ===== El NPC pegar el doble a partir de su 50% de vida
@@ -2062,7 +2062,7 @@ Obj5=889-1000 'Anillas con Manto Verde (H/E/EO)
 Obj6=1003-1000 'Casco de Oso
 Obj7=132-1000 'Casco de Hierro
 Obj8=128-1000 'Escudo de Hierro
-Obj9=105-1000 'Armadura de Placas Completa
+Obj9=390-1000 'Armadura de Placas Completa +1
 Obj10=243-1000 'Armadura de Placas Completa (E/G)
 Obj11=903-1000 'Armadura de Campeon (H/E/EO)
 Obj12=1004-1000 'Casco de Tigre
@@ -3098,7 +3098,7 @@ BackUp=0
 NROITEMS=0
 
 [NPC553]
-Name=Jefe Mono
+Name=NO USAR
 NpcType=0
 Head=0
 Heading=1
@@ -4076,87 +4076,33 @@ BackUp=0
 NROITEMS=0
 
 [NPC661]
-Name=Momia
+Name=Jefe Mono
 NpcType=0
 Head=0
 Heading=1
-Body=608
+Body=214
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+Respawn=0
 Hostile=1
-Domable=2010
+Domable=0
 Alineacion=2
 Comercia=0
 GiveEXP=2000
-GiveGLD=2000
-MinHP=2000
-MaxHP=2000
-MaxHIT=100
-MinHIT=70
-DEF=0
+GiveGLD=1000
+MinHP=1500
+MaxHP=1500
+MaxHIT=85
+MinHIT=60
 ELV=20
-PoderAtaque=84
+DEF=13
+PoderAtaque=30
 PoderEvasion=30
 BackUp=0
 NROITEMS=0
 
 [NPC662]
-Name=Momia Putrefacta
-NpcType=0
-Head=0
-Heading=1
-Body=680
-Movement=3
-AguaValida=0
-Attackable=1
-ReSpawn=0
-Hostile=1
-Domable=2010
-Alineacion=2
-Comercia=0
-GiveEXP=2000
-GiveGLD=2000
-MinHP=2000
-MaxHP=2000
-MaxHIT=100
-MinHIT=70
-DEF=20
-ELV=20
-PoderAtaque=84
-PoderEvasion=30
-BackUp=0
-NROITEMS=0
-
-[NPC663]
-Name=Akenaton
-NpcType=0
-Head=0
-Heading=1
-Body=682
-Movement=3
-AguaValida=0
-Attackable=1
-ReSpawn=0
-Hostile=1
-Domable=2010
-Alineacion=2
-Comercia=0
-GiveEXP=2800
-GiveGLD=2800
-MinHP=2800
-MaxHP=2800
-MaxHIT=80
-MinHIT=50
-DEF=25
-ELV=20
-PoderAtaque=84
-PoderEvasion=30
-BackUp=0
-NROITEMS=0
-
-[NPC664]
 Name=Hadita
 NpcType=0
 Head=0
@@ -4183,7 +4129,7 @@ PoderEvasion=30
 BackUp=0
 NROITEMS=0
 
-[NPC665]
+[NPC663]
 Name=Hada Rosa
 NpcType=0
 Head=0
@@ -4210,7 +4156,7 @@ PoderEvasion=30
 BackUp=0
 NROITEMS=0
 
-[NPC666]
+[NPC664]
 Name=Hada Azul
 NpcType=0
 Head=0
@@ -4237,7 +4183,7 @@ PoderEvasion=30
 BackUp=0
 NROITEMS=0
 
-[NPC667]
+[NPC665]
 Name=Mole de Tierra
 NpcType=0
 Head=0
@@ -4264,7 +4210,7 @@ PoderEvasion=30
 BackUp=0
 NROITEMS=0
 
-[NPC668]
+[NPC666]
 Name=Esclavo Contrabandista
 NpcType=0
 Head=0
@@ -4495,30 +4441,29 @@ BackUp=0
 NROITEMS=0
 
 [NPC707]
-Name=Semerjet
+Name=Momia
 NpcType=0
 Head=0
 Heading=1
-Body=679
+Body=608
 Movement=3
 AguaValida=0
 Attackable=1
 ReSpawn=0
 Hostile=1
-Domable=0
+Domable=2010
 Alineacion=2
 Comercia=0
-GiveEXP=3500
-GiveGLD=3500
-MinHP=3500
-MaxHP=3500
-MaxHIT=135
-MinHIT=120
-DEF=45
+GiveEXP=2000
+GiveGLD=2000
+MinHP=2000
+MaxHP=2000
+MaxHIT=100
+MinHIT=70
+DEF=0
 ELV=25
-PoderAtaque=200
-PoderEvasion=100
-Veneno=1
+PoderAtaque=84
+PoderEvasion=30
 BackUp=0
 NROITEMS=0
 
@@ -5024,7 +4969,8 @@ MaxHIT=145
 MinHIT=110
 DEF=30
 ELV=30
-Retardo=30
+TiempoRetardoMin=30
+TiempoRetardoMax=40
 PoderAtaque=260
 PoderEvasion=175
 Nroitems=1
@@ -5628,6 +5574,88 @@ NROITEMS=0
 ##################
 
 [NPC800] 
+Name=Semerjet
+NpcType=0
+Head=0
+Heading=1
+Body=679
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=23000
+GiveGLD=12500
+MinHP=9000
+MaxHP=9000
+MaxHIT=150
+MinHIT=120
+DEF=45
+ELV=35
+PoderAtaque=200
+PoderEvasion=100
+Veneno=1
+BackUp=0
+NROITEMS=0
+
+[NPC801]
+Name=Momia Putrefacta
+NpcType=0
+Head=0
+Heading=1
+Body=680
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=0
+Hostile=1
+Domable=2010
+Alineacion=2
+Comercia=0
+GiveEXP=1200
+GiveGLD=6000
+MinHP=4000
+MaxHP=4000
+MaxHIT=100
+MinHIT=70
+DEF=20
+ELV=35
+PoderAtaque=84
+PoderEvasion=30
+BackUp=0
+NROITEMS=0
+
+[NPC803]
+Name=Akenaton
+NpcType=0
+Head=0
+Heading=1
+Body=682
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=0
+Hostile=1
+Domable=2010
+Alineacion=2
+Comercia=0
+GiveEXP=12000
+GiveGLD=6000
+MinHP=5800
+MaxHP=5800
+MaxHIT=150
+MinHIT=120
+DEF=25
+ELV=35
+PoderAtaque=84
+PoderEvasion=30
+BackUp=0
+NROITEMS=0
+
+[NPC804] 
 Name=Oso Polar
 NpcType=0
 Head=0
@@ -5656,7 +5684,7 @@ Nroitems=1
 BackUp=0
 NROITEMS=0
 
-[NPC801] 
+[NPC805] 
 Name=Troglodita
 NpcType=0
 Head=0
@@ -5684,7 +5712,7 @@ Nroitems=1
 BackUp=0
 NROITEMS=0
 
-[NPC802] 
+[NPC806] 
 Name=Pinguino
 NpcType=0
 Head=0
@@ -5712,7 +5740,7 @@ Nroitems=1
 BackUp=0
 NROITEMS=0
 
-[NPC803] 
+[NPC806] 
 Name=Medusa
 NpcType=0
 Head=0
@@ -5740,7 +5768,7 @@ Nroitems=1
 BackUp=0
 NROITEMS=0
 
-[NPC804] 
+[NPC807] 
 Name=Medusa Madre
 NpcType=0
 Head=0
@@ -5768,7 +5796,7 @@ Nroitems=1
 BackUp=0
 NROITEMS=0
 
-[NPC805] 
+[NPC808] 
 Name=Esbirro Excavador
 NpcType=0
 Head=0
@@ -5796,7 +5824,7 @@ Nroitems=1
 BackUp=0
 NROITEMS=0
 
-[NPC806] 
+[NPC809] 
 Name=Observador de las Profundidades
 NpcType=0
 Head=0
@@ -5824,7 +5852,7 @@ Nroitems=1
 BackUp=0
 NROITEMS=0
 
-[NPC807] 
+[NPC810] 
 Name=Exclavo Helado
 NpcType=0
 Head=0
@@ -5852,7 +5880,7 @@ Nroitems=1
 BackUp=0
 NROITEMS=0
 
-[NPC808] 
+[NPC811] 
 Name=Gigante Terrorifico
 NpcType=0
 Head=0
@@ -5880,7 +5908,7 @@ Nroitems=1
 BackUp=0
 NROITEMS=0
 
-[NPC809] 
+[NPC812] 
 Name=Señor del Terror
 NpcType=0
 Head=0
@@ -5908,7 +5936,7 @@ Nroitems=1
 BackUp=0
 NROITEMS=0
 
-[NPC810] 
+[NPC813] 
 Name=Ciclope
 NpcType=0
 Head=0
@@ -5936,7 +5964,7 @@ Nroitems=1
 BackUp=0
 NROITEMS=0
 
-[NPC811] 
+[NPC814] 
 Name=Reptiliano
 NpcType=0
 Head=0
@@ -5964,7 +5992,7 @@ Nroitems=1
 BackUp=0
 NROITEMS=0
 
-[NPC812] 'WORLDBOSS
+[NPC815] 'WORLDBOSS
 Name=Crolusco 
 NpcType=12
 Head=0
@@ -7059,7 +7087,7 @@ Obj1=1252-1-100
 
 [NPC1054] 
 Name=Dragon Legendario
-NpcType=0
+NpcType=6
 Head=0
 Heading=1
 Body=82
@@ -7077,6 +7105,10 @@ MinHP=10000
 MaxHP=10000
 MaxHIT=170
 MinHIT=150
+TiempoRetardoMin=240
+TiempoRetardoMax=360
+AfectaParalisis=1
+LanzaSpells=15
 DEF=50
 ELV=55
 PoderAtaque=260
