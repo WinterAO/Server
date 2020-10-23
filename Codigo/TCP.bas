@@ -374,10 +374,14 @@ Sub ConnectNewUser(ByVal UserIndex As Integer, _
         Next i
         
         If Count > 1 Then
-                        Call WriteErrorMsg(UserIndex, "Nombre invalido.")
+            Call WriteErrorMsg(UserIndex, "Nombre invalido.")
             Exit Sub
         End If
-    
+        
+        'Capitalizamos el nombre
+        Name = StrConv(Name, vbProperCase)
+        Debug.Print Name
+        
         If UserList(UserIndex).flags.UserLogged Then
             Call LogCheating("El usuario " & UserList(UserIndex).Name & " ha intentado crear a " & Name & " desde la IP " & UserList(UserIndex).IP)
         
