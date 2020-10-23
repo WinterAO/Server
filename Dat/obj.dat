@@ -153,7 +153,7 @@ Madera Magica: 1006
 [INIT]
 'aca va el numero de OBJ mas alto, NO la cantidad de OBJs.
 'esto sirve para que los GMS puedan ver la lista completa de items para crear en una ventanita.
-NumOBJs=1332
+NumOBJs=1333
 
 
 [OBJ1]
@@ -16595,3 +16595,23 @@ ObjType=30
 Agarrable=0
 Valor=0
 Crucial=0
+
+[OBJ1333]
+Name=Resurreccion [CLERIGOS]
+GrhIndex=609
+ObjType=24
+Agarrable=0
+Valor=990000
+Crucial=1
+HechizoIndex=56
+CP1=Mago
+CP2=Brujo
+CP3=Guerrero
+CP4=Asesino
+CP5=Ladron
+CP6=Bardo
+CP7=Druida
+CP8=Bandido
+CP9=Paladin
+CP10=CAZADOR
+CP11=PIRATA

@@ -1454,7 +1454,9 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=24
-NROITEMS=0
+NROITEMS=1
+Obj1=319=1000 'Resucitar
+Obj2=1333=1000 'Resurreccion
 BackUp=1
 
 [NPC116] 'Pescador Belleuve
