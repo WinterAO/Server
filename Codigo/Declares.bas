@@ -565,6 +565,12 @@ Public Const vlLadron      As Integer = 25
 
 Public Const vlProleta     As Integer = 2
 
+'%%%%%%%% CONSTANTES DE VELOCIDADES %%%%%%%%%%%%%
+
+Public Const SPEED_NORMAL As Double = 0.018
+
+Public Const SPEED_MUERTO As Double = 0.02
+
 '%%%%%%%%%% CONSTANTES DE INDICES %%%%%%%%%%%%%%%
 Public Const iCuerpoMuerto As Integer = 8
 
@@ -1180,6 +1186,8 @@ Public Type ObjData
     Recurso As tProfesion
     
     Efecto As tEfectos
+    
+    Speed As Double
 End Type
 
 Public Type obj
@@ -1528,6 +1536,8 @@ Public Type UserFlags
     Instruyendo As Byte
     
     Trabajando As Byte
+    
+    Velocidad As Double
     
 End Type
 

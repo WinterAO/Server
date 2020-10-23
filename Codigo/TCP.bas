@@ -1256,6 +1256,15 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
             .flags.Navegando = 1
 
         End If
+        
+        'Seteamos la velocidad
+        If .flags.Muerto = 1 Then
+            .flags.Velocidad = SPEED_MUERTO
+        Else
+            .flags.Velocidad = SPEED_NORMAL
+        End If
+        
+        Call WriteSetSpeed(UserIndex)
     
         'Info
         Call WriteUserIndexInServer(UserIndex) 'Enviamos el User index
@@ -1773,6 +1782,7 @@ Sub ResetUserFlags(ByVal UserIndex As Integer)
         .ProfInstruyendo = 0
         .Instruyendo = 0
         .Trabajando = 0
+        .Velocidad = 0
 
         Call ResetCasteo(UserIndex)
         

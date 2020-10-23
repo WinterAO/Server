@@ -2696,7 +2696,9 @@ Public Sub DoEquita(ByVal UserIndex As Integer, _
     
                 '  Comienza a equitar
                 .flags.Equitando = 1
-
+                .flags.Velocidad = ObjData(.Invent.MonturaObjIndex).Speed
+                Call WriteSetSpeed(UserIndex)
+                
                 Call WriteEquitandoToggle(UserIndex)
 
                 'Mostramos solo el casco de los items equipados por que los demas items quedan mal en el render, solo es un tema visual (Recox)
@@ -2730,6 +2732,9 @@ Public Sub UnmountMontura(ByVal UserIndex As Integer)
   
         ' Termina de equitar
         .flags.Equitando = 0
+        .flags.Velocidad = SPEED_NORMAL
+        Call WriteSetSpeed(UserIndex)
+        
         .Counters.MonturaCounter = 3
 
     End With

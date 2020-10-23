@@ -128,6 +128,9 @@ Public Sub RevivirUsuario(ByVal UserIndex As Integer)
         
         Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.Heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
         Call WriteUpdateUserStats(UserIndex)
+        
+        .flags.Velocidad = SPEED_NORMAL
+        Call WriteSetSpeed(UserIndex)
 
     End With
 
@@ -1945,6 +1948,10 @@ Public Sub UserDie(ByVal UserIndex As Integer, Optional ByVal AttackerIndex As I
                 Call Retos.UserDieFight(UserIndex, AttackerIndex, False)
             End If
         End If
+        
+        .flags.Velocidad = SPEED_MUERTO
+        Call WriteSetSpeed(UserIndex)
+        
     End With
 
     Exit Sub

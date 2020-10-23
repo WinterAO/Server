@@ -172,6 +172,7 @@ Private Enum ServerPacketID
     CharParticle
     IniciarSubastaConsulta
     ConfirmarInstruccion
+    SetSpeed
 End Enum
 
 Private Enum ClientPacketID
@@ -383,6 +384,7 @@ Public Enum eEditOptions
     eo_addGold
     eo_Vida
     eo_Poss
+    eo_Speed
 
 End Enum
 
@@ -2249,43 +2251,34 @@ Private Sub HandleWalk(ByVal UserIndex As Integer)
         End If
 
         Dim TiempoDeWalk As Byte
-        If .flags.Equitando = 1 Then
-            TiempoDeWalk = 36
-        Else
-            TiempoDeWalk = 30
-        End If
+        TiempoDeWalk = Round(.flags.Velocidad * 1700) 'No es muy preciso, pero podria servir por ahora
         
         'Prevent SpeedHack
-        If .flags.TimesWalk >= TiempoDeWalk Then
+        If .flags.TimesWalk >= 40 + (.flags.Velocidad * 2) Then
             TempTick = GetTickCount And &H7FFFFFFF
-            dummy = (TempTick - .flags.StartWalk)
+            dummy = getInterval(TempTick, .flags.StartWalk) ' 0.13.5
             
             ' 5800 is actually less than what would be needed in perfect conditions to take 30 steps
             '(it's about 193 ms per step against the over 200 needed in perfect conditions)
             If dummy < 5800 Then
-                If TempTick - .flags.CountSH > 30000 Then
+                If getInterval(TempTick, .flags.CountSH) > 30000 Then ' 0.13.5
                     .flags.CountSH = 0
-
                 End If
-                
+        
                 If Not .flags.CountSH = 0 Then
                     If dummy <> 0 Then dummy = 126000 \ dummy
-                    
-                    Call LogHackAttemp("Tramposo SH: " & .Name & " , " & dummy)
-                    Call SendData(SendTarget.ToAdmins, 0, PrepareMessageConsoleMsg("Servidor> " & .Name & " ha sido echado por el servidor por posible uso de SH.", FontTypeNames.FONTTYPE_SERVER))
-                    Call CloseUser(UserIndex)
-                    
+         
+                    Call LogHackAttemp("SpeedHack: " & .Name & " , " & dummy)
+                    Call SendData(SendTarget.ToAdmins, 0, PrepareMessageConsoleMsg("Servidor> " & .Name & " ha sido echado por el servidor por posible uso de SpeedHack.", FontTypeNames.FONTTYPE_SERVER))
+                    Call CloseSocket(UserIndex)
+         
                     Exit Sub
                 Else
                     .flags.CountSH = TempTick
-
                 End If
-
             End If
-
             .flags.StartWalk = TempTick
             .flags.TimesWalk = 0
-
         End If
         
         .flags.TimesWalk = .flags.TimesWalk + 1
@@ -10924,6 +10917,18 @@ Private Sub HandleEditChar(ByVal UserIndex As Integer)
                         
                     ' Log it
                     CommandString = CommandString & "POSS "
+                    
+                    Case eEditOptions.eo_Speed
+                        
+                        Dim Speed As Double
+                        
+                        If val(Arg1) > 500 Then _
+                            Arg1 = 500
+                            
+                        Speed = val(Arg1) / 10000
+                        
+                        UserList(tUser).flags.Velocidad = Speed
+                        Call WriteSetSpeed(tUser)
                         
                 Case Else
                     Call WriteConsoleMsg(UserIndex, "Comando no permitido.", FontTypeNames.FONTTYPE_INFO)
@@ -23092,6 +23097,28 @@ Public Sub WriteEquitandoToggle(ByVal UserIndex As Integer)
 On Error GoTo errHandler
     With UserList(UserIndex)
         Call .outgoingData.WriteByte(ServerPacketID.EquitandoToggle)
+        
+    End With
+
+    Exit Sub
+
+errHandler:
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
+        Resume
+    End If
+End Sub
+
+Public Sub WriteSetSpeed(ByVal UserIndex As Integer)
+'***************************************************
+'Author: Lorwik
+'Last Modification: 23/10/11
+'Writes the "EquitandoToggle" message to the given user's outgoing data buffer
+'***************************************************
+On Error GoTo errHandler
+    With UserList(UserIndex)
+        Call .outgoingData.WriteByte(ServerPacketID.SetSpeed)
+        Call .outgoingData.WriteDouble(.flags.Velocidad)
         
     End With
 

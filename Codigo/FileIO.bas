@@ -1150,6 +1150,8 @@ Sub LoadOBJData()
 
             End Select
             
+            .Speed = val(Leer.GetValue("OBJ" & Object, "Speed")) 'Cambia la velocidad
+            
             .Ropaje = val(Leer.GetValue("OBJ" & Object, "NumRopaje"))
             .HechizoIndex = val(Leer.GetValue("OBJ" & Object, "HechizoIndex"))
             
