@@ -177,7 +177,7 @@ Public Sub MuereNpc(ByVal NPCIndex As Integer, ByVal UserIndex As Integer)
                     .Stats.Exp = .Stats.Exp + MiNPC.flags.ExpCount
 
                     If .Stats.Exp > MAXEXP Then .Stats.Exp = MAXEXP
-                    Call WriteConsoleMsg(UserIndex, "Has ganado " & MiNPC.flags.ExpCount & " puntos de experiencia.", FontTypeNames.FONTTYPE_FIGHT)
+                    Call WriteConsoleMsg(UserIndex, "Has ganado " & MiNPC.flags.ExpCount & " puntos de experiencia.", FontTypeNames.FONTTYPE_EXP)
 
                 End If
 

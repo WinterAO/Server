@@ -8,7 +8,7 @@ Attribute VB_Name = "modSubastas"
 Public Type c_subasta
     Actual As Boolean ' Sabemos si hay una subasta actualmente
     
-    userIndex As Integer ' UserIndex del Usuario Subastando
+    UserIndex As Integer ' UserIndex del Usuario Subastando
     OfertaIndex As Integer ' UserIndex del usuario con mayor oferta
     
     OfertaMayor As Long ' Oferta que vale la pena
@@ -24,7 +24,7 @@ Public Subasta As c_subasta
 Public Sub Init_Subastas()
     With Subasta
         .Actual = False
-        .userIndex = 0
+        .UserIndex = 0
         .OfertaIndex = 0
         .ValorBase = 0
         .OfertaMayor = 0
@@ -32,73 +32,73 @@ Public Sub Init_Subastas()
     End With
 End Sub
  
-Public Sub Consultar_Subasta(ByVal userIndex As Integer)
+Public Sub Consultar_Subasta(ByVal UserIndex As Integer)
     With Subasta
         If .Actual = True Then
-                If .userIndex <> -1 Then
-                    Call WriteConsoleMsg(userIndex, "[Subasta] " & UserList(.userIndex).Name & " está subastando " & .Objeto.Amount & " " & ObjData(.Objeto.ObjIndex).Name & ". La oferta actual es de " & .OfertaMayor & ". Esta subasta seguirá por " & .Tiempo & " minutos.", FontTypeNames.FONTTYPE_INFO)
+                If .UserIndex <> -1 Then
+                    Call WriteConsoleMsg(UserIndex, "[Subasta] " & UserList(.UserIndex).Name & " está subastando " & .Objeto.Amount & " " & ObjData(.Objeto.ObjIndex).Name & ". La oferta actual es de " & .OfertaMayor & ". Esta subasta seguirá por " & .Tiempo & " minutos.", FontTypeNames.FONTTYPE_INFO)
                 Else
-                    Call WriteConsoleMsg(userIndex, "[Subasta] Se está subastando " & .Objeto.Amount & " " & ObjData(.Objeto.ObjIndex).Name & ". La oferta actual es de " & .OfertaMayor & ". Esta subasta seguirá por " & .Tiempo & " minutos.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "[Subasta] Se está subastando " & .Objeto.Amount & " " & ObjData(.Objeto.ObjIndex).Name & ". La oferta actual es de " & .OfertaMayor & ". Esta subasta seguirá por " & .Tiempo & " minutos.", FontTypeNames.FONTTYPE_INFO)
                 End If
             Exit Sub
         Else
-            Call WriteConsoleMsg(userIndex, "Actualmente no hay ninguna subasta activa.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Actualmente no hay ninguna subasta activa.", FontTypeNames.FONTTYPE_INFO)
         End If
     End With
 End Sub
  
-Public Sub Iniciar_Subasta(ByVal userIndex As Integer, Slot As Integer, Amount As Integer, ValorBase As Long)
+Public Sub Iniciar_Subasta(ByVal UserIndex As Integer, Slot As Integer, Amount As Integer, ValorBase As Long)
 
     With Subasta
         ' Si ya hay una subasta le informamos que debe esperar
         If .Actual = True Then
-            Call WriteConsoleMsg(userIndex, "Ya hay una subasta actualmente, deberás esperar " & .Tiempo & " minutos para inciar una nueva subasta.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Ya hay una subasta actualmente, deberás esperar " & .Tiempo & " minutos para inciar una nueva subasta.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
         Else
             
             'Hizo aparecer el form con hacks?
-            If UserList(userIndex).flags.Subastando = False Then Exit Sub
+            If UserList(UserIndex).flags.Subastando = False Then Exit Sub
             
             'reseteamos el flag
-            UserList(userIndex).flags.Subastando = False
+            UserList(UserIndex).flags.Subastando = False
             
             'AntiHack (Ya se comprobo en el cliente, se vuelve a comprobar aqui)
             If Amount <= 0 Then
-                Call WriteConsoleMsg(userIndex, "Debes subastar una cantidad mayor a 0 de ítems.", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "Debes subastar una cantidad mayor a 0 de ítems.", FontTypeNames.FONTTYPE_INFO)
                 Exit Sub
             End If
             
             If ValorBase <= 100 Then
-                Call WriteConsoleMsg(userIndex, "Debes poner un valor mayor a 100 para poder subastar.", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "Debes poner un valor mayor a 100 para poder subastar.", FontTypeNames.FONTTYPE_INFO)
                 Exit Sub
             End If
             
-            If UserList(userIndex).Invent.Object(Slot).ObjIndex <= 0 Then
-                Call WriteConsoleMsg(userIndex, "Debes seleccionar un ítem para poder iniciar una subasta.", FontTypeNames.FONTTYPE_INFO)
+            If UserList(UserIndex).Invent.Object(Slot).ObjIndex <= 0 Then
+                Call WriteConsoleMsg(UserIndex, "Debes seleccionar un ítem para poder iniciar una subasta.", FontTypeNames.FONTTYPE_INFO)
                 Exit Sub
             End If
             
             ' Comprobamos que el usuario tenga lo que intenta ofertar
-            If UserList(userIndex).Invent.Object(Slot).Amount < Amount Then
-                Call WriteConsoleMsg(userIndex, "No tienes la cantidad de ítems que deseas subastar.", FontTypeNames.FONTTYPE_INFO)
+            If UserList(UserIndex).Invent.Object(Slot).Amount < Amount Then
+                Call WriteConsoleMsg(UserIndex, "No tienes la cantidad de ítems que deseas subastar.", FontTypeNames.FONTTYPE_INFO)
                 Exit Sub
             End If
             
             'Items de Newbie no se pueden vender
-            If ItemNewbie(UserList(userIndex).Invent.Object(Slot).ObjIndex) = True Then
-                Call WriteConsoleMsg(userIndex, "No puedes subastar ítems de Newbie.", FontTypeNames.FONTTYPE_INFO)
+            If ItemNewbie(UserList(UserIndex).Invent.Object(Slot).ObjIndex) = True Then
+                Call WriteConsoleMsg(UserIndex, "No puedes subastar ítems de Newbie.", FontTypeNames.FONTTYPE_INFO)
                 Exit Sub
             End If
             
             'Piedra de hogar no se puede vender
-            If ObjData(UserList(userIndex).Invent.Object(Slot).ObjIndex).OBJType = otPiedraHogar Then
-                Call WriteConsoleMsg(userIndex, "¿¡Estas loco!? ¡Si vendes tu piedra de hogar no podras volver a casa!", FontTypeNames.FONTTYPE_INFO)
+            If ObjData(UserList(UserIndex).Invent.Object(Slot).ObjIndex).OBJType = otPiedraHogar Then
+                Call WriteConsoleMsg(UserIndex, "¿¡Estas loco!? ¡Si vendes tu piedra de hogar no podras volver a casa!", FontTypeNames.FONTTYPE_INFO)
                 Exit Sub
             End If
             
             ' Actualizamos los datos
             .Actual = True
-            .userIndex = userIndex
+            .UserIndex = UserIndex
             
             .OfertaIndex = 0 ' Mientras quede 0 es por que no hay ofertas ;)
             .ValorBase = val(ValorBase)
@@ -106,55 +106,55 @@ Public Sub Iniciar_Subasta(ByVal userIndex As Integer, Slot As Integer, Amount A
             
             ' Creamos el Objeto
             .Objeto.Amount = Amount
-            .Objeto.ObjIndex = UserList(userIndex).Invent.Object(Slot).ObjIndex
+            .Objeto.ObjIndex = UserList(UserIndex).Invent.Object(Slot).ObjIndex
             
             .Tiempo = 3
             
             ' Quitamos el Objeto del usuario
-            Call QuitarObjetos(.Objeto.ObjIndex, .Objeto.Amount, .userIndex)
+            Call QuitarObjetos(.Objeto.ObjIndex, .Objeto.Amount, .UserIndex)
             
             ' Ahora podemos informar:
-            Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("[Subasta] " & UserList(.userIndex).Name & " está subastando " & .Objeto.Amount & " " & ObjData(.Objeto.ObjIndex).Name & " con un valor inicial de " & .ValorBase, FontTypeNames.FONTTYPE_INFO))
+            Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("[Subasta] " & UserList(.UserIndex).Name & " está subastando " & .Objeto.Amount & " " & ObjData(.Objeto.ObjIndex).Name & " con un valor inicial de " & .ValorBase, FontTypeNames.FONTTYPE_INFO))
  
             Exit Sub
         End If
     End With
 End Sub
  
-Public Sub Revisar_Subasta(ByVal userIndex As Integer)
+Public Sub Revisar_Subasta(ByVal UserIndex As Integer)
     With Subasta
-        If userIndex = .OfertaIndex Then
+        If UserIndex = .OfertaIndex Then
             .OfertaIndex = -1
         End If
         
-        If userIndex = .userIndex Then
-            .userIndex = -1
+        If UserIndex = .UserIndex Then
+            .UserIndex = -1
         End If
     End With
 End Sub
  
-Public Sub Ofertar_Subasta(ByVal userIndex As Integer, Oferta As Long)
+Public Sub Ofertar_Subasta(ByVal UserIndex As Integer, Oferta As Long)
     With Subasta
         ' Nos fijamos si existe la subasta
         If .Actual = False Then
-            Call WriteConsoleMsg(userIndex, "No hay ninguna subasta actualmente.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "No hay ninguna subasta actualmente.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
         Else
             ' ¿Tiene la cantidad de oro?
-            If UserList(userIndex).Stats.Gld < Oferta Then
-                Call WriteConsoleMsg(userIndex, "No tienes la cantidad de oro que intentas ofrecer.", FontTypeNames.FONTTYPE_INFO)
+            If UserList(UserIndex).Stats.Gld < Oferta Then
+                Call WriteConsoleMsg(UserIndex, "No tienes la cantidad de oro que intentas ofrecer.", FontTypeNames.FONTTYPE_INFO)
                 Exit Sub
             End If
             
             ' ¿Ya hay una oferta mayor? ¿Existia alguna oferta?
             If Oferta <= .OfertaMayor And .OfertaIndex <> 0 Then
-                Call WriteConsoleMsg(userIndex, "Tu oferta es menor a la oferta de " & val(.OfertaMayor) & " de " & UserList(.OfertaIndex).Name, FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "Tu oferta es menor a la oferta de " & val(.OfertaMayor) & " de " & UserList(.OfertaIndex).Name, FontTypeNames.FONTTYPE_INFO)
                 Exit Sub
             End If
             
             ' Si no hay oferta, revisamos la nueva oferta para que no sea menor al precio base
             If .OfertaIndex = 0 And Oferta <= .ValorBase Then
-                Call WriteConsoleMsg(userIndex, "Tu oferta es menor a la oferta del valor inicial de " & val(.ValorBase), FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "Tu oferta es menor a la oferta del valor inicial de " & val(.ValorBase), FontTypeNames.FONTTYPE_INFO)
                 Exit Sub
             End If
             
@@ -166,7 +166,7 @@ Public Sub Ofertar_Subasta(ByVal userIndex As Integer, Oferta As Long)
             End If
             
             ' Ahora podemos actualizar tranquilos
-            .OfertaIndex = userIndex
+            .OfertaIndex = UserIndex
             .OfertaMayor = Oferta
             
             ' Restamos el oro:
@@ -190,8 +190,8 @@ Public Sub Actualizar_Subasta()
             If .Tiempo <= 0 Then
                 Call Termina_Subasta
             Else
-                If .userIndex <> -1 Then
-                    Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("[Subasta] El usuario " & UserList(.userIndex).Name & " está subastando " & .Objeto.Amount & " " & ObjData(.Objeto.ObjIndex).Name & ". La oferta actual es de " & .OfertaMayor & ". Esta subasta seguirá por " & .Tiempo & " minutos.", FontTypeNames.FONTTYPE_INFO))
+                If .UserIndex <> -1 Then
+                    Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("[Subasta] El usuario " & UserList(.UserIndex).Name & " está subastando " & .Objeto.Amount & " " & ObjData(.Objeto.ObjIndex).Name & ". La oferta actual es de " & .OfertaMayor & ". Esta subasta seguirá por " & .Tiempo & " minutos.", FontTypeNames.FONTTYPE_INFO))
                 Else
                     Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("[Subasta] Se está subastando " & .Objeto.Amount & " " & ObjData(.Objeto.ObjIndex).Name & ". La oferta actual es de " & .OfertaMayor & ". Esta subasta seguirá por " & .Tiempo & " minutos.", FontTypeNames.FONTTYPE_INFO))
                 End If
@@ -206,13 +206,13 @@ Public Sub Termina_Subasta()
             ' Informamos que la subasta termino, y que nadie ofertó
             Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("[Subasta] La subasta de " & .Objeto.Amount & " " & ObjData(.Objeto.ObjIndex).Name & " terminó sin ninguna oferta.", FontTypeNames.FONTTYPE_INFO))
        
-            If .userIndex <> -1 Then
-                Call MeterItemEnInventario(.userIndex, .Objeto)
+            If .UserIndex <> -1 Then
+                Call MeterItemEnInventario(.UserIndex, .Objeto)
             End If
             
             'Reseteamos los datos
             .Actual = False
-            .userIndex = 0
+            .UserIndex = 0
             .OfertaIndex = 0
             .ValorBase = 0
             .OfertaMayor = 0
@@ -225,19 +225,19 @@ Public Sub Termina_Subasta()
                 Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("[Subasta] El usuario " & UserList(.OfertaIndex).Name & " ganó la subasta de " & .Objeto.Amount & " " & ObjData(.Objeto.ObjIndex).Name & " por la cantidad de " & .OfertaMayor, FontTypeNames.FONTTYPE_INFO))
     
                 If MeterItemEnInventario(.OfertaIndex, .Objeto) Then
-                    Call WriteConsoleMsg(.OfertaIndex, "Felicitaciones, has ganado la subasta de " & .Objeto.Amount & " " & ObjData(.Objeto.ObjIndex).Name & " por la cantidad de " & .OfertaMayor, FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(.OfertaIndex, "Felicitaciones, has ganado la subasta de " & .Objeto.Amount & " " & ObjData(.Objeto.ObjIndex).Name & " por la cantidad de " & .OfertaMayor, FontTypeNames.FONTTYPE_INFOBOLD)
                 End If
             End If
             
             ' Enviamos el Oro
-            If .userIndex <> -1 Then
-                UserList(.userIndex).Stats.Gld = UserList(.userIndex).Stats.Gld + val(.OfertaMayor)
-                Call WriteUpdateGold(.userIndex)
+            If .UserIndex <> -1 Then
+                UserList(.UserIndex).Stats.Gld = UserList(.UserIndex).Stats.Gld + val(.OfertaMayor)
+                Call WriteUpdateGold(.UserIndex)
             End If
             
             'Reseteamos los datos
             .Actual = False
-            .userIndex = 0
+            .UserIndex = 0
             .OfertaIndex = 0
             .ValorBase = 0
             .OfertaMayor = 0

@@ -348,14 +348,14 @@ Public Sub FinishQuest(ByVal UserIndex As Integer, _
         'Se entrega la experiencia.
         If .RewardEXP Then
             UserList(UserIndex).Stats.Exp = UserList(UserIndex).Stats.Exp + .RewardEXP
-            Call WriteConsoleMsg(UserIndex, "Has ganado " & .RewardEXP & " puntos de experiencia como recompensa.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Has ganado " & .RewardEXP & " puntos de experiencia como recompensa.", FontTypeNames.FONTTYPE_EXP)
 
         End If
         
         'Se entrega el oro.
         If .RewardGLD Then
             UserList(UserIndex).Stats.Gld = UserList(UserIndex).Stats.Gld + .RewardGLD
-            Call WriteConsoleMsg(UserIndex, "Has ganado " & .RewardGLD & " monedas de oro como recompensa.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Has ganado " & .RewardGLD & " monedas de oro como recompensa.", FontTypeNames.FONTTYPE_INFOBOLD)
 
         End If
         

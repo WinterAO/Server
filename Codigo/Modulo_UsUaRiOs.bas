@@ -1623,7 +1623,7 @@ Sub SubirSkill(ByVal UserIndex As Integer, _
 
                     If .Exp > MAXEXP Then .Exp = MAXEXP
                     
-                    Call WriteConsoleMsg(UserIndex, "Has ganado 5 puntos de experiencia!", FontTypeNames.FONTTYPE_FIGHT)
+                    Call WriteConsoleMsg(UserIndex, "Has ganado 5 puntos de experiencia!", FontTypeNames.FONTTYPE_EXP)
                     
                     Call WriteUpdateExp(UserIndex)
                     Call CheckUserLevel(UserIndex)

@@ -362,7 +362,8 @@ Public Enum FontTypeNames
     FONTTYPE_CONSE
     FONTTYPE_DIOS
     FONTTYPE_CRIMINAL
-
+    FONTTYPE_EXP
+    
 End Enum
 
 Public Enum eEditOptions
