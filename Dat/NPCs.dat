@@ -39,6 +39,18 @@ Veneno ===== El Npc envenenada
 Quema ===== EL Npc incinera
 
 ##############################################
+############ VELOCIDAD VARIABLE ##############
+##############################################
+
+En el server hay un intervalo global de la velocidad de los NPC actualmente establecido en 300ms.
+La velocidad estandar que debe tener un NPC es de "Speed=370" o van a correr mucho.
+El rango de valores puede ir desde 0ms a 10000ms, siendo este ultimo EXTREMADAMENTE lento.
+
+Estos valores son muy dificiles de ajustar, por lo que se recomienda ir subiendo de 10 en 10, o de 20 en 20.
+
+A partir de "Speed=480" la lentitud se empieza a notar con respecto a la velocidad standar.
+
+##############################################
 ################ORDEN EN DAT##################
 ##############################################
 
@@ -129,6 +141,7 @@ Domable=0
 Alineacion=0
 Comercia=0
 BackUp=0
+Speed=370
 
 [NPC2] 'Provisiones Isla Newbie
 Name=Thorkis
@@ -149,6 +162,7 @@ NROITEMS=2
 Obj1=1-10000 'Todas las comidas
 Obj2=43-10000 'Todas las bebidas
 BackUp=1
+Speed=370
 
 [NPC3] 'Vende Pociones
 Name=Alquimista
@@ -173,6 +187,7 @@ Obj5=461-1000 'Pocion verde (Newbie)
 Obj6=855-1000 'Pocion Amarilla (Newbie)
 Obj7=166-1000 'Pocion Violeta
 BackUp=1
+Speed=370
 
 [NPC4]
 Name=Mark
@@ -190,6 +205,7 @@ Alineacion=0
 Comercia=0
 BackUp=0
 QuestNumber=1
+Speed=370
 
 [NPC5]
 Name=Willdon
@@ -207,6 +223,7 @@ Alineacion=0
 Comercia=0
 BackUp=0
 QuestNumber=4
+Speed=370
 
 [NPC6]
 Name=Selenna
@@ -224,6 +241,7 @@ Alineacion=0
 Comercia=0
 BackUp=0
 QuestNumber=2
+Speed=370
 
 [NPC7]
 Name=Wilson
@@ -241,6 +259,7 @@ Alineacion=0
 Comercia=0
 BackUp=0
 QuestNumber=3
+Speed=370
 
 ##############################################################
 ################ NPCS VENDEDORES DE RAMX #####################
@@ -261,6 +280,7 @@ Domable=0
 Alineacion=0
 Comercia=0
 BackUp=0
+Speed=370
 
 [NPC12]
 Name=Banquera
@@ -277,6 +297,7 @@ Domable=0
 Alineacion=0
 Comercia=0
 BackUp=0
+Speed=370
 
 [NPC13]
 Name=Banquero
@@ -293,6 +314,7 @@ Domable=0
 Alineacion=0
 Comercia=0
 BackUp=0
+Speed=370
 
 [NPC14] 'Vende Pociones
 Name=Lilith
@@ -318,6 +340,7 @@ Obj6=36-1000 'Pocion Amarilla
 Obj7=166-1000 'Pocion Violeta
 Obj8=645-1000 'Pocion Negra
 BackUp=1
+Speed=370
 
 [NPC15] 'Herrero
 Name=Herrero
@@ -351,6 +374,7 @@ Obj13=123-1000  'Espada Vikinga
 Obj14=124-1000 'Katana
 Obj15=164-1000  'Espada Corta 
 BackUp=1
+Speed=370
 
 [NPC16] 'Sastre Ramx
 Name=Sastre
@@ -391,6 +415,7 @@ Obj20=502-1000 'Ropa de Campesino (E/G)
 Obj21=507-1000 'Ropa Violeta (E/G)
 Obj22=511-1000 'Vestido de Novia Sensual (H/E/EO-M)
 BackUp=1
+Speed=370
 
 [NPC17] 'Armaduras Ramx
 Name=Armaduras
@@ -415,6 +440,7 @@ Obj5=1002-1000 'Casco de Lobo
 Obj6=360-1000 'Armadura de Cazador
 Obj7=648-1000 'Armadura de Cazador (E/G)
 BackUp=1
+Speed=370
 
 [NPC18] 'Provisiones Ramx
 Name=Thorkis
@@ -437,6 +463,7 @@ Obj2=26-1000 'Pollo
 Obj3=43-1000 'Botella de Agua
 Obj4=160-1000 'Cerveza
 BackUp=1
+Speed=370
 
 [NPC19] 'VendeMagia Ramx
 Name=Mago
@@ -466,6 +493,7 @@ Obj9=383-1000 'Sombrero Magico
 Obj10=394-1000 'Llamado a la Naturaleza
 Obj11=470-1000 'Fuerza
 BackUp=1
+Speed=370
 
 [NPC20] 'Pescador Ramx
 Name=Pescador
@@ -487,6 +515,7 @@ Obj1=138-1000 'Cana de Pescar
 Obj2=139-1000 'Pescado
 Obj3=543-1000 'Red de Pesca
 BackUp=1
+Speed=370
 
 [NPC21] 'Minero
 Name=Minero
@@ -506,6 +535,7 @@ TipoItems=23
 NROITEMS=1
 Obj1=187-1000 'Piquete de Minero
 BackUp=1
+Speed=370
 
 [NPC22] 'Mercader
 Name=Mercader
@@ -524,6 +554,7 @@ Comercia=1
 TipoItems=1000
 NROITEMS=0
 BackUp=1
+Speed=370
 
 [NPC23] 'Carpintera
 Name=Carpintera
@@ -551,6 +582,7 @@ Obj7=663-1000 	'Arco Simple Reforzado
 Obj8=479-1000 	'Arco Compuesto
 Obj9=664-1000 	'Arco Compuesto Reforzado
 BackUp=1
+Speed=370
 
 [NPC24]
 Name=Marinero
@@ -573,6 +605,7 @@ Obj2=830-1000
 Obj3=1008-1000
 Obj4=1058-1000
 BackUp=1
+Speed=370
 
 [NPC25]
 Name=Gobernador
@@ -590,6 +623,7 @@ Alineacion=0
 Comercia=0
 BackUp=0
 Ciudad=1
+Speed=370
 
 [NPC26] 'Instructor de Mineria
 Name=Instructor de Mineria
@@ -606,6 +640,7 @@ Domable=0
 Alineacion=0
 BackUp=1
 Instruye=19
+Speed=370
 
 [NPC27] 'Instructor de Taladores
 Name=Instructor de Taladores
@@ -622,6 +657,7 @@ Domable=0
 Alineacion=0
 BackUp=1
 Instruye=17
+Speed=370
 
 [NPC28] 'Instructor de Carpinteros
 Name=Instructor de Carpinteros
@@ -638,6 +674,7 @@ Domable=0
 Alineacion=0
 BackUp=1
 Instruye=20
+Speed=370
 
 [NPC29] 'Instructor de Herreria
 Name=Instructor de Herreria
@@ -654,6 +691,7 @@ Domable=0
 Alineacion=0
 BackUp=1
 Instruye=21
+Speed=370
 
 [NPC30] 'Instructor de Sastreria
 Name=Instructor de Sastreria
@@ -670,6 +708,7 @@ Domable=0
 Alineacion=0
 BackUp=1
 Instruye=22
+Speed=370
 
 [NPC31] 'Instructor de Alquimia
 Name=Instructor de Alquimia
@@ -685,6 +724,7 @@ Domable=0
 Alineacion=0
 BackUp=1
 Instruye=24
+Speed=370
 
 [NPC32]
 Name=Artesano
@@ -700,6 +740,7 @@ Hostile=0
 Domable=0
 Alineacion=0
 Comercia=0
+Speed=370
 
 ##############################################################
 ############## NPCS VENDEDORES DE SHAKOUD ####################
@@ -721,6 +762,7 @@ Alineacion=0
 Comercia=0
 BackUp=0
 Ciudad=2
+Speed=370
 
 [NPC51]
 Name=Sacerdote
@@ -737,6 +779,7 @@ Domable=0
 Alineacion=0
 Comercia=0
 BackUp=0
+Speed=370
 
 [NPC52]
 Name=Banquero
@@ -753,6 +796,7 @@ Domable=0
 Alineacion=0
 Comercia=0
 BackUp=0
+Speed=370
 
 [NPC53]
 Name=Marinero
@@ -775,6 +819,7 @@ Obj2=1316-1000
 Obj3=1317-1000
 Obj4=1318-1000
 BackUp=1
+Speed=370
 
 [NPC54] 'Vende Pociones
 Name=Krona
@@ -800,6 +845,7 @@ Obj6=36-1000 'Pocion Amarilla
 Obj7=166-1000 'Pocion Violeta
 Obj8=645-1000 'Pocion Negra
 BackUp=1
+Speed=370
 
 [NPC55] 'Herrero
 Name=Herrero
@@ -833,6 +879,7 @@ Obj13=123-1000  'Espada Vikinga
 Obj14=124-1000 'Katana
 Obj15=164-1000  'Espada Corta 
 BackUp=1
+Speed=370
 
 [NPC56] 'Sastre Shakoud
 Name=Sastre
@@ -873,6 +920,7 @@ Obj20=502-1000 'Ropa de Campesino (E/G)
 Obj21=507-1000 'Ropa Violeta (E/G)
 Obj22=511-1000 'Vestido de Novia Sensual (H/E/EO-M)
 BackUp=1
+Speed=370
 
 [NPC57] 'Armaduras Shakoud
 Name=Armaduras
@@ -897,7 +945,7 @@ Obj5=1002-1000 'Casco de Lobo
 Obj6=360-1000 'Armadura de Cazador
 Obj7=648-1000 'Armadura de Cazador (E/G)
 BackUp=1
-
+Speed=370
 
 [NPC58] 'Provisiones Shakoud
 Name=Thorin
@@ -922,6 +970,7 @@ Obj4=754-1000 'Rábano
 Obj5=29-1000 'Sandía
 Obj6=43-1000 'Botella de Agua
 BackUp=1
+Speed=370
 
 [NPC59] 'VendeMagia Shakoud
 Name=Mago
@@ -947,6 +996,7 @@ Obj5=200-1000 'Antidoto Magico
 Obj6=530-1000 'Inmovilizar
 Obj7=207-1000 'Remover Paralisis
 BackUp=1
+Speed=370
 
 [NPC60] 'Pescador Shakoud
 Name=Pescador
@@ -968,6 +1018,7 @@ Obj1=138-1000 'Cana de Pescar
 Obj2=139-1000 'Pescado
 Obj3=543-1000 'Red de Pesca
 BackUp=1
+Speed=370
 
 [NPC61] 'Minero
 Name=Minero
@@ -987,6 +1038,7 @@ TipoItems=23
 NROITEMS=1
 Obj1=187-1000 'Piquete de Minero
 BackUp=1
+Speed=370
 
 [NPC62] 'Mercader
 Name=Mercader
@@ -1005,6 +1057,7 @@ Comercia=1
 TipoItems=1000
 NROITEMS=0
 BackUp=1
+Speed=370
 
 [NPC63] 'Carpintera
 Name=Carpintera
@@ -1032,6 +1085,7 @@ Obj7=663-1000 	'Arco Simple Reforzado
 Obj8=479-1000 	'Arco Compuesto
 Obj9=664-1000 	'Arco Compuesto Reforzado
 BackUp=1
+Speed=370
 
 [NPC64]
 Name=Subastador
@@ -1048,6 +1102,7 @@ Domable=0
 Alineacion=0
 Comercia=0
 BackUp=0
+Speed=370
 
 ##############################################################
 ############## NPCS VENDEDORES DE BELLEUVE ###################
@@ -1069,6 +1124,7 @@ Alineacion=0
 Comercia=0
 BackUp=0
 Ciudad=3
+Speed=370
 
 [NPC101]
 Name=Sacerdote
@@ -1085,6 +1141,7 @@ Domable=0
 Alineacion=0
 Comercia=0
 BackUp=0
+Speed=370
 
 [NPC102]
 Name=Banquero
@@ -1101,6 +1158,7 @@ Domable=0
 Alineacion=0
 Comercia=0
 BackUp=0
+Speed=370
 
 [NPC103]
 Name=Marinero
@@ -1122,6 +1180,7 @@ Obj1=1312-1000
 Obj2=1313-1000
 Obj3=1314-1000
 BackUp=1
+Speed=370
 
 [NPC104] 'Guardia Armada (Comun)
 Name=Guardia Imperial
@@ -1149,6 +1208,7 @@ DEF=30
 PoderAtaque=400
 PoderEvasion=190
 BackUp=0
+Speed=370
 
 [NPC105] 'Guardia Armada (Movimiento random)
 Name=Guardia Imperial
@@ -1176,6 +1236,7 @@ DEF=30
 PoderAtaque=400
 PoderEvasion=190
 BackUp=0
+Speed=370
 
 [NPC106] 'Guardia Armada (Arquera)
 Name=Arquera Real
@@ -1206,6 +1267,7 @@ Sp1=35
 NROITEMS=1
 Obj1=551-10 'Flecha +1
 BackUp=0
+Speed=370
 
 [NPC107] 'Guardia Armada (Sacerdote)
 Name=Sacerdote Imperial
@@ -1235,6 +1297,7 @@ LanzaSpells=2
 Sp1=25
 Sp2=9
 BackUp=0
+Speed=370
 
 [NPC108] 'Guardia Armada
 Name=Druida Imperial
@@ -1265,6 +1328,7 @@ LanzaSpells=2
 Sp1=24
 Sp2=23
 BackUp=0
+Speed=370
 
 [NPC109] 'Guardia Armada (Mago)
 Name=Mago Imperial
@@ -1294,6 +1358,7 @@ LanzaSpells=2
 Sp1=24
 Sp2=23
 BackUp=0
+Speed=370
 
 [NPC110] 'Vende Pociones Belleuve
 Name=Furaxin
@@ -1319,6 +1384,7 @@ Obj6=36-1000 'Pocion Amarilla
 Obj7=166-1000 'Pocion Violeta
 Obj8=645-1000 'Pocion Negra
 BackUp=1
+Speed=370
 
 [NPC111] 'Herrero Belleuve
 Name=Herrero
@@ -1346,6 +1412,7 @@ Obj7=478-1000 'Arco Simple
 Obj8=990-1000 'Mazo del Juicio
 Obj9=389-1000 'Martillo de Herrero
 BackUp=1
+Speed=370
 
 [NPC112] 'Sastre Belleuve
 Name=Sastre
@@ -1386,6 +1453,7 @@ Obj20=502-1000 'Ropa de Campesino (E/G)
 Obj21=507-1000 'Ropa Violeta (E/G)
 Obj22=511-1000 'Vestido de Novia Sensual (H/E/EO-M)
 BackUp=1
+Speed=370
 
 [NPC113] 'Armaduras Belleuve
 Name=Armaduras
@@ -1410,6 +1478,7 @@ Obj5=1002-1000 'Casco de Lobo
 Obj6=360-1000 'Armadura de Cazador
 Obj7=648-1000 'Armadura de Cazador (E/G)
 BackUp=1
+Speed=370
 
 [NPC114] 'Provisiones Belleuve
 Name=Zodux
@@ -1438,6 +1507,7 @@ Obj8=160-1000 'Cerveza
 Obj9=42-1000 'Vino
 Obj10=161-1000 'Jugo de Frutas
 BackUp=1
+Speed=370
 
 [NPC115] 'VendeMagia Belleuve
 Name=Mago
@@ -1458,6 +1528,7 @@ NROITEMS=1
 Obj1=319=1000 'Resucitar
 Obj2=1333=1000 'Resurreccion
 BackUp=1
+Speed=370
 
 [NPC116] 'Pescador Belleuve
 Name=Pescador
@@ -1479,6 +1550,7 @@ Obj1=138-1000 'Cana de Pescar
 Obj2=139-1000 'Pescado
 Obj3=543-1000 'Red de Pesca
 BackUp=1
+Speed=370
 
 [NPC117] 'Minero
 Name=Minero
@@ -1498,6 +1570,7 @@ TipoItems=23
 NROITEMS=1
 Obj1=187-1000 'Piquete de Minero
 BackUp=1
+Speed=370
 
 [NPC118] 'Mercader
 Name=Mercader
@@ -1516,6 +1589,7 @@ Comercia=1
 TipoItems=1000
 NROITEMS=0
 BackUp=1
+Speed=370
 
 [NPC119] 'Carpintera
 Name=Carpintera
@@ -1543,6 +1617,7 @@ Obj7=663-1000 	'Arco Simple Reforzado
 Obj8=479-1000 	'Arco Compuesto
 Obj9=664-1000 	'Arco Compuesto Reforzado
 BackUp=1
+Speed=370
 
 [NPC120]
 Name=Lord Legislador
@@ -1559,6 +1634,7 @@ Domable=0
 Alineacion=0
 Comercia=0
 BackUp=0
+Speed=370
 
 ##############################################################
 ############## NPCS VENDEDORES DE ISLA ZHARKEL ###############
@@ -1580,6 +1656,7 @@ Alineacion=0
 Comercia=0
 BackUp=0
 Ciudad=3
+Speed=370
 
 [NPC151]
 Name=Sacerdote
@@ -1596,6 +1673,7 @@ Domable=0
 Alineacion=0
 Comercia=0
 BackUp=0
+Speed=370
 
 [NPC152]
 Name=Banquero
@@ -1612,6 +1690,7 @@ Domable=0
 Alineacion=0
 Comercia=0
 BackUp=0
+Speed=370
 
 [NPC153]
 Name=Marinero
@@ -1633,6 +1712,7 @@ Obj1=1319-1000
 Obj2=1320-1000
 Obj3=1321-1000
 BackUp=1
+Speed=370
 
 [NPC154] 'Vende Pociones
 Name=Asilithas
@@ -1658,6 +1738,7 @@ Obj6=36-1000 'Pocion Amarilla
 Obj7=166-1000 'Pocion Violeta
 Obj8=645-1000 'Pocion Negra
 BackUp=1
+Speed=370
 
 [NPC155] 'Herrero
 Name=Herrero
@@ -1685,6 +1766,7 @@ Obj7=478-1000 'Arco Simple
 Obj8=990-1000 'Mazo del Juicio
 Obj9=389-1000 'Martillo de Herrero
 BackUp=1
+Speed=370
 
 [NPC156] 'Sastre Isla Zharkel
 Name=Sastre
@@ -1725,6 +1807,7 @@ Obj20=502-1000 'Ropa de Campesino (E/G)
 Obj21=507-1000 'Ropa Violeta (E/G)
 Obj22=511-1000 'Vestido de Novia Sensual (H/E/EO-M)
 BackUp=1
+Speed=370
 
 [NPC157] 'Armaduras Isla Zharkel
 Name=Armaduras
@@ -1749,6 +1832,7 @@ Obj5=1002-1000 'Casco de Lobo
 Obj6=360-1000 'Armadura de Cazador
 Obj7=648-1000 'Armadura de Cazador (E/G)
 BackUp=1
+Speed=370
 
 [NPC158] 'Provisiones Isla Zharkel
 Name=Thorin
@@ -1771,6 +1855,7 @@ Obj2=754-1000 'Rábano
 Obj3=43-1000 'Botella de Agua
 Obj4=160-1000 'Cerveza
 BackUp=1
+Speed=370
 
 [NPC159] 'VendeMagia Isla Zharkel
 Name=Maga
@@ -1789,6 +1874,7 @@ Comercia=1
 TipoItems=24
 NROITEMS=0
 BackUp=1
+Speed=370
 
 [NPC160] 'Isla Zharkel Shakoud
 Name=Pescadora
@@ -1807,6 +1893,7 @@ Comercia=1
 TipoItems=1
 NROITEMS=0
 BackUp=1
+Speed=370
 
 [NPC161] 'Minera
 Name=Minera
@@ -1826,6 +1913,7 @@ TipoItems=23
 NROITEMS=1
 Obj1=187-1000 'Piquete de Minero
 BackUp=1
+Speed=370
 
 [NPC162] 'Mercader
 Name=Mercader
@@ -1844,6 +1932,7 @@ Comercia=1
 TipoItems=1000
 NROITEMS=0
 BackUp=1
+Speed=370
 
 [NPC163]
 Name=Kelsier
@@ -1862,6 +1951,7 @@ Alineacion=0
 Comercia=0
 Faccion=1
 BackUp=0
+Speed=370
 
 [NPC164] 'Propiedades 
 Name=Cullighan
@@ -1881,6 +1971,7 @@ TipoItems=9
 NROITEMS=0
 InvReSpawn=1
 BackUp=1
+Speed=370
 
 ##############################################################
 ############## NPCS VENDEDORES DE HAVERWOOD ##################
@@ -1902,6 +1993,7 @@ Alineacion=0
 Comercia=0
 BackUp=0
 Ciudad=2
+Speed=370
 
 [NPC201]
 Name=Sacerdote
@@ -1918,6 +2010,7 @@ Domable=0
 Alineacion=0
 Comercia=0
 BackUp=0
+Speed=370
 
 [NPC202]
 Name=Banquero
@@ -1934,6 +2027,7 @@ Domable=0
 Alineacion=0
 Comercia=0
 BackUp=0
+Speed=370
 
 [NPC203]
 Name=Marinero
@@ -1956,6 +2050,7 @@ Obj2=1323-1000
 Obj3=1324-1000
 Obj4=1325-1000
 BackUp=1
+Speed=370
 
 [NPC204] 'Vende Pociones
 Name=Elith
@@ -1981,6 +2076,7 @@ Obj6=36-1000 'Pocion Amarilla
 Obj7=166-1000 'Pocion Violeta
 Obj8=645-1000 'Pocion Negra
 BackUp=1
+Speed=370
 
 [NPC205] 'Herrero
 Name=Herrero
@@ -2007,6 +2103,7 @@ Obj6=753-1000 'Mayal Triple
 Obj7=404-1000 'Escudo de Tortuga
 Obj8=990-1000 'Mazo del Juicio
 BackUp=1
+Speed=370
 
 [NPC206] 'Sastre Haverwood
 Name=Sastre
@@ -2040,6 +2137,7 @@ Obj13=901-1000 'Coraza Compuesta de Mujer (H/E/EO-M)
 Obj14=887-1000 'Cotas de Manto Marron (H/E/EO)
 Obj15=890-1000 'Armadura de Cuero de Oso Pardo (H/E/EO)
 BackUp=1
+Speed=370
 
 [NPC207] 'Armaduras Haverwood
 Name=Armaduras
@@ -2068,6 +2166,7 @@ Obj9=390-1000 'Armadura de Placas Completa +1
 Obj10=243-1000 'Armadura de Placas Completa (E/G)
 Obj11=903-1000 'Armadura de Campeon (H/E/EO)
 Obj12=1004-1000 'Casco de Tigre
+Speed=370
 
 [NPC208] 'Provisiones Haverwood
 Name=Thorin
@@ -2096,6 +2195,7 @@ Obj8=160-1000 'Cerveza
 Obj9=42-1000 'Vino
 Obj10=161-1000 'Jugo de Frutas
 BackUp=1
+Speed=370
 
 [NPC209] 'VendeMagia Haverwood
 Name=Mago
@@ -2114,6 +2214,7 @@ Comercia=1
 TipoItems=24
 NROITEMS=0
 BackUp=1
+Speed=370
 
 [NPC210] 'Pescador Haverwood
 Name=Pescador
@@ -2135,6 +2236,7 @@ Obj1=138-1000 'Cana de Pescar
 Obj2=139-1000 'Pescado
 Obj3=543-1000 'Red de Pesca
 BackUp=1
+Speed=370
 
 [NPC211] 'Minero
 Name=Minero
@@ -2154,6 +2256,7 @@ TipoItems=23
 NROITEMS=1
 Obj1=187-1000 'Piquete de Minero
 BackUp=1
+Speed=370
 
 [NPC212] 'Mercader
 Name=Mercader
@@ -2172,6 +2275,7 @@ Comercia=1
 TipoItems=1000
 NROITEMS=0
 BackUp=1
+Speed=370
 
 [NPC213] 'Carpintera
 Name=Carpintera
@@ -2199,6 +2303,7 @@ Obj7=663-1000 	'Arco Simple Reforzado
 Obj8=479-1000 	'Arco Compuesto
 Obj9=664-1000 	'Arco Compuesto Reforzado
 BackUp=1
+Speed=370
 
 [NPC214] 'Propiedades
 Name=Propiedades
@@ -2217,6 +2322,7 @@ Comercia=1
 TipoItems=9
 NROITEMS=0
 BackUp=1
+Speed=370
 
 ##############################################################
 ################## INVOCACIONES HECHIZOS #####################
@@ -2246,6 +2352,7 @@ DEF=0
 PoderAtaque=400
 PoderEvasion=200
 BackUp=0
+Speed=370
 
 [NPC451] 'NO RESPAWN (para el hechizo Invocacion)
 Name=Elemental de Fuego
@@ -2273,6 +2380,7 @@ PoderEvasion=100
 LanzaSpells=1
 Sp1=15
 BackUp=0
+Speed=370
 
 [NPC452] 'NO RESPAWN (para el hechizo Invocacion)
 Name=Elemental de Tierra
@@ -2300,6 +2408,7 @@ PoderEvasion=100
 LanzaSpells=1
 Sp1=9
 BackUp=0
+Speed=370
 
 [NPC453] 'NO RESPAWN (para el hechizo Invocar Zombies)
 Name=Zombie
@@ -2326,6 +2435,7 @@ PoderAtaque=180
 PoderEvasion=20
 SND2=33
 BackUp=0
+Speed=370
 
 [NPC454] 'NO RESPAWN (para el hechizo Invocacion de Ultratumba)
 Name=Esqueleto Guerrero
@@ -2351,6 +2461,7 @@ DEF=25
 PoderAtaque=250
 PoderEvasion=100
 BackUp=0
+Speed=370
 
 [NPC455] 'NO RESPAWN (para el hechizo Invocar Lobos)
 Name=Lobo
@@ -2378,6 +2489,7 @@ PoderEvasion=25
 Snd1=35
 Snd2=9
 BackUp=0
+Speed=370
 
 [NPC456] 'NO RESPAWN
 Name=Dragon Rojo
@@ -2405,6 +2517,7 @@ PoderAtaque=150
 PoderEvasion=70
 Veneno=1
 BackUp=0
+Speed=370
 
 [NPC457] 
 Name=Fuego Fatuo 'NO RESPAWN
@@ -2433,6 +2546,7 @@ LanzaSpells=2
 Sp1=24
 Sp2=23
 BackUp=0
+Speed=370
 
 [NPC458] 'npc centinela
 Name=Centinela
@@ -2449,6 +2563,7 @@ Domable=0
 Alineacion=0
 Comercia=0
 BackUp=0
+Speed=370
 
 ##############################################################
 ####################### HOSTILES #############################
@@ -2487,6 +2602,7 @@ Snd2=297
 Snd3=298
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC501]
 Name=Gallo Salvaje
@@ -2518,6 +2634,7 @@ Snd3=14
 BackUp=0
 NROITEMS=1
 Obj1=26-1-100 'Pollo
+Speed=370
 
 [NPC502]
 Name=Cuervo Salvaje
@@ -2547,6 +2664,7 @@ PoderEvasion=15
 SND3=63
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC503]
 Name=Conejo
@@ -2575,6 +2693,7 @@ PoderEvasion=0
 SND2=103
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC504] 'Dungeon Newbie
 Name=Murcielago Rabioso
@@ -2605,6 +2724,7 @@ Snd2=294
 Snd3=295
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC505]
 Name=Pavo
@@ -2633,6 +2753,7 @@ PoderEvasion=0
 SND2=103
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC506]
 Name=Cerdo
@@ -2661,6 +2782,7 @@ PoderEvasion=0
 SND2=103
 BackUp=0
 NROITEMS=0
+Speed=480
 
 [NPC507]
 Name=Vaca
@@ -2689,6 +2811,7 @@ PoderEvasion=0
 SND2=103
 BackUp=0
 NROITEMS=0
+Speed=480
 
 [NPC508]
 Name=Gato
@@ -2718,6 +2841,7 @@ SND2=103
 BackUp=0
 NROITEMS=1
 Obj1=666-1-100 'Piel de gato
+Speed=370
 
 [NPC509]
 Name=Aguila
@@ -2746,6 +2870,7 @@ PoderEvasion=0
 SND2=103
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC510]
 Name=Cria de Araña
@@ -2776,6 +2901,7 @@ Snd2=34
 Snd3=215
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC511]
 NameHormiga
@@ -2804,6 +2930,7 @@ PoderEvasion=0
 SND2=103
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC512]
 Name=Raton
@@ -2834,6 +2961,7 @@ Snd2=309
 Snd3=310
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC513]
 Name=Rana
@@ -2862,6 +2990,7 @@ PoderEvasion=0
 SND2=103
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC514]
 Name=Loro
@@ -2890,6 +3019,7 @@ PoderEvasion=0
 SND2=103
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC515]
 Name=Aguila Blanca
@@ -2918,6 +3048,7 @@ PoderEvasion=15
 SND2=103
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC516]
 Name=Pato
@@ -2946,6 +3077,7 @@ PoderEvasion=0
 SND2=103
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC517] 'Isla Newbie
 Name=Gallo Salvaje Envenenado
@@ -2979,6 +3111,7 @@ BackUp=0
 NROITEMS=2
 Obj1=26-1-100 'Pollo
 Obj2=1249-1-50 'Veneno de serpiente
+Speed=370
 
 [NPC518]
 Name=Vibora
@@ -3008,8 +3141,10 @@ Snd1=296
 Snd2=297
 Snd3=298
 BackUp=0
+Speed=40
 NROITEMS=1
 Obj1=1249-1-50 'Veneno de serpiente
+Speed=370
 
 [NPC519]
 Name=Alacran
@@ -3038,6 +3173,7 @@ PoderEvasion=15
 SND2=103
 BackUp=0
 NROITEMS=0
+Speed=370
 
 ##################
 ####LEVEL 10######
@@ -3071,6 +3207,7 @@ Snd1=208
 Snd3=207
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC552]
 Name=Mono
@@ -3098,6 +3235,7 @@ PoderAtaque=30
 PoderEvasion=30
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC553]
 Name=NO USAR
@@ -3125,6 +3263,7 @@ PoderAtaque=30
 PoderEvasion=30
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC554]
 Name=Rata
@@ -3155,6 +3294,7 @@ Snd2=309
 Snd3=310
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC555]
 Name=Sapo
@@ -3182,6 +3322,7 @@ PoderAtaque=30
 PoderEvasion=30
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC556]
 Name=Cisne
@@ -3210,6 +3351,7 @@ PoderAtaque=30
 PoderEvasion=75
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC557]
 Name=Tortuga
@@ -3238,6 +3380,7 @@ PoderEvasion=45
 BackUp=0
 NROITEMS=1
 Obj1=404-1-30 'Escudo de Tortuga
+Speed=520
 
 [NPC558]
 Name=Tortuga Gigante
@@ -3266,6 +3409,7 @@ PoderEvasion=45
 BackUp=0
 NROITEMS=1
 Obj1=404-1-30 'Escudo de Tortuga
+Speed=520
 
 [NPC559]
 Name=Cria de Lobo
@@ -3297,6 +3441,7 @@ Snd3=107
 BackUp=0
 NROITEMS=1
 Obj1=27-3-30 'Chuleta
+Speed=370
 
 [NPC560]
 Name=Gato Negro
@@ -3327,6 +3472,7 @@ Snd2=9
 BackUp=0
 NROITEMS=1
 Obj1=666-1-80 'Piel de gato
+Speed=370
 
 ##################
 ####LEVEL 15######
@@ -3359,6 +3505,7 @@ PoderAtaque=60
 PoderEvasion=50
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC601]
 Name=Araña gigante
@@ -3389,6 +3536,7 @@ Snd1=29
 Snd2=34
 Snd3=215
 NROITEMS=0
+Speed=370
 
 [NPC602]
 Name=Hormiga Gigante
@@ -3416,6 +3564,7 @@ PoderAtaque=60
 PoderEvasion=100
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC603]
 Name=Contrabandista
@@ -3444,6 +3593,7 @@ PoderEvasion=50
 Snd3=157
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC604]
 Name=Esclavo Contrabandista
@@ -3472,6 +3622,7 @@ PoderEvasion=50
 Snd3=155
 BackUp=0
 NROITEMS=0
+Speed=460
 
 [NPC605]
 Name=Osezno
@@ -3500,6 +3651,7 @@ PoderEvasion=60
 BackUp=0
 NROITEMS=1
 Obj1=415-1-100 'Piel Oso Pardo
+Speed=370
 
 [NPC606]
 Name=Cocodrilo Joven
@@ -3528,6 +3680,7 @@ AguaValida=1
 PoderAtaque=64
 PoderEvasion=45
 BackUp=0
+Speed=370
 
 [NPC607]
 Name=Unicornio
@@ -3562,6 +3715,7 @@ Obj2=12-80-50 'Oro
 Obj3=12-150-50 'Oro
 Obj4=37-50-50 'Pocion Azul
 Obj5=12-5000-80 'Oro
+Speed=370
 
 [NPC608] 'Dungeon Newbie
 Name=Orco
@@ -3593,6 +3747,7 @@ Snd3=301
 BackUp=0
 NROITEMS=1
 Obj1=1250-1-60 'Fragmento de arma
+Speed=480
 
 [NPC609]
 Name=Lobo Adulto
@@ -3624,6 +3779,7 @@ BackUp=0
 NROITEMS=2
 Obj1=414-1-30 'Piel de Lobo
 Obj2=27-3-30 'Chuleta
+Speed=370
 
 [NPC610]
 Name=Anfisbena
@@ -3650,6 +3806,7 @@ ELV=15
 PoderAtaque=80
 PoderEvasion=25
 BackUp=0
+Speed=370
 
 [NPC611]
 Name=Gusano de Arena
@@ -3676,6 +3833,7 @@ ELV=15
 PoderAtaque=80
 PoderEvasion=100
 BackUp=0
+Speed=370
 
 [NPC612]
 Name=Tarantula Venenosa
@@ -3702,6 +3860,7 @@ ELV=15
 PoderAtaque=80
 PoderEvasion=50
 BackUp=0
+Speed=370
 
 [NPC613]
 Name=Duende Maligno
@@ -3729,6 +3888,7 @@ PoderAtaque=84
 PoderEvasion=30
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC614]
 Name=Escarabajo Gigante
@@ -3756,6 +3916,7 @@ PoderAtaque=84
 PoderEvasion=30
 BackUp=0
 NROITEMS=0
+Speed=370
 
 ##################
 ####LEVEL 20######
@@ -3791,6 +3952,7 @@ Snd1=35
 Snd2=9
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC651]
 Name=Rata Gigante
@@ -3821,6 +3983,7 @@ Snd2=309
 Snd3=310
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC652]
 Name=Zorro
@@ -3852,6 +4015,7 @@ BackUp=0
 NROITEMS=2
 Obj1=414-1-30 'Piel de Lobo
 Obj2=27-3-30 'Chuleta
+Speed=370
 
 [NPC653]
 Name=Cria de Tigre
@@ -3880,6 +4044,7 @@ BackUp=0
 NROITEMS=2
 Obj1=414-20-30 'Piel de Tigre (le pongo de lobo mientras, cambiar!!)
 Obj2=27-23-30 'Chuleta
+Speed=370
 
 [NPC654]
 Name=Tigre
@@ -3908,6 +4073,7 @@ BackUp=0
 NROITEMS=2
 Obj1=414-20-30 'Piel de Tigre (le pongo de lobo mientras, cambiar!!)
 Obj2=27-23-30 'Chuleta
+Speed=370
 
 [NPC655]
 Name=Oso
@@ -3936,6 +4102,7 @@ PoderEvasion=70
 BackUp=0
 NROITEMS=1
 Obj1=415-1-30 'Piel Oso Pardo
+Speed=370
 
 [NPC656]
 Name=Muercielago Negro
@@ -3963,6 +4130,7 @@ PoderAtaque=84
 PoderEvasion=30
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC657]
 Name=Duende
@@ -3990,6 +4158,7 @@ PoderAtaque=84
 PoderEvasion=30
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC658]
 Name=Orco Guerrero
@@ -4020,6 +4189,7 @@ Snd2=300
 Snd3=301
 BackUp=0
 NROITEMS=0
+Speed=480
 
 [NPC659]
 Name=Ent
@@ -4048,6 +4218,7 @@ PoderAtaque=84
 PoderEvasion=50
 BackUp=0
 NROITEMS=0
+Speed=500
 
 [NPC660]
 Name=Llama Viviente
@@ -4076,6 +4247,7 @@ PoderAtaque=84
 PoderEvasion=125
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC661]
 Name=Jefe Mono
@@ -4103,6 +4275,7 @@ PoderAtaque=30
 PoderEvasion=30
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC662]
 Name=Hadita
@@ -4130,6 +4303,7 @@ PoderAtaque=84
 PoderEvasion=30
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC663]
 Name=Hada Rosa
@@ -4157,6 +4331,7 @@ PoderAtaque=84
 PoderEvasion=30
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC664]
 Name=Hada Azul
@@ -4184,6 +4359,7 @@ PoderAtaque=84
 PoderEvasion=30
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC665]
 Name=Mole de Tierra
@@ -4211,6 +4387,7 @@ PoderAtaque=84
 PoderEvasion=30
 BackUp=0
 NROITEMS=0
+Speed=500
 
 [NPC666]
 Name=Esclavo Contrabandista
@@ -4238,6 +4415,7 @@ PoderAtaque=70
 PoderEvasion=50
 BackUp=0
 NROITEMS=0
+Speed=370
 
 ##################
 ####LEVEL 25######
@@ -4270,6 +4448,7 @@ PoderEvasion=70
 BackUp=0
 NROITEMS=1
 Obj1=415-1-30 'Piel Oso Pardo
+Speed=370
 
 [NPC701]
 Name=Arachnida Sicarius
@@ -4301,6 +4480,7 @@ Snd1=29
 Snd2=34
 Snd3=215
 NROITEMS=0
+Speed=370
 
 [NPC702]
 Name=Basilisco
@@ -4327,6 +4507,7 @@ ELV=25
 PoderAtaque=200
 PoderEvasion=65
 BackUp=0
+Speed=460
 
 [NPC703]
 Name=Tiburon
@@ -4356,6 +4537,7 @@ PoderEvasion=65
 Veneno=1
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC704]
 Name=Sirena
@@ -4385,6 +4567,7 @@ PoderEvasion=150
 Veneno=1
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC705]
 Name=Caballito de Mar
@@ -4413,6 +4596,7 @@ PoderEvasion=300
 Veneno=1
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC706]
 Name=Dientes del Mar
@@ -4441,6 +4625,7 @@ PoderEvasion=100
 Veneno=1
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC707]
 Name=Momia
@@ -4468,6 +4653,7 @@ PoderAtaque=84
 PoderEvasion=30
 BackUp=0
 NROITEMS=0
+Speed=480
 
 [NPC708]
 Name=Triada Nilo
@@ -4496,6 +4682,7 @@ PoderEvasion=70
 Veneno=1
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC709]
 Name=Zombie Decapitado
@@ -4524,6 +4711,7 @@ PoderEvasion=80
 Veneno=1
 BackUp=0
 NROITEMS=0
+Speed=500
 
 [NPC710]
 Name=Zombie Decapitado
@@ -4552,6 +4740,7 @@ PoderEvasion=80
 Veneno=1
 BackUp=0
 NROITEMS=0
+Speed=500
 
 [NPC711]
 Name=Zombie Descuartizado
@@ -4580,6 +4769,7 @@ PoderEvasion=60
 Veneno=1
 BackUp=0
 NROITEMS=0
+Speed=500
 
 [NPC712]
 Name=Esqueleto
@@ -4608,6 +4798,7 @@ PoderEvasion=25
 Veneno=1
 BackUp=0
 NROITEMS=0
+Speed=460
 
 [NPC713]
 Name=Esqueleto Guerrero
@@ -4636,6 +4827,7 @@ PoderEvasion=35
 Veneno=1
 BackUp=0
 NROITEMS=0
+Speed=460
 
 [NPC714]
 Name=Cuervo Asesino
@@ -4664,6 +4856,7 @@ PoderEvasion=45
 Veneno=1
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC715]
 Name=Cucaracha
@@ -4692,6 +4885,7 @@ PoderEvasion=45
 Veneno=1
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC716]
 Name=Lobo del Terror
@@ -4720,6 +4914,7 @@ PoderEvasion=55
 Veneno=1
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC717]
 Name=Lobo Zombie
@@ -4748,6 +4943,7 @@ PoderEvasion=45
 Veneno=1
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC718]
 Name=Fantasma
@@ -4776,6 +4972,7 @@ PoderEvasion=150
 Veneno=1
 BackUp=0
 NROITEMS=0
+Speed=480
 
 [NPC719]
 Name=Angel
@@ -4804,6 +5001,7 @@ PoderEvasion=0
 Veneno=1
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC721]
 Name=Ent Ancestral
@@ -4832,6 +5030,7 @@ PoderEvasion=0
 Veneno=1
 BackUp=0
 NROITEMS=0
+Speed=500
 
 [NPC722]
 Name=Guerrero del Desierto
@@ -4860,6 +5059,7 @@ PoderEvasion=150
 Veneno=1
 BackUp=0
 NROITEMS=0
+Speed=460
 
 [NPC723]
 Name=Coyote
@@ -4888,6 +5088,7 @@ PoderEvasion=0
 Veneno=1
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC724]
 Name=Protector de la Naturaleza
@@ -4916,6 +5117,7 @@ PoderEvasion=0
 Veneno=1
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC725]
 Name=Genio de Arena
@@ -4944,6 +5146,7 @@ PoderEvasion=100
 Veneno=1
 BackUp=0
 NROITEMS=0
+Speed=370
 
 ##################
 ####LEVEL 30######
@@ -4978,6 +5181,7 @@ PoderEvasion=175
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC751] 'WORLDBOSS
 Name=Tortuga Milenaria
@@ -5005,6 +5209,7 @@ PoderAtaque=260
 PoderEvasion=245
 snd2=78
 BackUp=0
+Speed=500
 
 [NPC752]
 Name=Leviathan
@@ -5033,6 +5238,7 @@ PoderAtaque=260
 PoderEvasion=150
 snd2=78
 BackUp=0
+Speed=370
 
 [NPC753] 
 Name=Guardian de las Produndidades
@@ -5061,6 +5267,7 @@ PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC754] 
 Name=Piraña
@@ -5089,6 +5296,7 @@ PoderEvasion=55
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC755] 'WORLDBOSS
 Name=Gorila Gigante
@@ -5117,6 +5325,7 @@ PoderEvasion=200
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=480
 
 [NPC756] 
 Name=Liche
@@ -5145,6 +5354,7 @@ PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC757] 
 Name=Araña del Terror
@@ -5176,6 +5386,7 @@ Snd1=29
 Snd2=34
 Snd3=215
 NROITEMS=0
+Speed=370
 
 [NPC758] 
 Name=Esqueleto
@@ -5204,6 +5415,7 @@ PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC759] 
 Name=Fango
@@ -5232,6 +5444,7 @@ PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=480
 
 [NPC760] 
 Name=Cria de Pinguino
@@ -5261,6 +5474,7 @@ PoderEvasion=120
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC761] 
 Name=Lobo Polar
@@ -5289,6 +5503,7 @@ PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC762] 
 Name=Oso Blanco
@@ -5317,6 +5532,7 @@ PoderEvasion=0
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC763] 
 Name=Djin de Viento
@@ -5345,6 +5561,7 @@ PoderEvasion=180
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC764] 
 Name=Demogorgon
@@ -5373,6 +5590,7 @@ PoderEvasion=0
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC766] 
 Name=Hombre Lobo
@@ -5401,6 +5619,7 @@ PoderEvasion=90
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC767] 
 Name=Javaspi
@@ -5429,6 +5648,7 @@ PoderEvasion=75
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=460
 
 [NPC768] 
 Name=La Parca
@@ -5457,6 +5677,7 @@ PoderEvasion=0
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=480
 
 [NPC769] 
 Name=Licantropo
@@ -5485,6 +5706,7 @@ PoderEvasion=200
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC770] 
 Name=Viuda Negra
@@ -5513,6 +5735,7 @@ PoderEvasion=100
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=480
 
 [NPC771] 
 Name=Gran Arbol Milenario
@@ -5541,6 +5764,7 @@ PoderEvasion=0
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=520
 
 [NPC772] 
 Name=Adorador de Zharkel
@@ -5569,7 +5793,7 @@ PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
-
+Speed=370
 
 ##################
 ####LEVEL 35######
@@ -5602,6 +5826,7 @@ PoderEvasion=100
 Veneno=1
 BackUp=0
 NROITEMS=0
+Speed=500
 
 [NPC801]
 Name=Momia Putrefacta
@@ -5629,6 +5854,7 @@ PoderAtaque=84
 PoderEvasion=30
 BackUp=0
 NROITEMS=0
+Speed=480
 
 [NPC803]
 Name=Akenaton
@@ -5656,6 +5882,7 @@ PoderAtaque=84
 PoderEvasion=30
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC804] 
 Name=Oso Polar
@@ -5685,6 +5912,7 @@ PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC805] 
 Name=Troglodita
@@ -5713,6 +5941,7 @@ PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC806] 
 Name=Pinguino
@@ -5741,6 +5970,7 @@ PoderEvasion=50
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC806] 
 Name=Medusa
@@ -5769,6 +5999,7 @@ PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC807] 
 Name=Medusa Madre
@@ -5797,6 +6028,7 @@ PoderEvasion=180
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC808] 
 Name=Esbirro Excavador
@@ -5825,6 +6057,7 @@ PoderEvasion=130
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC809] 
 Name=Observador de las Profundidades
@@ -5853,6 +6086,7 @@ PoderEvasion=300
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=480
 
 [NPC810] 
 Name=Exclavo Helado
@@ -5881,6 +6115,7 @@ PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC811] 
 Name=Gigante Terrorifico
@@ -5909,6 +6144,7 @@ PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC812] 
 Name=Señor del Terror
@@ -5937,6 +6173,7 @@ PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC813] 
 Name=Ciclope
@@ -5965,6 +6202,7 @@ PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=480
 
 [NPC814] 
 Name=Reptiliano
@@ -5993,6 +6231,7 @@ PoderEvasion=80
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC815] 'WORLDBOSS
 Name=Crolusco 
@@ -6021,6 +6260,7 @@ PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=480
 
 ##################
 ####LEVEL 40######
@@ -6053,6 +6293,7 @@ PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=480
 
 [NPC851] 
 Name=Genio Congelado
@@ -6081,6 +6322,7 @@ PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC852] 
 Name=Kraken
@@ -6110,6 +6352,7 @@ PoderEvasion=140
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=460
 
 [NPC853] 
 Name=Beholder
@@ -6138,6 +6381,7 @@ PoderEvasion=180
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC854] 
 Name=Guerrero Troll
@@ -6166,6 +6410,7 @@ PoderEvasion=130
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=480
 
 [NPC855] 
 Name=Jefe Troll
@@ -6194,6 +6439,7 @@ PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=480
 
 [NPC856] 
 Name=Lanzapiedras Troll
@@ -6222,6 +6468,7 @@ PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=5
 
 [NPC857] 
 Name=Troll Decapitador
@@ -6250,6 +6497,7 @@ PoderEvasion=110
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=480
 
 [NPC858] 
 Name=Troll Guardian
@@ -6278,6 +6526,7 @@ PoderEvasion=180
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=480
 
 [NPC859] 
 Name=Beeholder
@@ -6306,6 +6555,7 @@ PoderEvasion=0
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC860] 
 Name=Demonio
@@ -6334,6 +6584,7 @@ PoderEvasion=200
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC861] 
 Name=Fenrir
@@ -6362,6 +6613,7 @@ PoderEvasion=100
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC862] 
 Name=Tarantula Raider
@@ -6390,6 +6642,7 @@ PoderEvasion=120
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=460
 
 [NPC863] 
 Name=Guardian Raider
@@ -6418,6 +6671,7 @@ PoderEvasion=0
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC864] 
 Name=Guardian Raider
@@ -6446,6 +6700,7 @@ PoderEvasion=0
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC865] 
 Name=Ogro Brujo
@@ -6474,6 +6729,7 @@ PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=480
 
 [NPC866] 
 Name=Ogro Guerrero
@@ -6502,6 +6758,7 @@ PoderEvasion=120
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=460
 
 [NPC867] 
 Name=Cria de Dragon
@@ -6531,6 +6788,7 @@ Nroitems=1
 BackUp=0
 NROITEMS=1
 Obj1=1302-2-80
+Speed=370
 
 [NPC868] 
 Name=Octopus
@@ -6559,6 +6817,7 @@ PoderEvasion=180
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=370
 
 ##################
 ####LEVEL 45######
@@ -6591,6 +6850,7 @@ PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=500
 
 [NPC901] 
 Name=Ettin
@@ -6619,6 +6879,7 @@ PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=500
 
 [NPC902] 
 Name=Araña Matriarch
@@ -6647,6 +6908,7 @@ PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC903] 
 Name=Golem de Hielo
@@ -6675,6 +6937,7 @@ PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=500
 
 [NPC904] 
 Name=Bomba de Lava
@@ -6704,6 +6967,7 @@ PoderEvasion=220
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=500
 
 [NPC905] 
 Name=Protector de Titan
@@ -6732,6 +6996,7 @@ PoderEvasion=110
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=500
 
 [NPC906] 
 Name=Protector de Lava de Titan
@@ -6761,7 +7026,7 @@ PoderEvasion=250
 Nroitems=1
 BackUp=0
 NROITEMS=0
-
+Speed=500
 
 [NPC907] 
 Name=Demonio Guerrero
@@ -6790,6 +7055,7 @@ PoderEvasion=100
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC908] 
 Name=Señor del Hielo
@@ -6818,6 +7084,7 @@ PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=480
 
 ##################
 ####LEVEL 50######
@@ -6850,6 +7117,7 @@ PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=480
 
 [NPC1001] 
 Name=Smaug
@@ -6878,6 +7146,7 @@ PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=500
 
 [NPC1002] 
 Name=Demonio Brujo
@@ -6906,6 +7175,7 @@ PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=370
 
 [NPC1003] 
 Name=Golem de Lava
@@ -6935,6 +7205,7 @@ Nroitems=1
 BackUp=0
 NROITEMS=1
 Obj1=192-50-30
+Speed=500
 
 [NPC1004] 
 Name=Gran Demonio Behemoth
@@ -6963,6 +7234,7 @@ PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=370
 
 ##################
 ####LEVEL 55######
@@ -6995,6 +7267,7 @@ PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
+Speed=500
 
 [NPC1051]
 Name=Titan de Fuego
@@ -7025,6 +7298,7 @@ BackUp=0
 Invocacion=1
 NROITEMS=1
 Obj1=1254-1-100
+Speed=520
 
 [NPC1052]
 Name=Titan de Agua
@@ -7055,6 +7329,7 @@ BackUp=0
 Invocacion=1
 NROITEMS=1
 Obj1=1253-1-100
+Speed=520
 
 [NPC1053]
 Name=Titan de Tierra
@@ -7086,6 +7361,7 @@ NoShadow=1
 Invocacion=1
 NROITEMS=1
 Obj1=1252-1-100
+Speed=520
 
 [NPC1054] 
 Name=Dragon Legendario
@@ -7119,6 +7395,7 @@ Nroitems=1
 BackUp=0
 NROITEMS=1
 Obj1=1302-100-100
+Speed=520
 
 ##############################################
 ##############NPC PRETORIANOS#################
@@ -7158,6 +7435,7 @@ Obj1=646-1
 Obj2=403-1
 AfectaParalisis=1
 BackUp=0
+Speed=370
 
 ############################################
 
@@ -7195,6 +7473,7 @@ Obj1=907-1
 Obj2=403-1
 AfectaParalisis=1
 BackUp=0
+Speed=370
 
 ############################################
 
@@ -7234,6 +7513,7 @@ Obj4=38-300-100  ' Pocion Roja
 Obj5=361-1-100   ' Tormenta de Fuego
 Obj6=697-1-100   ' Anillo Magico
 BackUp=0
+Speed=370
 
 ############################################
 
@@ -7273,6 +7553,7 @@ Obj4=38-300-100  ' Pocion Roja
 Obj5=361-1-100   ' Tormenta de Fuego
 Obj6=697-1-100   ' Anillo Magico
 BackUp=0
+Speed=370
 
 ############################################
 
@@ -7312,6 +7593,7 @@ Obj4=38-300-100  ' Pocion Roja
 Obj5=132-1-100   ' Casco de Hierro
 Obj6=1049-1-100  ' Laud Elfico
 BackUp=0
+Speed=370
 
 ############################################
 
@@ -7351,6 +7633,7 @@ Obj4=38-300-100  ' Pocion Roja
 Obj5=132-1-100   ' Casco de Hierro
 Obj6=1049-1-100  ' Laud Elfico
 BackUp=0
+Speed=370
 
 ############################################
 
@@ -7386,6 +7669,7 @@ Obj3=37-400-100   ' Pocion Azul
 Obj4=660-1-100    ' Baculo Engarzado
 Obj5=662-1-100    ' Sombrero de Mago
 BackUp=0
+Speed=370
 
 ############################################
 
@@ -7421,6 +7705,7 @@ Obj3=37-400-100   ' Pocion Azul
 Obj4=660-1-100    ' Baculo Engarzado
 Obj5=662-1-100    ' Sombrero de Mago
 BackUp=0
+Speed=370
 
 ############################################
 
@@ -7456,6 +7741,7 @@ Obj3=37-400-100   ' Pocion Azul
 Obj4=1050-1-100   ' Flauta Elfica
 Obj5=1004-1-100   ' Casco de Tigre
 BackUp=0
+Speed=370
 
 ############################################
 
@@ -7491,6 +7777,7 @@ Obj3=37-400-100   ' Pocion Azul
 Obj4=1050-1-100   ' Flauta Elfica
 Obj5=1004-1-100   ' Casco de Tigre
 BackUp=0
+Speed=370
 
 ############################################
 
@@ -7528,6 +7815,7 @@ Obj6=128-1-100    ' Escudo de Hierro
 Obj7=36-20-100    ' Pocion Amarilla
 Obj8=39-20-100    ' Pocion Verde
 BackUp=0
+Speed=370
 
 ############################################
  
@@ -7565,6 +7853,7 @@ Obj6=128-1-100    ' Escudo de Hierro
 Obj7=36-20-100    ' Pocion Amarilla
 Obj8=39-20-100    ' Pocion Verde
 BackUp=0
+Speed=370
 
 ############################################
 
@@ -7600,6 +7889,7 @@ Obj4=1010-1-100   ' Sombrero Pirata
 Obj5=36-20-100    ' Pocion Amarilla
 Obj6=39-20-100    ' Pocion Verde
 BackUp=0
+Speed=370
 
 ############################################
 
@@ -7635,6 +7925,7 @@ Obj4=1010-1-100   ' Sombrero Pirata
 Obj5=36-20-100    ' Pocion Amarilla
 Obj6=39-20-100    ' Pocion Verde
 BackUp=0
+Speed=370
 
 ############################################
 
@@ -7671,6 +7962,7 @@ Obj6=36-30-100   ' Pocion Amarilla
 Obj7=39-30-100   ' Pocion Verde
 Obj8=38-300-100  ' Pocion Roja
 BackUp=0
+Speed=370
 
 ############################################
 
@@ -7707,6 +7999,7 @@ Obj6=36-30-100   ' Pocion Amarilla
 Obj7=39-30-100   ' Pocion Verde
 Obj8=38-300-100  ' Pocion Roja
 BackUp=0
+Speed=370
 
 ############################################
 
@@ -7742,6 +8035,7 @@ Obj5=128-1-100   ' Escudo de Hierro
 Obj6=37-450-100  ' Pocion Azul
 Obj7=38-300-100  ' Pocion Roja
 BackUp=0
+Speed=370
 
 ############################################
 
@@ -7777,6 +8071,7 @@ Obj5=128-1-100   ' Escudo de Hierro
 Obj6=37-450-100  ' Pocion Azul
 Obj7=38-300-100  ' Pocion Roja
 BackUp=0
+Speed=370
 
 ############################################
 
@@ -7813,6 +8108,7 @@ Obj6=697-1-100   ' Anillo magico
 Obj7=37-450-100  ' Pocion Azul
 Obj8=38-300-100  ' Pocion Roja
 BackUp=0
+Speed=370
 
 ############################################
 
@@ -7849,6 +8145,7 @@ Obj6=697-1-100   ' Anillo magico
 Obj7=37-450-100  ' Pocion Azul
 Obj8=38-300-100  ' Pocion Roja
 BackUp=0
+Speed=370
 
 ############################################
 
@@ -7885,6 +8182,7 @@ Obj6=873-1-100   ' Guantes de hurto
 Obj7=37-450-100  ' Pocion Azul
 Obj8=38-300-100  ' Pocion Roja
 BackUp=0
+Speed=370
 
 ############################################
 
@@ -7921,6 +8219,7 @@ Obj6=873-1-100   ' Guantes de hurto
 Obj7=37-450-100  ' Pocion Azul
 Obj8=38-300-100  ' Pocion Roja
 BackUp=0
+Speed=370
 
 ############################################
 
@@ -7955,6 +8254,7 @@ Obj1=12-10000-100 ' Oro
 Obj2=873-1-100    ' Guantes de hurto
 Obj3=132-1-100    ' Casco de Hierro
 BackUp=0
+Speed=370
 
 ############################################
 
@@ -7989,6 +8289,7 @@ Obj1=12-10000-100 ' Oro
 Obj2=873-1-100    ' Guantes de hurto
 Obj3=132-1-100    ' Casco de Hierro
 BackUp=0
+Speed=370
 
 ##############################################
 #############RECURSOS NATURALES###############
@@ -8023,6 +8324,7 @@ BackUp=0
 Recurso=17-1
 NROITEMS=1
 Obj1=58-50-100 'Madera
+Speed=370
 
 [NPC1301]
 Name=Arbol
@@ -8053,6 +8355,7 @@ BackUp=0
 Recurso=17-1
 NROITEMS=1
 Obj1=58-50-100 'Madera
+Speed=370
 
 [NPC1302]
 Name=Arbol
@@ -8083,6 +8386,7 @@ BackUp=0
 Recurso=17-1
 NROITEMS=1
 Obj1=58-50-100 'Madera
+Speed=370
 
 [NPC1303]
 Name=Arbol
@@ -8113,6 +8417,7 @@ BackUp=0
 Recurso=17-1
 NROITEMS=1
 Obj1=58-50-100 'Madera
+Speed=370
 
 [NPC1304]
 Name=Arbol
@@ -8143,6 +8448,7 @@ BackUp=0
 Recurso=17-1
 NROITEMS=1
 Obj1=58-50-100 'Madera
+Speed=370
 
 [NPC1305]
 Name=Arbol
@@ -8173,6 +8479,7 @@ BackUp=0
 Recurso=17-1
 NROITEMS=1
 Obj1=58-50-100 'Madera
+Speed=370
 
 [NPC1306]
 Name=Arbol
@@ -8203,6 +8510,7 @@ BackUp=0
 Recurso=17-1
 NROITEMS=1
 Obj1=58-50-100 'Madera
+Speed=370
 
 [NPC1307]
 Name=Arbol Mágico
@@ -8234,6 +8542,7 @@ Recurso=17-1
 NROITEMS=1
 Obj1=58-30-50 'Madera
 Obj2=1005-30-100
+Speed=370
 
 [NPC1308]
 Name=Hongo
@@ -8264,6 +8573,7 @@ BackUp=0
 Recurso=17-1
 NROITEMS=1
 Obj1=1307-2-100 'Hongo
+Speed=370
 
 [NPC1309]
 Name=Hongo
@@ -8294,6 +8604,7 @@ BackUp=0
 Recurso=17-1
 NROITEMS=1
 Obj1=1307-2-100 'Hongo
+Speed=370
 
 [NPC1310]
 Name=Hongo
@@ -8324,6 +8635,7 @@ BackUp=0
 Recurso=17-1
 NROITEMS=1
 Obj1=1307-2-100 'Hongo
+Speed=370
 
 [NPC1311]
 Name=Yacimiento de Duralumin
@@ -8354,6 +8666,7 @@ BackUp=0
 Recurso=19-2
 NROITEMS=1
 Obj1=1309-1-90 'Cristal de Duralunin
+Speed=370
 
 [NPC1312]
 Name=Yacimiento de Duralumin Grande
@@ -8384,3 +8697,4 @@ BackUp=0
 Recurso=19-2
 NROITEMS=1
 Obj1=1309-6-100 'Cristal de Duralunin
+Speed=370

@@ -360,7 +360,8 @@ Private Sub IrUsuarioCercano(ByVal NPCIndex As Integer)
     Dim UserProtected As Boolean
     
     With Npclist(NPCIndex)
-
+        
+        '¿Esta inmovilizado?
         If .flags.Inmovilizado = 1 Then
 
             Select Case .Char.Heading
@@ -408,7 +409,7 @@ Private Sub IrUsuarioCercano(ByVal NPCIndex As Integer)
 
             Next i
             
-            ' No esta inmobilizado
+        ' No esta inmobilizado
         Else
             
             ' Tiene prioridad de seguir al usuario al que le pertenece si esta en el rango de vision
@@ -416,6 +417,7 @@ Private Sub IrUsuarioCercano(ByVal NPCIndex As Integer)
             
             OwnerIndex = .Owner
 
+            '¿Tiene propietario?
             If OwnerIndex > 0 Then
                 
                 ' TODO: Es temporal hatsa reparar un bug que hace que ataquen a usuarios de otros mapas
@@ -471,24 +473,26 @@ Private Sub IrUsuarioCercano(ByVal NPCIndex As Integer)
                 
             End If
             
-            ' No le pertenece a nadie o el dueno no esta en el rango de vision, sigue a cualquiera
+            '¿No tiene propietario? Buscamos al usuario mas cercano
             For i = 1 To Areas.ConnGroups(.Pos.Map).Count()
                 UserIndex = Areas.ConnGroups(.Pos.Map).Item(i)
                 
                 '¿Esta en el rango de vision?
                 If Abs(UserList(UserIndex).Pos.X - .Pos.X) <= RANGO_VISION_NPC_X Then
                     If Abs(UserList(UserIndex).Pos.Y - .Pos.Y) <= RANGO_VISION_NPC_Y Then
-                        
+                      
                         With UserList(UserIndex)
                             
                             UserProtected = Not IntervaloPermiteSerAtacado(UserIndex) And .flags.NoPuedeSerAtacado
                             UserProtected = UserProtected Or .flags.Ignorado Or .flags.EnConsulta
                             
+                            'Si el user no esta muerto, invisible, protegido, etc...
                             If .flags.Muerto = 0 And .flags.invisible = 0 And .flags.Oculto = 0 And .flags.AdminPerseguible And Not UserProtected Then
                                 
                                 If Npclist(NPCIndex).flags.LanzaSpells <> 0 Then Call NpcLanzaUnSpell(NPCIndex, UserIndex)
                                 
                                 If Not Npclist(NPCIndex).PFINFO.PathLenght > 0 Then tHeading = FindDirection(Npclist(NPCIndex).Pos, .Pos)
+                                
                                 If tHeading = 0 Then
                                     Call PathFindingAI(NPCIndex)
                                     If Not ReCalculatePath(NPCIndex) Then
@@ -1159,91 +1163,96 @@ Sub NPCAI(ByVal NPCIndex As Integer)
             'Call HostilBuenoAI(NpcIndex)
         End If
         
-        '<<<<<<<<<<<Movimiento>>>>>>>>>>>>>>>>
-        Select Case .Movement
-
-            Case TipoAI.MueveAlAzar
-
-                If .flags.Inmovilizado = 1 Then Exit Sub
-                If .NPCtype = eNPCType.GuardiaReal Then
-                    If RandomNumber(1, 12) = 3 Then
-                        Call MoveNPCChar(NPCIndex, CByte(RandomNumber(eHeading.SOUTH, eHeading.EAST)))
-
-                    End If
-                    
-                    Call PersigueCriminal(NPCIndex)
-                    
-                ElseIf .NPCtype = eNPCType.Guardiascaos Then
-
-                    If RandomNumber(1, 12) = 3 Then
-                        Call MoveNPCChar(NPCIndex, CByte(RandomNumber(eHeading.SOUTH, eHeading.EAST)))
-
-                    End If
-                    
-                    Call PersigueCiudadano(NPCIndex)
-                    
-                Else
-
-                    If RandomNumber(1, 12) = 3 Then
-                        Call MoveNPCChar(NPCIndex, CByte(RandomNumber(eHeading.SOUTH, eHeading.EAST)))
-
-                    End If
-
-                End If
-            
-                'Va hacia el usuario cercano
-            Case TipoAI.NpcMaloAtacaUsersBuenos
-                Call IrUsuarioCercano(NPCIndex)
-            
-                'Va hacia el usuario que lo ataco(FOLLOW)
-            Case TipoAI.NPCDEFENSA
-                Call SeguirAgresor(NPCIndex)
-            
-                'Persigue criminales
-            Case TipoAI.GuardiasAtacanCriminales
-                Call PersigueCriminal(NPCIndex)
-            
-            Case TipoAI.SigueAmo
-
-                If .flags.Inmovilizado = 1 Then Exit Sub
-                Call SeguirAmo(NPCIndex)
-
-                If RandomNumber(1, 12) = 3 Then
-                    Call MoveNPCChar(NPCIndex, CByte(RandomNumber(eHeading.SOUTH, eHeading.EAST)))
-
-                End If
-            
-            Case TipoAI.NpcAtacaNpc
-                Call AiNpcAtacaNpc(NPCIndex)
-                
-            Case TipoAI.NpcObjeto
-                Call AiNpcObjeto(NPCIndex)
-                
-            Case TipoAI.NpcPathfinding
-
-                If .flags.Inmovilizado = 1 Then Exit Sub
-                If ReCalculatePath(NPCIndex) Then
-                    Call PathFindingAI(NPCIndex)
-
-                    'Existe el camino?
-                    If .PFINFO.NoPath Then 'Si no existe nos movemos al azar
-                        'Move randomly
-                        Call MoveNPCChar(NPCIndex, RandomNumber(eHeading.SOUTH, eHeading.EAST))
-
-                    End If
-
-                Else
-
-                    If Not PathEnd(NPCIndex) Then
-                        Call FollowPath(NPCIndex)
+        'Cada NPC tiene su propia velocidad
+        If IntervaloNpcVelocidadVariable(NPCIndex) Then
+        
+            '<<<<<<<<<<<Movimiento>>>>>>>>>>>>>>>>
+            Select Case .Movement
+    
+                Case TipoAI.MueveAlAzar
+    
+                    If .flags.Inmovilizado = 1 Then Exit Sub
+                    If .NPCtype = eNPCType.GuardiaReal Then
+                        If RandomNumber(1, 12) = 3 Then
+                            Call MoveNPCChar(NPCIndex, CByte(RandomNumber(eHeading.SOUTH, eHeading.EAST)))
+    
+                        End If
+                        
+                        Call PersigueCriminal(NPCIndex)
+                        
+                    ElseIf .NPCtype = eNPCType.Guardiascaos Then
+    
+                        If RandomNumber(1, 12) = 3 Then
+                            Call MoveNPCChar(NPCIndex, CByte(RandomNumber(eHeading.SOUTH, eHeading.EAST)))
+    
+                        End If
+                        
+                        Call PersigueCiudadano(NPCIndex)
+                        
                     Else
-                        .PFINFO.PathLenght = 0
-
+    
+                        If RandomNumber(1, 12) = 3 Then
+                            Call MoveNPCChar(NPCIndex, CByte(RandomNumber(eHeading.SOUTH, eHeading.EAST)))
+    
+                        End If
+    
                     End If
-
-                End If
-
-        End Select
+                
+                    'Va hacia el usuario cercano
+                Case TipoAI.NpcMaloAtacaUsersBuenos
+                    Call IrUsuarioCercano(NPCIndex)
+                
+                    'Va hacia el usuario que lo ataco(FOLLOW)
+                Case TipoAI.NPCDEFENSA
+                    Call SeguirAgresor(NPCIndex)
+                
+                    'Persigue criminales
+                Case TipoAI.GuardiasAtacanCriminales
+                    Call PersigueCriminal(NPCIndex)
+                
+                Case TipoAI.SigueAmo
+    
+                    If .flags.Inmovilizado = 1 Then Exit Sub
+                    Call SeguirAmo(NPCIndex)
+    
+                    If RandomNumber(1, 12) = 3 Then
+                        Call MoveNPCChar(NPCIndex, CByte(RandomNumber(eHeading.SOUTH, eHeading.EAST)))
+    
+                    End If
+                
+                Case TipoAI.NpcAtacaNpc
+                    Call AiNpcAtacaNpc(NPCIndex)
+                    
+                Case TipoAI.NpcObjeto
+                    Call AiNpcObjeto(NPCIndex)
+                    
+                Case TipoAI.NpcPathfinding
+    
+                    If .flags.Inmovilizado = 1 Then Exit Sub
+                    If ReCalculatePath(NPCIndex) Then
+                        Call PathFindingAI(NPCIndex)
+    
+                        'Existe el camino?
+                        If .PFINFO.NoPath Then 'Si no existe nos movemos al azar
+                            'Move randomly
+                            Call MoveNPCChar(NPCIndex, RandomNumber(eHeading.SOUTH, eHeading.EAST))
+    
+                        End If
+    
+                    Else
+    
+                        If Not PathEnd(NPCIndex) Then
+                            Call FollowPath(NPCIndex)
+                        Else
+                            .PFINFO.PathLenght = 0
+    
+                        End If
+    
+                    End If
+    
+            End Select
+        
+        End If
 
     End With
 
@@ -1348,7 +1357,7 @@ Function PathFindingAI(ByVal NPCIndex As Integer) As Boolean
         For Y = .Pos.Y - 10 To .Pos.Y + 10    'Makes a loop that looks at
             For X = .Pos.X - 10 To .Pos.X + 10   '5 tiles in every direction
                 
-                'Make sure tile is legal
+                'Makñe sure tile is legal
                 If X > MinXBorder And X < MaxXBorder And Y > MinYBorder And Y < MaxYBorder Then
                     
                     'look for a user
@@ -1362,6 +1371,7 @@ Function PathFindingAI(ByVal NPCIndex As Integer) As Boolean
                         With UserList(tmpUserIndex)
 
                             If .flags.Muerto = 0 And .flags.invisible = 0 And .flags.Oculto = 0 And .flags.AdminPerseguible Then
+                            
                                 'We have to invert the coordinates, this is because
                                 'ORE refers to maps in converse way of my pathfinding
                                 'routines.

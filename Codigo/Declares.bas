@@ -567,9 +567,9 @@ Public Const vlProleta     As Integer = 2
 
 '%%%%%%%% CONSTANTES DE VELOCIDADES %%%%%%%%%%%%%
 
-Public Const SPEED_NORMAL As Double = 0.018
+Public Const SPEED_NORMAL As Double = 1.8
 
-Public Const SPEED_MUERTO As Double = 0.02
+Public Const SPEED_MUERTO As Double = 2
 
 '%%%%%%%%%% CONSTANTES DE INDICES %%%%%%%%%%%%%%%
 Public Const iCuerpoMuerto As Integer = 8
@@ -1801,6 +1801,7 @@ Public Type NpcCounters
     Paralisis As Integer
     TiempoExistencia As Long
     Ataque As Long
+    VelocidadVariable As Long
 
 End Type
 
@@ -1954,6 +1955,8 @@ Public Type NPC
     
     NoShadow As Byte
     Instruye As Byte 'Instruye un profesion
+    
+    SpeedVar As Long
 
 End Type
 

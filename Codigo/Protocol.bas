@@ -2251,10 +2251,9 @@ Private Sub HandleWalk(ByVal UserIndex As Integer)
         End If
 
         Dim TiempoDeWalk As Byte
-        TiempoDeWalk = Round(.flags.Velocidad * 1700) 'No es muy preciso, pero podria servir por ahora
         
         'Prevent SpeedHack
-        If .flags.TimesWalk >= 40 + (.flags.Velocidad * 2) Then
+        If .flags.TimesWalk >= 31 + (.flags.Velocidad * 2) Then
             TempTick = GetTickCount And &H7FFFFFFF
             dummy = getInterval(TempTick, .flags.StartWalk) ' 0.13.5
             
@@ -10922,10 +10921,10 @@ Private Sub HandleEditChar(ByVal UserIndex As Integer)
                         
                         Dim Speed As Double
                         
-                        If val(Arg1) > 500 Then _
-                            Arg1 = 500
+                        If val(Arg1) > 50 Then _
+                            Arg1 = 50
                             
-                        Speed = val(Arg1) / 10000
+                        Speed = val(Arg1)
                         
                         UserList(tUser).flags.Velocidad = Speed
                         Call WriteSetSpeed(tUser)
@@ -23115,10 +23114,18 @@ Public Sub WriteSetSpeed(ByVal UserIndex As Integer)
 'Last Modification: 23/10/11
 'Writes the "EquitandoToggle" message to the given user's outgoing data buffer
 '***************************************************
+
 On Error GoTo errHandler
+
+    Dim Client_Speed As Double
+
     With UserList(UserIndex)
         Call .outgoingData.WriteByte(ServerPacketID.SetSpeed)
-        Call .outgoingData.WriteDouble(.flags.Velocidad)
+        
+        'Transformamos a valores que maneja el cliente
+        Client_Speed = .flags.Velocidad / 100
+        
+        Call .outgoingData.WriteDouble(Client_Speed)
         
     End With
 

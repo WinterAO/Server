@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{48E59290-9880-11CF-9754-00AA00C00908}#1.0#0"; "MSINET.ocx"
+Object = "{48E59290-9880-11CF-9754-00AA00C00908}#1.0#0"; "MSINET.OCX"
 Begin VB.Form frmMain 
    BackColor       =   &H00000000&
    BorderStyle     =   3  'Fixed Dialog
@@ -246,7 +246,7 @@ Begin VB.Form frmMain
          Top             =   1440
       End
       Begin VB.Timer TIMER_AI 
-         Interval        =   380
+         Interval        =   1
          Left            =   1680
          Top             =   1440
       End

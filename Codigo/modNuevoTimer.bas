@@ -35,6 +35,36 @@ Option Explicit
 ' timer para que no se pueda hacer la accion hasta el nuevo ciclo.
 '
 
+Public Function IntervaloNpcVelocidadVariable(ByVal NPCIndex As Integer, _
+                                          Optional ByVal Actualizar As Boolean = True) As Boolean
+    '***************************************************
+    'Author: Lorwik
+    'Last Modification: 24/10/2020
+    ' Verificamos si la criatura puede comenzar a perseguir
+    '***************************************************
+
+    Dim TActual As Long
+
+    TActual = GetTickCount() And &H7FFFFFFF
+
+    With Npclist(NPCIndex)
+
+        If TActual - .Contadores.VelocidadVariable >= .SpeedVar Then
+            If Actualizar Then
+                .Contadores.VelocidadVariable = TActual
+
+            End If
+
+            IntervaloNpcVelocidadVariable = True
+        Else
+            IntervaloNpcVelocidadVariable = False
+
+        End If
+
+    End With
+
+End Function
+
 Public Function IntervaloPermiteAtacarNpc(ByVal NPCIndex As Integer, _
                                           Optional ByVal Actualizar As Boolean = True) As Boolean
     '***************************************************
@@ -49,7 +79,7 @@ Public Function IntervaloPermiteAtacarNpc(ByVal NPCIndex As Integer, _
 
     With Npclist(NPCIndex)
 
-        If TActual - .Contadores.Ataque >= 3000 Then
+        If TActual - .Contadores.Ataque >= IntervaloNPCPuedeAtacar Then
             If Actualizar Then
                 .Contadores.Ataque = TActual
 
