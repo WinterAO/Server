@@ -35,6 +35,36 @@ Option Explicit
 ' timer para que no se pueda hacer la accion hasta el nuevo ciclo.
 '
 
+Public Function IntervaloPermiteChatGlobal(ByVal UserIndex As Integer, _
+                                          Optional ByVal Actualizar As Boolean = True) As Boolean
+    '***************************************************
+    'Author: Lorwik
+    'Last Modification: 25/10/2020
+    ' Verificamos si ya puede volver hablar por global
+    '***************************************************
+
+    Dim TActual As Long
+
+    TActual = GetTickCount() And &H7FFFFFFF
+
+    With UserList(UserIndex)
+
+        If TActual - .Counters.LastGlobalMsg >= INTERVALO_GLOBAL Then
+            If Actualizar Then
+                .Counters.LastGlobalMsg = TActual
+
+            End If
+
+            IntervaloPermiteChatGlobal = True
+        Else
+            IntervaloPermiteChatGlobal = False
+
+        End If
+
+    End With
+
+End Function
+
 Public Function IntervaloNpcVelocidadVariable(ByVal NPCIndex As Integer, _
                                           Optional ByVal Actualizar As Boolean = True) As Boolean
     '***************************************************

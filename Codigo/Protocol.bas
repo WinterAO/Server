@@ -23265,16 +23265,17 @@ On Error GoTo errHandler
             '¿El usuario esta silenciado?
             If UserList(UserIndex).flags.Global = 0 Then
                 Call WriteConsoleMsg(UserIndex, "No puedes hablar por el chat global por que has sido silenciado.", FontTypeNames.FONTTYPE_INFO)
-                
-            'Si no pasaron 10 segundos desde el último mensaje global enviado por el usuario
-            ElseIf (timeGetTime - .Counters.LastGlobalMsg) > INTERVALO_GLOBAL Then
-                .Counters.LastGlobalMsg = timeGetTime
-                Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(.Name & "> " & Message, FontTypeNames.FONTTYPE_TALK))
-                Call LogGlobal(.Name & "> " & Message)
-
             Else
-                Call WriteConsoleMsg(UserIndex, "Debes esperar al menos " & INTERVALO_GLOBAL / 100 & " segundos entre cada mensaje.", FontTypeNames.FONTTYPE_INFO)
                 
+                'Si no pasaron 5 segundos desde el último mensaje global enviado por el usuario
+                If IntervaloPermiteChatGlobal(UserIndex) Then
+                    Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(.Name & "> " & Message, FontTypeNames.FONTTYPE_TALK))
+                    Call LogGlobal(.Name & "> " & Message)
+    
+                Else
+                    Call WriteConsoleMsg(UserIndex, "Debes esperar al menos " & INTERVALO_GLOBAL / 1000 & " segundos entre cada mensaje.", FontTypeNames.FONTTYPE_INFO)
+                    
+                End If
             End If
             
         Else
