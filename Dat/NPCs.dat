@@ -3596,7 +3596,7 @@ NROITEMS=0
 Speed=370
 
 [NPC604]
-Name=Esclavo Contrabandista
+Name=Contrabandista
 NpcType=0
 Head=201
 Heading=1
@@ -3715,7 +3715,7 @@ Obj2=12-80-50 'Oro
 Obj3=12-150-50 'Oro
 Obj4=37-50-50 'Pocion Azul
 Obj5=12-5000-80 'Oro
-Speed=370
+Speed=460
 
 [NPC608] 'Dungeon Newbie
 Name=Orco

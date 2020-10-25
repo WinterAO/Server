@@ -1265,6 +1265,21 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
         End If
         
         Call WriteSetSpeed(UserIndex)
+        
+        'Actualizamos los seguros
+        If .flags.ModoCombate Then
+            Call WriteMultiMessage(UserIndex, eMessages.CombatSafeOn)
+        Else
+            Call WriteMultiMessage(UserIndex, eMessages.CombatSafeOff)
+
+        End If
+
+        If .flags.Seguro Then
+            Call WriteMultiMessage(UserIndex, eMessages.SafeModeOff)
+        Else
+            Call WriteMultiMessage(UserIndex, eMessages.SafeModeOn)
+
+        End If
     
         'Info
         Call WriteUserIndexInServer(UserIndex) 'Enviamos el User index

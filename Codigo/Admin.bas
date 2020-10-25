@@ -349,8 +349,8 @@ Public Sub UnBan(ByVal Name As String)
     Call UnBanDatabase(Name)
 
     'Remove it from the banned people database
-    Call WriteVar(App.Path & "\logs\" & "BanDetail.dat", Name, "BannedBy", "NOBODY")
-    Call WriteVar(App.Path & "\logs\" & "BanDetail.dat", Name, "Reason", "NO REASON")
+    Call WriteVar(App.Path & "\Dat\" & "BanDetail.dat", Name, "BannedBy", "NOBODY")
+    Call WriteVar(App.Path & "\Dat\" & "BanDetail.dat", Name, "Reason", "NO REASON")
 
 End Sub
 

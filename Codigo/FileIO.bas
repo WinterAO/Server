@@ -2147,8 +2147,8 @@ Sub Ban(ByVal BannedName As String, ByVal Baneador As String, ByVal Motivo As St
     '
     '***************************************************
 
-    Call WriteVar(App.Path & "\logs\" & "BanDetail.dat", BannedName, "BannedBy", Baneador)
-    Call WriteVar(App.Path & "\logs\" & "BanDetail.dat", BannedName, "Reason", Motivo)
+    Call WriteVar(App.Path & "\Dat\" & "BanDetail.dat", BannedName, "BannedBy", Baneador)
+    Call WriteVar(App.Path & "\Dat\" & "BanDetail.dat", BannedName, "Reason", Motivo)
     
     'Log interno del servidor, lo usa para hacer un UNBAN general de toda la gente banned
     Dim mifile As Integer
