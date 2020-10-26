@@ -214,71 +214,99 @@ Public Sub DoNavega(ByVal UserIndex As Integer, _
         
         ' No estaba navegando
         If .flags.Navegando = 0 Then
-            .Invent.BarcoObjIndex = .Invent.Object(Slot).ObjIndex
-            .Invent.BarcoSlot = Slot
             
-            .Char.Head = 0
-            
-            ' No esta muerto
-            If .flags.Muerto = 0 Then
-                Call ToggleBoatBody(UserIndex)
-                Call SetVisibleStateForUserAfterNavigateOrEquitate(UserIndex)
-                
-            ' Esta muerto
-            Else
-                .Char.body = iFragataFantasmal
-                .Char.ShieldAnim = NingunEscudo
-                .Char.WeaponAnim = NingunArma
-                .Char.CascoAnim = NingunCasco
-                .Char.AuraAnim = NingunAura
-                .Char.AuraColor = NingunAura
-                
-            End If
-            
-            ' Comienza a navegar
-            .flags.Navegando = 1
+            Call ComenzaraNavegar(UserIndex, Slot)
         
         ' Estaba navegando
         Else
-            .Invent.BarcoObjIndex = 0
-            .Invent.BarcoSlot = 0
         
-            ' No esta muerto
-            If .flags.Muerto = 0 Then
-                .Char.Head = .OrigChar.Head
-                
-                Call SetEquipmentOnCharAfterNavigateOrEquitate(UserIndex)
-                
-                ' Al dejar de navegar, si estaba invisible actualizo los clientes
-                If .flags.invisible = 1 Then
-                    Call SetInvisible(UserIndex, .Char.CharIndex, True)
-                End If
-                
-            ' Esta muerto
-            Else
-                .Char.body = iCuerpoMuerto
-                .Char.Head = iCabezaMuerto
-                .Char.ShieldAnim = NingunEscudo
-                .Char.WeaponAnim = NingunArma
-                .Char.CascoAnim = NingunCasco
-                .Char.AuraAnim = NingunAura
-                .Char.AuraColor = NingunAura
-
-            End If
-            
-            ' Termina de navegar
-            .flags.Navegando = 0
+            Call DejardeNavegar(UserIndex)
 
         End If
-        
-        ' Actualizo clientes
-        Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.Heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
 
     End With
     
-    Call WriteNavigateToggle(UserIndex)
+End Sub
+
+Public Sub ComenzaraNavegar(ByVal UserIndex As Integer, ByVal Slot As Integer)
+
+    With UserList(UserIndex)
+    
+        .Invent.BarcoObjIndex = .Invent.Object(Slot).ObjIndex
+        .Invent.BarcoSlot = Slot
+            
+        .Char.Head = 0
+            
+        ' No esta muerto
+        If .flags.Muerto = 0 Then
+            Call ToggleBoatBody(UserIndex)
+            Call SetVisibleStateForUserAfterNavigateOrEquitate(UserIndex)
+                
+        ' Esta muerto
+        Else
+            .Char.body = iFragataFantasmal
+            .Char.ShieldAnim = NingunEscudo
+            .Char.WeaponAnim = NingunArma
+            .Char.CascoAnim = NingunCasco
+            .Char.AuraAnim = NingunAura
+            .Char.AuraColor = NingunAura
+                
+        End If
+            
+        ' Comienza a navegar
+        .flags.Navegando = 1
+        
+        ' Actualizo clientes
+        Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.Heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
+    
+        Call WriteNavigateToggle(UserIndex)
+    
+    End With
 
 End Sub
+
+Public Sub DejardeNavegar(ByVal UserIndex As Integer)
+
+    With UserList(UserIndex)
+    
+        .Invent.BarcoObjIndex = 0
+        .Invent.BarcoSlot = 0
+    
+        ' No esta muerto
+        If .flags.Muerto = 0 Then
+            .Char.Head = .OrigChar.Head
+                
+            Call SetEquipmentOnCharAfterNavigateOrEquitate(UserIndex)
+                
+            ' Al dejar de navegar, si estaba invisible actualizo los clientes
+            If .flags.invisible = 1 Then
+                Call SetInvisible(UserIndex, .Char.CharIndex, True)
+            End If
+                
+        ' Esta muerto
+        Else
+            .Char.body = iCuerpoMuerto
+            .Char.Head = iCabezaMuerto
+            .Char.ShieldAnim = NingunEscudo
+            .Char.WeaponAnim = NingunArma
+            .Char.CascoAnim = NingunCasco
+            .Char.AuraAnim = NingunAura
+            .Char.AuraColor = NingunAura
+
+        End If
+            
+        ' Termina de navegar
+        .flags.Navegando = 0
+        
+        ' Actualizo clientes
+        Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.Heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
+    
+        Call WriteNavigateToggle(UserIndex)
+    
+    End With
+End Sub
+
+
 
 Public Sub FundirMineral(ByVal UserIndex As Integer)
     '***************************************************

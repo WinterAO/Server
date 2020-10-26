@@ -271,17 +271,32 @@ Public Sub Encarcelar(ByVal UserIndex As Integer, _
     'Shak: Agregamos el array.
     'Recox: Arreglado problema de tiempo en carcel
     '***************************************************
-
-    UserList(UserIndex).Counters.Pena = Minutos * 60
     
-    Call WarpUserChar(UserIndex, Prision.Map, Prision.X, Prision.Y, True)
+    With UserList(UserIndex)
     
-    If LenB(GmName) = 0 Then
-        Call WriteConsoleMsg(UserIndex, "Has sido encarcelado, deberas permanecer en la carcel " & Minutos & " minutos.", FontTypeNames.FONTTYPE_INFO)
-    Else
-        Call WriteConsoleMsg(UserIndex, GmName & " te ha encarcelado, deberas permanecer en la carcel " & Minutos & " minutos.", FontTypeNames.FONTTYPE_INFO)
-
-    End If
+        'Si esta navegando, lo bajamos de la barca
+        If .flags.Navegando = 1 Then
+            Call DejardeNavegar(UserIndex)
+        End If
+        
+        'Si esta equitando, lo bajamos de la montura
+        If .flags.Equitando = 1 Then
+            Call UnmountMontura(UserIndex)
+            Call WriteEquitandoToggle(UserIndex)
+        End If
+    
+        .Counters.Pena = Minutos * 60
+        
+        Call WarpUserChar(UserIndex, Prision.Map, Prision.X, Prision.Y, True)
+        
+        If LenB(GmName) = 0 Then
+            Call WriteConsoleMsg(UserIndex, "Has sido encarcelado, deberas permanecer en la carcel " & Minutos & " minutos.", FontTypeNames.FONTTYPE_INFO)
+        Else
+            Call WriteConsoleMsg(UserIndex, GmName & " te ha encarcelado, deberas permanecer en la carcel " & Minutos & " minutos.", FontTypeNames.FONTTYPE_INFO)
+    
+        End If
+    
+    End With
 
 End Sub
 

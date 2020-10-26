@@ -2197,10 +2197,7 @@ Sub WarpUserChar(ByVal UserIndex As Integer, _
             Else
 
                 If .flags.Navegando = 1 Then
-                    .flags.Navegando = 0
-                            
-                    'Tell the client that we are navigating.
-                    Call WriteNavigateToggle(UserIndex)
+                    Call DejardeNavegar(UserIndex)
 
                 End If
 
