@@ -3,6 +3,8 @@ Option Explicit
 
 Public prgRun As Boolean
 
+Private Const INTERVALO_AI_GENERAL As Long = 350
+
 Public Sub Auditoria()
 
     On Error GoTo errhand
@@ -60,8 +62,14 @@ Public Sub TIMER_AI()
     Dim Mapa     As Integer
     Dim e_p      As Integer
     
+    Static Contador As Long
+    
     'Barrin 29/9/03
     If Not haciendoBK And Not EnPausa Then
+    
+        'Contador de intervalo general (no afecta al movimiento)
+        If Contador >= INTERVALO_AI_GENERAL Then Contador = 0
+        Contador = Contador + 1
 
         'Update NPCs
         For NPCIndex = 1 To LastNPC
@@ -71,20 +79,22 @@ Public Sub TIMER_AI()
                 If .flags.NPCActive Then 'Nos aseguramos que sea INTELIGENTE!
                 
                     ' Chequea si contiua teniendo dueno
-                    If .Owner > 0 Then Call ValidarPermanenciaNpc(NPCIndex)
+                    If .Owner > 0 Then
+                        If Contador >= INTERVALO_AI_GENERAL Then Call ValidarPermanenciaNpc(NPCIndex)
+                    End If
                 
                     If .flags.Paralizado = 1 Then
-                        Call EfectoParalisisNpc(NPCIndex)
+                        If Contador >= INTERVALO_AI_GENERAL Then Call EfectoParalisisNpc(NPCIndex)
                     Else
 
                         ' Preto? Tienen ai especial
                         If .NPCtype = eNPCType.Pretoriano Then
-                            Call ClanPretoriano(.ClanIndex).PerformPretorianAI(NPCIndex)
+                            If Contador >= INTERVALO_AI_GENERAL Then Call ClanPretoriano(.ClanIndex).PerformPretorianAI(NPCIndex)
                         Else
 
                             'Usamos AI si hay algun user en el mapa
                             If .flags.Inmovilizado = 1 Then
-                                Call EfectoParalisisNpc(NPCIndex)
+                                If Contador >= INTERVALO_AI_GENERAL Then Call EfectoParalisisNpc(NPCIndex)
 
                             End If
                             

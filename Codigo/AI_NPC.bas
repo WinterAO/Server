@@ -198,73 +198,70 @@ Private Sub HostilMalvadoAI(ByVal NPCIndex As Integer)
         For headingloop = eHeading.SOUTH To eHeading.EAST
             nPos = .Pos
 
-            If .flags.Inmovilizado = 0 Or .Char.Heading = headingloop Then
-                Call HeadtoPos(headingloop, nPos)
+            Call HeadtoPos(headingloop, nPos)
 
-                If InMapBounds(nPos.Map, nPos.X, nPos.Y) Then
-                    UI = MapData(nPos.Map, nPos.X, nPos.Y).UserIndex
-                    NPCI = MapData(nPos.Map, nPos.X, nPos.Y).NPCIndex
+            If InMapBounds(nPos.Map, nPos.X, nPos.Y) Then
+                UI = MapData(nPos.Map, nPos.X, nPos.Y).UserIndex
+                NPCI = MapData(nPos.Map, nPos.X, nPos.Y).NPCIndex
 
-                    If UI > 0 And Not atacoPJ Then
-                        UserProtected = Not IntervaloPermiteSerAtacado(UI) And UserList(UI).flags.NoPuedeSerAtacado
-                        UserProtected = UserProtected Or UserList(UI).flags.Ignorado Or UserList(UI).flags.EnConsulta
+                If UI > 0 And Not atacoPJ Then
+                    UserProtected = Not IntervaloPermiteSerAtacado(UI) And UserList(UI).flags.NoPuedeSerAtacado
+                    UserProtected = UserProtected Or UserList(UI).flags.Ignorado Or UserList(UI).flags.EnConsulta
                         
-                        If UserList(UI).flags.Muerto = 0 And UserList(UI).flags.AdminPerseguible And (Not UserProtected) Then
+                    If UserList(UI).flags.Muerto = 0 And UserList(UI).flags.AdminPerseguible And (Not UserProtected) Then
                             
-                            atacoPJ = True
+                        atacoPJ = True
 
-                            If .Movement = NpcObjeto Then
+                        If .Movement = NpcObjeto Then
 
-                                ' Los npc objeto no atacan siempre al mismo usuario
-                                If RandomNumber(1, 3) = 3 Then atacoPJ = False
+                            ' Los npc objeto no atacan siempre al mismo usuario
+                            If RandomNumber(1, 3) = 3 Then atacoPJ = False
 
-                            End If
+                        End If
                             
-                            If atacoPJ Then
-                                If .flags.LanzaSpells Then
-                                    If .flags.AtacaDoble Then
-                                        If (RandomNumber(0, 1)) Then
-                                            If NpcAtacaUser(NPCIndex, UI) Then
-                                                Call ChangeNPCChar(NPCIndex, .Char.body, .Char.Head, headingloop)
-
-                                            End If
-
-                                            Exit Sub
+                        If atacoPJ Then
+                            If .flags.LanzaSpells Then
+                                If .flags.AtacaDoble Then
+                                    If (RandomNumber(0, 1)) Then
+                                        If NpcAtacaUser(NPCIndex, UI) Then
+                                            Call ChangeNPCChar(NPCIndex, .Char.body, .Char.Head, headingloop)
 
                                         End If
 
+                                        Exit Sub
+
                                     End If
-                                    
-                                    Call ChangeNPCChar(NPCIndex, .Char.body, .Char.Head, headingloop)
-                                    Call NpcLanzaUnSpell(NPCIndex, UI)
 
                                 End If
-
-                            End If
-
-                            If NpcAtacaUser(NPCIndex, UI) Then
+                                    
                                 Call ChangeNPCChar(NPCIndex, .Char.body, .Char.Head, headingloop)
+                                Call NpcLanzaUnSpell(NPCIndex, UI)
 
                             End If
 
-                            Exit Sub
-
                         End If
 
-                    ElseIf NPCI > 0 Then
-
-                        If Npclist(NPCI).MaestroUser > 0 And Npclist(NPCI).flags.Paralizado = 0 Then
+                        If NpcAtacaUser(NPCIndex, UI) Then
                             Call ChangeNPCChar(NPCIndex, .Char.body, .Char.Head, headingloop)
-                            Call SistemaCombate.NpcAtacaNpc(NPCIndex, NPCI, False)
-                            Exit Sub
 
                         End If
+
+                        Exit Sub
+
+                    End If
+
+                ElseIf NPCI > 0 Then
+
+                    If Npclist(NPCI).MaestroUser > 0 And Npclist(NPCI).flags.Paralizado = 0 Then
+                        Call ChangeNPCChar(NPCIndex, .Char.body, .Char.Head, headingloop)
+                        Call SistemaCombate.NpcAtacaNpc(NPCIndex, NPCI, False)
+                        Exit Sub
 
                     End If
 
                 End If
 
-            End If  'inmo
+                End If
 
         Next headingloop
 
