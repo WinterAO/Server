@@ -8271,6 +8271,7 @@ ObjType=30
 Agarrable=0
 Valor=0
 Crucial=0
+newbie=1
 
 [OBJ667]
 Name=Cota de Mallas (E/G)
@@ -15742,6 +15743,7 @@ ObjType=30
 Agarrable=0
 Valor=0
 Crucial=0
+newbie=1
 
 [OBJ1250]
 Name=Fragmento de arma
@@ -15750,6 +15752,7 @@ ObjType=30
 Agarrable=0
 Valor=0
 Crucial=0
+newbie=1
 
 [OBJ1251]
 Name=Amuleto de la hermandad
