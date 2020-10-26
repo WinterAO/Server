@@ -2565,6 +2565,7 @@ Speed=370
 
 [NPC458] 'npc centinela
 Name=Centinela
+Desc=Soy el centinela, guardian de los recursos naturales de este mundo.
 NpcType=0
 Head=0
 Heading=3

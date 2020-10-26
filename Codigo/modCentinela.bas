@@ -7,21 +7,21 @@ Option Explicit
  
 Public isCentinelaActivated As Boolean          'Esta activado?
  
-Const NUM_CENTINELAS   As Byte = 5         'Cantidad de centinelas.
+Const NUM_CENTINELAS        As Byte = 5         'Cantidad de centinelas.
 
-Const NUM_NPC          As Integer = 458     'NpcNum del centinela.
+Public Const NUM_CENTI      As Integer = 458     'NpcNum del centinela.
  
-Const MAPA_EXPLOTAR    As Integer = 15     'Numero de mapa en la qe se pinchan usuarios.
+Const MAPA_EXPLOTAR         As Integer = 15     'Numero de mapa en la qe se pinchan usuarios.
 
-Const X_EXPLOTAR       As Byte = 50        'X
+Const X_EXPLOTAR            As Byte = 50        'X
 
-Const Y_EXPLOTAR       As Byte = 50        'Y
+Const Y_EXPLOTAR            As Byte = 50        'Y
  
-Const LIMITE_TIEMPO    As Long = 120000    'Tiempo limite (milisegundos), 2 minutos.
+Const LIMITE_TIEMPO         As Long = 120000    'Tiempo limite (milisegundos), 2 minutos.
 
-Const CARCEL_TIEMPO    As Byte = 5         'Minutos en la carcel
+Const CARCEL_TIEMPO         As Byte = 5         'Minutos en la carcel
 
-Const REVISION_TIEMPO  As Long = 1800000   'Tiempo de cada revision (milisegundos) 1.800.000 = 30 minutos (60 segundos * 30 minutos) * 1000 milisegundos
+Const REVISION_TIEMPO       As Long = 1800000   'Tiempo de cada revision (milisegundos) 1.800.000 = 30 minutos (60 segundos * 30 minutos) * 1000 milisegundos
  
 Type Centinelas
 
@@ -72,7 +72,7 @@ Sub EnviarAUsuario(ByVal UserIndex As Integer, ByVal CIndex As Byte)
         .CodigoCheck = GenerarClave
      
         'Spawnea.
-        .MiNpcIndex = SpawnNpc(NUM_NPC, DarPosicion(UserIndex), True, False)
+        .MiNpcIndex = SpawnNpc(NUM_CENTI, DarPosicion(UserIndex), True, False)
      
         'Setea el flag.
         .Invocado = (.MiNpcIndex <> 0)
@@ -144,13 +144,13 @@ Sub AvisarUsuario(ByVal userSlot As Integer, _
             'Paso la mitad de tiempo?
             If (GetTickCount() - .TiempoInicio) > (LIMITE_TIEMPO / 2) Then
                 'Prepara el paquete a enviar.
-                DataSend = PrepareMessageChatOverHead("CONTROL DE MACRO INASISTIDO, Debes escribir /CENTINELA " & .CodigoCheck & " En menos de 2 minutos.", Npclist(.MiNpcIndex).Char.CharIndex, vbYellow)
+                DataSend = PrepareMessageChatOverHead("Hola, soy el centinela, guardian de los recursos naturales de estas tierras. Debes escribir /CENTINELA " & .CodigoCheck & " En menos de 2 minuto o seras sancionado.", Npclist(.MiNpcIndex).Char.CharIndex, vbYellow)
             Else
-                DataSend = PrepareMessageChatOverHead("CONTROL DE MACRO INASISTIDO, Tienes menos de un minuto para escribir /CENTINELA " & .CodigoCheck & ".", Npclist(.MiNpcIndex).Char.CharIndex, vbYellow)
+                DataSend = PrepareMessageChatOverHead("Sigo esperando, tienes menos de un minuto para escribir /CENTINELA " & .CodigoCheck & ".", Npclist(.MiNpcIndex).Char.CharIndex, vbYellow)
             End If
 
         Else
-            DataSend = PrepareMessageChatOverHead("CONTROL DE MACRO INASISTIDO, El codigo ingresado NO es correcto, debes escribir : /CENTINELA " & .CodigoCheck & ".", Npclist(.MiNpcIndex).Char.CharIndex, vbYellow)
+            DataSend = PrepareMessageChatOverHead("El codigo ingresado NO es correcto, debes escribir : /CENTINELA " & .CodigoCheck & ".", Npclist(.MiNpcIndex).Char.CharIndex, vbYellow)
 
         End If
      

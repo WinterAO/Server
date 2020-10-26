@@ -13,7 +13,7 @@ Public Sub Auditoria()
 
     centinelSecs = centinelSecs + 1
 
-    If centinelSecs = 5 Then
+    If centinelSecs = 30 Then
         'Every 5 seconds, we try to call the player's attention so it will report the code.
         Call modCentinela.AvisarUsuarios
     
