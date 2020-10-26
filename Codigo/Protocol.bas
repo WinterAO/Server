@@ -362,6 +362,7 @@ Public Enum FontTypeNames
     FONTTYPE_DIOS
     FONTTYPE_CRIMINAL
     FONTTYPE_EXP
+    FONTTYPE_PRIVADO
     
 End Enum
 
@@ -2125,19 +2126,6 @@ Private Sub HandleWhisper(ByVal UserIndex As Integer)
                     
                     ' No puede
                     Call WriteConsoleMsg(UserIndex, "No puedes susurrarle a los Administradores.", FontTypeNames.FONTTYPE_INFO)
-                
-                    ' En rango? (Los dioses pueden susurrar a distancia)
-                ElseIf Not EstaPCarea(UserIndex, TargetUserIndex) And (UserPriv And (PlayerType.Dios Or PlayerType.Admin)) = 0 Then
-                    
-                    ' No se puede susurrar a admins fuera de su rango
-                    If (TargetPriv And (PlayerType.User)) = 0 And (UserPriv And (PlayerType.Dios Or PlayerType.Admin)) = 0 Then
-                        Call WriteConsoleMsg(UserIndex, "No puedes susurrarle a los Administradores.", FontTypeNames.FONTTYPE_INFO)
-                    
-                        ' Whisperer admin? (Else say nothing)
-                    ElseIf (UserPriv And (PlayerType.Dios Or PlayerType.Admin)) <> 0 Then
-                        Call WriteConsoleMsg(UserIndex, "Estas muy lejos del usuario.", FontTypeNames.FONTTYPE_INFO)
-
-                    End If
 
                 Else
 
@@ -2156,30 +2144,22 @@ Private Sub HandleWhisper(ByVal UserIndex As Integer)
                         Call Statistics.ParseChat(Chat)
                         
                         ' Dios susurrando a distancia
-                        If Not EstaPCarea(UserIndex, TargetUserIndex) And (UserPriv And (PlayerType.Dios Or PlayerType.Admin)) <> 0 Then
+                        If Not EstaPCarea(UserIndex, TargetUserIndex) Then
                             
-                            Call WriteConsoleMsg(UserIndex, "Susurraste> " & Chat, FontTypeNames.FONTTYPE_GM)
-                            Call WriteConsoleMsg(TargetUserIndex, "Gm susurra> " & Chat, FontTypeNames.FONTTYPE_GM)
+                            Call WriteConsoleMsg(UserIndex, UserList(UserIndex).Name & "> " & Chat, FontTypeNames.FONTTYPE_PRIVADO)
+                            Call WriteConsoleMsg(TargetUserIndex, UserList(UserIndex).Name & "> " & Chat, FontTypeNames.FONTTYPE_PRIVADO)
                             
                         ElseIf Not (.flags.AdminInvisible = 1) Then
-                            Call WriteChatOverHead(UserIndex, Chat, .Char.CharIndex, vbBlue)
-                            Call WriteChatOverHead(TargetUserIndex, Chat, .Char.CharIndex, vbBlue)
-                            
-                            '[CDT 17-02-2004]
-                            If .flags.Privilegios And (PlayerType.User Or PlayerType.Consejero) Then
-                                Call SendData(SendTarget.ToAdminsAreaButConsejeros, UserIndex, PrepareMessageChatOverHead("A " & UserList(TargetUserIndex).Name & "> " & Chat, .Char.CharIndex, vbYellow))
-
-                            End If
+                            Call WriteChatOverHead(UserIndex, Chat, .Char.CharIndex, &HC000&, True)
+                            Call WriteChatOverHead(TargetUserIndex, Chat, .Char.CharIndex, &HC000&, True)
+                            Call WriteConsoleMsg(UserIndex, UserList(UserIndex).Name & "> " & Chat, FontTypeNames.FONTTYPE_PRIVADO)
+                            Call WriteConsoleMsg(TargetUserIndex, UserList(UserIndex).Name & "> " & Chat, FontTypeNames.FONTTYPE_PRIVADO)
 
                         Else
-                            Call WriteConsoleMsg(UserIndex, "Susurraste> " & Chat, FontTypeNames.FONTTYPE_GM)
+                            Call WriteConsoleMsg(UserIndex, UserList(UserIndex).Name & "> " & Chat, FontTypeNames.FONTTYPE_PRIVADO)
 
-                            If UserIndex <> TargetUserIndex Then Call WriteConsoleMsg(TargetUserIndex, "Gm susurra> " & Chat, FontTypeNames.FONTTYPE_GM)
+                            If UserIndex <> TargetUserIndex Then Call WriteConsoleMsg(TargetUserIndex, UserList(TargetUserIndex).Name & "> " & Chat, FontTypeNames.FONTTYPE_PRIVADO)
                             
-                            If .flags.Privilegios And (PlayerType.User Or PlayerType.Consejero) Then
-                                Call SendData(SendTarget.ToAdminsAreaButConsejeros, UserIndex, PrepareMessageConsoleMsg("Gm dijo a " & UserList(TargetUserIndex).Name & "> " & Chat, FontTypeNames.FONTTYPE_GM))
-
-                            End If
 
                         End If
 
@@ -17975,7 +17955,8 @@ End Sub
 Public Sub WriteChatOverHead(ByVal UserIndex As Integer, _
                              ByVal Chat As String, _
                              ByVal CharIndex As Integer, _
-                             ByVal color As Long)
+                             ByVal color As Long, _
+                             Optional ByVal NoConsole As Boolean = False)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -17984,7 +17965,7 @@ Public Sub WriteChatOverHead(ByVal UserIndex As Integer, _
     '***************************************************
     On Error GoTo errHandler
 
-    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageChatOverHead(Chat, CharIndex, color))
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageChatOverHead(Chat, CharIndex, color, NoConsole))
     Exit Sub
 
 errHandler:
@@ -20945,7 +20926,7 @@ End Function
 Public Function PrepareMessageChatOverHead(ByVal Chat As String, _
                                            ByVal CharIndex As Integer, _
                                            ByVal color As Long, _
-                                           Optional ByVal Spell As Boolean = False) As String
+                                           Optional ByVal NoConsole As Boolean = False) As String
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -20956,7 +20937,7 @@ Public Function PrepareMessageChatOverHead(ByVal Chat As String, _
         Call .WriteByte(ServerPacketID.ChatOverHead)
         Call .WriteASCIIString(Chat)
         Call .WriteInteger(CharIndex)
-        Call .WriteBoolean(Spell)
+        Call .WriteBoolean(NoConsole)
         
         ' Write rgb channels and save one byte from long :D
         Call .WriteByte(color And &HFF)
