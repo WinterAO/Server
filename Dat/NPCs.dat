@@ -261,6 +261,21 @@ BackUp=0
 QuestNumber=3
 Speed=370
 
+[NPC8] 
+Name=Entrenador
+NpcType=0
+Desc=Bienvenido a la Isla Newbie. En este lugar protegido podras preparate para salir al mundo exterior en busca de aventuras. Mis amigos te daran misiones que te ayudaran a entrenar, equiparte y conseguir algo de oro. Buena suerte!
+Head=549
+Heading=1
+Body=162
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=0
+
 ##############################################################
 ################ NPCS VENDEDORES DE RAMX #####################
 ##############################################################

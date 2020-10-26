@@ -2190,6 +2190,8 @@ Public Prision         As WorldPos
 
 Public Libertad        As WorldPos
 
+Public IslaNew         As WorldPos
+
 Public Ayuda           As cCola
 
 Public Denuncias       As cCola

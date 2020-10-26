@@ -380,7 +380,6 @@ Sub ConnectNewUser(ByVal UserIndex As Integer, _
         
         'Capitalizamos el nombre
         Name = StrConv(Name, vbProperCase)
-        Debug.Print Name
         
         If UserList(UserIndex).flags.UserLogged Then
             Call LogCheating("El usuario " & UserList(UserIndex).Name & " ha intentado crear a " & Name & " desde la IP " & UserList(UserIndex).IP)
@@ -453,6 +452,9 @@ Sub ConnectNewUser(ByVal UserIndex As Integer, _
     
         .OrigChar = .Char
         
+        'Comenzara en la isla Newbie
+        .Pos = IslaNew
+            
         'De primeras podra hablar por global
         .flags.Global = 1
         .Counters.LastGlobalMsg = INTERVALO_GLOBAL
@@ -466,7 +468,7 @@ Sub ConnectNewUser(ByVal UserIndex As Integer, _
 
     'Valores Default de facciones al Activar nuevo usuario
     Call ResetFacciones(UserIndex)
-
+    
     Call SaveUser(UserIndex)
   
     'Open User
@@ -1123,7 +1125,7 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
 
         Mapa = .Pos.Map
     
-        'Posicion de comienzo
+        '¿Mapa invalido? Lo llevamos a Ramx
         If Mapa = 0 Then
 
             'Dejo esto comentado aqui por si se quiere utilizar la ciudad elegida desde el menu
@@ -1135,7 +1137,6 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
         Else
     
             If Not MapaValido(Mapa) Then
-            Debug.Print Mapa
                 Call WriteErrorMsg(UserIndex, "El PJ se encuenta en un mapa invalido.")
                 Call CloseUser(UserIndex)
                 Exit Sub

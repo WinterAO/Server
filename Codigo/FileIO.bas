@@ -1932,6 +1932,12 @@ Sub CargarCiudades()
             .X = Lector.GetValue("Prision-Afuera", "X")
             .Y = Lector.GetValue("Prision-Afuera", "Y")
         End With
+        
+        With IslaNew
+            .Map = Lector.GetValue("IslaNew", "Mapa")
+            .X = Lector.GetValue("IslaNew", "X")
+            .Y = Lector.GetValue("IslaNew", "Y")
+        End With
 
     Set Lector = Nothing
     
