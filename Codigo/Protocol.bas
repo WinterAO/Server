@@ -3533,6 +3533,11 @@ Private Sub HandleWorkLeftClick(ByVal UserIndex As Integer)
                                 Exit Sub
                             End If
                             
+                            If .flags.Navegando = 0 Then
+                                Call WriteConsoleMsg(UserIndex, "Para pescar necesitas estar en una barca.", FontTypeNames.FONTTYPE_INFO)
+                                Exit Sub
+                            End If
+                                              
                             .flags.MacroTrabajo = eMacroTrabajo.PescarRed
    
                         Case Else
