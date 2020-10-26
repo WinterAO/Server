@@ -172,6 +172,7 @@ Private Enum ServerPacketID
     CharParticle
     IniciarSubastaConsulta
     ConfirmarInstruccion
+    SetSpeed
 End Enum
 
 Private Enum ClientPacketID
@@ -185,7 +186,7 @@ Private Enum ClientPacketID
     Attack                          'AT
     PickUp                          'AG
     SafeToggle                      '/SEG & SEG  (SEG's behaviour has to be coded in the client)
-    ResuscitationSafeToggle
+    CombatSafeToggle
     RequestGuildLeaderInfo          'GLINFO
     RequestAtributes                'ATR
     RequestFame                     'FAMA
@@ -276,7 +277,6 @@ Private Enum ClientPacketID
     CouncilMessage                '/BMSG
     RoleMasterRequest             '/ROL
     GMRequest                     '/GM
-    bugReport                     '/_BUG
     ChangeDescription             '/DESC
     GuildVote                     '/VOTO
     punishments                   '/PENAS
@@ -361,7 +361,9 @@ Public Enum FontTypeNames
     FONTTYPE_CONSE
     FONTTYPE_DIOS
     FONTTYPE_CRIMINAL
-
+    FONTTYPE_EXP
+    FONTTYPE_PRIVADO
+    
 End Enum
 
 Public Enum eEditOptions
@@ -383,6 +385,7 @@ Public Enum eEditOptions
     eo_addGold
     eo_Vida
     eo_Poss
+    eo_Speed
 
 End Enum
 
@@ -500,8 +503,8 @@ Public Function HandleIncomingData(ByVal UserIndex As Integer) As Boolean
         Case ClientPacketID.SafeToggle              '/SEG & SEG  (SEG's behaviour has to be coded in the client)
             Call HandleSafeToggle(UserIndex)
         
-        Case ClientPacketID.ResuscitationSafeToggle
-            Call HandleResuscitationToggle(UserIndex)
+        Case ClientPacketID.CombatSafeToggle
+            Call HandleCombatToggle(UserIndex)
         
         Case ClientPacketID.RequestGuildLeaderInfo  'GLINFO
             Call HandleRequestGuildLeaderInfo(UserIndex)
@@ -773,9 +776,6 @@ Public Function HandleIncomingData(ByVal UserIndex As Integer) As Boolean
         Case ClientPacketID.GMRequest               '/GM
             Call HandleGMRequest(UserIndex)
         
-        Case ClientPacketID.bugReport               '/_BUG
-            Call HandleBugReport(UserIndex)
-        
         Case ClientPacketID.ChangeDescription       '/DESC
             Call HandleChangeDescription(UserIndex)
         
@@ -983,7 +983,7 @@ Public Sub WriteMultiMessage(ByVal UserIndex As Integer, _
         
         Select Case MessageIndex
 
-            Case eMessages.NPCSwing, eMessages.NPCKillUser, eMessages.BlockedWithShieldUser, eMessages.BlockedWithShieldother, eMessages.UserSwing, eMessages.SafeModeOn, eMessages.SafeModeOff, eMessages.ResuscitationSafeOff, eMessages.ResuscitationSafeOn, eMessages.NobilityLost, eMessages.CantUseWhileMeditating, eMessages.FinishHome
+            Case eMessages.NPCSwing, eMessages.NPCKillUser, eMessages.BlockedWithShieldUser, eMessages.BlockedWithShieldother, eMessages.UserSwing, eMessages.SafeModeOn, eMessages.SafeModeOff, eMessages.CombatSafeOff, eMessages.CombatSafeOn, eMessages.NobilityLost, eMessages.CantUseWhileMeditating, eMessages.FinishHome
             
             Case eMessages.NPCHitUser
                 Call .WriteByte(Arg1) 'Target
@@ -2126,19 +2126,6 @@ Private Sub HandleWhisper(ByVal UserIndex As Integer)
                     
                     ' No puede
                     Call WriteConsoleMsg(UserIndex, "No puedes susurrarle a los Administradores.", FontTypeNames.FONTTYPE_INFO)
-                
-                    ' En rango? (Los dioses pueden susurrar a distancia)
-                ElseIf Not EstaPCarea(UserIndex, TargetUserIndex) And (UserPriv And (PlayerType.Dios Or PlayerType.Admin)) = 0 Then
-                    
-                    ' No se puede susurrar a admins fuera de su rango
-                    If (TargetPriv And (PlayerType.User)) = 0 And (UserPriv And (PlayerType.Dios Or PlayerType.Admin)) = 0 Then
-                        Call WriteConsoleMsg(UserIndex, "No puedes susurrarle a los Administradores.", FontTypeNames.FONTTYPE_INFO)
-                    
-                        ' Whisperer admin? (Else say nothing)
-                    ElseIf (UserPriv And (PlayerType.Dios Or PlayerType.Admin)) <> 0 Then
-                        Call WriteConsoleMsg(UserIndex, "Estas muy lejos del usuario.", FontTypeNames.FONTTYPE_INFO)
-
-                    End If
 
                 Else
 
@@ -2157,30 +2144,22 @@ Private Sub HandleWhisper(ByVal UserIndex As Integer)
                         Call Statistics.ParseChat(Chat)
                         
                         ' Dios susurrando a distancia
-                        If Not EstaPCarea(UserIndex, TargetUserIndex) And (UserPriv And (PlayerType.Dios Or PlayerType.Admin)) <> 0 Then
+                        If Not EstaPCarea(UserIndex, TargetUserIndex) Then
                             
-                            Call WriteConsoleMsg(UserIndex, "Susurraste> " & Chat, FontTypeNames.FONTTYPE_GM)
-                            Call WriteConsoleMsg(TargetUserIndex, "Gm susurra> " & Chat, FontTypeNames.FONTTYPE_GM)
+                            Call WriteConsoleMsg(UserIndex, UserList(UserIndex).Name & "> " & Chat, FontTypeNames.FONTTYPE_PRIVADO)
+                            Call WriteConsoleMsg(TargetUserIndex, UserList(UserIndex).Name & "> " & Chat, FontTypeNames.FONTTYPE_PRIVADO)
                             
                         ElseIf Not (.flags.AdminInvisible = 1) Then
-                            Call WriteChatOverHead(UserIndex, Chat, .Char.CharIndex, vbBlue)
-                            Call WriteChatOverHead(TargetUserIndex, Chat, .Char.CharIndex, vbBlue)
-                            
-                            '[CDT 17-02-2004]
-                            If .flags.Privilegios And (PlayerType.User Or PlayerType.Consejero) Then
-                                Call SendData(SendTarget.ToAdminsAreaButConsejeros, UserIndex, PrepareMessageChatOverHead("A " & UserList(TargetUserIndex).Name & "> " & Chat, .Char.CharIndex, vbYellow))
-
-                            End If
+                            Call WriteChatOverHead(UserIndex, Chat, .Char.CharIndex, &HC000&, True)
+                            Call WriteChatOverHead(TargetUserIndex, Chat, .Char.CharIndex, &HC000&, True)
+                            Call WriteConsoleMsg(UserIndex, UserList(UserIndex).Name & "> " & Chat, FontTypeNames.FONTTYPE_PRIVADO)
+                            Call WriteConsoleMsg(TargetUserIndex, UserList(UserIndex).Name & "> " & Chat, FontTypeNames.FONTTYPE_PRIVADO)
 
                         Else
-                            Call WriteConsoleMsg(UserIndex, "Susurraste> " & Chat, FontTypeNames.FONTTYPE_GM)
+                            Call WriteConsoleMsg(UserIndex, UserList(UserIndex).Name & "> " & Chat, FontTypeNames.FONTTYPE_PRIVADO)
 
-                            If UserIndex <> TargetUserIndex Then Call WriteConsoleMsg(TargetUserIndex, "Gm susurra> " & Chat, FontTypeNames.FONTTYPE_GM)
+                            If UserIndex <> TargetUserIndex Then Call WriteConsoleMsg(TargetUserIndex, UserList(TargetUserIndex).Name & "> " & Chat, FontTypeNames.FONTTYPE_PRIVADO)
                             
-                            If .flags.Privilegios And (PlayerType.User Or PlayerType.Consejero) Then
-                                Call SendData(SendTarget.ToAdminsAreaButConsejeros, UserIndex, PrepareMessageConsoleMsg("Gm dijo a " & UserList(TargetUserIndex).Name & "> " & Chat, FontTypeNames.FONTTYPE_GM))
-
-                            End If
 
                         End If
 
@@ -2249,43 +2228,33 @@ Private Sub HandleWalk(ByVal UserIndex As Integer)
         End If
 
         Dim TiempoDeWalk As Byte
-        If .flags.Equitando = 1 Then
-            TiempoDeWalk = 36
-        Else
-            TiempoDeWalk = 30
-        End If
         
         'Prevent SpeedHack
-        If .flags.TimesWalk >= TiempoDeWalk Then
+        If .flags.TimesWalk >= 31 + (.flags.Velocidad * 2) Then
             TempTick = GetTickCount And &H7FFFFFFF
-            dummy = (TempTick - .flags.StartWalk)
+            dummy = getInterval(TempTick, .flags.StartWalk) ' 0.13.5
             
             ' 5800 is actually less than what would be needed in perfect conditions to take 30 steps
             '(it's about 193 ms per step against the over 200 needed in perfect conditions)
             If dummy < 5800 Then
-                If TempTick - .flags.CountSH > 30000 Then
+                If getInterval(TempTick, .flags.CountSH) > 30000 Then ' 0.13.5
                     .flags.CountSH = 0
-
                 End If
-                
+        
                 If Not .flags.CountSH = 0 Then
                     If dummy <> 0 Then dummy = 126000 \ dummy
-                    
-                    Call LogHackAttemp("Tramposo SH: " & .Name & " , " & dummy)
-                    Call SendData(SendTarget.ToAdmins, 0, PrepareMessageConsoleMsg("Servidor> " & .Name & " ha sido echado por el servidor por posible uso de SH.", FontTypeNames.FONTTYPE_SERVER))
-                    Call CloseUser(UserIndex)
-                    
+         
+                    Call LogHackAttemp("SpeedHack: " & .Name & " , " & dummy)
+                    Call SendData(SendTarget.ToAdmins, 0, PrepareMessageConsoleMsg("Servidor> " & .Name & " ha sido echado por el servidor por posible uso de SpeedHack.", FontTypeNames.FONTTYPE_SERVER))
+                    Call CloseSocket(UserIndex)
+         
                     Exit Sub
                 Else
                     .flags.CountSH = TempTick
-
                 End If
-
             End If
-
             .flags.StartWalk = TempTick
             .flags.TimesWalk = 0
-
         End If
         
         .flags.TimesWalk = .flags.TimesWalk + 1
@@ -2549,25 +2518,25 @@ Private Sub HandleSafeToggle(ByVal UserIndex As Integer)
 End Sub
 
 ''
-' Handles the "ResuscitationSafeToggle" message.
+' Handles the "CombatSafeToggle" message.
 '
 ' @param    userIndex The index of the user sending the message.
 
-Private Sub HandleResuscitationToggle(ByVal UserIndex As Integer)
+Private Sub HandleCombatToggle(ByVal UserIndex As Integer)
 
     '***************************************************
-    'Author: Rapsodius
-    'Creation Date: 10/10/07
+    'Author: Lorwik
+    'Creation Date: 23/10/2020
     '***************************************************
     With UserList(UserIndex)
         Call .incomingData.ReadByte
         
-        .flags.SeguroResu = Not .flags.SeguroResu
+        .flags.ModoCombate = Not .flags.ModoCombate
         
-        If .flags.SeguroResu Then
-            Call WriteMultiMessage(UserIndex, eMessages.ResuscitationSafeOn) 'Call WriteResuscitationSafeOn(UserIndex)
+        If .flags.ModoCombate Then
+            Call WriteMultiMessage(UserIndex, eMessages.CombatSafeOn) 'Call WriteCombatSafeOn(UserIndex)
         Else
-            Call WriteMultiMessage(UserIndex, eMessages.ResuscitationSafeOff) 'Call WriteResuscitationSafeOff(UserIndex)
+            Call WriteMultiMessage(UserIndex, eMessages.CombatSafeOff) 'Call WriteCombatSafeOff(UserIndex)
 
         End If
 
@@ -3544,6 +3513,11 @@ Private Sub HandleWorkLeftClick(ByVal UserIndex As Integer)
                                 Exit Sub
                             End If
                             
+                            If .flags.Navegando = 0 Then
+                                Call WriteConsoleMsg(UserIndex, "Para pescar necesitas estar en una barca.", FontTypeNames.FONTTYPE_INFO)
+                                Exit Sub
+                            End If
+                                              
                             .flags.MacroTrabajo = eMacroTrabajo.PescarRed
    
                         Case Else
@@ -7596,93 +7570,81 @@ End Sub
 ' @param    userIndex The index of the user sending the message.
 
 Private Sub HandleGMRequest(ByVal UserIndex As Integer)
+'***************************************************
+'Author: Juan Martín Sotuyo Dodero (Maraxus)
+'Last Modification: 05/17/06
+'
+'***************************************************
+    Dim Tipo As Byte
+    Dim Message As String
+    'Bug y Sugerencias
+    Dim cant As Integer
+    Dim Motivo As Integer
+    Dim Nuevo As String
+    Dim Mensaje As String
+    Dim FileDir As String
 
-    '***************************************************
-    'Author: Juan Martin Sotuyo Dodero (Maraxus)
-    'Last Modification: 05/17/06
-    '
-    '***************************************************
     With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
         
-        If Not Ayuda.Existe(.Name) Then
-            Call WriteConsoleMsg(UserIndex, "El mensaje ha sido entregado, ahora solo debes esperar que se desocupe algun GM.", FontTypeNames.FONTTYPE_INFO)
-            Call Ayuda.Push(.Name)
-        Else
-            Call Ayuda.Quitar(.Name)
-            Call Ayuda.Push(.Name)
-            Call WriteConsoleMsg(UserIndex, "Ya habias mandado un mensaje, tu mensaje ha sido movido al final de la cola de mensajes.", FontTypeNames.FONTTYPE_INFO)
-        End If
+        Tipo = .incomingData.ReadByte
+        Message = .incomingData.ReadASCIIString()
+        
+        'Ruta donde se guardan los reportes
+        FileDir = App.Path & "\REPORTES\"
+        
+        'Si es una Consulta:
+        Select Case Tipo
+        
+        Case 0 'Consultas
+        
+            If Not Ayuda.Existe(.Name) Then
+                Call WriteConsoleMsg(UserIndex, "El mensaje ha sido entregado, ahora sólo debes esperar que se desocupe algún GM.", FontTypeNames.FONTTYPE_INFO)
+                Call Ayuda.Push(.Name & ";" & Message)
+                Exit Sub
+            Else
+                Call Ayuda.Quitar(.Name)
+                Call Ayuda.Push(.Name & ";" & Message)
+                Call WriteConsoleMsg(UserIndex, "Ya habías mandado un mensaje, tu mensaje ha sido movido al final de la cola de mensajes.", FontTypeNames.FONTTYPE_INFO)
+                Exit Sub
+            End If
+            
+        Case 1 'Reporte de bugs
+            
+            If FileExist(FileDir, vbDirectory) = False Then _
+                MkDir FileDir
+            
+            cant = GetVar(FileDir & "Bugs.INI", "BUGS", "CANTIDAD")
+            Motivo = val(cant) + 1
+            Nuevo = "Bug" & Motivo
+            Mensaje = Date & " " & time & " - " & UserList(UserIndex).Name & " Reporto el siguiente Bug: " & Message & " - IP: " & UserList(UserIndex).IP
 
-        Call SendData(SendTarget.ToAdmins, 0, PrepareMessageConsoleMsg(.Name + " ha solicitado la ayuda de algun GM con /GM. Podes usar el comando /SHOW SOS para ver quienes necesitan ayuda", FontTypeNames.FONTTYPE_INFO))
+            Call WriteVar(FileDir & "Bugs.INI", "Bugs", "Cantidad", Motivo)
+            Call WriteVar(FileDir & "Bugs.INI", "Reportes", Nuevo, Mensaje)
+            
+            Call WriteConsoleMsg(UserIndex, "El Bug ha sido reportado exitosamente! Gracias por colaborar con WinterAO.", FONTTYPE_GUILD)
+            Call WriteConsoleMsg(SendTarget.ToAdmins, Mensaje, FONTTYPE_TALK)
+            
+        Case 2 'Sugerencia
+            
+            If FileExist(FileDir, vbDirectory) = False Then _
+                MkDir FileDir
+        
+            cant = GetVar(FileDir & "Sugerencias.ini", "SUGERENCIAS", "CANTIDAD")
+            Motivo = val(cant) + 1
+            Nuevo = "Sugerencia" & Motivo
+            Mensaje = Date & " " & time & " - " & UserList(UserIndex).Name & " Reporto la siguiente sugerencia: " & Message & " - IP: " & UserList(UserIndex).IP
+
+            Call WriteVar(FileDir & "Sugerencias.ini", "SUGERENCIAS", "Cantidad", Motivo)
+            Call WriteVar(FileDir & "Sugerencias.ini", "Reportes", Nuevo, Mensaje)
+            
+            Call WriteConsoleMsg(UserIndex, "La sugerencia ha sido guardada! Gracias por colaboar con WinterAO.", FONTTYPE_GUILD)
+            Call WriteConsoleMsg(SendTarget.ToAdmins, Mensaje, FONTTYPE_TALK)
+            
+        End Select
+        
     End With
-
-End Sub
-
-''
-' Handles the "BugReport" message.
-'
-' @param    userIndex The index of the user sending the message.
-
-Private Sub HandleBugReport(ByVal UserIndex As Integer)
-
-    '***************************************************
-    'Author: Juan Martin Sotuyo Dodero (Maraxus)
-    'Last Modification: 05/17/06
-    '
-    '***************************************************
-    If UserList(UserIndex).incomingData.Length < 3 Then
-        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
-        Exit Sub
-
-    End If
-    
-    On Error GoTo errHandler
-
-    With UserList(UserIndex)
-
-        'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
-        Dim buffer As clsByteQueue
-        Set buffer = New clsByteQueue
-
-        Dim n As Integer
-        
-        Call buffer.CopyBuffer(.incomingData)
-        
-        'Remove packet ID
-        Call buffer.ReadByte
-        
-        Dim bugReport As String
-        
-        bugReport = buffer.ReadASCIIString()
-        
-        n = FreeFile
-        Open App.Path & "\LOGS\BUGs.log" For Append Shared As n
-        Print #n, "Usuario:" & .Name & "  Fecha:" & Date & "    Hora:" & time
-        Print #n, "BUG:"
-        Print #n, bugReport
-        Print #n, "########################################################################"
-        Close #n
-        
-        'If we got here then packet is complete, copy data back to original queue
-        Call .incomingData.CopyBuffer(buffer)
-
-    End With
-    
-errHandler:
-
-    Dim Error As Long
-
-    Error = Err.Number
-
-    On Error GoTo 0
-    
-    'Destroy auxiliar buffer
-    Set buffer = Nothing
-    
-    If Error <> 0 Then Err.Raise Error
-
 End Sub
 
 ''
@@ -10816,9 +10778,6 @@ Private Sub HandleEditChar(ByVal UserIndex As Integer)
                         If tUser <= 0 Then
                             Call WriteConsoleMsg(UserIndex, "El usuario esta offline o no existe.", FontTypeNames.FONTTYPE_INFO)
                             Call LogGM(.Name, "Intento editar un usuario inexistente u offline.")
-                        Else
-                            UserList(tUser).Stats.Banco = IIf(UserList(tUser).Stats.Banco + val(Arg1) <= 0, 0, UserList(tUser).Stats.Banco + val(Arg1))
-                            Call WriteConsoleMsg(tUser, STANDARD_BOUNTY_HUNTER_MESSAGE, FONTTYPE_TALK)
 
                         End If
 
@@ -10874,6 +10833,18 @@ Private Sub HandleEditChar(ByVal UserIndex As Integer)
                         
                     ' Log it
                     CommandString = CommandString & "POSS "
+                    
+                    Case eEditOptions.eo_Speed
+                        
+                        Dim Speed As Double
+                        
+                        If val(Arg1) > 50 Then _
+                            Arg1 = 50
+                            
+                        Speed = val(Arg1)
+                        
+                        UserList(tUser).flags.Velocidad = Speed
+                        Call WriteSetSpeed(tUser)
                         
                 Case Else
                     Call WriteConsoleMsg(UserIndex, "Comando no permitido.", FontTypeNames.FONTTYPE_INFO)
@@ -17984,7 +17955,8 @@ End Sub
 Public Sub WriteChatOverHead(ByVal UserIndex As Integer, _
                              ByVal Chat As String, _
                              ByVal CharIndex As Integer, _
-                             ByVal color As Long)
+                             ByVal color As Long, _
+                             Optional ByVal NoConsole As Boolean = False)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -17993,7 +17965,7 @@ Public Sub WriteChatOverHead(ByVal UserIndex As Integer, _
     '***************************************************
     On Error GoTo errHandler
 
-    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageChatOverHead(Chat, CharIndex, color))
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageChatOverHead(Chat, CharIndex, color, NoConsole))
     Exit Sub
 
 errHandler:
@@ -20953,7 +20925,8 @@ End Function
 
 Public Function PrepareMessageChatOverHead(ByVal Chat As String, _
                                            ByVal CharIndex As Integer, _
-                                           ByVal color As Long) As String
+                                           ByVal color As Long, _
+                                           Optional ByVal NoConsole As Boolean = False) As String
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -20964,6 +20937,7 @@ Public Function PrepareMessageChatOverHead(ByVal Chat As String, _
         Call .WriteByte(ServerPacketID.ChatOverHead)
         Call .WriteASCIIString(Chat)
         Call .WriteInteger(CharIndex)
+        Call .WriteBoolean(NoConsole)
         
         ' Write rgb channels and save one byte from long :D
         Call .WriteByte(color And &HFF)
@@ -23052,6 +23026,36 @@ errHandler:
     End If
 End Sub
 
+Public Sub WriteSetSpeed(ByVal UserIndex As Integer)
+'***************************************************
+'Author: Lorwik
+'Last Modification: 23/10/11
+'Writes the "EquitandoToggle" message to the given user's outgoing data buffer
+'***************************************************
+
+On Error GoTo errHandler
+
+    Dim Client_Speed As Double
+
+    With UserList(UserIndex)
+        Call .outgoingData.WriteByte(ServerPacketID.SetSpeed)
+        
+        'Transformamos a valores que maneja el cliente
+        Client_Speed = .flags.Velocidad / 100
+        
+        Call .outgoingData.WriteDouble(Client_Speed)
+        
+    End With
+
+    Exit Sub
+
+errHandler:
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
+        Resume
+    End If
+End Sub
+
 ''
 ' Handles the "CraftsmanCreate" message.
 '
@@ -23178,16 +23182,17 @@ On Error GoTo errHandler
             '¿El usuario esta silenciado?
             If UserList(UserIndex).flags.Global = 0 Then
                 Call WriteConsoleMsg(UserIndex, "No puedes hablar por el chat global por que has sido silenciado.", FontTypeNames.FONTTYPE_INFO)
-                
-            'Si no pasaron 10 segundos desde el último mensaje global enviado por el usuario
-            ElseIf (timeGetTime - .Counters.LastGlobalMsg) > INTERVALO_GLOBAL Then
-                .Counters.LastGlobalMsg = timeGetTime
-                Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(.Name & "> " & Message, FontTypeNames.FONTTYPE_TALK))
-                Call LogGlobal(.Name & "> " & Message)
-
             Else
-                Call WriteConsoleMsg(UserIndex, "Debes esperar al menos " & INTERVALO_GLOBAL / 100 & " segundos entre cada mensaje.", FontTypeNames.FONTTYPE_INFO)
                 
+                'Si no pasaron 5 segundos desde el último mensaje global enviado por el usuario
+                If IntervaloPermiteChatGlobal(UserIndex) Then
+                    Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(.Name & "> " & Message, FontTypeNames.FONTTYPE_TALK))
+                    Call LogGlobal(.Name & "> " & Message)
+    
+                Else
+                    Call WriteConsoleMsg(UserIndex, "Debes esperar al menos " & INTERVALO_GLOBAL / 1000 & " segundos entre cada mensaje.", FontTypeNames.FONTTYPE_INFO)
+                    
+                End If
             End If
             
         Else
@@ -23465,9 +23470,11 @@ Private Sub HandleAccionInventario(ByVal UserIndex As Integer)
         .incomingData.ReadByte
         
         itemSlot = .incomingData.ReadByte
-        
-        'Esta el user muerto?
-        If .flags.Muerto = 1 Then
+
+        ObjIndex = .Invent.Object(itemSlot).ObjIndex
+
+        'Esta el user muerto y no esta usando una piedra de hogar?
+        If .flags.Muerto = 1 And ObjData(ObjIndex).OBJType <> otPiedraHogar Then
             Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
             Exit Sub
         End If
@@ -23476,8 +23483,6 @@ Private Sub HandleAccionInventario(ByVal UserIndex As Integer)
         
         'Validate item slot
         If itemSlot > .CurrentInventorySlots Or itemSlot < 1 Then Exit Sub
-        
-        ObjIndex = .Invent.Object(itemSlot).ObjIndex
         
         If ObjIndex = 0 Then Exit Sub
         

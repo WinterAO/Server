@@ -625,7 +625,7 @@ Private Sub SendInvitation(ByVal UserIndex As Integer, _
     Dim LoopC As Integer
     Dim strtemp As String
     Dim tUser As Integer
-    Dim str() As tRetoUser
+    Dim Str() As tRetoUser
           
     ' Save data temp
     With UserList(UserIndex)
@@ -642,13 +642,13 @@ Private Sub SendInvitation(ByVal UserIndex As Integer, _
         End With
     End With
           
-    ReDim str(LBound(Users()) To UBound(Users())) As tRetoUser
+    ReDim Str(LBound(Users()) To UBound(Users())) As tRetoUser
           
     For LoopC = LBound(Users()) To UBound(Users())
-        str(LoopC).UserIndex = NameIndex(Users(LoopC))
+        Str(LoopC).UserIndex = NameIndex(Users(LoopC))
     Next LoopC
           
-    strtemp = StrTeam(str) & "."
+    strtemp = StrTeam(Str) & "."
     strtemp = strtemp & IIf(GldRequired > 0, " Oro requerido: " & GldRequired & ".", vbNullString)
     strtemp = strtemp & " Para aceptar tipea /ACEPTAR " & UserList(UserIndex).Name
           
@@ -975,10 +975,7 @@ Private Sub StatsDuelos(ByVal UserIndex As Integer)
                   
          WriteUpdateUserStats UserIndex
                 
-        'If .flags.Paralizado = 1 Then
-            '.flags.Paralizado = 0
-            'Call WriteParalizeOK(UserIndex)
-        'End If
+        Call RemoveParalisis(UserIndex)
                 
     End With
           

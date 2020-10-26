@@ -7,21 +7,21 @@ Option Explicit
  
 Public isCentinelaActivated As Boolean          'Esta activado?
  
-Const NUM_CENTINELAS   As Byte = 5         'Cantidad de centinelas.
+Const NUM_CENTINELAS        As Byte = 5         'Cantidad de centinelas.
 
-Const NUM_NPC          As Integer = 458     'NpcNum del centinela.
+Public Const NUM_CENTI      As Integer = 458     'NpcNum del centinela.
  
-Const MAPA_EXPLOTAR    As Integer = 15     'Numero de mapa en la qe se pinchan usuarios.
+Const MAPA_EXPLOTAR         As Integer = 15     'Numero de mapa en la qe se pinchan usuarios.
 
-Const X_EXPLOTAR       As Byte = 50        'X
+Const X_EXPLOTAR            As Byte = 50        'X
 
-Const Y_EXPLOTAR       As Byte = 50        'Y
+Const Y_EXPLOTAR            As Byte = 50        'Y
  
-Const LIMITE_TIEMPO    As Long = 120000    'Tiempo limite (milisegundos), 2 minutos.
+Const LIMITE_TIEMPO         As Long = 120000    'Tiempo limite (milisegundos), 2 minutos.
 
-Const CARCEL_TIEMPO    As Byte = 5         'Minutos en la carcel
+Const CARCEL_TIEMPO         As Byte = 5         'Minutos en la carcel
 
-Const REVISION_TIEMPO  As Long = 1800000   'Tiempo de cada revision (milisegundos) 1.800.000 = 30 minutos (60 segundos * 30 minutos) * 1000 milisegundos
+Const REVISION_TIEMPO       As Long = 1800000   'Tiempo de cada revision (milisegundos) 1.800.000 = 30 minutos (60 segundos * 30 minutos) * 1000 milisegundos
  
 Type Centinelas
 
@@ -72,7 +72,7 @@ Sub EnviarAUsuario(ByVal UserIndex As Integer, ByVal CIndex As Byte)
         .CodigoCheck = GenerarClave
      
         'Spawnea.
-        .MiNpcIndex = SpawnNpc(NUM_NPC, DarPosicion(UserIndex), True, False)
+        .MiNpcIndex = SpawnNpc(NUM_CENTI, DarPosicion(UserIndex), True, False)
      
         'Setea el flag.
         .Invocado = (.MiNpcIndex <> 0)
@@ -83,12 +83,9 @@ Sub EnviarAUsuario(ByVal UserIndex As Integer, ByVal CIndex As Byte)
             Exit Sub
         End If
 
-     
         'Avisa al usuario sobre el char del centinela.
         Call AvisarUsuario(UserIndex, CIndex)
         
-        Call DejardeTrabajar(UserIndex)
-     
         'Setea el tiempo.
         .TiempoInicio = GetTickCount()
      
@@ -147,18 +144,21 @@ Sub AvisarUsuario(ByVal userSlot As Integer, _
             'Paso la mitad de tiempo?
             If (GetTickCount() - .TiempoInicio) > (LIMITE_TIEMPO / 2) Then
                 'Prepara el paquete a enviar.
-                DataSend = PrepareMessageChatOverHead("CONTROL DE MACRO INASISTIDO, Debes escribir /CENTINELA " & .CodigoCheck & " En menos de 2 minutos.", Npclist(.MiNpcIndex).Char.CharIndex, vbYellow)
+                DataSend = PrepareMessageChatOverHead("Hola, soy el centinela, guardian de los recursos naturales de estas tierras. Debes escribir /CENTINELA " & .CodigoCheck & " En menos de 2 minuto o seras sancionado.", Npclist(.MiNpcIndex).Char.CharIndex, vbYellow)
             Else
-                DataSend = PrepareMessageChatOverHead("CONTROL DE MACRO INASISTIDO, Tienes menos de un minuto para escribir /CENTINELA " & .CodigoCheck & ".", Npclist(.MiNpcIndex).Char.CharIndex, vbYellow)
+                DataSend = PrepareMessageChatOverHead("Sigo esperando, tienes menos de un minuto para escribir /CENTINELA " & .CodigoCheck & ".", Npclist(.MiNpcIndex).Char.CharIndex, vbYellow)
             End If
 
         Else
-            DataSend = PrepareMessageChatOverHead("CONTROL DE MACRO INASISTIDO, El codigo ingresado NO es correcto, debes escribir : /CENTINELA " & .CodigoCheck & ".", Npclist(.MiNpcIndex).Char.CharIndex, vbYellow)
+            DataSend = PrepareMessageChatOverHead("El codigo ingresado NO es correcto, debes escribir : /CENTINELA " & .CodigoCheck & ".", Npclist(.MiNpcIndex).Char.CharIndex, vbYellow)
 
         End If
      
         'Envia.
         Call UserList(userSlot).outgoingData.WriteASCIIStringFixed(DataSend)
+        
+        'Paramos el trabajo
+         Call DejardeTrabajar(userSlot)
     
     End With
  
@@ -183,7 +183,8 @@ Sub ChekearUsuarios()
                 If .Counters.Trabajando <> 0 Then
 
                     'Si todavia no lo revisaron o si paso mas del tiempo sin revisar, vuelve a enviar.
-                    If Not .CentinelaUsuario.CentinelaCheck Or ((GetTickCount() - .CentinelaUsuario.UltimaRevision) > REVISION_TIEMPO) Then
+                    'Lorwik> Lo hice aleatorio. Ahora el tiempo en el que aparece nunca se sabra!
+                    If Not .CentinelaUsuario.CentinelaCheck Or ((GetTickCount() - .CentinelaUsuario.UltimaRevision) > RandomNumber(REVISION_TIEMPO, REVISION_TIEMPO / 3)) Then
                         'Busca un slot para centinela y se lo envia.
                         CIndex = ProximoCentinela
 
@@ -255,7 +256,7 @@ Sub AprobarUsuario(ByVal UserIndex As Integer, ByVal CIndex As Byte)
             .UltimaRevision = GetTickCount()
         End With
  
-        Call Protocol.WriteConsoleMsg(UserIndex, "El control ha finalizado.", FontTypeNames.FONTTYPE_DIOS)
+        Call Protocol.WriteConsoleMsg(UserIndex, "Gracias, sigue trabajando, pero no bajes la guardia por que volvere!", FontTypeNames.FONTTYPE_DIOS)
      
     End With
  
@@ -310,14 +311,8 @@ Sub UsuarioInActivo(ByVal UserIndex As Integer)
     'Telep al mapa.
     Call WarpUserChar(UserIndex, MAPA_EXPLOTAR, X_EXPLOTAR, Y_EXPLOTAR, True)
  
-
-    'No creo que tirar los items sea justo, con encarcelarlo y matarlo es mas que suficiente. (Recox)
-    'Aparte de que si muere desaparecen los items...
-    'Muere.
-    'Call UserDie(Userindex)
- 
     'Tira los items.
-    'Call TirarTodosLosItems(Userindex)
+    Call TirarTodosLosItems(UserIndex)
  
     'Lo encarcela.
     Call Encarcelar(UserIndex, CARCEL_TIEMPO, "El centinela")
@@ -328,7 +323,7 @@ Sub UsuarioInActivo(ByVal UserIndex As Integer)
     End If
  
     'Deja un mensaje.
-    Call Protocol.WriteConsoleMsg(UserIndex, "El centinela te ha ejecutado y encarcelado por Macro Inasistido.", FontTypeNames.FONTTYPE_DIOS)
+    Call Protocol.WriteConsoleMsg(UserIndex, "El centinela te ha sancionado por macro inasistido.", FontTypeNames.FONTTYPE_DIOS)
  
     'Limpia el tipo del usuario.
     Dim ClearType As CentinelaUser
@@ -409,6 +404,6 @@ Function CheckCodigo(ByRef Ingresada As String, ByVal CIndex As Byte) As Boolean
  
     ' @ Devuelve si el codigo es correcto.
  
-    CheckCodigo = (Not Ingresada <> Centinelas(CIndex).CodigoCheck)
+    CheckCodigo = (Not UCase(Ingresada) <> UCase(Centinelas(CIndex).CodigoCheck))
  
 End Function

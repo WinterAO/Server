@@ -49,7 +49,7 @@ Public Function TirarItemAlPiso(Pos As WorldPos, _
     '
     '***************************************************
 
-    On Error GoTo Errhandler
+    On Error GoTo errHandler
 
     Dim NuevaPos As WorldPos
 
@@ -66,11 +66,11 @@ Public Function TirarItemAlPiso(Pos As WorldPos, _
     TirarItemAlPiso = NuevaPos
 
     Exit Function
-Errhandler:
+errHandler:
 
 End Function
 
-Public Sub NPC_TIRAR_ITEMS(ByVal UserIndex As Integer, ByRef npc As npc, ByVal IsPretoriano As Boolean)
+Public Sub NPC_TIRAR_ITEMS(ByVal UserIndex As Integer, ByRef NPC As NPC, ByVal IsPretoriano As Boolean)
 
     '***************************************************
     'Autor: Unknown (orginal version)
@@ -82,7 +82,7 @@ Public Sub NPC_TIRAR_ITEMS(ByVal UserIndex As Integer, ByRef npc As npc, ByVal I
     '***************************************************
     On Error Resume Next
 
-    With npc
+    With NPC
         
         Dim i           As Byte
         Dim MiObj       As obj
@@ -103,7 +103,7 @@ Public Sub NPC_TIRAR_ITEMS(ByVal UserIndex As Integer, ByRef npc As npc, ByVal I
                 Call TirarItemAlPiso(.Pos, MiObj)
 
                 If ObjData(MiObj.ObjIndex).Log = 1 Then _
-                    Call LogDesarrollo(npc.Name & " dropeo " & MiObj.Amount & " " & ObjData(ObjIndex).Name & "[" & ObjIndex & "]")
+                    Call LogDesarrollo(NPC.Name & " dropeo " & MiObj.Amount & " " & ObjData(ObjIndex).Name & "[" & ObjIndex & "]")
 
             End If
 
@@ -137,7 +137,7 @@ Public Sub NPC_TIRAR_ITEMS(ByVal UserIndex As Integer, ByRef npc As npc, ByVal I
 
 End Sub
 
-Function QuedanItems(ByVal NpcIndex As Integer, ByVal ObjIndex As Integer) As Boolean
+Function QuedanItems(ByVal NPCIndex As Integer, ByVal ObjIndex As Integer) As Boolean
     '***************************************************
     'Author: Unknown
     'Last Modification: -
@@ -148,11 +148,11 @@ Function QuedanItems(ByVal NpcIndex As Integer, ByVal ObjIndex As Integer) As Bo
 
     Dim i As Integer
 
-    If Npclist(NpcIndex).Invent.NroItems > 0 Then
+    If Npclist(NPCIndex).Invent.NroItems > 0 Then
 
         For i = 1 To MAX_INVENTORY_SLOTS
 
-            If Npclist(NpcIndex).Invent.Object(i).ObjIndex = ObjIndex Then
+            If Npclist(NPCIndex).Invent.Object(i).ObjIndex = ObjIndex Then
                 QuedanItems = True
                 Exit Function
 
@@ -173,7 +173,7 @@ End Function
 ' @param ObjIndex Specifies reference to object
 ' @return   The amount of the item that the npc has
 ' @remarks This function reads the Npc.dat file
-Function EncontrarCant(ByVal NpcIndex As Integer, ByVal ObjIndex As Integer) As Integer
+Function EncontrarCant(ByVal NPCIndex As Integer, ByVal ObjIndex As Integer) As Integer
 
     '***************************************************
     'Author: Unknown
@@ -192,7 +192,7 @@ Function EncontrarCant(ByVal NpcIndex As Integer, ByVal ObjIndex As Integer) As 
     npcfile = DatPath & "NPCs.dat"
      
     For i = 1 To MAX_INVENTORY_SLOTS
-        ln = GetVar(npcfile, "NPC" & Npclist(NpcIndex).Numero, "Obj" & i)
+        ln = GetVar(npcfile, "NPC" & Npclist(NPCIndex).Numero, "Obj" & i)
 
         If ObjIndex = val(ReadField(1, ln, 45)) Then
             EncontrarCant = val(ReadField(2, ln, 45))
@@ -206,7 +206,7 @@ Function EncontrarCant(ByVal NpcIndex As Integer, ByVal ObjIndex As Integer) As 
 
 End Function
 
-Sub ResetNpcInv(ByVal NpcIndex As Integer)
+Sub ResetNpcInv(ByVal NPCIndex As Integer)
     '***************************************************
     'Author: Unknown
     'Last Modification: -
@@ -217,7 +217,7 @@ Sub ResetNpcInv(ByVal NpcIndex As Integer)
 
     Dim i As Integer
     
-    With Npclist(NpcIndex)
+    With Npclist(NPCIndex)
         .Invent.NroItems = 0
         
         For i = 1 To MAX_INVENTORY_SLOTS
@@ -237,7 +237,7 @@ End Sub
 ' @param npcIndex Specifies reference to npcmerchant
 ' @param Slot Specifies reference to npc's inventory's slot
 ' @param antidad Specifies amount of items that will be removed
-Sub QuitarNpcInvItem(ByVal NpcIndex As Integer, _
+Sub QuitarNpcInvItem(ByVal NPCIndex As Integer, _
                      ByVal Slot As Byte, _
                      ByVal Cantidad As Integer)
 
@@ -252,7 +252,7 @@ Sub QuitarNpcInvItem(ByVal NpcIndex As Integer, _
 
     Dim iCant    As Integer
     
-    With Npclist(NpcIndex)
+    With Npclist(NPCIndex)
         ObjIndex = .Invent.Object(Slot).ObjIndex
     
         'Quita un Obj
@@ -265,7 +265,7 @@ Sub QuitarNpcInvItem(ByVal NpcIndex As Integer, _
                 .Invent.Object(Slot).Amount = 0
 
                 If .Invent.NroItems = 0 And .InvReSpawn <> 1 Then
-                    Call CargarInvent(NpcIndex) 'Reponemos el inventario
+                    Call CargarInvent(NPCIndex) 'Reponemos el inventario
 
                 End If
 
@@ -279,9 +279,9 @@ Sub QuitarNpcInvItem(ByVal NpcIndex As Integer, _
                 .Invent.Object(Slot).ObjIndex = 0
                 .Invent.Object(Slot).Amount = 0
                 
-                If Not QuedanItems(NpcIndex, ObjIndex) Then
+                If Not QuedanItems(NPCIndex, ObjIndex) Then
                     'Check if the item is in the npc's dat.
-                    iCant = EncontrarCant(NpcIndex, ObjIndex)
+                    iCant = EncontrarCant(NPCIndex, ObjIndex)
 
                     If iCant Then
                         .Invent.Object(Slot).ObjIndex = ObjIndex
@@ -293,7 +293,7 @@ Sub QuitarNpcInvItem(ByVal NpcIndex As Integer, _
                 End If
                 
                 If .Invent.NroItems = 0 And .InvReSpawn <> 1 Then
-                    Call CargarInvent(NpcIndex) 'Reponemos el inventario
+                    Call CargarInvent(NPCIndex) 'Reponemos el inventario
 
                 End If
 
@@ -305,7 +305,7 @@ Sub QuitarNpcInvItem(ByVal NpcIndex As Integer, _
 
 End Sub
 
-Sub CargarInvent(ByVal NpcIndex As Integer)
+Sub CargarInvent(ByVal NPCIndex As Integer)
     '***************************************************
     'Author: Unknown
     'Last Modification: -
@@ -321,7 +321,7 @@ Sub CargarInvent(ByVal NpcIndex As Integer)
     
     npcfile = DatPath & "NPCs.dat"
     
-    With Npclist(NpcIndex)
+    With Npclist(NPCIndex)
         .Invent.NroItems = val(GetVar(npcfile, "NPC" & .Numero, "NROITEMS"))
         
         For LoopC = 1 To .Invent.NroItems
@@ -343,7 +343,7 @@ Public Sub TirarOroNpc(ByVal UserIndex As Integer, ByVal Cantidad As Long, ByRef
     'si supera los 10k, si es inferior lo tira al suelo
     '***************************************************
     
-    On Error GoTo Errhandler
+    On Error GoTo errHandler
     
     Dim MiObj As obj
 
@@ -353,7 +353,7 @@ Public Sub TirarOroNpc(ByVal UserIndex As Integer, ByVal Cantidad As Long, ByRef
     '¿La cantidad supera los 10k? Se lo mandamos directamente a la billetera
     If Cantidad >= MAX_INVENTORY_OBJS Then
     
-        Call WriteConsoleMsg(UserIndex, "Has ganado " & Cantidad & " monedas de oro.", FontTypeNames.FONTTYPE_INFO)
+        Call WriteConsoleMsg(UserIndex, "Has ganado " & Cantidad & " monedas de oro.", FontTypeNames.FONTTYPE_INFOBOLD)
         UserList(UserIndex).Stats.Gld = UserList(UserIndex).Stats.Gld + Cantidad
         Call WriteUpdateGold(UserIndex)
     
@@ -368,7 +368,7 @@ Public Sub TirarOroNpc(ByVal UserIndex As Integer, ByVal Cantidad As Long, ByRef
 
     Exit Sub
 
-Errhandler:
+errHandler:
     Call LogError("Error en TirarOro. Error " & Err.Number & " : " & Err.description)
 
 End Sub

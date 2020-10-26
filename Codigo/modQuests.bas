@@ -291,7 +291,7 @@ Public Sub FinishQuest(ByVal UserIndex As Integer, _
             For i = 1 To .RequiredOBJs
 
                 If TieneObjetos(.RequiredOBJ(i).ObjIndex, .RequiredOBJ(i).Amount, UserIndex) = False Then
-                    Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead("No has conseguido todos los objetos que te he pedido.", Npclist(NPCIndex).Char.CharIndex, vbWhite))
+                    Call WriteChatOverHead(UserIndex, "No has conseguido todos los objetos que te he pedido.", Npclist(NPCIndex).Char.CharIndex, vbWhite)
                     Exit Sub
 
                 End If
@@ -306,7 +306,7 @@ Public Sub FinishQuest(ByVal UserIndex As Integer, _
             For i = 1 To .RequiredNPCs
 
                 If .RequiredNPC(i).Amount > UserList(UserIndex).QuestStats.Quests(QuestSlot).NPCsKilled(i) Then
-                    Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead("No has matado todas las criaturas que te he pedido.", Npclist(NPCIndex).Char.CharIndex, vbWhite))
+                    Call WriteChatOverHead(UserIndex, "No has matado todas las criaturas que te he pedido.", Npclist(NPCIndex).Char.CharIndex, vbWhite)
                     Exit Sub
 
                 End If
@@ -326,7 +326,7 @@ Public Sub FinishQuest(ByVal UserIndex As Integer, _
             
             'Nos fijamos si entra
             If InvSlotsLibres < .RewardOBJs Then
-                Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead("No tienes suficiente espacio en el inventario para recibir la recompensa. Vuelve cuando hayas hecho mas espacio.", Npclist(NPCIndex).Char.CharIndex, vbWhite))
+                Call WriteChatOverHead(UserIndex, "No tienes suficiente espacio en el inventario para recibir la recompensa. Vuelve cuando hayas hecho mas espacio.", Npclist(NPCIndex).Char.CharIndex, vbWhite)
                 Exit Sub
 
             End If
@@ -348,14 +348,14 @@ Public Sub FinishQuest(ByVal UserIndex As Integer, _
         'Se entrega la experiencia.
         If .RewardEXP Then
             UserList(UserIndex).Stats.Exp = UserList(UserIndex).Stats.Exp + .RewardEXP
-            Call WriteConsoleMsg(UserIndex, "Has ganado " & .RewardEXP & " puntos de experiencia como recompensa.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Has ganado " & .RewardEXP & " puntos de experiencia como recompensa.", FontTypeNames.FONTTYPE_EXP)
 
         End If
         
         'Se entrega el oro.
         If .RewardGLD Then
             UserList(UserIndex).Stats.Gld = UserList(UserIndex).Stats.Gld + .RewardGLD
-            Call WriteConsoleMsg(UserIndex, "Has ganado " & .RewardGLD & " monedas de oro como recompensa.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Has ganado " & .RewardGLD & " monedas de oro como recompensa.", FontTypeNames.FONTTYPE_INFOBOLD)
 
         End If
         
@@ -515,21 +515,21 @@ Public Sub AccionParaQuest(ByVal UserIndex As Integer, ByVal NPCIndex As Integer
         
         'El NPC hace quests?
         If .QuestNumber = 0 Then
-            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead("No tengo ninguna mision para ti.", .Char.CharIndex, vbWhite))
+            Call WriteChatOverHead(UserIndex, "No tengo ninguna mision para ti.", .Char.CharIndex, vbWhite)
             Exit Sub
     
         End If
         
         'El personaje ya hizo la quest?
         If UserDoneQuest(UserIndex, .QuestNumber) Then
-            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead("Gracias por la ayuda, quizas en otro momento podamos te necesite.", .Char.CharIndex, vbWhite))
+            Call WriteChatOverHead(UserIndex, "Gracias por la ayuda, quizas en otro momento podamos te necesite.", .Char.CharIndex, vbWhite)
             Exit Sub
     
         End If
      
         'El personaje tiene suficiente nivel?
         If UserList(UserIndex).Stats.ELV < QuestList(.QuestNumber).RequiredLevel Then
-            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead("Debes ser por lo menos nivel " & QuestList(.QuestNumber).RequiredLevel & " para emprender esta mision.", .Char.CharIndex, vbWhite))
+            Call WriteChatOverHead(UserIndex, "Debes ser por lo menos nivel " & QuestList(.QuestNumber).RequiredLevel & " para emprender esta mision.", .Char.CharIndex, vbWhite)
             Exit Sub
     
         End If
@@ -545,7 +545,7 @@ Public Sub AccionParaQuest(ByVal UserIndex As Integer, ByVal NPCIndex As Integer
             
             'Si obtuvimos -1, es que no hay slots libres
             If MaxQuestsAceptadas(UserIndex) < 0 Then
-                Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead("Estas haciendo demasiadas misiones. Vuelve cuando hayas completado alguna.", .Char.CharIndex, vbWhite))
+                Call WriteChatOverHead(UserIndex, "Estas haciendo demasiadas misiones. Vuelve cuando hayas completado alguna.", .Char.CharIndex, vbWhite)
                 Exit Sub
     
             End If

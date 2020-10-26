@@ -270,7 +270,7 @@ Private Sub SendSpellEffects(ByVal UserIndex As Integer, _
         ' Spell Words
         If DecirPalabras Then
             Call SendData(SendTarget.ToNPCArea, NPCIndex, _
-                PrepareMessageChatOverHead(Hechizos(Spell).PalabrasMagicas, Npclist(NPCIndex).Char.CharIndex, vbCyan))
+                PrepareMessageChatOverHead(Hechizos(Spell).PalabrasMagicas, Npclist(NPCIndex).Char.CharIndex, vbCyan, True))
         End If
 
     End With
@@ -301,7 +301,7 @@ Public Sub NpcLanzaSpellSobreNpc(ByVal NPCIndex As Integer, _
         ' Decir las palabras magicas?
         If DecirPalabras Then
             Call SendData(SendTarget.ToNPCArea, NPCIndex, _
-                PrepareMessageChatOverHead(Hechizos(spellIndex).PalabrasMagicas, Npclist(NPCIndex).Char.CharIndex, vbCyan))
+                PrepareMessageChatOverHead(Hechizos(spellIndex).PalabrasMagicas, Npclist(NPCIndex).Char.CharIndex, vbCyan, True))
         End If
     
         ' Spell deals damage??
@@ -343,6 +343,7 @@ Public Sub NpcLanzaSpellSobreNpc(ByVal NPCIndex As Integer, _
         ' Spell Adds/Removes poison?
         If Hechizos(spellIndex).Envenena = 1 Then
             .flags.Envenenado = 1
+            
         ElseIf Hechizos(spellIndex).CuraVeneno = 1 Then
             .flags.Envenenado = 0
 
@@ -351,6 +352,7 @@ Public Sub NpcLanzaSpellSobreNpc(ByVal NPCIndex As Integer, _
         'Spell Adds/Removes incinerado?
         If Hechizos(spellIndex).Incinera = 1 Then
             .flags.Incinerado = 1
+            
         ElseIf Hechizos(spellIndex).CuraQuemaduras = 1 Then
             .flags.Incinerado = 0
 
@@ -458,7 +460,7 @@ On Error GoTo errHandler
 
     With UserList(UserIndex)
         If .flags.AdminInvisible <> 1 Then
-            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead(SpellWords, .Char.CharIndex, vbCyan))
+            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead(SpellWords, .Char.CharIndex, vbCyan, True))
             
             ' Si estaba oculto, se vuelve visible
             If .flags.Oculto = 1 Then
@@ -1069,6 +1071,12 @@ Sub LanzarHechizo(ByVal spellIndex As Integer, ByVal UserIndex As Integer)
             Exit Sub
 
         End If
+        
+        If .flags.ModoCombate = False Then
+            Call WriteConsoleMsg(UserIndex, "No puedes lanzar hechizos si con el modo combate desactivado.", FontTypeNames.FONTTYPE_INFO)
+            Exit Sub
+
+        End If
     
         If PuedeLanzar(UserIndex, spellIndex) Then
         
@@ -1504,8 +1512,8 @@ Sub HechizoEstadoUsuario(ByVal UserIndex As Integer, ByRef HechizoCasteado As Bo
             If UserList(targetIndex).flags.Muerto = 1 Then
             
                 'Seguro de resurreccion (solo afecta a los hechizos, no al sacerdote ni al comando de GM)
-                If UserList(targetIndex).flags.SeguroResu Then
-                    Call WriteConsoleMsg(UserIndex, "El espiritu no tiene intenciones de regresar al mundo de los vivos!", FontTypeNames.FONTTYPE_INFO)
+                If UserList(targetIndex).flags.ModoCombate Then
+                    Call WriteConsoleMsg(UserIndex, "El usuario debe desactivar el modo combate para ser resucitado!", FontTypeNames.FONTTYPE_INFO)
                     HechizoCasteado = False
                     Exit Sub
 

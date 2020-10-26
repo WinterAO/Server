@@ -1347,6 +1347,20 @@ Sub LookatTile(ByVal UserIndex As Integer, _
                                     Stat = Stat & " Intacto)"
                                 End If
                             End If
+                            
+                            If UserList(TempCharIndex).flags.Paralizado = 1 Then
+                                Stat = Stat & " [Paralizado]"
+                                
+                            ElseIf UserList(TempCharIndex).flags.Inmovilizado = 1 Then
+                                Stat = Stat & " [Inmovilizado]"
+                                
+                            End If
+                            
+                            If UserList(TempCharIndex).flags.Incinerado = 1 Then _
+                                Stat = Stat & " [Incinerado]"
+                                
+                            If UserList(TempCharIndex).flags.Envenenado = 1 Then _
+                                Stat = Stat & " [Envenenado]"
                                         
                             If .flags.Privilegios And PlayerType.RoyalCouncil Then
                                 Stat = Stat & " [CONSEJO DE BELLEUVE]"
@@ -1432,12 +1446,14 @@ Sub LookatTile(ByVal UserIndex As Integer, _
                     Dim MinHp              As Long
                     Dim MaxHp              As Long
                     Dim sDesc              As String
-                    Dim TimeParalizado     As String
+                    Dim Paralisis          As String
+                    Dim Incinerado         As String
+                    Dim Envenenado         As String
                 
                     If Npclist(TempCharIndex).Stats.ELV = 0 Or (Npclist(TempCharIndex).Stats.ELV - 7) > UserList(UserIndex).Stats.ELV Then
-                        estatus = " Nivel: ?? "
+                        estatus = "- Nivel: ??"
                     Else
-                        estatus = " Nivel: " & Npclist(TempCharIndex).Stats.ELV & " "
+                        estatus = "- Nivel: " & Npclist(TempCharIndex).Stats.ELV
                     End If
                 
                     MinHp = Npclist(TempCharIndex).Stats.MinHp
@@ -1451,62 +1467,62 @@ Sub LookatTile(ByVal UserIndex As Integer, _
                         If .Muerto = 0 Then
                     
                             If SupervivenciaSkill <= 10 Then
-                                estatus = estatus + " (Dudoso) "
+                                estatus = estatus + " (Dudoso)"
                             
                             ElseIf SupervivenciaSkill <= 20 Then
 
                                 If MinHp < (MaxHp / 2) Then
-                                    estatus = estatus + " (Herido) "
+                                    estatus = estatus + " (Herido)"
                                 Else
-                                    estatus = estatus + " (Sano) "
+                                    estatus = estatus + " (Sano)"
 
                                 End If
                             
                             ElseIf SupervivenciaSkill <= 30 Then
 
                                 If MinHp < (MaxHp * 0.5) Then
-                                    estatus = estatus + " (Malherido) "
+                                    estatus = estatus + " (Malherido)"
                                 ElseIf MinHp < (MaxHp * 0.75) Then
-                                    estatus = estatus + " (Herido) "
+                                    estatus = estatus + " (Herido)"
                                 Else
-                                    estatus = estatus + " (Sano) "
+                                    estatus = estatus + " (Sano)"
 
                                 End If
                             
                             ElseIf SupervivenciaSkill <= 40 Then
 
                                 If MinHp < (MaxHp * 0.25) Then
-                                    estatus = estatus + " (Muy malherido) "
+                                    estatus = estatus + " (Muy malherido)"
                                 ElseIf MinHp < (MaxHp * 0.5) Then
-                                    estatus = estatus + " (Herido) "
+                                    estatus = estatus + " (Herido)"
                                 ElseIf MinHp < (MaxHp * 0.75) Then
-                                    estatus = estatus + " (Levemente herido) "
+                                    estatus = estatus + " (Levemente herido)"
                                 Else
-                                    estatus = estatus + " (Sano) "
+                                    estatus = estatus + " (Sano)"
 
                                 End If
                             
                             ElseIf SupervivenciaSkill < 60 Then
 
                                 If MinHp < (MaxHp * 0.05) Then
-                                    estatus = estatus + " (Agonizando) "
+                                    estatus = estatus + " (Agonizando)"
                                 ElseIf MinHp < (MaxHp * 0.1) Then
-                                    estatus = estatus + " (Casi muerto) "
+                                    estatus = estatus + " (Casi muerto)"
                                 ElseIf MinHp < (MaxHp * 0.25) Then
-                                    estatus = estatus + " (Muy Malherido) "
+                                    estatus = estatus + " (Muy Malherido)"
                                 ElseIf MinHp < (MaxHp * 0.5) Then
-                                    estatus = estatus + " (Herido) "
+                                    estatus = estatus + " (Herido)"
                                 ElseIf MinHp < (MaxHp * 0.75) Then
-                                    estatus = estatus + " (Levemente herido) "
+                                    estatus = estatus + " (Levemente herido)"
                                 ElseIf MinHp < (MaxHp) Then
-                                    estatus = estatus + " (Sano) "
+                                    estatus = estatus + " (Sano)"
                                 Else
-                                    estatus = estatus + " (Intacto) "
+                                    estatus = estatus + " (Intacto)"
 
                                 End If
 
                             Else
-                                estatus = estatus + " (" & MinHp & "/" & MaxHp & ") "
+                                estatus = estatus + " (" & MinHp & "/" & MaxHp & ")"
 
                             End If
 
@@ -1514,15 +1530,19 @@ Sub LookatTile(ByVal UserIndex As Integer, _
 
                     End If
                     
-                    'Lorwik> Tiene 100 skills en supervivencia?
-                    If UserList(UserIndex).Stats.UserSkills(eSkill.Supervivencia) = 100 Then
-
-                        'Lorwik> Esta paralizado o inmovilizado? Si lo esta miramos el tiempo que le queda.
-                        If Npclist(TempCharIndex).flags.Paralizado = 1 Or Npclist(TempCharIndex).flags.Inmovilizado = 1 Then
-                            TimeParalizado = " - Tiempo de paralisis: " & Npclist(TempCharIndex).Contadores.Paralisis & " segundos."
-                        End If
+                    If Npclist(TempCharIndex).flags.Paralizado = 1 Then
+                        Paralisis = " [Paralizado]"
+                        
+                    ElseIf Npclist(TempCharIndex).flags.Inmovilizado = 1 Then
+                        Paralisis = " [Inmovilizado]"
                         
                     End If
+                    
+                    If Npclist(TempCharIndex).flags.Incinerado = 1 Then _
+                        Incinerado = " [Incinerado]"
+                        
+                    If Npclist(TempCharIndex).flags.Envenenado = 1 Then _
+                        Envenenado = " [Envenenado]"
                     
                     If Len(Npclist(TempCharIndex).Desc) > 1 Then
                         Stat = Npclist(TempCharIndex).Desc
@@ -1579,16 +1599,30 @@ Sub LookatTile(ByVal UserIndex As Integer, _
                             End If
 
                         End If
+                        
+                       'Centinela
+                        If Npclist(TempCharIndex).Numero = NUM_CENTI Then
+                            If UserList(UserIndex).CentinelaUsuario.Revisando Then
+                                Stat = "Sigo esperando, ingresa el codigo que te he solicitado."
+                            Else
+                                Stat = "No estoy hablando contigo."
+                            End If
+                            
+                            'Enviamos el mensaje propiamente dicho:
+                            Call WriteChatOverHead(UserIndex, Stat, Npclist(TempCharIndex).Char.CharIndex, vbYellow)
+                            
+                        Else
+                            'Enviamos el mensaje propiamente dicho:
+                            Call WriteChatOverHead(UserIndex, Stat, Npclist(TempCharIndex).Char.CharIndex, vbWhite)
+                        End If
                     
-                        'Enviamos el mensaje propiamente dicho:
-                        Call WriteChatOverHead(UserIndex, Stat, Npclist(TempCharIndex).Char.CharIndex, vbWhite)
                     Else
 
                         If Npclist(TempCharIndex).MaestroUser > 0 Then
-                            Call WriteConsoleMsg(UserIndex, Npclist(TempCharIndex).Name & " es mascota de " & UserList(Npclist(TempCharIndex).MaestroUser).Name & " " & estatus & TimeParalizado, FontTypeNames.FONTTYPE_INFO)
+                            Call WriteConsoleMsg(UserIndex, Npclist(TempCharIndex).Name & " es mascota de " & UserList(Npclist(TempCharIndex).MaestroUser).Name & " " & estatus & Paralisis & Incinerado & Envenenado, FontTypeNames.FONTTYPE_INFO)
                         
                         Else
-                            Call WriteConsoleMsg(UserIndex, Npclist(TempCharIndex).Name & " " & estatus & TimeParalizado, FontTypeNames.FONTTYPE_INFO)
+                            Call WriteConsoleMsg(UserIndex, Npclist(TempCharIndex).Name & " " & estatus & Paralisis & Incinerado & Envenenado, FontTypeNames.FONTTYPE_INFO)
                             
                             If Len(Npclist(TempCharIndex).flags.AttackedFirstBy) > 0 And (UserList(UserIndex).flags.Privilegios And (PlayerType.Dios Or PlayerType.Admin)) Then
                                 Call WriteConsoleMsg(UserIndex, "Le pego primero: " & Npclist(TempCharIndex).flags.AttackedFirstBy & ".", FontTypeNames.FONTTYPE_INFO)

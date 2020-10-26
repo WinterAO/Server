@@ -128,6 +128,9 @@ Public Sub RevivirUsuario(ByVal UserIndex As Integer)
         
         Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.Heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
         Call WriteUpdateUserStats(UserIndex)
+        
+        .flags.Velocidad = SPEED_NORMAL
+        Call WriteSetSpeed(UserIndex)
 
     End With
 
@@ -1046,9 +1049,9 @@ Sub MoveUserChar(ByVal UserIndex As Integer, ByVal nHeading As eHeading)
                 If Not isAdminInvi Then
                     
                     If TriggerZonaPelea(UserIndex, CasperIndex) = TRIGGER6_PROHIBE Then
-                        If UserList(CasperIndex).flags.SeguroResu = False Then
-                            UserList(CasperIndex).flags.SeguroResu = True
-                            Call WriteMultiMessage(CasperIndex, eMessages.ResuscitationSafeOn)
+                        If UserList(CasperIndex).flags.ModoCombate = False Then
+                            UserList(CasperIndex).flags.ModoCombate = True
+                            Call WriteMultiMessage(CasperIndex, eMessages.CombatSafeOn)
 
                         End If
 
@@ -1620,7 +1623,7 @@ Sub SubirSkill(ByVal UserIndex As Integer, _
 
                     If .Exp > MAXEXP Then .Exp = MAXEXP
                     
-                    Call WriteConsoleMsg(UserIndex, "Has ganado 5 puntos de experiencia!", FontTypeNames.FONTTYPE_FIGHT)
+                    Call WriteConsoleMsg(UserIndex, "Has ganado 5 puntos de experiencia!", FontTypeNames.FONTTYPE_EXP)
                     
                     Call WriteUpdateExp(UserIndex)
                     Call CheckUserLevel(UserIndex)
@@ -1657,11 +1660,13 @@ Public Sub UserDie(ByVal UserIndex As Integer, Optional ByVal AttackerIndex As I
     '************************************************
     On Error GoTo ErrorHandler
 
-    Dim i           As Long
+    Dim i                   As Long
 
-    Dim aN          As Integer
+    Dim aN                  As Integer
     
-    Dim iSoundDeath As Integer
+    Dim iSoundDeath         As Integer
+    
+    Dim SortijaUltratumba   As Boolean
     
     With UserList(UserIndex)
 
@@ -1698,16 +1703,6 @@ Public Sub UserDie(ByVal UserIndex As Integer, Optional ByVal AttackerIndex As I
         .flags.Muerto = 1
 
         .Counters.Trabajando = 0
-        
-        ' No se activa en arenas
-        If TriggerZonaPelea(UserIndex, UserIndex) <> TRIGGER6_PERMITE Then
-            .flags.SeguroResu = True
-            Call WriteMultiMessage(UserIndex, eMessages.ResuscitationSafeOn) 'Call WriteResuscitationSafeOn(UserIndex)
-        Else
-            .flags.SeguroResu = False
-            Call WriteMultiMessage(UserIndex, eMessages.ResuscitationSafeOff) 'Call WriteResuscitationSafeOff(UserIndex)
-
-        End If
         
         aN = .flags.AtacadoPorNpc
 
@@ -1793,13 +1788,25 @@ Public Sub UserDie(ByVal UserIndex As Integer, Optional ByVal AttackerIndex As I
                 
                 ' Si estas en zona segura no se caen los items.
                 If MapInfo(.Pos.Map).Pk Then
-                
-                    ' << Si es newbie no pierde el inventario >>
-                    If Not EsNewbie(UserIndex) Then
-                        Call TirarTodo(UserIndex)
+                    
+                    '¿Tiene la sortija de ultratumba?
+                    If .Invent.AnilloEqpObjIndex > 0 Then
+                        If ObjData(.Invent.AnilloEqpObjIndex).Efecto = Ultratumba Then _
+                            SortijaUltratumba = True
+                    End If
+                        
+                    If SortijaUltratumba Then
+                        Call DropObj(UserIndex, UserList(UserIndex).Invent.AnilloEqpSlot, 1, .Pos.Map, .Pos.X, .Pos.Y)
+                            
                     Else
-                        Call TirarTodosLosItemsNoNewbies(UserIndex)
-    
+                        ' << Si es newbie no pierde el inventario >>
+                        If Not EsNewbie(UserIndex) Then
+                            Call TirarTodo(UserIndex) '
+                        Else
+                            Call TirarTodosLosItemsNoNewbies(UserIndex)
+        
+                        End If
+                        
                     End If
                     
                 End If
@@ -1941,6 +1948,10 @@ Public Sub UserDie(ByVal UserIndex As Integer, Optional ByVal AttackerIndex As I
                 Call Retos.UserDieFight(UserIndex, AttackerIndex, False)
             End If
         End If
+        
+        .flags.Velocidad = SPEED_MUERTO
+        Call WriteSetSpeed(UserIndex)
+        
     End With
 
     Exit Sub
@@ -2186,10 +2197,7 @@ Sub WarpUserChar(ByVal UserIndex As Integer, _
             Else
 
                 If .flags.Navegando = 1 Then
-                    .flags.Navegando = 0
-                            
-                    'Tell the client that we are navigating.
-                    Call WriteNavigateToggle(UserIndex)
+                    Call DejardeNavegar(UserIndex)
 
                 End If
 

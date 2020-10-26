@@ -1808,7 +1808,7 @@ Public Sub BanGlobalChatCargar()
     Dim Tmp As String
     Dim ArchivoLog As String
 
-    ArchivoLog = App.Path & "\logs\BanGlobalChat.dat"
+    ArchivoLog = App.Path & "\Dat\BanGlobalChat.dat"
 
     Set BanUsersChatGlobal = New Collection
 
@@ -1891,7 +1891,7 @@ Public Sub BanGlobalChatGuardar()
     Dim ArchN As Long
     Dim LoopC As Long
 
-    ArchivoLog = App.Path & "\logs\BanGlobalChat.dat"
+    ArchivoLog = App.Path & "\Dat\BanGlobalChat.dat"
 
     ArchN = FreeFile()
     Open ArchivoLog For Output As #ArchN

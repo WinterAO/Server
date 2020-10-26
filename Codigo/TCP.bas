@@ -374,10 +374,13 @@ Sub ConnectNewUser(ByVal UserIndex As Integer, _
         Next i
         
         If Count > 1 Then
-                        Call WriteErrorMsg(UserIndex, "Nombre invalido.")
+            Call WriteErrorMsg(UserIndex, "Nombre invalido.")
             Exit Sub
         End If
-    
+        
+        'Capitalizamos el nombre
+        Name = StrConv(Name, vbProperCase)
+        
         If UserList(UserIndex).flags.UserLogged Then
             Call LogCheating("El usuario " & UserList(UserIndex).Name & " ha intentado crear a " & Name & " desde la IP " & UserList(UserIndex).IP)
         
@@ -449,6 +452,9 @@ Sub ConnectNewUser(ByVal UserIndex As Integer, _
     
         .OrigChar = .Char
         
+        'Comenzara en la isla Newbie
+        .Pos = IslaNew
+            
         'De primeras podra hablar por global
         .flags.Global = 1
         .Counters.LastGlobalMsg = INTERVALO_GLOBAL
@@ -462,7 +468,7 @@ Sub ConnectNewUser(ByVal UserIndex As Integer, _
 
     'Valores Default de facciones al Activar nuevo usuario
     Call ResetFacciones(UserIndex)
-
+    
     Call SaveUser(UserIndex)
   
     'Open User
@@ -1103,15 +1109,6 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
         If .Invent.WeaponEqpSlot = 0 Then .Char.WeaponAnim = NingunArma
     
         .CurrentInventorySlots = getMaxInventorySlots(UserIndex)
-
-        If (.flags.Muerto = 0) Then
-            .flags.SeguroResu = False
-            Call WriteMultiMessage(UserIndex, eMessages.ResuscitationSafeOff)
-        Else
-            .flags.SeguroResu = True
-            Call WriteMultiMessage(UserIndex, eMessages.ResuscitationSafeOn)
-
-        End If
     
         Call UpdateUserInv(True, UserIndex, 0)
         Call UpdateUserHechizos(True, UserIndex, 0)
@@ -1128,7 +1125,7 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
 
         Mapa = .Pos.Map
     
-        'Posicion de comienzo
+        '¿Mapa invalido? Lo llevamos a Ramx
         If Mapa = 0 Then
 
             'Dejo esto comentado aqui por si se quiere utilizar la ciudad elegida desde el menu
@@ -1140,7 +1137,6 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
         Else
     
             If Not MapaValido(Mapa) Then
-            Debug.Print Mapa
                 Call WriteErrorMsg(UserIndex, "El PJ se encuenta en un mapa invalido.")
                 Call CloseUser(UserIndex)
                 Exit Sub
@@ -1261,6 +1257,30 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
             .flags.Navegando = 1
 
         End If
+        
+        'Seteamos la velocidad
+        If .flags.Muerto = 1 Then
+            .flags.Velocidad = SPEED_MUERTO
+        Else
+            .flags.Velocidad = SPEED_NORMAL
+        End If
+        
+        Call WriteSetSpeed(UserIndex)
+        
+        'Actualizamos los seguros
+        If .flags.ModoCombate Then
+            Call WriteMultiMessage(UserIndex, eMessages.CombatSafeOn)
+        Else
+            Call WriteMultiMessage(UserIndex, eMessages.CombatSafeOff)
+
+        End If
+
+        If .flags.Seguro Then
+            Call WriteMultiMessage(UserIndex, eMessages.SafeModeOff)
+        Else
+            Call WriteMultiMessage(UserIndex, eMessages.SafeModeOn)
+
+        End If
     
         'Info
         Call WriteUserIndexInServer(UserIndex) 'Enviamos el User index
@@ -1376,15 +1396,6 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
 
         If .flags.Navegando = 1 Then
             Call WriteNavigateToggle(UserIndex)
-
-        End If
-    
-        If criminal(UserIndex) Then
-            Call WriteMultiMessage(UserIndex, eMessages.SafeModeOff) 'Call WriteSafeModeOff(UserIndex)
-            .flags.Seguro = False
-        Else
-            .flags.Seguro = True
-            Call WriteMultiMessage(UserIndex, eMessages.SafeModeOn) 'Call WriteSafeModeOn(UserIndex)
 
         End If
     
@@ -1787,6 +1798,7 @@ Sub ResetUserFlags(ByVal UserIndex As Integer)
         .ProfInstruyendo = 0
         .Instruyendo = 0
         .Trabajando = 0
+        .Velocidad = 0
 
         Call ResetCasteo(UserIndex)
         

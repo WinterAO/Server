@@ -259,6 +259,8 @@ Public Const NingunAura              As Integer = 0
 
 Public Const EspadaMataDragonesIndex As Integer = 402
 
+Public Const EspadaMataDragonesROTA  As Integer = 1332
+
 Public Const LAUDMAGICO              As Integer = 696
 
 Public Const FLAUTAMAGICA            As Integer = 208
@@ -413,8 +415,6 @@ Public Const MAX_EXP_EDIT                   As Long = 5000000
 
 Public Const MAX_VIDA_EDIT                  As Long = 30000
 
-Public Const STANDARD_BOUNTY_HUNTER_MESSAGE As String = "Se te ha otorgado un premio por ayudar al proyecto reportando bugs, el mismo esta disponible en tu boveda."
-
 Public Const TAG_USER_INVISIBLE             As String = "[INVISIBLE]"
 
 Public Const TAG_CONSULT_MODE               As String = "[CONSULTA]"
@@ -564,6 +564,12 @@ Public Const vlNoble       As Integer = 5
 Public Const vlLadron      As Integer = 25
 
 Public Const vlProleta     As Integer = 2
+
+'%%%%%%%% CONSTANTES DE VELOCIDADES %%%%%%%%%%%%%
+
+Public Const SPEED_NORMAL As Double = 1.8
+
+Public Const SPEED_MUERTO As Double = 2
 
 '%%%%%%%%%% CONSTANTES DE INDICES %%%%%%%%%%%%%%%
 Public Const iCuerpoMuerto As Integer = 8
@@ -1006,6 +1012,14 @@ Public Type tProfesion
     Categoria As Byte 'Indica la categoria
 End Type
 
+'Efectos de los anillos magicos
+Public Enum tEfectos
+    Trabajador = 1
+    Aventurero = 2
+    Ultratumba = 3
+    Sabiduria = 4
+End Enum
+
 'Tipos de objetos
 Public Type ObjData
 
@@ -1170,6 +1184,10 @@ Public Type ObjData
     
     Herramienta As tProfesion
     Recurso As tProfesion
+    
+    Efecto As tEfectos
+    
+    Speed As Double
 End Type
 
 Public Type obj
@@ -1435,7 +1453,7 @@ Public Type UserFlags
     Navegando As Byte
     Equitando As Byte
     Seguro As Boolean
-    SeguroResu As Boolean
+    ModoCombate As Boolean
     
     DuracionEfecto As Long
     TargetNPC As Integer ' Npc senalado por el usuario
@@ -1518,6 +1536,8 @@ Public Type UserFlags
     Instruyendo As Byte
     
     Trabajando As Byte
+    
+    Velocidad As Double
     
 End Type
 
@@ -1781,6 +1801,7 @@ Public Type NpcCounters
     Paralisis As Integer
     TiempoExistencia As Long
     Ataque As Long
+    VelocidadVariable As Long
 
 End Type
 
@@ -1934,6 +1955,8 @@ Public Type NPC
     
     NoShadow As Byte
     Instruye As Byte 'Instruye un profesion
+    
+    SpeedVar As Long
 
 End Type
 
@@ -2167,6 +2190,8 @@ Public Prision         As WorldPos
 
 Public Libertad        As WorldPos
 
+Public IslaNew         As WorldPos
+
 Public Ayuda           As cCola
 
 Public Denuncias       As cCola
@@ -2213,8 +2238,8 @@ Public Enum eMessages
     UserSwing
     SafeModeOn
     SafeModeOff
-    ResuscitationSafeOff
-    ResuscitationSafeOn
+    CombatSafeOff
+    CombatSafeOn
     NobilityLost
     CantUseWhileMeditating
     NPCHitUser

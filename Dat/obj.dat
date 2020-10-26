@@ -69,6 +69,15 @@
 '1 Montura Acuatica (pide skills en equitacion)
 
 ##############################################
+########TIPOS  DE EFECTOS DE ANILLOS##########
+##############################################
+
+'1 Anillo del trabajador
+'2 Anillo de aventurero
+'3 Sortija de ultratumba
+'4 Anillo de sabiduria
+
+##############################################
 #############NRO DE OBJS LIBRES###############
 ##############################################
 
@@ -144,7 +153,7 @@ Madera Magica: 1006
 [INIT]
 'aca va el numero de OBJ mas alto, NO la cantidad de OBJs.
 'esto sirve para que los GMS puedan ver la lista completa de items para crear en una ventanita.
-NumOBJs=1327
+NumOBJs=1333
 
 
 [OBJ1]
@@ -5597,6 +5606,7 @@ MinSkill=45
 Materiales=58-1006-0-0
 CantMateriales=1000-10000-0-0
 SkCarpinteria=65
+Speed=2
 
 [OBJ476]
 Name=Galeon
@@ -5614,6 +5624,7 @@ MinSkill=50
 Materiales=58-1006-0-0
 CantMateriales=2000-15000-0-0
 SkCarpinteria=90
+Speed=2.2
 
 [OBJ477]
 Name=Fragata Fantasmal
@@ -8260,6 +8271,7 @@ ObjType=30
 Agarrable=0
 Valor=0
 Crucial=0
+newbie=1
 
 [OBJ667]
 Name=Cota de Mallas (E/G)
@@ -8794,6 +8806,7 @@ CP7=BRUJO
 Materiales=386-0-0-0
 CantMateriales=50-0-0-0
 SkHerreria=50
+MinLevel=25
 
 [OBJ698]
 Name=Anillo de Resistencia Magica
@@ -8815,6 +8828,7 @@ CP8=CAZADOR
 Materiales=386-387-0-0
 CantMateriales=50-50-0-0
 SkHerreria=75
+MinLevel=35
 
 [OBJ699]
 Name=Anillo de Disolucion Magica
@@ -8837,6 +8851,7 @@ CP9=BRUJO
 Materiales=386-387-388-0
 CantMateriales=200-100-50-0
 SkHerreria=90
+MinLevel=45
     
 [OBJ700]
 Name=Anillo de los Dioses
@@ -14078,6 +14093,7 @@ NoSeCae=1
 Valor=0
 Crucial=0
 MinSkill=50
+Speed=2.4
 
 [OBJ1115]
 Name=Montura gran Rey Mono
@@ -14091,6 +14107,7 @@ NoSeCae=1
 MinSkill=80
 Valor=0
 Crucial=0
+Speed=2.4
 
 [OBJ1116]
 Name=Montura Acuatica
@@ -14208,6 +14225,7 @@ NoSeCae=1
 MinSkill=100
 Valor=0
 Crucial=0
+Speed=2.4
 
 [OBJ1122]
 Name=Manual de Equitacion SUPREMO
@@ -14268,7 +14286,8 @@ GrhIndex=25332
 ObjType=29
 Agarrable=0
 Crucial=0
-Valor=100000
+Valor=0
+MinLevel=30
 
 [OBJ1127]
 Name=Secretos de Liderazgo
@@ -14462,6 +14481,7 @@ NoSeCae=1
 Valor=3500000
 Crucial=0
 MinSkill=50
+Speed=2.4
 
 [OBJ1140]
 Name=Espada de las almas
@@ -14766,6 +14786,7 @@ NoSeCae=1
 Valor=5000000
 Crucial=0
 MinSkill=50
+Speed=2.4
 
 [OBJ1157]
 Name=Montura de Gran Dragon negro
@@ -14779,6 +14800,7 @@ NoSeCae=1
 Valor=5000000
 Crucial=0
 MinSkill=50
+Speed=2.4
 
 [OBJ1158]
 Name=Daga +5
@@ -14817,6 +14839,7 @@ MinDef=120
 NoSeCae=1
 Valor=2400000
 Crucial=0
+Speed=2.4
 
 [OBJ1160]
 Name=Montura de Caballo
@@ -14829,6 +14852,7 @@ MinDef=120
 NoSeCae=1
 Valor=2400000
 Crucial=0
+Speed=2.4
 
 [OBJ1161]
 Name=Cuchara Legendaria (Prueba)
@@ -15719,6 +15743,7 @@ ObjType=30
 Agarrable=0
 Valor=0
 Crucial=0
+newbie=1
 
 [OBJ1250]
 Name=Fragmento de arma
@@ -15727,10 +15752,11 @@ ObjType=30
 Agarrable=0
 Valor=0
 Crucial=0
+newbie=1
 
 [OBJ1251]
-Name=Anillo de la hermandad
-GrhIndex=17937
+Name=Amuleto de la hermandad
+GrhIndex=4785
 ObjType=30
 Agarrable=0
 Valor=0
@@ -16524,6 +16550,73 @@ Agarrable=0
 Valor=75000
 Crucial=1
 HechizoIndex=55
+CP1=Mago
+CP2=Brujo
+CP3=Guerrero
+CP4=Asesino
+CP5=Ladron
+CP6=Bardo
+CP7=Druida
+CP8=Bandido
+CP9=Paladin
+CP10=CAZADOR
+CP11=PIRATA
+
+[OBJ1328] 'Reduce el consumo de energia al trabajar en un 50%
+Name=Anillo del trabajador
+GrhIndex=4784
+ObjType=18
+Agarrable=0
+Efecto=1
+Valor=0
+Crucial=0
+
+[OBJ1329] 'Aumenta en +30 el golpe a melee contra npc
+Name=Anillo de aventurero
+GrhIndex=4796
+ObjType=18
+Agarrable=0
+Efecto=2
+Valor=0
+Crucial=0
+MinLevel=25
+
+[OBJ1330] 'No pierde inventario al morir
+Name=Amuleto de ultratumba
+GrhIndex=4794
+ObjType=18
+Agarrable=0
+Efecto=3
+Valor=0
+Crucial=0
+MinLevel=25
+
+[OBJ1331] 'Aumenta regeneracion de mana
+Name=Anillo de sabiduria
+GrhIndex=4797
+ObjType=18
+Agarrable=0
+Efecto=4
+Valor=0
+Crucial=0
+MinLevel=20
+
+[OBJ1332]
+Name=Espada Matadragones rota
+GrhIndex=17937
+ObjType=30
+Agarrable=0
+Valor=0
+Crucial=0
+
+[OBJ1333]
+Name=Resurreccion [CLERIGOS]
+GrhIndex=609
+ObjType=24
+Agarrable=0
+Valor=990000
+Crucial=1
+HechizoIndex=56
 CP1=Mago
 CP2=Brujo
 CP3=Guerrero

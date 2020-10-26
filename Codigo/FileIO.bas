@@ -1121,6 +1121,7 @@ Sub LoadOBJData()
                     .ImpideAturdir = val(Leer.GetValue("OBJ" & Object, "ImpideAturdir")) <> 0
                     .ImpideCegar = val(Leer.GetValue("OBJ" & Object, "ImpideCegar")) <> 0
                     '(/WyroX)
+                    .Efecto = val(Leer.GetValue("OBJ" & Object, "Efecto"))
                     
                 Case eOBJType.otTeleport
                     .Radio = val(Leer.GetValue("OBJ" & Object, "Radio"))
@@ -1148,6 +1149,8 @@ Sub LoadOBJData()
                     .SkNecesarios = val(Leer.GetValue("OBJ" & Object, "SkNecesarios"))
 
             End Select
+            
+            .Speed = val(Leer.GetValue("OBJ" & Object, "Speed")) 'Cambia la velocidad
             
             .Ropaje = val(Leer.GetValue("OBJ" & Object, "NumRopaje"))
             .HechizoIndex = val(Leer.GetValue("OBJ" & Object, "HechizoIndex"))
@@ -1777,6 +1780,7 @@ Sub LoadSini()
     IntervaloInvisible = val(Lector.GetValue("INTERVALOS", "IntervaloInvisible"))
     IntervaloFrio = val(Lector.GetValue("INTERVALOS", "IntervaloFrio"))
     IntervaloWavFx = val(Lector.GetValue("INTERVALOS", "IntervaloWAVFX"))
+    IntervaloNPCPuedeAtacar = val(Lector.GetValue("INTERVALOS", "IntervaloNpcPuedeAtacar"))
     IntervaloInvocacion = val(Lector.GetValue("INTERVALOS", "IntervaloInvocacion"))
     IntervaloParaConexion = val(Lector.GetValue("INTERVALOS", "IntervaloParaConexion"))
     IntervaloUserPuedeCastear = val(Lector.GetValue("INTERVALOS", "IntervaloLanzaHechizo"))
@@ -1927,6 +1931,12 @@ Sub CargarCiudades()
             .Map = Lector.GetValue("Prision-Afuera", "Mapa")
             .X = Lector.GetValue("Prision-Afuera", "X")
             .Y = Lector.GetValue("Prision-Afuera", "Y")
+        End With
+        
+        With IslaNew
+            .Map = Lector.GetValue("IslaNew", "Mapa")
+            .X = Lector.GetValue("IslaNew", "X")
+            .Y = Lector.GetValue("IslaNew", "Y")
         End With
 
     Set Lector = Nothing
@@ -2143,8 +2153,8 @@ Sub Ban(ByVal BannedName As String, ByVal Baneador As String, ByVal Motivo As St
     '
     '***************************************************
 
-    Call WriteVar(App.Path & "\logs\" & "BanDetail.dat", BannedName, "BannedBy", Baneador)
-    Call WriteVar(App.Path & "\logs\" & "BanDetail.dat", BannedName, "Reason", Motivo)
+    Call WriteVar(App.Path & "\Dat\" & "BanDetail.dat", BannedName, "BannedBy", Baneador)
+    Call WriteVar(App.Path & "\Dat\" & "BanDetail.dat", BannedName, "Reason", Motivo)
     
     'Log interno del servidor, lo usa para hacer un UNBAN general de toda la gente banned
     Dim mifile As Integer

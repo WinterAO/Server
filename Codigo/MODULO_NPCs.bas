@@ -177,7 +177,7 @@ Public Sub MuereNpc(ByVal NPCIndex As Integer, ByVal UserIndex As Integer)
                     .Stats.Exp = .Stats.Exp + MiNPC.flags.ExpCount
 
                     If .Stats.Exp > MAXEXP Then .Stats.Exp = MAXEXP
-                    Call WriteConsoleMsg(UserIndex, "Has ganado " & MiNPC.flags.ExpCount & " puntos de experiencia.", FontTypeNames.FONTTYPE_FIGHT)
+                    Call WriteConsoleMsg(UserIndex, "Has ganado " & MiNPC.flags.ExpCount & " puntos de experiencia.", FontTypeNames.FONTTYPE_EXP)
 
                 End If
 
@@ -919,10 +919,10 @@ Public Function MoveNPCChar(ByVal NPCIndex As Integer, ByVal nHeading As Byte) A
             Call CheckUpdateNeededNpc(NPCIndex, nHeading)
             
             'Si es un WorldBoss y se aleja 10 tiles de su OrigPos se le devuelve.
-            If Npclist(NPCIndex).NPCtype = eNPCType.WorldBoss And Npclist(NPCIndex).Pos.X <= (Npclist(NPCIndex).Orig.X - 10) Or _
-                Npclist(NPCIndex).Pos.X >= (Npclist(NPCIndex).Orig.X + 10) Or Npclist(NPCIndex).Pos.Y <= (Npclist(NPCIndex).Orig.Y - 10) Or _
-                    Npclist(NPCIndex).Pos.Y >= (Npclist(NPCIndex).Orig.Y + 10) Then
-                                        
+            If Npclist(NPCIndex).NPCtype = eNPCType.WorldBoss And Npclist(NPCIndex).Pos.X <= (Npclist(NPCIndex).Orig.X - 20) Or _
+                Npclist(NPCIndex).Pos.X >= (Npclist(NPCIndex).Orig.X + 20) Or Npclist(NPCIndex).Pos.Y <= (Npclist(NPCIndex).Orig.Y - 20) Or _
+                    Npclist(NPCIndex).Pos.Y >= (Npclist(NPCIndex).Orig.Y + 20) Then
+ 
                 Call NPCTelep(NPCIndex, Npclist(NPCIndex).Orig, True)
                     
             End If
@@ -1166,8 +1166,11 @@ Public Sub NPCTelep(ByVal NPCIndex As Integer, Posicion As WorldPos, ByVal FXTel
             Call CheckUpdateNeededNpc(NPCIndex, nHeading)
             
             '¿Mostramos FX?
-            If FXTelep Then _
+            If FXTelep Then
                 Call SendData(SendTarget.ToPCArea, NPCIndex, PrepareMessagePlayWave(SND_WARP, Posicion.X, Posicion.Y))
+                Call SendData(SendTarget.ToPCArea, NPCIndex, PrepareMessageCreateFX(.Char.CharIndex, FXIDs.FXWARP, 0))
+                
+            End If
                 
         End If
     End With
@@ -1388,6 +1391,8 @@ Public Function OpenNPC(ByVal NpcNumber As Integer, _
         .NoShadow = val(Leer.GetValue("NPC" & NpcNumber, "NoShadow"))
         
         .Instruye = val(Leer.GetValue("NPC" & NpcNumber, "Instruye"))
+        
+        .SpeedVar = val(Leer.GetValue("NPC" & NpcNumber, "Speed"))
 
     End With
     

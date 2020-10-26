@@ -13,7 +13,7 @@ RequiredNPC2=517-10 'Pollo Envenenado
 RequiredOBJs=1
 RequiredOBJ1=1249-5
  
-RewardEXP=800
+RewardEXP=1600
 RewardGLD=1000
  
 RewardOBJs=2
@@ -32,7 +32,7 @@ RequiredNPC2=504-15 'Murcielago
 RequiredOBJs=1
 RequiredOBJ1=666-5
  
-RewardGLD=1500
+RewardGLD=3000
 RewardEXP=1200
  
 RewardOBJs=0
@@ -49,7 +49,7 @@ RequiredNPC2=608-10 'Orco
 RequiredOBJs=1
 RequiredOBJ1=1250-5 'Fragmento de Arma
  
-RewardEXP=2500
+RewardEXP=5000
 RewardGLD=1700
  
 RewardOBJs=1
@@ -64,7 +64,7 @@ RequiredLevel=1
 RequiredNPCs=1
 RequiredNPC1=607-1 'Unicornio
 
-RewardEXP=500
+RewardEXP=1000
 RewardGLD=3500
  
 RewardOBJs=1

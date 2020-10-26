@@ -364,7 +364,7 @@ Public Function CalcularDano(ByVal UserIndex As Integer, _
                         If Npclist(NPCIndex).NPCtype = DRAGON Then 'Ataca Dragon?
                             DanoArma = RandomNumber(Arma.MinHIT, Arma.MaxHIT)
                             DanoMaxArma = Arma.MaxHIT
-                            matoDragon = True ''sacar esto si no queremos q la matadracos mate el Dragon si o si
+                            matoDragon = False ''sacar esto si no queremos q la matadracos mate el Dragon si o si
                         Else ' Sino es Dragon dano es 1
                             DanoArma = 1
                             DanoMaxArma = 1
@@ -474,6 +474,12 @@ Public Sub UserDanoNpc(ByVal UserIndex As Integer, ByVal NPCIndex As Integer)
     
     DanoBase = CalcularDano(UserIndex, NPCIndex)
     
+    '¿Tiene anillo del aventurero?
+    If UserList(UserIndex).Invent.AnilloEqpObjIndex > 0 Then
+        If ObjData(UserList(UserIndex).Invent.AnilloEqpObjIndex).Efecto = Aventurero Then _
+            DanoBase = DanoBase + 30
+    End If
+    
     'esta navegando? si es asi le sumamos el dano del barco
     If UserList(UserIndex).flags.Navegando = 1 Then
     
@@ -532,12 +538,20 @@ Public Sub UserDanoNpc(ByVal UserIndex As Integer, ByVal NPCIndex As Integer)
         
         If .Stats.MinHp <= 0 Then
 
-            ' Si era un Dragon perdemos la espada mataDragones
+            ' Si era un Dragon rompemos la espada mataDragones
             If .NPCtype = DRAGON Then
 
-                'Si tiene equipada la matadracos se la sacamos
+                'Si tiene equipada la matadracos la reemplazamos por una MD rota
                 If UserList(UserIndex).Invent.WeaponEqpObjIndex = EspadaMataDragonesIndex Then
                     Call QuitarObjetos(EspadaMataDragonesIndex, 1, UserIndex)
+                    
+                    Dim MDRota As obj
+            
+                    MDRota.Amount = 1
+                    MDRota.ObjIndex = EspadaMataDragonesROTA
+            
+                    If Not MeterItemEnInventario(UserIndex, MDRota) Then _
+                        Call TirarItemAlPiso(UserList(UserIndex).Pos, MDRota)
 
                 End If
 
@@ -1231,6 +1245,11 @@ Public Sub UsuarioAtaca(ByVal UserIndex As Integer)
 
     Dim AttackPos As WorldPos
     Dim bot_Index As Byte
+    
+    If UserList(UserIndex).flags.ModoCombate = False Then
+        Call WriteConsoleMsg(UserIndex, "Para atacar debes activar el modo combate", FontTypeNames.FONTTYPE_INFO)
+        Exit Sub
+    End If
     
     'Check bow's interval
     If Not IntervaloPermiteUsarArcos(UserIndex, False) Then Exit Sub
@@ -2625,7 +2644,7 @@ Sub CalcularDarExp(ByVal UserIndex As Integer, _
     'Si hay una diferencia de 7 niveles por encima, el bicho solo dara el 10% de la experiencia
     If (Npclist(NPCIndex).Stats.ELV - 7) > UserList(UserIndex).Stats.ELV Then
         ExpaDar = Porcentaje(ExpaDar, 10)
-        Call WriteConsoleMsg(UserIndex, "La criatura es muy fuerte, no consigues obtener demasiada experiencia.", FontTypeNames.FONTTYPE_INFO)
+        Call WriteConsoleMsg(UserIndex, "La criatura es muy fuerte, no consigues obtener demasiada experiencia.", FontTypeNames.FONTTYPE_VENENO)
     End If
     
     '[Nacho] Vamos contando cuanta experiencia sacamos, porque se da toda la que no se dio al user que mata al NPC
@@ -2647,7 +2666,7 @@ Sub CalcularDarExp(ByVal UserIndex As Integer, _
             UserList(UserIndex).Stats.Exp = UserList(UserIndex).Stats.Exp + ExpaDar
 
             If UserList(UserIndex).Stats.Exp > MAXEXP Then UserList(UserIndex).Stats.Exp = MAXEXP
-            Call WriteConsoleMsg(UserIndex, "Has ganado " & ExpaDar & " puntos de experiencia.", FontTypeNames.FONTTYPE_FIGHT)
+            Call WriteConsoleMsg(UserIndex, "Has ganado " & ExpaDar & " puntos de experiencia.", FontTypeNames.FONTTYPE_EXP)
 
         End If
         

@@ -32,3 +32,8 @@ MAPA=35
 X=43
 Y=67
 MAPA=35
+
+[IslaNew]
+X=56
+Y=33
+MAPA=114
