@@ -277,7 +277,6 @@ Private Enum ClientPacketID
     CouncilMessage                '/BMSG
     RoleMasterRequest             '/ROL
     GMRequest                     '/GM
-    bugReport                     '/_BUG
     ChangeDescription             '/DESC
     GuildVote                     '/VOTO
     punishments                   '/PENAS
@@ -775,9 +774,6 @@ Public Function HandleIncomingData(ByVal UserIndex As Integer) As Boolean
         
         Case ClientPacketID.GMRequest               '/GM
             Call HandleGMRequest(UserIndex)
-        
-        Case ClientPacketID.bugReport               '/_BUG
-            Call HandleBugReport(UserIndex)
         
         Case ClientPacketID.ChangeDescription       '/DESC
             Call HandleChangeDescription(UserIndex)
@@ -7664,71 +7660,6 @@ Private Sub HandleGMRequest(ByVal UserIndex As Integer)
         End Select
         
     End With
-End Sub
-
-''
-' Handles the "BugReport" message.
-'
-' @param    userIndex The index of the user sending the message.
-
-Private Sub HandleBugReport(ByVal UserIndex As Integer)
-
-    '***************************************************
-    'Author: Juan Martin Sotuyo Dodero (Maraxus)
-    'Last Modification: 05/17/06
-    '
-    '***************************************************
-    If UserList(UserIndex).incomingData.Length < 3 Then
-        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
-        Exit Sub
-
-    End If
-    
-    On Error GoTo errHandler
-
-    With UserList(UserIndex)
-
-        'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
-        Dim buffer As clsByteQueue
-        Set buffer = New clsByteQueue
-
-        Dim n As Integer
-        
-        Call buffer.CopyBuffer(.incomingData)
-        
-        'Remove packet ID
-        Call buffer.ReadByte
-        
-        Dim bugReport As String
-        
-        bugReport = buffer.ReadASCIIString()
-        
-        n = FreeFile
-        Open App.Path & "\LOGS\BUGs.log" For Append Shared As n
-        Print #n, "Usuario:" & .Name & "  Fecha:" & Date & "    Hora:" & time
-        Print #n, "BUG:"
-        Print #n, bugReport
-        Print #n, "########################################################################"
-        Close #n
-        
-        'If we got here then packet is complete, copy data back to original queue
-        Call .incomingData.CopyBuffer(buffer)
-
-    End With
-    
-errHandler:
-
-    Dim Error As Long
-
-    Error = Err.Number
-
-    On Error GoTo 0
-    
-    'Destroy auxiliar buffer
-    Set buffer = Nothing
-    
-    If Error <> 0 Then Err.Raise Error
-
 End Sub
 
 ''

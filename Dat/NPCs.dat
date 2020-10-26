@@ -4158,7 +4158,7 @@ PoderAtaque=84
 PoderEvasion=30
 BackUp=0
 NROITEMS=0
-Speed=370
+Speed=470
 
 [NPC658]
 Name=Orco Guerrero
@@ -4247,7 +4247,7 @@ PoderAtaque=84
 PoderEvasion=125
 BackUp=0
 NROITEMS=0
-Speed=370
+Speed=470
 
 [NPC661]
 Name=Jefe Mono
