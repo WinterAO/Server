@@ -233,22 +233,22 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
         '*******************************************************************
         'Atributos
         '*******************************************************************
-        query = "INSERT INTO attribute (user_id, number, value) VALUES "
+        query = "INSERT INTO attribute (user_id, "
 
         For LoopC = 1 To NUMATRIBUTOS
-            query = query & "("
-            query = query & .ID & ", "
-            query = query & LoopC & ", "
-            query = query & .Stats.UserAtributos(LoopC) & ")"
+            query = query & " att" & LoopC
+            If LoopC < NUMATRIBUTOS Then query = query & ", "
+        Next LoopC
 
-            If LoopC < NUMATRIBUTOS Then
-                query = query & ", "
-            Else
-                query = query & ";"
+        query = query & ") VALUES (" & .ID & ", "
 
-            End If
+        For LoopC = 1 To NUMATRIBUTOS
+            query = query & .Stats.UserAtributos(LoopC)
+            If LoopC < NUMATRIBUTOS Then query = query & ", "
 
         Next LoopC
+        
+        query = query & ");"
 
         Call Database_Connection.Execute(query)
 
@@ -880,15 +880,15 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
         Set Database_RecordSet = Database_Connection.Execute(query)
     
         If Not Database_RecordSet.RecordCount = 0 Then
+            
             Database_RecordSet.MoveFirst
+            
+            For LoopC = 1 To NUMATRIBUTOS
 
-            While Not Database_RecordSet.EOF
+                .Stats.UserAtributos(LoopC) = Database_RecordSet("att" & LoopC)
+                .Stats.UserAtributosBackUP(LoopC) = .Stats.UserAtributos(LoopC)
 
-                .Stats.UserAtributos(Database_RecordSet!Number) = Database_RecordSet!Value
-                .Stats.UserAtributosBackUP(Database_RecordSet!Number) = .Stats.UserAtributos(Database_RecordSet!Number)
-
-                Database_RecordSet.MoveNext
-            Wend
+            Next LoopC
 
         End If
 

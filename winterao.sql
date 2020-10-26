@@ -62,85 +62,12 @@ INSERT INTO `account` (`id`, `username`, `email`, `password`, `salt`, `id_recupe
 
 CREATE TABLE `attribute` (
   `user_id` mediumint(8) UNSIGNED NOT NULL,
-  `number` tinyint(3) UNSIGNED NOT NULL,
-  `value` tinyint(3) UNSIGNED NOT NULL
+  `att1` tinyint(3) UNSIGNED NOT NULL,
+  `att2` tinyint(3) UNSIGNED NOT NULL,
+  `att3` tinyint(3) UNSIGNED NOT NULL,
+  `att4` tinyint(3) UNSIGNED NOT NULL,
+  `att5` tinyint(3) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Volcado de datos para la tabla `attribute`
---
-
-INSERT INTO `attribute` (`user_id`, `number`, `value`) VALUES
-(1, 1, 19),
-(1, 2, 19),
-(1, 3, 18),
-(1, 4, 18),
-(1, 5, 20),
-(2, 1, 19),
-(2, 2, 19),
-(2, 3, 18),
-(2, 4, 18),
-(2, 5, 20),
-(3, 1, 19),
-(3, 2, 19),
-(3, 3, 18),
-(3, 4, 18),
-(3, 5, 20),
-(4, 1, 19),
-(4, 2, 19),
-(4, 3, 18),
-(4, 4, 18),
-(4, 5, 20),
-(5, 1, 16),
-(5, 2, 21),
-(5, 3, 22),
-(5, 4, 19),
-(5, 5, 18),
-(6, 1, 20),
-(6, 2, 19),
-(6, 3, 19),
-(6, 4, 18),
-(6, 5, 19),
-(7, 1, 16),
-(7, 2, 21),
-(7, 3, 22),
-(7, 4, 19),
-(7, 5, 18),
-(8, 1, 20),
-(8, 2, 19),
-(8, 3, 19),
-(8, 4, 18),
-(8, 5, 19),
-(9, 1, 20),
-(9, 2, 19),
-(9, 3, 19),
-(9, 4, 18),
-(9, 5, 19),
-(10, 1, 20),
-(10, 2, 19),
-(10, 3, 19),
-(10, 4, 18),
-(10, 5, 19),
-(11, 1, 20),
-(11, 2, 21),
-(11, 3, 20),
-(11, 4, 18),
-(11, 5, 18),
-(12, 1, 19),
-(12, 2, 19),
-(12, 3, 18),
-(12, 4, 18),
-(12, 5, 20),
-(13, 1, 17),
-(13, 2, 21),
-(13, 3, 21),
-(13, 4, 20),
-(13, 5, 19),
-(14, 1, 16),
-(14, 2, 21),
-(14, 3, 22),
-(14, 4, 19),
-(14, 5, 18);
 
 -- --------------------------------------------------------
 
@@ -8159,7 +8086,9 @@ CREATE TABLE `usuario` (
   `guild_rejected_because` varchar(255) DEFAULT NULL,
   `is_global` tinyint(1) DEFAULT 1,
   `profesionA` int(2) NOT NULL DEFAULT 0,
-  `ProfesionB` int(2) NOT NULL DEFAULT 0
+  `ProfesionB` int(2) NOT NULL DEFAULT 0,
+  `modocombate` tinyint(4) DEFAULT 0,
+  `seguro` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -8196,7 +8125,7 @@ ALTER TABLE `account`
 -- Indices de la tabla `attribute`
 --
 ALTER TABLE `attribute`
-  ADD PRIMARY KEY (`user_id`,`number`);
+  ADD PRIMARY KEY (`user_id`);
 
 --
 -- Indices de la tabla `pet`
