@@ -326,24 +326,24 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
         '*******************************************************************
         'Skills
         '*******************************************************************
-        query = "INSERT INTO skillpoint (user_id, number, value, exp, elu) VALUES "
+        query = "INSERT INTO skillpoint (user_id, "
+        
+        For LoopC = 1 To NUMSKILLS
+            query = query & "sk" & LoopC & ", exp" & LoopC & ", elu" & LoopC
+            If LoopC < NUMSKILLS Then query = query & ", "
+        Next LoopC
+        
+        query = query & ") VALUES (" & .ID & ", "
 
         For LoopC = 1 To NUMSKILLS
-            query = query & "("
-            query = query & .ID & ", "
-            query = query & LoopC & ", "
             query = query & .Stats.UserSkills(LoopC) & ", "
             query = query & .Stats.ExpSkills(LoopC) & ", "
-            query = query & .Stats.EluSkills(LoopC) & ")"
-
-            If LoopC < NUMSKILLS Then
-                query = query & ", "
-            Else
-                query = query & ";"
-
-            End If
+            query = query & .Stats.EluSkills(LoopC)
+            If LoopC < NUMSKILLS Then query = query & ", "
 
         Next LoopC
+        
+        query = query & ");"
 
         Call Database_Connection.Execute(query)
         
@@ -607,15 +607,19 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
         '*******************************************************************
         'Skills
         '*******************************************************************
+        query = "UPDATE skillpoint SET "
+        
         For LoopC = 1 To NUMSKILLS
-            query = "UPDATE skillpoint SET "
-            query = query & "value = '" & .Stats.UserSkills(LoopC) & "', "
-            query = query & "exp = '" & .Stats.ExpSkills(LoopC) & "', "
-            query = query & "elu = '" & .Stats.EluSkills(LoopC) & "' "
-            query = query & "WHERE user_id = '" & .ID & "' AND number = '" & LoopC & "'"
             
-            Call Database_Connection.Execute(query)
+            query = query & "sk" & LoopC & " = '" & .Stats.UserSkills(LoopC) & "', "
+            query = query & "exp" & LoopC & " = '" & .Stats.ExpSkills(LoopC) & "', "
+            query = query & "elu" & LoopC & " = '" & .Stats.EluSkills(LoopC) & "' "
+
         Next LoopC
+        
+        query = query & "WHERE user_id = '" & .ID & "'"
+        
+        Call Database_Connection.Execute(query)
 
         '*******************************************************************
         'Recetas
@@ -977,14 +981,11 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
         If Not Database_RecordSet.RecordCount = 0 Then
             Database_RecordSet.MoveFirst
 
-            While Not Database_RecordSet.EOF
-
-                .Stats.UserSkills(Database_RecordSet!Number) = Database_RecordSet!Value
-                .Stats.ExpSkills(Database_RecordSet!Number) = Database_RecordSet!Exp
-                .Stats.EluSkills(Database_RecordSet!Number) = Database_RecordSet!ELU
-
-                Database_RecordSet.MoveNext
-            Wend
+            For LoopC = 1 To NUMSKILLS
+                .Stats.UserSkills(Database_RecordSet!Number) = Database_RecordSet("sk" & LoopC)
+                .Stats.ExpSkills(Database_RecordSet!Number) = Database_RecordSet("exp" & LoopC)
+                .Stats.EluSkills(Database_RecordSet!Number) = Database_RecordSet("elu" & LoopC)
+            Next LoopC
 
         End If
 
