@@ -412,6 +412,27 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
         query = query & ");"
 
         Call Database_Connection.Execute(query)
+        
+        '*******************************************************************
+        'Mascotas
+        '*******************************************************************
+        query = "INSERT INTO pet (user_id, "
+        
+        For LoopC = 1 To MAXMASCOTAS
+            query = query & "pet" & LoopC
+            If LoopC < MAXMASCOTAS Then query = query & ", "
+        Next LoopC
+
+        query = query & ") VALUES (" & .ID & ", "
+
+        For LoopC = 1 To MAXMASCOTAS
+            query = query & .MascotasIndex(LoopC)
+            If LoopC < MAXMASCOTAS Then query = query & ", "
+        Next LoopC
+
+        query = query & ");"
+
+        Call Database_Connection.Execute(query)
     End With
     
     #If DBConexionUnica = 0 Then
@@ -651,9 +672,11 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
         'Mascotas
         '*******************************************************************
         Dim petType As Integer
+        
+        query = "UPDATE pet SET "
+        
         For LoopC = 1 To MAXMASCOTAS
-            query = "UPDATE pet SET "
-
+            
             'CHOTS | I got this logic from SaveUserToCharfile
             If .MascotasIndex(LoopC) > 0 Then
                 If Npclist(.MascotasIndex(LoopC)).Contadores.TiempoExistencia = 0 Then
@@ -668,11 +691,13 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
 
             End If
 
-            query = query & "pet_id = '" & petType & "' "
-            query = query & "WHERE user_id = '" & .ID & "' AND number = '" & LoopC & "'"
-
-            Call Database_Connection.Execute(query)
+            query = query & "pet" & LoopC & " = '" & petType & "' "
+            If LoopC < MAXMASCOTAS Then query = query & ", "
         Next LoopC
+        
+        query = query & "WHERE user_id = '" & .ID & "'"
+
+        Call Database_Connection.Execute(query)
 
     End With
 
@@ -931,12 +956,9 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
         If Not Database_RecordSet.RecordCount = 0 Then
             Database_RecordSet.MoveFirst
 
-            While Not Database_RecordSet.EOF
-
-                .MascotasType(Database_RecordSet!Number) = Database_RecordSet!pet_id
-
-                Database_RecordSet.MoveNext
-            Wend
+            For LoopC = 1 To MAXMASCOTAS
+                .MascotasType(LoopC) = Database_RecordSet("pet" & LoopC)
+            Next LoopC
 
         End If
 
