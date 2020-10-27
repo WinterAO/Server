@@ -374,47 +374,44 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
         '*******************************************************************
         'Profesion primaria
         '*******************************************************************
-        query = "INSERT INTO profesion_primaria (user_id, number, receta_id) VALUES "
+        query = "INSERT INTO profesion_primaria (user_id, profesion, "
+        
+        For LoopC = 1 To MAXUSERRECETAS
+            query = query & "receta" & LoopC
+            If LoopC < MAXUSERRECETAS Then query = query & ", "
+        Next LoopC
+
+        query = query & ") VALUES (" & .ID & ", " & .Profesion(0).Profesion & ", "
 
         For LoopC = 1 To MAXUSERRECETAS
-            query = query & "("
-            query = query & .ID & ", "
-            query = query & LoopC & ", "
-            query = query & .Profesion(0).Recetas(LoopC) & ")"
-
-            If LoopC < MAXUSERRECETAS Then
-                query = query & ", "
-            Else
-                query = query & ";"
-
-            End If
-
+            query = query & .Profesion(0).Recetas(LoopC)
+            If LoopC < MAXUSERRECETAS Then query = query & ", "
         Next LoopC
+
+        query = query & ");"
 
         Call Database_Connection.Execute(query)
         
         '*******************************************************************
         'Profesion secundaria
         '*******************************************************************
-        query = "INSERT INTO profesion_secundaria (user_id, number, receta_id) VALUES "
-
+        query = "INSERT INTO profesion_secundaria (user_id, profesion, "
+        
         For LoopC = 1 To MAXUSERRECETAS
-            query = query & "("
-            query = query & .ID & ", "
-            query = query & LoopC & ", "
-            query = query & .Profesion(1).Recetas(LoopC) & ")"
-
-            If LoopC < MAXUSERRECETAS Then
-                query = query & ", "
-            Else
-                query = query & ";"
-
-            End If
-
+            query = query & "receta" & LoopC
+            If LoopC < MAXUSERRECETAS Then query = query & ", "
         Next LoopC
 
-        Call Database_Connection.Execute(query)
+        query = query & ") VALUES (" & .ID & ", " & .Profesion(1).Profesion & ", "
 
+        For LoopC = 1 To MAXUSERRECETAS
+            query = query & .Profesion(1).Recetas(LoopC)
+            If LoopC < MAXUSERRECETAS Then query = query & ", "
+        Next LoopC
+
+        query = query & ");"
+
+        Call Database_Connection.Execute(query)
     End With
     
     #If DBConexionUnica = 0 Then
@@ -613,32 +610,42 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
             
             query = query & "sk" & LoopC & " = '" & .Stats.UserSkills(LoopC) & "', "
             query = query & "exp" & LoopC & " = '" & .Stats.ExpSkills(LoopC) & "', "
-            query = query & "elu" & LoopC & " = '" & .Stats.EluSkills(LoopC) & "' "
+            query = query & "elu" & LoopC & " = '" & .Stats.EluSkills(LoopC) & "'"
+            If LoopC < NUMSKILLS Then query = query & ", "
 
         Next LoopC
         
-        query = query & "WHERE user_id = '" & .ID & "'"
+        query = query & " WHERE user_id = '" & .ID & "'"
         
         Call Database_Connection.Execute(query)
-
+       
         '*******************************************************************
-        'Recetas
+        'Profesion primaria
         '*******************************************************************
-        For LoopC = 1 To MAXUSERRECETAS
-            query = "UPDATE profesion_primaria SET "
-            query = query & "receta_id = '" & .Profesion(0).Recetas(LoopC) & "' "
-            query = query & "WHERE user_id = '" & .ID & "' AND number = '" & LoopC & "'"
-            
-            Call Database_Connection.Execute(query)
-        Next LoopC
+        query = "UPDATE profesion_primaria SET profesion" & " = '" & .Profesion(0).Profesion & "', "
         
         For LoopC = 1 To MAXUSERRECETAS
-            query = "UPDATE profesion_secundaria SET "
-            query = query & "receta_id = '" & .Profesion(1).Recetas(LoopC) & "' "
-            query = query & "WHERE user_id = '" & .ID & "' AND number = '" & LoopC & "'"
-            
-            Call Database_Connection.Execute(query)
+            query = query & "receta" & LoopC & " = '" & .Profesion(0).Recetas(LoopC) & "'"
+            If LoopC < MAXUSERRECETAS Then query = query & ", "
         Next LoopC
+        
+        query = query & " WHERE user_id = '" & .ID & "'"
+            
+        Call Database_Connection.Execute(query)
+        
+        '*******************************************************************
+        'Profesion secundaria
+        '*******************************************************************
+        query = "UPDATE profesion_secundaria SET profesion" & " = '" & .Profesion(1).Profesion & "', "
+        
+        For LoopC = 1 To MAXUSERRECETAS
+            query = query & "receta" & LoopC & " = '" & .Profesion(1).Recetas(LoopC) & "'"
+            If LoopC < MAXUSERRECETAS Then query = query & ", "
+        Next LoopC
+        
+        query = query & " WHERE user_id = '" & .ID & "'"
+            
+        Call Database_Connection.Execute(query)
         
         '*******************************************************************
         'Mascotas
@@ -982,9 +989,9 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
             Database_RecordSet.MoveFirst
 
             For LoopC = 1 To NUMSKILLS
-                .Stats.UserSkills(Database_RecordSet!Number) = Database_RecordSet("sk" & LoopC)
-                .Stats.ExpSkills(Database_RecordSet!Number) = Database_RecordSet("exp" & LoopC)
-                .Stats.EluSkills(Database_RecordSet!Number) = Database_RecordSet("elu" & LoopC)
+                .Stats.UserSkills(LoopC) = Database_RecordSet("sk" & LoopC)
+                .Stats.ExpSkills(LoopC) = Database_RecordSet("exp" & LoopC)
+                .Stats.EluSkills(LoopC) = Database_RecordSet("elu" & LoopC)
             Next LoopC
 
         End If
@@ -1000,12 +1007,11 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
         If Not Database_RecordSet.RecordCount = 0 Then
             Database_RecordSet.MoveFirst
 
-            While Not Database_RecordSet.EOF
+            .Profesion(0).Profesion = Database_RecordSet("profesion")
 
-                .Profesion(0).Recetas(Database_RecordSet!Number) = Database_RecordSet!receta_id
-
-                Database_RecordSet.MoveNext
-            Wend
+            For LoopC = 1 To MAXUSERRECETAS
+                .Profesion(0).Recetas(LoopC) = Database_RecordSet("receta" & LoopC)
+            Next LoopC
 
         End If
 
@@ -1020,12 +1026,11 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
         If Not Database_RecordSet.RecordCount = 0 Then
             Database_RecordSet.MoveFirst
 
-            While Not Database_RecordSet.EOF
+            .Profesion(1).Profesion = Database_RecordSet("profesion")
 
-                .Profesion(1).Recetas(Database_RecordSet!Number) = Database_RecordSet!receta_id
-
-                Database_RecordSet.MoveNext
-            Wend
+            For LoopC = 1 To MAXUSERRECETAS
+                .Profesion(1).Recetas(LoopC) = Database_RecordSet("receta" & LoopC)
+            Next LoopC
 
         End If
 
