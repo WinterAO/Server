@@ -2641,9 +2641,9 @@ Sub CalcularDarExp(ByVal UserIndex As Integer, _
 
     If ExpaDar <= 0 Then Exit Sub
     
-    'Si hay una diferencia de 7 niveles por encima, el bicho solo dara el 10% de la experiencia
+    'Si hay una diferencia de 7 niveles por encima, el bicho solo dara el 5% de la experiencia
     If (Npclist(NPCIndex).Stats.ELV - 7) > UserList(UserIndex).Stats.ELV Then
-        ExpaDar = Porcentaje(ExpaDar, 10)
+        ExpaDar = Porcentaje(ExpaDar, 5)
         Call WriteConsoleMsg(UserIndex, "La criatura es muy fuerte, no consigues obtener demasiada experiencia.", FontTypeNames.FONTTYPE_VENENO)
     End If
     

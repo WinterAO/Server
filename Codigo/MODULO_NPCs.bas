@@ -171,13 +171,21 @@ Public Sub MuereNpc(ByVal NPCIndex As Integer, ByVal UserIndex As Integer)
             
             '[KEVIN]
             If MiNPC.flags.ExpCount > 0 Then
+                Dim ExpaDar As Long
+                
+                'Si hay una diferencia de 7 niveles por encima, el bicho solo dara el 5% de la experiencia
+                If (Npclist(NPCIndex).Stats.ELV - 7) > UserList(UserIndex).Stats.ELV Then
+                    ExpaDar = Porcentaje(MiNPC.flags.ExpCount, 5)
+                    Call WriteConsoleMsg(UserIndex, "La criatura es muy fuerte, no consigues obtener demasiada experiencia.", FontTypeNames.FONTTYPE_VENENO)
+                End If
+            
                 If .PartyIndex > 0 Then
-                    Call mdParty.ObtenerExito(UserIndex, MiNPC.flags.ExpCount, MiNPC.Pos.Map, MiNPC.Pos.X, MiNPC.Pos.Y)
+                    Call mdParty.ObtenerExito(UserIndex, ExpaDar, MiNPC.Pos.Map, MiNPC.Pos.X, MiNPC.Pos.Y)
                 Else
-                    .Stats.Exp = .Stats.Exp + MiNPC.flags.ExpCount
+                    .Stats.Exp = .Stats.Exp + ExpaDar
 
                     If .Stats.Exp > MAXEXP Then .Stats.Exp = MAXEXP
-                    Call WriteConsoleMsg(UserIndex, "Has ganado " & MiNPC.flags.ExpCount & " puntos de experiencia.", FontTypeNames.FONTTYPE_EXP)
+                    Call WriteConsoleMsg(UserIndex, "Has ganado " & ExpaDar & " puntos de experiencia.", FontTypeNames.FONTTYPE_EXP)
 
                 End If
 
