@@ -17,7 +17,7 @@ End Enum
  
 'Constantes de las quests
 Public Const MAXUSERQUESTS As Integer = 5      'Maxima cantidad de quests aceptadas sin completar que puede tener un usuario al mismo tiempo.
-Public Const MAXQUESTS As Integer = 200        'Maxima cantidad de quests que puede tener un usuario
+Public Const MAXQUESTS As Integer = 250        'Maxima cantidad de quests que puede tener un usuario
 Public NumQuests As Integer                    'Num de quest dateadas actualmente
  
 Public Function TieneQuest(ByVal UserIndex As Integer, _

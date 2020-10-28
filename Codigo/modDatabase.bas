@@ -159,7 +159,7 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
 
     Dim UserID As Integer
 
-    Dim LoopC  As Byte
+    Dim LoopC  As Integer
 
     #If DBConexionUnica = 0 Then
         Call Database_Connect
@@ -230,173 +230,233 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
 
         .ID = UserID
 
-        'User attributes
-        query = "INSERT INTO attribute (user_id, number, value) VALUES "
+        '*******************************************************************
+        'Atributos
+        '*******************************************************************
+        query = "INSERT INTO attribute (user_id, "
 
         For LoopC = 1 To NUMATRIBUTOS
-            query = query & "("
-            query = query & .ID & ", "
-            query = query & LoopC & ", "
-            query = query & .Stats.UserAtributos(LoopC) & ")"
+            query = query & " att" & LoopC
+            If LoopC < NUMATRIBUTOS Then query = query & ", "
+        Next LoopC
 
-            If LoopC < NUMATRIBUTOS Then
-                query = query & ", "
-            Else
-                query = query & ";"
+        query = query & ") VALUES (" & .ID & ", "
 
-            End If
+        For LoopC = 1 To NUMATRIBUTOS
+            query = query & .Stats.UserAtributos(LoopC)
+            If LoopC < NUMATRIBUTOS Then query = query & ", "
 
         Next LoopC
+        
+        query = query & ");"
 
         Call Database_Connection.Execute(query)
 
-        'User spells
-        query = "INSERT INTO spell (user_id, number, spell_id) VALUES "
+        '*******************************************************************
+        'Hechizos
+        '*******************************************************************
+        query = "INSERT INTO spell (user_id, "
 
         For LoopC = 1 To MAXUSERHECHIZOS
-            query = query & "("
-            query = query & .ID & ", "
-            query = query & LoopC & ", "
-            query = query & .Stats.UserHechizos(LoopC) & ")"
+            query = query & " spell_id" & LoopC
+            If LoopC < MAXUSERHECHIZOS Then query = query & ", "
+        Next LoopC
 
-            If LoopC < MAXUSERHECHIZOS Then
-                query = query & ", "
-            Else
-                query = query & ";"
+        query = query & ") VALUES (" & .ID & ", "
 
-            End If
+        For LoopC = 1 To MAXUSERHECHIZOS
+            query = query & .Stats.UserHechizos(LoopC)
+            If LoopC < MAX_INVENTORY_SLOTS Then query = query & ", "
 
         Next LoopC
+        
+        query = query & ");"
 
         Call Database_Connection.Execute(query)
 
-        'User inventory
-        query = "INSERT INTO inventory_item (user_id, number, item_id, amount, is_equipped) VALUES "
-
+        '*******************************************************************
+        'Inventario
+        '*******************************************************************
+        query = "INSERT INTO inventory_item (user_id, "
+        
         For LoopC = 1 To MAX_INVENTORY_SLOTS
-            query = query & "("
-            query = query & .ID & ", "
-            query = query & LoopC & ", "
+            query = query & "item_id" & LoopC & ", amount" & LoopC & ", is_equipped" & LoopC
+            If LoopC < MAX_INVENTORY_SLOTS Then query = query & ", "
+        Next LoopC
+        
+        query = query & ") VALUES (" & .ID & ", "
+        
+        For LoopC = 1 To MAX_INVENTORY_SLOTS
+
             query = query & .Invent.Object(LoopC).ObjIndex & ", "
             query = query & .Invent.Object(LoopC).Amount & ", "
-            query = query & .Invent.Object(LoopC).Equipped & ")"
-
-            If LoopC < MAX_INVENTORY_SLOTS Then
-                query = query & ", "
-            Else
-                query = query & ";"
-
-            End If
-
+            query = query & .Invent.Object(LoopC).Equipped
+            If LoopC < MAX_INVENTORY_SLOTS Then query = query & ", "
+            
         Next LoopC
-
-        Call Database_Connection.Execute(query)
         
-        'User Boveda
-        query = "INSERT INTO bank_item (user_id, number, item_id, amount) VALUES "
-
-        For LoopC = 1 To MAX_BANCOINVENTORY_SLOTS
-            query = query & "("
-            query = query & .ID & ", "
-            query = query & LoopC & ", "
-            query = query & .BancoInvent.Object(LoopC).ObjIndex & ", "
-            query = query & .BancoInvent.Object(LoopC).Amount & ")"
-
-            If LoopC < MAX_BANCOINVENTORY_SLOTS Then
-                query = query & ", "
-            Else
-                query = query & ";"
-
-            End If
-
-        Next LoopC
+        query = query & ");"
 
         Call Database_Connection.Execute(query)
 
-        'User skills
-        query = "INSERT INTO skillpoint (user_id, number, value, exp, elu) VALUES "
+        '*******************************************************************
+        'Boveda
+        '*******************************************************************
+        query = "INSERT INTO bank_item (user_id, "
+        
+        For LoopC = 1 To MAX_BANCOINVENTORY_SLOTS
+            query = query & "item_id" & LoopC & ", amount" & LoopC
+            If LoopC < MAX_BANCOINVENTORY_SLOTS Then query = query & ", "
+        Next LoopC
+        
+        query = query & ") VALUES (" & .ID & ", "
+        
+        For LoopC = 1 To MAX_BANCOINVENTORY_SLOTS
+
+            query = query & .BancoInvent.Object(LoopC).ObjIndex & ", "
+            query = query & .BancoInvent.Object(LoopC).Amount
+            If LoopC < MAX_BANCOINVENTORY_SLOTS Then query = query & ", "
+            
+        Next LoopC
+        
+        query = query & ");"
+
+        Call Database_Connection.Execute(query)
+
+        '*******************************************************************
+        'Skills
+        '*******************************************************************
+        query = "INSERT INTO skillpoint (user_id, "
+        
+        For LoopC = 1 To NUMSKILLS
+            query = query & "sk" & LoopC & ", exp" & LoopC & ", elu" & LoopC
+            If LoopC < NUMSKILLS Then query = query & ", "
+        Next LoopC
+        
+        query = query & ") VALUES (" & .ID & ", "
 
         For LoopC = 1 To NUMSKILLS
-            query = query & "("
-            query = query & .ID & ", "
-            query = query & LoopC & ", "
             query = query & .Stats.UserSkills(LoopC) & ", "
             query = query & .Stats.ExpSkills(LoopC) & ", "
-            query = query & .Stats.EluSkills(LoopC) & ")"
-
-            If LoopC < NUMSKILLS Then
-                query = query & ", "
-            Else
-                query = query & ";"
-
-            End If
+            query = query & .Stats.EluSkills(LoopC)
+            If LoopC < NUMSKILLS Then query = query & ", "
 
         Next LoopC
+        
+        query = query & ");"
 
         Call Database_Connection.Execute(query)
         
+        '*******************************************************************
         'Quests
-        query = "INSERT INTO quest (idquest, user_id, npcs, estado) VALUES "
+        '*******************************************************************
+        query = "INSERT INTO quest (user_id, "
         
         For LoopC = 1 To MAXQUESTS
         
-            query = query & "("
-            query = query & LoopC & ", "
-            query = query & .ID & ", "
-            query = query & "0, "
-            query = query & "0)"
+            query = query & "npcs" & LoopC & ", estado" & LoopC
+            If LoopC < MAXQUESTS Then query = query & ", "
+        
+        Next LoopC
+        
+        query = query & ") VALUES (" & .ID & ", "
+        
+        For LoopC = 1 To MAXQUESTS
+            query = query & "0, 0"
+            If LoopC < MAXQUESTS Then query = query & ", "
             
-            If LoopC < MAXQUESTS Then
-                query = query & ", "
-            Else
-                query = query & ";"
-
-            End If
-
         Next LoopC
+        
+        query = query & ");"
         
         Call Database_Connection.Execute(query)
         
-        'User Profesion Primaria
-        query = "INSERT INTO profesion_primaria (user_id, number, receta_id) VALUES "
+        '*******************************************************************
+        'Profesion primaria
+        '*******************************************************************
+        query = "INSERT INTO profesion_primaria (user_id, profesion, "
+        
+        For LoopC = 1 To MAXUSERRECETAS
+            query = query & "receta" & LoopC
+            If LoopC < MAXUSERRECETAS Then query = query & ", "
+        Next LoopC
+
+        query = query & ") VALUES (" & .ID & ", " & .Profesion(0).Profesion & ", "
 
         For LoopC = 1 To MAXUSERRECETAS
-            query = query & "("
-            query = query & .ID & ", "
-            query = query & LoopC & ", "
-            query = query & .Profesion(0).Recetas(LoopC) & ")"
-
-            If LoopC < MAXUSERRECETAS Then
-                query = query & ", "
-            Else
-                query = query & ";"
-
-            End If
-
+            query = query & .Profesion(0).Recetas(LoopC)
+            If LoopC < MAXUSERRECETAS Then query = query & ", "
         Next LoopC
+
+        query = query & ");"
 
         Call Database_Connection.Execute(query)
         
-        'User Profesion Secundaria
-        query = "INSERT INTO profesion_secundaria (user_id, number, receta_id) VALUES "
-
+        '*******************************************************************
+        'Profesion secundaria
+        '*******************************************************************
+        query = "INSERT INTO profesion_secundaria (user_id, profesion, "
+        
         For LoopC = 1 To MAXUSERRECETAS
-            query = query & "("
-            query = query & .ID & ", "
-            query = query & LoopC & ", "
-            query = query & .Profesion(1).Recetas(LoopC) & ")"
-
-            If LoopC < MAXUSERRECETAS Then
-                query = query & ", "
-            Else
-                query = query & ";"
-
-            End If
-
+            query = query & "receta" & LoopC
+            If LoopC < MAXUSERRECETAS Then query = query & ", "
         Next LoopC
 
-        Call Database_Connection.Execute(query)
+        query = query & ") VALUES (" & .ID & ", " & .Profesion(1).Profesion & ", "
 
+        For LoopC = 1 To MAXUSERRECETAS
+            query = query & .Profesion(1).Recetas(LoopC)
+            If LoopC < MAXUSERRECETAS Then query = query & ", "
+        Next LoopC
+
+        query = query & ");"
+
+        Call Database_Connection.Execute(query)
+        
+        '*******************************************************************
+        'Mascotas
+        '*******************************************************************
+        query = "INSERT INTO pet (user_id, "
+        
+        For LoopC = 1 To MAXMASCOTAS
+            query = query & "pet" & LoopC
+            If LoopC < MAXMASCOTAS Then query = query & ", "
+        Next LoopC
+
+        query = query & ") VALUES (" & .ID & ", "
+
+        For LoopC = 1 To MAXMASCOTAS
+            query = query & .MascotasIndex(LoopC)
+            If LoopC < MAXMASCOTAS Then query = query & ", "
+        Next LoopC
+
+        query = query & ");"
+
+        Call Database_Connection.Execute(query)
+        
+        '*******************************************************************
+        'Amigos
+        '*******************************************************************
+        query = "INSERT INTO amigos (user_id, "
+        
+        For LoopC = 1 To MAXAMIGOS
+            query = query & "nombre" & LoopC & ", "
+            query = query & "ignorado" & LoopC
+            If LoopC < MAXAMIGOS Then query = query & ", "
+        Next LoopC
+
+        query = query & ") VALUES (" & .ID & ", "
+
+        For LoopC = 1 To MAXAMIGOS
+            query = query & .Amigos(LoopC).Nombre & ", "
+            query = query & .Amigos(LoopC).Ignorado
+            If LoopC < MAXAMIGOS Then query = query & ", "
+        Next LoopC
+
+        query = query & ");"
+
+        Call Database_Connection.Execute(query)
+        
     End With
     
     #If DBConexionUnica = 0 Then
@@ -533,78 +593,114 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
         '*******************************************************************
         'Hechizos
         '*******************************************************************
+        
+        query = "UPDATE spell SET "
+        
         For LoopC = 1 To MAXUSERHECHIZOS
-            query = "UPDATE spell SET "
-            query = query & "spell_id = '" & .Stats.UserHechizos(LoopC) & "' "
-            query = query & "WHERE user_id = '" & .ID & "' AND number = '" & LoopC & "'"
-
-            Call Database_Connection.Execute(query)
+            
+            query = query & "spell_id" & LoopC & " = '" & .Stats.UserHechizos(LoopC) & "' "
+            If LoopC < MAXUSERHECHIZOS Then query = query & ", "
+            
         Next LoopC
+        
+        query = query & " WHERE user_id = '" & .ID & "'"
+
+        Call Database_Connection.Execute(query)
 
         '*******************************************************************
         'Inventario
         '*******************************************************************
+        
+        query = "UPDATE inventory_item SET "
+        
         For LoopC = 1 To MAX_INVENTORY_SLOTS
-            query = "UPDATE inventory_item SET "
-            query = query & "item_id = '" & .Invent.Object(LoopC).ObjIndex & "', "
-            query = query & "amount = '" & .Invent.Object(LoopC).Amount & "', "
-            query = query & "is_equipped = '" & .Invent.Object(LoopC).Equipped & "' "
-            query = query & "WHERE user_id = '" & .ID & "' AND number = '" & LoopC & "'"
             
-            Call Database_Connection.Execute(query)
+            query = query & "item_id" & LoopC & " = '" & .Invent.Object(LoopC).ObjIndex & "', "
+            query = query & "amount" & LoopC & " = '" & .Invent.Object(LoopC).Amount & "', "
+            query = query & "is_equipped" & LoopC & " = '" & .Invent.Object(LoopC).Equipped & "'"
+            
+            If LoopC < MAX_INVENTORY_SLOTS Then query = query & ", "
+            
         Next LoopC
+        
+        query = query & " WHERE user_id = '" & .ID & "'"
+        
+        Call Database_Connection.Execute(query)
 
         '*******************************************************************
         'Boveda
         '*******************************************************************
+        
+        query = "UPDATE bank_item SET "
+        
         For LoopC = 1 To MAX_BANCOINVENTORY_SLOTS
-            query = "UPDATE bank_item SET "
-            query = query & "item_id = '" & .BancoInvent.Object(LoopC).ObjIndex & "', "
-            query = query & "amount = '" & .BancoInvent.Object(LoopC).Amount & "' "
-            query = query & "WHERE user_id = '" & .ID & "' AND number = '" & LoopC & "'"
             
-            Call Database_Connection.Execute(query)
+            query = query & "item_id" & LoopC & " = '" & .BancoInvent.Object(LoopC).ObjIndex & "', "
+            query = query & "amount" & LoopC & " = '" & .BancoInvent.Object(LoopC).Amount & "'"
+            
+            If LoopC < MAX_BANCOINVENTORY_SLOTS Then query = query & ", "
+            
         Next LoopC
+        
+        query = query & " WHERE user_id = '" & .ID & "'"
+        
+        Call Database_Connection.Execute(query)
 
         '*******************************************************************
         'Skills
         '*******************************************************************
+        query = "UPDATE skillpoint SET "
+        
         For LoopC = 1 To NUMSKILLS
-            query = "UPDATE skillpoint SET "
-            query = query & "value = '" & .Stats.UserSkills(LoopC) & "', "
-            query = query & "exp = '" & .Stats.ExpSkills(LoopC) & "', "
-            query = query & "elu = '" & .Stats.EluSkills(LoopC) & "' "
-            query = query & "WHERE user_id = '" & .ID & "' AND number = '" & LoopC & "'"
             
-            Call Database_Connection.Execute(query)
-        Next LoopC
+            query = query & "sk" & LoopC & " = '" & .Stats.UserSkills(LoopC) & "', "
+            query = query & "exp" & LoopC & " = '" & .Stats.ExpSkills(LoopC) & "', "
+            query = query & "elu" & LoopC & " = '" & .Stats.EluSkills(LoopC) & "'"
+            If LoopC < NUMSKILLS Then query = query & ", "
 
-        '*******************************************************************
-        'Recetas
-        '*******************************************************************
-        For LoopC = 1 To MAXUSERRECETAS
-            query = "UPDATE profesion_primaria SET "
-            query = query & "receta_id = '" & .Profesion(0).Recetas(LoopC) & "' "
-            query = query & "WHERE user_id = '" & .ID & "' AND number = '" & LoopC & "'"
-            
-            Call Database_Connection.Execute(query)
         Next LoopC
         
+        query = query & " WHERE user_id = '" & .ID & "'"
+        
+        Call Database_Connection.Execute(query)
+       
+        '*******************************************************************
+        'Profesion primaria
+        '*******************************************************************
+        query = "UPDATE profesion_primaria SET profesion" & " = '" & .Profesion(0).Profesion & "', "
+        
         For LoopC = 1 To MAXUSERRECETAS
-            query = "UPDATE profesion_secundaria SET "
-            query = query & "receta_id = '" & .Profesion(1).Recetas(LoopC) & "' "
-            query = query & "WHERE user_id = '" & .ID & "' AND number = '" & LoopC & "'"
-            
-            Call Database_Connection.Execute(query)
+            query = query & "receta" & LoopC & " = '" & .Profesion(0).Recetas(LoopC) & "'"
+            If LoopC < MAXUSERRECETAS Then query = query & ", "
         Next LoopC
+        
+        query = query & " WHERE user_id = '" & .ID & "'"
+            
+        Call Database_Connection.Execute(query)
+        
+        '*******************************************************************
+        'Profesion secundaria
+        '*******************************************************************
+        query = "UPDATE profesion_secundaria SET profesion" & " = '" & .Profesion(1).Profesion & "', "
+        
+        For LoopC = 1 To MAXUSERRECETAS
+            query = query & "receta" & LoopC & " = '" & .Profesion(1).Recetas(LoopC) & "'"
+            If LoopC < MAXUSERRECETAS Then query = query & ", "
+        Next LoopC
+        
+        query = query & " WHERE user_id = '" & .ID & "'"
+            
+        Call Database_Connection.Execute(query)
         
         '*******************************************************************
         'Mascotas
         '*******************************************************************
         Dim petType As Integer
+        
+        query = "UPDATE pet SET "
+        
         For LoopC = 1 To MAXMASCOTAS
-            query = "UPDATE pet SET "
-
+            
             'CHOTS | I got this logic from SaveUserToCharfile
             If .MascotasIndex(LoopC) > 0 Then
                 If Npclist(.MascotasIndex(LoopC)).Contadores.TiempoExistencia = 0 Then
@@ -619,11 +715,28 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
 
             End If
 
-            query = query & "pet_id = '" & petType & "' "
-            query = query & "WHERE user_id = '" & .ID & "' AND number = '" & LoopC & "'"
-
-            Call Database_Connection.Execute(query)
+            query = query & "pet" & LoopC & " = '" & petType & "' "
+            If LoopC < MAXMASCOTAS Then query = query & ", "
         Next LoopC
+        
+        query = query & "WHERE user_id = '" & .ID & "'"
+
+        Call Database_Connection.Execute(query)
+        
+        '*******************************************************************
+        'Amigos
+        '*******************************************************************
+        query = "UPDATE amigos SET "
+        
+        For LoopC = 1 To MAXAMIGOS
+            query = query & "nombre" & LoopC & " = '" & .Amigos(LoopC).Nombre & "', "
+            query = query & "ignorado" & LoopC & " = '" & .Amigos(LoopC).Ignorado & "'"
+            If LoopC < MAXAMIGOS Then query = query & ", "
+        Next LoopC
+        
+        query = query & " WHERE user_id = '" & .ID & "'"
+            
+        Call Database_Connection.Execute(query)
 
     End With
 
@@ -660,18 +773,19 @@ Public Sub UpdateUserQuest(ByVal UserIndex As Integer)
     'Basic user data
     With UserList(UserIndex)
 
+        query = "UPDATE quest SET "
+
         For LoopC = 1 To MAXQUESTS
-        
-            query = "UPDATE quest SET "
-            query = query & "estado = '" & CInt(.QuestStats.Quests(LoopC).QuestStatus) & "', "           'Estado de la quest
             
-            tmpst = "npcs = '0'"
+            query = query & "estado" & LoopC & " = '" & CInt(.QuestStats.Quests(LoopC).QuestStatus) & "', "           'Estado de la quest
+            
+            tmpst = "npcs" & LoopC & " = '0' "
             
             If .QuestStats.Quests(LoopC).QuestStatus = eStatusQuest.EnCurso Then
             
                 '¿La quest requiere matar NPC?
                 If QuestList(LoopC).RequiredNPCs > 0 Then
-                    tmpst = "npcs = '"
+                    tmpst = "npcs" & LoopC & " = '"
                     For j = 1 To QuestList(LoopC).RequiredNPCs
                     
                         tmpst = tmpst & val(.QuestStats.Quests(LoopC).NPCsKilled(j))   'Cuantos NPCs se ha matado de los que requeridos
@@ -679,17 +793,24 @@ Public Sub UpdateUserQuest(ByVal UserIndex As Integer)
                         If Not j = QuestList(LoopC).RequiredNPCs Then tmpst = tmpst & "."
                     Next j
                     
-                    tmpst = tmpst & "'"
+                    tmpst = tmpst & "' "
 
                 End If
                 
             End If
             
+            If LoopC < MAXQUESTS Then tmpst = tmpst & ","
+            
             query = query & tmpst
-            query = query & " WHERE user_id = '" & .ID & "' AND idquest = '" & LoopC & "'"
 
-            Call Database_Connection.Execute(query)
         Next LoopC
+        
+        query = query & " WHERE user_id = '" & .ID & "'"
+
+        Call Database_Connection.Execute(query)
+        
+        'Debug.Print query
+
     End With
 
     #If DBConexionUnica = 0 Then
@@ -835,151 +956,168 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
 
         Set Database_RecordSet = Nothing
 
-        'User attributes
+        '*******************************************************************
+        'Atributos
+        '*******************************************************************
         query = "SELECT * FROM attribute WHERE user_id = " & .ID & ";"
         Set Database_RecordSet = Database_Connection.Execute(query)
     
         If Not Database_RecordSet.RecordCount = 0 Then
+            
             Database_RecordSet.MoveFirst
+            
+            For LoopC = 1 To NUMATRIBUTOS
 
-            While Not Database_RecordSet.EOF
+                .Stats.UserAtributos(LoopC) = Database_RecordSet("att" & LoopC)
+                .Stats.UserAtributosBackUP(LoopC) = .Stats.UserAtributos(LoopC)
 
-                .Stats.UserAtributos(Database_RecordSet!Number) = Database_RecordSet!Value
-                .Stats.UserAtributosBackUP(Database_RecordSet!Number) = .Stats.UserAtributos(Database_RecordSet!Number)
-
-                Database_RecordSet.MoveNext
-            Wend
+            Next LoopC
 
         End If
 
         Set Database_RecordSet = Nothing
 
-        'User spells
+        '*******************************************************************
+        'Hechizos
+        '*******************************************************************
         query = "SELECT * FROM spell WHERE user_id = " & .ID & ";"
         Set Database_RecordSet = Database_Connection.Execute(query)
 
         If Not Database_RecordSet.RecordCount = 0 Then
             Database_RecordSet.MoveFirst
 
-            While Not Database_RecordSet.EOF
-
-                .Stats.UserHechizos(Database_RecordSet!Number) = Database_RecordSet!spell_id
-
-                Database_RecordSet.MoveNext
-            Wend
+            For LoopC = 1 To MAXUSERHECHIZOS
+                .Stats.UserHechizos(LoopC) = Database_RecordSet("spell_id" & LoopC)
+            Next LoopC
 
         End If
 
         Set Database_RecordSet = Nothing
 
-        'User pets
+        '*******************************************************************
+        'Mascotas
+        '*******************************************************************
         query = "SELECT * FROM pet WHERE user_id = " & .ID & ";"
         Set Database_RecordSet = Database_Connection.Execute(query)
 
         If Not Database_RecordSet.RecordCount = 0 Then
             Database_RecordSet.MoveFirst
 
-            While Not Database_RecordSet.EOF
-
-                .MascotasType(Database_RecordSet!Number) = Database_RecordSet!pet_id
-
-                Database_RecordSet.MoveNext
-            Wend
+            For LoopC = 1 To MAXMASCOTAS
+                .MascotasType(LoopC) = Database_RecordSet("pet" & LoopC)
+            Next LoopC
 
         End If
 
         Set Database_RecordSet = Nothing
 
-        'User inventory
+        '*******************************************************************
+        'Inventario
+        '*******************************************************************
         query = "SELECT * FROM inventory_item WHERE user_id = " & .ID & ";"
         Set Database_RecordSet = Database_Connection.Execute(query)
 
         If Not Database_RecordSet.RecordCount = 0 Then
             Database_RecordSet.MoveFirst
-
-            While Not Database_RecordSet.EOF
-
-                .Invent.Object(Database_RecordSet!Number).ObjIndex = Database_RecordSet!item_id
-                .Invent.Object(Database_RecordSet!Number).Amount = Database_RecordSet!Amount
-                .Invent.Object(Database_RecordSet!Number).Equipped = Database_RecordSet!is_equipped
-
-                Database_RecordSet.MoveNext
-            Wend
-
+                
+            For LoopC = 1 To MAX_INVENTORY_SLOTS
+                .Invent.Object(LoopC).ObjIndex = Database_RecordSet("item_id" & LoopC)
+                .Invent.Object(LoopC).Amount = Database_RecordSet("Amount" & LoopC)
+                .Invent.Object(LoopC).Equipped = Database_RecordSet("is_equipped" & LoopC)
+            Next LoopC
+                
         End If
 
         Set Database_RecordSet = Nothing
 
-        'User bank inventory
+        '*******************************************************************
+        'Boveda
+        '*******************************************************************
         query = "SELECT * FROM bank_item WHERE user_id = " & .ID & ";"
         Set Database_RecordSet = Database_Connection.Execute(query)
 
         If Not Database_RecordSet.RecordCount = 0 Then
             Database_RecordSet.MoveFirst
-
-            While Not Database_RecordSet.EOF
-
-                .BancoInvent.Object(Database_RecordSet!Number).ObjIndex = Database_RecordSet!item_id
-                .BancoInvent.Object(Database_RecordSet!Number).Amount = Database_RecordSet!Amount
-
-                Database_RecordSet.MoveNext
-            Wend
-
+                
+            For LoopC = 1 To MAX_BANCOINVENTORY_SLOTS
+                .BancoInvent.Object(LoopC).ObjIndex = Database_RecordSet("item_id" & LoopC)
+                .BancoInvent.Object(LoopC).Amount = Database_RecordSet("Amount" & LoopC)
+            Next LoopC
+                
         End If
 
         Set Database_RecordSet = Nothing
 
-        'User skills
+        '*******************************************************************
+        'Skills
+        '*******************************************************************
         query = "SELECT * FROM skillpoint WHERE user_id = " & .ID & ";"
         Set Database_RecordSet = Database_Connection.Execute(query)
 
         If Not Database_RecordSet.RecordCount = 0 Then
             Database_RecordSet.MoveFirst
 
-            While Not Database_RecordSet.EOF
-
-                .Stats.UserSkills(Database_RecordSet!Number) = Database_RecordSet!Value
-                .Stats.ExpSkills(Database_RecordSet!Number) = Database_RecordSet!Exp
-                .Stats.EluSkills(Database_RecordSet!Number) = Database_RecordSet!ELU
-
-                Database_RecordSet.MoveNext
-            Wend
+            For LoopC = 1 To NUMSKILLS
+                .Stats.UserSkills(LoopC) = Database_RecordSet("sk" & LoopC)
+                .Stats.ExpSkills(LoopC) = Database_RecordSet("exp" & LoopC)
+                .Stats.EluSkills(LoopC) = Database_RecordSet("elu" & LoopC)
+            Next LoopC
 
         End If
 
         Set Database_RecordSet = Nothing
         
-        'User Recetas Profesion Primaria
+        '*******************************************************************
+        'Profesion primaria
+        '*******************************************************************
         query = "SELECT * FROM profesion_primaria WHERE user_id = " & .ID & ";"
         Set Database_RecordSet = Database_Connection.Execute(query)
 
         If Not Database_RecordSet.RecordCount = 0 Then
             Database_RecordSet.MoveFirst
 
-            While Not Database_RecordSet.EOF
+            .Profesion(0).Profesion = Database_RecordSet("profesion")
 
-                .Profesion(0).Recetas(Database_RecordSet!Number) = Database_RecordSet!receta_id
-
-                Database_RecordSet.MoveNext
-            Wend
+            For LoopC = 1 To MAXUSERRECETAS
+                .Profesion(0).Recetas(LoopC) = Database_RecordSet("receta" & LoopC)
+            Next LoopC
 
         End If
 
         Set Database_RecordSet = Nothing
         
-        'User Recetas Profesion Secundaria
+        '*******************************************************************
+        'Profesion secundaria
+        '*******************************************************************
         query = "SELECT * FROM profesion_secundaria WHERE user_id = " & .ID & ";"
         Set Database_RecordSet = Database_Connection.Execute(query)
 
         If Not Database_RecordSet.RecordCount = 0 Then
             Database_RecordSet.MoveFirst
 
-            While Not Database_RecordSet.EOF
+            .Profesion(1).Profesion = Database_RecordSet("profesion")
 
-                .Profesion(1).Recetas(Database_RecordSet!Number) = Database_RecordSet!receta_id
+            For LoopC = 1 To MAXUSERRECETAS
+                .Profesion(1).Recetas(LoopC) = Database_RecordSet("receta" & LoopC)
+            Next LoopC
 
-                Database_RecordSet.MoveNext
-            Wend
+        End If
+
+        Set Database_RecordSet = Nothing
+        
+        '*******************************************************************
+        'Amigos
+        '*******************************************************************
+        query = "SELECT * FROM amigos WHERE user_id = " & .ID & ";"
+        Set Database_RecordSet = Database_Connection.Execute(query)
+
+        If Not Database_RecordSet.RecordCount = 0 Then
+            Database_RecordSet.MoveFirst
+
+            For LoopC = 1 To MAXAMIGOS
+                .Amigos(LoopC).Nombre = Database_RecordSet("amigo" & LoopC)
+                .Amigos(LoopC).Ignorado = Database_RecordSet("ignorado" & LoopC)
+            Next LoopC
 
         End If
 
@@ -1007,11 +1145,12 @@ Public Sub LoadQuestStats(ByVal UserIndex As Integer)
 
     On Error GoTo ErrorHandler
 
-    Dim query       As String
-    Dim Fields()    As String
-    Dim Count       As Integer
-    Dim j           As Integer
-    Dim tmpint      As Integer
+    Dim query           As String
+    Dim Fields()        As String
+    Dim j               As Integer
+    Dim tmpint          As Integer
+    Dim LoopC           As Integer
+    Dim NPCRequeridos   As String
     
     #If DBConexionUnica = 0 Then
         Call Database_Connect
@@ -1027,37 +1166,34 @@ Public Sub LoadQuestStats(ByVal UserIndex As Integer)
     
         If Not Database_RecordSet.RecordCount = 0 Then
             Database_RecordSet.MoveFirst
-            Count = 1
             
-            While Not Database_RecordSet.EOF And Count <> NumQuests
+            For LoopC = 1 To NumQuests
 
                     '¿La quest requiere matar NPC?
-                    If QuestList(Count).RequiredNPCs Then
-                        ReDim .Quests(Count).NPCsKilled(1 To QuestList(Count).RequiredNPCs)
+                    If QuestList(LoopC).RequiredNPCs Then
+                        ReDim .Quests(LoopC).NPCsKilled(1 To QuestList(LoopC).RequiredNPCs)
             
-                        Fields = Split(Database_RecordSet!NPCs, ".")
+                        NPCRequeridos = Database_RecordSet("npcs" & LoopC)
             
-                        For j = 1 To QuestList(Count).RequiredNPCs
+                        Fields = Split(NPCRequeridos, ".")
+                        
+                        For j = 1 To QuestList(LoopC).RequiredNPCs
 
                             If UBound(Fields()) > 0 Then
-                                .Quests(Count).NPCsKilled(j) = CInt(Fields(j - 1))
-                                Debug.Print j & " - " & .Quests(Count).NPCsKilled(j)
+                                .Quests(LoopC).NPCsKilled(j) = CInt(Fields(j - 1))
                             Else
-                                    .Quests(Count).NPCsKilled(j) = 0
+                                .Quests(LoopC).NPCsKilled(j) = NPCRequeridos
                             End If
                         Next j
      
-                    .Quests(Count).QuestStatus = CByte(Database_RecordSet!estado)
+                    .Quests(LoopC).QuestStatus = CByte(Database_RecordSet("estado" & LoopC))
                              
                     'Si la quest actual se termino, lo sumamos al contador de terminados
-                    If .Quests(Count).QuestStatus = eStatusQuest.Terminada Then .NumQuestsDone = .NumQuestsDone + 1
-
-                    Count = Count + 1
-                        
-                    Database_RecordSet.MoveNext
+                    If .Quests(LoopC).QuestStatus = eStatusQuest.Terminada Then .NumQuestsDone = .NumQuestsDone + 1
                         
                 End If
-            Wend
+                
+            Next LoopC
                 
            Call ListarQuestsenCurso(UserIndex)
                 
@@ -2402,9 +2538,10 @@ Public Sub SendUserInvTxtFromDatabase(ByVal sendIndex As Integer, _
     '***************************************************
     On Error GoTo ErrorHandler
 
-    Dim query  As String
+    Dim query   As String
+    Dim LoopC   As Byte
 
-    Dim ObjInd As Long
+    Dim ObjInd  As Long
 
     If Not PersonajeExiste(UserName) Then
         Call WriteConsoleMsg(sendIndex, "Pj Inexistente", FontTypeNames.FONTTYPE_INFO)
@@ -2416,7 +2553,14 @@ Public Sub SendUserInvTxtFromDatabase(ByVal sendIndex As Integer, _
             If CheckSQLStatus = False Then Database_Reconnect
         #End If
 
-        query = "SELECT number, item_id, amount FROM inventory_item WHERE user_id = (SELECT id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "')"
+        query = "SELECT "
+
+        For LoopC = 1 To MAX_INVENTORY_SLOTS
+            query = query & "item_id" & LoopC & ", amount" & LoopC
+            If LoopC < MAX_INVENTORY_SLOTS Then query = query & ", "
+        Next LoopC
+
+        query = query & " FROM inventory_item WHERE user_id = (SELECT id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "')"
 
         Set Database_RecordSet = Database_Connection.Execute(query)
 
@@ -2462,7 +2606,8 @@ Public Sub SendUserBovedaTxtFromDatabase(ByVal sendIndex As Integer, _
     '***************************************************
     On Error GoTo ErrorHandler
 
-    Dim query  As String
+    Dim query   As String
+    Dim LoopC   As Byte
 
     Dim ObjInd As Long
 
@@ -2475,8 +2620,15 @@ Public Sub SendUserBovedaTxtFromDatabase(ByVal sendIndex As Integer, _
             'Si perdimos la conexion reconectamos
             If CheckSQLStatus = False Then Database_Reconnect
         #End If
+        
+        query = "SELECT "
 
-        query = "SELECT number, item_id, amount FROM bank_item WHERE user_id = (SELECT id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "')"
+        For LoopC = 1 To MAX_BANCOINVENTORY_SLOTS
+            query = query & "item_id" & LoopC & ", amount" & LoopC
+            If LoopC < MAX_BANCOINVENTORY_SLOTS Then query = query & ", "
+        Next LoopC
+        
+        query = query & " FROM bank_item WHERE user_id = (SELECT id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "')"
 
         Set Database_RecordSet = Database_Connection.Execute(query)
 
