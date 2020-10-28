@@ -159,7 +159,7 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
 
     Dim UserID As Integer
 
-    Dim LoopC  As Byte
+    Dim LoopC  As Integer
 
     #If DBConexionUnica = 0 Then
         Call Database_Connect
@@ -350,24 +350,24 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
         '*******************************************************************
         'Quests
         '*******************************************************************
-        query = "INSERT INTO quest (idquest, user_id, npcs, estado) VALUES "
+        query = "INSERT INTO quest (user_id, "
         
         For LoopC = 1 To MAXQUESTS
         
-            query = query & "("
-            query = query & LoopC & ", "
-            query = query & .ID & ", "
-            query = query & "0, "
-            query = query & "0)"
-            
-            If LoopC < MAXQUESTS Then
-                query = query & ", "
-            Else
-                query = query & ";"
-
-            End If
-
+            query = query & "npcs" & LoopC & ", estado" & LoopC
+            If LoopC < MAXQUESTS Then query = query & ", "
+        
         Next LoopC
+        
+        query = query & ") VALUES (" & .ID & ", "
+        
+        For LoopC = 1 To MAXQUESTS
+            query = query & "0, 0"
+            If LoopC < MAXQUESTS Then query = query & ", "
+            
+        Next LoopC
+        
+        query = query & ");"
         
         Call Database_Connection.Execute(query)
         
@@ -433,6 +433,30 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
         query = query & ");"
 
         Call Database_Connection.Execute(query)
+        
+        '*******************************************************************
+        'Amigos
+        '*******************************************************************
+        query = "INSERT INTO amigos (user_id, "
+        
+        For LoopC = 1 To MAXAMIGOS
+            query = query & "nombre" & LoopC & ", "
+            query = query & "ignorado" & LoopC
+            If LoopC < MAXAMIGOS Then query = query & ", "
+        Next LoopC
+
+        query = query & ") VALUES (" & .ID & ", "
+
+        For LoopC = 1 To MAXAMIGOS
+            query = query & .Amigos(LoopC).Nombre & ", "
+            query = query & .Amigos(LoopC).Ignorado
+            If LoopC < MAXAMIGOS Then query = query & ", "
+        Next LoopC
+
+        query = query & ");"
+
+        Call Database_Connection.Execute(query)
+        
     End With
     
     #If DBConexionUnica = 0 Then
@@ -698,6 +722,21 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
         query = query & "WHERE user_id = '" & .ID & "'"
 
         Call Database_Connection.Execute(query)
+        
+        '*******************************************************************
+        'Amigos
+        '*******************************************************************
+        query = "UPDATE amigos SET "
+        
+        For LoopC = 1 To MAXAMIGOS
+            query = query & "nombre" & LoopC & " = '" & .Amigos(LoopC).Nombre & "', "
+            query = query & "ignorado" & LoopC & " = '" & .Amigos(LoopC).Ignorado & "'"
+            If LoopC < MAXAMIGOS Then query = query & ", "
+        Next LoopC
+        
+        query = query & " WHERE user_id = '" & .ID & "'"
+            
+        Call Database_Connection.Execute(query)
 
     End With
 
@@ -734,18 +773,19 @@ Public Sub UpdateUserQuest(ByVal UserIndex As Integer)
     'Basic user data
     With UserList(UserIndex)
 
+        query = "UPDATE quest SET "
+
         For LoopC = 1 To MAXQUESTS
-        
-            query = "UPDATE quest SET "
-            query = query & "estado = '" & CInt(.QuestStats.Quests(LoopC).QuestStatus) & "', "           'Estado de la quest
             
-            tmpst = "npcs = '0'"
+            query = query & "estado" & LoopC & " = '" & CInt(.QuestStats.Quests(LoopC).QuestStatus) & "', "           'Estado de la quest
+            
+            tmpst = "npcs" & LoopC & " = '0' "
             
             If .QuestStats.Quests(LoopC).QuestStatus = eStatusQuest.EnCurso Then
             
                 '¿La quest requiere matar NPC?
                 If QuestList(LoopC).RequiredNPCs > 0 Then
-                    tmpst = "npcs = '"
+                    tmpst = "npcs" & LoopC & " = '"
                     For j = 1 To QuestList(LoopC).RequiredNPCs
                     
                         tmpst = tmpst & val(.QuestStats.Quests(LoopC).NPCsKilled(j))   'Cuantos NPCs se ha matado de los que requeridos
@@ -753,17 +793,24 @@ Public Sub UpdateUserQuest(ByVal UserIndex As Integer)
                         If Not j = QuestList(LoopC).RequiredNPCs Then tmpst = tmpst & "."
                     Next j
                     
-                    tmpst = tmpst & "'"
+                    tmpst = tmpst & "' "
 
                 End If
                 
             End If
             
+            If LoopC < MAXQUESTS Then tmpst = tmpst & ","
+            
             query = query & tmpst
-            query = query & " WHERE user_id = '" & .ID & "' AND idquest = '" & LoopC & "'"
 
-            Call Database_Connection.Execute(query)
         Next LoopC
+        
+        query = query & " WHERE user_id = '" & .ID & "'"
+
+        Call Database_Connection.Execute(query)
+        
+        'Debug.Print query
+
     End With
 
     #If DBConexionUnica = 0 Then
@@ -1057,6 +1104,24 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
         End If
 
         Set Database_RecordSet = Nothing
+        
+        '*******************************************************************
+        'Amigos
+        '*******************************************************************
+        query = "SELECT * FROM amigos WHERE user_id = " & .ID & ";"
+        Set Database_RecordSet = Database_Connection.Execute(query)
+
+        If Not Database_RecordSet.RecordCount = 0 Then
+            Database_RecordSet.MoveFirst
+
+            For LoopC = 1 To MAXAMIGOS
+                .Amigos(LoopC).Nombre = Database_RecordSet("amigo" & LoopC)
+                .Amigos(LoopC).Ignorado = Database_RecordSet("ignorado" & LoopC)
+            Next LoopC
+
+        End If
+
+        Set Database_RecordSet = Nothing
 
     End With
 
@@ -1080,11 +1145,12 @@ Public Sub LoadQuestStats(ByVal UserIndex As Integer)
 
     On Error GoTo ErrorHandler
 
-    Dim query       As String
-    Dim Fields()    As String
-    Dim Count       As Integer
-    Dim j           As Integer
-    Dim tmpint      As Integer
+    Dim query           As String
+    Dim Fields()        As String
+    Dim j               As Integer
+    Dim tmpint          As Integer
+    Dim LoopC           As Integer
+    Dim NPCRequeridos   As String
     
     #If DBConexionUnica = 0 Then
         Call Database_Connect
@@ -1100,37 +1166,34 @@ Public Sub LoadQuestStats(ByVal UserIndex As Integer)
     
         If Not Database_RecordSet.RecordCount = 0 Then
             Database_RecordSet.MoveFirst
-            Count = 1
             
-            While Not Database_RecordSet.EOF And Count <> NumQuests
+            For LoopC = 1 To NumQuests
 
                     '¿La quest requiere matar NPC?
-                    If QuestList(Count).RequiredNPCs Then
-                        ReDim .Quests(Count).NPCsKilled(1 To QuestList(Count).RequiredNPCs)
+                    If QuestList(LoopC).RequiredNPCs Then
+                        ReDim .Quests(LoopC).NPCsKilled(1 To QuestList(LoopC).RequiredNPCs)
             
-                        Fields = Split(Database_RecordSet!NPCs, ".")
+                        NPCRequeridos = Database_RecordSet("npcs" & LoopC)
             
-                        For j = 1 To QuestList(Count).RequiredNPCs
+                        Fields = Split(NPCRequeridos, ".")
+                        
+                        For j = 1 To QuestList(LoopC).RequiredNPCs
 
                             If UBound(Fields()) > 0 Then
-                                .Quests(Count).NPCsKilled(j) = CInt(Fields(j - 1))
-                                Debug.Print j & " - " & .Quests(Count).NPCsKilled(j)
+                                .Quests(LoopC).NPCsKilled(j) = CInt(Fields(j - 1))
                             Else
-                                    .Quests(Count).NPCsKilled(j) = 0
+                                .Quests(LoopC).NPCsKilled(j) = NPCRequeridos
                             End If
                         Next j
      
-                    .Quests(Count).QuestStatus = CByte(Database_RecordSet!estado)
+                    .Quests(LoopC).QuestStatus = CByte(Database_RecordSet("estado" & LoopC))
                              
                     'Si la quest actual se termino, lo sumamos al contador de terminados
-                    If .Quests(Count).QuestStatus = eStatusQuest.Terminada Then .NumQuestsDone = .NumQuestsDone + 1
-
-                    Count = Count + 1
-                        
-                    Database_RecordSet.MoveNext
+                    If .Quests(LoopC).QuestStatus = eStatusQuest.Terminada Then .NumQuestsDone = .NumQuestsDone + 1
                         
                 End If
-            Wend
+                
+            Next LoopC
                 
            Call ListarQuestsenCurso(UserIndex)
                 
