@@ -1140,7 +1140,7 @@ Private Sub tLluviaEvent()
     If Not Lloviendo Then
         MinutosSinLluvia = MinutosSinLluvia + 1
 
-        If MinutosSinLluvia >= 15 And MinutosSinLluvia < 1440 Then
+        If MinutosSinLluvia >= 30 And MinutosSinLluvia < 1440 Then
             If RandomNumber(1, 100) <= 2 Then
                 Lloviendo = True
                 MinutosSinLluvia = 0
@@ -1159,12 +1159,13 @@ Private Sub tLluviaEvent()
 
     Else
         MinutosLloviendo = MinutosLloviendo + 1
-
+Debug.Print MinutosLloviendo
         If MinutosLloviendo >= 5 Then
             Lloviendo = False
             'Call SendData(SendTarget.ToAll, 0, PrepareMessageActualizarClima())
             Call SortearClima
             MinutosLloviendo = 0
+            
         Else
 
             If RandomNumber(1, 100) <= 2 Then
