@@ -1922,7 +1922,7 @@ Public Type NPC
     GiveEXP As Long
     GiveGLD As Long
     
-    QuestNumber As Integer
+    QuestNumber(1 To 5) As Integer
     
     Stats As NPCStats
     flags As NPCFlags
