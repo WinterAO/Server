@@ -437,23 +437,7 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
         '*******************************************************************
         'Amigos
         '*******************************************************************
-        query = "INSERT INTO amigos (user_id, "
-        
-        For LoopC = 1 To MAXAMIGOS
-            query = query & "nombre" & LoopC & ", "
-            query = query & "ignorado" & LoopC
-            If LoopC < MAXAMIGOS Then query = query & ", "
-        Next LoopC
-
-        query = query & ") VALUES (" & .ID & ", "
-
-        For LoopC = 1 To MAXAMIGOS
-            query = query & "'" & .Amigos(LoopC).Nombre & "', "
-            query = query & .Amigos(LoopC).Ignorado
-            If LoopC < MAXAMIGOS Then query = query & ", "
-        Next LoopC
-
-        query = query & ");"
+        query = "INSERT INTO amigos (user_id) VALUES (" & .ID & ");"
 
         Call Database_Connection.Execute(query)
         
@@ -729,7 +713,7 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
         query = "UPDATE amigos SET "
         
         For LoopC = 1 To MAXAMIGOS
-            query = query & "nombre" & LoopC & " = '" & .Amigos(LoopC).Nombre & "', "
+            query = query & "amigo" & LoopC & " = '" & .Amigos(LoopC).Nombre & "', "
             query = query & "ignorado" & LoopC & " = '" & .Amigos(LoopC).Ignorado & "'"
             If LoopC < MAXAMIGOS Then query = query & ", "
         Next LoopC
