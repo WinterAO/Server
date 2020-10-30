@@ -131,7 +131,7 @@ Public Sub NPC_TIRAR_ITEMS(ByVal UserIndex As Integer, ByRef NPC As NPC, ByVal I
         Next i
         
         ' Dropea oro?
-        If .GiveGLD > 0 Then Call TirarOroNpc(UserIndex, RandomNumber(Porcentaje(.GiveGLD, 70), .GiveGLD), .Pos)
+        If .GiveGLD > 0 Then Call TirarOroNpc(UserIndex, .GiveGLD, .Pos)
 
     End With
 

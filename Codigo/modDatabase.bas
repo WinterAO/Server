@@ -448,7 +448,7 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
         query = query & ") VALUES (" & .ID & ", "
 
         For LoopC = 1 To MAXAMIGOS
-            query = query & .Amigos(LoopC).Nombre & ", "
+            query = query & "'" & .Amigos(LoopC).Nombre & "', "
             query = query & .Amigos(LoopC).Ignorado
             If LoopC < MAXAMIGOS Then query = query & ", "
         Next LoopC
