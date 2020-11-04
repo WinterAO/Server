@@ -2098,10 +2098,12 @@ Sub CloseUser(ByVal UserIndex As Integer)
         ' Si el usuario habia dejado un msg en la gm's queue lo borramos
         If Ayuda.Existe(.Name) Then Call Ayuda.Quitar(.Name)
     
+        Call ActualizarPJCuentas(UserIndex)
+    
         Call ResetUserSlot(UserIndex)
     
         Call MostrarNumUsers
-        
+
         n = FreeFile(1)
         Open App.Path & "\logs\Connect.log" For Append Shared As #n
         Print #n, Name & " ha dejado el juego. " & "User Index:" & UserIndex & " " & time & " " & Date

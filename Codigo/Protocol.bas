@@ -22255,7 +22255,7 @@ errHandler:
 
 End Sub
 
-Public Sub WriteEnviarPJUserAccount(ByVal UserIndex As Integer, Optional ByVal Refresh As Boolean = False)
+Public Sub WriteEnviarPJUserAccount(ByVal UserIndex As Integer)
 '***************************************************
 'Author: Juan Andres Dalmasso (CHOTS)
 'Last Modification: 12/10/2018
@@ -22269,7 +22269,6 @@ Public Sub WriteEnviarPJUserAccount(ByVal UserIndex As Integer, Optional ByVal R
         Call .outgoingData.WriteByte(ServerPacketID.EnviarPJUserAccount)
         .Redundance = RandomNumber(15, 250)
         Call .outgoingData.WriteByte(.Redundance)
-        Call .outgoingData.WriteBoolean(Refresh)
         Call .outgoingData.WriteASCIIString(.AccountInfo.UserName)
         Call .outgoingData.WriteByte(.AccountInfo.NumPjs)
 

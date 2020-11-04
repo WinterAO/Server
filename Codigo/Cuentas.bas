@@ -600,6 +600,9 @@ Public Sub ActualizarPJCuentas(ByVal UserIndex As Integer)
             If .AccountInfo.AccountPJ(i).ID = .ID Then _
                 Posicion = i
         Next i
+        
+        '¿Posicion invalida?
+        If Posicion <= 0 Then Exit Sub
 
         .AccountInfo.AccountPJ(Posicion).ID = .ID
         .AccountInfo.AccountPJ(Posicion).Name = .Name
@@ -615,7 +618,7 @@ Public Sub ActualizarPJCuentas(ByVal UserIndex As Integer)
         .AccountInfo.AccountPJ(Posicion).criminal = criminal(UserIndex)
         .AccountInfo.AccountPJ(Posicion).dead = .flags.Muerto
         .AccountInfo.AccountPJ(Posicion).gameMaster = EsGmChar(.Name)
-            
+
         'Actualiza los PJ de la cuenta
         Call WriteEnviarPJUserAccount(UserIndex, True)
     End With

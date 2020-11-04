@@ -465,7 +465,6 @@ Public Sub CleanQuestSlot(ByVal UserIndex As Integer, ByVal QuestSlot As Integer
         
         .Quests(QuestSlot).QuestStatus = eStatusQuest.NoAceptada
         
-        Debug.Print "Quest " & QuestSlot & " eliminada."
     End With
 
 End Sub
