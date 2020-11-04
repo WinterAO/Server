@@ -113,7 +113,10 @@ Private Function DelQuestEnCurso(ByVal UserIndex As Integer, ByVal QuestIndex As
     'Autor: Lorwik
     'Fecha: 15/08/2020
     'Descripcion: Elimina una quest a la lista de seguimientos
+    'Recibe el numero de la quest (questindex), y obtiene el slot donde se encuentra
+    'esa quest en curso
     '****************************************
+    
     Dim i As Integer
     Dim Slot As Byte
     Dim Count As Byte
@@ -734,13 +737,12 @@ Public Sub HandleQuestAbandon(ByVal UserIndex As Integer)
         QuestSlot = .incomingData.ReadByte
         QuestIndex = .QuestStats.QuestEnCurso(QuestSlot)
         
-        Debug.Print "QuestIndex: " & QuestIndex & " - " & "QuestSlot: " & QuestSlot
-        
-        Call DelQuestEnCurso(UserIndex, .QuestStats.QuestEnCurso(QuestSlot))
+        'Elimiamos la quest de la lista de seguimiento
+        Call DelQuestEnCurso(UserIndex, QuestIndex)
         
         Call WriteConsoleMsg(UserIndex, "Has cancelado la mision " & Chr(34) & QuestList(QuestIndex).Nombre & Chr(34) & ".", FontTypeNames.FONTTYPE_INFO)
         
-        'Borramos la quest.
+        'Borramos la quest, de la lista global
         Call CleanQuestSlot(UserIndex, QuestIndex)
         
         'Enviamos la lista de quests actualizada.

@@ -2065,8 +2065,9 @@ Sub CloseUser(ByVal UserIndex As Integer)
         '    Call SendToUserArea(UserIndex, "QDL" & .Char.charindex)
         'End If
     
-        If MapInfo(Map).NumUsers > 0 Then
-            Call SendData(SendTarget.ToPCAreaButIndex, UserIndex, PrepareMessageRemoveCharDialog(.Char.CharIndex))
+        If Map > 0 Then
+            If MapInfo(Map).NumUsers > 0 Then _
+                Call SendData(SendTarget.ToPCAreaButIndex, UserIndex, PrepareMessageRemoveCharDialog(.Char.CharIndex))
 
         End If
     
