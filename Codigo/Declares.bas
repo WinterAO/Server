@@ -986,6 +986,7 @@ Public Type Char
     CharIndex As Integer
     Head As Integer
     body As Integer
+    AnimAtaque As Long
     
     WeaponAnim As Integer
     ShieldAnim As Integer

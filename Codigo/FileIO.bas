@@ -1999,8 +1999,12 @@ Sub BackUPnPc(ByVal NPCIndex As Integer, ByVal hFile As Integer)
         'General
         Print #hFile, "Name=" & .Name
         Print #hFile, "Desc=" & .Desc
+        Print #hFile, "AnimAtaque=" & val(Npclist(NPCIndex).Char.AnimAtaque)
         Print #hFile, "Head=" & val(.Char.Head)
         Print #hFile, "Body=" & val(.Char.body)
+        Print #hFile, "ShieldAnim=" & val(.Char.ShieldAnim)
+        Print #hFile, "WeaponAnim=" & val(.Char.WeaponAnim)
+        Print #hFile, "CascoAnim=" & val(.Char.CascoAnim)
         Print #hFile, "Heading=" & val(.Char.Heading)
         Print #hFile, "Movement=" & val(.Movement)
         Print #hFile, "Attackable=" & val(.Attackable)
@@ -2078,6 +2082,9 @@ Sub CargarNpcBackUp(ByVal NPCIndex As Integer, ByVal NpcNumber As Integer)
         
         .Char.body = val(GetVar(npcfile, "NPC" & NpcNumber, "Body"))
         .Char.Head = val(GetVar(npcfile, "NPC" & NpcNumber, "Head"))
+        .Char.WeaponAnim = val(GetVar(npcfile, "NPC" & NpcNumber, "WeaponAnim"))
+        .Char.CascoAnim = val(GetVar(npcfile, "NPC" & NpcNumber, "CascoAnim"))
+        .Char.ShieldAnim = val(GetVar(npcfile, "NPC" & NpcNumber, "ShieldAnim"))
         .Char.Heading = val(GetVar(npcfile, "NPC" & NpcNumber, "Heading"))
         
         .Attackable = val(GetVar(npcfile, "NPC" & NpcNumber, "Attackable"))

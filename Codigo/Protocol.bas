@@ -173,6 +173,7 @@ Private Enum ServerPacketID
     IniciarSubastaConsulta
     ConfirmarInstruccion
     SetSpeed
+    AtaqueNPC
 End Enum
 
 Private Enum ClientPacketID
@@ -1618,6 +1619,12 @@ Private Sub HandleDeleteChar(ByVal UserIndex As Integer)
         Call WriteErrorMsg(UserIndex, "El personaje que intentas borrar pertenece a un clan. Debes salir del clan antes de borrar el personaje.")
         Exit Sub
     End If
+    
+    If NameIndex(UserList(UserIndex).AccountInfo.AccountPJ(PJSeleccionado).Name) > 0 Then
+        Call WriteErrorMsg(UserIndex, "El personaje que intentas borrar esta conectado.")
+        Exit Sub
+    End If
+    
     'Mandamos a borrar el PJ
     If BorrarUsuario(UserIndex, UserList(UserIndex).AccountInfo.AccountPJ(PJSeleccionado).Name) Then
         'Si se pudo borrar enviamos paquete para mostrar mensaje satisfactorio en el cliente
@@ -18213,6 +18220,7 @@ Public Sub WriteCharacterCreate(ByVal UserIndex As Integer, _
                                 ByVal FX As Integer, _
                                 ByVal FXLoops As Integer, _
                                 ByVal helmet As Integer, _
+                                ByVal AnimAtaque As Integer, _
                                 ByVal Name As String, _
                                 ByVal NickColor As Byte, _
                                 ByVal Privileges As Byte, _
@@ -18228,7 +18236,7 @@ Public Sub WriteCharacterCreate(ByVal UserIndex As Integer, _
     '***************************************************
     On Error GoTo errHandler
 
-    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterCreate(body, Head, Heading, CharIndex, X, Y, weapon, shield, FX, FXLoops, helmet, Name, NickColor, Privileges, GrhAura, AuraColor, NoShadow, EstadoQuest))
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterCreate(body, Head, Heading, CharIndex, X, Y, weapon, shield, FX, FXLoops, helmet, AnimAtaque, Name, NickColor, Privileges, GrhAura, AuraColor, NoShadow, EstadoQuest))
     Exit Sub
 
 errHandler:
@@ -21363,6 +21371,7 @@ Public Function PrepareMessageCharacterCreate(ByVal body As Integer, _
                                               ByVal FX As Integer, _
                                               ByVal FXLoops As Integer, _
                                               ByVal helmet As Integer, _
+                                              ByVal AnimAtaque As Integer, _
                                               ByVal Name As String, _
                                               ByVal NickColor As Byte, _
                                               ByVal Privileges As Byte, _
@@ -21388,6 +21397,7 @@ Public Function PrepareMessageCharacterCreate(ByVal body As Integer, _
         Call .WriteInteger(weapon)
         Call .WriteInteger(shield)
         Call .WriteInteger(helmet)
+        Call .WriteInteger(AnimAtaque)
         Call .WriteInteger(FX)
         Call .WriteInteger(FXLoops)
         Call .WriteASCIIString(Name)
@@ -23927,4 +23937,17 @@ Public Sub HandleDelAmigo(ByVal UserIndex As Integer)
 
     End With
 
+End Sub
+
+Public Sub WriteAtaqueNPC(ByVal UserIndex As Integer, ByVal NPCIndex As Integer)
+On Error GoTo errHandler
+    Call UserList(UserIndex).outgoingData.WriteByte(ServerPacketID.AtaqueNPC)
+    Call UserList(UserIndex).outgoingData.WriteInteger(NPCIndex)
+Exit Sub
+
+errHandler:
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
+        Resume
+    End If
 End Sub

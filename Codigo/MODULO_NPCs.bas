@@ -774,37 +774,42 @@ Public Sub MakeNPCChar(ByVal toMap As Boolean, _
     Dim EstadoQuest As Integer
     Dim NombreNPC As String
     
-    If Npclist(NpcIndex).Char.CharIndex = 0 Then
-        CharIndex = NextOpenCharIndex
-        Npclist(NpcIndex).Char.CharIndex = CharIndex
-        CharList(CharIndex) = NpcIndex
-
-    End If
+    With Npclist(NpcIndex)
     
-    MapData(Map, X, Y).NpcIndex = NpcIndex
+        If .Char.CharIndex = 0 Then
+            CharIndex = NextOpenCharIndex
+            .Char.CharIndex = CharIndex
+            CharList(CharIndex) = NpcIndex
     
-    If Npclist(NpcIndex).NPCtype = WorldBoss Then color = 8
+        End If
+        
+        MapData(Map, X, Y).NpcIndex = NpcIndex
+        
+        If .NPCtype = WorldBoss Then color = 8
+        
+        If .QuestNumber(1) > 0 Then
+            EstadoQuest = Quests.EstadoQuest(sndIndex, .QuestNumber(1))
+        Else
+            EstadoQuest = 255 'El NPC No tiene quest
+        End If
+        
+        'Si el NPC no es hostil o es un WorldBoss, tendra nombre
+        If .Hostile = 0 Or .NPCtype = WorldBoss Then
+            NombreNPC = .Name
+        Else
+            NombreNPC = vbNullString
+        End If
+        
+        If Not toMap Then
+            Call WriteCharacterCreate(sndIndex, .Char.body, .Char.Head, .Char.Heading, .Char.CharIndex, _
+                X, Y, .Char.WeaponAnim, .Char.ShieldAnim, 0, 0, .Char.CascoAnim, .Char.AnimAtaque, NombreNPC, color, 0, NingunAura, NingunAura, .NoShadow, EstadoQuest)
+    '
+        Else
+            Call AgregarNpc(NpcIndex)
     
-    If Npclist(NpcIndex).QuestNumber(1) > 0 Then
-        EstadoQuest = Quests.EstadoQuest(sndIndex, Npclist(NpcIndex).QuestNumber(1))
-    Else
-        EstadoQuest = 255 'El NPC No tiene quest
-    End If
+        End If
     
-    'Si el NPC no es hostil o es un WorldBoss, tendra nombre
-    If Npclist(NpcIndex).Hostile = 0 Or Npclist(NpcIndex).NPCtype = WorldBoss Then
-        NombreNPC = Npclist(NpcIndex).Name
-    Else
-        NombreNPC = vbNullString
-    End If
-    
-    If Not toMap Then
-        Call WriteCharacterCreate(sndIndex, Npclist(NpcIndex).Char.body, Npclist(NpcIndex).Char.Head, Npclist(NpcIndex).Char.Heading, Npclist(NpcIndex).Char.CharIndex, X, Y, 0, 0, 0, 0, 0, NombreNPC, color, 0, NingunAura, NingunAura, Npclist(NpcIndex).NoShadow, EstadoQuest)
-'
-    Else
-        Call AgregarNpc(NpcIndex)
-
-    End If
+    End With
 
 End Sub
 
@@ -1283,9 +1288,13 @@ Public Function OpenNPC(ByVal NpcNumber As Integer, _
         
         .NPCtype = val(Leer.GetValue("NPC" & NpcNumber, "NpcType"))
         
+        .Char.AnimAtaque = val(Leer.GetValue("NPC" & NpcNumber, "AnimAtaque"))
         .Char.body = val(Leer.GetValue("NPC" & NpcNumber, "Body"))
         .Char.Head = val(Leer.GetValue("NPC" & NpcNumber, "Head"))
         .Char.Heading = val(Leer.GetValue("NPC" & NpcNumber, "Heading"))
+        .Char.ShieldAnim = val(Leer.GetValue("NPC" & NpcNumber, "ShieldAnim"))
+        .Char.WeaponAnim = val(Leer.GetValue("NPC" & NpcNumber, "WeaponAnim"))
+        .Char.CascoAnim = val(Leer.GetValue("NPC" & NpcNumber, "CascoAnim"))
         
         .Attackable = val(Leer.GetValue("NPC" & NpcNumber, "Attackable"))
         .Comercia = val(Leer.GetValue("NPC" & NpcNumber, "Comercia"))
