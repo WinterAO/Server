@@ -155,7 +155,7 @@ Private Enum ServerPacketID
     CancelOfferItem
     PlayAttackAnim
     FXtoMap
-    AccountLogged  'CHOTS | Accounts
+    EnviarPJUserAccount
     SearchList
     QuestDetails
     QuestListSend
@@ -22255,7 +22255,7 @@ errHandler:
 
 End Sub
 
-Public Sub WriteUserAccountLogged(ByVal UserIndex As Integer, Optional ByVal Refresh As Boolean = False)
+Public Sub WriteEnviarPJUserAccount(ByVal UserIndex As Integer, Optional ByVal Refresh As Boolean = False)
 '***************************************************
 'Author: Juan Andres Dalmasso (CHOTS)
 'Last Modification: 12/10/2018
@@ -22266,16 +22266,16 @@ Public Sub WriteUserAccountLogged(ByVal UserIndex As Integer, Optional ByVal Ref
     Dim i As Long
 
     With UserList(UserIndex)
-        Call .outgoingData.WriteByte(ServerPacketID.AccountLogged)
+        Call .outgoingData.WriteByte(ServerPacketID.EnviarPJUserAccount)
         .Redundance = RandomNumber(15, 250)
         Call .outgoingData.WriteByte(.Redundance)
         Call .outgoingData.WriteBoolean(Refresh)
         Call .outgoingData.WriteASCIIString(.AccountInfo.UserName)
-        Call .outgoingData.WriteByte(.AccountInfo.NumChars)
+        Call .outgoingData.WriteByte(.AccountInfo.NumPjs)
 
-        If .AccountInfo.NumChars > 0 Then
+        If .AccountInfo.NumPjs > 0 Then
 
-            For i = 1 To .AccountInfo.NumChars
+            For i = 1 To .AccountInfo.NumPjs
                 Call .outgoingData.WriteASCIIString(.AccountInfo.AccountPJ(i).Name)
                 Call .outgoingData.WriteInteger(.AccountInfo.AccountPJ(i).body)
                 Call .outgoingData.WriteInteger(.AccountInfo.AccountPJ(i).Head)
@@ -22286,7 +22286,6 @@ Public Sub WriteUserAccountLogged(ByVal UserIndex As Integer, Optional ByVal Ref
                 Call .outgoingData.WriteByte(.AccountInfo.AccountPJ(i).race)
                 Call .outgoingData.WriteInteger(.AccountInfo.AccountPJ(i).Map)
                 Call .outgoingData.WriteByte(.AccountInfo.AccountPJ(i).level)
-                Call .outgoingData.WriteLong(.AccountInfo.AccountPJ(i).Gold)
                 Call .outgoingData.WriteBoolean(.AccountInfo.AccountPJ(i).criminal)
                 Call .outgoingData.WriteBoolean(.AccountInfo.AccountPJ(i).dead)
                 Call .outgoingData.WriteBoolean(.AccountInfo.AccountPJ(i).gameMaster)
@@ -22549,7 +22548,7 @@ Public Sub HandleDragAndDropHechizos(ByVal UserIndex As Integer)
 End Sub
 
 Public Sub WriteQuestDetails(ByVal UserIndex As Integer, _
-                             ByVal Questindex As Integer, _
+                             ByVal QuestIndex As Integer, _
                              Optional QuestSlot As Byte = 0)
 
     '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -22568,23 +22567,23 @@ Public Sub WriteQuestDetails(ByVal UserIndex As Integer, _
         Call .WriteByte(IIf(QuestSlot, 1, 0))
 
         'Enviamos nombre, descripci�n y nivel requerido de la quest
-        Call .WriteASCIIString(QuestList(Questindex).Nombre)
-        Call .WriteASCIIString(QuestList(Questindex).Desc)
-        Call .WriteByte(QuestList(Questindex).RequiredLevel)
+        Call .WriteASCIIString(QuestList(QuestIndex).Nombre)
+        Call .WriteASCIIString(QuestList(QuestIndex).Desc)
+        Call .WriteByte(QuestList(QuestIndex).RequiredLevel)
         
         'Enviamos la cantidad de npcs requeridos
-        Call .WriteByte(QuestList(Questindex).RequiredNPCs)
+        Call .WriteByte(QuestList(QuestIndex).RequiredNPCs)
 
-        If QuestList(Questindex).RequiredNPCs Then
+        If QuestList(QuestIndex).RequiredNPCs Then
 
             'Si hay npcs entonces enviamos la lista
-            For i = 1 To QuestList(Questindex).RequiredNPCs
-                Call .WriteInteger(QuestList(Questindex).RequiredNPC(i).Amount)
-                Call .WriteASCIIString(GetVar(DatPath & "NPCs.dat", "NPC" & QuestList(Questindex).RequiredNPC(i).NPCIndex, "Name"))
+            For i = 1 To QuestList(QuestIndex).RequiredNPCs
+                Call .WriteInteger(QuestList(QuestIndex).RequiredNPC(i).Amount)
+                Call .WriteASCIIString(GetVar(DatPath & "NPCs.dat", "NPC" & QuestList(QuestIndex).RequiredNPC(i).NPCIndex, "Name"))
 
                 'Si es una quest ya empezada, entonces mandamos los NPCs que mat�.
                 If QuestSlot Then
-                    Call .WriteInteger(UserList(UserIndex).QuestStats.Quests(Questindex).NPCsKilled(i))
+                    Call .WriteInteger(UserList(UserIndex).QuestStats.Quests(QuestIndex).NPCsKilled(i))
 
                 End If
 
@@ -22593,31 +22592,31 @@ Public Sub WriteQuestDetails(ByVal UserIndex As Integer, _
         End If
         
         'Enviamos la cantidad de objs requeridos
-        Call .WriteByte(QuestList(Questindex).RequiredOBJs)
+        Call .WriteByte(QuestList(QuestIndex).RequiredOBJs)
 
-        If QuestList(Questindex).RequiredOBJs Then
+        If QuestList(QuestIndex).RequiredOBJs Then
 
             'Si hay objs entonces enviamos la lista
-            For i = 1 To QuestList(Questindex).RequiredOBJs
-                Call .WriteInteger(QuestList(Questindex).RequiredOBJ(i).Amount)
-                Call .WriteASCIIString(ObjData(QuestList(Questindex).RequiredOBJ(i).ObjIndex).Name)
+            For i = 1 To QuestList(QuestIndex).RequiredOBJs
+                Call .WriteInteger(QuestList(QuestIndex).RequiredOBJ(i).Amount)
+                Call .WriteASCIIString(ObjData(QuestList(QuestIndex).RequiredOBJ(i).ObjIndex).Name)
             Next i
 
         End If
     
         'Enviamos la recompensa de oro y experiencia.
-        Call .WriteLong(QuestList(Questindex).RewardGLD)
-        Call .WriteLong(QuestList(Questindex).RewardEXP)
+        Call .WriteLong(QuestList(QuestIndex).RewardGLD)
+        Call .WriteLong(QuestList(QuestIndex).RewardEXP)
         
         'Enviamos la cantidad de objs de recompensa
-        Call .WriteByte(QuestList(Questindex).RewardOBJs)
+        Call .WriteByte(QuestList(QuestIndex).RewardOBJs)
 
-        If QuestList(Questindex).RewardOBJs Then
+        If QuestList(QuestIndex).RewardOBJs Then
 
             'si hay objs entonces enviamos la lista
-            For i = 1 To QuestList(Questindex).RewardOBJs
-                Call .WriteInteger(QuestList(Questindex).RewardOBJ(i).Amount)
-                Call .WriteASCIIString(ObjData(QuestList(Questindex).RewardOBJ(i).ObjIndex).Name)
+            For i = 1 To QuestList(QuestIndex).RewardOBJs
+                Call .WriteInteger(QuestList(QuestIndex).RewardOBJ(i).Amount)
+                Call .WriteASCIIString(ObjData(QuestList(QuestIndex).RewardOBJ(i).ObjIndex).Name)
             Next i
 
         End If

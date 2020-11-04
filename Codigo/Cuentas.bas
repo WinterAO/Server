@@ -48,12 +48,12 @@ Public Sub LoginAccountDatabase(ByVal UserIndex As Integer, ByVal UserName As St
     End If
     
         'Now the characters
-        query = "SELECT id, name, level, gold, body_id, head_id, weapon_id, shield_id, helmet_id, race_id, class_id, pos_map, rep_average, is_dead FROM usuario "
+        query = "SELECT id, name, level, body_id, head_id, weapon_id, shield_id, helmet_id, race_id, class_id, pos_map, rep_average, is_dead FROM usuario "
         query = query & "WHERE account_id = " & .AccountInfo.ID & " AND deleted = FALSE;"
     
         Set Database_RecordSet = Database_Connection.Execute(query)
     
-        .AccountInfo.NumChars = 0
+        .AccountInfo.NumPjs = 0
 
         If Not Database_RecordSet.RecordCount = 0 Then
             Database_RecordSet.MoveFirst
@@ -61,25 +61,24 @@ Public Sub LoginAccountDatabase(ByVal UserIndex As Integer, ByVal UserName As St
             While Not Database_RecordSet.EOF
             
                 'Incrementamos la cantidad de PJ creados actualmnente
-                .AccountInfo.NumChars = .AccountInfo.NumChars + 1
+                .AccountInfo.NumPjs = .AccountInfo.NumPjs + 1
 
-                .AccountInfo.AccountPJ(.AccountInfo.NumChars).ID = Database_RecordSet!ID
-                .AccountInfo.AccountPJ(.AccountInfo.NumChars).Name = Database_RecordSet!Name
-                .AccountInfo.AccountPJ(.AccountInfo.NumChars).body = Database_RecordSet!body_id
-                .AccountInfo.AccountPJ(.AccountInfo.NumChars).Head = Database_RecordSet!head_id
-                .AccountInfo.AccountPJ(.AccountInfo.NumChars).weapon = Database_RecordSet!weapon_id
-                .AccountInfo.AccountPJ(.AccountInfo.NumChars).shield = Database_RecordSet!shield_id
-                .AccountInfo.AccountPJ(.AccountInfo.NumChars).helmet = Database_RecordSet!helmet_id
-                .AccountInfo.AccountPJ(.AccountInfo.NumChars).Class = Database_RecordSet!class_id
-                .AccountInfo.AccountPJ(.AccountInfo.NumChars).race = Database_RecordSet!race_id
-                .AccountInfo.AccountPJ(.AccountInfo.NumChars).Map = Database_RecordSet!pos_map
-                .AccountInfo.AccountPJ(.AccountInfo.NumChars).level = Database_RecordSet!level
-                .AccountInfo.AccountPJ(.AccountInfo.NumChars).Gold = Database_RecordSet!Gold
-                .AccountInfo.AccountPJ(.AccountInfo.NumChars).criminal = (Database_RecordSet!rep_average < 0)
-                .AccountInfo.AccountPJ(.AccountInfo.NumChars).dead = Database_RecordSet!is_dead
-                .AccountInfo.AccountPJ(.AccountInfo.NumChars).gameMaster = EsGmChar(Database_RecordSet!Name)
+                .AccountInfo.AccountPJ(.AccountInfo.NumPjs).ID = Database_RecordSet!ID
+                .AccountInfo.AccountPJ(.AccountInfo.NumPjs).Name = Database_RecordSet!Name
+                .AccountInfo.AccountPJ(.AccountInfo.NumPjs).body = Database_RecordSet!body_id
+                .AccountInfo.AccountPJ(.AccountInfo.NumPjs).Head = Database_RecordSet!head_id
+                .AccountInfo.AccountPJ(.AccountInfo.NumPjs).weapon = Database_RecordSet!weapon_id
+                .AccountInfo.AccountPJ(.AccountInfo.NumPjs).shield = Database_RecordSet!shield_id
+                .AccountInfo.AccountPJ(.AccountInfo.NumPjs).helmet = Database_RecordSet!helmet_id
+                .AccountInfo.AccountPJ(.AccountInfo.NumPjs).Class = Database_RecordSet!class_id
+                .AccountInfo.AccountPJ(.AccountInfo.NumPjs).race = Database_RecordSet!race_id
+                .AccountInfo.AccountPJ(.AccountInfo.NumPjs).Map = Database_RecordSet!pos_map
+                .AccountInfo.AccountPJ(.AccountInfo.NumPjs).level = Database_RecordSet!level
+                .AccountInfo.AccountPJ(.AccountInfo.NumPjs).criminal = (Database_RecordSet!rep_average < 0)
+                .AccountInfo.AccountPJ(.AccountInfo.NumPjs).dead = Database_RecordSet!is_dead
+                .AccountInfo.AccountPJ(.AccountInfo.NumPjs).gameMaster = EsGmChar(Database_RecordSet!Name)
                 
-                If .AccountInfo.AccountPJ(.AccountInfo.NumChars).gameMaster = True Then TieneGM = True
+                If .AccountInfo.AccountPJ(.AccountInfo.NumPjs).gameMaster = True Then TieneGM = True
                     
                 Database_RecordSet.MoveNext
             Wend
@@ -104,7 +103,7 @@ Public Sub LoginAccountDatabase(ByVal UserIndex As Integer, ByVal UserName As St
         Call Database_Close
     #End If
     
-    Call WriteUserAccountLogged(UserIndex, Refresh)
+    Call WriteEnviarPJUserAccount(UserIndex, Refresh)
 
     Exit Sub
 ErrorHandler:
@@ -585,3 +584,70 @@ ErrorHandler:
 
 End Function
 
+Public Sub ActualizarPJCuentas(ByVal UserIndex As Integer)
+'****************************************************
+'Autor: Lorwik
+'Fecha: 04/11/2020
+'Descripcion: Actualiza el PJ actual en el listado de la cuenta y lo manda al cliente
+'****************************************************
+
+    Dim Posicion As Byte
+    Dim i As Byte
+
+    With UserList(UserIndex)
+    
+        For i = 1 To .AccountInfo.NumPjs
+            If .AccountInfo.AccountPJ(i).ID = .ID Then _
+                Posicion = i
+        Next i
+
+        .AccountInfo.AccountPJ(Posicion).ID = .ID
+        .AccountInfo.AccountPJ(Posicion).Name = .Name
+        .AccountInfo.AccountPJ(Posicion).body = .Char.body
+        .AccountInfo.AccountPJ(Posicion).Head = .Char.Head
+        .AccountInfo.AccountPJ(Posicion).weapon = .Char.WeaponAnim
+        .AccountInfo.AccountPJ(Posicion).shield = .Char.ShieldAnim
+        .AccountInfo.AccountPJ(Posicion).helmet = .Char.CascoAnim
+        .AccountInfo.AccountPJ(Posicion).Class = .clase
+        .AccountInfo.AccountPJ(Posicion).race = .Raza
+        .AccountInfo.AccountPJ(Posicion).Map = .Pos.Map
+        .AccountInfo.AccountPJ(Posicion).level = .Stats.ELV
+        .AccountInfo.AccountPJ(Posicion).criminal = criminal(UserIndex)
+        .AccountInfo.AccountPJ(Posicion).dead = .flags.Muerto
+        .AccountInfo.AccountPJ(Posicion).gameMaster = EsGmChar(.Name)
+            
+        'Actualiza los PJ de la cuenta
+        Call WriteEnviarPJUserAccount(UserIndex, True)
+    End With
+
+End Sub
+
+Public Sub AddNewPJCuenta(ByVal UserIndex As Integer)
+'****************************************************
+'Autor: Lorwik
+'Fecha: 04/11/2020
+'Descripcion: Añade un nuevo personaje a la lista de la cuenta
+'****************************************************
+
+    With UserList(UserIndex)
+        'Incrementamos la cantidad de PJ creados actualmnente
+        .AccountInfo.NumPjs = .AccountInfo.NumPjs + 1
+            
+        .AccountInfo.AccountPJ(.AccountInfo.NumPjs).ID = .ID
+        .AccountInfo.AccountPJ(.AccountInfo.NumPjs).Name = .Name
+        .AccountInfo.AccountPJ(.AccountInfo.NumPjs).body = .Char.body
+        .AccountInfo.AccountPJ(.AccountInfo.NumPjs).Head = .Char.Head
+        .AccountInfo.AccountPJ(.AccountInfo.NumPjs).weapon = .Char.WeaponAnim
+        .AccountInfo.AccountPJ(.AccountInfo.NumPjs).shield = .Char.ShieldAnim
+        .AccountInfo.AccountPJ(.AccountInfo.NumPjs).helmet = .Char.CascoAnim
+        .AccountInfo.AccountPJ(.AccountInfo.NumPjs).Class = .clase
+        .AccountInfo.AccountPJ(.AccountInfo.NumPjs).race = .Raza
+        .AccountInfo.AccountPJ(.AccountInfo.NumPjs).Map = .Pos.Map
+        .AccountInfo.AccountPJ(.AccountInfo.NumPjs).level = .Stats.ELV
+        .AccountInfo.AccountPJ(.AccountInfo.NumPjs).criminal = criminal(UserIndex)
+        .AccountInfo.AccountPJ(.AccountInfo.NumPjs).dead = .flags.Muerto
+        .AccountInfo.AccountPJ(.AccountInfo.NumPjs).gameMaster = EsGmChar(.Name)
+        
+    End With
+    
+End Sub

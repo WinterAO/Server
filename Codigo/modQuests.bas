@@ -1,5 +1,4 @@
 Attribute VB_Name = "Quests"
-
 '¿Como funciona este sistema de Quest?
 'Cada usuario tiene X cantidad de slots de quest que esta enumerado desde 1 a MAXQUESTS.
 'Cada quest se guardara en el slot correspondiente segun su indice. Por ejemplo, una quest
@@ -259,7 +258,7 @@ Public Sub HandleQuestAccept(ByVal UserIndex As Integer)
         Call WriteConsoleMsg(UserIndex, "Has aceptado la mision " & Chr(34) & QuestList(NextQuest).Nombre & Chr(34) & ".", FontTypeNames.FONTTYPE_INFO)
         
         Call ActualizarNPCQuest(UserIndex, NPCIndex)
-
+        
     End With
 
 End Sub
@@ -447,27 +446,23 @@ Public Sub CleanQuestSlot(ByVal UserIndex As Integer, ByVal QuestSlot As Integer
     'Descripcion: Limpia un slot de quest de un usuario.
     '****************************************************
     Dim i As Integer
-    Dim QuestIndex As Integer
-    
+ 
     With UserList(UserIndex).QuestStats
-
-        QuestIndex = .QuestEnCurso(QuestSlot)
-
+        
         '¿El slot de quest es mayor al numero de quest cargadas o no tiene la quest aceptada?
-        If QuestSlot > NumQuests Or Estadoquest(UserIndex, QuestIndex) = eStatusQuest.NoAceptada Then Exit Sub
+        If QuestSlot > NumQuests Then Exit Sub
+        
+        If QuestList(QuestSlot).RequiredNPCs Then
 
-        If QuestList(QuestIndex).RequiredNPCs Then
-
-            For i = 1 To QuestList(QuestIndex).RequiredNPCs
-                .Quests(QuestIndex).NPCsKilled(i) = 0
-                .Quests(QuestIndex).QuestStatus = eStatusQuest.NoAceptada
+            For i = 1 To QuestList(QuestSlot).RequiredNPCs
+                .Quests(QuestSlot).NPCsKilled(i) = 0
             Next i
 
         End If
         
-        'Lo eliminamos de seguimientos
-        Call DelQuestEnCurso(UserIndex, QuestIndex)
+        .Quests(QuestSlot).QuestStatus = eStatusQuest.NoAceptada
         
+        Debug.Print "Quest " & QuestSlot & " eliminada."
     End With
 
 End Sub
@@ -728,15 +723,31 @@ Public Sub HandleQuestAbandon(ByVal UserIndex As Integer)
     'Descripcion: Maneja el paquete QuestAbandon.
     '****************************************************
     
-    'Leemos el paquete.
-    Call UserList(UserIndex).incomingData.ReadByte
+    Dim QuestSlot As Integer
+    Dim QuestIndex As Integer
     
-    'Borramos la quest.
-    Call CleanQuestSlot(UserIndex, UserList(UserIndex).incomingData.ReadByte)
+    With UserList(UserIndex)
     
-    'Enviamos la lista de quests actualizada.
-    Call WriteQuestListSend(UserIndex)
-
+        'Leemos el paquete.
+        Call .incomingData.ReadByte
+        
+        QuestSlot = .incomingData.ReadByte
+        QuestIndex = .QuestStats.QuestEnCurso(QuestSlot)
+        
+        Debug.Print "QuestIndex: " & QuestIndex & " - " & "QuestSlot: " & QuestSlot
+        
+        Call DelQuestEnCurso(UserIndex, .QuestStats.QuestEnCurso(QuestSlot))
+        
+        Call WriteConsoleMsg(UserIndex, "Has cancelado la mision " & Chr(34) & QuestList(QuestIndex).Nombre & Chr(34) & ".", FontTypeNames.FONTTYPE_INFO)
+        
+        'Borramos la quest.
+        Call CleanQuestSlot(UserIndex, QuestIndex)
+        
+        'Enviamos la lista de quests actualizada.
+        Call WriteQuestListSend(UserIndex)
+    
+    End With
+    
 End Sub
 
 Public Function BuscarSiguienteQuest(ByVal UserIndex As Integer, ByVal NPCIndex As Integer)
@@ -754,3 +765,4 @@ Public Function BuscarSiguienteQuest(ByVal UserIndex As Integer, ByVal NPCIndex 
     BuscarSiguienteQuest = 0
     
 End Function
+

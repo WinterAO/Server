@@ -1637,7 +1637,6 @@ Public Type AccountCharacters
     race As Byte
     Map As Integer
     level As Byte
-    Gold As Long
     criminal As Boolean
     dead As Boolean
     gameMaster As Boolean
@@ -1654,7 +1653,7 @@ Public Type AccountUser
     status As Boolean
     Gemas As Long
     
-    NumChars As Byte
+    NumPjs As Byte
     AccountPJ(1 To MAXPJACCOUNTS) As AccountCharacters
 
 End Type

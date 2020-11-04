@@ -472,7 +472,7 @@ Sub ConnectNewUser(ByVal UserIndex As Integer, _
     Call SaveUser(UserIndex)
   
     'Open User
-    Call ConnectUser(UserIndex, Name)
+    Call ConnectUser(UserIndex, Name, True)
 
     'Aqui solo vamos a hacer un request a los endpoints de la aplicacion en Node.js
     'el repositorio para hacer funcionar esto, es este: https://github.com/ao-libre/ao-api-server
@@ -978,7 +978,7 @@ Function ValidateChr(ByVal UserIndex As Integer) As Boolean
 End Function
 
 Sub ConnectUser(ByVal UserIndex As Integer, _
-                ByRef Name As String)
+                ByRef Name As String, Optional ByVal NewUser As Boolean = False)
 
     '***************************************************
     'Autor: Unknown (orginal version)
@@ -1408,6 +1408,11 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
             End If
 
         End If
+        
+        '****Añadimos al user nuevo a la lista de PJ*****
+        If NewUser Then _
+            Call AddNewPJCuenta(UserIndex)
+
     
         Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageCreateFX(.Char.CharIndex, FXIDs.FXWARP, 0))
     
@@ -1600,22 +1605,21 @@ Sub ResetUseRaccount(ByVal UserIndex As Integer)
         .AccountInfo.Gemas = 0
         .AccountInfo.status = False
         
-        For i = 1 To .AccountInfo.NumChars
-            .AccountInfo.AccountPJ(.AccountInfo.NumChars).ID = 0
-            .AccountInfo.AccountPJ(.AccountInfo.NumChars).Name = vbNullString
-            .AccountInfo.AccountPJ(.AccountInfo.NumChars).body = 0
-            .AccountInfo.AccountPJ(.AccountInfo.NumChars).Head = 0
-            .AccountInfo.AccountPJ(.AccountInfo.NumChars).weapon = 0
-            .AccountInfo.AccountPJ(.AccountInfo.NumChars).shield = 0
-            .AccountInfo.AccountPJ(.AccountInfo.NumChars).helmet = 0
-            .AccountInfo.AccountPJ(.AccountInfo.NumChars).Class = 0
-            .AccountInfo.AccountPJ(.AccountInfo.NumChars).race = 0
-            .AccountInfo.AccountPJ(.AccountInfo.NumChars).Map = 0
-            .AccountInfo.AccountPJ(.AccountInfo.NumChars).level = 0
-            .AccountInfo.AccountPJ(.AccountInfo.NumChars).Gold = 0
-            .AccountInfo.AccountPJ(.AccountInfo.NumChars).criminal = False
-            .AccountInfo.AccountPJ(.AccountInfo.NumChars).dead = False
-            .AccountInfo.AccountPJ(.AccountInfo.NumChars).gameMaster = False
+        For i = 1 To .AccountInfo.NumPjs
+            .AccountInfo.AccountPJ(.AccountInfo.NumPjs).ID = 0
+            .AccountInfo.AccountPJ(.AccountInfo.NumPjs).Name = vbNullString
+            .AccountInfo.AccountPJ(.AccountInfo.NumPjs).body = 0
+            .AccountInfo.AccountPJ(.AccountInfo.NumPjs).Head = 0
+            .AccountInfo.AccountPJ(.AccountInfo.NumPjs).weapon = 0
+            .AccountInfo.AccountPJ(.AccountInfo.NumPjs).shield = 0
+            .AccountInfo.AccountPJ(.AccountInfo.NumPjs).helmet = 0
+            .AccountInfo.AccountPJ(.AccountInfo.NumPjs).Class = 0
+            .AccountInfo.AccountPJ(.AccountInfo.NumPjs).race = 0
+            .AccountInfo.AccountPJ(.AccountInfo.NumPjs).Map = 0
+            .AccountInfo.AccountPJ(.AccountInfo.NumPjs).level = 0
+            .AccountInfo.AccountPJ(.AccountInfo.NumPjs).criminal = False
+            .AccountInfo.AccountPJ(.AccountInfo.NumPjs).dead = False
+            .AccountInfo.AccountPJ(.AccountInfo.NumPjs).gameMaster = False
         Next i
     
     End With
@@ -2055,7 +2059,7 @@ Sub CloseUser(ByVal UserIndex As Integer)
     
         'usado para borrar Pjs
         Call UpdateUserLogged(.Name, 0)
-    
+        
         'Quitar el dialogo
         'If MapInfo(Map).NumUsers > 0 Then
         '    Call SendToUserArea(UserIndex, "QDL" & .Char.charindex)
@@ -2096,7 +2100,7 @@ Sub CloseUser(ByVal UserIndex As Integer)
         Call ResetUserSlot(UserIndex)
     
         Call MostrarNumUsers
-    
+        
         n = FreeFile(1)
         Open App.Path & "\logs\Connect.log" For Append Shared As #n
         Print #n, Name & " ha dejado el juego. " & "User Index:" & UserIndex & " " & time & " " & Date
