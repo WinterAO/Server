@@ -822,8 +822,7 @@ Public Sub ChangeNPCChar(ByVal NPCIndex As Integer, _
     'Last Modification: -
     '
     '***************************************************
-    Dim Estadoquest As Integer
-    
+
     If NPCIndex > 0 Then
 
         With Npclist(NPCIndex).Char
@@ -831,7 +830,7 @@ Public Sub ChangeNPCChar(ByVal NPCIndex As Integer, _
             .Head = Head
             .Heading = Heading
             
-            Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessageCharacterChange(body, Head, Heading, .CharIndex, .WeaponAnim, .ShieldAnim, 0, 0, .CascoAnim, NingunAura, NingunAura, Estadoquest))
+            Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessageCharacterChange(body, Head, Heading, .CharIndex, .WeaponAnim, .ShieldAnim, 0, 0, .CascoAnim, NingunAura, NingunAura))
 
         End With
 
