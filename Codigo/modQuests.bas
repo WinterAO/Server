@@ -39,7 +39,7 @@ Public Function TieneQuest(ByVal UserIndex As Integer, _
 
 End Function
 
-Public Function EstadoQuest(ByVal UserIndex As Integer, _
+Public Function Estadoquest(ByVal UserIndex As Integer, _
                            ByVal NQuest As Integer) As Byte
 
     '****************************************
@@ -50,11 +50,11 @@ Public Function EstadoQuest(ByVal UserIndex As Integer, _
     
     'Si el numero de la quest es invalida, devolvemos como que no acepto ninguna quest
     If NQuest <= 0 Or UserIndex = 0 Then
-        EstadoQuest = 0
+        Estadoquest = 0
         Exit Function
     End If
     
-    EstadoQuest = UserList(UserIndex).QuestStats.Quests(NQuest).QuestStatus
+    Estadoquest = UserList(UserIndex).QuestStats.Quests(NQuest).QuestStatus
     
 End Function
 
@@ -196,7 +196,7 @@ Public Sub HandleQuestAccept(ByVal UserIndex As Integer)
     'Maneja el evento de aceptar una quest.
     'Last modified: 31/01/2010 by Amraphen
     '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-    Dim NpcIndex  As Integer
+    Dim NPCIndex  As Integer
 
     Dim QuestSlot As Byte
     
@@ -206,12 +206,12 @@ Public Sub HandleQuestAccept(ByVal UserIndex As Integer)
  
     Call UserList(UserIndex).incomingData.ReadByte
  
-    NpcIndex = UserList(UserIndex).flags.TargetNPC
+    NPCIndex = UserList(UserIndex).flags.TargetNPC
     
-    If NpcIndex = 0 Then Exit Sub
+    If NPCIndex = 0 Then Exit Sub
     
     'Esta el personaje en la distancia correcta?
-    If Distancia(UserList(UserIndex).Pos, Npclist(NpcIndex).Pos) > 5 Then
+    If Distancia(UserList(UserIndex).Pos, Npclist(NPCIndex).Pos) > 5 Then
         Call WriteConsoleMsg(UserIndex, "Estas demasiado lejos.", FontTypeNames.FONTTYPE_INFO)
         Exit Sub
 '
@@ -224,7 +224,7 @@ Public Sub HandleQuestAccept(ByVal UserIndex As Integer)
 
     End If
     
-    NextQuest = BuscarSiguienteQuest(UserIndex, NpcIndex)
+    NextQuest = BuscarSiguienteQuest(UserIndex, NPCIndex)
     
     'Agregamos la quest.
     With UserList(UserIndex).QuestStats.Quests(NextQuest)
@@ -258,6 +258,8 @@ Public Sub HandleQuestAccept(ByVal UserIndex As Integer)
         
         Call WriteConsoleMsg(UserIndex, "Has aceptado la mision " & Chr(34) & QuestList(NextQuest).Nombre & Chr(34) & ".", FontTypeNames.FONTTYPE_INFO)
         
+        Call ActualizarNPCQuest(UserIndex, NPCIndex)
+        
     End With
 
 End Sub
@@ -276,9 +278,9 @@ Public Sub FinishQuest(ByVal UserIndex As Integer, _
 
     Dim InvSlotsLibres As Byte
 
-    Dim NpcIndex       As Integer
+    Dim NPCIndex       As Integer
  
-    NpcIndex = UserList(UserIndex).flags.TargetNPC
+    NPCIndex = UserList(UserIndex).flags.TargetNPC
     
     With QuestList(Questindex)
 
@@ -295,7 +297,7 @@ Public Sub FinishQuest(ByVal UserIndex As Integer, _
             For i = 1 To .RequiredOBJs
 
                 If TieneObjetos(.RequiredOBJ(i).ObjIndex, .RequiredOBJ(i).Amount, UserIndex) = False Then
-                    Call WriteChatOverHead(UserIndex, "No has conseguido todos los objetos que te he pedido.", Npclist(NpcIndex).Char.CharIndex, vbWhite)
+                    Call WriteChatOverHead(UserIndex, "No has conseguido todos los objetos que te he pedido.", Npclist(NPCIndex).Char.CharIndex, vbWhite)
                     Exit Sub
 
                 End If
@@ -310,7 +312,7 @@ Public Sub FinishQuest(ByVal UserIndex As Integer, _
             For i = 1 To .RequiredNPCs
 
                 If .RequiredNPC(i).Amount > UserList(UserIndex).QuestStats.Quests(QuestSlot).NPCsKilled(i) Then
-                    Call WriteChatOverHead(UserIndex, "No has matado todas las criaturas que te he pedido.", Npclist(NpcIndex).Char.CharIndex, vbWhite)
+                    Call WriteChatOverHead(UserIndex, "No has matado todas las criaturas que te he pedido.", Npclist(NPCIndex).Char.CharIndex, vbWhite)
                     Exit Sub
 
                 End If
@@ -330,7 +332,7 @@ Public Sub FinishQuest(ByVal UserIndex As Integer, _
             
             'Nos fijamos si entra
             If InvSlotsLibres < .RewardOBJs Then
-                Call WriteChatOverHead(UserIndex, "No tienes suficiente espacio en el inventario para recibir la recompensa. Vuelve cuando hayas hecho mas espacio.", Npclist(NpcIndex).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "No tienes suficiente espacio en el inventario para recibir la recompensa. Vuelve cuando hayas hecho mas espacio.", Npclist(NPCIndex).Char.CharIndex, vbWhite)
                 Exit Sub
 
             End If
@@ -388,9 +390,30 @@ Public Sub FinishQuest(ByVal UserIndex As Integer, _
         'Actualizamos el personaje
         Call CheckUserLevel(UserIndex)
         Call UpdateUserInv(True, UserIndex, 0)
+        
+        Call ActualizarNPCQuest(UserIndex, NPCIndex)
 
     End With
 
+End Sub
+
+Private Sub ActualizarNPCQuest(ByVal UserIndex As Integer, ByVal NPCIndex As Integer)
+
+    Dim Estadoquest As Byte
+
+    With Npclist(NPCIndex)
+    
+        If .QuestNumber(1) > 0 Then
+            Estadoquest = Quests.Estadoquest(UserIndex, .QuestNumber(1))
+        Else
+            Estadoquest = 255 'El NPC No tiene quest
+        End If
+    
+        Call WriteCharacterChange(UserIndex, .Char.body, .Char.Head, .Char.Heading, .Char.CharIndex, .Char.WeaponAnim, _
+            .Char.ShieldAnim, 0, 0, .Char.CascoAnim, 0, 0, Estadoquest)
+    
+    End With
+    
 End Sub
  
 Public Function UserDoneQuest(ByVal UserIndex As Integer, _
@@ -478,18 +501,18 @@ Public Sub HandleQuest(ByVal UserIndex As Integer)
     'Lorwik: Paso todo el chequeo y la accion a otro sub refractorio
     '****************************************************
     
-    Dim NpcIndex As Integer
+    Dim NPCIndex As Integer
 
     'Leemos el paquete
     Call UserList(UserIndex).incomingData.ReadByte
  
-    NpcIndex = UserList(UserIndex).flags.TargetNPC
+    NPCIndex = UserList(UserIndex).flags.TargetNPC
     
-    Call AccionParaQuest(UserIndex, NpcIndex)
+    Call AccionParaQuest(UserIndex, NPCIndex)
 
 End Sub
 
-Public Sub AccionParaQuest(ByVal UserIndex As Integer, ByVal NpcIndex As Integer)
+Public Sub AccionParaQuest(ByVal UserIndex As Integer, ByVal NPCIndex As Integer)
     '****************************************
     'Autor: Lorwik
     'Fecha: 18/05/2020
@@ -500,9 +523,9 @@ Public Sub AccionParaQuest(ByVal UserIndex As Integer, ByVal NpcIndex As Integer
     Dim SlotLibreQuest As Integer
     Dim NextQuest As Integer
     
-    If NpcIndex = 0 Then Exit Sub
+    If NPCIndex = 0 Then Exit Sub
     
-    With Npclist(NpcIndex)
+    With Npclist(NPCIndex)
     
         'Esta el user muerto?
         If UserList(UserIndex).flags.Muerto = 1 Then
@@ -518,7 +541,7 @@ Public Sub AccionParaQuest(ByVal UserIndex As Integer, ByVal NpcIndex As Integer
     
         End If
         
-        NextQuest = BuscarSiguienteQuest(UserIndex, NpcIndex)
+        NextQuest = BuscarSiguienteQuest(UserIndex, NPCIndex)
         
         'El NPC hace quests?
         If NextQuest = 0 Then
@@ -624,7 +647,7 @@ Public Sub LoadQuests()
                 For j = 1 To .RequiredNPCs
                     tmpStr = Reader.GetValue("QUEST" & i, "RequiredNPC" & j)
                     
-                    .RequiredNPC(j).NpcIndex = val(ReadField(1, tmpStr, 45))
+                    .RequiredNPC(j).NPCIndex = val(ReadField(1, tmpStr, 45))
                     .RequiredNPC(j).Amount = val(ReadField(2, tmpStr, 45))
                 Next j
 
@@ -713,13 +736,13 @@ Public Sub HandleQuestAbandon(ByVal UserIndex As Integer)
 
 End Sub
 
-Public Function BuscarSiguienteQuest(ByVal UserIndex As Integer, ByVal NpcIndex As Integer)
+Public Function BuscarSiguienteQuest(ByVal UserIndex As Integer, ByVal NPCIndex As Integer)
     Dim i As Byte
 
     'Buscamos la siguiente quest disponible del NPC
     For i = 1 To 5
-        If Not UserList(UserIndex).QuestStats.Quests(Npclist(NpcIndex).QuestNumber(i)).QuestStatus = Terminada And Npclist(NpcIndex).QuestNumber(i) <> 0 Then
-            BuscarSiguienteQuest = Npclist(NpcIndex).QuestNumber(i)
+        If Not UserList(UserIndex).QuestStats.Quests(Npclist(NPCIndex).QuestNumber(i)).QuestStatus = Terminada And Npclist(NPCIndex).QuestNumber(i) <> 0 Then
+            BuscarSiguienteQuest = Npclist(NPCIndex).QuestNumber(i)
             Exit Function
         End If
     Next

@@ -18360,7 +18360,8 @@ Public Sub WriteCharacterChange(ByVal UserIndex As Integer, _
                                 ByVal FXLoops As Integer, _
                                 ByVal helmet As Integer, _
                                 ByVal AuraAnim As Long, _
-                                ByVal AuraColor As Long)
+                                ByVal AuraColor As Long, _
+                                Optional ByVal QuestStatus As Byte = 255)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -18369,7 +18370,7 @@ Public Sub WriteCharacterChange(ByVal UserIndex As Integer, _
     '***************************************************
     On Error GoTo errHandler
 
-    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterChange(body, Head, Heading, CharIndex, weapon, shield, FX, FXLoops, helmet, AuraAnim, AuraColor))
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterChange(body, Head, Heading, CharIndex, weapon, shield, FX, FXLoops, helmet, AuraAnim, AuraColor, QuestStatus))
     Exit Sub
 
 errHandler:
@@ -21439,7 +21440,8 @@ Public Function PrepareMessageCharacterChange(ByVal body As Integer, _
                                               ByVal FXLoops As Integer, _
                                               ByVal helmet As Integer, _
                                               ByVal AuraAnim As Long, _
-                                              ByVal AuraColor As Long) As String
+                                              ByVal AuraColor As Long, _
+                                              Optional ByVal QuestStatus As Byte = 255) As String
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -21460,6 +21462,7 @@ Public Function PrepareMessageCharacterChange(ByVal body As Integer, _
         Call .WriteInteger(FXLoops)
         Call .WriteLong(AuraAnim)
         Call .WriteLong(AuraColor)
+        Call .WriteByte(QuestStatus)
         
         PrepareMessageCharacterChange = .ReadASCIIStringFixed(.Length)
 
