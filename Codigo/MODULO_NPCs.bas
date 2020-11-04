@@ -831,7 +831,7 @@ Public Sub ChangeNPCChar(ByVal NPCIndex As Integer, _
             .Head = Head
             .Heading = Heading
             
-            Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessageCharacterChange(body, Head, Heading, .CharIndex, 0, 0, 0, 0, 0, NingunAura, NingunAura, Estadoquest))
+            Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessageCharacterChange(body, Head, Heading, .CharIndex, .WeaponAnim, .ShieldAnim, 0, 0, .CascoAnim, NingunAura, NingunAura, Estadoquest))
 
         End With
 

@@ -7649,6 +7649,22 @@ Private Sub HandleGMRequest(ByVal UserIndex As Integer)
             Call WriteConsoleMsg(UserIndex, "La sugerencia ha sido guardada! Gracias por colaboar con WinterAO.", FONTTYPE_GUILD)
             Call WriteConsoleMsg(SendTarget.ToAdmins, Mensaje, FONTTYPE_TALK)
             
+        Case 3 'Denuncia
+            
+            If FileExist(FileDir, vbDirectory) = False Then _
+                MkDir FileDir
+        
+            cant = GetVar(FileDir & "Sugerencias.ini", "DENUNCIAS", "CANTIDAD")
+            Motivo = val(cant) + 1
+            Nuevo = "Sugerencia" & Motivo
+            Mensaje = Date & " " & time & " - " & UserList(UserIndex).Name & " Reporto la siguiente denunciaa: " & Message & " - IP: " & UserList(UserIndex).IP
+
+            Call WriteVar(FileDir & "Denuncias.ini", "SUGERENCIAS", "Cantidad", Motivo)
+            Call WriteVar(FileDir & "Denuncias.ini", "Reportes", Nuevo, Mensaje)
+            
+            Call WriteConsoleMsg(UserIndex, "La denuncia ha sido registrada! Gracias por colaboar con WinterAO.", FONTTYPE_GUILD)
+            Call WriteConsoleMsg(SendTarget.ToAdmins, Mensaje, FONTTYPE_TALK)
+            
         End Select
         
     End With
@@ -18227,7 +18243,7 @@ Public Sub WriteCharacterCreate(ByVal UserIndex As Integer, _
                                 ByVal GrhAura As Long, _
                                 ByVal AuraColor As Long, _
                                 Optional ByVal NoShadow As Byte = False, _
-                                Optional ByVal EstadoQuest As Byte = 255)
+                                Optional ByVal Estadoquest As Byte = 255)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -18236,7 +18252,7 @@ Public Sub WriteCharacterCreate(ByVal UserIndex As Integer, _
     '***************************************************
     On Error GoTo errHandler
 
-    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterCreate(body, Head, Heading, CharIndex, X, Y, weapon, shield, FX, FXLoops, helmet, AnimAtaque, Name, NickColor, Privileges, GrhAura, AuraColor, NoShadow, EstadoQuest))
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterCreate(body, Head, Heading, CharIndex, X, Y, weapon, shield, FX, FXLoops, helmet, AnimAtaque, Name, NickColor, Privileges, GrhAura, AuraColor, NoShadow, Estadoquest))
     Exit Sub
 
 errHandler:
@@ -21379,7 +21395,7 @@ Public Function PrepareMessageCharacterCreate(ByVal body As Integer, _
                                               ByVal GrhAura As Long, _
                                               ByVal AuraColor As Long, _
                                               ByVal NoShadow As Byte, _
-                                              ByVal EstadoQuest As Byte) As String
+                                              ByVal Estadoquest As Byte) As String
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -21407,7 +21423,7 @@ Public Function PrepareMessageCharacterCreate(ByVal body As Integer, _
         Call .WriteLong(GrhAura)
         Call .WriteLong(AuraColor)
         Call .WriteByte(NoShadow)
-        Call .WriteByte(EstadoQuest)
+        Call .WriteByte(Estadoquest)
         
         PrepareMessageCharacterCreate = .ReadASCIIStringFixed(.Length)
 
