@@ -1606,20 +1606,7 @@ Sub ResetUseRaccount(ByVal UserIndex As Integer)
         .AccountInfo.status = False
         
         For i = 1 To .AccountInfo.NumPjs
-            .AccountInfo.AccountPJ(.AccountInfo.NumPjs).ID = 0
-            .AccountInfo.AccountPJ(.AccountInfo.NumPjs).Name = vbNullString
-            .AccountInfo.AccountPJ(.AccountInfo.NumPjs).body = 0
-            .AccountInfo.AccountPJ(.AccountInfo.NumPjs).Head = 0
-            .AccountInfo.AccountPJ(.AccountInfo.NumPjs).weapon = 0
-            .AccountInfo.AccountPJ(.AccountInfo.NumPjs).shield = 0
-            .AccountInfo.AccountPJ(.AccountInfo.NumPjs).helmet = 0
-            .AccountInfo.AccountPJ(.AccountInfo.NumPjs).Class = 0
-            .AccountInfo.AccountPJ(.AccountInfo.NumPjs).race = 0
-            .AccountInfo.AccountPJ(.AccountInfo.NumPjs).Map = 0
-            .AccountInfo.AccountPJ(.AccountInfo.NumPjs).level = 0
-            .AccountInfo.AccountPJ(.AccountInfo.NumPjs).criminal = False
-            .AccountInfo.AccountPJ(.AccountInfo.NumPjs).dead = False
-            .AccountInfo.AccountPJ(.AccountInfo.NumPjs).gameMaster = False
+            Call ResetPJAccountSlot(UserIndex, i)
         Next i
     
     End With

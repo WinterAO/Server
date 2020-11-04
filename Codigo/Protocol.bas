@@ -1613,27 +1613,32 @@ Private Sub HandleDeleteChar(ByVal UserIndex As Integer)
     If PJSeleccionado < 1 Or PJSeleccionado > MAXPJACCOUNTS Then
         Call WriteErrorMsg(UserIndex, "Error al borrar el PJ. Intentelo de nuevo o contacte con un Administrador.")
         Exit Sub
+        
     End If
     
     If GetUserGuildIndexDatabase(UserList(UserIndex).AccountInfo.AccountPJ(PJSeleccionado).Name) > 0 Then
         Call WriteErrorMsg(UserIndex, "El personaje que intentas borrar pertenece a un clan. Debes salir del clan antes de borrar el personaje.")
         Exit Sub
+        
     End If
     
     If NameIndex(UserList(UserIndex).AccountInfo.AccountPJ(PJSeleccionado).Name) > 0 Then
         Call WriteErrorMsg(UserIndex, "El personaje que intentas borrar esta conectado.")
         Exit Sub
+        
     End If
     
     'Mandamos a borrar el PJ
-    If BorrarUsuario(UserIndex, UserList(UserIndex).AccountInfo.AccountPJ(PJSeleccionado).Name) Then
+    If BorrarUsuario(UserIndex, PJSeleccionado) Then
         'Si se pudo borrar enviamos paquete para mostrar mensaje satisfactorio en el cliente
         Call UserList(UserIndex).outgoingData.WriteByte(ServerPacketID.DeletedChar)
         'Mandamos la actualizacion de personajes de la cuenta
-        Call LoginAccountDatabase(UserIndex, UserList(UserIndex).AccountInfo.UserName, True)
+        Call LoginAccountDatabase(UserIndex, UserList(UserIndex).AccountInfo.UserName)
+        
     Else
         Call WriteErrorMsg(UserIndex, "Error al borrar el PJ. Intentelo de nuevo o contacte con un Administrador.")
         Exit Sub
+        
     End If
     
     Exit Sub

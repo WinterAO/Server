@@ -1,7 +1,7 @@
 Attribute VB_Name = "Cuentas"
 Option Explicit
 
-Public Sub LoginAccountDatabase(ByVal UserIndex As Integer, ByVal UserName As String, Optional ByVal Refresh As Boolean = False)
+Public Sub LoginAccountDatabase(ByVal UserIndex As Integer, ByVal UserName As String)
     '***************************************************
     'Author: Lorwik
     'Last Modification: 20/05/2020
@@ -20,20 +20,19 @@ Public Sub LoginAccountDatabase(ByVal UserIndex As Integer, ByVal UserName As St
     
     With UserList(UserIndex)
     
-    If Refresh = False Then
     
         query = "SELECT id, username, email, password, salt, gemas, status FROM account "
         query = query & "WHERE UPPER(username) = '" & UCase$(UserName) & "';"
-    
+        
         Set Database_RecordSet = Database_Connection.Execute(query)
-    
+        
         If Database_RecordSet.BOF Or Database_RecordSet.EOF Then
             Call WriteErrorMsg(UserIndex, "Error al cargar la cuenta.")
             Call CloseUser(UserIndex)
             Exit Sub
-    
-        End If
         
+        End If
+            
         'Guardo la información de la cuenta
         .AccountInfo.ID = CInt(Database_RecordSet!ID)
         .AccountInfo.UserName = Database_RecordSet!UserName
@@ -42,27 +41,25 @@ Public Sub LoginAccountDatabase(ByVal UserIndex As Integer, ByVal UserName As St
         .AccountInfo.Salt = Database_RecordSet!Salt
         .AccountInfo.Gemas = CLng(Database_RecordSet!Gemas)
         .AccountInfo.status = CBool(Database_RecordSet!status)
-        
+            
         Set Database_RecordSet = Nothing
         
-    End If
-    
         'Now the characters
         query = "SELECT id, name, level, body_id, head_id, weapon_id, shield_id, helmet_id, race_id, class_id, pos_map, rep_average, is_dead FROM usuario "
         query = query & "WHERE account_id = " & .AccountInfo.ID & " AND deleted = FALSE;"
-    
+        
         Set Database_RecordSet = Database_Connection.Execute(query)
-    
+        
         .AccountInfo.NumPjs = 0
-
+    
         If Not Database_RecordSet.RecordCount = 0 Then
             Database_RecordSet.MoveFirst
-    
+        
             While Not Database_RecordSet.EOF
-            
+                
                 'Incrementamos la cantidad de PJ creados actualmnente
                 .AccountInfo.NumPjs = .AccountInfo.NumPjs + 1
-
+    
                 .AccountInfo.AccountPJ(.AccountInfo.NumPjs).ID = Database_RecordSet!ID
                 .AccountInfo.AccountPJ(.AccountInfo.NumPjs).Name = Database_RecordSet!Name
                 .AccountInfo.AccountPJ(.AccountInfo.NumPjs).body = Database_RecordSet!body_id
@@ -77,9 +74,9 @@ Public Sub LoginAccountDatabase(ByVal UserIndex As Integer, ByVal UserName As St
                 .AccountInfo.AccountPJ(.AccountInfo.NumPjs).criminal = (Database_RecordSet!rep_average < 0)
                 .AccountInfo.AccountPJ(.AccountInfo.NumPjs).dead = Database_RecordSet!is_dead
                 .AccountInfo.AccountPJ(.AccountInfo.NumPjs).gameMaster = EsGmChar(Database_RecordSet!Name)
-                
-                If .AccountInfo.AccountPJ(.AccountInfo.NumPjs).gameMaster = True Then TieneGM = True
                     
+                If .AccountInfo.AccountPJ(.AccountInfo.NumPjs).gameMaster = True Then TieneGM = True
+                        
                 Database_RecordSet.MoveNext
             Wend
     
@@ -103,7 +100,7 @@ Public Sub LoginAccountDatabase(ByVal UserIndex As Integer, ByVal UserName As St
         Call Database_Close
     #End If
     
-    Call WriteEnviarPJUserAccount(UserIndex, Refresh)
+    Call WriteEnviarPJUserAccount(UserIndex)
 
     Exit Sub
 ErrorHandler:
@@ -620,7 +617,7 @@ Public Sub ActualizarPJCuentas(ByVal UserIndex As Integer)
         .AccountInfo.AccountPJ(Posicion).gameMaster = EsGmChar(.Name)
 
         'Actualiza los PJ de la cuenta
-        Call WriteEnviarPJUserAccount(UserIndex, True)
+        Call WriteEnviarPJUserAccount(UserIndex)
     End With
 
 End Sub
@@ -653,4 +650,85 @@ Public Sub AddNewPJCuenta(ByVal UserIndex As Integer)
         
     End With
     
+End Sub
+
+Public Sub DeletePJCuenta(ByVal UserIndex As Integer, ByVal Slot As Byte)
+'****************************************************
+'Autor: Lorwik
+'Fecha: 04/11/2020
+'Descripcion: elimina un personaje de la lista de la cuentay, y lo reordena
+'****************************************************
+
+    Dim Count As Byte
+    Dim i As Byte
+    
+    With UserList(UserIndex).AccountInfo
+
+        '¿El Slot es el ultimo?
+        If Slot = .NumPjs Then
+            Call ResetPJAccountSlot(UserIndex, Slot)
+            
+        Else
+            
+            'Primero borro el Slot
+            Call ResetPJAccountSlot(UserIndex, Slot)
+        
+            For i = Slot To .NumPjs - 1
+            
+                .AccountPJ(i).ID = .AccountPJ(i + 1).ID
+                .AccountPJ(i).Name = .AccountPJ(i + 1).Name
+                .AccountPJ(i).body = .AccountPJ(i + 1).body
+                .AccountPJ(i).Head = .AccountPJ(i + 1).Head
+                .AccountPJ(i).weapon = .AccountPJ(i + 1).weapon
+                .AccountPJ(i).shield = .AccountPJ(i + 1).shield
+                .AccountPJ(i).helmet = .AccountPJ(i + 1).helmet
+                .AccountPJ(i).Class = .AccountPJ(i + 1).Class
+                .AccountPJ(i).race = .AccountPJ(i + 1).race
+                .AccountPJ(i).Map = .AccountPJ(i + 1).Map
+                .AccountPJ(i).level = .AccountPJ(i + 1).level
+                .AccountPJ(i).criminal = .AccountPJ(i + 1).criminal
+                .AccountPJ(i).dead = .AccountPJ(i + 1).dead
+                .AccountPJ(i).gameMaster = .AccountPJ(i + 1).gameMaster
+                
+                'Voy limpiando
+                Call ResetPJAccountSlot(UserIndex, i + 1)
+            
+            Next i
+        
+        End If
+
+
+    End With
+
+    Call WriteEnviarPJUserAccount(UserIndex)
+    
+End Sub
+
+Public Sub ResetPJAccountSlot(ByVal UserIndex As Integer, ByVal Slot As Byte)
+'****************************************************
+'Autor: Lorwik
+'Fecha: 04/11/2020
+'Descripcion: Limpia un slot de la cuenta
+'****************************************************
+
+    With UserList(UserIndex).AccountInfo
+        .AccountPJ(Slot).ID = 0
+        .AccountPJ(Slot).Name = vbNullString
+        .AccountPJ(Slot).body = 0
+        .AccountPJ(Slot).Head = 0
+        .AccountPJ(Slot).weapon = 0
+        .AccountPJ(Slot).shield = 0
+        .AccountPJ(Slot).helmet = 0
+        .AccountPJ(Slot).Class = 0
+        .AccountPJ(Slot).race = 0
+        .AccountPJ(Slot).Map = 0
+        .AccountPJ(Slot).level = 0
+        .AccountPJ(Slot).criminal = False
+        .AccountPJ(Slot).dead = False
+        .AccountPJ(Slot).gameMaster = False
+        
+        'Restamos 1
+        .NumPjs = .NumPjs - 1
+    End With
+            
 End Sub
