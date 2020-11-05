@@ -40,7 +40,7 @@ Public Const PARTY_MAXMEMBERS          As Byte = 5
 ''
 'Si esto esta en True, la exp sale por cada golpe que le da
 'Si no, la exp la recibe al salirse de la party (pq las partys, floodean)
-Public Const PARTY_EXPERIENCIAPORGOLPE As Boolean = False
+Public Const PARTY_EXPERIENCIAPORGOLPE As Boolean = True
 
 ''
 'maxima diferencia de niveles permitida en una party
