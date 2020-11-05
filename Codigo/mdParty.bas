@@ -31,7 +31,7 @@ Public Const MAX_PARTIES               As Integer = 300
 
 ''
 'nivel minimo para crear party
-Public Const MINPARTYLEVEL             As Byte = 15
+Public Const MINPARTYLEVEL             As Byte = 1
 
 ''
 'Cantidad maxima de gente en la party

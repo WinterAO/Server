@@ -2075,11 +2075,13 @@ Sub CloseUser(ByVal UserIndex As Integer)
         Next i
     
         'Update Map Users
-        MapInfo(Map).NumUsers = MapInfo(Map).NumUsers - 1
+        If Map > 0 Then
+            MapInfo(Map).NumUsers = MapInfo(Map).NumUsers - 1
     
-        If MapInfo(Map).NumUsers < 0 Then
-            MapInfo(Map).NumUsers = 0
-
+            If MapInfo(Map).NumUsers < 0 Then
+                MapInfo(Map).NumUsers = 0
+            End If
+            
         End If
     
         ' Si el usuario habia dejado un msg en la gm's queue lo borramos

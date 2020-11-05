@@ -332,6 +332,7 @@ Private Function CanAcceptFight(ByVal UserIndex As Integer, _
               
     If tUser <= 0 Then
         ' Personaje offline
+        Call WriteConsoleMsg(UserIndex, "Usuario offline.", FontTypeNames.FONTTYPE_INFO)
         CanAcceptFight = False
         Exit Function
     End If
@@ -656,7 +657,7 @@ Private Sub SendInvitation(ByVal UserIndex As Integer, _
         tUser = NameIndex(Users(LoopC))
               
         If tUser <> UserIndex Then
-            Call WriteConsoleMsg(tUser, strtemp, FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(tUser, strtemp, FontTypeNames.FONTTYPE_WARNING)
         End If
                                               
     Next LoopC
@@ -973,12 +974,7 @@ Private Sub StatsDuelos(ByVal UserIndex As Integer)
         .Stats.MinMAN = .Stats.MaxMAN
         .Stats.MinSta = .Stats.MaxSta
                   
-         WriteUpdateUserStats UserIndex
-                
-                
-        If .flags.Paralizado Or .flags.Inmovilizado Then
-            Call RemoveParalisis(UserIndex)
-        End If
+        Call WriteUpdateUserStats(UserIndex)
                 
     End With
           
