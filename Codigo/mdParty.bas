@@ -48,7 +48,7 @@ Public Const MAXPARTYDELTALEVEL        As Byte = 7
 
 ''
 'distancia al leader para que este acepte el ingreso
-Public Const MAXDISTANCIAINGRESOPARTY  As Byte = 2
+Public Const MAXDISTANCIAINGRESOPARTY  As Byte = 10
 
 ''
 'maxima distancia a un exito para obtener su experiencia

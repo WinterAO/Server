@@ -146,6 +146,7 @@ Private Enum ServerPacketID
     
     ShowGuildAlign
     ShowPartyForm
+    PeticionInvitarParty
     UpdateStrenghtAndDexterity
     UpdateStrenght
     UpdateDexterity
@@ -210,6 +211,7 @@ Private Enum ClientPacketID
     CraftearItem
     WorkClose
     WorkLeftClick                   'WLC
+    InvitarPartyClick
     CreateNewGuild                  'CIG
     SpellInfo                      'INFS
     EquipItem                      'EQUI
@@ -572,6 +574,9 @@ Public Function HandleIncomingData(ByVal UserIndex As Integer) As Boolean
         
         Case ClientPacketID.WorkLeftClick           'WLC
             Call HandleWorkLeftClick(UserIndex)
+            
+        Case ClientPacketID.InvitarPartyClick
+            Call HandleInvitarPartyClick(UserIndex)
         
         Case ClientPacketID.CreateNewGuild          'CIG
             Call HandleCreateNewGuild(UserIndex)
@@ -3649,6 +3654,81 @@ Private Sub HandleWorkLeftClick(ByVal UserIndex As Integer)
 
     End With
 
+End Sub
+
+''
+' Handles the "InvitarPartyClick" message.
+
+Private Sub HandleInvitarPartyClick(ByVal UserIndex As Integer)
+'***************************************************
+'Author: Lorwik
+'Last Modification: 05/11/2020
+'***************************************************
+    
+    With UserList(UserIndex)
+    
+        If .incomingData.Length < 3 Then
+            Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
+            Exit Sub
+    
+        End If
+        
+        Dim X           As Byte
+    
+        Dim Y           As Byte
+    
+        'Remove packet ID
+        Call .incomingData.ReadByte
+            
+        X = .incomingData.ReadByte()
+        Y = .incomingData.ReadByte()
+    
+        If .flags.Muerto = 1 Or .flags.Descansar Or .flags.Meditando Or Not InMapBounds(.Pos.Map, X, Y) Then Exit Sub
+    
+        If Not InRangoVision(UserIndex, X, Y) Then
+            Call WritePosUpdate(UserIndex)
+            Exit Sub
+    
+        End If
+    
+        'If exiting, cancel
+        Call CancelExit(UserIndex)
+            
+        'Si esta casteando, lo cancelamos
+        Call CancelCast(UserIndex)
+    
+        'Target whatever is in that tile
+        Call LookatTile(UserIndex, .Pos.Map, X, Y)
+                    
+        If .flags.TargetUser <= 0 Then Exit Sub
+                    
+        'If it's outside range log it and exit
+        If Abs(.Pos.X - X) > RANGO_VISION_X Or Abs(.Pos.Y - Y) > RANGO_VISION_Y Then
+            Call LogCheating("Ataque fuera de rango de " & .Name & "(" & .Pos.Map & "/" & .Pos.X & "/" & .Pos.Y & ") ip: " & .IP & " a la posicion (" & .Pos.Map & "/" & X & "/" & Y & ")")
+            Exit Sub
+        End If
+        
+        'Si ninguno de los 2 tiene party la intentamos crear
+        If .PartyIndex = 0 And UserList(.flags.TargetUser).PartyIndex = 0 Then
+            
+            'La podemos crear?
+            If Not mdParty.PuedeCrearParty(UserIndex) Then Exit Sub
+        
+            'La creamos
+            Call mdParty.CrearParty(UserIndex)
+            
+            'Metemos al target
+            Call mdParty.SolicitarIngresoAParty(.flags.TargetUser)
+            
+            'Lo aceptamos
+            Call mdParty.AprobarIngresoAParty(UserIndex, .flags.TargetUser)
+        
+        Else
+        
+        End If
+    
+    End With
+    
 End Sub
 
 ''
@@ -9767,7 +9847,7 @@ Private Sub HandlePartyForm(ByVal UserIndex As Integer)
             Call WriteShowPartyForm(UserIndex)
             
         Else
-            Call WriteConsoleMsg(UserIndex, "No perteneces a ningun grupo!", FontTypeNames.FONTTYPE_INFOBOLD)
+            Call WritePeticionInvitarParty(UserIndex)
 
         End If
 
@@ -20719,6 +20799,29 @@ errHandler:
 
     End If
 
+End Sub
+
+Public Sub WritePeticionInvitarParty(ByVal UserIndex As Integer)
+   '***************************************************
+    'Author: Lorwik
+    'Last Modification: 05/11/2020
+    '***************************************************
+    On Error GoTo errHandler
+    
+    With UserList(UserIndex).outgoingData
+        Call .WriteByte(ServerPacketID.PeticionInvitarParty)
+
+    End With
+
+    Exit Sub
+
+errHandler:
+
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
+        Resume
+
+    End If
 End Sub
 
 ''
