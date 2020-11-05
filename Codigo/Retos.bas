@@ -975,7 +975,10 @@ Private Sub StatsDuelos(ByVal UserIndex As Integer)
                   
          WriteUpdateUserStats UserIndex
                 
-        Call RemoveParalisis(UserIndex)
+                
+        If .flags.Paralizado Or .flags.Inmovilizado Then
+            Call RemoveParalisis(UserIndex)
+        End If
                 
     End With
           
