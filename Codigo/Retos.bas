@@ -6,7 +6,7 @@ Attribute VB_Name = "Retos"
 
 Option Explicit
 
-Private Const MAX_RETOS_SIMULTANEOS As Byte = 4
+Public Const MAX_RETOS_SIMULTANEOS As Byte = 4
 
 Public Enum eTipoReto
     None = 0

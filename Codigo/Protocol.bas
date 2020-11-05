@@ -2903,6 +2903,12 @@ Private Sub HandleDrop(ByVal UserIndex As Integer)
             Call WriteConsoleMsg(UserIndex, "¡Estas trabajando!", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
         End If
+        
+        '¿Puede tirar items en el mapa?
+        If MapInfo(.Pos.Map).NoTirarItems = True Then
+            Call WriteConsoleMsg(UserIndex, "No puedes tirar objetos en el mapa.", FontTypeNames.FONTTYPE_INFO)
+            Exit Sub
+        End If
 
         'If the user is trading, he can't drop items => He's cheating, we kick him.
         If .flags.Comerciando Then Exit Sub
@@ -23207,6 +23213,12 @@ On Error GoTo errHandler
 
             '¿Esta muerto?
             If .flags.Muerto = 1 Then
+                Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
+                Exit Sub
+            End If
+            
+            '¿Tiene el nivel requerido?
+            If .Stats.ELV >= MINLVLGLOBAL Then
                 Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
                 Exit Sub
             End If

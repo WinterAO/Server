@@ -121,6 +121,7 @@ Private Type tMapDat
     InviSinEfecto As Boolean
     LuzBase As Long
     version As Long
+    NoTirarItems As Boolean
 End Type
 
 Public MapSize As tMapSize
@@ -1654,6 +1655,7 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
         .OcultarSinEfecto = MapDat.OcultarSinEfecto
         .InvocarSinEfecto = MapDat.InvocarSinEfecto
         .RoboNpcsPermitido = MapDat.RoboNpcsPermitido
+        .NoTirarItems = MapDat.NoTirarItems
 
         If MapDat.lvlMinimo = "" Then
             .lvlMinimo = 0

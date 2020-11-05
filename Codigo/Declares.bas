@@ -77,6 +77,8 @@ Public Const FX_PASA_NIVEL = 51
 
 Public Const MAXAMIGOS As Byte = 50   'Cantidad Maxima de Amigos
 
+Public Const MINLVLGLOBAL As Byte = 5 'Nivel minimo para poder usar el chat global.
+
 ''
 ' The color of chats over head of dead characters.
 Public Const CHAT_COLOR_DEAD_CHAR As Long = &HC0C0C0
@@ -2006,6 +2008,8 @@ Type MapInfo
     BackUp As Byte
     
     lvlMinimo As Byte
+    
+    NoTirarItems As Byte
 
 End Type
 
