@@ -270,8 +270,6 @@ Private Enum ClientPacketID
     RequestMOTD                   '/MOTD
     UpTime                        '/UPTIME
     PartyLeave                    '/SALIRPARTY
-    PartyCreate                   '/CREARPARTY
-    PartyJoin                     '/PARTY
     Inquiry                       '/ENCUESTA ( with no params )
     GuildMessage                  '/CMSG
     PartyMessage                  '/PMSG
@@ -751,12 +749,6 @@ Public Function HandleIncomingData(ByVal UserIndex As Integer) As Boolean
         
         Case ClientPacketID.PartyLeave              '/SALIRPARTY
             Call HandlePartyLeave(UserIndex)
-        
-        Case ClientPacketID.PartyCreate             '/CREARPARTY
-            Call HandlePartyCreate(UserIndex)
-        
-        Case ClientPacketID.PartyJoin               '/PARTY
-            Call HandlePartyJoin(UserIndex)
         
         Case ClientPacketID.Inquiry                 '/ENCUESTA ( with no params )
             Call HandleInquiry(UserIndex)
@@ -7199,44 +7191,6 @@ Private Sub HandlePartyLeave(ByVal UserIndex As Integer)
     Call UserList(UserIndex).incomingData.ReadByte
     
     Call mdParty.SalirDeParty(UserIndex)
-
-End Sub
-
-''
-' Handles the "PartyCreate" message.
-'
-' @param    userIndex The index of the user sending the message.
-
-Private Sub HandlePartyCreate(ByVal UserIndex As Integer)
-    '***************************************************
-    'Author: Juan Martin Sotuyo Dodero (Maraxus)
-    'Last Modification: 05/17/06
-    '
-    '***************************************************
-    'Remove packet ID
-    Call UserList(UserIndex).incomingData.ReadByte
-    
-    If Not mdParty.PuedeCrearParty(UserIndex) Then Exit Sub
-    
-    Call mdParty.CrearParty(UserIndex)
-
-End Sub
-
-''
-' Handles the "PartyJoin" message.
-'
-' @param    userIndex The index of the user sending the message.
-
-Private Sub HandlePartyJoin(ByVal UserIndex As Integer)
-    '***************************************************
-    'Author: Juan Martin Sotuyo Dodero (Maraxus)
-    'Last Modification: 05/17/06
-    '
-    '***************************************************
-    'Remove packet ID
-    Call UserList(UserIndex).incomingData.ReadByte
-    
-    Call mdParty.SolicitarIngresoAParty(UserIndex)
 
 End Sub
 

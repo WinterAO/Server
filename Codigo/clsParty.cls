@@ -268,7 +268,7 @@ Public Function SaleMiembro(ByVal UserIndex As Integer) As Boolean
                     
                     ' No envia el mensaje al lider
                     If j <> 1 Then
-                        Call WriteConsoleMsg(.UserIndex, "Abandonas la party liderada por " & UserList(p_members(1).UserIndex).Name & ".", FontTypeNames.FONTTYPE_PARTY)
+                        Call WriteConsoleMsg(.UserIndex, "Abandonas el grupo liderada por " & UserList(p_members(1).UserIndex).Name & ".", FontTypeNames.FONTTYPE_PARTY)
 
                     End If
                     
@@ -283,7 +283,7 @@ Public Function SaleMiembro(ByVal UserIndex As Integer) As Boolean
 
                     End If
                     
-                    Call MandarMensajeAConsola(UserList(.UserIndex).Name & " abandona la party.", "Servidor")
+                    Call MandarMensajeAConsola(UserList(.UserIndex).Name & " abandona el grupo.", "Servidor")
                     
                     UserList(.UserIndex).PartyIndex = 0
                     p_CantMiembros = p_CantMiembros - 1
@@ -315,7 +315,7 @@ Public Function SaleMiembro(ByVal UserIndex As Integer) As Boolean
 
                 End If
                 
-                Call MandarMensajeAConsola(.Name & " abandona la party.", "Servidor")
+                Call MandarMensajeAConsola(.Name & " abandona el grupo.", "Servidor")
                 'TODO: Revisar que esto este bien, y no este faltando/sobrando un mensaje, ahora solo los estoy corrigiendo
                 Call WriteConsoleMsg(MemberIndex, "Durante la misma has conseguido " & CStr(Fix(p_members(i).Experiencia)) & " puntos de experiencia.", FontTypeNames.FONTTYPE_PARTY)
                 
@@ -369,7 +369,7 @@ Public Function HacerLeader(ByVal UserIndex As Integer) As Boolean
 
     If UserIndexIndex = 0 Then
         'catastrofe! esto no deberia pasar nunca! pero como es AO.... :p
-        Call LogError("INCONSISTENCIA DE PARTIES")
+        Call LogError("INCONSISTENCIA DE GRUPOS")
         Call SendData(SendTarget.ToAdmins, 0, PrepareMessageConsoleMsg("Inconsistencia de parties en HACERLEADER (UII = 0), AVISE A UN PROGRAMADOR ESTO ES UNA CATASTROFE!!!!", FontTypeNames.FONTTYPE_PARTY))
         HacerLeader = False
         Exit Function
@@ -465,28 +465,28 @@ Public Function PuedeEntrar(ByVal UserIndex As Integer, ByRef razon As String) A
                 'aspirante armada en party crimi
                 If UI > 0 Then
                     If esArmada And criminal(UI) Then
-                        razon = "Los miembros del ejercito real no entran a una party con criminales."
+                        razon = "Los miembros del ejercito real no entran a un grupo con criminales."
                         rv = False
 
                     End If
 
                     'aspirante caos en party ciuda
                     If esCaos And Not criminal(UI) Then
-                        razon = "Los miembros de la legion oscura no entran a una party con ciudadanos."
+                        razon = "Los miembros de la legion oscura no entran a un grupo con ciudadanos."
                         rv = False
 
                     End If
 
                     'aspirante crimi en party armada
                     If UserList(UI).Faccion.ArmadaReal = 1 And criminal(UserIndex) Then
-                        razon = "Los criminales no entran a parties con miembros del ejercito real."
+                        razon = "Los criminales no entran a grupos con miembros del ejercito real."
                         rv = False
 
                     End If
 
                     'aspirante ciuda en party caos
                     If UserList(UI).Faccion.FuerzasCaos = 1 And Not criminal(UserIndex) Then
-                        razon = "Los ciudadanos no entran a parties con miembros de la legion oscura."
+                        razon = "Los ciudadanos no entran a grupos con miembros de la legion oscura."
                         rv = False
 
                     End If
