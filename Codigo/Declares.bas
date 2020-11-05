@@ -1748,6 +1748,7 @@ Public Type User
     
     PartyIndex As Integer   'index a la party q es miembro
     PartySolicitud As Integer   'index a la party q solicito
+    FormandoGrupo As Integer
     
     KeyCrypt As Integer
     

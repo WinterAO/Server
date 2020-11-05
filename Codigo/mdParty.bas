@@ -178,87 +178,6 @@ Public Sub CrearParty(ByVal UserIndex As Integer)
 
 End Sub
 
-Public Sub SolicitarIngresoAParty(ByVal UserIndex As Integer)
-    '***************************************************
-    'Author: Unknown
-    'Last Modification: 05/22/2010 (Marco)
-    ' - 05/22/2010 : staff members aren't allowed to party anyone. (Marco)
-    '18/09/2010: ZaMa - Ahora le avisa al funda de la party cuando alguien quiere ingresar a la misma.
-    '18/09/2010: ZaMa - Contemple mas ecepciones (solo se le puede mandar party al lider)
-    '***************************************************
-
-    'ESTO ES enviado por el PJ para solicitar el ingreso a la party
-    Dim TargetUserIndex As Integer
-
-    Dim PartyIndex      As Integer
-
-    With UserList(UserIndex)
-    
-        'staff members aren't allowed to party anyone
-        If (.flags.Privilegios And PlayerType.User) = 0 Then
-            Call WriteConsoleMsg(UserIndex, "Los miembros del staff no pueden unirse a partys!", FontTypeNames.FONTTYPE_PARTY)
-            Exit Sub
-
-        End If
-        
-        If .PartyIndex > 0 Then
-            'si ya esta en una party
-            Call WriteConsoleMsg(UserIndex, "Ya perteneces a una party, escribe /SALIRPARTY para abandonarla", FontTypeNames.FONTTYPE_PARTY)
-            .PartySolicitud = 0
-            Exit Sub
-
-        End If
-        
-        ' Muerto?
-        If .flags.Muerto = 1 Then
-            'Call WriteConsoleMsg(UserIndex, "Estas muerto!!", FontTypeNames.FONTTYPE_INFO)
-            Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
-            .PartySolicitud = 0
-            Exit Sub
-
-        End If
-        
-        TargetUserIndex = .flags.TargetUser
-
-        ' Target valido?
-        If TargetUserIndex > 0 Then
-        
-            PartyIndex = UserList(TargetUserIndex).PartyIndex
-
-            ' Tiene party?
-            If PartyIndex > 0 Then
-            
-                ' Es el lider?
-                If Parties(PartyIndex).EsPartyLeader(TargetUserIndex) Then
-                    .PartySolicitud = PartyIndex
-                    Call WriteConsoleMsg(UserIndex, "El lider decidira si te acepta en la party.", FontTypeNames.FONTTYPE_PARTY)
-                    Call WriteConsoleMsg(TargetUserIndex, .Name & " solicita ingresar a tu party.", FontTypeNames.FONTTYPE_PARTY)
-                
-                    ' No es lider
-                Else
-                    Call WriteConsoleMsg(UserIndex, UserList(TargetUserIndex).Name & " no es lider de la party.", FontTypeNames.FONTTYPE_PARTY)
-
-                End If
-            
-                ' No tiene party
-            Else
-                Call WriteConsoleMsg(UserIndex, UserList(TargetUserIndex).Name & " no pertenece a ninguna party.", FontTypeNames.FONTTYPE_PARTY)
-                .PartySolicitud = 0
-                Exit Sub
-
-            End If
-        
-            ' Target invalido
-        Else
-            Call WriteConsoleMsg(UserIndex, "Para ingresar a una party debes hacer click sobre el fundador y luego escribir /PARTY", FontTypeNames.FONTTYPE_PARTY)
-            .PartySolicitud = 0
-
-        End If
-        
-    End With
-
-End Sub
-
 Public Sub SalirDeParty(ByVal UserIndex As Integer)
     '***************************************************
     'Author: Unknown
@@ -347,6 +266,87 @@ Public Function UserPuedeEjecutarComandos(ByVal User As Integer) As Boolean
 
 End Function
 
+Public Sub SolicitarIngresoAParty(ByVal UserIndex As Integer)
+    '***************************************************
+    'Author: Unknown
+    'Last Modification: 05/22/2010 (Marco)
+    ' - 05/22/2010 : staff members aren't allowed to party anyone. (Marco)
+    '18/09/2010: ZaMa - Ahora le avisa al funda de la party cuando alguien quiere ingresar a la misma.
+    '18/09/2010: ZaMa - Contemple mas ecepciones (solo se le puede mandar party al lider)
+    '***************************************************
+
+    'ESTO ES enviado por el PJ para solicitar el ingreso a la party
+    Dim TargetUserIndex As Integer
+
+    Dim PartyIndex      As Integer
+
+    With UserList(UserIndex)
+    
+        'staff members aren't allowed to party anyone
+        If (.flags.Privilegios And PlayerType.User) = 0 Then
+            Call WriteConsoleMsg(UserIndex, "Los miembros del staff no pueden unirse a grupos!", FontTypeNames.FONTTYPE_PARTY)
+            Exit Sub
+
+        End If
+        
+        If .PartyIndex > 0 Then
+            'si ya esta en una party
+            Call WriteConsoleMsg(UserIndex, "Ya perteneces a un grupo.", FontTypeNames.FONTTYPE_PARTY)
+            .PartySolicitud = 0
+            Exit Sub
+
+        End If
+        
+        ' Muerto?
+        If .flags.Muerto = 1 Then
+            'Call WriteConsoleMsg(UserIndex, "Estas muerto!!", FontTypeNames.FONTTYPE_INFO)
+            Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
+            .PartySolicitud = 0
+            Exit Sub
+
+        End If
+        
+        TargetUserIndex = .flags.TargetUser
+
+        ' Target valido?
+        If TargetUserIndex > 0 Then
+        
+            PartyIndex = UserList(TargetUserIndex).PartyIndex
+
+            ' Tiene party?
+            If PartyIndex > 0 Then
+            
+                ' Es el lider?
+                If Parties(PartyIndex).EsPartyLeader(TargetUserIndex) Then
+                    .PartySolicitud = PartyIndex
+                    Call WriteConsoleMsg(UserIndex, "El lider decidira si te acepta en el grupo.", FontTypeNames.FONTTYPE_PARTY)
+                    Call WriteConsoleMsg(TargetUserIndex, .Name & " solicita ingresar a tu grupo.", FontTypeNames.FONTTYPE_PARTY)
+                
+                    ' No es lider
+                Else
+                    Call WriteConsoleMsg(UserIndex, UserList(TargetUserIndex).Name & " no es lider del grupo.", FontTypeNames.FONTTYPE_PARTY)
+
+                End If
+            
+                ' No tiene party
+            Else
+                Call WriteConsoleMsg(UserIndex, UserList(TargetUserIndex).Name & " no pertenece a ningun grupo.", FontTypeNames.FONTTYPE_PARTY)
+                .PartySolicitud = 0
+                Exit Sub
+
+            End If
+        
+            ' Target invalido
+        Else
+            Call WriteConsoleMsg(UserIndex, "Para ingresar a una party debes hacer pulsa sobre el botón 'Grupos' del menu, y envia peticion al lider.", FontTypeNames.FONTTYPE_PARTY)
+            .PartySolicitud = 0
+
+        End If
+        
+    End With
+
+End Sub
+
 Public Sub AprobarIngresoAParty(ByVal leader As Integer, ByVal NewMember As Integer)
     '***************************************************
     'Author: Unknown
@@ -368,13 +368,13 @@ Public Sub AprobarIngresoAParty(ByVal leader As Integer, ByVal NewMember As Inte
                 If .PartyIndex = 0 Then
                     If Parties(PI).PuedeEntrar(NewMember, razon) Then
                         If Parties(PI).NuevoMiembro(NewMember) Then
-                            Call Parties(PI).MandarMensajeAConsola(UserList(leader).Name & " ha aceptado a " & .Name & " en la party.", "Servidor")
+                            Call Parties(PI).MandarMensajeAConsola(UserList(leader).Name & " ha aceptado a " & .Name & " en el grupo.", "Servidor")
                             .PartyIndex = PI
                             .PartySolicitud = 0
                         Else
                             'no pudo entrar
                             'ACA UNO PUEDE CODIFICAR OTRO TIPO DE ERRORES...
-                            Call SendData(SendTarget.ToAdmins, leader, PrepareMessageConsoleMsg(" Servidor> CATASTROFE EN PARTIES, NUEVO MIEMBRO DIO FALSE! :S ", FontTypeNames.FONTTYPE_PARTY))
+                            Call SendData(SendTarget.ToAdmins, leader, PrepareMessageConsoleMsg(" Servidor> CATASTROFE EN GRUPOS, NUEVO MIEMBRO DIO FALSE! :S ", FontTypeNames.FONTTYPE_PARTY))
 
                         End If
 
@@ -387,9 +387,9 @@ Public Sub AprobarIngresoAParty(ByVal leader As Integer, ByVal NewMember As Inte
                 Else
 
                     If .PartyIndex = PI Then
-                        Call WriteConsoleMsg(leader, LCase(.Name) & " ya es miembro de la party.", FontTypeNames.FONTTYPE_PARTY)
+                        Call WriteConsoleMsg(leader, LCase(.Name) & " ya es miembro del grupo.", FontTypeNames.FONTTYPE_PARTY)
                     Else
-                        Call WriteConsoleMsg(leader, .Name & " ya es miembro de otra party.", FontTypeNames.FONTTYPE_PARTY)
+                        Call WriteConsoleMsg(leader, .Name & " ya es miembro de otro grupo.", FontTypeNames.FONTTYPE_PARTY)
 
                     End If
                     
@@ -406,9 +406,9 @@ Public Sub AprobarIngresoAParty(ByVal leader As Integer, ByVal NewMember As Inte
         Else
 
             If .PartyIndex = PI Then
-                Call WriteConsoleMsg(leader, LCase(.Name) & " ya es miembro de la party.", FontTypeNames.FONTTYPE_PARTY)
+                Call WriteConsoleMsg(leader, LCase(.Name) & " ya es miembro del grupo.", FontTypeNames.FONTTYPE_PARTY)
             Else
-                Call WriteConsoleMsg(leader, LCase(.Name) & " no ha solicitado ingresar a tu party.", FontTypeNames.FONTTYPE_PARTY)
+                Call WriteConsoleMsg(leader, LCase(.Name) & " no ha solicitado ingresar a tu grupo.", FontTypeNames.FONTTYPE_PARTY)
 
             End If
             

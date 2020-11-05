@@ -1636,6 +1636,7 @@ Sub ResetBasicUserInfo(ByVal UserIndex As Integer)
         
         .PartyIndex = 0
         .PartySolicitud = 0
+        .FormandoGrupo = 0
         
         .CreoPortal = False
         .PortalPos.Map = 0

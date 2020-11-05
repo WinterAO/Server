@@ -3677,6 +3677,8 @@ Private Sub HandleInvitarPartyClick(ByVal UserIndex As Integer)
     
         Dim Y           As Byte
     
+        Dim Aleatorio   As Integer
+        
         'Remove packet ID
         Call .incomingData.ReadByte
             
@@ -3708,22 +3710,71 @@ Private Sub HandleInvitarPartyClick(ByVal UserIndex As Integer)
             Exit Sub
         End If
         
-        'Si ninguno de los 2 tiene party la intentamos crear
-        If .PartyIndex = 0 And UserList(.flags.TargetUser).PartyIndex = 0 Then
-            
-            'La podemos crear?
-            If Not mdParty.PuedeCrearParty(UserIndex) Then Exit Sub
+        '¿Se invita a si mismo?
+        If UserIndex = .flags.TargetUser Then Exit Sub
         
-            'La creamos
-            Call mdParty.CrearParty(UserIndex)
+        '¿No tengo grupo?
+        If .PartyIndex = 0 Then
             
-            'Metemos al target
-            Call mdParty.SolicitarIngresoAParty(.flags.TargetUser)
+            '¿El otro tampoco tiene?
+            If UserList(.flags.TargetUser).PartyIndex = 0 Then
             
-            'Lo aceptamos
-            Call mdParty.AprobarIngresoAParty(UserIndex, .flags.TargetUser)
-        
-        Else
+                'Lo podemos crear?
+                If Not mdParty.PuedeCrearParty(UserIndex) Then Exit Sub
+                
+                '¿Estan creando grupo?
+                If .FormandoGrupo <> .ID Then
+                    
+                    .FormandoGrupo = UserList(.flags.TargetUser).ID
+                    UserList(.flags.TargetUser).FormandoGrupo = UserList(.flags.TargetUser).ID 'Se anota asi mismo, señal que es el invitado
+                    
+                    Call WriteConsoleMsg(UserIndex, "Has enviado una peticion a " & UserList(.flags.TargetUser).Name & " para crear un grupo.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(.flags.TargetUser, UserList(UserIndex).Name & " te ha invitado para crear un grupo.", FontTypeNames.FONTTYPE_INFO)
+                    
+                Else '¿Es la respuesta?
+                    'Lo creamos
+                    Call mdParty.CrearParty(UserIndex)
+                    
+                    'Metemos al target
+                    UserList(.flags.TargetUser).PartySolicitud = .PartyIndex
+                    
+                    'Lo aceptamos
+                    Call mdParty.AprobarIngresoAParty(UserIndex, .flags.TargetUser)
+                    
+                    .FormandoGrupo = 0
+                    UserList(.flags.TargetUser).FormandoGrupo = 0
+                    
+                    Exit Sub
+                End If
+                
+            Else '¿El otro SI tiene grupo?
+            
+                '¿Es el lider?
+                If Parties(UserList(.flags.TargetUser).PartyIndex).EsPartyLeader(.flags.TargetUser) Then
+                    'Enviamos peticion para unirme
+                    Call mdParty.SolicitarIngresoAParty(UserIndex)
+                    Exit Sub
+                Else '¿No lo es?
+                    Call WriteConsoleMsg(UserIndex, UserList(.flags.TargetUser).Name & " ya pertenece a un grupo.", FontTypeNames.FONTTYPE_INFO)
+                    Exit Sub
+                End If
+            
+            End If
+            
+        Else '¿SI tengo party?
+
+            '¿Soy el lider?
+            If Parties(.PartyIndex).EsPartyLeader(UserIndex) Then
+                '¿Solicito entrar a mi party?
+                If UserList(.flags.TargetUser).PartySolicitud = .PartyIndex Then
+                    'Lo aceptamos
+                    Call mdParty.AprobarIngresoAParty(UserIndex, .flags.TargetUser)
+                    
+                Else '¿no?
+                    Call WriteConsoleMsg(UserIndex, UserList(.flags.TargetUser).Name & " no ha solicitado entrar a tu grupo.", FontTypeNames.FONTTYPE_PARTY)
+                    
+                End If
+            End If
         
         End If
     
@@ -9839,11 +9890,19 @@ Private Sub HandlePartyForm(ByVal UserIndex As Integer)
     'Last Modification: 11/26/09
     '
     '***************************************************
+    
+    Dim LiderInvita As Boolean
+    
     With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
 
-        If .PartyIndex > 0 Then
+        LiderInvita = .incomingData.ReadBoolean
+
+        If LiderInvita Then
+            Call WritePeticionInvitarParty(UserIndex)
+
+        ElseIf .PartyIndex > 0 Then
             Call WriteShowPartyForm(UserIndex)
             
         Else
