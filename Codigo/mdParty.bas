@@ -195,6 +195,11 @@ Public Sub SalirDeParty(ByVal UserIndex As Integer)
             Set Parties(PI) = Nothing
         Else
             UserList(UserIndex).PartyIndex = 0
+            
+            'Si la cantidad de miembros es 1 disolvemos el grupo
+            If Parties(PI).CantMiembros = 1 Then
+                Call SalirDeParty(Parties(PI).ObtenerLeader)
+            End If
 
         End If
 
@@ -223,6 +228,11 @@ Public Sub ExpulsarDeParty(ByVal leader As Integer, ByVal OldMember As Integer)
             Set Parties(PI) = Nothing
         Else
             UserList(OldMember).PartyIndex = 0
+            
+            'Si la cantidad de miembros es 1 disolvemos el grupo
+            If Parties(PI).CantMiembros = 1 Then
+                Call SalirDeParty(leader)
+            End If
 
         End If
 

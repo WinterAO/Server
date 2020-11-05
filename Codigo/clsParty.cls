@@ -84,7 +84,7 @@ Public Sub UpdateSumaNivelesElevados(ByVal Lvl As Integer)
 
 End Sub
 
-Public Function MiExperiencia(ByVal Userindex As Integer) As Long
+Public Function MiExperiencia(ByVal UserIndex As Integer) As Long
 
     '***************************************************
     'Author: Unknown
@@ -99,7 +99,7 @@ Public Function MiExperiencia(ByVal Userindex As Integer) As Long
 
     i = 1
 
-    While i <= PARTY_MAXMEMBERS And p_members(i).Userindex <> Userindex
+    While i <= PARTY_MAXMEMBERS And p_members(i).UserIndex <> UserIndex
 
         i = i + 1
     Wend
@@ -114,8 +114,8 @@ Public Function MiExperiencia(ByVal Userindex As Integer) As Long
 End Function
 
 Public Sub ObtenerExito(ByVal ExpGanada As Long, _
-                        ByVal mapa As Integer, _
-                        x As Integer, _
+                        ByVal Mapa As Integer, _
+                        X As Integer, _
                         Y As Integer)
 
     '***************************************************
@@ -138,14 +138,14 @@ Public Sub ObtenerExito(ByVal ExpGanada As Long, _
     p_expTotal = p_expTotal + ExpGanada
 
     For i = 1 To PARTY_MAXMEMBERS
-        UI = p_members(i).Userindex
+        UI = p_members(i).UserIndex
 
         If UI > 0 Then
             ' Formula: Exp* (Nivel ^ ExponenteNivelParty) / sumadeNivelesElevados
-            expThisUser = CDbl(ExpGanada * (UserList(p_members(i).Userindex).Stats.ELV ^ ExponenteNivelParty) / p_SumaNivelesElevados)
+            expThisUser = CDbl(ExpGanada * (UserList(p_members(i).UserIndex).Stats.ELV ^ ExponenteNivelParty) / p_SumaNivelesElevados)
         
-            If mapa = UserList(UI).Pos.Map And UserList(UI).flags.Muerto = 0 Then
-                If Distance(UserList(UI).Pos.x, UserList(UI).Pos.Y, x, Y) <= PARTY_MAXDISTANCIA Then
+            If Mapa = UserList(UI).Pos.Map And UserList(UI).flags.Muerto = 0 Then
+                If Distance(UserList(UI).Pos.X, UserList(UI).Pos.Y, X, Y) <= PARTY_MAXDISTANCIA Then
                     p_members(i).Experiencia = p_members(i).Experiencia + expThisUser
 
                     If p_members(i).Experiencia < 0 Then
@@ -179,8 +179,8 @@ Public Sub MandarMensajeAConsola(ByVal texto As String, ByVal Sender As String)
 
     For i = 1 To PARTY_MAXMEMBERS
 
-        If p_members(i).Userindex > 0 Then
-            Call WriteConsoleMsg(p_members(i).Userindex, " [" & Sender & "] " & texto, FontTypeNames.FONTTYPE_PARTY)
+        If p_members(i).UserIndex > 0 Then
+            Call WriteConsoleMsg(p_members(i).UserIndex, " [" & Sender & "] " & texto, FontTypeNames.FONTTYPE_PARTY)
 
         End If
 
@@ -188,12 +188,17 @@ Public Sub MandarMensajeAConsola(ByVal texto As String, ByVal Sender As String)
 
 End Sub
 
-Public Function EsPartyLeader(ByVal Userindex As Integer) As Boolean
-    EsPartyLeader = (Userindex = p_Fundador)
+Public Function EsPartyLeader(ByVal UserIndex As Integer) As Boolean
+    EsPartyLeader = (UserIndex = p_Fundador)
 
 End Function
 
-Public Function NuevoMiembro(ByVal Userindex As Integer) As Boolean
+Public Function ObtenerLeader(ByVal PartyIndex As Integer) As Integer
+    ObtenerLeader = p_Fundador
+
+End Function
+
+Public Function NuevoMiembro(ByVal UserIndex As Integer) As Boolean
     '***************************************************
     'Author: Unknown
     'Last Modification: 07/04/08
@@ -206,17 +211,17 @@ Public Function NuevoMiembro(ByVal Userindex As Integer) As Boolean
 
     i = 1
 
-    While i <= PARTY_MAXMEMBERS And p_members(i).Userindex > 0
+    While i <= PARTY_MAXMEMBERS And p_members(i).UserIndex > 0
 
         i = i + 1
     Wend
 
     If i <= PARTY_MAXMEMBERS Then
         p_members(i).Experiencia = 0
-        p_members(i).Userindex = Userindex
+        p_members(i).UserIndex = UserIndex
         NuevoMiembro = True
         p_CantMiembros = p_CantMiembros + 1
-        p_SumaNivelesElevados = p_SumaNivelesElevados + (UserList(Userindex).Stats.ELV ^ ExponenteNivelParty)
+        p_SumaNivelesElevados = p_SumaNivelesElevados + (UserList(UserIndex).Stats.ELV ^ ExponenteNivelParty)
     Else
         NuevoMiembro = False
 
@@ -224,7 +229,7 @@ Public Function NuevoMiembro(ByVal Userindex As Integer) As Boolean
 
 End Function
 
-Public Function SaleMiembro(ByVal Userindex As Integer) As Boolean
+Public Function SaleMiembro(ByVal UserIndex As Integer) As Boolean
 
     '***************************************************
     'Author: Unknown
@@ -245,7 +250,7 @@ Public Function SaleMiembro(ByVal Userindex As Integer) As Boolean
     i = 1
     SaleMiembro = False
 
-    While i <= PARTY_MAXMEMBERS And p_members(i).Userindex <> Userindex
+    While i <= PARTY_MAXMEMBERS And p_members(i).UserIndex <> UserIndex
 
         i = i + 1
     Wend
@@ -259,31 +264,31 @@ Public Function SaleMiembro(ByVal Userindex As Integer) As Boolean
             
             With p_members(j)
             
-                If .Userindex > 0 Then
+                If .UserIndex > 0 Then
                     
                     ' No envia el mensaje al lider
                     If j <> 1 Then
-                        Call WriteConsoleMsg(.Userindex, "Abandonas la party liderada por " & UserList(p_members(1).Userindex).Name & ".", FontTypeNames.FONTTYPE_PARTY)
+                        Call WriteConsoleMsg(.UserIndex, "Abandonas la party liderada por " & UserList(p_members(1).UserIndex).Name & ".", FontTypeNames.FONTTYPE_PARTY)
 
                     End If
                     
-                    Call WriteConsoleMsg(.Userindex, "Durante la misma has conseguido " & CStr(Fix(.Experiencia)) & " puntos de experiencia.", FontTypeNames.FONTTYPE_PARTY)
+                    Call WriteConsoleMsg(.UserIndex, "Durante la misma has conseguido " & CStr(Fix(.Experiencia)) & " puntos de experiencia.", FontTypeNames.FONTTYPE_PARTY)
             
                     If Not PARTY_EXPERIENCIAPORGOLPE Then
-                        UserList(.Userindex).Stats.Exp = UserList(.Userindex).Stats.Exp + Fix(.Experiencia)
+                        UserList(.UserIndex).Stats.Exp = UserList(.UserIndex).Stats.Exp + Fix(.Experiencia)
 
-                        If UserList(.Userindex).Stats.Exp > MAXEXP Then UserList(.Userindex).Stats.Exp = MAXEXP
-                        Call CheckUserLevel(.Userindex)
-                        Call WriteUpdateUserStats(.Userindex)
+                        If UserList(.UserIndex).Stats.Exp > MAXEXP Then UserList(.UserIndex).Stats.Exp = MAXEXP
+                        Call CheckUserLevel(.UserIndex)
+                        Call WriteUpdateUserStats(.UserIndex)
 
                     End If
                     
-                    Call MandarMensajeAConsola(UserList(.Userindex).Name & " abandona la party.", "Servidor")
+                    Call MandarMensajeAConsola(UserList(.UserIndex).Name & " abandona la party.", "Servidor")
                     
-                    UserList(.Userindex).PartyIndex = 0
+                    UserList(.UserIndex).PartyIndex = 0
                     p_CantMiembros = p_CantMiembros - 1
-                    p_SumaNivelesElevados = p_SumaNivelesElevados - (UserList(Userindex).Stats.ELV ^ ExponenteNivelParty)
-                    .Userindex = 0
+                    p_SumaNivelesElevados = p_SumaNivelesElevados - (UserList(UserIndex).Stats.ELV ^ ExponenteNivelParty)
+                    .UserIndex = 0
                     .Experiencia = 0
                     
                 End If
@@ -296,7 +301,7 @@ Public Function SaleMiembro(ByVal Userindex As Integer) As Boolean
 
         If i <= PARTY_MAXMEMBERS Then
             
-            MemberIndex = p_members(i).Userindex
+            MemberIndex = p_members(i).UserIndex
             
             With UserList(MemberIndex)
 
@@ -315,10 +320,10 @@ Public Function SaleMiembro(ByVal Userindex As Integer) As Boolean
                 Call WriteConsoleMsg(MemberIndex, "Durante la misma has conseguido " & CStr(Fix(p_members(i).Experiencia)) & " puntos de experiencia.", FontTypeNames.FONTTYPE_PARTY)
                 
                 p_CantMiembros = p_CantMiembros - 1
-                p_SumaNivelesElevados = p_SumaNivelesElevados - (UserList(Userindex).Stats.ELV ^ ExponenteNivelParty)
+                p_SumaNivelesElevados = p_SumaNivelesElevados - (UserList(UserIndex).Stats.ELV ^ ExponenteNivelParty)
                 MemberIndex = 0
                 p_members(i).Experiencia = 0
-                p_members(i).Userindex = 0
+                p_members(i).UserIndex = 0
                 CompactMemberList
 
             End With
@@ -329,7 +334,7 @@ Public Function SaleMiembro(ByVal Userindex As Integer) As Boolean
 
 End Function
 
-Public Function HacerLeader(ByVal Userindex As Integer) As Boolean
+Public Function HacerLeader(ByVal UserIndex As Integer) As Boolean
 
     '***************************************************
     'Author: Unknown
@@ -350,8 +355,8 @@ Public Function HacerLeader(ByVal Userindex As Integer) As Boolean
 
     For i = 1 To PARTY_MAXMEMBERS
 
-        If p_members(i).Userindex > 0 Then
-            If p_members(i).Userindex = Userindex Then
+        If p_members(i).UserIndex > 0 Then
+            If p_members(i).UserIndex = UserIndex Then
                 UserIndexIndex = i
 
             End If
@@ -372,16 +377,16 @@ Public Function HacerLeader(ByVal Userindex As Integer) As Boolean
     End If
 
     'aca esta todo bien y doy vuelta las collections
-    OldLeader = p_members(1).Userindex
+    OldLeader = p_members(1).UserIndex
     oldExp = p_members(1).Experiencia
 
-    p_members(1).Userindex = p_members(UserIndexIndex).Userindex     'que en realdiad es el userindex, pero no quiero inconsistencias moviendo experiencias
+    p_members(1).UserIndex = p_members(UserIndexIndex).UserIndex     'que en realdiad es el userindex, pero no quiero inconsistencias moviendo experiencias
     p_members(1).Experiencia = p_members(UserIndexIndex).Experiencia
 
-    p_members(UserIndexIndex).Userindex = OldLeader
+    p_members(UserIndexIndex).UserIndex = OldLeader
     p_members(UserIndexIndex).Experiencia = oldExp
 
-    p_Fundador = p_members(1).Userindex
+    p_Fundador = p_members(1).UserIndex
 
     'no need to compact
 End Function
@@ -401,8 +406,8 @@ Public Sub ObtenerMiembrosOnline(ByRef MemberList() As Integer)
 
     For i = 1 To PARTY_MAXMEMBERS
 
-        If p_members(i).Userindex > 0 Then
-            MemberList(i) = p_members(i).Userindex
+        If p_members(i).UserIndex > 0 Then
+            MemberList(i) = p_members(i).UserIndex
 
         End If
 
@@ -420,7 +425,7 @@ Public Function ObtenerExperienciaTotal() As Long
 
 End Function
 
-Public Function PuedeEntrar(ByVal Userindex As Integer, ByRef razon As String) As Boolean
+Public Function PuedeEntrar(ByVal UserIndex As Integer, ByRef razon As String) As Boolean
 
     '***************************************************
     'Author: Unknown
@@ -442,19 +447,19 @@ Public Function PuedeEntrar(ByVal Userindex As Integer, ByRef razon As String) A
     Dim UI       As Integer
 
     rv = True
-    esArmada = (UserList(Userindex).Faccion.ArmadaReal = 1)
-    esCaos = (UserList(Userindex).Faccion.FuerzasCaos = 1)
-    MyLevel = UserList(Userindex).Stats.ELV
+    esArmada = (UserList(UserIndex).Faccion.ArmadaReal = 1)
+    esCaos = (UserList(UserIndex).Faccion.FuerzasCaos = 1)
+    MyLevel = UserList(UserIndex).Stats.ELV
 
-    rv = Distancia(UserList(p_members(1).Userindex).Pos, UserList(Userindex).Pos) <= MAXDISTANCIAINGRESOPARTY
+    rv = Distancia(UserList(p_members(1).UserIndex).Pos, UserList(UserIndex).Pos) <= MAXDISTANCIAINGRESOPARTY
 
     If rv Then
-        rv = (p_members(PARTY_MAXMEMBERS).Userindex = 0)
+        rv = (p_members(PARTY_MAXMEMBERS).UserIndex = 0)
 
         If rv Then
 
             For i = 1 To PARTY_MAXMEMBERS
-                UI = p_members(i).Userindex
+                UI = p_members(i).UserIndex
 
                 'pongo los casos que evitarian que pueda entrar
                 'aspirante armada en party crimi
@@ -473,14 +478,14 @@ Public Function PuedeEntrar(ByVal Userindex As Integer, ByRef razon As String) A
                     End If
 
                     'aspirante crimi en party armada
-                    If UserList(UI).Faccion.ArmadaReal = 1 And criminal(Userindex) Then
+                    If UserList(UI).Faccion.ArmadaReal = 1 And criminal(UserIndex) Then
                         razon = "Los criminales no entran a parties con miembros del ejercito real."
                         rv = False
 
                     End If
 
                     'aspirante ciuda en party caos
-                    If UserList(UI).Faccion.FuerzasCaos = 1 And Not criminal(Userindex) Then
+                    If UserList(UI).Faccion.FuerzasCaos = 1 And Not criminal(UserIndex) Then
                         razon = "Los ciudadanos no entran a parties con miembros de la legion oscura."
                         rv = False
 
@@ -499,7 +504,7 @@ Public Function PuedeEntrar(ByVal Userindex As Integer, ByRef razon As String) A
 
     Else
         'Con o sin nombre?
-        razon = "El usuario " & UserList(Userindex).Name & " se encuentra muy lejos."
+        razon = "El usuario " & UserList(UserIndex).Name & " se encuentra muy lejos."
 
     End If
 
@@ -524,25 +529,25 @@ Public Sub FlushExperiencia()
 
         For i = 1 To PARTY_MAXMEMBERS
 
-            If p_members(i).Userindex > 0 Then
+            If p_members(i).UserIndex > 0 Then
                 If p_members(i).Experiencia > 0 Then
-                    UserList(p_members(i).Userindex).Stats.Exp = UserList(p_members(i).Userindex).Stats.Exp + Fix(p_members(i).Experiencia)
+                    UserList(p_members(i).UserIndex).Stats.Exp = UserList(p_members(i).UserIndex).Stats.Exp + Fix(p_members(i).Experiencia)
 
-                    If UserList(p_members(i).Userindex).Stats.Exp > MAXEXP Then UserList(p_members(i).Userindex).Stats.Exp = MAXEXP
-                    Call CheckUserLevel(p_members(i).Userindex)
+                    If UserList(p_members(i).UserIndex).Stats.Exp > MAXEXP Then UserList(p_members(i).UserIndex).Stats.Exp = MAXEXP
+                    Call CheckUserLevel(p_members(i).UserIndex)
                 Else
 
-                    If Abs(UserList(p_members(i).Userindex).Stats.Exp) > Abs(Fix(p_members(i).Experiencia)) Then
-                        UserList(p_members(i).Userindex).Stats.Exp = UserList(p_members(i).Userindex).Stats.Exp + Fix(p_members(i).Experiencia)
+                    If Abs(UserList(p_members(i).UserIndex).Stats.Exp) > Abs(Fix(p_members(i).Experiencia)) Then
+                        UserList(p_members(i).UserIndex).Stats.Exp = UserList(p_members(i).UserIndex).Stats.Exp + Fix(p_members(i).Experiencia)
                     Else
-                        UserList(p_members(i).Userindex).Stats.Exp = 0
+                        UserList(p_members(i).UserIndex).Stats.Exp = 0
 
                     End If
 
                 End If
 
                 p_members(i).Experiencia = 0
-                Call WriteUpdateUserStats(p_members(i).Userindex)
+                Call WriteUpdateUserStats(p_members(i).UserIndex)
 
             End If
 
@@ -562,12 +567,12 @@ Private Sub CompactMemberList()
 
     While i <= PARTY_MAXMEMBERS
 
-        If p_members(i).Userindex = 0 And freeIndex = 0 Then
+        If p_members(i).UserIndex = 0 And freeIndex = 0 Then
             freeIndex = i
-        ElseIf p_members(i).Userindex > 0 And freeIndex > 0 Then
+        ElseIf p_members(i).UserIndex > 0 And freeIndex > 0 Then
             p_members(freeIndex).Experiencia = p_members(i).Experiencia
-            p_members(freeIndex).Userindex = p_members(i).Userindex
-            p_members(i).Userindex = 0
+            p_members(freeIndex).UserIndex = p_members(i).UserIndex
+            p_members(i).UserIndex = 0
             p_members(i).Experiencia = 0
             'muevo el de la pos i a freeindex
             i = freeIndex
