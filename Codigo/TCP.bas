@@ -1474,6 +1474,13 @@ Sub SendMOTD(ByVal UserIndex As Integer)
     For j = 1 To MaxLines
         Call WriteGuildChat(UserIndex, MOTD(j).texto)
     Next j
+    
+    If NumFortalezas > 0 Then
+        Call WriteGuildChat(UserIndex, "Estado de las fortalezas:")
+        For j = 1 To NumFortalezas
+            Call WriteGuildChat(UserIndex, Fortaleza(j).NombreFortaleza & " " & Fortaleza(j).ClanConquistador)
+        Next j
+    End If
 
 End Sub
 

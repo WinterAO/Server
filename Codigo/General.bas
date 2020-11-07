@@ -346,6 +346,10 @@ Sub Main()
     frmCargando.Label1(2).Caption = "Cargando Pretorianos.dat"
     Call LoadPretorianData
     
+    ' Fortalezas
+    frmCargando.Label1(2).Caption = "Cargando Fortalezas.dat"
+    Call CargarFortalezas
+    
     ' Mapas
     If BootDelBackUp Then
         frmCargando.Label1(2).Caption = "Cargando Backup"

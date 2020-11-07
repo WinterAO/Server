@@ -1,0 +1,18 @@
+[INIT]
+NumFortalezas=1
+
+[FORTALEZA1]
+Nombre=Fortaleza Winter
+Mapa=1
+ReyIndex=1
+XRey=1
+YRey=1
+PuertaIndex=1
+XPuerta=1
+YPuerta=1
+EstadoPuerta1=232
+EstadoPuerta2=233
+EstadoPuerta3=234
+ClanConquistador=Sin Conquistar
+Recompensa=500000
+IntervaloRecompensa=60000
