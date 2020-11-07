@@ -1960,6 +1960,8 @@ Public Type NPC
     Instruye As Byte 'Instruye un profesion
     
     SpeedVar As Long
+    
+    EsdeFortaleza As Boolean
 
 End Type
 

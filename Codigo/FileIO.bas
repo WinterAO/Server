@@ -2035,9 +2035,12 @@ Sub BackUPnPc(ByVal NPCIndex As Integer, ByVal hFile As Integer)
         Print #hFile, "TiempoRetardoMax= " & val(.flags.TiempoRetardoMax)
         Print #hFile, "Explota" & val(.flags.Explota)
         
-        Print #hFile, "LanzaMensaje" & .flags.LanzaMensaje
-        Print #hFile, "AumentaPotencia" & val(.flags.AumentaPotencia)
-        Print #hFile, "Tepeable" & val(.flags.Tepeable)
+        Print #hFile, "LanzaMensaje=" & .flags.LanzaMensaje
+        Print #hFile, "AumentaPotencia=" & val(.flags.AumentaPotencia)
+        Print #hFile, "Tepeable=" & val(.flags.Tepeable)
+        
+        Print #hFile, "Speed=" & val(.SpeedVar)
+        Print #hFile, "Fortaleza=" & val(.EsdeFortaleza)
         
         'Inventario
         Print #hFile, "NroItems=" & val(.Invent.NroItems)
@@ -2145,6 +2148,9 @@ Sub CargarNpcBackUp(ByVal NPCIndex As Integer, ByVal NpcNumber As Integer)
         .flags.LanzaMensaje = GetVar(npcfile, "NPC" & NpcNumber, "LanzaMensaje")
         .flags.AumentaPotencia = val(GetVar(npcfile, "NPC" & NpcNumber, "AumentaPotencia"))
         .flags.Tepeable = val(GetVar(npcfile, "NPC", NpcNumber, "Tepeable"))
+        
+        .SpeedVar = val(GetVar(npcfile, "NPC", NpcNumber, "Speed"))
+        .EsdeFortaleza = val(GetVar(npcfile, "NPC", NpcNumber, "Fortaleza"))
         
         
         'Tipo de items con los que comercia

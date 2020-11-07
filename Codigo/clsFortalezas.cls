@@ -69,7 +69,7 @@ Public Property Get ReyFortaleza() As Integer
 End Property
 
 Public Property Get PuertaFortaleza() As Integer
-    PuertaFortaleza = Puerta_Index
+    PuertaFortaleza = Puerta
 End Property
 
 Public Property Get ClanConquistador() As String
@@ -105,17 +105,11 @@ Public Sub Inicializar(ByVal NombreFortaleza As String, _
     Rey_Pos.Map = MapaFortaleza
     Rey_Pos.X = XRey
     Rey_Pos.Y = YRey
-    
-    'Spawn Rey
-    ReyIndex = SpawnNpc(Rey_Index, Rey_Pos, True, False)
-    
+
     Puerta = NPuerta
     Puerta_Pos.Map = MapaFortaleza
     Puerta_Pos.X = XPuerta
     Puerta_Pos.Y = YPuerta
-    
-    'Spawn Puerta
-    PuertaIndex = SpawnNpc(Puerta_Index, Puerta_Pos, True, False)
     
     For i = 1 To ESTADOSPUERTA
         Estado_Puerta(i) = EstadoPuerta(i)
@@ -125,9 +119,14 @@ Public Sub Inicializar(ByVal NombreFortaleza As String, _
     Oro_Recompensa = Recompensa
     Intervalo_Recompensa = Intervalo
 
-    'Por defecto la puerta no esta destruida
-    Puerta_Destruida = False
+    'Iniciamos los estados globales
     Conquistado = False
+    Puerta_Destruida = False
+
+    'Spawn Rey
+    ReyIndex = SpawnNpc(Rey, Rey_Pos, True, False)
+    'Spawn Puerta
+    PuertaIndex = SpawnNpc(Puerta, Puerta_Pos, True, False)
 
 End Sub
 
@@ -141,20 +140,20 @@ Public Sub ReiniciarCastillo()
     'Si el Castillo no fue conquistado, es por que el rey sigue vivo, lo quitamos
     If Conquistado = False Then
         Call QuitarNPC(ReyIndex)
+    Else
+        Conquistado = False
     End If
     
     'Si la puerta no fue destruida la quitamos
     If Puerta_Destruida = False Then
         Call QuitarNPC(PuertaIndex)
+    Else
+        Puerta_Destruida = False
     End If
     
     'Spawn Rey
-    ReyIndex = SpawnNpc(Rey_Index, Rey_Pos, True, False)
-    
+    ReyIndex = SpawnNpc(Rey, Rey_Pos, True, False)
     'Spawn Puerta
-    PuertaIndex = SpawnNpc(Puerta_Index, Puerta_Pos, True, False)
-    
-    Conquistado = False
-    Puerta_Destruida = False
+    PuertaIndex = SpawnNpc(Puerta, Puerta_Pos, True, False)
     
 End Sub

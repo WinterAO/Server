@@ -104,3 +104,58 @@ Public Sub DestruirFortalezas()
     NumFortalezas = 0
     
 End Sub
+
+Public Function PuedeAtacarFortaleza(ByVal UserIndex As Integer, ByVal NFortaleza As Byte) As Boolean
+    '************************************************
+    'Autor: Lorwik
+    'Fecha: 07/11/2020
+    'Descripcion: Devuelve True o False si puede atacar una fortaleza
+    '************************************************
+    
+    With UserList(UserIndex)
+    
+        '¿Tiene clan?
+        If UserList(UserIndex).GuildIndex = 0 Then
+            Call WriteConsoleMsg(UserIndex, "Para atacar una fortaleza necesitas pertenece a un clan.", FontTypeNames.FONTTYPE_INFO)
+            PuedeAtacarFortaleza = False
+            Exit Function
+        End If
+    
+        '¿Su clan es el dueño?
+        If modGuilds.GuildName(.GuildIndex) = Fortaleza(NFortaleza).ClanConquistador Then
+            Call WriteConsoleMsg(UserIndex, "Tu clan ya controla esta fortaleza.", FontTypeNames.FONTTYPE_INFO)
+            PuedeAtacarFortaleza = False
+            Exit Function
+        End If
+        
+        PuedeAtacarFortaleza = True
+    
+    End With
+    
+End Function
+
+Public Function IndiceFortaleza(ByVal UserIndex As Integer) As Integer
+    '************************************************
+    'Autor: Lorwik
+    'Fecha: 07/11/2020
+    'Descripcion: Devuelve el indice de la fortaleza en la que se encuentra actualmente.
+    'si devuelve 0 es que no esta en ninguna fortaleza
+    '************************************************
+    
+    Dim i As Byte
+    
+    With UserList(UserIndex)
+        
+        For i = 1 To NumFortalezas
+            'El mapa en el que se encuentra coincide con el de alguna fortaleza?
+            If .Pos.Map = Fortaleza(i).MapaFortaleza Then
+                IndiceFortaleza = i
+                Exit Function
+            End If
+        Next i
+    
+        'Si llegamos aqui es que no esta en ninguna fortaleza
+        IndiceFortaleza = 0
+    
+    End With
+End Function

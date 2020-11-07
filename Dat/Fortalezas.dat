@@ -3,13 +3,13 @@ NumFortalezas=1
 
 [FORTALEZA1]
 Nombre=Fortaleza Winter
-Mapa=1
-ReyIndex=1
-XRey=1
-YRey=1
-PuertaIndex=1
-XPuerta=1
-YPuerta=1
+Mapa=129
+ReyIndex=257
+XRey=40
+YRey=36
+PuertaIndex=256
+XPuerta=47
+YPuerta=76
 EstadoPuerta1=232
 EstadoPuerta2=233
 EstadoPuerta3=234

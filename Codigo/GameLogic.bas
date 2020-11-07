@@ -714,7 +714,7 @@ Sub ClosestLegalPos(Pos As WorldPos, _
     ' La primera posicion es valida?
     If LegalPos(Pos.Map, nPos.X, nPos.Y, PuedeAgua, PuedeTierra, CheckExitTile) Then
         Found = True
-    
+        
         ' Busca en las demas posiciones, en forma de "rombo"
     Else
 
@@ -731,7 +731,7 @@ Sub ClosestLegalPos(Pos As WorldPos, _
         Wend
         
     End If
-    
+
     If Not Found Then
         nPos.X = 0
         nPos.Y = 0

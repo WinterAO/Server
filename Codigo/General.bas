@@ -346,10 +346,6 @@ Sub Main()
     frmCargando.Label1(2).Caption = "Cargando Pretorianos.dat"
     Call LoadPretorianData
     
-    ' Fortalezas
-    frmCargando.Label1(2).Caption = "Cargando Fortalezas.dat"
-    Call CargarFortalezas
-    
     ' Mapas
     If BootDelBackUp Then
         frmCargando.Label1(2).Caption = "Cargando Backup"
@@ -361,6 +357,10 @@ Sub Main()
     End If
     
     Call InitializeAreas
+    
+    ' Fortalezas (No pueden ir antes o los npc no hacen spawn)
+    frmCargando.Label1(2).Caption = "Cargando Fortalezas.dat"
+    Call CargarFortalezas
     
     'Arenas de Retos
     Call LoadArenas
