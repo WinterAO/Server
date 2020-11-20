@@ -458,6 +458,8 @@ Private Sub ResetNpcMainInfo(ByVal NPCIndex As Integer)
     '22/05/2010: ZaMa - Ahora se resetea el dueno del npc tambien.
     '***************************************************
 
+    Dim j As Long
+
     With Npclist(NPCIndex)
         .Attackable = 0
         .Comercia = 0
@@ -465,7 +467,10 @@ Private Sub ResetNpcMainInfo(ByVal NPCIndex As Integer)
         .GiveGLD = 0
         .Hostile = 0
         .InvReSpawn = 0
-        .QuestNumber = 0
+        
+        For j = 1 To 5
+            .QuestNumber(j) = 0
+        Next j
         
         If .MaestroUser > 0 Then Call QuitarMascota(.MaestroUser, NPCIndex)
         If .MaestroNpc > 0 Then Call QuitarMascotaNpc(.MaestroNpc)
@@ -497,8 +502,6 @@ Private Sub ResetNpcMainInfo(ByVal NPCIndex As Integer)
         
         .ClanIndex = 0
         
-        Dim j As Long
-
         For j = 1 To .NroSpells
             .Spells(j) = 0
         Next j
@@ -768,40 +771,45 @@ Public Sub MakeNPCChar(ByVal toMap As Boolean, _
     
     Dim CharIndex As Integer
     Dim color As Byte
-    Dim EstadoQuest As Integer
+    Dim Estadoquest As Integer
     Dim NombreNPC As String
     
-    If Npclist(NPCIndex).Char.CharIndex = 0 Then
-        CharIndex = NextOpenCharIndex
-        Npclist(NPCIndex).Char.CharIndex = CharIndex
-        CharList(CharIndex) = NPCIndex
-
-    End If
+    With Npclist(NPCIndex)
     
-    MapData(Map, X, Y).NPCIndex = NPCIndex
+        If .Char.CharIndex = 0 Then
+            CharIndex = NextOpenCharIndex
+            .Char.CharIndex = CharIndex
+            CharList(CharIndex) = NPCIndex
     
-    If Npclist(NPCIndex).NPCtype = WorldBoss Then color = 8
+        End If
+        
+        MapData(Map, X, Y).NPCIndex = NPCIndex
+        
+        If .NPCtype = WorldBoss Then color = 8
+        
+        If .QuestNumber(1) > 0 Then
+            Estadoquest = Quests.Estadoquest(sndIndex, .QuestNumber(1))
+        Else
+            Estadoquest = 255 'El NPC No tiene quest
+        End If
+        
+        'Si el NPC no es hostil o es un WorldBoss, tendra nombre
+        If .Hostile = 0 Or .NPCtype = WorldBoss Then
+            NombreNPC = .Name
+        Else
+            NombreNPC = vbNullString
+        End If
+        
+        If Not toMap Then
+            Call WriteCharacterCreate(sndIndex, .Char.body, .Char.Head, .Char.Heading, .Char.CharIndex, _
+                X, Y, .Char.WeaponAnim, .Char.ShieldAnim, 0, 0, .Char.CascoAnim, .Char.AnimAtaque, NombreNPC, color, 0, NingunAura, NingunAura, .NoShadow, Estadoquest)
+    '
+        Else
+            Call AgregarNpc(NPCIndex)
     
-    If Npclist(NPCIndex).QuestNumber > 0 Then
-        EstadoQuest = Quests.EstadoQuest(sndIndex, Npclist(NPCIndex).QuestNumber)
-    Else
-        EstadoQuest = 255 'El NPC No tiene quest
-    End If
+        End If
     
-    'Si el NPC no es hostil o es un WorldBoss, tendra nombre
-    If Npclist(NPCIndex).Hostile = 0 Or Npclist(NPCIndex).NPCtype = WorldBoss Then
-        NombreNPC = Npclist(NPCIndex).Name
-    Else
-        NombreNPC = vbNullString
-    End If
-    
-    If Not toMap Then
-        Call WriteCharacterCreate(sndIndex, Npclist(NPCIndex).Char.body, Npclist(NPCIndex).Char.Head, Npclist(NPCIndex).Char.Heading, Npclist(NPCIndex).Char.CharIndex, X, Y, 0, 0, 0, 0, 0, NombreNPC, color, 0, NingunAura, NingunAura, Npclist(NPCIndex).NoShadow, EstadoQuest)
-'
-    Else
-        Call AgregarNpc(NPCIndex)
-
-    End If
+    End With
 
 End Sub
 
@@ -814,7 +822,7 @@ Public Sub ChangeNPCChar(ByVal NPCIndex As Integer, _
     'Last Modification: -
     '
     '***************************************************
-    
+
     If NPCIndex > 0 Then
 
         With Npclist(NPCIndex).Char
@@ -822,7 +830,7 @@ Public Sub ChangeNPCChar(ByVal NPCIndex As Integer, _
             .Head = Head
             .Heading = Heading
             
-            Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessageCharacterChange(body, Head, Heading, .CharIndex, 0, 0, 0, 0, 0, NingunAura, NingunAura))
+            Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessageCharacterChange(body, Head, Heading, .CharIndex, .WeaponAnim, .ShieldAnim, 0, 0, .CascoAnim, NingunAura, NingunAura))
 
         End With
 
@@ -1280,9 +1288,13 @@ Public Function OpenNPC(ByVal NpcNumber As Integer, _
         
         .NPCtype = val(Leer.GetValue("NPC" & NpcNumber, "NpcType"))
         
+        .Char.AnimAtaque = val(Leer.GetValue("NPC" & NpcNumber, "AnimAtaque"))
         .Char.body = val(Leer.GetValue("NPC" & NpcNumber, "Body"))
         .Char.Head = val(Leer.GetValue("NPC" & NpcNumber, "Head"))
         .Char.Heading = val(Leer.GetValue("NPC" & NpcNumber, "Heading"))
+        .Char.ShieldAnim = val(Leer.GetValue("NPC" & NpcNumber, "ShieldAnim"))
+        .Char.WeaponAnim = val(Leer.GetValue("NPC" & NpcNumber, "WeaponAnim"))
+        .Char.CascoAnim = val(Leer.GetValue("NPC" & NpcNumber, "CascoAnim"))
         
         .Attackable = val(Leer.GetValue("NPC" & NpcNumber, "Attackable"))
         .Comercia = val(Leer.GetValue("NPC" & NpcNumber, "Comercia"))
@@ -1301,7 +1313,11 @@ Public Function OpenNPC(ByVal NpcNumber As Integer, _
         
         .GiveGLD = val(Leer.GetValue("NPC" & NpcNumber, "GiveGLD"))
         
-        .QuestNumber = val(Leer.GetValue("NPC" & NpcNumber, "QuestNumber"))
+        ln = Leer.GetValue("NPC" & NpcNumber, "QuestNumber")
+        
+        For LoopC = 1 To 5
+            .QuestNumber(LoopC) = val(ReadField(LoopC, ln, 45))
+        Next LoopC
         
         .PoderAtaque = val(Leer.GetValue("NPC" & NpcNumber, "PoderAtaque"))
         .PoderEvasion = val(Leer.GetValue("NPC" & NpcNumber, "PoderEvasion"))

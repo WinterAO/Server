@@ -146,6 +146,7 @@ Private Enum ServerPacketID
     
     ShowGuildAlign
     ShowPartyForm
+    PeticionInvitarParty
     UpdateStrenghtAndDexterity
     UpdateStrenght
     UpdateDexterity
@@ -155,7 +156,7 @@ Private Enum ServerPacketID
     CancelOfferItem
     PlayAttackAnim
     FXtoMap
-    AccountLogged  'CHOTS | Accounts
+    EnviarPJUserAccount
     SearchList
     QuestDetails
     QuestListSend
@@ -173,6 +174,7 @@ Private Enum ServerPacketID
     IniciarSubastaConsulta
     ConfirmarInstruccion
     SetSpeed
+    AtaqueNPC
 End Enum
 
 Private Enum ClientPacketID
@@ -209,6 +211,7 @@ Private Enum ClientPacketID
     CraftearItem
     WorkClose
     WorkLeftClick                   'WLC
+    InvitarPartyClick
     CreateNewGuild                  'CIG
     SpellInfo                      'INFS
     EquipItem                      'EQUI
@@ -267,8 +270,6 @@ Private Enum ClientPacketID
     RequestMOTD                   '/MOTD
     UpTime                        '/UPTIME
     PartyLeave                    '/SALIRPARTY
-    PartyCreate                   '/CREARPARTY
-    PartyJoin                     '/PARTY
     Inquiry                       '/ENCUESTA ( with no params )
     GuildMessage                  '/CMSG
     PartyMessage                  '/PMSG
@@ -571,6 +572,9 @@ Public Function HandleIncomingData(ByVal UserIndex As Integer) As Boolean
         
         Case ClientPacketID.WorkLeftClick           'WLC
             Call HandleWorkLeftClick(UserIndex)
+            
+        Case ClientPacketID.InvitarPartyClick
+            Call HandleInvitarPartyClick(UserIndex)
         
         Case ClientPacketID.CreateNewGuild          'CIG
             Call HandleCreateNewGuild(UserIndex)
@@ -745,12 +749,6 @@ Public Function HandleIncomingData(ByVal UserIndex As Integer) As Boolean
         
         Case ClientPacketID.PartyLeave              '/SALIRPARTY
             Call HandlePartyLeave(UserIndex)
-        
-        Case ClientPacketID.PartyCreate             '/CREARPARTY
-            Call HandlePartyCreate(UserIndex)
-        
-        Case ClientPacketID.PartyJoin               '/PARTY
-            Call HandlePartyJoin(UserIndex)
         
         Case ClientPacketID.Inquiry                 '/ENCUESTA ( with no params )
             Call HandleInquiry(UserIndex)
@@ -1612,21 +1610,32 @@ Private Sub HandleDeleteChar(ByVal UserIndex As Integer)
     If PJSeleccionado < 1 Or PJSeleccionado > MAXPJACCOUNTS Then
         Call WriteErrorMsg(UserIndex, "Error al borrar el PJ. Intentelo de nuevo o contacte con un Administrador.")
         Exit Sub
+        
     End If
     
     If GetUserGuildIndexDatabase(UserList(UserIndex).AccountInfo.AccountPJ(PJSeleccionado).Name) > 0 Then
         Call WriteErrorMsg(UserIndex, "El personaje que intentas borrar pertenece a un clan. Debes salir del clan antes de borrar el personaje.")
         Exit Sub
+        
     End If
+    
+    If NameIndex(UserList(UserIndex).AccountInfo.AccountPJ(PJSeleccionado).Name) > 0 Then
+        Call WriteErrorMsg(UserIndex, "El personaje que intentas borrar esta conectado.")
+        Exit Sub
+        
+    End If
+    
     'Mandamos a borrar el PJ
-    If BorrarUsuario(UserIndex, UserList(UserIndex).AccountInfo.AccountPJ(PJSeleccionado).Name) Then
+    If BorrarUsuario(UserIndex, PJSeleccionado) Then
         'Si se pudo borrar enviamos paquete para mostrar mensaje satisfactorio en el cliente
         Call UserList(UserIndex).outgoingData.WriteByte(ServerPacketID.DeletedChar)
         'Mandamos la actualizacion de personajes de la cuenta
-        Call LoginAccountDatabase(UserIndex, UserList(UserIndex).AccountInfo.UserName, True)
+        Call LoginAccountDatabase(UserIndex, UserList(UserIndex).AccountInfo.UserName)
+        
     Else
         Call WriteErrorMsg(UserIndex, "Error al borrar el PJ. Intentelo de nuevo o contacte con un Administrador.")
         Exit Sub
+        
     End If
     
     Exit Sub
@@ -2891,6 +2900,12 @@ Private Sub HandleDrop(ByVal UserIndex As Integer)
             Call WriteConsoleMsg(UserIndex, "¡Estas trabajando!", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
         End If
+        
+        '¿Puede tirar items en el mapa?
+        If MapInfo(.Pos.Map).NoTirarItems = True Then
+            Call WriteConsoleMsg(UserIndex, "No puedes tirar objetos en el mapa.", FontTypeNames.FONTTYPE_INFO)
+            Exit Sub
+        End If
 
         'If the user is trading, he can't drop items => He's cheating, we kick him.
         If .flags.Comerciando Then Exit Sub
@@ -3631,6 +3646,132 @@ Private Sub HandleWorkLeftClick(ByVal UserIndex As Integer)
 
     End With
 
+End Sub
+
+''
+' Handles the "InvitarPartyClick" message.
+
+Private Sub HandleInvitarPartyClick(ByVal UserIndex As Integer)
+'***************************************************
+'Author: Lorwik
+'Last Modification: 05/11/2020
+'***************************************************
+    
+    With UserList(UserIndex)
+    
+        If .incomingData.Length < 3 Then
+            Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
+            Exit Sub
+    
+        End If
+        
+        Dim X           As Byte
+    
+        Dim Y           As Byte
+    
+        Dim Aleatorio   As Integer
+        
+        'Remove packet ID
+        Call .incomingData.ReadByte
+            
+        X = .incomingData.ReadByte()
+        Y = .incomingData.ReadByte()
+    
+        If .flags.Muerto = 1 Or .flags.Descansar Or .flags.Meditando Or Not InMapBounds(.Pos.Map, X, Y) Then Exit Sub
+    
+        If Not InRangoVision(UserIndex, X, Y) Then
+            Call WritePosUpdate(UserIndex)
+            Exit Sub
+    
+        End If
+    
+        'If exiting, cancel
+        Call CancelExit(UserIndex)
+            
+        'Si esta casteando, lo cancelamos
+        Call CancelCast(UserIndex)
+    
+        'Target whatever is in that tile
+        Call LookatTile(UserIndex, .Pos.Map, X, Y)
+                    
+        If .flags.TargetUser <= 0 Then Exit Sub
+                    
+        'If it's outside range log it and exit
+        If Abs(.Pos.X - X) > RANGO_VISION_X Or Abs(.Pos.Y - Y) > RANGO_VISION_Y Then
+            Call LogCheating("Ataque fuera de rango de " & .Name & "(" & .Pos.Map & "/" & .Pos.X & "/" & .Pos.Y & ") ip: " & .IP & " a la posicion (" & .Pos.Map & "/" & X & "/" & Y & ")")
+            Exit Sub
+        End If
+        
+        '¿Se invita a si mismo?
+        If UserIndex = .flags.TargetUser Then Exit Sub
+        
+        '¿No tengo grupo?
+        If .PartyIndex = 0 Then
+            
+            '¿El otro tampoco tiene?
+            If UserList(.flags.TargetUser).PartyIndex = 0 Then
+            
+                'Lo podemos crear?
+                If Not mdParty.PuedeCrearParty(UserIndex) Then Exit Sub
+                
+                '¿Estan creando grupo?
+                If .FormandoGrupo <> .ID Then
+                    
+                    .FormandoGrupo = UserList(.flags.TargetUser).ID
+                    UserList(.flags.TargetUser).FormandoGrupo = UserList(.flags.TargetUser).ID 'Se anota asi mismo, señal que es el invitado
+                    
+                    Call WriteConsoleMsg(UserIndex, "Has enviado una peticion a " & UserList(.flags.TargetUser).Name & " para crear un grupo.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(.flags.TargetUser, UserList(UserIndex).Name & " te ha invitado para crear un grupo.", FontTypeNames.FONTTYPE_INFO)
+                    
+                Else '¿Es la respuesta?
+                    'Lo creamos
+                    Call mdParty.CrearParty(UserIndex)
+                    
+                    'Metemos al target
+                    UserList(.flags.TargetUser).PartySolicitud = .PartyIndex
+                    
+                    'Lo aceptamos
+                    Call mdParty.AprobarIngresoAParty(UserIndex, .flags.TargetUser)
+                    
+                    .FormandoGrupo = 0
+                    UserList(.flags.TargetUser).FormandoGrupo = 0
+                    
+                    Exit Sub
+                End If
+                
+            Else '¿El otro SI tiene grupo?
+            
+                '¿Es el lider?
+                If Parties(UserList(.flags.TargetUser).PartyIndex).EsPartyLeader(.flags.TargetUser) Then
+                    'Enviamos peticion para unirme
+                    Call mdParty.SolicitarIngresoAParty(UserIndex)
+                    Exit Sub
+                Else '¿No lo es?
+                    Call WriteConsoleMsg(UserIndex, UserList(.flags.TargetUser).Name & " ya pertenece a un grupo.", FontTypeNames.FONTTYPE_INFO)
+                    Exit Sub
+                End If
+            
+            End If
+            
+        Else '¿SI tengo party?
+
+            '¿Soy el lider?
+            If Parties(.PartyIndex).EsPartyLeader(UserIndex) Then
+                '¿Solicito entrar a mi party?
+                If UserList(.flags.TargetUser).PartySolicitud = .PartyIndex Then
+                    'Lo aceptamos
+                    Call mdParty.AprobarIngresoAParty(UserIndex, .flags.TargetUser)
+                    
+                Else '¿no?
+                    Call WriteConsoleMsg(UserIndex, UserList(.flags.TargetUser).Name & " no ha solicitado entrar a tu grupo.", FontTypeNames.FONTTYPE_PARTY)
+                    
+                End If
+            End If
+        
+        End If
+    
+    End With
+    
 End Sub
 
 ''
@@ -7054,44 +7195,6 @@ Private Sub HandlePartyLeave(ByVal UserIndex As Integer)
 End Sub
 
 ''
-' Handles the "PartyCreate" message.
-'
-' @param    userIndex The index of the user sending the message.
-
-Private Sub HandlePartyCreate(ByVal UserIndex As Integer)
-    '***************************************************
-    'Author: Juan Martin Sotuyo Dodero (Maraxus)
-    'Last Modification: 05/17/06
-    '
-    '***************************************************
-    'Remove packet ID
-    Call UserList(UserIndex).incomingData.ReadByte
-    
-    If Not mdParty.PuedeCrearParty(UserIndex) Then Exit Sub
-    
-    Call mdParty.CrearParty(UserIndex)
-
-End Sub
-
-''
-' Handles the "PartyJoin" message.
-'
-' @param    userIndex The index of the user sending the message.
-
-Private Sub HandlePartyJoin(ByVal UserIndex As Integer)
-    '***************************************************
-    'Author: Juan Martin Sotuyo Dodero (Maraxus)
-    'Last Modification: 05/17/06
-    '
-    '***************************************************
-    'Remove packet ID
-    Call UserList(UserIndex).incomingData.ReadByte
-    
-    Call mdParty.SolicitarIngresoAParty(UserIndex)
-
-End Sub
-
-''
 ' Handles the "ShareNpc" message.
 '
 ' @param    userIndex The index of the user sending the message.
@@ -7640,6 +7743,22 @@ Private Sub HandleGMRequest(ByVal UserIndex As Integer)
             Call WriteVar(FileDir & "Sugerencias.ini", "Reportes", Nuevo, Mensaje)
             
             Call WriteConsoleMsg(UserIndex, "La sugerencia ha sido guardada! Gracias por colaboar con WinterAO.", FONTTYPE_GUILD)
+            Call WriteConsoleMsg(SendTarget.ToAdmins, Mensaje, FONTTYPE_TALK)
+            
+        Case 3 'Denuncia
+            
+            If FileExist(FileDir, vbDirectory) = False Then _
+                MkDir FileDir
+        
+            cant = GetVar(FileDir & "Sugerencias.ini", "DENUNCIAS", "CANTIDAD")
+            Motivo = val(cant) + 1
+            Nuevo = "Sugerencia" & Motivo
+            Mensaje = Date & " " & time & " - " & UserList(UserIndex).Name & " Reporto la siguiente denunciaa: " & Message & " - IP: " & UserList(UserIndex).IP
+
+            Call WriteVar(FileDir & "Denuncias.ini", "SUGERENCIAS", "Cantidad", Motivo)
+            Call WriteVar(FileDir & "Denuncias.ini", "Reportes", Nuevo, Mensaje)
+            
+            Call WriteConsoleMsg(UserIndex, "La denuncia ha sido registrada! Gracias por colaboar con WinterAO.", FONTTYPE_GUILD)
             Call WriteConsoleMsg(SendTarget.ToAdmins, Mensaje, FONTTYPE_TALK)
             
         End Select
@@ -9725,15 +9844,23 @@ Private Sub HandlePartyForm(ByVal UserIndex As Integer)
     'Last Modification: 11/26/09
     '
     '***************************************************
+    
+    Dim LiderInvita As Boolean
+    
     With UserList(UserIndex)
         'Remove packet ID
         Call .incomingData.ReadByte
 
-        If .PartyIndex > 0 Then
+        LiderInvita = .incomingData.ReadBoolean
+
+        If LiderInvita Then
+            Call WritePeticionInvitarParty(UserIndex)
+
+        ElseIf .PartyIndex > 0 Then
             Call WriteShowPartyForm(UserIndex)
             
         Else
-            Call WriteConsoleMsg(UserIndex, "No perteneces a ningun grupo!", FontTypeNames.FONTTYPE_INFOBOLD)
+            Call WritePeticionInvitarParty(UserIndex)
 
         End If
 
@@ -18213,13 +18340,14 @@ Public Sub WriteCharacterCreate(ByVal UserIndex As Integer, _
                                 ByVal FX As Integer, _
                                 ByVal FXLoops As Integer, _
                                 ByVal helmet As Integer, _
+                                ByVal AnimAtaque As Integer, _
                                 ByVal Name As String, _
                                 ByVal NickColor As Byte, _
                                 ByVal Privileges As Byte, _
                                 ByVal GrhAura As Long, _
                                 ByVal AuraColor As Long, _
                                 Optional ByVal NoShadow As Byte = False, _
-                                Optional ByVal EstadoQuest As Byte = 255)
+                                Optional ByVal Estadoquest As Byte = 255)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -18228,7 +18356,7 @@ Public Sub WriteCharacterCreate(ByVal UserIndex As Integer, _
     '***************************************************
     On Error GoTo errHandler
 
-    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterCreate(body, Head, Heading, CharIndex, X, Y, weapon, shield, FX, FXLoops, helmet, Name, NickColor, Privileges, GrhAura, AuraColor, NoShadow, EstadoQuest))
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterCreate(body, Head, Heading, CharIndex, X, Y, weapon, shield, FX, FXLoops, helmet, AnimAtaque, Name, NickColor, Privileges, GrhAura, AuraColor, NoShadow, Estadoquest))
     Exit Sub
 
 errHandler:
@@ -18352,7 +18480,8 @@ Public Sub WriteCharacterChange(ByVal UserIndex As Integer, _
                                 ByVal FXLoops As Integer, _
                                 ByVal helmet As Integer, _
                                 ByVal AuraAnim As Long, _
-                                ByVal AuraColor As Long)
+                                ByVal AuraColor As Long, _
+                                Optional ByVal QuestStatus As Byte = 255)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -18361,7 +18490,7 @@ Public Sub WriteCharacterChange(ByVal UserIndex As Integer, _
     '***************************************************
     On Error GoTo errHandler
 
-    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterChange(body, Head, Heading, CharIndex, weapon, shield, FX, FXLoops, helmet, AuraAnim, AuraColor))
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterChange(body, Head, Heading, CharIndex, weapon, shield, FX, FXLoops, helmet, AuraAnim, AuraColor, QuestStatus))
     Exit Sub
 
 errHandler:
@@ -20685,6 +20814,29 @@ errHandler:
 
 End Sub
 
+Public Sub WritePeticionInvitarParty(ByVal UserIndex As Integer)
+   '***************************************************
+    'Author: Lorwik
+    'Last Modification: 05/11/2020
+    '***************************************************
+    On Error GoTo errHandler
+    
+    With UserList(UserIndex).outgoingData
+        Call .WriteByte(ServerPacketID.PeticionInvitarParty)
+
+    End With
+
+    Exit Sub
+
+errHandler:
+
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
+        Resume
+
+    End If
+End Sub
+
 ''
 ' Writes the "ShowMOTDEditionForm" message to the given user's outgoing data buffer.
 '
@@ -21363,13 +21515,14 @@ Public Function PrepareMessageCharacterCreate(ByVal body As Integer, _
                                               ByVal FX As Integer, _
                                               ByVal FXLoops As Integer, _
                                               ByVal helmet As Integer, _
+                                              ByVal AnimAtaque As Integer, _
                                               ByVal Name As String, _
                                               ByVal NickColor As Byte, _
                                               ByVal Privileges As Byte, _
                                               ByVal GrhAura As Long, _
                                               ByVal AuraColor As Long, _
                                               ByVal NoShadow As Byte, _
-                                              ByVal EstadoQuest As Byte) As String
+                                              ByVal Estadoquest As Byte) As String
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -21388,6 +21541,7 @@ Public Function PrepareMessageCharacterCreate(ByVal body As Integer, _
         Call .WriteInteger(weapon)
         Call .WriteInteger(shield)
         Call .WriteInteger(helmet)
+        Call .WriteInteger(AnimAtaque)
         Call .WriteInteger(FX)
         Call .WriteInteger(FXLoops)
         Call .WriteASCIIString(Name)
@@ -21396,7 +21550,7 @@ Public Function PrepareMessageCharacterCreate(ByVal body As Integer, _
         Call .WriteLong(GrhAura)
         Call .WriteLong(AuraColor)
         Call .WriteByte(NoShadow)
-        Call .WriteByte(EstadoQuest)
+        Call .WriteByte(Estadoquest)
         
         PrepareMessageCharacterCreate = .ReadASCIIStringFixed(.Length)
 
@@ -21429,7 +21583,8 @@ Public Function PrepareMessageCharacterChange(ByVal body As Integer, _
                                               ByVal FXLoops As Integer, _
                                               ByVal helmet As Integer, _
                                               ByVal AuraAnim As Long, _
-                                              ByVal AuraColor As Long) As String
+                                              ByVal AuraColor As Long, _
+                                              Optional ByVal QuestStatus As Byte = 255) As String
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -21450,6 +21605,7 @@ Public Function PrepareMessageCharacterChange(ByVal body As Integer, _
         Call .WriteInteger(FXLoops)
         Call .WriteLong(AuraAnim)
         Call .WriteLong(AuraColor)
+        Call .WriteByte(QuestStatus)
         
         PrepareMessageCharacterChange = .ReadASCIIStringFixed(.Length)
 
@@ -22226,7 +22382,7 @@ errHandler:
 
 End Sub
 
-Public Sub WriteUserAccountLogged(ByVal UserIndex As Integer, Optional ByVal Refresh As Boolean = False)
+Public Sub WriteEnviarPJUserAccount(ByVal UserIndex As Integer)
 '***************************************************
 'Author: Juan Andres Dalmasso (CHOTS)
 'Last Modification: 12/10/2018
@@ -22237,16 +22393,15 @@ Public Sub WriteUserAccountLogged(ByVal UserIndex As Integer, Optional ByVal Ref
     Dim i As Long
 
     With UserList(UserIndex)
-        Call .outgoingData.WriteByte(ServerPacketID.AccountLogged)
+        Call .outgoingData.WriteByte(ServerPacketID.EnviarPJUserAccount)
         .Redundance = RandomNumber(15, 250)
         Call .outgoingData.WriteByte(.Redundance)
-        Call .outgoingData.WriteBoolean(Refresh)
         Call .outgoingData.WriteASCIIString(.AccountInfo.UserName)
-        Call .outgoingData.WriteByte(.AccountInfo.NumChars)
+        Call .outgoingData.WriteByte(.AccountInfo.NumPjs)
 
-        If .AccountInfo.NumChars > 0 Then
+        If .AccountInfo.NumPjs > 0 Then
 
-            For i = 1 To .AccountInfo.NumChars
+            For i = 1 To .AccountInfo.NumPjs
                 Call .outgoingData.WriteASCIIString(.AccountInfo.AccountPJ(i).Name)
                 Call .outgoingData.WriteInteger(.AccountInfo.AccountPJ(i).body)
                 Call .outgoingData.WriteInteger(.AccountInfo.AccountPJ(i).Head)
@@ -22257,7 +22412,6 @@ Public Sub WriteUserAccountLogged(ByVal UserIndex As Integer, Optional ByVal Ref
                 Call .outgoingData.WriteByte(.AccountInfo.AccountPJ(i).race)
                 Call .outgoingData.WriteInteger(.AccountInfo.AccountPJ(i).Map)
                 Call .outgoingData.WriteByte(.AccountInfo.AccountPJ(i).level)
-                Call .outgoingData.WriteLong(.AccountInfo.AccountPJ(i).Gold)
                 Call .outgoingData.WriteBoolean(.AccountInfo.AccountPJ(i).criminal)
                 Call .outgoingData.WriteBoolean(.AccountInfo.AccountPJ(i).dead)
                 Call .outgoingData.WriteBoolean(.AccountInfo.AccountPJ(i).gameMaster)
@@ -22520,7 +22674,7 @@ Public Sub HandleDragAndDropHechizos(ByVal UserIndex As Integer)
 End Sub
 
 Public Sub WriteQuestDetails(ByVal UserIndex As Integer, _
-                             ByVal Questindex As Integer, _
+                             ByVal QuestIndex As Integer, _
                              Optional QuestSlot As Byte = 0)
 
     '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -22539,23 +22693,23 @@ Public Sub WriteQuestDetails(ByVal UserIndex As Integer, _
         Call .WriteByte(IIf(QuestSlot, 1, 0))
 
         'Enviamos nombre, descripciï¿½n y nivel requerido de la quest
-        Call .WriteASCIIString(QuestList(Questindex).Nombre)
-        Call .WriteASCIIString(QuestList(Questindex).Desc)
-        Call .WriteByte(QuestList(Questindex).RequiredLevel)
+        Call .WriteASCIIString(QuestList(QuestIndex).Nombre)
+        Call .WriteASCIIString(QuestList(QuestIndex).Desc)
+        Call .WriteByte(QuestList(QuestIndex).RequiredLevel)
         
         'Enviamos la cantidad de npcs requeridos
-        Call .WriteByte(QuestList(Questindex).RequiredNPCs)
+        Call .WriteByte(QuestList(QuestIndex).RequiredNPCs)
 
-        If QuestList(Questindex).RequiredNPCs Then
+        If QuestList(QuestIndex).RequiredNPCs Then
 
             'Si hay npcs entonces enviamos la lista
-            For i = 1 To QuestList(Questindex).RequiredNPCs
-                Call .WriteInteger(QuestList(Questindex).RequiredNPC(i).Amount)
-                Call .WriteASCIIString(GetVar(DatPath & "NPCs.dat", "NPC" & QuestList(Questindex).RequiredNPC(i).NPCIndex, "Name"))
+            For i = 1 To QuestList(QuestIndex).RequiredNPCs
+                Call .WriteInteger(QuestList(QuestIndex).RequiredNPC(i).Amount)
+                Call .WriteASCIIString(GetVar(DatPath & "NPCs.dat", "NPC" & QuestList(QuestIndex).RequiredNPC(i).NPCIndex, "Name"))
 
                 'Si es una quest ya empezada, entonces mandamos los NPCs que matï¿½.
                 If QuestSlot Then
-                    Call .WriteInteger(UserList(UserIndex).QuestStats.Quests(Questindex).NPCsKilled(i))
+                    Call .WriteInteger(UserList(UserIndex).QuestStats.Quests(QuestIndex).NPCsKilled(i))
 
                 End If
 
@@ -22564,31 +22718,31 @@ Public Sub WriteQuestDetails(ByVal UserIndex As Integer, _
         End If
         
         'Enviamos la cantidad de objs requeridos
-        Call .WriteByte(QuestList(Questindex).RequiredOBJs)
+        Call .WriteByte(QuestList(QuestIndex).RequiredOBJs)
 
-        If QuestList(Questindex).RequiredOBJs Then
+        If QuestList(QuestIndex).RequiredOBJs Then
 
             'Si hay objs entonces enviamos la lista
-            For i = 1 To QuestList(Questindex).RequiredOBJs
-                Call .WriteInteger(QuestList(Questindex).RequiredOBJ(i).Amount)
-                Call .WriteASCIIString(ObjData(QuestList(Questindex).RequiredOBJ(i).ObjIndex).Name)
+            For i = 1 To QuestList(QuestIndex).RequiredOBJs
+                Call .WriteInteger(QuestList(QuestIndex).RequiredOBJ(i).Amount)
+                Call .WriteASCIIString(ObjData(QuestList(QuestIndex).RequiredOBJ(i).ObjIndex).Name)
             Next i
 
         End If
     
         'Enviamos la recompensa de oro y experiencia.
-        Call .WriteLong(QuestList(Questindex).RewardGLD)
-        Call .WriteLong(QuestList(Questindex).RewardEXP)
+        Call .WriteLong(QuestList(QuestIndex).RewardGLD)
+        Call .WriteLong(QuestList(QuestIndex).RewardEXP)
         
         'Enviamos la cantidad de objs de recompensa
-        Call .WriteByte(QuestList(Questindex).RewardOBJs)
+        Call .WriteByte(QuestList(QuestIndex).RewardOBJs)
 
-        If QuestList(Questindex).RewardOBJs Then
+        If QuestList(QuestIndex).RewardOBJs Then
 
             'si hay objs entonces enviamos la lista
-            For i = 1 To QuestList(Questindex).RewardOBJs
-                Call .WriteInteger(QuestList(Questindex).RewardOBJ(i).Amount)
-                Call .WriteASCIIString(ObjData(QuestList(Questindex).RewardOBJ(i).ObjIndex).Name)
+            For i = 1 To QuestList(QuestIndex).RewardOBJs
+                Call .WriteInteger(QuestList(QuestIndex).RewardOBJ(i).Amount)
+                Call .WriteASCIIString(ObjData(QuestList(QuestIndex).RewardOBJ(i).ObjIndex).Name)
             Next i
 
         End If
@@ -23175,6 +23329,12 @@ On Error GoTo errHandler
 
             '¿Esta muerto?
             If .flags.Muerto = 1 Then
+                Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
+                Exit Sub
+            End If
+            
+            '¿Tiene el nivel requerido?
+            If .Stats.ELV >= MINLVLGLOBAL Then
                 Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
                 Exit Sub
             End If
@@ -23927,4 +24087,17 @@ Public Sub HandleDelAmigo(ByVal UserIndex As Integer)
 
     End With
 
+End Sub
+
+Public Sub WriteAtaqueNPC(ByVal UserIndex As Integer, ByVal NPCIndex As Integer)
+On Error GoTo errHandler
+    Call UserList(UserIndex).outgoingData.WriteByte(ServerPacketID.AtaqueNPC)
+    Call UserList(UserIndex).outgoingData.WriteInteger(NPCIndex)
+Exit Sub
+
+errHandler:
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
+        Resume
+    End If
 End Sub

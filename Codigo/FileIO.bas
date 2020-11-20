@@ -121,6 +121,7 @@ Private Type tMapDat
     InviSinEfecto As Boolean
     LuzBase As Long
     version As Long
+    NoTirarItems As Boolean
 End Type
 
 Public MapSize As tMapSize
@@ -1654,6 +1655,7 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
         .OcultarSinEfecto = MapDat.OcultarSinEfecto
         .InvocarSinEfecto = MapDat.InvocarSinEfecto
         .RoboNpcsPermitido = MapDat.RoboNpcsPermitido
+        .NoTirarItems = MapDat.NoTirarItems
 
         If MapDat.lvlMinimo = "" Then
             .lvlMinimo = 0
@@ -1772,6 +1774,7 @@ Sub LoadSini()
     StaminaIntervaloSinDescansar = val(Lector.GetValue("INTERVALOS", "StaminaIntervaloSinDescansar"))
     SanaIntervaloDescansar = val(Lector.GetValue("INTERVALOS", "SanaIntervaloDescansar"))
     StaminaIntervaloDescansar = val(Lector.GetValue("INTERVALOS", "StaminaIntervaloDescansar"))
+    StaminaIntervaloLloviendo = val(Lector.GetValue("INTERVALOS", "StaminaIntervaloLloviendo"))
     IntervaloSed = val(Lector.GetValue("INTERVALOS", "IntervaloSed"))
     IntervaloHambre = val(Lector.GetValue("INTERVALOS", "IntervaloHambre"))
     IntervaloVeneno = val(Lector.GetValue("INTERVALOS", "IntervaloVeneno"))
@@ -1998,8 +2001,12 @@ Sub BackUPnPc(ByVal NPCIndex As Integer, ByVal hFile As Integer)
         'General
         Print #hFile, "Name=" & .Name
         Print #hFile, "Desc=" & .Desc
+        Print #hFile, "AnimAtaque=" & val(Npclist(NPCIndex).Char.AnimAtaque)
         Print #hFile, "Head=" & val(.Char.Head)
         Print #hFile, "Body=" & val(.Char.body)
+        Print #hFile, "ShieldAnim=" & val(.Char.ShieldAnim)
+        Print #hFile, "WeaponAnim=" & val(.Char.WeaponAnim)
+        Print #hFile, "CascoAnim=" & val(.Char.CascoAnim)
         Print #hFile, "Heading=" & val(.Char.Heading)
         Print #hFile, "Movement=" & val(.Movement)
         Print #hFile, "Attackable=" & val(.Attackable)
@@ -2077,6 +2084,9 @@ Sub CargarNpcBackUp(ByVal NPCIndex As Integer, ByVal NpcNumber As Integer)
         
         .Char.body = val(GetVar(npcfile, "NPC" & NpcNumber, "Body"))
         .Char.Head = val(GetVar(npcfile, "NPC" & NpcNumber, "Head"))
+        .Char.WeaponAnim = val(GetVar(npcfile, "NPC" & NpcNumber, "WeaponAnim"))
+        .Char.CascoAnim = val(GetVar(npcfile, "NPC" & NpcNumber, "CascoAnim"))
+        .Char.ShieldAnim = val(GetVar(npcfile, "NPC" & NpcNumber, "ShieldAnim"))
         .Char.Heading = val(GetVar(npcfile, "NPC" & NpcNumber, "Heading"))
         
         .Attackable = val(GetVar(npcfile, "NPC" & NpcNumber, "Attackable"))

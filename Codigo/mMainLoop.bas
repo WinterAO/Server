@@ -211,7 +211,7 @@ Public Sub GameTimer()
                                             bEnviarStats = False
 
                                         End If
-
+                                        
                                         Call RecStamina(iUserIndex, bEnviarStats, StaminaIntervaloSinDescansar)
 
                                         If bEnviarStats Then
@@ -221,7 +221,7 @@ Public Sub GameTimer()
                                         End If
 
                                     Else
-                                        'esta descansando
+                                        'Esta descansando
                                         Call Sanar(iUserIndex, bEnviarStats, SanaIntervaloDescansar)
 
                                         If bEnviarStats Then
@@ -246,6 +246,16 @@ Public Sub GameTimer()
 
                                         End If
                                         
+                                    End If
+
+                                Else
+
+                                    Call RecStamina(iUserIndex, bEnviarStats, StaminaIntervaloLloviendo - UserList(iUserIndex).Stats.UserSkills(eSkill.Supervivencia))
+                                    
+                                    If bEnviarStats Then
+                                        Call WriteUpdateSta(iUserIndex)
+                                        bEnviarStats = False
+
                                     End If
 
                                 End If

@@ -77,6 +77,8 @@ Public Const FX_PASA_NIVEL = 51
 
 Public Const MAXAMIGOS As Byte = 50   'Cantidad Maxima de Amigos
 
+Public Const MINLVLGLOBAL As Byte = 5 'Nivel minimo para poder usar el chat global.
+
 ''
 ' The color of chats over head of dead characters.
 Public Const CHAT_COLOR_DEAD_CHAR As Long = &HC0C0C0
@@ -986,6 +988,7 @@ Public Type Char
     CharIndex As Integer
     Head As Integer
     body As Integer
+    AnimAtaque As Long
     
     WeaponAnim As Integer
     ShieldAnim As Integer
@@ -1636,7 +1639,6 @@ Public Type AccountCharacters
     race As Byte
     Map As Integer
     level As Byte
-    Gold As Long
     criminal As Boolean
     dead As Boolean
     gameMaster As Boolean
@@ -1653,7 +1655,7 @@ Public Type AccountUser
     status As Boolean
     Gemas As Long
     
-    NumChars As Byte
+    NumPjs As Byte
     AccountPJ(1 To MAXPJACCOUNTS) As AccountCharacters
 
 End Type
@@ -1746,6 +1748,7 @@ Public Type User
     
     PartyIndex As Integer   'index a la party q es miembro
     PartySolicitud As Integer   'index a la party q solicito
+    FormandoGrupo As Integer
     
     KeyCrypt As Integer
     
@@ -1922,7 +1925,7 @@ Public Type NPC
     GiveEXP As Long
     GiveGLD As Long
     
-    QuestNumber As Integer
+    QuestNumber(1 To 5) As Integer
     
     Stats As NPCStats
     flags As NPCFlags
@@ -2006,6 +2009,8 @@ Type MapInfo
     BackUp As Byte
     
     lvlMinimo As Byte
+    
+    NoTirarItems As Byte
 
 End Type
 

@@ -71,6 +71,8 @@ Public SanaIntervaloDescansar            As Integer
 
 Public StaminaIntervaloDescansar         As Integer
 
+Public StaminaIntervaloLloviendo         As Integer
+
 Public IntervaloSed                      As Integer
 
 Public IntervaloHambre                   As Integer
@@ -300,12 +302,17 @@ Public Sub Encarcelar(ByVal UserIndex As Integer, _
 
 End Sub
 
-Public Function BorrarUsuario(ByVal UserIndex As Integer, ByVal UserName As String) As Boolean
+Public Function BorrarUsuario(ByVal UserIndex As Integer, ByVal Slot As Byte) As Boolean
 
     '********************************************************************************
     'Author: Lorwik
     'Last Modification: 21/05/2020
     '********************************************************************************
+    
+    Dim UserName As String
+    
+    'Obtenemos el nombre del usuario
+    UserName = UserList(UserIndex).AccountInfo.AccountPJ(Slot).Name
     
     'Podria estar de mas, pero... Existe el personaje?
     If Not PersonajeExiste(UserName) Then
@@ -313,7 +320,11 @@ Public Function BorrarUsuario(ByVal UserIndex As Integer, ByVal UserName As Stri
         Exit Function
     End If
     
+    'Mandamos "borrar" en la base de datos (en realidad no se borra)
     Call BorrarUsuarioDatabase(UserName)
+    
+    'Actualizamo las listas y el cliente del usuario
+    Call DeletePJCuenta(UserIndex, Slot)
     
     BorrarUsuario = True
 

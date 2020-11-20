@@ -1,5 +1,4 @@
 Attribute VB_Name = "Quests"
-
 '¿Como funciona este sistema de Quest?
 'Cada usuario tiene X cantidad de slots de quest que esta enumerado desde 1 a MAXQUESTS.
 'Cada quest se guardara en el slot correspondiente segun su indice. Por ejemplo, una quest
@@ -21,7 +20,7 @@ Public Const MAXQUESTS As Integer = 250        'Maxima cantidad de quests que pu
 Public NumQuests As Integer                    'Num de quest dateadas actualmente
  
 Public Function TieneQuest(ByVal UserIndex As Integer, _
-                           ByVal QuestNumber As Integer) As Byte
+                           ByVal NQuest As Integer) As Byte
     '****************************************
     'Autor: Lorwik
     'Fecha: 09/07/2020
@@ -29,8 +28,8 @@ Public Function TieneQuest(ByVal UserIndex As Integer, _
     'NOTA: Tambien se podria mirar en la lista de quests en curso, pero esto es valido igual.
     '****************************************
     
-    If UserList(UserIndex).QuestStats.Quests(QuestNumber).QuestStatus = eStatusQuest.EnCurso Then
-        TieneQuest = QuestNumber
+    If UserList(UserIndex).QuestStats.Quests(NQuest).QuestStatus = eStatusQuest.EnCurso Then
+        TieneQuest = NQuest
         Exit Function
 
     End If
@@ -39,8 +38,8 @@ Public Function TieneQuest(ByVal UserIndex As Integer, _
 
 End Function
 
-Public Function EstadoQuest(ByVal UserIndex As Integer, _
-                           ByVal QuestNumber As Integer) As Byte
+Public Function Estadoquest(ByVal UserIndex As Integer, _
+                           ByVal NQuest As Integer) As Byte
 
     '****************************************
     'Autor: Lorwik
@@ -49,12 +48,12 @@ Public Function EstadoQuest(ByVal UserIndex As Integer, _
     '****************************************
     
     'Si el numero de la quest es invalida, devolvemos como que no acepto ninguna quest
-    If QuestNumber <= 0 Or UserIndex = 0 Then
-        EstadoQuest = 0
+    If NQuest <= 0 Or UserIndex = 0 Then
+        Estadoquest = 0
         Exit Function
     End If
     
-    EstadoQuest = UserList(UserIndex).QuestStats.Quests(QuestNumber).QuestStatus
+    Estadoquest = UserList(UserIndex).QuestStats.Quests(NQuest).QuestStatus
     
 End Function
 
@@ -109,12 +108,15 @@ Private Function AddQuestEnCurso(ByVal UserIndex As Integer, ByVal Slot As Byte,
     End With
 End Function
 
-Private Function DelQuestEnCurso(ByVal UserIndex As Integer, ByVal Questindex As Integer) As Boolean
+Private Function DelQuestEnCurso(ByVal UserIndex As Integer, ByVal QuestIndex As Integer) As Boolean
     '****************************************
     'Autor: Lorwik
     'Fecha: 15/08/2020
     'Descripcion: Elimina una quest a la lista de seguimientos
+    'Recibe el numero de la quest (questindex), y obtiene el slot donde se encuentra
+    'esa quest en curso
     '****************************************
+    
     Dim i As Integer
     Dim Slot As Byte
     Dim Count As Byte
@@ -124,7 +126,7 @@ Private Function DelQuestEnCurso(ByVal UserIndex As Integer, ByVal Questindex As
     
         'Buscamos el Slot donde se encuentra la quest
         For i = 1 To MAXUSERQUESTS
-            If .QuestEnCurso(i) = Questindex Then Slot = i
+            If .QuestEnCurso(i) = QuestIndex Then Slot = i
         Next i
         
         'Si la quest era la ultima en la lista, la eliminamos y listo
@@ -200,7 +202,9 @@ Public Sub HandleQuestAccept(ByVal UserIndex As Integer)
 
     Dim QuestSlot As Byte
     
-    Dim i         As Byte
+    Dim i         As Long
+    
+    Dim NextQuest As Integer
  
     Call UserList(UserIndex).incomingData.ReadByte
  
@@ -222,8 +226,10 @@ Public Sub HandleQuestAccept(ByVal UserIndex As Integer)
 
     End If
     
+    NextQuest = BuscarSiguienteQuest(UserIndex, NPCIndex)
+    
     'Agregamos la quest.
-    With UserList(UserIndex).QuestStats.Quests(Npclist(NPCIndex).QuestNumber)
+    With UserList(UserIndex).QuestStats.Quests(NextQuest)
     
         'Solicitamos un slot libre para quest aceptadas
         QuestSlot = MaxQuestsAceptadas(UserIndex)
@@ -235,7 +241,7 @@ Public Sub HandleQuestAccept(ByVal UserIndex As Integer)
         End If
     
         'Añadimos la quest a la lista de seguimiento
-        If AddQuestEnCurso(UserIndex, QuestSlot, Npclist(NPCIndex).QuestNumber) = False Then
+        If AddQuestEnCurso(UserIndex, QuestSlot, NextQuest) = False Then
             Call WriteConsoleMsg(UserIndex, "Estas haciendo demasiadas misiones. Vuelve cuando hayas completado alguna.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
         End If
@@ -243,23 +249,25 @@ Public Sub HandleQuestAccept(ByVal UserIndex As Integer)
         'Establecemos la quest en curso
         .QuestStatus = eStatusQuest.EnCurso
         
-        If QuestList(Npclist(NPCIndex).QuestNumber).RequiredNPCs Then
-            ReDim .NPCsKilled(1 To QuestList(Npclist(NPCIndex).QuestNumber).RequiredNPCs)
+        If QuestList(NextQuest).RequiredNPCs Then
+            ReDim .NPCsKilled(1 To QuestList(NextQuest).RequiredNPCs)
             
-            For i = 1 To QuestList(Npclist(NPCIndex).QuestNumber).RequiredNPCs
+            For i = 1 To QuestList(NextQuest).RequiredNPCs
                 .NPCsKilled(i) = 0
             Next i
             
         End If
         
-        Call WriteConsoleMsg(UserIndex, "Has aceptado la mision " & Chr(34) & QuestList(Npclist(NPCIndex).QuestNumber).Nombre & Chr(34) & ".", FontTypeNames.FONTTYPE_INFO)
+        Call WriteConsoleMsg(UserIndex, "Has aceptado la mision " & Chr(34) & QuestList(NextQuest).Nombre & Chr(34) & ".", FontTypeNames.FONTTYPE_INFO)
+        
+        Call ActualizarNPCQuest(UserIndex, NPCIndex)
         
     End With
 
 End Sub
  
 Public Sub FinishQuest(ByVal UserIndex As Integer, _
-                       ByVal Questindex As Integer, _
+                       ByVal QuestIndex As Integer, _
                        ByVal QuestSlot As Byte)
 
     '****************************************************
@@ -276,7 +284,7 @@ Public Sub FinishQuest(ByVal UserIndex As Integer, _
  
     NPCIndex = UserList(UserIndex).flags.TargetNPC
     
-    With QuestList(Questindex)
+    With QuestList(QuestIndex)
 
         'Esta el user muerto?
         If UserList(UserIndex).flags.Muerto = 1 Then
@@ -334,7 +342,7 @@ Public Sub FinishQuest(ByVal UserIndex As Integer, _
         End If
     
         'A esta altura ya cumplio los objetivos, entonces se le entregan las recompensas.
-        Call WriteConsoleMsg(UserIndex, "Has completado la mision " & Chr(34) & QuestList(Questindex).Nombre & Chr(34) & "!", FontTypeNames.FONTTYPE_INFO)
+        Call WriteConsoleMsg(UserIndex, "Has completado la mision " & Chr(34) & QuestList(QuestIndex).Nombre & Chr(34) & "!", FontTypeNames.FONTTYPE_INFO)
         
         'Si la quest pedia objetos, se los saca al personaje.
         If .RequiredOBJs Then
@@ -366,7 +374,7 @@ Public Sub FinishQuest(ByVal UserIndex As Integer, _
 
                 If .RewardOBJ(i).Amount Then
                     Call MeterItemEnInventario(UserIndex, .RewardOBJ(i))
-                    Call WriteConsoleMsg(UserIndex, "Has recibido " & QuestList(Questindex).RewardOBJ(i).Amount & " " & ObjData(QuestList(Questindex).RewardOBJ(i).ObjIndex).Name & " como recompensa.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "Has recibido " & QuestList(QuestIndex).RewardOBJ(i).Amount & " " & ObjData(QuestList(QuestIndex).RewardOBJ(i).ObjIndex).Name & " como recompensa.", FontTypeNames.FONTTYPE_INFO)
 
                 End If
 
@@ -375,22 +383,43 @@ Public Sub FinishQuest(ByVal UserIndex As Integer, _
         End If
 
         'Se agrega que el usuario ya hizo esta quest.
-        UserList(UserIndex).QuestStats.Quests(Questindex).QuestStatus = eStatusQuest.Terminada
+        UserList(UserIndex).QuestStats.Quests(QuestIndex).QuestStatus = eStatusQuest.Terminada
         UserList(UserIndex).QuestStats.NumQuestsDone = UserList(UserIndex).QuestStats.NumQuestsDone + 1
         
         'Eliminamos la quest de la lista de seguimientos
-        Call DelQuestEnCurso(UserIndex, Questindex)
+        Call DelQuestEnCurso(UserIndex, QuestIndex)
 
         'Actualizamos el personaje
         Call CheckUserLevel(UserIndex)
         Call UpdateUserInv(True, UserIndex, 0)
+        
+        Call ActualizarNPCQuest(UserIndex, NPCIndex)
 
     End With
 
 End Sub
+
+Private Sub ActualizarNPCQuest(ByVal UserIndex As Integer, ByVal NPCIndex As Integer)
+
+    Dim Estadoquest As Byte
+
+    With Npclist(NPCIndex)
+    
+        If .QuestNumber(1) > 0 Then
+            Estadoquest = Quests.Estadoquest(UserIndex, .QuestNumber(1))
+        Else
+            Estadoquest = 255 'El NPC No tiene quest
+        End If
+    
+        Call WriteCharacterChange(UserIndex, .Char.body, .Char.Head, .Char.Heading, .Char.CharIndex, .Char.WeaponAnim, _
+            .Char.ShieldAnim, 0, 0, .Char.CascoAnim, 0, 0, Estadoquest)
+    
+    End With
+    
+End Sub
  
 Public Function UserDoneQuest(ByVal UserIndex As Integer, _
-                              ByVal Questindex As Integer) As Boolean
+                              ByVal QuestIndex As Integer) As Boolean
 
     '****************************************************
     'Autor: Lorwik
@@ -400,7 +429,7 @@ Public Function UserDoneQuest(ByVal UserIndex As Integer, _
     With UserList(UserIndex).QuestStats
     
         'Tiene la quest terminada?
-        If .Quests(Questindex).QuestStatus = eStatusQuest.Terminada Then
+        If .Quests(QuestIndex).QuestStatus = eStatusQuest.Terminada Then
             UserDoneQuest = True
             Exit Function
 
@@ -424,19 +453,17 @@ Public Sub CleanQuestSlot(ByVal UserIndex As Integer, ByVal QuestSlot As Integer
     With UserList(UserIndex).QuestStats
         
         '¿El slot de quest es mayor al numero de quest cargadas o no tiene la quest aceptada?
-        If QuestSlot > NumQuests Or .Quests(QuestSlot).QuestStatus = eStatusQuest.NoAceptada Then Exit Sub
+        If QuestSlot > NumQuests Then Exit Sub
         
         If QuestList(QuestSlot).RequiredNPCs Then
 
             For i = 1 To QuestList(QuestSlot).RequiredNPCs
                 .Quests(QuestSlot).NPCsKilled(i) = 0
-                .Quests(QuestSlot).QuestStatus = eStatusQuest.NoAceptada
             Next i
 
         End If
         
-        'Lo eliminamos de seguimientos
-        Call DelQuestEnCurso(UserIndex, QuestSlot)
+        .Quests(QuestSlot).QuestStatus = eStatusQuest.NoAceptada
         
     End With
 
@@ -494,6 +521,7 @@ Public Sub AccionParaQuest(ByVal UserIndex As Integer, ByVal NPCIndex As Integer
     
     Dim tmpByte  As Byte
     Dim SlotLibreQuest As Integer
+    Dim NextQuest As Integer
     
     If NPCIndex = 0 Then Exit Sub
     
@@ -513,34 +541,36 @@ Public Sub AccionParaQuest(ByVal UserIndex As Integer, ByVal NPCIndex As Integer
     
         End If
         
+        NextQuest = BuscarSiguienteQuest(UserIndex, NPCIndex)
+        
         'El NPC hace quests?
-        If .QuestNumber = 0 Then
+        If NextQuest = 0 Then
             Call WriteChatOverHead(UserIndex, "No tengo ninguna mision para ti.", .Char.CharIndex, vbWhite)
             Exit Sub
     
         End If
         
         'El personaje ya hizo la quest?
-        If UserDoneQuest(UserIndex, .QuestNumber) Then
+        If UserDoneQuest(UserIndex, NextQuest) Then
             Call WriteChatOverHead(UserIndex, "Gracias por la ayuda, quizas en otro momento podamos te necesite.", .Char.CharIndex, vbWhite)
             Exit Sub
     
         End If
      
         'El personaje tiene suficiente nivel?
-        If UserList(UserIndex).Stats.ELV < QuestList(.QuestNumber).RequiredLevel Then
-            Call WriteChatOverHead(UserIndex, "Debes ser por lo menos nivel " & QuestList(.QuestNumber).RequiredLevel & " para emprender esta mision.", .Char.CharIndex, vbWhite)
+        If UserList(UserIndex).Stats.ELV < QuestList(NextQuest).RequiredLevel Then
+            Call WriteChatOverHead(UserIndex, "Debes ser por lo menos nivel " & QuestList(NextQuest).RequiredLevel & " para emprender esta mision.", .Char.CharIndex, vbWhite)
             Exit Sub
     
         End If
         
         'A esta altura ya analizo todas las restricciones y esta preparado para el handle propiamente dicho
      
-        tmpByte = TieneQuest(UserIndex, .QuestNumber)
+        tmpByte = TieneQuest(UserIndex, NextQuest)
         
         If tmpByte Then
             'El usuario esta haciendo la quest, entonces va a hablar con el NPC para recibir la recompensa.
-            Call FinishQuest(UserIndex, .QuestNumber, tmpByte)
+            Call FinishQuest(UserIndex, NextQuest, tmpByte)
         Else
             
             'Si obtuvimos -1, es que no hay slots libres
@@ -551,7 +581,7 @@ Public Sub AccionParaQuest(ByVal UserIndex As Integer, ByVal NPCIndex As Integer
             End If
             
             'Enviamos los detalles de la quest
-            Call WriteQuestDetails(UserIndex, .QuestNumber)
+            Call WriteQuestDetails(UserIndex, NextQuest)
     
         End If
     End With
@@ -695,13 +725,45 @@ Public Sub HandleQuestAbandon(ByVal UserIndex As Integer)
     'Descripcion: Maneja el paquete QuestAbandon.
     '****************************************************
     
-    'Leemos el paquete.
-    Call UserList(UserIndex).incomingData.ReadByte
+    Dim QuestSlot As Integer
+    Dim QuestIndex As Integer
     
-    'Borramos la quest.
-    Call CleanQuestSlot(UserIndex, UserList(UserIndex).incomingData.ReadByte)
+    With UserList(UserIndex)
     
-    'Enviamos la lista de quests actualizada.
-    Call WriteQuestListSend(UserIndex)
-
+        'Leemos el paquete.
+        Call .incomingData.ReadByte
+        
+        QuestSlot = .incomingData.ReadByte
+        QuestIndex = .QuestStats.QuestEnCurso(QuestSlot)
+        
+        'Elimiamos la quest de la lista de seguimiento
+        Call DelQuestEnCurso(UserIndex, QuestIndex)
+        
+        Call WriteConsoleMsg(UserIndex, "Has cancelado la mision " & Chr(34) & QuestList(QuestIndex).Nombre & Chr(34) & ".", FontTypeNames.FONTTYPE_INFO)
+        
+        'Borramos la quest, de la lista global
+        Call CleanQuestSlot(UserIndex, QuestIndex)
+        
+        'Enviamos la lista de quests actualizada.
+        Call WriteQuestListSend(UserIndex)
+    
+    End With
+    
 End Sub
+
+Public Function BuscarSiguienteQuest(ByVal UserIndex As Integer, ByVal NPCIndex As Integer)
+    Dim i As Byte
+
+    'Buscamos la siguiente quest disponible del NPC
+    For i = 1 To 5
+        If Not UserList(UserIndex).QuestStats.Quests(Npclist(NPCIndex).QuestNumber(i)).QuestStatus = Terminada And Npclist(NPCIndex).QuestNumber(i) <> 0 Then
+            BuscarSiguienteQuest = Npclist(NPCIndex).QuestNumber(i)
+            Exit Function
+        End If
+    Next
+    
+    'No encontro
+    BuscarSiguienteQuest = 0
+    
+End Function
+

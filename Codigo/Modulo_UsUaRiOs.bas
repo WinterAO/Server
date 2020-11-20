@@ -633,7 +633,7 @@ Public Sub MakeUserChar(ByVal toMap As Boolean, _
 
                 End If
             
-                Call WriteCharacterCreate(sndIndex, .Char.body, .Char.Head, .Char.Heading, .Char.CharIndex, X, Y, .Char.WeaponAnim, .Char.ShieldAnim, .Char.FX, 999, .Char.CascoAnim, UserName, NickColor, Privileges, .Char.AuraAnim, .Char.AuraColor)
+                Call WriteCharacterCreate(sndIndex, .Char.body, .Char.Head, .Char.Heading, .Char.CharIndex, X, Y, .Char.WeaponAnim, .Char.ShieldAnim, .Char.FX, 999, .Char.CascoAnim, 0, UserName, NickColor, Privileges, .Char.AuraAnim, .Char.AuraColor)
             Else
                 'Hide the name and clan - set privs as normal user
                 Call AgregarUser(UserIndex, .Pos.Map, ButIndex)

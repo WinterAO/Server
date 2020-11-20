@@ -1159,7 +1159,7 @@ Private Sub tLluviaEvent()
 
     Else
         MinutosLloviendo = MinutosLloviendo + 1
-Debug.Print MinutosLloviendo
+
         If MinutosLloviendo >= 5 Then
             Lloviendo = False
             'Call SendData(SendTarget.ToAll, 0, PrepareMessageActualizarClima())

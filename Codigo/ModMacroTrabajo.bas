@@ -678,3 +678,4 @@ Public Sub MacroTrabajo(ByVal UserIndex As Integer, ByRef Tarea As eMacroTrabajo
     End With
         
 End Sub
+

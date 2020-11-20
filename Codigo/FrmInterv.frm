@@ -796,9 +796,9 @@ Begin VB.Form FrmInterv
             Strikethrough   =   0   'False
          EndProperty
          Height          =   1710
-         Left            =   3015
+         Left            =   3000
          TabIndex        =   4
-         Top             =   210
+         Top             =   240
          Width           =   1410
          Begin VB.TextBox txtStaminaIntervaloSinDescansar 
             BackColor       =   &H00C0FFFF&
