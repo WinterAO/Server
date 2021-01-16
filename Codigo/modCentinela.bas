@@ -48,7 +48,7 @@ Sub CambiarEstado(ByVal gmIndex As Integer)
     isCentinelaActivated = Not isCentinelaActivated
     
     'Lo cambiamos en el Server.ini
-    Call WriteVar(IniPath & "Server.ini", "INIT", "CentinelaAuditoriaTrabajoActivo", IIf(isCentinelaActivated, 1, 0))
+    Call WriteVar(ConfigPath & "Server.ini", "INIT", "CentinelaAuditoriaTrabajoActivo", IIf(isCentinelaActivated, 1, 0))
 
     'Preparamos el aviso por consola.
     Dim Message As String

@@ -1158,29 +1158,29 @@ Private Sub Command2_Click()
     On Error GoTo Err
 
     'Intervalos
-    Call WriteVar(IniPath & "Server.ini", "INTERVALOS", "SanaIntervaloSinDescansar", Str(SanaIntervaloSinDescansar))
-    Call WriteVar(IniPath & "Server.ini", "INTERVALOS", "StaminaIntervaloSinDescansar", Str(StaminaIntervaloSinDescansar))
-    Call WriteVar(IniPath & "Server.ini", "INTERVALOS", "SanaIntervaloDescansar", Str(SanaIntervaloDescansar))
-    Call WriteVar(IniPath & "Server.ini", "INTERVALOS", "StaminaIntervaloDescansar", Str(StaminaIntervaloDescansar))
-    Call WriteVar(IniPath & "Server.ini", "INTERVALOS", "IntervaloSed", Str(IntervaloSed))
-    Call WriteVar(IniPath & "Server.ini", "INTERVALOS", "IntervaloHambre", Str(IntervaloHambre))
-    Call WriteVar(IniPath & "Server.ini", "INTERVALOS", "IntervaloVeneno", Str(IntervaloVeneno))
-    Call WriteVar(IniPath & "Server.ini", "INTERVALOS", "IntervaloParalizado", Str(IntervaloParalizado))
-    Call WriteVar(IniPath & "Server.ini", "INTERVALOS", "IntervaloInvisible", Str(IntervaloInvisible))
-    Call WriteVar(IniPath & "Server.ini", "INTERVALOS", "IntervaloFrio", Str(IntervaloFrio))
-    Call WriteVar(IniPath & "Server.ini", "INTERVALOS", "IntervaloWAVFX", Str(IntervaloWavFx))
-    Call WriteVar(IniPath & "Server.ini", "INTERVALOS", "IntervaloInvocacion", Str(IntervaloInvocacion))
-    Call WriteVar(IniPath & "Server.ini", "INTERVALOS", "IntervaloParaConexion", Str(IntervaloParaConexion))
+    Call WriteVar(ConfigPath & "Server.ini", "INTERVALOS", "SanaIntervaloSinDescansar", Str(SanaIntervaloSinDescansar))
+    Call WriteVar(ConfigPath & "Server.ini", "INTERVALOS", "StaminaIntervaloSinDescansar", Str(StaminaIntervaloSinDescansar))
+    Call WriteVar(ConfigPath & "Server.ini", "INTERVALOS", "SanaIntervaloDescansar", Str(SanaIntervaloDescansar))
+    Call WriteVar(ConfigPath & "Server.ini", "INTERVALOS", "StaminaIntervaloDescansar", Str(StaminaIntervaloDescansar))
+    Call WriteVar(ConfigPath & "Server.ini", "INTERVALOS", "IntervaloSed", Str(IntervaloSed))
+    Call WriteVar(ConfigPath & "Server.ini", "INTERVALOS", "IntervaloHambre", Str(IntervaloHambre))
+    Call WriteVar(ConfigPath & "Server.ini", "INTERVALOS", "IntervaloVeneno", Str(IntervaloVeneno))
+    Call WriteVar(ConfigPath & "Server.ini", "INTERVALOS", "IntervaloParalizado", Str(IntervaloParalizado))
+    Call WriteVar(ConfigPath & "Server.ini", "INTERVALOS", "IntervaloInvisible", Str(IntervaloInvisible))
+    Call WriteVar(ConfigPath & "Server.ini", "INTERVALOS", "IntervaloFrio", Str(IntervaloFrio))
+    Call WriteVar(ConfigPath & "Server.ini", "INTERVALOS", "IntervaloWAVFX", Str(IntervaloWavFx))
+    Call WriteVar(ConfigPath & "Server.ini", "INTERVALOS", "IntervaloInvocacion", Str(IntervaloInvocacion))
+    Call WriteVar(ConfigPath & "Server.ini", "INTERVALOS", "IntervaloParaConexion", Str(IntervaloParaConexion))
 
     '&&&&&&&&&&&&&&&&&&&&& TIMERS &&&&&&&&&&&&&&&&&&&&&&&
 
-    Call WriteVar(IniPath & "Server.ini", "INTERVALOS", "IntervaloLanzaHechizo", Str(IntervaloUserPuedeCastear))
-    Call WriteVar(IniPath & "Server.ini", "INTERVALOS", "IntervaloTrabajo", Str(IntervaloUserPuedeTrabajar))
-    Call WriteVar(IniPath & "Server.ini", "INTERVALOS", "IntervaloUserPuedeAtacar", Str(IntervaloUserPuedeAtacar))
+    Call WriteVar(ConfigPath & "Server.ini", "INTERVALOS", "IntervaloLanzaHechizo", Str(IntervaloUserPuedeCastear))
+    Call WriteVar(ConfigPath & "Server.ini", "INTERVALOS", "IntervaloTrabajo", Str(IntervaloUserPuedeTrabajar))
+    Call WriteVar(ConfigPath & "Server.ini", "INTERVALOS", "IntervaloUserPuedeAtacar", Str(IntervaloUserPuedeAtacar))
     
     '&&&&&&&&&&&&&&&&&&&& Suerte desde INIT &&&&&&&&&&&&&&&&&&&&&&&&&
     
-    Call WriteVar(IniPath & "Server.ini", "DIFICULTAD", "DificultadExtraer", Str(DificultadExtraer))
+    Call WriteVar(ConfigPath & "Rates.ini", "DIFICULTAD", "DificultadExtraer", Str(DificultadExtraer))
     
     
     MsgBox "Los intervalos se han guardado sin problemas."

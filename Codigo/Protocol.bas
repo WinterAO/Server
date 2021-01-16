@@ -17018,10 +17018,10 @@ Public Sub HandleSetMOTD(ByVal UserIndex As Integer)
             
             ReDim MOTD(1 To MaxLines)
             
-            Call WriteVar(App.Path & "\Dat\Motd.ini", "INIT", "NumLines", CStr(MaxLines))
+            Call WriteVar(ConfigPath & "Motd.ini", "INIT", "NumLines", CStr(MaxLines))
             
             For LoopC = 1 To MaxLines
-                Call WriteVar(App.Path & "\Dat\Motd.ini", "Motd", "Line" & CStr(LoopC), auxiliaryString(LoopC - 1))
+                Call WriteVar(ConfigPath & "Motd.ini", "Motd", "Line" & CStr(LoopC), auxiliaryString(LoopC - 1))
                 
                 MOTD(LoopC).texto = auxiliaryString(LoopC - 1)
             Next LoopC
@@ -17166,11 +17166,11 @@ Public Sub HandleSetIniVar(ByVal UserIndex As Integer)
                 Call WriteConsoleMsg(UserIndex, "No puedes modificar esa informacion desde aqui!", FontTypeNames.FONTTYPE_INFO)
             Else
                 'Obtengo el valor segUn llave y clave
-                sTmp = GetVar(IniPath & "Server.ini", sLlave, sClave)
+                sTmp = GetVar(ConfigPath & "Server.ini", sLlave, sClave)
 
                 'Si obtengo un valor escribo en el server.ini
                 If LenB(sTmp) Then
-                    Call WriteVar(IniPath & "Server.ini", sLlave, sClave, sValor)
+                    Call WriteVar(ConfigPath & "Server.ini", sLlave, sClave, sValor)
                     Call LogGM(.Name, "Modifico en server.ini (" & sLlave & " " & sClave & ") el valor " & sTmp & " por " & sValor)
                     Call WriteConsoleMsg(UserIndex, "Modifico " & sLlave & " " & sClave & " a " & sValor & ". Valor anterior " & sTmp, FontTypeNames.FONTTYPE_INFO)
                 Else

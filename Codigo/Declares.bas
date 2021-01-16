@@ -2038,7 +2038,7 @@ Public RecordUsuariosOnline                     As Long
 
 ''
 'Ruta base del server, en donde esta el "server.ini"
-Public IniPath                            As String
+Public ConfigPath                         As String
 
 ''
 'Ruta base para guardar los chars

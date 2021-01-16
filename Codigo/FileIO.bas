@@ -290,7 +290,7 @@ Public Sub loadAdministrativeUsers()
 
     Set ServerIni = New clsIniManager
     
-    Call ServerIni.Initialize(IniPath & "Server.ini")
+    Call ServerIni.Initialize(ConfigPath & "Server.ini")
        
     ' Admines
     buf = val(ServerIni.GetValue("INIT", "Admines"))
@@ -625,13 +625,13 @@ Sub LoadMotd()
     If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando archivo MOTD.INI."
 
     Dim i As Integer
-    
-    MaxLines = val(GetVar(App.Path & "\Dat\Motd.ini", "INIT", "NumLines"))
+
+    MaxLines = val(GetVar(ConfigPath & "Motd.ini", "INIT", "NumLines"))
     
     ReDim MOTD(1 To MaxLines)
 
     For i = 1 To MaxLines
-        MOTD(i).texto = GetVar(App.Path & "\Dat\Motd.ini", "Motd", "Line" & i)
+        MOTD(i).texto = GetVar(ConfigPath & "Motd.ini", "Motd", "Line" & i)
         MOTD(i).Formato = vbNullString
     Next i
 
@@ -1699,7 +1699,7 @@ Sub LoadSini()
         frmMain.txtStatus.Text = "Cargando info de inicio del server."
     End If
     
-    Call Lector.Initialize(IniPath & "Server.ini")
+    Call Lector.Initialize(ConfigPath & "Server.ini")
     
     BootDelBackUp = CBool(val(Lector.GetValue("INIT", "IniciarDesdeBackUp")))
     
@@ -1713,16 +1713,6 @@ Sub LoadSini()
     
     'Lee la version correcta del cliente
     ULTIMAVERSION = Lector.GetValue("INIT", "VersionBuildCliente")
-    
-    STAT_MAXELV = val(Lector.GetValue("INIT", "NivelMaximo"))
-    
-    ExpMultiplier = val(Lector.GetValue("INIT", "ExpMulti"))
-    OroMultiplier = val(Lector.GetValue("INIT", "OroMulti"))
-    OficioMultiplier = val(Lector.GetValue("INIT", "OficioMulti"))
-    
-    DropItemsAlMorir = CBool(Lector.GetValue("INIT", "DropItemsAlMorir"))
-    
-    ArtesaniaCosto = val(Lector.GetValue("INIT", "ArtesaniaCosto"))
 
     'Esto es para ver si el centinela esta activo o no.
     isCentinelaActivated = CBool(val(Lector.GetValue("INIT", "CentinelaAuditoriaTrabajoActivo")))
@@ -1815,8 +1805,6 @@ Sub LoadSini()
     
     IntervaloOculto = val(Lector.GetValue("INTERVALOS", "IntervaloOculto"))
     
-    '&&&&&&&&&&&&&&&&&&&&& SUERTE &&&&&&&&&&&&&&&&&&&&&&&
-    DificultadExtraer = val(Lector.GetValue("DIFICULTAD", "DificultadExtraer"))
     '&&&&&&&&&&&&&&&&&&&&& FIN TIMERS &&&&&&&&&&&&&&&&&&&&&&&
       
     RecordUsuariosOnline = val(Lector.GetValue("INIT", "Record"))
@@ -1845,13 +1833,6 @@ Sub LoadSini()
     ConexionAPI = CBool(Lector.GetValue("CONEXIONAPI", "Activado"))
     ApiUrlServer = Lector.GetValue("CONEXIONAPI", "UrlServer")
     ApiPath = Lector.GetValue("CONEXIONAPI", "ApiPath")
-
-    'CHOTS | Database
-    Database_DataSource = Lector.GetValue("DATABASE", "DSN")
-    Database_Host = Lector.GetValue("DATABASE", "Host")
-    Database_Name = Lector.GetValue("DATABASE", "Name")
-    Database_Username = Lector.GetValue("DATABASE", "Username")
-    Database_Password = Lector.GetValue("DATABASE", "Password")
       
     'Max users
     Temporal = val(Lector.GetValue("INIT", "MaxUsers"))
@@ -1878,6 +1859,54 @@ Sub LoadSini()
     Call loadAdministrativeUsers
 
     If frmMain.Visible Then frmMain.txtStatus.Text = Date & " " & time & " - Se cargo la info de inicio del server (Sinfo.ini)"
+    
+End Sub
+
+Public Sub Load_ConfigDatBase()
+
+    Dim Lector As clsIniManager
+    Set Lector = New clsIniManager
+    
+    If frmMain.Visible Then
+        frmMain.txtStatus.Text = "Cargando info de inicio del server."
+    End If
+    
+    Call Lector.Initialize(ConfigPath & "DataBase.ini")
+
+    Database_DataSource = Lector.GetValue("DATABASE", "DSN")
+    Database_Host = Lector.GetValue("DATABASE", "Host")
+    Database_Name = Lector.GetValue("DATABASE", "Name")
+    Database_Username = Lector.GetValue("DATABASE", "Username")
+    Database_Password = Lector.GetValue("DATABASE", "Password")
+    
+    Set Lector = Nothing
+
+End Sub
+
+Public Sub Load_Rates()
+
+    Dim Lector As clsIniManager
+    Set Lector = New clsIniManager
+    
+    If frmMain.Visible Then
+        frmMain.txtStatus.Text = "Cargando info de inicio del server."
+    End If
+    
+    Call Lector.Initialize(ConfigPath & "Rates.ini")
+
+    STAT_MAXELV = val(Lector.GetValue("INIT", "NivelMaximo"))
+    
+    ExpMultiplier = val(Lector.GetValue("INIT", "ExpMulti"))
+    OroMultiplier = val(Lector.GetValue("INIT", "OroMulti"))
+    OficioMultiplier = val(Lector.GetValue("INIT", "OficioMulti"))
+
+    DropItemsAlMorir = CBool(Lector.GetValue("INIT", "DropItemsAlMorir"))
+    
+    ArtesaniaCosto = val(Lector.GetValue("INIT", "ArtesaniaCosto"))
+
+    DificultadExtraer = val(Lector.GetValue("DIFICULTAD", "DificultadExtraer"))
+    
+    Set Lector = Nothing
     
 End Sub
 

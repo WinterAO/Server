@@ -486,11 +486,11 @@ End Sub
 Private Sub SetAttributesCustomToNewUser(ByVal UserIndex As Integer)
 
     With UserList(UserIndex)
-        .Stats.Gld = CLng(val(GetVar(IniPath & "Server.ini", "ESTADISTICASINICIALESPJ", "Oro")))
-        .Stats.Banco = CLng(val(GetVar(IniPath & "Server.ini", "ESTADISTICASINICIALESPJ", "Banco")))
+        .Stats.Gld = CLng(val(GetVar(ConfigPath & "Server.ini", "ESTADISTICASINICIALESPJ", "Oro")))
+        .Stats.Banco = CLng(val(GetVar(ConfigPath & "Server.ini", "ESTADISTICASINICIALESPJ", "Banco")))
 
         Dim InitialLevel, Experiencia As Long
-        InitialLevel = val(GetVar(IniPath & "Server.ini", "ESTADISTICASINICIALESPJ", "Nivel"))
+        InitialLevel = val(GetVar(ConfigPath & "Server.ini", "ESTADISTICASINICIALESPJ", "Nivel"))
         
         Dim i As Long
         For i = 1 To InitialLevel
@@ -720,7 +720,7 @@ Private Sub CargarObjetosIniciales()
 
     Dim Leer As clsIniManager
     Set Leer = New clsIniManager
-    Call Leer.Initialize(IniPath & "Server.ini")
+    Call Leer.Initialize(ConfigPath & "Server.ini")
 
     Dim Slot As Long, sTemp As String
 
@@ -1365,7 +1365,7 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
         If NumUsers > RecordUsuariosOnline Then
             Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Record de usuarios conectados simultaneamente. Hay " & NumUsers & " usuarios.", FontTypeNames.FONTTYPE_INFOBOLD))
             RecordUsuariosOnline = NumUsers
-            Call WriteVar(IniPath & "Server.ini", "INIT", "RECORD", Str(RecordUsuariosOnline))
+            Call WriteVar(ConfigPath & "Server.ini", "INIT", "RECORD", Str(RecordUsuariosOnline))
 
             'Este ultimo es para saber siempre los records en el frmMain
             frmMain.txtRecordOnline.Text = RecordUsuariosOnline

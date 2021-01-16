@@ -286,7 +286,6 @@ Sub Main()
     'Inicializamos la cabecera
     Call IniciarCabecera
     
-    Call LoadMotd
     Call BanIpCargar
     
     Call BanGlobalChatCargar
@@ -301,6 +300,11 @@ Sub Main()
     Call InicializarSonidos
     DoEvents
     
+    ' Motd
+    frmCargando.Label1(2).Caption = "Cargando Motd..."
+    Call LoadMotd
+    DoEvents
+    
     ' Arrays
     frmCargando.Label1(2).Caption = "Iniciando Arrays..."
     Call LoadArrays
@@ -310,10 +314,12 @@ Sub Main()
     Call LoadSini
     Call CargarCiudades
     Call CargaApuestas
+    Call Load_Rates
     
     'Base de datos MySQL
 #If DBConexionUnica = 1 Then
     frmCargando.Label1(2).Caption = "Cargando Base de datos"
+    Call Load_ConfigDatBase
     Call Database_Connect
 #End If
 
@@ -434,8 +440,8 @@ Private Sub LoadConstants()
     Minutos = Format(Now, "Short Time")
     
     ' Paths
-    IniPath = App.Path & "\"
     DatPath = App.Path & "\Dat\"
+    ConfigPath = App.Path & "\Configuracion\"
     
     'Lorwik: Nueva subida de Skills, subira de 2 en 2 hasta el lvl max.
     LevelSkill(1).LevelValue = 2
@@ -607,7 +613,7 @@ Private Sub SocketConfig()
 
     If SockListen <> -1 Then
         ' Guarda el socket escuchando
-        Call WriteVar(IniPath & "Server.ini", "INIT", "LastSockListen", SockListen)
+        Call WriteVar(ConfigPath & "Server.ini", "INIT", "LastSockListen", SockListen)
     Else
         Call MsgBox("Ha ocurrido un error al iniciar el socket del Servidor.", vbCritical + vbOKOnly)
     End If
