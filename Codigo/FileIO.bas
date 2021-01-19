@@ -290,7 +290,7 @@ Public Sub loadAdministrativeUsers()
 
     Set ServerIni = New clsIniManager
     
-    Call ServerIni.Initialize(ConfigPath & "Server.ini")
+    Call ServerIni.Initialize(ConfigPath & "GameMasters.ini")
        
     ' Admines
     buf = val(ServerIni.GetValue("INIT", "Admines"))
@@ -1854,9 +1854,6 @@ Sub LoadSini()
     
     Set ConsultaPopular = New ConsultasPopulares
     Call ConsultaPopular.LoadData
-    
-    ' Admins
-    Call loadAdministrativeUsers
 
     If frmMain.Visible Then frmMain.txtStatus.Text = Date & " " & time & " - Se cargo la info de inicio del server (Sinfo.ini)"
     

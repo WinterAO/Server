@@ -311,8 +311,9 @@ Sub Main()
     
     ' Server.ini & Apuestas.dat & Ciudades.dat
     frmCargando.Label1(2).Caption = "Cargando Server.ini"
-    Call LoadSini
-    Call Load_Rates
+    Call LoadSini 'Configuración general (Server.ini)
+    Call Load_Rates 'Rates (Rates.ini)
+    Call loadAdministrativeUsers 'Gms (GameMasters.ini)
     Call CargarCiudades
     Call CargaApuestas
     

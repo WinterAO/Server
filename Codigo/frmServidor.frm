@@ -434,6 +434,7 @@ End Sub
 Private Sub cmdRecargarConfigIni_Click()
     Call LoadSini
     Call Load_Rates
+    Call loadAdministrativeUsers
 End Sub
 
 Private Sub cmdReiniciar_Click()
