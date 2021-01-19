@@ -266,9 +266,9 @@ Begin VB.Form frmServidor
          Top             =   1290
          Width           =   1575
       End
-      Begin VB.CommandButton cmdRecargarServerIni 
+      Begin VB.CommandButton cmdRecargarConfigIni 
          BackColor       =   &H00FFC0C0&
-         Caption         =   "Server.ini"
+         Caption         =   "Configuración"
          Height          =   375
          Left            =   240
          Style           =   1  'Graphical
@@ -431,8 +431,9 @@ Private Sub cmdPausarServidor_Click()
 
 End Sub
 
-Private Sub cmdRecargarServerIni_Click()
+Private Sub cmdRecargarConfigIni_Click()
     Call LoadSini
+    Call Load_Rates
 End Sub
 
 Private Sub cmdReiniciar_Click()

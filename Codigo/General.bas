@@ -312,9 +312,9 @@ Sub Main()
     ' Server.ini & Apuestas.dat & Ciudades.dat
     frmCargando.Label1(2).Caption = "Cargando Server.ini"
     Call LoadSini
+    Call Load_Rates
     Call CargarCiudades
     Call CargaApuestas
-    Call Load_Rates
     
     'Base de datos MySQL
 #If DBConexionUnica = 1 Then
