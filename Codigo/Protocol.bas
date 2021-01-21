@@ -51,42 +51,42 @@ Private auxiliarBuffer  As clsByteQueue
 
 Private Enum ServerPacketID
     Logged = 1                  ' LOGGED
-    RemoveDialogs = 2           ' QTDL
-    RemoveCharDialog = 3        ' QDL
-    NavigateToggle = 4          ' NAVEG
-    Disconnect = 5              ' FINOK
-    CommerceEnd = 6             ' FINCOMOK
-    BankEnd = 7                 ' FINBANOK
-    CommerceInit = 8            ' INITCOM
-    BankInit = 9                ' INITBANCO
-    UserCommerceInit = 10        ' INITCOMUSU
-    UserCommerceEnd = 11         ' FINCOMUSUOK
-    UserOfferConfirm = 12
-    CommerceChat = 13
-    UpdateSta = 14               ' ASS
-    UpdateMana = 15             ' ASM
-    UpdateHP = 16                ' ASH
-    UpdateGold = 17              ' ASG
-    UpdateBankGold = 18
-    UpdateExp = 19               ' ASE
-    ChangeMap = 20               ' CM
-    PosUpdate = 21              ' PU
-    ChatOverHead = 22            ' ||
-    ConsoleMsg = 23              ' || - Beware!! its the same as above, but it was properly splitted
-    GuildChat = 24               ' |+
-    ShowMessageBox = 25          ' !!
-    UserIndexInServer = 26       ' IU
-    UserCharIndexInServer = 27   ' IP
-    CharacterCreate = 28         ' CC
-    CharacterRemove = 29         ' BP
-    CharacterChangeNick = 30
-    CharacterMove = 31           ' MP, +, * and _ '
-    ForceCharMove = 32
-    CharacterChange = 33         ' CP
-    HeadingChange = 34
-    ObjectCreate = 35            ' HO
-    ObjectDelete = 36            ' BO
-    BlockPosition = 37           ' BQ
+    RemoveDialogs               ' QTDL
+    RemoveCharDialog            ' QDL
+    NavigateToggle              ' NAVEG
+    Disconnect                  ' FINOK
+    CommerceEnd                 ' FINCOMOK
+    BankEnd                     ' FINBANOK
+    CommerceInit                ' INITCOM
+    BankInit                    ' INITBANCO
+    CommerceChat
+    UpdateSta                   ' ASS
+    UpdateMana                  ' ASM
+    UpdateHP                    ' ASH
+    UpdateGold                  ' ASG
+    UpdateBankGold
+    UpdateExp                   ' ASE
+    ChangeMap                   ' CM
+    PosUpdate                   ' PU
+    ChatOverHead                ' ||
+    ConsoleMsg                  ' || - Beware!! its the same as above, but it was properly splitted
+    GuildChat                   ' |+
+    ShowMessageBox              ' !!
+    UserIndexInServer           ' IU
+    UserCharIndexInServer       ' IP
+    CharacterCreate             ' CC
+    CharacterRemove             ' BP
+    CharacterChangeNick
+    CharacterMove               ' MP, +, * and _ '
+    ForceCharMove
+    CharacterChange             ' CP
+    HeadingChange
+    ObjectCreate                ' HO
+    ObjectDelete                ' BO
+    BlockPosition               ' BQ
+    UserCommerceInit            ' INITCOMUSU
+    UserCommerceEnd             ' FINCOMUSUOK
+    UserOfferConfirm
     PlayMusic                    ' TM
     PlayWave                     ' TW
     guildList                    ' GL
@@ -184,6 +184,7 @@ Private Enum ClientPacketID
     Yell                            '-
     Whisper                         '\
     Walk                            'M
+    UseItem                         'USA
     RequestPositionUpdate           'RPU
     Attack                          'AT
     PickUp                          'AG
@@ -207,7 +208,6 @@ Private Enum ClientPacketID
     AccionClick                     'RC
     Work                            'UK
     UseSpellMacro                   'UMH
-    UseItem                         'USA
     CraftearItem
     WorkClose
     WorkLeftClick                   'WLC
@@ -294,7 +294,6 @@ Private Enum ClientPacketID
     PartyAcceptMember             '/ACCEPTPARTY
     Ping                          '/PING
     RequestPartyForm
-    GMCommands
     Home
     ShowGuildNews
     ShareNpc                      '/COMPARTIR
@@ -332,6 +331,7 @@ Private Enum ClientPacketID
     OfertarSubasta 'Ofertamos en la subasta
     ConsultaSubasta 'Si existe una subasta enviamos la Info, sino Abrimos el panel para iniciar una subasta.
     RespuestaInstruccion
+    GMCommands
 End Enum
 
 ''
@@ -491,6 +491,9 @@ Public Function HandleIncomingData(ByVal UserIndex As Integer) As Boolean
         
         Case ClientPacketID.Walk                    'M
             Call HandleWalk(UserIndex)
+            
+        Case ClientPacketID.UseItem                 'USA
+            Call HandleUseItem(UserIndex)
         
         Case ClientPacketID.RequestPositionUpdate   'RPU
             Call HandleRequestPositionUpdate(UserIndex)
@@ -560,9 +563,6 @@ Public Function HandleIncomingData(ByVal UserIndex As Integer) As Boolean
         
         Case ClientPacketID.UseSpellMacro           'UMH
             Call HandleUseSpellMacro(UserIndex)
-        
-        Case ClientPacketID.UseItem                 'USA
-            Call HandleUseItem(UserIndex)
         
         Case ClientPacketID.CraftearItem
             Call HandleCraftearItem(UserIndex)
@@ -822,9 +822,6 @@ Public Function HandleIncomingData(ByVal UserIndex As Integer) As Boolean
         Case ClientPacketID.RequestPartyForm
             Call HandlePartyForm(UserIndex)
         
-        Case ClientPacketID.GMCommands              'GM Messages
-            Call HandleGMCommands(UserIndex)
-        
         Case ClientPacketID.Home
             Call HandleHome(UserIndex)
         
@@ -932,6 +929,9 @@ Public Function HandleIncomingData(ByVal UserIndex As Integer) As Boolean
             
         Case ClientPacketID.RespuestaInstruccion
             Call HandleRespuestaInstruccion(UserIndex)
+            
+        Case ClientPacketID.GMCommands              'GM Messages
+            Call HandleGMCommands(UserIndex)
             
         Case Else
             'ERROR : Abort!
