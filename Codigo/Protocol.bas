@@ -22394,7 +22394,7 @@ Public Sub WriteEnviarPJUserAccount(ByVal UserIndex As Integer)
 
     With UserList(UserIndex)
         Call .outgoingData.WriteByte(ServerPacketID.EnviarPJUserAccount)
-        .Redundance = RandomNumber(15, 250)
+        .Redundance = RandomNumber(5, 250)
         Call .outgoingData.WriteByte(.Redundance)
         Call .outgoingData.WriteASCIIString(.AccountInfo.UserName)
         Call .outgoingData.WriteByte(.AccountInfo.NumPjs)

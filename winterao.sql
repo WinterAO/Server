@@ -25,10 +25,10 @@ USE `winterao`;
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `account`
+-- Estructura de tabla para la tabla `cuentas`
 --
 
-CREATE TABLE `account` (
+CREATE TABLE `cuentas` (
   `id` mediumint(8) UNSIGNED NOT NULL,
   `username` varchar(24) NOT NULL,
   `email` varchar(64) NOT NULL,
@@ -44,10 +44,10 @@ CREATE TABLE `account` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Volcado de datos para la tabla `account`
+-- Volcado de datos para la tabla `cuentas`
 --
 
-INSERT INTO `account` (`id`, `username`, `email`, `password`, `salt`, `id_recuperacion`, `date_created`, `last_ip`, `date_last_login`, `gemas`, `status`, `id_confirmacion`) VALUES
+INSERT INTO `cuentas` (`id`, `username`, `email`, `password`, `salt`, `id_recuperacion`, `date_created`, `last_ip`, `date_last_login`, `gemas`, `status`, `id_confirmacion`) VALUES
 (2, 'Lorwik', 'lorwik@gmail.com', '330d98ee11071b977ca70f6cb9d680855da8d77f30c312dde101be74775153a5', '03f782fd99e7787c1cac925a452d6264', NULL, '2020-06-04 18:39:29', '79.108.8.202', '2020-10-29 17:41:40', 0, 1, 'yyUxfFxNP7QySeiUC5P6YK328P5sOh8N'),
 (8, 'sANTO', 'sonrisa_eventos@hotmail.com', '71f46a44617e6e6f3f72b68b7980787eec16d69f7d61c52d8ade8b860537764f', 'k0UJiREgZqmXEtZiLfefMEiThYiuSoYJ', NULL, '2020-06-04 19:56:08', '186.138.38.130', '2020-10-30 06:44:44', 0, 1, 'VERIFICADA'),
 (10, 'Definiun', 'Definiun@gmail.com', '892a6e79a67699642e8330a24a87d72184842c4dcd097bd9b9f4d346fadb7951', 'D8pgoUVJZYC0vz3imklk6ZUYLXS2gPYh', NULL, '2020-06-04 20:22:58', '192.168.1.7', '2020-09-03 20:45:10', 0, 1, 'JkDnxG7PR0j178DSut7DRHMt4UxSymvY'),
@@ -67,10 +67,10 @@ INSERT INTO `account` (`id`, `username`, `email`, `password`, `salt`, `id_recupe
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `attribute`
+-- Estructura de tabla para la tabla `atributos`
 --
 
-CREATE TABLE `attribute` (
+CREATE TABLE `atributos` (
   `user_id` mediumint(8) UNSIGNED NOT NULL,
   `att1` tinyint(3) UNSIGNED NOT NULL,
   `att2` tinyint(3) UNSIGNED NOT NULL,
@@ -82,10 +82,10 @@ CREATE TABLE `attribute` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `bank_item`
+-- Estructura de tabla para la tabla `banco_items`
 --
 
-CREATE TABLE `bank_item` (
+CREATE TABLE `banco_items` (
       `user_id` mediumint(8) UNSIGNED NOT NULL,
       `item_id1` smallint(5) UNSIGNED NULL DEFAULT '0',
       `amount1` smallint(5) UNSIGNED NULL DEFAULT '0',
@@ -210,10 +210,10 @@ CREATE TABLE `bank_item` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `inventory_item`
+-- Estructura de tabla para la tabla `inventario_items`
 --
 
-CREATE TABLE inventory_item (
+CREATE TABLE inventario_items (
     `user_id` mediumint(8) UNSIGNED NOT NULL,
       `item_id1` smallint(5) UNSIGNED NULL DEFAULT '0',
       `amount1` smallint(5) UNSIGNED NULL DEFAULT '0',
@@ -1572,12 +1572,12 @@ CREATE TABLE `spell` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `usuario`
+-- Estructura de tabla para la tabla `personaje`
 --
 
-CREATE TABLE `usuario` (
+CREATE TABLE `personaje` (
   `id` mediumint(8) UNSIGNED NOT NULL,
-  `account_id` mediumint(8) UNSIGNED NOT NULL,
+  `cuenta_id` mediumint(8) UNSIGNED NOT NULL,
   `deleted` tinyint(1) NOT NULL DEFAULT 0,
   `name` varchar(30) NOT NULL,
   `level` smallint(5) UNSIGNED NOT NULL,
@@ -1681,16 +1681,16 @@ CREATE TABLE `usuario` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Indices de la tabla `account`
+-- Indices de la tabla `cuentas`
 --
-ALTER TABLE `account`
+ALTER TABLE `cuentas`
   ADD PRIMARY KEY (`id`);
 
 
 --
--- Indices de la tabla `attribute`
+-- Indices de la tabla `atributos`
 --
-ALTER TABLE `attribute`
+ALTER TABLE `atributos`
   ADD PRIMARY KEY (`user_id`);
 
 --
@@ -1730,11 +1730,11 @@ ALTER TABLE `spell`
   ADD PRIMARY KEY (`user_id`);
 
 --
--- Indices de la tabla `usuario`
+-- Indices de la tabla `personaje`
 --
-ALTER TABLE `usuario`
+ALTER TABLE `personaje`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_user_account` (`account_id`),
+  ADD KEY `fk_user_cuenta` (`cuenta_id`),
   ADD KEY `name` (`name`);
 
 --
@@ -1742,78 +1742,78 @@ ALTER TABLE `usuario`
 --
 
 --
--- AUTO_INCREMENT de la tabla `account`
+-- AUTO_INCREMENT de la tabla `cuentas`
 --
-ALTER TABLE `account`
+ALTER TABLE `cuentas`
   MODIFY `id` mediumint(8) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 --
--- AUTO_INCREMENT de la tabla `usuario`
+-- AUTO_INCREMENT de la tabla `personaje`
 --
-ALTER TABLE `usuario`
+ALTER TABLE `personaje`
   MODIFY `id` mediumint(8) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 --
 -- Restricciones para tablas volcadas
 --
 
 --
--- Filtros para la tabla `attribute`
+-- Filtros para la tabla `atributos`
 --
-ALTER TABLE `attribute`
-  ADD CONSTRAINT `fk_attribute_user` FOREIGN KEY (`user_id`) REFERENCES `usuario` (`id`);
+ALTER TABLE `atributos`
+  ADD CONSTRAINT `fk_atributos_user` FOREIGN KEY (`user_id`) REFERENCES `personaje` (`id`);
 
 --
--- Filtros para la tabla `bank_item`
+-- Filtros para la tabla `banco_items`
 --
-ALTER TABLE `bank_item`
-  ADD CONSTRAINT `fk_bank_user` FOREIGN KEY (`user_id`) REFERENCES `usuario` (`id`);
+ALTER TABLE `banco_items`
+  ADD CONSTRAINT `fk_bank_user` FOREIGN KEY (`user_id`) REFERENCES `personaje` (`id`);
 
 --
--- Filtros para la tabla `inventory_item`
+-- Filtros para la tabla `inventario_items`
 --
-ALTER TABLE `inventory_item`
-  ADD CONSTRAINT `fk_inventory_user` FOREIGN KEY (`user_id`) REFERENCES `usuario` (`id`);
+ALTER TABLE `inventario_items`
+  ADD CONSTRAINT `fk_inventory_user` FOREIGN KEY (`user_id`) REFERENCES `personaje` (`id`);
 
 --
 -- Filtros para la tabla `pet`
 --
 ALTER TABLE `pet`
-  ADD CONSTRAINT `fk_pet_user` FOREIGN KEY (`user_id`) REFERENCES `usuario` (`id`);
+  ADD CONSTRAINT `fk_pet_user` FOREIGN KEY (`user_id`) REFERENCES `personaje` (`id`);
 
 --
 -- Filtros para la tabla `punishment`
 --
 ALTER TABLE `punishment`
-  ADD CONSTRAINT `fk_punishment_user` FOREIGN KEY (`user_id`) REFERENCES `usuario` (`id`);
+  ADD CONSTRAINT `fk_punishment_user` FOREIGN KEY (`user_id`) REFERENCES `personaje` (`id`);
 
 --
 -- Filtros para la tabla `quest`
 --
 ALTER TABLE `quest`
-  ADD CONSTRAINT `fk_quest_user` FOREIGN KEY (`user_id`) REFERENCES `usuario` (`id`);
+  ADD CONSTRAINT `fk_quest_user` FOREIGN KEY (`user_id`) REFERENCES `personaje` (`id`);
   
 --
 -- Filtros para la tabla `amigos`
 --
 ALTER TABLE `amigos`
-  ADD CONSTRAINT `fk_amigos_user` FOREIGN KEY (`user_id`) REFERENCES `usuario` (`id`);
+  ADD CONSTRAINT `fk_amigos_user` FOREIGN KEY (`user_id`) REFERENCES `personaje` (`id`);
 
 --
 -- Filtros para la tabla `skillpoint`
 --
 ALTER TABLE `skillpoint`
-  ADD CONSTRAINT `fk_skillpoint_user` FOREIGN KEY (`user_id`) REFERENCES `usuario` (`id`);
+  ADD CONSTRAINT `fk_skillpoint_user` FOREIGN KEY (`user_id`) REFERENCES `personaje` (`id`);
 
 --
 -- Filtros para la tabla `spell`
 --
 ALTER TABLE `spell`
-  ADD CONSTRAINT `fk_spell_user` FOREIGN KEY (`user_id`) REFERENCES `usuario` (`id`);
+  ADD CONSTRAINT `fk_spell_user` FOREIGN KEY (`user_id`) REFERENCES `personaje` (`id`);
 
 --
--- Filtros para la tabla `usuario`
+-- Filtros para la tabla `personaje`
 --
-ALTER TABLE `usuario`
-  ADD CONSTRAINT `fk_user_account` FOREIGN KEY (`account_id`) REFERENCES `account` (`id`);
+ALTER TABLE `personaje`
+  ADD CONSTRAINT `fk_user_cuenta` FOREIGN KEY (`cuenta_id`) REFERENCES `cuentas` (`id`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
