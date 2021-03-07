@@ -21596,6 +21596,7 @@ Public Function PrepareMessageCharacterChange(ByVal body As Integer, _
         Call .WriteByte(ServerPacketID.CharacterChange)
         
         Call .WriteInteger(CharIndex)
+        Call .WriteByte(Heading)
         Call .WriteInteger(body)
         Call .WriteInteger(Head)
         Call .WriteInteger(weapon)
