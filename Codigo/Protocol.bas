@@ -15295,7 +15295,6 @@ Public Sub HandleResetAutoUpdate(ByVal UserIndex As Integer)
         Call .incomingData.ReadByte
         
         If .flags.Privilegios And (PlayerType.User Or PlayerType.Consejero Or PlayerType.SemiDios) Then Exit Sub
-        If UCase$(.Name) <> "MARAXUS" Then Exit Sub
         
         Call WriteConsoleMsg(UserIndex, "TID: " & CStr(ReiniciarAutoUpdate()), FontTypeNames.FONTTYPE_INFO)
 
@@ -15320,7 +15319,6 @@ Public Sub HandleRestart(ByVal UserIndex As Integer)
         Call .incomingData.ReadByte
     
         If .flags.Privilegios And (PlayerType.User Or PlayerType.Consejero Or PlayerType.SemiDios) Then Exit Sub
-        If UCase$(.Name) <> "MARAXUS" Then Exit Sub
         
         'time and Time BUG!
         Call LogGM(.Name, .Name & " reinicio el mundo.")
@@ -15483,7 +15481,6 @@ Public Sub HandleNight(ByVal UserIndex As Integer)
         Call .incomingData.ReadByte
         
         If .flags.Privilegios And (PlayerType.User Or PlayerType.Consejero Or PlayerType.SemiDios) Then Exit Sub
-        If UCase$(.Name) <> "MARAXUS" Then Exit Sub
         
         DeNoche = Not DeNoche
         
