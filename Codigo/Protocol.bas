@@ -18019,7 +18019,6 @@ Public Sub WriteChangeMap(ByVal UserIndex As Integer, _
     With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.ChangeMap)
         Call .WriteInteger(Map)
-        Call .WriteASCIIString(MapInfo(Map).Name)
         Call .WriteInteger(version)
 
     End With
