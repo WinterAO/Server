@@ -23304,7 +23304,7 @@ Private Sub HandleChatGlobal(ByVal UserIndex As Integer)
 '***************************************************
 'Autor: Lorwik
 'Fecha: 09/06/2020
-'Descripción: Conversiones por chat global
+'Descripción: Conversaciones por chat global
 '***************************************************
 
     If UserList(UserIndex).incomingData.Length < 3 Then
@@ -23313,6 +23313,7 @@ Private Sub HandleChatGlobal(ByVal UserIndex As Integer)
     End If
 
 On Error GoTo errHandler
+
     With UserList(UserIndex)
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue: Set buffer = New clsByteQueue
@@ -23324,6 +23325,9 @@ On Error GoTo errHandler
         Dim Message As String
         Message = buffer.ReadASCIIString()
       
+        'If we got here then packet is complete, copy data back to original queue
+        Call .incomingData.CopyBuffer(buffer)
+      
         '¿El chat global esta activo?
         If GlobalChatActive = True Then
 
@@ -23332,10 +23336,10 @@ On Error GoTo errHandler
                 Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
                 Exit Sub
             End If
-            
+
             '¿Tiene el nivel requerido?
-            If .Stats.ELV >= MINLVLGLOBAL Then
-                Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
+            If .Stats.ELV < MINLVLGLOBAL Then
+                Call WriteConsoleMsg(UserIndex, "Para usar el chat global debes ser nivel " & MINLVLGLOBAL & " como minimo.", FontTypeNames.FONTTYPE_INFO)
                 Exit Sub
             End If
             
@@ -23360,8 +23364,6 @@ On Error GoTo errHandler
             Call WriteConsoleMsg(UserIndex, "El chat global se encuentra deshabilitado en estos momentos.", FontTypeNames.FONTTYPE_INFO)
         End If
           
-        'If we got here then packet is complete, copy data back to original queue
-        Call .incomingData.CopyBuffer(buffer)
     End With
 
 errHandler:
