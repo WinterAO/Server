@@ -2342,12 +2342,12 @@ Public Function HechizoPropUsuario(ByVal UserIndex As Integer) As Boolean
         ' <-------- Cura salud ---------->
         If Hechizos(spellIndex).SubeHP = 1 Then
         
-            Call UserHechizoCuraUser(UserIndex, targetIndex, spellIndex)
+            If Not UserHechizoCuraUser(UserIndex, targetIndex, spellIndex) Then Exit Function
         
             ' <-------- Quita salud (Dana) ---------->
         ElseIf Hechizos(spellIndex).SubeHP = 2 Then
         
-            Call UserHechizoDanoUser(UserIndex, targetIndex, spellIndex)
+            If Not UserHechizoDanoUser(UserIndex, targetIndex, spellIndex) Then Exit Function
         
         End If
     
@@ -3044,7 +3044,7 @@ Public Sub CancelCast(ByVal UserIndex As Integer)
     End With
 End Sub
 
-Private Sub UserHechizoDanoUser(ByVal UserIndex As Integer, ByVal targetIndex As Integer, ByVal spellIndex As Integer, Optional ByVal NoFX As Boolean = False)
+Private Function UserHechizoDanoUser(ByVal UserIndex As Integer, ByVal targetIndex As Integer, ByVal spellIndex As Integer, Optional ByVal NoFX As Boolean = False) As Boolean
 '***************************************
 'Autor: Lorwik
 'Fecha: 25/08/2020
@@ -3055,7 +3055,10 @@ Private Sub UserHechizoDanoUser(ByVal UserIndex As Integer, ByVal targetIndex As
 
     With UserList(targetIndex)
     
-        If UserIndex = targetIndex Then Exit Sub
+        If UserIndex = targetIndex Then
+            UserHechizoDanoUser = False
+            Exit Function
+        End If
         
         dano = RandomNumber(Hechizos(spellIndex).MinHp, Hechizos(spellIndex).MaxHp)
         
@@ -3093,7 +3096,10 @@ Private Sub UserHechizoDanoUser(ByVal UserIndex As Integer, ByVal targetIndex As
         
         If dano < 0 Then dano = 0
         
-        If Not PuedeAtacar(UserIndex, targetIndex) Then Exit Sub
+        If Not PuedeAtacar(UserIndex, targetIndex) Then
+            UserHechizoDanoUser = False
+            Exit Function
+        End If
         
         If UserIndex <> targetIndex Then
             Call UsuarioAtacadoPorUsuario(UserIndex, targetIndex)
@@ -3131,9 +3137,11 @@ Private Sub UserHechizoDanoUser(ByVal UserIndex As Integer, ByVal targetIndex As
         
     End With
     
-End Sub
+    UserHechizoDanoUser = True
+    
+End Function
 
-Private Function UserHechizoCuraUser(ByVal UserIndex As Integer, ByVal targetIndex As Integer, ByVal spellIndex As Integer, Optional ByVal NoFX As Boolean = False)
+Private Function UserHechizoCuraUser(ByVal UserIndex As Integer, ByVal targetIndex As Integer, ByVal spellIndex As Integer, Optional ByVal NoFX As Boolean = False) As Boolean
 '***************************************
 'Autor: Lorwik
 'Fecha: 25/08/2020
@@ -3147,12 +3155,16 @@ Private Function UserHechizoCuraUser(ByVal UserIndex As Integer, ByVal targetInd
         'Verifica que el usuario no este muerto
         If .flags.Muerto = 1 Then
             Call WriteConsoleMsg(UserIndex, "El usuario esta muerto!", FontTypeNames.FONTTYPE_INFO)
+            UserHechizoCuraUser = False
             Exit Function
 
         End If
         
         ' Chequea si el status permite ayudar al otro usuario
-        If Not CanSupportUser(UserIndex, targetIndex) Then Exit Function
+        If Not CanSupportUser(UserIndex, targetIndex) Then
+            UserHechizoCuraUser = False
+            Exit Function
+        End If
            
         cura = RandomNumber(Hechizos(spellIndex).MinHp, Hechizos(spellIndex).MaxHp)
         cura = cura + Porcentaje(cura, 3 * UserList(UserIndex).Stats.ELV)
