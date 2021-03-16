@@ -3174,9 +3174,9 @@ Private Function UserHechizoCuraUser(ByVal UserIndex As Integer, ByVal targetInd
         If NoFX = False Then _
             Call InfoHechizo(UserIndex, NoFX)
     
-        .Stats.MinHp = .Stats.MinHp + cura
+        UserList(targetIndex).Stats.MinHp = UserList(targetIndex).Stats.MinHp + cura
 
-        If .Stats.MinHp > .Stats.MaxHp Then .Stats.MinHp = .Stats.MaxHp
+        If UserList(targetIndex).Stats.MinHp > UserList(targetIndex).Stats.MaxHp Then UserList(targetIndex).Stats.MinHp = UserList(targetIndex).Stats.MaxHp
         
         Call WriteUpdateHP(targetIndex)
         
