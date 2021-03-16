@@ -679,8 +679,10 @@ Sub HechizoTerrenoEstado(ByVal UserIndex As Integer, ByRef b As Boolean)
                 For TempY = PosCasteadaY - Hechizos(h).RadioArea To PosCasteadaY + Hechizos(h).RadioArea
                 
                     If MapData(PosCasteadaM, TempX, TempY).UserIndex > 0 Then '¿Hay un usuario en esa posicion?
-                        Call UserHechizoDanoUser(UserIndex, MapData(PosCasteadaM, TempX, TempY).UserIndex, h, True)
-                        Count = Count + 1
+                        If MapData(PosCasteadaM, TempX, TempY).UserIndex <> UserIndex Then '¿No es el propio usuario?
+                            Call UserHechizoDanoUser(UserIndex, MapData(PosCasteadaM, TempX, TempY).UserIndex, h, True)
+                            Count = Count + 1
+                        End If
                         
                     ElseIf MapData(PosCasteadaM, TempX, TempY).NPCIndex > 0 Then '¿Hay un NPC en esa posicion?
                         'Si no es atacable no hacemos nada
