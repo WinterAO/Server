@@ -1285,9 +1285,6 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
         'Info
         Call WriteUserIndexInServer(UserIndex) 'Enviamos el User index
         Call WriteChangeMap(UserIndex, .Pos.Map, MapInfo(.Pos.Map).MapVersion) 'Carga el mapa
-
-        'Si tiene MP3 el mapa mandamos que lo reproduzca
-        Call WritePlayMusic(UserIndex, val(ReadField(1, MapInfo(.Pos.Map).music, 45)))
         
         If .flags.Privilegios = PlayerType.Dios Then
             .flags.ChatColor = RGB(250, 250, 150)

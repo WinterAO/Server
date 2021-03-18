@@ -2144,8 +2144,6 @@ Sub WarpUserChar(ByVal UserIndex As Integer, _
 
             End If
 
-            Call WritePlayMusic(UserIndex, val(ReadField(1, MapInfo(Map).music, 45)))
-
             'Update new Map Users
             MapInfo(Map).NumUsers = MapInfo(Map).NumUsers + 1
             
