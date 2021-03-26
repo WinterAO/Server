@@ -170,9 +170,9 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
 
     'Basic user data
     With UserList(UserIndex)
-        query = "INSERT INTO usuario SET "
+        query = "INSERT INTO personaje SET "
         query = query & "name = '" & .Name & "', "
-        query = query & "account_id = " & .AccountInfo.ID & ", "
+        query = query & "cuenta_id = " & .AccountInfo.ID & ", "
         query = query & "level = " & .Stats.ELV & ", "
         query = query & "exp = " & .Stats.Exp & ", "
         query = query & "elu = " & .Stats.ELU & ", "
@@ -233,7 +233,7 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
         '*******************************************************************
         'Atributos
         '*******************************************************************
-        query = "INSERT INTO attribute (user_id, "
+        query = "INSERT INTO atributos (user_id, "
 
         For LoopC = 1 To NUMATRIBUTOS
             query = query & " att" & LoopC
@@ -277,7 +277,7 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
         '*******************************************************************
         'Inventario
         '*******************************************************************
-        query = "INSERT INTO inventory_item (user_id, "
+        query = "INSERT INTO inventario_items (user_id, "
         
         For LoopC = 1 To MAX_INVENTORY_SLOTS
             query = query & "item_id" & LoopC & ", amount" & LoopC & ", is_equipped" & LoopC
@@ -302,7 +302,7 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
         '*******************************************************************
         'Boveda
         '*******************************************************************
-        query = "INSERT INTO bank_item (user_id, "
+        query = "INSERT INTO banco_items (user_id, "
         
         For LoopC = 1 To MAX_BANCOINVENTORY_SLOTS
             query = query & "item_id" & LoopC & ", amount" & LoopC
@@ -479,7 +479,7 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
 
     'Basic user data
     With UserList(UserIndex)
-        query = "UPDATE usuario SET "
+        query = "UPDATE personaje SET "
         query = query & "name = '" & .Name & "', "
         query = query & "level = " & .Stats.ELV & ", "
         query = query & "exp = " & .Stats.Exp & ", "
@@ -595,7 +595,7 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
         'Inventario
         '*******************************************************************
         
-        query = "UPDATE inventory_item SET "
+        query = "UPDATE inventario_items SET "
         
         For LoopC = 1 To MAX_INVENTORY_SLOTS
             
@@ -615,7 +615,7 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
         'Boveda
         '*******************************************************************
         
-        query = "UPDATE bank_item SET "
+        query = "UPDATE banco_items SET "
         
         For LoopC = 1 To MAX_BANCOINVENTORY_SLOTS
             
@@ -731,7 +731,7 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
     Exit Sub
 
 ErrorHandler:
-    Call LogDatabaseError("Unable to UPDATE usuario to Mysql Database: " & UserList(UserIndex).Name & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Unable to UPDATE personaje to Mysql Database: " & UserList(UserIndex).Name & ". " & Err.Number & " - " & Err.description)
 
 End Sub
 
@@ -804,7 +804,7 @@ Public Sub UpdateUserQuest(ByVal UserIndex As Integer)
     Exit Sub
 
 ErrorHandler:
-    Call LogDatabaseError("Unable to UPDATE usuario to Mysql Database: " & UserList(UserIndex).Name & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Unable to UPDATE personaje to Mysql Database: " & UserList(UserIndex).Name & ". " & Err.Number & " - " & Err.description)
 End Sub
 
 Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
@@ -829,7 +829,7 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
 
     'Basic user data
     With UserList(UserIndex)
-        query = "SELECT *, DATE_FORMAT(fecha_ingreso, '%Y-%m-%d') as 'fecha_ingreso_format' FROM usuario WHERE UPPER(name) ='" & UCase$(.Name) & "';"
+        query = "SELECT *, DATE_FORMAT(fecha_ingreso, '%Y-%m-%d') as 'fecha_ingreso_format' FROM personaje WHERE UPPER(name) ='" & UCase$(.Name) & "';"
         Set Database_RecordSet = Database_Connection.Execute(query)
 
         If Database_RecordSet.BOF Or Database_RecordSet.EOF Then Exit Sub
@@ -943,7 +943,7 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
         '*******************************************************************
         'Atributos
         '*******************************************************************
-        query = "SELECT * FROM attribute WHERE user_id = " & .ID & ";"
+        query = "SELECT * FROM atributos WHERE user_id = " & .ID & ";"
         Set Database_RecordSet = Database_Connection.Execute(query)
     
         If Not Database_RecordSet.RecordCount = 0 Then
@@ -998,7 +998,7 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
         '*******************************************************************
         'Inventario
         '*******************************************************************
-        query = "SELECT * FROM inventory_item WHERE user_id = " & .ID & ";"
+        query = "SELECT * FROM inventario_items WHERE user_id = " & .ID & ";"
         Set Database_RecordSet = Database_Connection.Execute(query)
 
         If Not Database_RecordSet.RecordCount = 0 Then
@@ -1017,7 +1017,7 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
         '*******************************************************************
         'Boveda
         '*******************************************************************
-        query = "SELECT * FROM bank_item WHERE user_id = " & .ID & ";"
+        query = "SELECT * FROM banco_items WHERE user_id = " & .ID & ";"
         Set Database_RecordSet = Database_Connection.Execute(query)
 
         If Not Database_RecordSet.RecordCount = 0 Then
@@ -1215,7 +1215,7 @@ Public Function PersonajeExisteDatabase(ByVal UserName As String) As Boolean
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "SELECT id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "' AND deleted = FALSE;"
+    query = "SELECT id FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "' AND deleted = FALSE;"
 
     Set Database_RecordSet = Database_Connection.Execute(query)
 
@@ -1256,7 +1256,7 @@ Public Function BANCheckDatabase(ByVal UserName As String) As Boolean
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "SELECT is_ban FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
+    query = "SELECT is_ban FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
     Set Database_RecordSet = Database_Connection.Execute(query)
 
@@ -1298,7 +1298,7 @@ Public Sub UnBanDatabase(ByVal UserName As String)
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "UPDATE usuario SET is_ban = FALSE WHERE UPPER(name) = '" & UCase$(UserName) & "';"
+    query = "UPDATE personaje SET is_ban = FALSE WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
     Database_Connection.Execute (query)
 
@@ -1330,7 +1330,7 @@ Public Function GetUserGuildIndexDatabase(ByVal UserName As String) As Integer
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "SELECT guild_index FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
+    query = "SELECT guild_index FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
     Set Database_RecordSet = Database_Connection.Execute(query)
 
@@ -1371,7 +1371,7 @@ Public Sub CopyUserDatabase(ByVal UserName As String, ByVal newName As String)
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "UPDATE usuario SET name = '" & UCase$(newName) & "' WHERE UPPER(name) = '" & UCase$(UserName) & "';"
+    query = "UPDATE personaje SET name = '" & UCase$(newName) & "' WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
     Database_Connection.Execute (query)
 
@@ -1404,7 +1404,7 @@ Public Sub MarcarPjComoQueYaVotoDatabase(ByVal UserIndex As Integer, _
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "UPDATE usuario SET votes_amount = " & NumeroEncuesta & " WHERE id = " & UserList(UserIndex).ID & ";"
+    query = "UPDATE personaje SET votes_amount = " & NumeroEncuesta & " WHERE id = " & UserList(UserIndex).ID & ";"
 
     Database_Connection.Execute (query)
     
@@ -1436,7 +1436,7 @@ Public Function PersonajeCantidadVotosDatabase(ByVal UserName As String) As Inte
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "SELECT votes_amount FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
+    query = "SELECT votes_amount FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
     Set Database_RecordSet = Database_Connection.Execute(query)
 
@@ -1483,12 +1483,12 @@ Public Sub SaveBan(ByVal UserName As String, _
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "UPDATE usuario SET is_ban = TRUE WHERE UPPER(name) = '" & UCase$(UserName) & "';"
+    query = "UPDATE personaje SET is_ban = TRUE WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
     Database_Connection.Execute (query)
 
     query = "INSERT INTO punishment SET "
-    query = query & "user_id = (SELECT id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "'), "
+    query = query & "user_id = (SELECT id FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "'), "
     query = query & "number = " & (cantPenas + 1) & ", "
     query = query & "reason = '" & BannedBy & ": BAN POR " & LCase$(Reason) & " " & Date & " " & time & "';"
 
@@ -1522,7 +1522,7 @@ Public Function GetUserAmountOfPunishments(ByVal UserName As String) As Integer
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "SELECT COUNT(1) as punishments FROM punishment WHERE user_id = (SELECT id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "')"
+    query = "SELECT COUNT(1) as punishments FROM punishment WHERE user_id = (SELECT id FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "')"
 
     Set Database_RecordSet = Database_Connection.Execute(query)
 
@@ -1564,7 +1564,7 @@ Public Sub SendUserPunishments(ByVal UserIndex As Integer, _
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "SELECT * FROM punishment WHERE user_id = (SELECT id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "');"
+    query = "SELECT * FROM punishment WHERE user_id = (SELECT id FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "');"
 
     Set Database_RecordSet = Database_Connection.Execute(query)
 
@@ -1609,7 +1609,7 @@ Public Function GetUserPos(ByVal UserName As String) As String
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "SELECT pos_map, pos_x, pos_y FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
+    query = "SELECT pos_map, pos_x, pos_y FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
     Set Database_RecordSet = Database_Connection.Execute(query)
 
@@ -1652,7 +1652,7 @@ Public Sub SaveUserPunishment(ByVal UserName As String, _
     #End If
 
     query = "INSERT INTO punishment SET "
-    query = query & "user_id = (SELECT id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "'), "
+    query = query & "user_id = (SELECT id FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "'), "
     query = query & "number = " & Number & ", "
     query = query & "reason = '" & Reason & "';"
 
@@ -1689,7 +1689,7 @@ Public Sub AlterUserPunishment(ByVal UserName As String, _
 
     query = "UPDATE punishment SET "
     query = query & "reason = '" & Reason & "' "
-    query = query & "WHERE number = " & Number & " AND user_id = (SELECT id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "');"
+    query = query & "WHERE number = " & Number & " AND user_id = (SELECT id FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "');"
 
     Database_Connection.Execute (query)
 
@@ -1720,7 +1720,7 @@ Public Sub ResetUserFacciones(ByVal UserName As String)
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "UPDATE usuario SET "
+    query = "UPDATE personaje SET "
     query = query & "pertenece_real = FALSE, "
     query = query & "pertenece_caos = FALSE, "
     query = query & "ciudadanos_matados = 0, "
@@ -1767,7 +1767,7 @@ Public Sub KickUserCouncils(ByVal UserName As String)
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "UPDATE usuario SET "
+    query = "UPDATE personaje SET "
     query = query & "pertenece_consejo_real = FALSE, "
     query = query & "pertenece_consejo_caos = FALSE "
     query = query & "WHERE UPPER(name) = '" & UCase$(UserName) & "';"
@@ -1801,7 +1801,7 @@ Public Sub KickUserFacciones(ByVal UserName As String)
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "UPDATE usuario SET "
+    query = "UPDATE personaje SET "
     query = query & "pertenece_real = FALSE, "
     query = query & "pertenece_caos = FALSE "
     query = query & "WHERE UPPER(name) = '" & UCase$(UserName) & "';"
@@ -1835,7 +1835,7 @@ Public Sub KickUserChaosLegion(ByVal UserName As String)
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "UPDATE usuario SET "
+    query = "UPDATE personaje SET "
     query = query & "pertenece_caos = FALSE, "
     query = query & "reenlistadas = 200 "
     query = query & "WHERE UPPER(name) = '" & UCase$(UserName) & "';"
@@ -1869,7 +1869,7 @@ Public Sub KickUserRoyalArmy(ByVal UserName As String)
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "UPDATE usuario SET "
+    query = "UPDATE personaje SET "
     query = query & "pertenece_real = FALSE, "
     query = query & "reenlistadas = 200 "
     query = query & "WHERE UPPER(name) = '" & UCase$(UserName) & "';"
@@ -1903,7 +1903,7 @@ Public Sub UpdateUserLogged(ByVal UserName As String, ByVal Logged As Byte)
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "UPDATE usuario SET "
+    query = "UPDATE personaje SET "
     query = query & "is_logged = " & IIf(Logged = 1, "TRUE", "FALSE") & " "
     query = query & "WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
@@ -1936,7 +1936,7 @@ Public Function GetUserLastIps(ByVal UserName As String) As String
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "SELECT last_ip FROM account WHERE id = (SELECT account_id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "');"
+    query = "SELECT last_ip FROM cuentas WHERE id = (SELECT cuenta_id FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "');"
 
     Set Database_RecordSet = Database_Connection.Execute(query)
 
@@ -1978,7 +1978,7 @@ Public Function GetUserSkills(ByVal UserName As String) As String
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "SELECT number, value FROM skillpoint WHERE user_id = (SELECT id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "');"
+    query = "SELECT number, value FROM skillpoint WHERE user_id = (SELECT id FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "');"
 
     Set Database_RecordSet = Database_Connection.Execute(query)
 
@@ -2023,7 +2023,7 @@ Public Function GetUserFreeSkills(ByVal UserName As String) As Integer
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "SELECT free_skillpoints FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
+    query = "SELECT free_skillpoints FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
     Set Database_RecordSet = Database_Connection.Execute(query)
 
@@ -2064,7 +2064,7 @@ Public Sub SaveUserTrainingTime(ByVal UserName As String, _
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "UPDATE usuario SET "
+    query = "UPDATE personaje SET "
     query = query & "counter_training = " & trainingTime & " "
     query = query & "WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
@@ -2097,7 +2097,7 @@ Public Function GetUserTrainingTime(ByVal UserName As String) As Long
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "SELECT counter_training FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
+    query = "SELECT counter_training FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
     Set Database_RecordSet = Database_Connection.Execute(query)
 
@@ -2137,7 +2137,7 @@ Public Function UserBelongsToRoyalArmy(ByVal UserName As String) As Boolean
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "SELECT pertenece_real FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "' AND deleted = FALSE;"
+    query = "SELECT pertenece_real FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "' AND deleted = FALSE;"
 
     Set Database_RecordSet = Database_Connection.Execute(query)
 
@@ -2178,7 +2178,7 @@ Public Function UserBelongsToChaosLegion(ByVal UserName As String) As Boolean
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "SELECT pertenece_caos FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "' AND deleted = FALSE;"
+    query = "SELECT pertenece_caos FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "' AND deleted = FALSE;"
 
     Set Database_RecordSet = Database_Connection.Execute(query)
 
@@ -2219,7 +2219,7 @@ Public Function GetUserLevel(ByVal UserName As String) As Byte
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "SELECT level FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
+    query = "SELECT level FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
     Set Database_RecordSet = Database_Connection.Execute(query)
 
@@ -2260,7 +2260,7 @@ Public Function GetUserPromedio(ByVal UserName As String) As Long
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "SELECT rep_average FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
+    query = "SELECT rep_average FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
     Set Database_RecordSet = Database_Connection.Execute(query)
 
@@ -2301,7 +2301,7 @@ Public Function GetUserReenlists(ByVal UserName As String) As Byte
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "SELECT reenlistadas FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
+    query = "SELECT reenlistadas FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
     Set Database_RecordSet = Database_Connection.Execute(query)
 
@@ -2342,7 +2342,7 @@ Public Sub SaveUserReenlists(ByVal UserName As String, ByVal Reenlists As Byte)
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "UPDATE usuario SET "
+    query = "UPDATE personaje SET "
     query = query & "reenlistadas = " & Reenlists & " "
     query = query & "WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
@@ -2380,7 +2380,7 @@ Public Sub SendUserStatsTxtDatabase(ByVal sendIndex As Integer, ByVal UserName A
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
     
-        query = "SELECT level, exp, elu, min_sta, max_sta, min_hp, max_hp, min_man, max_man, min_hit, max_hit, gold FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
+        query = "SELECT level, exp, elu, min_sta, max_sta, min_hp, max_hp, min_man, max_man, min_hit, max_hit, gold FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
         Set Database_RecordSet = Database_Connection.Execute(query)
 
@@ -2434,7 +2434,7 @@ Public Sub SendUserMiniStatsTxtFromDatabase(ByVal sendIndex As Integer, _
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
     
-        query = "SELECT killed_npcs, killed_users, ciudadanos_matados, criminales_matados, class_id, genre_id, race_id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
+        query = "SELECT killed_npcs, killed_users, ciudadanos_matados, criminales_matados, class_id, genre_id, race_id FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
         Set Database_RecordSet = Database_Connection.Execute(query)
 
@@ -2486,7 +2486,7 @@ Public Sub SendUserOROTxtFromDatabase(ByVal sendIndex As Integer, _
             If CheckSQLStatus = False Then Database_Reconnect
         #End If
 
-        query = "SELECT bank_gold FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
+        query = "SELECT bank_gold FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
         Set Database_RecordSet = Database_Connection.Execute(query)
 
@@ -2544,7 +2544,7 @@ Public Sub SendUserInvTxtFromDatabase(ByVal sendIndex As Integer, _
             If LoopC < MAX_INVENTORY_SLOTS Then query = query & ", "
         Next LoopC
 
-        query = query & " FROM inventory_item WHERE user_id = (SELECT id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "')"
+        query = query & " FROM inventario_items WHERE user_id = (SELECT id FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "')"
 
         Set Database_RecordSet = Database_Connection.Execute(query)
 
@@ -2612,7 +2612,7 @@ Public Sub SendUserBovedaTxtFromDatabase(ByVal sendIndex As Integer, _
             If LoopC < MAX_BANCOINVENTORY_SLOTS Then query = query & ", "
         Next LoopC
         
-        query = query & " FROM bank_item WHERE user_id = (SELECT id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "')"
+        query = query & " FROM banco_items WHERE user_id = (SELECT id FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "')"
 
         Set Database_RecordSet = Database_Connection.Execute(query)
 
@@ -2672,7 +2672,7 @@ Public Sub SendCharacterInfoDatabase(ByVal UserIndex As Integer, ByVal UserName 
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "SELECT race_id, class_id, genre_id, level, gold, bank_gold, rep_average, guild_requests_history, guild_index, guild_member_history, pertenece_real, pertenece_caos, ciudadanos_matados, criminales_matados FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
+    query = "SELECT race_id, class_id, genre_id, level, gold, bank_gold, rep_average, guild_requests_history, guild_index, guild_member_history, pertenece_real, pertenece_caos, ciudadanos_matados, criminales_matados FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
     Set Database_RecordSet = Database_Connection.Execute(query)
 
@@ -2729,7 +2729,7 @@ Public Function GetUserGuildMemberDatabase(ByVal UserName As String) As String
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "SELECT guild_member_history FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
+    query = "SELECT guild_member_history FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
     Set Database_RecordSet = Database_Connection.Execute(query)
 
@@ -2770,7 +2770,7 @@ Public Function GetUserGuildAspirantDatabase(ByVal UserName As String) As Intege
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "SELECT guild_aspirant_index FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
+    query = "SELECT guild_aspirant_index FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
     Set Database_RecordSet = Database_Connection.Execute(query)
 
@@ -2811,7 +2811,7 @@ Public Function GetUserGuildRejectionReasonDatabase(ByVal UserName As String) As
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "SELECT guild_rejected_because FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
+    query = "SELECT guild_rejected_because FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
     Set Database_RecordSet = Database_Connection.Execute(query)
 
@@ -2852,7 +2852,7 @@ Public Function GetUserGuildPedidosDatabase(ByVal UserName As String) As String
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "SELECT guild_requests_history FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "';"
+    query = "SELECT guild_requests_history FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
     Set Database_RecordSet = Database_Connection.Execute(query)
 
@@ -2894,7 +2894,7 @@ Public Sub SaveUserGuildRejectionReasonDatabase(ByVal UserName As String, _
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "UPDATE usuario SET "
+    query = "UPDATE personaje SET "
     query = query & "guild_rejected_because = '" & Reason & "' "
     query = query & "WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
@@ -2928,7 +2928,7 @@ Public Sub SaveUserGuildIndexDatabase(ByVal UserName As String, _
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "UPDATE usuario SET "
+    query = "UPDATE personaje SET "
     query = query & "guild_index = " & GuildIndex & " "
     query = query & "WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
@@ -2962,7 +2962,7 @@ Public Sub SaveUserGuildAspirantDatabase(ByVal UserName As String, _
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "UPDATE usuario SET "
+    query = "UPDATE personaje SET "
     query = query & "guild_aspirant_index = " & AspirantIndex & " "
     query = query & "WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
@@ -2995,7 +2995,7 @@ Public Sub SaveUserGuildMemberDatabase(ByVal UserName As String, ByVal guilds As
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "UPDATE usuario SET "
+    query = "UPDATE personaje SET "
     query = query & "guild_member_history = '" & guilds & "' "
     query = query & "WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
@@ -3028,7 +3028,7 @@ Public Sub SaveUserGuildPedidosDatabase(ByVal UserName As String, ByVal Pedidos 
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "UPDATE usuario SET "
+    query = "UPDATE personaje SET "
     query = query & "guild_requests_history = '" & Pedidos & "' "
     query = query & "WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
@@ -3061,7 +3061,7 @@ Public Sub SaveAccountLastLoginDatabase(ByVal UserName As String, ByVal UserIP A
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "UPDATE account SET "
+    query = "UPDATE cuentas SET "
     query = query & "date_last_login = NOW(), "
     query = query & "last_ip = '" & UserIP & "' "
     query = query & "WHERE UPPER(username) = '" & UCase$(UserName) & "';"
@@ -3095,7 +3095,7 @@ Public Sub SaveAccountEditGemasDatabase(ByVal UserName As String, ByVal Gemas As
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
     
-    query = "UPDATE account SET gemas = '" & Gemas & "' WHERE id = (SELECT account_id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "');"
+    query = "UPDATE cuentas SET gemas = '" & Gemas & "' WHERE id = (SELECT cuenta_id FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "');"
 
     Database_Connection.Execute (query)
 
@@ -3126,7 +3126,7 @@ Public Sub SaveAccountSumaGemasDatabase(ByVal UserName As String, ByVal Gemas As
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "UPDATE account SET gemas = gemas + '" & Gemas & "' WHERE id = (SELECT account_id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "');"
+    query = "UPDATE cuentas SET gemas = gemas + '" & Gemas & "' WHERE id = (SELECT cuenta_id FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "');"
 
     Database_Connection.Execute (query)
 
@@ -3157,7 +3157,7 @@ Public Sub SaveAccountRestaGemasDatabase(ByVal UserName As String, ByVal Gemas A
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "UPDATE account SET gemas = gemas - '" & Gemas & "' WHERE id = (SELECT account_id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "');"
+    query = "UPDATE cuentas SET gemas = gemas - '" & Gemas & "' WHERE id = (SELECT cuenta_id FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "');"
 
     Database_Connection.Execute (query)
 
@@ -3188,7 +3188,7 @@ Public Function GetGemasDatabase(ByVal UserName As String) As Long
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "SELECT gemas FROM account WHERE id = (SELECT account_id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "');"
+    query = "SELECT gemas FROM cuentas WHERE id = (SELECT cuenta_id FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "');"
     Debug.Print query
     Set Database_RecordSet = Database_Connection.Execute(query)
 

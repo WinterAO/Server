@@ -21,7 +21,7 @@ Public Sub LoginAccountDatabase(ByVal UserIndex As Integer, ByVal UserName As St
     With UserList(UserIndex)
     
     
-        query = "SELECT id, username, email, password, salt, gemas, status FROM account "
+        query = "SELECT id, username, email, password, salt, gemas, status FROM cuentas "
         query = query & "WHERE UPPER(username) = '" & UCase$(UserName) & "';"
         
         Set Database_RecordSet = Database_Connection.Execute(query)
@@ -45,8 +45,8 @@ Public Sub LoginAccountDatabase(ByVal UserIndex As Integer, ByVal UserName As St
         Set Database_RecordSet = Nothing
         
         'Now the characters
-        query = "SELECT id, name, level, body_id, head_id, weapon_id, shield_id, helmet_id, race_id, class_id, pos_map, rep_average, is_dead FROM usuario "
-        query = query & "WHERE account_id = " & .AccountInfo.ID & " AND deleted = FALSE;"
+        query = "SELECT id, name, level, body_id, head_id, weapon_id, shield_id, helmet_id, race_id, class_id, pos_map, rep_average, is_dead FROM personaje "
+        query = query & "WHERE cuenta_id = " & .AccountInfo.ID & " AND deleted = FALSE;"
         
         Set Database_RecordSet = Database_Connection.Execute(query)
         
@@ -155,7 +155,7 @@ Public Function CuentaExisteDatabase(ByVal UserName As String) As Boolean
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "SELECT id FROM account WHERE UPPER(username) = '" & UCase$(UserName) & "';"
+    query = "SELECT id FROM cuentas WHERE UPPER(username) = '" & UCase$(UserName) & "';"
 
     Set Database_RecordSet = Database_Connection.Execute(query)
 
@@ -199,7 +199,7 @@ Public Function CuentaVerificada(ByVal UserName As String) As Boolean
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "SELECT status FROM account WHERE UPPER(username) = '" & UCase$(UserName) & "';"
+    query = "SELECT status FROM cuentas WHERE UPPER(username) = '" & UCase$(UserName) & "';"
 
     Set Database_RecordSet = Database_Connection.Execute(query)
 
@@ -230,7 +230,7 @@ Public Function PersonajePerteneceCuenta(ByVal UserIndex As Integer, ByVal UserN
     'Author: Lorwik
     'Last Modification: 04/06/2020
     'Descripcion: Comprobamos si el personaje pertenece a la cuenta, para ello
-    'hacemos una consulta buscando el nombre del personaje y el account_id de
+    'hacemos una consulta buscando el nombre del personaje y el cuenta_id de
     'la persona que quieres entrar al personajeque le pasamos, si obtenemos 1 resultado
     'el personaje pertenece a la cuenta
     '***************************************************
@@ -245,7 +245,7 @@ Public Function PersonajePerteneceCuenta(ByVal UserIndex As Integer, ByVal UserN
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "SELECT id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "' AND account_id = '" & UserList(UserIndex).AccountInfo.ID & "';"
+    query = "SELECT id FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "' AND cuenta_id = '" & UserList(UserIndex).AccountInfo.ID & "';"
 
     Set Database_RecordSet = Database_Connection.Execute(query)
 
@@ -289,7 +289,7 @@ Public Function GetCountUserAccount(ByVal UserIndex As Integer) As Byte
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "SELECT COUNT(*) FROM usuario WHERE deleted = 0 and account_id = '" & UserList(UserIndex).AccountInfo.ID & "';"
+    query = "SELECT COUNT(*) FROM personaje WHERE deleted = 0 and cuenta_id = '" & UserList(UserIndex).AccountInfo.ID & "';"
 
     Set Database_RecordSet = Database_Connection.Execute(query)
 
@@ -329,7 +329,7 @@ Public Sub BorrarUsuarioDatabase(ByVal UserName As String)
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "UPDATE usuario SET name = '" & UCase$(UserName) & "_deleted', deleted = TRUE WHERE UPPER(name) = '" & UCase$(UserName) & "';"
+    query = "UPDATE personaje SET name = '" & UCase$(UserName) & "_deleted', deleted = TRUE WHERE UPPER(name) = '" & UCase$(UserName) & "';"
 
     Database_Connection.Execute (query)
 
@@ -361,7 +361,7 @@ Public Function GetAccountSalt(ByVal AccountName As String) As String
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "SELECT salt FROM account WHERE UPPER(username) = '" & UCase$(AccountName) & "';"
+    query = "SELECT salt FROM cuentas WHERE UPPER(username) = '" & UCase$(AccountName) & "';"
 
     Set Database_RecordSet = Database_Connection.Execute(query)
 
@@ -401,7 +401,7 @@ Public Function GetUserSalt(ByVal UserName As String) As String
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "SELECT salt FROM account WHERE id = (SELECT account_id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "');"
+    query = "SELECT salt FROM cuentas WHERE id = (SELECT cuenta_id FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "');"
 
     Set Database_RecordSet = Database_Connection.Execute(query)
 
@@ -441,7 +441,7 @@ Public Function GetAccountPassword(ByVal AccountName As String) As String
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "SELECT password FROM account WHERE UPPER(username) = '" & UCase$(AccountName) & "';"
+    query = "SELECT password FROM cuentas WHERE UPPER(username) = '" & UCase$(AccountName) & "';"
 
     Set Database_RecordSet = Database_Connection.Execute(query)
 
@@ -481,7 +481,7 @@ Public Function GetUserPassword(ByVal UserName As String) As String
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "SELECT password FROM account WHERE id = (SELECT account_id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "');"
+    query = "SELECT password FROM cuentas WHERE id = (SELECT cuenta_id FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "');"
 
     Set Database_RecordSet = Database_Connection.Execute(query)
 
@@ -521,7 +521,7 @@ Public Function GetUserEmail(ByVal UserName As String) As String
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "SELECT username FROM account WHERE id = (SELECT account_id FROM usuario WHERE UPPER(name) = '" & UCase$(UserName) & "');"
+    query = "SELECT username FROM cuentas WHERE id = (SELECT cuenta_id FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "');"
 
     Set Database_RecordSet = Database_Connection.Execute(query)
 
