@@ -23,10 +23,10 @@ End Type
 
 Private Type tMapEvent
     Map As Integer
-    X As Byte
-    Y As Byte
-    X2 As Byte
-    Y2 As Byte
+    X As Integer
+    Y As Integer
+    X2 As Integer
+    Y2 As Integer
 End Type
 
 Private Type tRetos

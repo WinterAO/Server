@@ -1176,8 +1176,8 @@ Public Type ObjData
     'Pasajes
     DesdeMap As Integer
     HastaMap As Integer
-    HastaY As Byte
-    HastaX As Byte
+    HastaY As Integer
+    HastaX As Integer
     NecesitaSkill As Byte
     CantidadSkill As Byte
     
@@ -2055,10 +2055,10 @@ Public DatPath                            As String
 
 ''
 'Bordes del mapa
-Public MinXBorder                         As Byte
-Public MaxXBorder                         As Byte
-Public MinYBorder                         As Byte
-Public MaxYBorder                         As Byte
+Public MinXBorder                         As Integer
+Public MaxXBorder                         As Integer
+Public MinYBorder                         As Integer
+Public MaxYBorder                         As Integer
 
 
 ''
@@ -2566,8 +2566,8 @@ Public Security As New clsSecurity
 Type tRetarded
     Tiempo As Long
     Mapa As Byte
-    X As Byte
-    Y As Byte
+    X As Integer
+    Y As Integer
     NPCNUM As Integer
 End Type
 

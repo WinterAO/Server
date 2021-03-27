@@ -2238,33 +2238,7 @@ Private Sub HandleWalk(ByVal UserIndex As Integer)
 
         Dim TiempoDeWalk As Byte
         
-        'Prevent SpeedHack
-        If .flags.TimesWalk >= 31 + (.flags.Velocidad * 2) Then
-            TempTick = GetTickCount And &H7FFFFFFF
-            dummy = getInterval(TempTick, .flags.StartWalk) ' 0.13.5
-            
-            ' 5800 is actually less than what would be needed in perfect conditions to take 30 steps
-            '(it's about 193 ms per step against the over 200 needed in perfect conditions)
-            If dummy < 5800 Then
-                If getInterval(TempTick, .flags.CountSH) > 30000 Then ' 0.13.5
-                    .flags.CountSH = 0
-                End If
-        
-                If Not .flags.CountSH = 0 Then
-                    If dummy <> 0 Then dummy = 126000 \ dummy
-         
-                    Call LogHackAttemp("SpeedHack: " & .Name & " , " & dummy)
-                    Call SendData(SendTarget.ToAdmins, 0, PrepareMessageConsoleMsg("Servidor> " & .Name & " ha sido echado por el servidor por posible uso de SpeedHack.", FontTypeNames.FONTTYPE_SERVER))
-                    Call CloseSocket(UserIndex)
-         
-                    Exit Sub
-                Else
-                    .flags.CountSH = TempTick
-                End If
-            End If
-            .flags.StartWalk = TempTick
-            .flags.TimesWalk = 0
-        End If
+  
         
         .flags.TimesWalk = .flags.TimesWalk + 1
         
@@ -3015,12 +2989,12 @@ Private Sub HandleLeftClick(ByVal UserIndex As Integer)
         'Remove packet ID
         Call .ReadByte
         
-        Dim X As Byte
+        Dim X As Integer
 
-        Dim Y As Byte
+        Dim Y As Integer
         
-        X = .ReadByte()
-        Y = .ReadByte()
+        X = .ReadInteger()
+        Y = .ReadInteger()
         
         Call LookatTile(UserIndex, UserList(UserIndex).Pos.Map, X, Y)
 
@@ -3050,12 +3024,12 @@ Private Sub HandleAccionClick(ByVal UserIndex As Integer)
         'Remove packet ID
         Call .ReadByte
         
-        Dim X As Byte
+        Dim X As Integer
 
-        Dim Y As Byte
+        Dim Y As Integer
         
-        X = .ReadByte()
-        Y = .ReadByte()
+        X = .ReadInteger()
+        Y = .ReadInteger()
         
         Call Accion(UserIndex, UserList(UserIndex).Pos.Map, X, Y)
 
@@ -3354,9 +3328,9 @@ Private Sub HandleWorkLeftClick(ByVal UserIndex As Integer)
         'Remove packet ID
         Call .incomingData.ReadByte
         
-        Dim X           As Byte
+        Dim X           As Integer
 
-        Dim Y           As Byte
+        Dim Y           As Integer
 
         Dim Skill       As eSkill
 
@@ -3368,8 +3342,8 @@ Private Sub HandleWorkLeftClick(ByVal UserIndex As Integer)
         
         Dim WeaponIndex As Integer
         
-        X = .incomingData.ReadByte()
-        Y = .incomingData.ReadByte()
+        X = .incomingData.ReadInteger()
+        Y = .incomingData.ReadInteger()
         
         Skill = .incomingData.ReadByte()
         
@@ -3665,17 +3639,17 @@ Private Sub HandleInvitarPartyClick(ByVal UserIndex As Integer)
     
         End If
         
-        Dim X           As Byte
+        Dim X           As Integer
     
-        Dim Y           As Byte
+        Dim Y           As Integer
     
         Dim Aleatorio   As Integer
         
         'Remove packet ID
         Call .incomingData.ReadByte
             
-        X = .incomingData.ReadByte()
-        Y = .incomingData.ReadByte()
+        X = .incomingData.ReadInteger()
+        Y = .incomingData.ReadInteger()
     
         If .flags.Muerto = 1 Or .flags.Descansar Or .flags.Meditando Or Not InMapBounds(.Pos.Map, X, Y) Then Exit Sub
     
@@ -9662,8 +9636,8 @@ Private Sub HandleWarpChar(ByVal UserIndex As Integer)
         
         UserName = buffer.ReadASCIIString()
         Map = buffer.ReadInteger()
-        X = buffer.ReadByte()
-        Y = buffer.ReadByte()
+        X = buffer.ReadInteger()
+        Y = buffer.ReadInteger()
         
         If Not .flags.Privilegios And PlayerType.User Then
             If MapaValido(Map) And LenB(UserName) <> 0 Then
@@ -12792,15 +12766,15 @@ Private Sub HandleTeleportCreate(ByVal UserIndex As Integer)
         
         Dim Mapa  As Integer
 
-        Dim X     As Byte
+        Dim X     As Integer
 
-        Dim Y     As Byte
+        Dim Y     As Integer
 
         Dim Radio As Byte
         
         Mapa = .incomingData.ReadInteger()
-        X = .incomingData.ReadByte()
-        Y = .incomingData.ReadByte()
+        X = .incomingData.ReadInteger()
+        Y = .incomingData.ReadInteger()
         Radio = .incomingData.ReadByte()
         
         Radio = MinimoInt(Radio, 6)
@@ -13197,14 +13171,14 @@ Private Sub HandleForceWAVEToMap(ByVal UserIndex As Integer)
 
         Dim Mapa   As Integer
 
-        Dim X      As Byte
+        Dim X      As Integer
 
-        Dim Y      As Byte
+        Dim Y      As Integer
         
         waveID = .incomingData.ReadByte()
         Mapa = .incomingData.ReadInteger()
-        X = .incomingData.ReadByte()
-        Y = .incomingData.ReadByte()
+        X = .incomingData.ReadInteger()
+        Y = .incomingData.ReadInteger()
         
         'Solo dioses, admins y RMS
         If .flags.Privilegios And (PlayerType.Dios Or PlayerType.Admin Or PlayerType.RoleMaster) Then
@@ -17216,8 +17190,8 @@ Public Sub HandleCreatePretorianClan(ByVal UserIndex As Integer)
     On Error GoTo errHandler
 
     Dim Map   As Integer
-    Dim X     As Byte
-    Dim Y     As Byte
+    Dim X     As Integer
+    Dim Y     As Integer
     Dim index As Long
     
     With UserList(UserIndex)
@@ -17226,8 +17200,8 @@ Public Sub HandleCreatePretorianClan(ByVal UserIndex As Integer)
         Call .incomingData.ReadByte
         
         Map = .incomingData.ReadInteger()
-        X = .incomingData.ReadByte()
-        Y = .incomingData.ReadByte()
+        X = .incomingData.ReadInteger()
+        Y = .incomingData.ReadInteger()
         
         ' User Admin?
         If .flags.Privilegios And (PlayerType.Admin Or PlayerType.Dios) = 0 Then Exit Sub
@@ -18332,8 +18306,8 @@ Public Sub WriteCharacterCreate(ByVal UserIndex As Integer, _
                                 ByVal Head As Integer, _
                                 ByVal Heading As eHeading, _
                                 ByVal CharIndex As Integer, _
-                                ByVal X As Byte, _
-                                ByVal Y As Byte, _
+                                ByVal X As Integer, _
+                                ByVal Y As Integer, _
                                 ByVal weapon As Integer, _
                                 ByVal shield As Integer, _
                                 ByVal FX As Integer, _
@@ -18408,8 +18382,8 @@ End Sub
 
 Public Sub WriteCharacterMove(ByVal UserIndex As Integer, _
                               ByVal CharIndex As Integer, _
-                              ByVal X As Byte, _
-                              ByVal Y As Byte)
+                              ByVal X As Integer, _
+                              ByVal Y As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -18515,8 +18489,8 @@ End Sub
 Public Sub WriteObjectCreate(ByVal UserIndex As Integer, _
                              ByVal GrhIndex As Long, _
                              ByVal ParticulaIndex As Integer, _
-                             ByVal X As Byte, _
-                             ByVal Y As Byte, _
+                             ByVal X As Integer, _
+                             ByVal Y As Integer, _
                              Optional ByVal Shadow As Byte = 0)
 
     '***************************************************
@@ -18547,7 +18521,7 @@ End Sub
 ' @param    Y Y coord of the character's new position.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteObjectDelete(ByVal UserIndex As Integer, ByVal X As Byte, ByVal Y As Byte)
+Public Sub WriteObjectDelete(ByVal UserIndex As Integer, ByVal X As Integer, ByVal Y As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -18579,8 +18553,8 @@ End Sub
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
 Public Sub WriteBlockPosition(ByVal UserIndex As Integer, _
-                              ByVal X As Byte, _
-                              ByVal Y As Byte, _
+                              ByVal X As Integer, _
+                              ByVal Y As Integer, _
                               ByVal Blocked As Boolean)
 
     '***************************************************
@@ -18592,8 +18566,8 @@ Public Sub WriteBlockPosition(ByVal UserIndex As Integer, _
 
     With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.BlockPosition)
-        Call .WriteByte(X)
-        Call .WriteByte(Y)
+        Call .WriteInteger(X)
+        Call .WriteInteger(Y)
         Call .WriteBoolean(Blocked)
 
     End With
@@ -18653,8 +18627,8 @@ End Sub
 
 Public Sub WritePlayWave(ByVal UserIndex As Integer, _
                          ByVal wave As Byte, _
-                         ByVal X As Byte, _
-                         ByVal Y As Byte)
+                         ByVal X As Integer, _
+                         ByVal Y As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -18740,8 +18714,8 @@ Public Sub WriteAreaChanged(ByVal UserIndex As Integer)
 
     With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.AreaChanged)
-        Call .WriteByte(UserList(UserIndex).Pos.X)
-        Call .WriteByte(UserList(UserIndex).Pos.Y)
+        Call .WriteInteger(UserList(UserIndex).Pos.X)
+        Call .WriteInteger(UserList(UserIndex).Pos.Y)
 
     End With
 
@@ -21205,8 +21179,8 @@ End Function
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
 Public Function PrepareMessagePlayWave(ByVal wave As Integer, _
-                                       ByVal X As Byte, _
-                                       ByVal Y As Byte) As String
+                                       ByVal X As Integer, _
+                                       ByVal Y As Integer) As String
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -21217,8 +21191,8 @@ Public Function PrepareMessagePlayWave(ByVal wave As Integer, _
     With auxiliarBuffer
         Call .WriteByte(ServerPacketID.PlayWave)
         Call .WriteInteger(wave)
-        Call .WriteByte(X)
-        Call .WriteByte(Y)
+        Call .WriteInteger(X)
+        Call .WriteInteger(Y)
         
         PrepareMessagePlayWave = .ReadASCIIStringFixed(.Length)
 
@@ -21353,7 +21327,7 @@ End Function
 ' @return   The formated message ready to be writen as is on outgoing buffers.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Function PrepareMessageObjectDelete(ByVal X As Byte, ByVal Y As Byte) As String
+Public Function PrepareMessageObjectDelete(ByVal X As Integer, ByVal Y As Integer) As String
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -21362,8 +21336,8 @@ Public Function PrepareMessageObjectDelete(ByVal X As Byte, ByVal Y As Byte) As 
     '***************************************************
     With auxiliarBuffer
         Call .WriteByte(ServerPacketID.ObjectDelete)
-        Call .WriteByte(X)
-        Call .WriteByte(Y)
+        Call .WriteInteger(X)
+        Call .WriteInteger(Y)
         
         PrepareMessageObjectDelete = .ReadASCIIStringFixed(.Length)
 
@@ -21380,8 +21354,8 @@ End Function
 ' @return   The formated message ready to be writen as is on outgoing buffers.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Function PrepareMessageBlockPosition(ByVal X As Byte, _
-                                            ByVal Y As Byte, _
+Public Function PrepareMessageBlockPosition(ByVal X As Integer, _
+                                            ByVal Y As Integer, _
                                             ByVal Blocked As Boolean) As String
 
     '***************************************************
@@ -21391,8 +21365,8 @@ Public Function PrepareMessageBlockPosition(ByVal X As Byte, _
     '***************************************************
     With auxiliarBuffer
         Call .WriteByte(ServerPacketID.BlockPosition)
-        Call .WriteByte(X)
-        Call .WriteByte(Y)
+        Call .WriteInteger(X)
+        Call .WriteInteger(Y)
         Call .WriteBoolean(Blocked)
         
         PrepareMessageBlockPosition = .ReadASCIIStringFixed(.Length)
@@ -21412,8 +21386,8 @@ End Function
 
 Public Function PrepareMessageObjectCreate(ByVal GrhIndex As Long, _
                                            ByVal ParticulaIndex As Integer, _
-                                           ByVal X As Byte, _
-                                           ByVal Y As Byte, _
+                                           ByVal X As Integer, _
+                                           ByVal Y As Integer, _
                                            ByVal Shadow As Byte) As String
 
     '***************************************************
@@ -21423,8 +21397,8 @@ Public Function PrepareMessageObjectCreate(ByVal GrhIndex As Long, _
     '***************************************************
     With auxiliarBuffer
         Call .WriteByte(ServerPacketID.ObjectCreate)
-        Call .WriteByte(X)
-        Call .WriteByte(Y)
+        Call .WriteInteger(X)
+        Call .WriteInteger(Y)
         Call .WriteLong(GrhIndex)
         Call .WriteInteger(ParticulaIndex)
         Call .WriteByte(Shadow)
@@ -21507,8 +21481,8 @@ Public Function PrepareMessageCharacterCreate(ByVal body As Integer, _
                                               ByVal Head As Integer, _
                                               ByVal Heading As eHeading, _
                                               ByVal CharIndex As Integer, _
-                                              ByVal X As Byte, _
-                                              ByVal Y As Byte, _
+                                              ByVal X As Integer, _
+                                              ByVal Y As Integer, _
                                               ByVal weapon As Integer, _
                                               ByVal shield As Integer, _
                                               ByVal FX As Integer, _
@@ -21535,8 +21509,8 @@ Public Function PrepareMessageCharacterCreate(ByVal body As Integer, _
         Call .WriteInteger(body)
         Call .WriteInteger(Head)
         Call .WriteByte(Heading)
-        Call .WriteByte(X)
-        Call .WriteByte(Y)
+        Call .WriteInteger(X)
+        Call .WriteInteger(Y)
         Call .WriteInteger(weapon)
         Call .WriteInteger(shield)
         Call .WriteInteger(helmet)
@@ -21641,8 +21615,8 @@ End Function
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
 Public Function PrepareMessageCharacterMove(ByVal CharIndex As Integer, _
-                                            ByVal X As Byte, _
-                                            ByVal Y As Byte) As String
+                                            ByVal X As Integer, _
+                                            ByVal Y As Integer) As String
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -21652,8 +21626,8 @@ Public Function PrepareMessageCharacterMove(ByVal CharIndex As Integer, _
     With auxiliarBuffer
         Call .WriteByte(ServerPacketID.CharacterMove)
         Call .WriteInteger(CharIndex)
-        Call .WriteByte(X)
-        Call .WriteByte(Y)
+        Call .WriteInteger(X)
+        Call .WriteInteger(Y)
         
         PrepareMessageCharacterMove = .ReadASCIIStringFixed(.Length)
 
@@ -22811,14 +22785,14 @@ errHandler:
 
 End Sub
 
-Public Function PrepareMessageCreateDamage(ByVal X As Byte, ByVal Y As Byte, ByVal DamageValue As Long, ByVal DamageType As Byte)
+Public Function PrepareMessageCreateDamage(ByVal X As Integer, ByVal Y As Integer, ByVal DamageValue As Long, ByVal DamageType As Byte)
  
 ' @ Envia el paquete para crear dano (Y)
  
 With auxiliarBuffer
      .WriteByte ServerPacketID.CreateDamage
-     .WriteByte X
-     .WriteByte Y
+     .WriteInteger X
+     .WriteInteger Y
      .WriteLong DamageValue
      .WriteByte DamageType
      

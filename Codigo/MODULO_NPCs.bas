@@ -1502,8 +1502,8 @@ Public Sub RandomNPCTepeable(ByVal NPCIndex As Integer)
 'Desscripción: El NPC Se teletransporta a una ubicacion aleatoria
 '***************************************************
     
-    Dim xX As Byte
-    Dim yY As Byte
+    Dim xX As Integer
+    Dim yY As Integer
     Dim TpPos As WorldPos
     
     With Npclist(NPCIndex)

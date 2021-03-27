@@ -2798,7 +2798,7 @@ Sub UserIncinera(ByVal AtacanteIndex As Integer, ByVal VictimaIndex As Integer)
 
 End Sub
 
-Public Sub LanzarProyectil(ByVal UserIndex As Integer, ByVal X As Byte, ByVal Y As Byte)
+Public Sub LanzarProyectil(ByVal UserIndex As Integer, ByVal X As Integer, ByVal Y As Integer)
 
     '***************************************************
     'Autor: ZaMa
