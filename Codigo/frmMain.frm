@@ -862,8 +862,11 @@ Private Sub AutoSave_Timer()
         MinutosReconexion = 0
         
         'Nos aseguramos que no hay usuarios jugando
-        If NumCuentas < 1 Then _
-            Call Database_Reconnect
+        If NumCuentas < 1 Then
+            Call User_Database.Database_Reconnect
+            Call Account_Database.Database_Reconnect
+    
+        End If
     Else
         MinutosReconexion = MinutosReconexion + 1
     End If
@@ -916,7 +919,8 @@ Private Sub cmdApagarServidor_Click()
     
     'Cerramos la conexion con la DB
     #If DBConexionUnica = 1 Then
-        Call Database_Close
+        Call User_Database.Database_Close
+        Call Account_Database.Database_Close
     #End If
 
     'Chauuu
@@ -942,23 +946,31 @@ Private Sub cmdDB_Click(index As Integer)
     
         Case 0 'Conectar
             If MsgBox("¿Desea CONECTAR a la base de datos MYSQL? ¡Si ya esta conectada podria provocar errores!!!", vbYesNo, "¡CONEXION A LA MYSQL!") = vbNo Then Exit Sub
-            Call Database_Connect
+            Call User_Database.Database_Connect
+            Call Account_Database.Database_Connect
             
         Case 1 'Desconectar
             If MsgBox("¿Desea DESCONECTAR de la base de datos MYSQL? ¡Si ya esta desconectada podria provocar errores!!!", vbYesNo, "¡DESCONEXION DE LA MYSQL!") = vbNo Then Exit Sub
-            Call Database_Close
+            Call User_Database.Database_Close
+            Call Account_Database.Database_Close
             
         Case 2 'Estado de la conexion
-        
-            If CheckSQLStatus Then
-                MsgBox "Base de datos CONECTADA"
+            If User_Database.CheckSQLStatus Then
+                MsgBox "Base de datos de usuarios CONECTADA"
             Else
-                MsgBox "No hay conexión con la Base de datos"
+                MsgBox "No hay conexión con la Base de datos de usuarios"
+            End If
+            
+            If Account_Database.CheckSQLStatus Then
+                MsgBox "Base de datos de Cuentas CONECTADA"
+            Else
+                MsgBox "No hay conexión con la Base de datos de usuarios"
             End If
             
         Case 3 'Reconectar
             If MsgBox("¿Desea RECONECTAR de la base de datos MYSQL? ¡Si ya esta conectada podria provocar errores!!!", vbYesNo, "¡RECONEXION DE LA MYSQL!") = vbNo Then Exit Sub
-            Call Database_Reconnect
+            Call User_Database.Database_Reconnect
+            Call Account_Database.Database_Reconnect
             
     End Select
 End Sub
@@ -982,7 +994,8 @@ Private Sub cmdForzarCierre_Click()
     If MsgBox("Desea FORZAR el CIERRE del SERVIDOR?", vbYesNo, "CIERRE DEL SERVIDOR!!!") = vbNo Then Exit Sub
         
 #If DBConexionUnica = 1 Then
-    Call Database_Close
+    Call User_Database.Database_Close
+    Call Account_Database.Database_Close
 #End If
     
     Call CloseServer

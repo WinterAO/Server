@@ -320,8 +320,13 @@ Sub Main()
     'Base de datos MySQL
 #If DBConexionUnica = 1 Then
     frmCargando.Label1(2).Caption = "Cargando Base de datos"
+    
+    Set User_Database = New clsDataBase
+    Set Account_Database = New clsDataBase
+    
     Call Load_ConfigDatBase
-    Call Database_Connect
+    Call User_Database.Database_Connect
+    Call Account_Database.Database_Connect
 #End If
 
     ' Npcs.dat

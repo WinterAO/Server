@@ -1439,7 +1439,7 @@ Sub CargarBackUp()
 
 man:
     MsgBox ("Error durante la carga de mapas, el mapa " & Map & " contiene errores")
-    Call LogError(Date & " " & Err.description & " " & Err.HelpContext & " " & Err.HelpFile & " " & Err.source)
+    Call LogError(Date & " " & Err.description & " " & Err.HelpContext & " " & Err.HelpFile & " " & Err.Source)
  
 End Sub
 
@@ -1484,7 +1484,7 @@ Sub LoadMapData()
 
 man:
     MsgBox ("Error durante la carga de mapas, el mapa " & Map & " contiene errores")
-    Call LogError(Date & " " & Err.description & " " & Err.HelpContext & " " & Err.HelpFile & " " & Err.source)
+    Call LogError(Date & " " & Err.description & " " & Err.HelpContext & " " & Err.HelpFile & " " & Err.Source)
 
 End Sub
 
@@ -1869,12 +1869,14 @@ Public Sub Load_ConfigDatBase()
     End If
     
     Call Lector.Initialize(ConfigPath & "DataBase.ini")
+    
+    Call User_Database.Inicialiar(Lector.GetValue("USER_DATABASE", "DSN"), Lector.GetValue("USER_DATABASE", "Host"), _
+                                  Lector.GetValue("USER_DATABASE", "Name"), Lector.GetValue("USER_DATABASE", "Username"), _
+                                  Lector.GetValue("USER_DATABASE", "Password"))
 
-    Database_DataSource = Lector.GetValue("DATABASE", "DSN")
-    Database_Host = Lector.GetValue("DATABASE", "Host")
-    Database_Name = Lector.GetValue("DATABASE", "Name")
-    Database_Username = Lector.GetValue("DATABASE", "Username")
-    Database_Password = Lector.GetValue("DATABASE", "Password")
+    Call Account_Database.Inicialiar(Lector.GetValue("ACC_DATABASE", "DSN"), Lector.GetValue("ACC_DATABASE", "Host"), _
+                                     Lector.GetValue("ACC_DATABASE", "Name"), Lector.GetValue("ACC_DATABASE", "Username"), _
+                                     Lector.GetValue("ACC_DATABASE", "Password"))
     
     Set Lector = Nothing
 

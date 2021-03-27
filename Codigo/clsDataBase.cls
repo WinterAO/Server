@@ -1,0 +1,144 @@
+VERSION 1.0 CLASS
+BEGIN
+  MultiUse = -1  'True
+  Persistable = 0  'NotPersistable
+  DataBindingBehavior = 0  'vbNone
+  DataSourceBehavior  = 0  'vbNone
+  MTSTransactionMode  = 0  'NotAnMTSObject
+END
+Attribute VB_Name = "clsDataBase"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = True
+Attribute VB_PredeclaredId = False
+Attribute VB_Exposed = False
+Option Explicit
+
+Private Database_DataSource As String
+Private Database_Host       As String
+Private Database_Name       As String
+Private Database_Username   As String
+Private Database_Password   As String
+
+Public Database_Connection As ADODB.Connection
+Public Database_RecordSet  As ADODB.Recordset
+
+'CONSTRUCTOR
+Public Sub Inicialiar(ByVal Source As String, _
+                      ByVal Host As String, _
+                      ByVal Name As String, _
+                      ByVal User As String, _
+                      ByVal Pass As String)
+                      
+    
+    Database_DataSource = Source
+    Database_Host = Host
+    Database_Name = Name
+    Database_Username = User
+    Database_Password = Pass
+
+End Sub
+
+Public Sub Database_Connect()
+    '************************************************************************************
+    'Author: Juan Andres Dalmasso
+    'Last Modification: 21/09/2019
+    '21/09/2019 Jopi - Agregue soporte a conexion via DSN. Solo para usuarios avanzados.
+    '************************************************************************************
+    
+    On Error GoTo ErrorHandler
+    
+    Set Database_Connection = New ADODB.Connection
+    
+    If Len(Database_DataSource) <> 0 Then
+    
+        Database_Connection.ConnectionString = "DATA SOURCE=" & Database_DataSource & ";"
+        
+    Else
+    
+        Database_Connection.ConnectionString = "DRIVER={MySQL ODBC 8.0 ANSI Driver};" & _
+                                               "SERVER=" & Database_Host & ";" & _
+                                               "DATABASE=" & Database_Name & ";" & _
+                                               "USER=" & Database_Username & ";" & _
+                                               "PASSWORD=" & Database_Password & ";" & _
+                                               "OPTION=3"
+    End If
+    
+    'Debug.Print Database_Connection.ConnectionString
+    
+    Database_Connection.CursorLocation = adUseClient
+    Database_Connection.Open
+    
+    Exit Sub
+    
+ErrorHandler:
+    Call LogDatabaseError("Database Error: " & Err.Number & " - " & Err.description)
+    Debug.Print "Database Error: " & Err.Number & " - " & Err.description
+
+End Sub
+
+Public Sub Database_Close()
+
+    '***************************************************
+    'Author: Juan Andres Dalmasso
+    'Last Modification: 18/09/2018
+    '***************************************************
+    On Error GoTo ErrorHandler
+     
+    Database_Connection.Close
+    Set Database_Connection = Nothing
+     
+    Exit Sub
+     
+ErrorHandler:
+    Call LogDatabaseError("Unable to close Mysql Database: " & Err.Number & " - " & Err.description)
+
+End Sub
+
+Public Function Database_Reconnect() As Boolean
+'***************************************************
+'Author: Lorwik
+'Fecha: 13/09/2020
+'Descripcion: Reconexión de la base de datos
+'***************************************************
+
+    Dim CerrolaConexion As Boolean
+    
+    'Si la conexión ya existia...
+    If Database_Connection Is Nothing Then
+        CerrolaConexion = False
+        
+    Else
+        Call Database_Close
+        CerrolaConexion = True
+        
+    End If
+    
+    Call Database_Connect
+    
+    Call LogDatabaseError("Base de datos reconectada. ¿Se cerro la conexion?: " & CerrolaConexion)
+    
+End Function
+
+Public Function CheckSQLStatus() As Boolean
+    '***************************************************
+    'Author: Lorwik
+    'Fecha: 17/07/2020
+    'Descripcion: Comprobamos el estado de la conexion a la base de datos.
+    '***************************************************
+    
+    If Database_Connection Is Nothing Then
+        CheckSQLStatus = False
+        Exit Function
+    End If
+    
+    If Database_Connection.State = 0 Then
+        CheckSQLStatus = False
+        Exit Function
+    End If
+    
+    'La conexion es correcta
+    CheckSQLStatus = True
+
+End Function
+
+

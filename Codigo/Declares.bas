@@ -2560,6 +2560,9 @@ Public NombreServidor As String
 
 Public Security As New clsSecurity
 
+Public User_Database As New clsDataBase
+Public Account_Database As New clsDataBase
+
 'Lorwik> Sistema de retardo de Spawn de NPC
 Type tRetarded
     Tiempo As Long
