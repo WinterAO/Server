@@ -411,7 +411,7 @@ Private Function ValidateFight_Users(ByVal UserIndex As Integer, _
                     Exit Function
                 End If
                               
-                If MapInfo(.Pos.Map).Pk = True Then
+                If MapZonas(.Pos.Map, UserZonaId(UserIndex)).Pk = True Then
                     ValidateFight_Users = False
                     Exit Function
                 End If

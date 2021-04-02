@@ -951,7 +951,7 @@ Public Sub CheckUserLevel(ByVal UserIndex As Integer, Optional ByVal PrintInCons
         If Not EsNewbie(UserIndex) And WasNewbie Then
             Call QuitarNewbieObj(UserIndex)
 
-            If MapInfo(.Pos.Map).Restringir = eRestrict.restrict_newbie Then
+            If MapZonas(.Pos.Map, UserZonaId(UserIndex)).Restringir = eRestrict.restrict_newbie Then
                 Call WarpUserChar(UserIndex, 1, 50, 50, True)
 
                 If PrintInConsole Then
@@ -1038,7 +1038,7 @@ Sub MoveUserChar(ByVal UserIndex As Integer, ByVal nHeading As eHeading)
         End If
             
         'si no estoy solo en el mapa...
-        If MapInfo(UserList(UserIndex).Pos.Map).NumUsers > 1 Then
+        If MapZonas(UserList(UserIndex).Pos.Map, UserZonaId(UserIndex)).NumUsers > 1 Then
                
             CasperIndex = MapData(UserList(UserIndex).Pos.Map, nPos.X, nPos.Y).UserIndex
 
@@ -1787,7 +1787,7 @@ Public Sub UserDie(ByVal UserIndex As Integer, Optional ByVal AttackerIndex As I
             If DropItemsAlMorir Then
                 
                 ' Si estas en zona segura no se caen los items.
-                If MapInfo(.Pos.Map).Pk Then
+                If MapZonas(.Pos.Map, UserZonaId(UserIndex)).Pk Then
                     
                     '¿Tiene la sortija de ultratumba?
                     If .Invent.AnilloEqpObjIndex > 0 Then
@@ -1934,11 +1934,11 @@ Public Sub UserDie(ByVal UserIndex As Integer, Optional ByVal AttackerIndex As I
 
         Dim MapaTelep As Integer
 
-        MapaTelep = MapInfo(Mapa).OnDeathGoTo.Map
+        MapaTelep = MapZonas(Mapa, UserZonaId(UserIndex)).OnDeathGoTo.Map
         
         If MapaTelep <> 0 Then
             Call WriteConsoleMsg(UserIndex, "Tu estado no te permite permanecer en el mapa!!!", FontTypeNames.FONTTYPE_INFOBOLD)
-            Call WarpUserChar(UserIndex, MapaTelep, MapInfo(Mapa).OnDeathGoTo.X, MapInfo(Mapa).OnDeathGoTo.Y, True, True)
+            Call WarpUserChar(UserIndex, MapaTelep, MapZonas(Mapa, UserZonaId(UserIndex)).OnDeathGoTo.X, MapZonas(Mapa, UserZonaId(UserIndex)).OnDeathGoTo.Y, True, True)
 
         End If
         
@@ -2105,7 +2105,7 @@ Sub WarpUserChar(ByVal UserIndex As Integer, _
         Call EraseUserChar(UserIndex, .flags.AdminInvisible = 1)
         
         If OldMap <> Map Then
-            Call WriteChangeMap(UserIndex, Map, MapInfo(.Pos.Map).MapVersion)
+            Call WriteChangeMap(UserIndex, Map, MapZonas(.Pos.Map, UserZonaId(UserIndex)).MapVersion)
             
             If .flags.Privilegios And PlayerType.User Then 'El chequeo de invi/ocultar solo afecta a Usuarios (C4b3z0n)
 
@@ -2114,7 +2114,7 @@ Sub WarpUserChar(ByVal UserIndex As Integer, _
                 Dim WasInvi      As Boolean
 
                 'Chequeo de flags de mapa por invisibilidad (C4b3z0n)
-                If MapInfo(Map).InviSinEfecto > 0 And .flags.invisible = 1 Then
+                If MapZonas(Map, UserZonaId(UserIndex)).InviSinEfecto > 0 And .flags.invisible = 1 Then
                     .flags.invisible = 0
                     .Counters.Invisibilidad = 0
                     AhoraVisible = True
@@ -2123,7 +2123,7 @@ Sub WarpUserChar(ByVal UserIndex As Integer, _
                 End If
 
                 'Chequeo de flags de mapa por ocultar (C4b3z0n)
-                If MapInfo(Map).OcultarSinEfecto > 0 And .flags.Oculto = 1 Then
+                If MapZonas(Map, UserZonaId(UserIndex)).OcultarSinEfecto > 0 And .flags.Oculto = 1 Then
                     AhoraVisible = True
                     .flags.Oculto = 0
                     .Counters.TiempoOculto = 0
@@ -2145,13 +2145,13 @@ Sub WarpUserChar(ByVal UserIndex As Integer, _
             End If
 
             'Update new Map Users
-            MapInfo(Map).NumUsers = MapInfo(Map).NumUsers + 1
+            MapZonas(Map, UserZonaId(UserIndex)).NumUsers = MapZonas(Map, UserZonaId(UserIndex)).NumUsers + 1
             
             'Update old Map Users
-            MapInfo(OldMap).NumUsers = MapInfo(OldMap).NumUsers - 1
+            MapZonas(OldMap, UserZonaId(UserIndex)).NumUsers = MapZonas(OldMap, UserZonaId(UserIndex)).NumUsers - 1
 
-            If MapInfo(OldMap).NumUsers < 0 Then
-                MapInfo(OldMap).NumUsers = 0
+            If MapZonas(OldMap, UserZonaId(UserIndex)).NumUsers < 0 Then
+                MapZonas(OldMap, UserZonaId(UserIndex)).NumUsers = 0
             End If
             
             Call WriteRemoveAllDialogs(UserIndex)
@@ -2236,7 +2236,7 @@ Private Sub WarpMascotas(ByVal UserIndex As Integer)
     Dim iMinHP           As Integer
     
     NroPets = UserList(UserIndex).NroMascotas
-    canWarp = (MapInfo(UserList(UserIndex).Pos.Map).Pk = True)
+    canWarp = (MapZonas(UserList(UserIndex).Pos.Map, UserZonaId(UserIndex)).Pk = True)
     
     For i = 1 To MAXMASCOTAS
         index = UserList(UserIndex).MascotasIndex(i)
@@ -2403,7 +2403,7 @@ Sub Cerrar_Usuario(ByVal UserIndex As Integer)
 
         If .flags.UserLogged And Not .Counters.Saliendo Then
             .Counters.Saliendo = True
-            .Counters.Salir = IIf((.flags.Privilegios And PlayerType.User) And MapInfo(.Pos.Map).Pk, IntervaloCerrarConexion, 0)
+            .Counters.Salir = IIf((.flags.Privilegios And PlayerType.User) And MapZonas(.Pos.Map, UserZonaId(UserIndex)).Pk, IntervaloCerrarConexion, 0)
             
             isNotVisible = (.flags.Oculto Or .flags.invisible)
 
@@ -2467,7 +2467,7 @@ Public Sub CancelExit(ByVal UserIndex As Integer)
             Call WriteConsoleMsg(UserIndex, "/salir cancelado.", FontTypeNames.FONTTYPE_WARNING)
         Else
             'Simply reset
-            UserList(UserIndex).Counters.Salir = IIf((UserList(UserIndex).flags.Privilegios And PlayerType.User) And MapInfo(UserList(UserIndex).Pos.Map).Pk, IntervaloCerrarConexion, 0)
+            UserList(UserIndex).Counters.Salir = IIf((UserList(UserIndex).flags.Privilegios And PlayerType.User) And MapZonas(UserList(UserIndex).Pos.Map, UserZonaId(UserIndex)).Pk, IntervaloCerrarConexion, 0)
 
         End If
 
@@ -2704,10 +2704,10 @@ Public Sub ApropioNpc(ByVal UserIndex As Integer, ByVal NPCIndex As Integer)
         If MapData(Mapa, .Pos.X, .Pos.Y).Trigger = eTrigger.ZONASEGURA Then Exit Sub
         
         ' No se aplica a mapas seguros
-        If MapInfo(Mapa).Pk = False Then Exit Sub
+        If MapZonas(Mapa, UserZonaId(UserIndex)).Pk = False Then Exit Sub
         
         ' No aplica a algunos mapas que permiten el robo de npcs
-        If MapInfo(Mapa).RoboNpcsPermitido = 1 Then Exit Sub
+        If MapZonas(Mapa, UserZonaId(UserIndex)).RoboNpcsPermitido = 1 Then Exit Sub
         
         ' Pierde el npc anterior
         If .flags.OwnedNpc > 0 Then Npclist(.flags.OwnedNpc).Owner = 0
@@ -2952,7 +2952,7 @@ Public Function ToogleToAtackable(ByVal UserIndex As Integer, _
     
     With UserList(UserIndex)
         
-        If MapInfo(.Pos.Map).Pk = False Then
+        If MapZonas(.Pos.Map, UserZonaId(UserIndex)).Pk = False Then
             Call WriteConsoleMsg(UserIndex, "No puedes robar npcs en zonas seguras.", FontTypeNames.FONTTYPE_INFO)
             Exit Function
 
@@ -3018,7 +3018,7 @@ Public Sub setHome(ByVal UserIndex As Integer, _
                 .Hogar = newHome
             
                 Call WriteChatOverHead(UserIndex, "Bienvenido a nuestra humilde comunidad, este es ahora tu nuevo hogar!!!", Npclist(NPCIndex).Char.CharIndex, vbWhite)
-                Call WriteConsoleMsg(UserIndex, "Ahora eres ciudadano de " & MapInfo(Ciudades(.Hogar).Map).Name, FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "Ahora eres ciudadano de " & MapZonas(Ciudades(.Hogar).Map, UserZonaId(UserIndex)).Name, FontTypeNames.FONTTYPE_INFO)
             Else
                 Call WriteChatOverHead(UserIndex, "Ya eres miembro de nuestra humilde comunidad!!!", Npclist(NPCIndex).Char.CharIndex, vbWhite)
         

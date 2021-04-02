@@ -806,7 +806,7 @@ Public Function Intemperie(ByVal UserIndex As Integer) As Boolean
 
     With UserList(UserIndex)
 
-        If MapInfo(.Pos.Map).Zona <> "DUNGEON" Then
+        If MapZonas(.Pos.Map, UserZonaId(UserIndex)).Zona <> "DUNGEON" Then
             If MapData(.Pos.Map, .Pos.X, .Pos.Y).Trigger <> eTrigger.BAJOTECHO And _
              MapData(.Pos.Map, .Pos.X, .Pos.Y).Trigger <> eTrigger.CASA And _
             MapData(.Pos.Map, .Pos.X, .Pos.Y).Trigger <> eTrigger.ZONASEGURA Then _
@@ -868,7 +868,7 @@ Public Sub EfectoFrio(ByVal UserIndex As Integer)
             .Counters.Frio = .Counters.Frio + 1
         Else '
 
-            If TerrainStringToByte(MapInfo(.Pos.Map).Terreno) = eTerrain.terrain_nieve Then
+            If TerrainStringToByte(MapZonas(.Pos.Map, UserZonaId(UserIndex)).Terreno) = eTerrain.terrain_nieve Then
                 Call WriteConsoleMsg(UserIndex, "Estas muriendo de frio, abrigate o moriras!!", FontTypeNames.FONTTYPE_INFO)
                 modifi = Porcentaje(.Stats.MaxHp, 5)
                 .Stats.MinHp = .Stats.MinHp - modifi
@@ -1360,7 +1360,7 @@ Public Sub HambreYSed(ByVal UserIndex As Integer, ByRef fenviarAyS As Boolean)
             Else
                 .Counters.AGUACounter = 0
                 
-                If Lloviendo And TerrainStringToByte(MapInfo(.Pos.Map).Terreno) = eTerrain.terrain_desierto And MapInfo(.Pos.Map).Zona = "BOSQUE" Then
+                If Lloviendo And TerrainStringToByte(MapZonas(.Pos.Map, UserZonaId(UserIndex)).Terreno) = eTerrain.terrain_desierto And MapZonas(.Pos.Map, UserZonaId(UserIndex)).Zona = "BOSQUE" Then
                     .Stats.MinAGU = .Stats.MinAGU - 20
                     Call WriteConsoleMsg(UserIndex, "Estas en una tormenta de arena, sientes el doble de sed.", FontTypeNames.FONTTYPE_INFO)
                 Else
@@ -1386,7 +1386,7 @@ Public Sub HambreYSed(ByVal UserIndex As Integer, ByRef fenviarAyS As Boolean)
             Else
                 .Counters.COMCounter = 0
                 
-                If Lloviendo And TerrainStringToByte(MapInfo(.Pos.Map).Terreno) = eTerrain.terrain_nieve And MapInfo(.Pos.Map).Zona = "BOSQUE" Then
+                If Lloviendo And TerrainStringToByte(MapZonas(.Pos.Map, UserZonaId(UserIndex)).Terreno) = eTerrain.terrain_nieve And MapZonas(.Pos.Map, UserZonaId(UserIndex)).Zona = "BOSQUE" Then
                     .Stats.MinHam = .Stats.MinHam - 20
                     Call WriteConsoleMsg(UserIndex, "Estas en una tormenta de nieve, sientes el doble de hambre.", FontTypeNames.FONTTYPE_INFO)
                 Else
@@ -1906,3 +1906,75 @@ Public Sub BanGlobalChatGuardar()
 
     Close #ArchN
 End Sub
+
+Public Function UserZonaId(ByVal UserIndex As Integer) As Integer
+'**************************************
+'Autor: Lorwik
+'Fecha: 02/04/2021
+'Descripción: Devuelve el Id de la zona donde se encuentra el usuario
+'**************************************
+On Error GoTo errHandler
+    
+    If UserIndex < 1 Then
+        UserZonaId = 0
+        Exit Function
+    
+    ElseIf UserList(UserIndex).Pos.X < 1 Or UserList(UserIndex).Pos.Y < 1 Then
+        UserZonaId = 0
+        Exit Function
+        
+    End If
+
+    UserZonaId = MapData(UserList(UserIndex).Pos.Map, UserList(UserIndex).Pos.X, UserList(UserIndex).Pos.Y).ZonaIndex
+
+errHandler:
+    UserZonaId = 0
+End Function
+
+Public Function NPCZonaId(ByVal NPCIndex As Integer) As Integer
+'**************************************
+'Autor: Lorwik
+'Fecha: 02/04/2021
+'Descripción: Devuelve el Id de la zona donde se encuentra el NPC
+'**************************************
+On Error GoTo errHandler
+
+    If NPCIndex < 1 Then
+        NPCZonaId = 0
+        Exit Function
+    
+    ElseIf Npclist(NPCIndex).Pos.X < 1 Or Npclist(NPCIndex).Pos.Y < 1 Then
+        NPCZonaId = 0
+        Exit Function
+        
+    End If
+
+    NPCZonaId = MapData(Npclist(NPCIndex).Pos.Map, Npclist(NPCIndex).Pos.X, Npclist(NPCIndex).Pos.Y).ZonaIndex
+    
+errHandler:
+    NPCZonaId = 0
+End Function
+
+Public Function CheckZona(ByVal CharIndex As Integer) As Boolean
+'**************************************
+'Autor: Lorwik
+'Fecha: 02/04/2021
+'Descripción: Comprueba si hubo cambio de zona
+'**************************************
+
+    Static ZonaActual   As Integer
+    Dim ZonaId          As Integer
+
+    'Nueva zona
+    ZonaId = UserZonaId(CharIndex)
+
+    If ZonaActual <> ZonaId Then
+    
+        'Funciones para actualizar la zona al usuario
+        
+        ZonaActual = ZonaId
+        
+    End If
+
+End Function
+

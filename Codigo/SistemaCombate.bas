@@ -1275,7 +1275,7 @@ Public Sub UsuarioAtaca(ByVal UserIndex As Integer)
         'Look for NPC
         If index > 0 Then
             If Npclist(index).Attackable Then
-                If Npclist(index).MaestroUser > 0 And MapInfo(Npclist(index).Pos.Map).Pk = False Then
+                If Npclist(index).MaestroUser > 0 And MapZonas(Npclist(index).Pos.Map, NPCZonaId(index)).Pk = False Then
                     Call WriteConsoleMsg(UserIndex, "No puedes atacar mascotas en zona segura.", FontTypeNames.FONTTYPE_WARNING)
                     Exit Sub
 
@@ -2020,7 +2020,7 @@ Public Function PuedeAtacar(ByVal AttackerIndex As Integer, _
     End If
     
     'Estas en un Mapa Seguro?
-    If MapInfo(UserList(victimIndex).Pos.Map).Pk = False Then
+    If MapZonas(UserList(victimIndex).Pos.Map, UserZonaId(victimIndex)).Pk = False Then
         If esArmada(AttackerIndex) Then
             If UserList(AttackerIndex).Faccion.RecompensasReal > 11 Then
                 If UserList(victimIndex).Pos.Map = 58 Or UserList(victimIndex).Pos.Map = 59 Or UserList(victimIndex).Pos.Map = 60 Then

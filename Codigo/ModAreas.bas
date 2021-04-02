@@ -269,7 +269,7 @@ Public Sub CheckUpdateNeededNpc(ByVal NPCIndex As Integer, ByVal Heading As Byte
         Call CalcularNuevaArea(.Pos.X, .Pos.Y, Heading, MinX, MaxX, MinY, MaxY)
 
         ' Si no hay usuarios en el mapa ahorramos tiempo y salimos
-        If MapInfo(.Pos.Map).NumUsers <> 0 Then
+        If MapZonas(.Pos.Map, NPCZonaId(NPCIndex)).NumUsers <> 0 Then
         
             For X = MinX To MaxX
                 For Y = MinY To MaxY

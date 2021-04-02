@@ -1982,10 +1982,11 @@ Public Type MapBlock
     Trigger As eTrigger
     Particulas As Integer
     
+    ZonaIndex As Integer
 End Type
 
 'Info del mapa
-Type MapInfo
+Type tMapInfo
 
     NumUsers As Integer
     music As String
@@ -2132,7 +2133,7 @@ Public Npclist(1 To MAXNPCS)              As NPC 'NPCS
 
 Public MapData()                          As MapBlock
 
-Public MapInfo()                          As MapInfo
+Public MapZonas()                         As tMapInfo
 
 Public Hechizos()                         As tHechizo
 

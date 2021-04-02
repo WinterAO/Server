@@ -1191,7 +1191,7 @@ Sub DoDomar(ByVal UserIndex As Integer, ByVal NPCIndex As Integer)
                 Call WriteConsoleMsg(UserIndex, "La criatura te ha aceptado como su amo.", FontTypeNames.FONTTYPE_INFO)
                 
                 ' Es zona segura?
-                CanStay = (MapInfo(.Pos.Map).Pk = True)
+                CanStay = (MapZonas(.Pos.Map, UserZonaId(UserIndex)).Pk = True)
                 
                 If Not CanStay Then
                     petType = Npclist(NPCIndex).Numero
@@ -1541,7 +1541,7 @@ Public Sub DoRobar(ByVal LadrOnIndex As Integer, ByVal VictimaIndex As Integer)
 
     Dim OtroUserIndex As Integer
 
-    If Not MapInfo(UserList(VictimaIndex).Pos.Map).Pk Then Exit Sub
+    If Not MapZonas(UserList(VictimaIndex).Pos.Map, UserZonaId(VictimaIndex)).Pk Then Exit Sub
     
     If UserList(VictimaIndex).flags.EnConsulta Then
         Call WriteConsoleMsg(LadrOnIndex, "No puedes robar a usuarios en consulta!!!", FontTypeNames.FONTTYPE_INFO)
@@ -2679,13 +2679,13 @@ Public Sub DoEquita(ByVal UserIndex As Integer, _
         End If
 
         '¿Esta intentando usar una montura de tipo dungeon fuera de un dungeon?
-        If MapInfo(.Pos.Map).Zona <> "DUNGEON" And Montura.MontTipo = 1 Then
+        If MapZonas(.Pos.Map, UserZonaId(UserIndex)).Zona <> "DUNGEON" And Montura.MontTipo = 1 Then
             Call WriteConsoleMsg(UserIndex, "No puedes utilizar esta montura fuera de un dungeon.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
         End If
 
         '¿Esta en un dungeon y la montura no es de tipo dungeon?
-        If MapInfo(.Pos.Map).Zona = "DUNGEON" And Montura.MontTipo <> 1 Then
+        If MapZonas(.Pos.Map, UserZonaId(UserIndex)).Zona = "DUNGEON" And Montura.MontTipo <> 1 Then
             Call WriteConsoleMsg(UserIndex, "No puedes utilizar esta montura en dungeon.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
         End If

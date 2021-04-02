@@ -61,6 +61,7 @@ Public Sub TIMER_AI()
     Dim NPCIndex As Long
     Dim Mapa     As Integer
     Dim e_p      As Integer
+    Dim i        As Integer
     
     Static Contador As Long
     
@@ -101,13 +102,11 @@ Public Sub TIMER_AI()
                             Mapa = .Pos.Map
                             
                             If Mapa > 0 Then
-                                'Si no hay usuarios en el mapa no hacemos nada
-                                If MapInfo(Mapa).NumUsers > 0 Then
+                                'Si no hay usuarios en la zona en al que se encuentra el NPC no hacemos nada
+                                If MapZonas(Mapa, NPCZonaId(NPCIndex)).NumUsers > 0 Then
                                     '¿El NPC tiene movimiento?
-                                    If .Movement <> TipoAI.ESTATICO Then
+                                    If .Movement <> TipoAI.ESTATICO Then _
                                         Call NPCAI(NPCIndex)
-
-                                    End If
 
                                 End If
 

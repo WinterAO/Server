@@ -63,7 +63,7 @@ Sub NpcLanzaSpellSobreUser(ByVal NPCIndex As Integer, _
         End If
         
         ' Si no se peude usar magia en el mapa, no le deja hacerlo.
-        If MapInfo(UserList(UserIndex).Pos.Map).MagiaSinEfecto > 0 Then Exit Sub
+        If MapZonas(UserList(UserIndex).Pos.Map, UserZonaId(UserIndex)).MagiaSinEfecto > 0 Then Exit Sub
 
         Dim dano As Integer
     
@@ -729,14 +729,14 @@ Sub HechizoInvocacion(ByVal UserIndex As Integer, ByRef HechizoCasteado As Boole
         Mapa = .Pos.Map
     
         'No permitimos se invoquen criaturas en zonas seguras
-        If MapInfo(Mapa).Pk = False Or MapData(Mapa, .Pos.X, .Pos.Y).Trigger = eTrigger.ZONASEGURA Then
+        If MapZonas(Mapa, UserZonaId(UserIndex)).Pk = False Or MapData(Mapa, .Pos.X, .Pos.Y).Trigger = eTrigger.ZONASEGURA Then
             Call WriteConsoleMsg(UserIndex, "No puedes invocar criaturas en zona segura.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
 
         End If
     
         'No permitimos se invoquen criaturas en mapas donde esta prohibido hacerlo
-        If MapInfo(Mapa).InvocarSinEfecto = 1 Then
+        If MapZonas(Mapa, UserZonaId(UserIndex)).InvocarSinEfecto = 1 Then
             Call WriteConsoleMsg(UserIndex, "Invocar no esta permitido aqui! Retirate de la Zona si deseas utilizar el Hechizo.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
 
@@ -1194,7 +1194,7 @@ Sub HechizoEstadoUsuario(ByVal UserIndex As Integer, ByRef HechizoCasteado As Bo
             End If
         
             'No usar invi mapas InviSinEfecto
-            If MapInfo(UserList(targetIndex).Pos.Map).InviSinEfecto > 0 Then
+            If MapZonas(UserList(targetIndex).Pos.Map, UserZonaId(targetIndex)).InviSinEfecto > 0 Then
                 Call WriteConsoleMsg(UserIndex, "La invisibilidad no funciona aqui!", FontTypeNames.FONTTYPE_INFO)
                 HechizoCasteado = False
                 Exit Sub
@@ -1522,7 +1522,7 @@ Sub HechizoEstadoUsuario(ByVal UserIndex As Integer, ByRef HechizoCasteado As Bo
                 End If
         
                 'No usar resu en mapas con ResuSinEfecto
-                If MapInfo(UserList(targetIndex).Pos.Map).ResuSinEfecto > 0 Then
+                If MapZonas(UserList(targetIndex).Pos.Map, UserZonaId(targetIndex)).ResuSinEfecto > 0 Then
                     Call WriteConsoleMsg(UserIndex, "Revivir no esta permitido aqui! Retirate de la Zona si deseas utilizar el Hechizo.", FontTypeNames.FONTTYPE_INFO)
                     HechizoCasteado = False
                     Exit Sub
@@ -2980,7 +2980,7 @@ Private Sub HechizoTerrenoMaterializa(ByVal UserIndex As Integer, ByRef Cast As 
                 Exit Sub
             End If
 
-            If MapInfo(.Pos.Map).Pk = False Or (.Counters.Pena <> 0) Then
+            If MapZonas(.Pos.Map, UserZonaId(UserIndex)).Pk = False Or (.Counters.Pena <> 0) Then
                 Call WriteConsoleMsg(UserIndex, "Una fuerza misteriosa no te permite abrir portales aquí.", FontTypeNames.FONTTYPE_INFO)
                 Cast = False
                 Exit Sub
