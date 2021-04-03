@@ -1957,18 +1957,18 @@ errHandler:
     NPCZonaId = 0
 End Function
 
-Public Function CheckZona(ByVal CharIndex As Integer) As Boolean
+Public Function CheckZona(ByVal UserIndex As Integer) As Boolean
 '**************************************
 'Autor: Lorwik
 'Fecha: 02/04/2021
 'Descripción: Comprueba si hubo cambio de zona
 '**************************************
 
-    Static ZonaActual   As Integer
-    Dim ZonaId          As Integer
+    Dim ZonaActual   As Integer
+    Dim ZonaId       As Integer
 
     'Nueva zona
-    ZonaId = UserZonaId(CharIndex)
+    ZonaId = UserZonaId(UserIndex)
 
     If ZonaActual <> ZonaId Then
     

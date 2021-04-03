@@ -1021,8 +1021,14 @@ Sub MoveUserChar(ByVal UserIndex As Integer, ByVal nHeading As eHeading)
 
     Dim isAdminInvi   As Boolean
     
+    Dim OldZona        As Integer
+    
+    Dim OldMap        As Integer
+    
     sailing = PuedeAtravesarAgua(UserIndex)
     nPos = UserList(UserIndex).Pos
+    OldZona = UserZonaId(UserIndex)
+    OldMap = nPos.Map
     Call HeadtoPos(nHeading, nPos)
         
     isAdminInvi = (UserList(UserIndex).flags.AdminInvisible = 1)
@@ -1105,6 +1111,15 @@ Sub MoveUserChar(ByVal UserIndex As Integer, ByVal nHeading As eHeading)
                 If HaySacerdote(UserIndex) Then Call AccionParaSacerdote(UserIndex)
                 
                 Call DoTileEvents(UserIndex, .Pos.Map, .Pos.X, .Pos.Y)
+                
+                If OldMap <> nPos.Map Or OldZona <> UserZonaId(UserIndex) Then
+
+                    MapZonas(OldMap, OldZona).NumUsers = MapZonas(OldMap, OldZona).NumUsers - 1
+                    MapZonas(nPos.Map, UserZonaId(UserIndex)).NumUsers = MapZonas(nPos.Map, UserZonaId(UserIndex)).NumUsers + 1
+                    
+                    If MapZonas(OldMap, OldZona).NumUsers < 0 Then MapZonas(OldMap, OldZona).NumUsers = 0
+                    
+                End If
 
             End With
             
@@ -2088,11 +2103,13 @@ Sub WarpUserChar(ByVal UserIndex As Integer, _
     '16/09/2010 - ZaMa: No se pierde la visibilidad al cambiar de mapa al estar navegando invisible.
     '11/23/2010 - C4b3z0n: Ahora si no se permite Invi o Ocultar en el mapa al que cambias, te lo saca
     '**************************************************************
-    Dim OldMap As Integer
+    Dim OldMap  As Integer
+    
+    Dim OldZona As Integer
 
-    Dim OldX   As Integer
+    Dim OldX    As Integer
 
-    Dim OldY   As Integer
+    Dim OldY    As Integer
     
     With UserList(UserIndex)
         'Quitar el dialogo
@@ -2101,10 +2118,11 @@ Sub WarpUserChar(ByVal UserIndex As Integer, _
         OldMap = .Pos.Map
         OldX = .Pos.X
         OldY = .Pos.Y
+        OldZona = UserZonaId(UserIndex)
 
         Call EraseUserChar(UserIndex, .flags.AdminInvisible = 1)
         
-        If OldMap <> Map Then
+        If OldMap <> Map Or OldZona <> UserZonaId(UserIndex) Then
             Call WriteChangeMap(UserIndex, Map, MapZonas(.Pos.Map, UserZonaId(UserIndex)).MapVersion)
             
             If .flags.Privilegios And PlayerType.User Then 'El chequeo de invi/ocultar solo afecta a Usuarios (C4b3z0n)
@@ -2148,10 +2166,10 @@ Sub WarpUserChar(ByVal UserIndex As Integer, _
             MapZonas(Map, UserZonaId(UserIndex)).NumUsers = MapZonas(Map, UserZonaId(UserIndex)).NumUsers + 1
             
             'Update old Map Users
-            MapZonas(OldMap, UserZonaId(UserIndex)).NumUsers = MapZonas(OldMap, UserZonaId(UserIndex)).NumUsers - 1
+            MapZonas(OldMap, OldZona).NumUsers = MapZonas(OldMap, OldZona).NumUsers - 1
 
-            If MapZonas(OldMap, UserZonaId(UserIndex)).NumUsers < 0 Then
-                MapZonas(OldMap, UserZonaId(UserIndex)).NumUsers = 0
+            If MapZonas(OldMap, OldZona).NumUsers < 0 Then
+                MapZonas(OldMap, OldZona).NumUsers = 0
             End If
             
             Call WriteRemoveAllDialogs(UserIndex)

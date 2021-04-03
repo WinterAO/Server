@@ -104,9 +104,10 @@ Public Sub TIMER_AI()
                             Zona = NPCZonaId(NPCIndex)
                             
                             If Mapa > 0 Then
-    
+
                                 'Si no hay usuarios en la zona en al que se encuentra el NPC no hacemos nada
                                 If MapZonas(Mapa, Zona).NumUsers > 0 Then
+
                                     '¿El NPC tiene movimiento?
                                     If .Movement <> TipoAI.ESTATICO Then _
                                         Call NPCAI(NPCIndex)
