@@ -1386,38 +1386,38 @@ Private Sub HandleGMCommands(ByVal UserIndex As Integer)
             Case eGMCommands.SaveMap                 '/GUARDAMAPA
                 Call HandleSaveMap(UserIndex)
         
-            Case eGMCommands.ChangeMapInfoPK         '/MODMAPINFO PK
-                Call HandleChangeMapInfoPK(UserIndex)
+            Case eGMCommands.ChangeZonaPK         '/MODZona PK
+                Call HandleChangeZonaPK(UserIndex)
             
-            Case eGMCommands.ChangeMapInfoBackup     '/MODMAPINFO BACKUP
-                Call HandleChangeMapInfoBackup(UserIndex)
+            Case eGMCommands.ChangeZonaBackup     '/MODZona BACKUP
+                Call HandleChangeZonaBackup(UserIndex)
         
-            Case eGMCommands.ChangeMapInfoRestricted '/MODMAPINFO RESTRINGIR
-                Call HandleChangeMapInfoRestricted(UserIndex)
+            Case eGMCommands.ChangeZonaRestricted '/MODZona RESTRINGIR
+                Call HandleChangeZonaRestricted(UserIndex)
         
-            Case eGMCommands.ChangeMapInfoNoMagic    '/MODMAPINFO MAGIASINEFECTO
-                Call HandleChangeMapInfoNoMagic(UserIndex)
+            Case eGMCommands.ChangeZonaNoMagic    '/MODZona MAGIASINEFECTO
+                Call HandleChangeZonaNoMagic(UserIndex)
         
-            Case eGMCommands.ChangeMapInfoNoInvi     '/MODMAPINFO INVISINEFECTO
-                Call HandleChangeMapInfoNoInvi(UserIndex)
+            Case eGMCommands.ChangeZonaNoInvi     '/MODZona INVISINEFECTO
+                Call HandleChangeZonaNoInvi(UserIndex)
         
-            Case eGMCommands.ChangeMapInfoNoResu     '/MODMAPINFO RESUSINEFECTO
-                Call HandleChangeMapInfoNoResu(UserIndex)
+            Case eGMCommands.ChangeZonaNoResu     '/MODZona RESUSINEFECTO
+                Call HandleChangeZonaNoResu(UserIndex)
         
-            Case eGMCommands.ChangeMapInfoLand       '/MODMAPINFO TERRENO
-                Call HandleChangeMapInfoLand(UserIndex)
+            Case eGMCommands.ChangeZonaLand       '/MODZona TERRENO
+                Call HandleChangeZonaLand(UserIndex)
         
-            Case eGMCommands.ChangeMapInfoZone       '/MODMAPINFO ZONA
-                Call HandleChangeMapInfoZone(UserIndex)
+            Case eGMCommands.ChangeZonaZone       '/MODZona ZONA
+                Call HandleChangeZonaZone(UserIndex)
         
-            Case eGMCommands.ChangeMapInfoStealNpc   '/MODMAPINFO ROBONPC
-                Call HandleChangeMapInfoStealNpc(UserIndex)
+            Case eGMCommands.ChangeZonaStealNpc   '/MODZona ROBONPC
+                Call HandleChangeZonaStealNpc(UserIndex)
             
-            Case eGMCommands.ChangeMapInfoNoOcultar  '/MODMAPINFO OCULTARSINEFECTO
-                Call HandleChangeMapInfoNoOcultar(UserIndex)
+            Case eGMCommands.ChangeZonaNoOcultar  '/MODZona OCULTARSINEFECTO
+                Call HandleChangeZonaNoOcultar(UserIndex)
             
-            Case eGMCommands.ChangeMapInfoNoInvocar  '/MODMAPINFO INVOCARSINEFECTO
-                Call HandleChangeMapInfoNoInvocar(UserIndex)
+            Case eGMCommands.ChangeZonaNoInvocar  '/MODZona INVOCARSINEFECTO
+                Call HandleChangeZonaNoInvocar(UserIndex)
             
             Case eGMCommands.SaveChars               '/GRABAR
                 Call HandleSaveChars(UserIndex)
@@ -9455,7 +9455,7 @@ Private Sub HandleCreaturesInMap(ByVal UserIndex As Integer)
             For i = 1 To LastNPC
 
                 'VB isn't lazzy, so we put more restrictive condition first to speed up the process
-                If Npclist(i).Pos.Map = Map Then
+                If NPCZonaId(i) = UserZonaId(UserIndex) Then
 
                     'esta vivo?
                     If Npclist(i).flags.NPCActive And Npclist(i).Hostile = 1 And Npclist(i).Stats.Alineacion = 2 Then
@@ -9527,7 +9527,7 @@ Private Sub HandleCreaturesInMap(ByVal UserIndex As Integer)
 
             Next i
             
-            Call WriteConsoleMsg(UserIndex, "Npcs Hostiles en mapa: ", FontTypeNames.FONTTYPE_WARNING)
+            Call WriteConsoleMsg(UserIndex, "Npcs Hostiles en zona: ", FontTypeNames.FONTTYPE_WARNING)
 
             If NPCcount1 = 0 Then
                 Call WriteConsoleMsg(UserIndex, "No hay NPCS Hostiles.", FontTypeNames.FONTTYPE_INFO)
@@ -9539,7 +9539,7 @@ Private Sub HandleCreaturesInMap(ByVal UserIndex As Integer)
 
             End If
 
-            Call WriteConsoleMsg(UserIndex, "Otros Npcs en mapa: ", FontTypeNames.FONTTYPE_WARNING)
+            Call WriteConsoleMsg(UserIndex, "Otros Npcs en la Zona: ", FontTypeNames.FONTTYPE_WARNING)
 
             If NPCcount2 = 0 Then
                 Call WriteConsoleMsg(UserIndex, "No hay mas NPCS.", FontTypeNames.FONTTYPE_INFO)
@@ -9551,7 +9551,7 @@ Private Sub HandleCreaturesInMap(ByVal UserIndex As Integer)
 
             End If
 
-            Call LogGM(.Name, "Numero enemigos en mapa " & Map)
+            Call LogGM(.Name, "Numero enemigos en zona " & Map)
 
         End If
 
@@ -15559,7 +15559,7 @@ End Sub
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleChangeMapInfoBackup(ByVal UserIndex As Integer)
+Public Sub HandleChangeZonaBackup(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Lucas Tavolaro Ortiz (Tavo)
@@ -15603,11 +15603,11 @@ Public Sub HandleChangeMapInfoBackup(ByVal UserIndex As Integer)
 End Sub
 
 ''
-' Handle the "ChangeMapInfoPK" message
+' Handle the "ChangeZonaPK" message
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleChangeMapInfoPK(ByVal UserIndex As Integer)
+Public Sub HandleChangeZonaPK(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Lucas Tavolaro Ortiz (Tavo)
@@ -15645,11 +15645,11 @@ Public Sub HandleChangeMapInfoPK(ByVal UserIndex As Integer)
 End Sub
 
 ''
-' Handle the "ChangeMapInfoRestricted" message
+' Handle the "ChangeZonaRestricted" message
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleChangeMapInfoRestricted(ByVal UserIndex As Integer)
+Public Sub HandleChangeZonaRestricted(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Pablo (ToxicWaste)
@@ -15715,11 +15715,11 @@ errHandler:
 End Sub
 
 ''
-' Handle the "ChangeMapInfoNoMagic" message
+' Handle the "ChangeZonaNoMagic" message
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleChangeMapInfoNoMagic(ByVal UserIndex As Integer)
+Public Sub HandleChangeZonaNoMagic(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Pablo (ToxicWaste)
@@ -15753,11 +15753,11 @@ Public Sub HandleChangeMapInfoNoMagic(ByVal UserIndex As Integer)
 End Sub
 
 ''
-' Handle the "ChangeMapInfoNoInvi" message
+' Handle the "ChangeZonaNoInvi" message
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleChangeMapInfoNoInvi(ByVal UserIndex As Integer)
+Public Sub HandleChangeZonaNoInvi(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Pablo (ToxicWaste)
@@ -15791,11 +15791,11 @@ Public Sub HandleChangeMapInfoNoInvi(ByVal UserIndex As Integer)
 End Sub
             
 ''
-' Handle the "ChangeMapInfoNoResu" message
+' Handle the "ChangeZonaNoResu" message
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleChangeMapInfoNoResu(ByVal UserIndex As Integer)
+Public Sub HandleChangeZonaNoResu(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Pablo (ToxicWaste)
@@ -15829,11 +15829,11 @@ Public Sub HandleChangeMapInfoNoResu(ByVal UserIndex As Integer)
 End Sub
 
 ''
-' Handle the "ChangeMapInfoLand" message
+' Handle the "ChangeZonaLand" message
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleChangeMapInfoLand(ByVal UserIndex As Integer)
+Public Sub HandleChangeZonaLand(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Pablo (ToxicWaste)
@@ -15900,11 +15900,11 @@ errHandler:
 End Sub
 
 ''
-' Handle the "ChangeMapInfoZone" message
+' Handle the "ChangeZonaZone" message
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleChangeMapInfoZone(ByVal UserIndex As Integer)
+Public Sub HandleChangeZonaZone(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Pablo (ToxicWaste)
@@ -15969,11 +15969,11 @@ errHandler:
 End Sub
             
 ''
-' Handle the "ChangeMapInfoStealNp" message
+' Handle the "ChangeZonaStealNp" message
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleChangeMapInfoStealNpc(ByVal UserIndex As Integer)
+Public Sub HandleChangeZonaStealNpc(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: ZaMa
@@ -16009,11 +16009,11 @@ Public Sub HandleChangeMapInfoStealNpc(ByVal UserIndex As Integer)
 End Sub
             
 ''
-' Handle the "ChangeMapInfoNoOcultar" message
+' Handle the "ChangeZonaNoOcultar" message
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleChangeMapInfoNoOcultar(ByVal UserIndex As Integer)
+Public Sub HandleChangeZonaNoOcultar(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: ZaMa
@@ -16055,11 +16055,11 @@ Public Sub HandleChangeMapInfoNoOcultar(ByVal UserIndex As Integer)
 End Sub
            
 ''
-' Handle the "ChangeMapInfoNoInvocar" message
+' Handle the "ChangeZonaNoInvocar" message
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleChangeMapInfoNoInvocar(ByVal UserIndex As Integer)
+Public Sub HandleChangeZonaNoInvocar(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: ZaMa

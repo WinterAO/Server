@@ -1037,7 +1037,7 @@ Sub MoveUserChar(ByVal UserIndex As Integer, ByVal nHeading As eHeading)
             Exit Sub
         End If
             
-        'si no estoy solo en el mapa...
+        'si no estoy solo en la zona...
         If MapZonas(UserList(UserIndex).Pos.Map, UserZonaId(UserIndex)).NumUsers > 1 Then
                
             CasperIndex = MapData(UserList(UserIndex).Pos.Map, nPos.X, nPos.Y).UserIndex

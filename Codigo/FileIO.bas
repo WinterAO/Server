@@ -1353,6 +1353,8 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
     Dim i               As Long
     Dim j               As Long
     
+    Static ZonaMaxima   As Integer
+    
     fh = FreeFile
     
     Open MAPFl & ".csm" For Binary Access Read As fh
@@ -1364,7 +1366,12 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
         
         CantZonas(Map) = MH.NumeroData
         
-        ReDim Preserve MapZonas(NumMaps, CantZonas(Map)) As tMapInfo
+        'Lorwik> Explicación: Debemos darle una dimensión al Array de MapZonas, para optimizar y
+        'no poner un numero excesivo de zonas mediante una constante, vamos a establecer el numero de zonas
+        'según el mapa que mas zonas tenga.
+        If CantZonas(Map) > ZonaMaxima Then ZonaMaxima = CantZonas(Map)
+
+        ReDim Preserve MapZonas(NumMaps, ZonaMaxima) As tZonaInfo
         ReDim MapDat(CantZonas(Map)) As tMapDat
         
         Get #fh, , MapDat

@@ -1926,7 +1926,8 @@ On Error GoTo errHandler
     End If
 
     UserZonaId = MapData(UserList(UserIndex).Pos.Map, UserList(UserIndex).Pos.X, UserList(UserIndex).Pos.Y).ZonaIndex
-
+    Exit Function
+    
 errHandler:
     UserZonaId = 0
 End Function
@@ -1950,6 +1951,7 @@ On Error GoTo errHandler
     End If
 
     NPCZonaId = MapData(Npclist(NPCIndex).Pos.Map, Npclist(NPCIndex).Pos.X, Npclist(NPCIndex).Pos.Y).ZonaIndex
+    Exit Function
     
 errHandler:
     NPCZonaId = 0

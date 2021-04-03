@@ -1986,7 +1986,7 @@ Public Type MapBlock
 End Type
 
 'Info del mapa
-Type tMapInfo
+Type tZonaInfo
 
     NumUsers As Integer
     music As String
@@ -2133,7 +2133,7 @@ Public Npclist(1 To MAXNPCS)              As NPC 'NPCS
 
 Public MapData()                          As MapBlock
 
-Public MapZonas()                         As tMapInfo
+Public MapZonas()                         As tZonaInfo
 
 Public Hechizos()                         As tHechizo
 
@@ -2378,17 +2378,17 @@ Public Enum eGMCommands
     DoBackUp                '/DOBACKUP
     ShowGuildMessages       '/SHOWCMSG
     SaveMap                 '/GUARDAMAPA
-    ChangeMapInfoPK         '/MODMAPINFO PK
-    ChangeMapInfoBackup     '/MODMAPINFO BACKUP
-    ChangeMapInfoRestricted '/MODMAPINFO RESTRINGIR
-    ChangeMapInfoNoMagic    '/MODMAPINFO MAGIASINEFECTO
-    ChangeMapInfoNoInvi     '/MODMAPINFO INVISINEFECTO
-    ChangeMapInfoNoResu     '/MODMAPINFO RESUSINEFECTO
-    ChangeMapInfoLand       '/MODMAPINFO TERRENO
-    ChangeMapInfoZone       '/MODMAPINFO ZONA
-    ChangeMapInfoStealNpc   '/MODMAPINFO ROBONPC
-    ChangeMapInfoNoOcultar  '/MODMAPINFO OCULTARSINEFECTO
-    ChangeMapInfoNoInvocar  '/MODMAPINFO INVOCARSINEFECTO
+    ChangeZonaPK            '/MODZona PK
+    ChangeZonaBackup        '/MODZona BACKUP
+    ChangeZonaRestricted    '/MODZona RESTRINGIR
+    ChangeZonaNoMagic       '/MODZona MAGIASINEFECTO
+    ChangeZonaNoInvi        '/MODZona INVISINEFECTO
+    ChangeZonaNoResu        '/MODZona RESUSINEFECTO
+    ChangeZonaLand          '/MODZona TERRENO
+    ChangeZonaZone          '/MODZona ZONA
+    ChangeZonaStealNpc      '/MODZona ROBONPC
+    ChangeZonaNoOcultar     '/MODZona OCULTARSINEFECTO
+    ChangeZonaNoInvocar     '/MODZona INVOCARSINEFECTO
     SaveChars               '/GRABAR
     CleanSOS                '/BORRAR SOS
     ShowServerForm          '/SHOW INT
