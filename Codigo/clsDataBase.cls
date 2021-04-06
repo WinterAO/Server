@@ -19,8 +19,9 @@ Private Database_Name       As String
 Private Database_Username   As String
 Private Database_Password   As String
 
-Public Database_Connection As ADODB.Connection
-Public Database_RecordSet  As ADODB.Recordset
+Public Database_Connection  As ADODB.Connection
+Public Database_RecordSet   As ADODB.Recordset
+Public Database_Command     As ADODB.Command
 
 'CONSTRUCTOR
 Public Sub Inicialiar(ByVal Source As String, _
