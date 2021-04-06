@@ -544,17 +544,9 @@ Public Function SaveNewAccount(ByVal UserName As String, _
     'Si perdimos la conexion reconectamos
     If Account_Database.CheckSQLStatus = False Then Account_Database.Database_Reconnect
 
-    query = "INSERT INTO cuentas SET "
-    query = query & "username = '" & UserName & "', "
-    query = query & "email = '" & Email & "', "
-    query = query & "password = '" & Password & "', "
-    query = query & "salt = '" & Salt & "', "
-    query = query & "id_confirmacion = 'VERIFICADA', "
-    query = query & "status = '1', "
-    query = query & "date_created = NOW(), "
-    query = query & "date_last_login = NOW();"
+    query = "INSERT INTO cuentas SET username = (?), email = (?), password = (?), salt = (?), id_confirmacion = 'VERIFICADA', status = '1', date_created = NOW(), date_last_login = NOW();"
 
-    Account_Database.Database_Connection.Execute (query)
+    Call Account_Database.MakeQuery(query, True, UserName, Email, Password, Salt)
 
     SaveNewAccount = True
     

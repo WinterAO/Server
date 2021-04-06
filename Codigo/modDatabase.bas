@@ -293,9 +293,9 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
         '*******************************************************************
         'Amigos
         '*******************************************************************
-        query = "INSERT INTO amigos (user_id) VALUES (" & .ID & ");"
+        query = "INSERT INTO amigos (user_id) VALUES (?)"
 
-        Call User_Database.Database_Connection.Execute(query)
+        Call User_Database.MakeQuery(query, True, .ID)
         
     End With
     
@@ -1073,8 +1073,6 @@ Public Sub UnBanDatabase(ByVal UserName As String)
     'Last Modification: 10/10/2018
     '***************************************************
     On Error GoTo ErrorHandler
-
-    Dim query As String
     
     #If DBConexionUnica = 0 Then
         Call Database_Connect
@@ -1083,9 +1081,7 @@ Public Sub UnBanDatabase(ByVal UserName As String)
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "UPDATE personaje SET is_ban = FALSE WHERE UPPER(name) = '" & UCase$(UserName) & "';"
-
-    User_Database.Database_Connection.Execute (query)
+    Call User_Database.MakeQuery("UPDATE personaje SET is_ban = FALSE WHERE UPPER(name) = (?)", True, UCase$(UserName))
 
     #If DBConexionUnica = 0 Then
         Call User_Database.Database_Close
@@ -1147,8 +1143,6 @@ Public Sub CopyUserDatabase(ByVal UserName As String, ByVal newName As String)
     '***************************************************
     On Error GoTo ErrorHandler
 
-    Dim query As String
-
     #If DBConexionUnica = 0 Then
         Call User_Database.Database_Connect
     #Else
@@ -1156,9 +1150,7 @@ Public Sub CopyUserDatabase(ByVal UserName As String, ByVal newName As String)
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "UPDATE personaje SET name = '" & UCase$(newName) & "' WHERE UPPER(name) = '" & UCase$(UserName) & "';"
-
-    User_Database.Database_Connection.Execute (query)
+    Call User_Database.MakeQuery("UPDATE personaje SET name = (?) WHERE UPPER(name) = (?)", True, newName, UCase$(UserName))
 
     #If DBConexionUnica = 0 Then
         Call User_Database.Database_Close
@@ -1180,8 +1172,6 @@ Public Sub MarcarPjComoQueYaVotoDatabase(ByVal UserIndex As Integer, _
     '***************************************************
     On Error GoTo ErrorHandler
 
-    Dim query As String
-
     #If DBConexionUnica = 0 Then
         Call User_Database.Database_Connect
     #Else
@@ -1189,9 +1179,7 @@ Public Sub MarcarPjComoQueYaVotoDatabase(ByVal UserIndex As Integer, _
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "UPDATE personaje SET votes_amount = " & NumeroEncuesta & " WHERE id = " & UserList(UserIndex).ID & ";"
-
-    User_Database.Database_Connection.Execute (query)
+    Call User_Database.MakeQuery("UPDATE personaje SET votes_amount = (?) WHERE id = (?)", True, NumeroEncuesta, UserList(UserIndex).ID)
     
     #If DBConexionUnica = 0 Then
         Call User_Database.Database_Close
@@ -1268,16 +1256,11 @@ Public Sub SaveBan(ByVal UserName As String, _
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "UPDATE personaje SET is_ban = TRUE WHERE UPPER(name) = '" & UCase$(UserName) & "';"
+    Call User_Database.MakeQuery("UPDATE personaje SET is_ban = TRUE WHERE UPPER(name) = (?)", True, UCase$(UserName))
 
-    User_Database.Database_Connection.Execute (query)
+    query = "INSERT INTO punishment SET user_id = (SELECT id FROM personaje WHERE UPPER(name) = (?)), number = (?), reason = (?)"
 
-    query = "INSERT INTO punishment SET "
-    query = query & "user_id = (SELECT id FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "'), "
-    query = query & "number = " & (cantPenas + 1) & ", "
-    query = query & "reason = '" & BannedBy & ": BAN POR " & LCase$(Reason) & " " & Date & " " & time & "';"
-
-    User_Database.Database_Connection.Execute (query)
+    Call User_Database.MakeQuery(query, True, UCase$(UserName), (cantPenas + 1), BannedBy & ": BAN POR " & LCase$(Reason) & " " & Date & " " & time)
 
     #If DBConexionUnica = 0 Then
         Call User_Database.Database_Close
@@ -1436,12 +1419,9 @@ Public Sub SaveUserPunishment(ByVal UserName As String, _
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "INSERT INTO punishment SET "
-    query = query & "user_id = (SELECT id FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "'), "
-    query = query & "number = " & Number & ", "
-    query = query & "reason = '" & Reason & "';"
+    query = "INSERT INTO punishment SET user_id = (SELECT id FROM personaje WHERE UPPER(name) = (?)), number = (?), reason = (?)"
 
-    User_Database.Database_Connection.Execute (query)
+    Call User_Database.MakeQuery(query, True, UCase$(UserName), Number, Reason)
 
     #If DBConexionUnica = 0 Then
         Call User_Database.Database_Close
@@ -1472,11 +1452,9 @@ Public Sub AlterUserPunishment(ByVal UserName As String, _
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "UPDATE punishment SET "
-    query = query & "reason = '" & Reason & "' "
-    query = query & "WHERE number = " & Number & " AND user_id = (SELECT id FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "');"
+    query = "UPDATE punishment SET reason = (?) WHERE number = (?) AND user_id = (SELECT id FROM personaje WHERE UPPER(name) = (?)"
 
-    User_Database.Database_Connection.Execute (query)
+    Call User_Database.MakeQuery(query, True, Reason, Number, UCase$(UserName))
 
     #If DBConexionUnica = 0 Then
         Call User_Database.Database_Close
@@ -1505,25 +1483,12 @@ Public Sub ResetUserFacciones(ByVal UserName As String)
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "UPDATE personaje SET "
-    query = query & "pertenece_real = FALSE, "
-    query = query & "pertenece_caos = FALSE, "
-    query = query & "ciudadanos_matados = 0, "
-    query = query & "criminales_matados = FALSE, "
-    query = query & "recibio_armadura_real = FALSE, "
-    query = query & "recibio_armadura_caos = FALSE, "
-    query = query & "recibio_exp_real = FALSE, "
-    query = query & "recibio_exp_caos = FALSE, "
-    query = query & "recompensas_real = 0, "
-    query = query & "recompensas_caos = 0, "
-    query = query & "reenlistadas = 0, "
-    query = query & "fecha_ingreso = NULL, "
-    query = query & "nivel_ingreso = NULL, "
-    query = query & "matados_ingreso = NULL, "
-    query = query & "siguiente_recompensa = NULL "
-    query = query & "WHERE UPPER(name) = '" & UCase$(UserName) & "';"
+    query = "UPDATE personaje SET pertenece_real = FALSE, pertenece_caos = FALSE, ciudadanos_matados = 0, criminales_matados = FALSE, "
+    query = query & "recibio_armadura_real = FALSE, recibio_armadura_caos = FALSE, recibio_exp_real = FALSE, recibio_exp_caos = FALSE, "
+    query = query & "recompensas_real = 0, recompensas_caos = 0, reenlistadas = 0, fecha_ingreso = NULL, nivel_ingreso = NULL, "
+    query = query & "matados_ingreso = NULL, siguiente_recompensa = NULL WHERE UPPER(name) = (?)"
 
-    User_Database.Database_Connection.Execute (query)
+    Call User_Database.MakeQuery(query, True, UCase$(UserName))
 
     #If DBConexionUnica = 0 Then
         Call User_Database.Database_Close
@@ -1552,12 +1517,9 @@ Public Sub KickUserCouncils(ByVal UserName As String)
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "UPDATE personaje SET "
-    query = query & "pertenece_consejo_real = FALSE, "
-    query = query & "pertenece_consejo_caos = FALSE "
-    query = query & "WHERE UPPER(name) = '" & UCase$(UserName) & "';"
+    query = "UPDATE personaje SET pertenece_consejo_real = FALSE, pertenece_consejo_caos = FALSE WHERE UPPER(name) = (?)"
 
-    User_Database.Database_Connection.Execute (query)
+    Call User_Database.MakeQuery(query, True, UCase$(UserName))
 
     #If DBConexionUnica = 0 Then
         Call User_Database.Database_Close
@@ -1586,12 +1548,9 @@ Public Sub KickUserFacciones(ByVal UserName As String)
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "UPDATE personaje SET "
-    query = query & "pertenece_real = FALSE, "
-    query = query & "pertenece_caos = FALSE "
-    query = query & "WHERE UPPER(name) = '" & UCase$(UserName) & "';"
+    query = "UPDATE personaje SET pertenece_real = FALSE, pertenece_caos = FALSE WHERE UPPER(name) = (?)"
 
-    User_Database.Database_Connection.Execute (query)
+    Call User_Database.MakeQuery(query, True, UCase$(UserName))
     
     #If DBConexionUnica = 0 Then
         Call User_Database.Database_Close
@@ -1620,12 +1579,9 @@ Public Sub KickUserChaosLegion(ByVal UserName As String)
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "UPDATE personaje SET "
-    query = query & "pertenece_caos = FALSE, "
-    query = query & "reenlistadas = 200 "
-    query = query & "WHERE UPPER(name) = '" & UCase$(UserName) & "';"
+    query = "UPDATE personaje SET pertenece_caos = FALSE, reenlistadas = 200 WHERE UPPER(name) = (?)"
 
-    User_Database.Database_Connection.Execute (query)
+    Call User_Database.MakeQuery(query, True, UCase$(UserName))
 
     #If DBConexionUnica = 0 Then
         Call User_Database.Database_Close
@@ -1654,12 +1610,9 @@ Public Sub KickUserRoyalArmy(ByVal UserName As String)
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "UPDATE personaje SET "
-    query = query & "pertenece_real = FALSE, "
-    query = query & "reenlistadas = 200 "
-    query = query & "WHERE UPPER(name) = '" & UCase$(UserName) & "';"
+    query = "UPDATE personaje SET pertenece_real = FALSE, reenlistadas = 200 WHERE UPPER(name) = (?)"
 
-    User_Database.Database_Connection.Execute (query)
+    Call User_Database.MakeQuery(query, True, UCase$(UserName))
 
     #If DBConexionUnica = 0 Then
         Call User_Database.Database_Close
@@ -1688,11 +1641,9 @@ Public Sub UpdateUserLogged(ByVal UserName As String, ByVal Logged As Byte)
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "UPDATE personaje SET "
-    query = query & "is_logged = " & IIf(Logged = 1, "TRUE", "FALSE") & " "
-    query = query & "WHERE UPPER(name) = '" & UCase$(UserName) & "';"
+    query = "UPDATE personaje SET is_logged = " & IIf(Logged = 1, "TRUE", "FALSE") & " WHERE UPPER(name) = (?)"
 
-    User_Database.Database_Connection.Execute (query)
+    Call User_Database.MakeQuery(query, True, UCase$(UserName))
 
     #If DBConexionUnica = 0 Then
         Call User_Database.Database_Close
@@ -1721,9 +1672,9 @@ Public Function GetUserLastIps(ByVal UserName As String) As String
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "SELECT last_ip FROM cuentas WHERE id = (SELECT cuenta_id FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "');"
+    query = "SELECT last_ip FROM cuentas WHERE id = (SELECT cuenta_id FROM personaje WHERE UPPER(name) = (?)"
 
-    Set User_Database.Database_RecordSet = User_Database.Database_Connection.Execute(query)
+    Call User_Database.MakeQuery(query, True, UCase$(UserName))
 
     If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then
         GetUserLastIps = vbNullString
@@ -1849,11 +1800,9 @@ Public Sub SaveUserTrainingTime(ByVal UserName As String, _
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "UPDATE personaje SET "
-    query = query & "counter_training = " & trainingTime & " "
-    query = query & "WHERE UPPER(name) = '" & UCase$(UserName) & "';"
+    query = "UPDATE personaje SET counter_training = (?) WHERE UPPER(name) = (?)"
 
-    User_Database.Database_Connection.Execute (query)
+    Call User_Database.MakeQuery(query, True, trainingTime, UCase$(UserName))
 
     #If DBConexionUnica = 0 Then
         Call User_Database.Database_Close
@@ -2127,11 +2076,9 @@ Public Sub SaveUserReenlists(ByVal UserName As String, ByVal Reenlists As Byte)
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "UPDATE personaje SET "
-    query = query & "reenlistadas = " & Reenlists & " "
-    query = query & "WHERE UPPER(name) = '" & UCase$(UserName) & "';"
+    query = "UPDATE personaje SET reenlistadas = (?) WHERE UPPER(name) = (?)"
 
-    User_Database.Database_Connection.Execute (query)
+    Call User_Database.MakeQuery(query, True, Reenlists, UCase$(UserName))
 
     #If DBConexionUnica = 0 Then
         Call User_Database.Database_Close
@@ -2679,11 +2626,9 @@ Public Sub SaveUserGuildRejectionReasonDatabase(ByVal UserName As String, _
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "UPDATE personaje SET "
-    query = query & "guild_rejected_because = '" & Reason & "' "
-    query = query & "WHERE UPPER(name) = '" & UCase$(UserName) & "';"
+    query = "UPDATE personaje SET guild_rejected_because = (?) WHERE UPPER(name) = (?)"
 
-    User_Database.Database_Connection.Execute (query)
+    Call User_Database.MakeQuery(query, True, Reason, UCase$(UserName))
     
 #If DBConexionUnica = 0 Then
     Call User_Database.Database_Close
@@ -2713,11 +2658,9 @@ Public Sub SaveUserGuildIndexDatabase(ByVal UserName As String, _
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "UPDATE personaje SET "
-    query = query & "guild_index = " & GuildIndex & " "
-    query = query & "WHERE UPPER(name) = '" & UCase$(UserName) & "';"
+    query = "UPDATE personaje SET guild_index = (?) WHERE UPPER(name) = (?)"
 
-    User_Database.Database_Connection.Execute (query)
+    Call User_Database.MakeQuery(query, True, GuildIndex, UCase$(UserName))
     
 #If DBConexionUnica = 0 Then
     Call User_Database.Database_Close
@@ -2747,11 +2690,9 @@ Public Sub SaveUserGuildAspirantDatabase(ByVal UserName As String, _
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "UPDATE personaje SET "
-    query = query & "guild_aspirant_index = " & AspirantIndex & " "
-    query = query & "WHERE UPPER(name) = '" & UCase$(UserName) & "';"
+    query = "UPDATE personaje SET guild_aspirant_index = (?) WHERE UPPER(name) = (?)"
 
-    User_Database.Database_Connection.Execute (query)
+    Call User_Database.MakeQuery(query, True, AspirantIndex, UCase$(UserName))
 
 #If DBConexionUnica = 0 Then
     Call User_Database.Database_Close
@@ -2780,11 +2721,9 @@ Public Sub SaveUserGuildMemberDatabase(ByVal UserName As String, ByVal guilds As
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "UPDATE personaje SET "
-    query = query & "guild_member_history = '" & guilds & "' "
-    query = query & "WHERE UPPER(name) = '" & UCase$(UserName) & "';"
+    query = "UPDATE personaje SET guild_member_history = (?) WHERE UPPER(name) = (?)"
 
-    User_Database.Database_Connection.Execute (query)
+    Call User_Database.MakeQuery(query, True, guilds, UCase$(UserName))
 
     #If DBConexionUnica = 0 Then
         Call User_Database.Database_Close
@@ -2813,11 +2752,9 @@ Public Sub SaveUserGuildPedidosDatabase(ByVal UserName As String, ByVal Pedidos 
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "UPDATE personaje SET "
-    query = query & "guild_requests_history = '" & Pedidos & "' "
-    query = query & "WHERE UPPER(name) = '" & UCase$(UserName) & "';"
+    query = "UPDATE personaje SET guild_requests_history = (?) WHERE UPPER(name) = (?)"
 
-    User_Database.Database_Connection.Execute (query)
+    Call User_Database.MakeQuery(query, True, Pedidos, UCase$(UserName))
 
     #If DBConexionUnica = 0 Then
         Call User_Database.Database_Close
@@ -2846,12 +2783,9 @@ Public Sub SaveAccountLastLoginDatabase(ByVal UserName As String, ByVal UserIP A
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "UPDATE cuentas SET "
-    query = query & "date_last_login = NOW(), "
-    query = query & "last_ip = '" & UserIP & "' "
-    query = query & "WHERE UPPER(username) = '" & UCase$(UserName) & "';"
+    query = "UPDATE cuentas SET date_last_login = NOW(), last_ip = (?) WHERE UPPER(username) = (?)"
 
-    User_Database.Database_Connection.Execute (query)
+    Call User_Database.MakeQuery(query, True, UserIP, UCase$(UserName))
 
     #If DBConexionUnica = 0 Then
         Call User_Database.Database_Close
