@@ -371,19 +371,7 @@ Public Sub BorrarUsuarioDatabase(ByVal UserName As String)
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    Set User_Database.Database_Command = New ADODB.Command
-
-    With User_Database.Database_Command
-        .ActiveConnection = User_Database.Database_Connection
-        .CommandType = adCmdText
-        .CommandText = "UPDATE personaje SET name = (?), deleted = TRUE WHERE UPPER(name) = (?)"
-        .Parameters.Append .CreateParameter(, adVarChar, adParamInput, Len(UserName & "_deleted"), UCase$(UserName) & "_deleted")
-        .Parameters.Append .CreateParameter(, adVarChar, adParamInput, Len(UserName), UCase$(UserName))
-        Set User_Database.Database_RecordSet = .Execute
-    End With
-    
-    Set User_Database.Database_RecordSet = Nothing
-    Set User_Database.Database_Command = Nothing
+    Call User_Database.MakeQuery("UPDATE personaje SET name = (?), deleted = TRUE WHERE UPPER(name) = (?)", True, UCase$(UserName) & "_deleted", UCase$(UserName))
     
     #If DBConexionUnica = 0 Then
         Call User_Database.Database_Close
@@ -600,17 +588,7 @@ Public Function SaveAccountEditGemasDatabase(ByVal UserName As String, ByVal Gem
     '¿Obtuvimos una ID nula?
     If UserAccId <> -1 Then
     
-        Set Account_Database.Database_Command = New ADODB.Command
-    
-        With Account_Database.Database_Command
-            .ActiveConnection = Account_Database.Database_Connection
-            .CommandType = adCmdText
-            .CommandText = "UPDATE cuentas SET gemas = (?) WHERE id = " & UserAccId
-            .Parameters.Append .CreateParameter(, adInteger, adParamInput, 12, Gemas)
-            Set Account_Database.Database_RecordSet = .Execute
-        End With
-    
-        Set Account_Database.Database_Command = Nothing
+        Call Account_Database.MakeQuery("UPDATE cuentas SET gemas = (?) WHERE id = " & UserAccId, True, Gemas)
         
         SaveAccountEditGemasDatabase = True
         
@@ -653,17 +631,7 @@ Public Function SaveAccountSumaGemasDatabase(ByVal UserName As String, ByVal Gem
     '¿Obtuvimos una ID nula?
     If UserAccId <> -1 Then
     
-        Set Account_Database.Database_Command = New ADODB.Command
-    
-        With Account_Database.Database_Command
-            .ActiveConnection = Account_Database.Database_Connection
-            .CommandType = adCmdText
-            .CommandText = "UPDATE cuentas SET gemas = gemas + (?) WHERE id = " & UserAccId
-            .Parameters.Append .CreateParameter(, adInteger, adParamInput, 12, Gemas)
-            Set Account_Database.Database_RecordSet = .Execute
-        End With
-    
-        Set Account_Database.Database_Command = Nothing
+        Call Account_Database.MakeQuery("UPDATE cuentas SET gemas = gemas + (?) WHERE id = " & UserAccId, True, Gemas)
         
         SaveAccountSumaGemasDatabase = True
         
@@ -706,17 +674,7 @@ Public Function SaveAccountRestaGemasDatabase(ByVal UserName As String, ByVal Ge
     '¿Obtuvimos una ID nula?
     If UserAccId <> -1 Then
     
-        Set Account_Database.Database_Command = New ADODB.Command
-    
-        With Account_Database.Database_Command
-            .ActiveConnection = Account_Database.Database_Connection
-            .CommandType = adCmdText
-            .CommandText = "UPDATE cuentas SET gemas = gemas - (?) WHERE id = " & UserAccId
-            .Parameters.Append .CreateParameter(, adInteger, adParamInput, 12, Gemas)
-            Set Account_Database.Database_RecordSet = .Execute
-        End With
-    
-        Set Account_Database.Database_Command = Nothing
+        Call Account_Database.MakeQuery("UPDATE cuentas SET gemas = gemas - (?) WHERE id = " & UserAccId, True, Gemas)
         
         SaveAccountRestaGemasDatabase = True
         

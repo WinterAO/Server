@@ -56,62 +56,31 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
     #End If
 
     'Basic user data
+
+    query = "INSERT INTO personaje SET name = (?), cuenta_id = (?), level = (?), exp = (?), elu = (?), genre_id = (?), race_id = (?), class_id = (?), "
+    query = query & "home_id = (?), description = (?), gold = (?), free_skillpoints = (?), assigned_skillpoints = (?), elo = (?), "
+    query = query & "pos_map = (?), pos_x = (?), pos_y = (?), body_id = (?), head_id = (?), weapon_id = (?), helmet_id = (?), shield_id = (?), "
+    query = query & "items_amount = (?), slot_armour = (?), slot_weapon = (?), min_hp = (?), max_hp = (?), min_man = (?), max_man = (?), "
+    query = query & "min_sta = (?), max_sta = (?), min_ham = (?), max_ham = (?), min_sed = (?), max_sed = (?), min_hit = (?), max_hit = (?), "
+    query = query & "rep_noble = (?), rep_plebe = (?), rep_average = (?), profesionA = (?), ProfesionB = (?)"
+
     With UserList(UserIndex)
-        query = "INSERT INTO personaje SET "
-        query = query & "name = '" & .Name & "', "
-        query = query & "cuenta_id = " & .AccountInfo.ID & ", "
-        query = query & "level = " & .Stats.ELV & ", "
-        query = query & "exp = " & .Stats.Exp & ", "
-        query = query & "elu = " & .Stats.ELU & ", "
-        query = query & "genre_id = " & .Genero & ", "
-        query = query & "race_id = " & .Raza & ", "
-        query = query & "class_id = " & .clase & ", "
-        query = query & "home_id = " & .Hogar & ", "
-        query = query & "description = '" & .Desc & "', "
-        query = query & "gold = " & .Stats.Gld & ", "
-        query = query & "free_skillpoints = " & .Stats.SkillPts & ", "
-        query = query & "assigned_skillpoints = " & .Counters.AsignedSkills & ", "
-        query = query & "elo = " & .Stats.ELO & ", "
-        query = query & "pos_map = " & .Pos.Map & ", "
-        query = query & "pos_x = " & .Pos.X & ", "
-        query = query & "pos_y = " & .Pos.Y & ", "
-        query = query & "body_id = " & .Char.body & ", "
-        query = query & "head_id = " & .Char.Head & ", "
-        query = query & "weapon_id = " & .Char.WeaponAnim & ", "
-        query = query & "helmet_id = " & .Char.CascoAnim & ", "
-        query = query & "shield_id = " & .Char.ShieldAnim & ", "
-        query = query & "items_amount = " & .Invent.NroItems & ", "
-        query = query & "slot_armour = " & .Invent.ArmourEqpSlot & ", "
-        query = query & "slot_weapon = " & .Invent.WeaponEqpSlot & ", "
-        query = query & "min_hp = " & .Stats.MinHp & ", "
-        query = query & "max_hp = " & .Stats.MaxHp & ", "
-        query = query & "min_man = " & .Stats.MinMAN & ", "
-        query = query & "max_man = " & .Stats.MaxMAN & ", "
-        query = query & "min_sta = " & .Stats.MinSta & ", "
-        query = query & "max_sta = " & .Stats.MaxSta & ", "
-        query = query & "min_ham = " & .Stats.MinHam & ", "
-        query = query & "max_ham = " & .Stats.MaxHam & ", "
-        query = query & "min_sed = " & .Stats.MinAGU & ", "
-        query = query & "max_sed = " & .Stats.MaxAGU & ", "
-        query = query & "min_hit = " & .Stats.MinHIT & ", "
-        query = query & "max_hit = " & .Stats.MaxHIT & ", "
-        query = query & "rep_noble = " & .Reputacion.NobleRep & ", "
-        query = query & "rep_plebe = " & .Reputacion.PlebeRep & ", "
-        query = query & "rep_average = " & .Reputacion.Promedio & ","
-        query = query & "profesionA = " & .Profesion(0).Profesion & ","
-        query = query & "ProfesionB = " & .Profesion(1).Profesion & ";"
 
-        'Insert the user
-        Call User_Database.Database_Connection.Execute(query)
-
-        'Get the user ID
+        Call User_Database.MakeQuery(query, True, .Name, .AccountInfo.ID, .Stats.ELV, .Stats.Exp, .Stats.ELU, .Genero, .Raza, .clase, .Hogar, .Desc, .Stats.Gld, .Stats.SkillPts, .Counters.AsignedSkills, _
+                                    .Stats.ELO, .Pos.Map, .Pos.X, .Pos.Y, .Char.body, .Char.Head, .Char.WeaponAnim, .Char.CascoAnim, .Char.ShieldAnim, .Invent.NroItems, .Invent.ArmourEqpSlot, _
+                                    .Invent.WeaponEqpSlot, .Stats.MinHp, .Stats.MaxHp, .Stats.MinMAN, .Stats.MaxMAN, .Stats.MinSta, .Stats.MaxSta, .Stats.MinHam, .Stats.MaxHam, _
+                                    .Stats.MinAGU, .Stats.MaxAGU, .Stats.MinHIT, .Stats.MaxHIT, .Reputacion.NobleRep, .Reputacion.PlebeRep, .Reputacion.Promedio, _
+                                    .Profesion(0).Profesion, .Profesion(1).Profesion)
+        
+        
+        'Obtenemos el ID del usuario
         Set User_Database.Database_RecordSet = User_Database.Database_Connection.Execute("SELECT LAST_INSERT_ID();")
-
+    
         If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then
             UserID = 1
-
+            
         End If
-
+    
         UserID = val(User_Database.Database_RecordSet.Fields(0).Value)
         Set User_Database.Database_RecordSet = Nothing
 
@@ -365,101 +334,30 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
     #End If
 
     'Basic user data
+        query = "UPDATE personaje SET name = (?), level = (?), exp = (?), elu = (?), genre_id = (?), race_id = (?), class_id = (?), home_id = (?), description = (?), "
+        query = query & "gold = (?), bank_gold = (?), free_skillpoints = (?), assigned_skillpoints = (?), elo = (?), pet_amount = (?), pos_map = (?), pos_x = (?), pos_y = (?), last_map = (?), "
+        query = query & "body_id = (?), head_id = (?), weapon_id = (?), helmet_id = (?), shield_id = (?), aura_id = (?), aura_color = (?), heading = (?), items_amount = (?), "
+        query = query & "slot_armour = (?), slot_weapon = (?), slot_helmet = (?), slot_shield = (?), slot_ammo = (?), slot_ship = (?), slot_ring = (?), slot_bag = (?), "
+        query = query & "min_hp = (?), max_hp = (?), min_man = (?), max_man = (?), min_sta = (?), max_sta = (?), min_ham = (?), max_ham = (?), min_sed = (?), max_sed = (?), min_hit = (?), max_hit = (?), "
+        query = query & "killed_npcs = (?), killed_users = (?), rep_asesino = (?), rep_bandido = (?), rep_burgues = (?), rep_ladron = (?), rep_noble = (?), rep_plebe = (?), rep_average = (?), "
+        query = query & "is_naked = (?), is_poisoned = (?), is_incinerado = (?), is_hidden = (?), is_hungry = (?), is_thirsty = (?), is_ban = (?), is_dead = (?), is_sailing = (?), is_paralyzed = (?), "
+        query = query & "counter_pena = (?), pertenece_consejo_real = (?), pertenece_consejo_caos = (?), pertenece_real = (?), pertenece_caos = (?), ciudadanos_matados = (?), criminales_matados = (?), "
+        query = query & "recibio_armadura_real = (?), recibio_armadura_caos = (?), recibio_exp_real = (?), recibio_exp_caos = (?), recompensas_real = (?), recompensas_caos = (?), "
+        query = query & "reenlistadas = (?), fecha_ingreso = (?), nivel_ingreso = (?), matados_ingreso = (?), siguiente_recompensa = (?), guild_index = (?), is_global = (?), profesionA = (?), profesionB = (?), "
+        query = query & "modocombate = (?), seguro = (?) WHERE id = (?)"
+
     With UserList(UserIndex)
-        query = "UPDATE personaje SET "
-        query = query & "name = '" & .Name & "', "
-        query = query & "level = " & .Stats.ELV & ", "
-        query = query & "exp = " & .Stats.Exp & ", "
-        query = query & "elu = " & .Stats.ELU & ", "
-        query = query & "genre_id = " & .Genero & ", "
-        query = query & "race_id = " & .Raza & ", "
-        query = query & "class_id = " & .clase & ", "
-        query = query & "home_id = " & .Hogar & ", "
-        query = query & "description = '" & .Desc & "', "
-        query = query & "gold = " & .Stats.Gld & ", "
-        query = query & "bank_gold = " & .Stats.Banco & ", "
-        query = query & "free_skillpoints = " & .Stats.SkillPts & ", "
-        query = query & "assigned_skillpoints = " & .Counters.AsignedSkills & ", "
-        query = query & "elo = " & .Stats.ELO & ", "
-        query = query & "pet_amount = " & .NroMascotas & ", "
-        query = query & "pos_map = " & .Pos.Map & ", "
-        query = query & "pos_x = " & .Pos.X & ", "
-        query = query & "pos_y = " & .Pos.Y & ", "
-        query = query & "last_map = " & .flags.lastMap & ", "
-        query = query & "body_id = " & .Char.body & ", "
-        query = query & "head_id = " & .OrigChar.Head & ", "
-        query = query & "weapon_id = " & .Char.WeaponAnim & ", "
-        query = query & "helmet_id = " & .Char.CascoAnim & ", "
-        query = query & "shield_id = " & .Char.ShieldAnim & ", "
-        query = query & "aura_id = " & .Char.AuraAnim & ", "
-        query = query & "aura_color = " & .Char.AuraColor & ", "
-        query = query & "heading = " & .Char.Heading & ", "
-        query = query & "items_amount = " & .Invent.NroItems & ", "
-        query = query & "slot_armour = " & .Invent.ArmourEqpSlot & ", "
-        query = query & "slot_weapon = " & .Invent.WeaponEqpSlot & ", "
-        query = query & "slot_helmet = " & .Invent.CascoEqpSlot & ", "
-        query = query & "slot_shield = " & .Invent.EscudoEqpSlot & ", "
-        query = query & "slot_ammo = " & .Invent.MunicionEqpSlot & ", "
-        query = query & "slot_ship = " & .Invent.BarcoSlot & ", "
-        query = query & "slot_ring = " & .Invent.AnilloEqpSlot & ", "
-        query = query & "slot_bag = " & .Invent.MochilaEqpSlot & ", "
-        query = query & "min_hp = " & .Stats.MinHp & ", "
-        query = query & "max_hp = " & .Stats.MaxHp & ", "
-        query = query & "min_man = " & .Stats.MinMAN & ", "
-        query = query & "max_man = " & .Stats.MaxMAN & ", "
-        query = query & "min_sta = " & .Stats.MinSta & ", "
-        query = query & "max_sta = " & .Stats.MaxSta & ", "
-        query = query & "min_ham = " & .Stats.MinHam & ", "
-        query = query & "max_ham = " & .Stats.MaxHam & ", "
-        query = query & "min_sed = " & .Stats.MinAGU & ", "
-        query = query & "max_sed = " & .Stats.MaxAGU & ", "
-        query = query & "min_hit = " & .Stats.MinHIT & ", "
-        query = query & "max_hit = " & .Stats.MaxHIT & ", "
-        query = query & "killed_npcs = " & .Stats.NPCsMuertos & ", "
-        query = query & "killed_users = " & .Stats.UsuariosMatados & ", "
-        query = query & "rep_asesino = " & .Reputacion.AsesinoRep & ", "
-        query = query & "rep_bandido = " & .Reputacion.BandidoRep & ", "
-        query = query & "rep_burgues = " & .Reputacion.BurguesRep & ", "
-        query = query & "rep_ladron = " & .Reputacion.LadronesRep & ", "
-        query = query & "rep_noble = " & .Reputacion.NobleRep & ", "
-        query = query & "rep_plebe = " & .Reputacion.PlebeRep & ", "
-        query = query & "rep_average = " & .Reputacion.Promedio & ", "
-        query = query & "is_naked = " & .flags.Desnudo & ", "
-        query = query & "is_poisoned = " & .flags.Envenenado & ", "
-        query = query & "is_incinerado = " & .flags.Incinerado & ", "
-        query = query & "is_hidden = " & .flags.Escondido & ", "
-        query = query & "is_hungry = " & .flags.Hambre & ", "
-        query = query & "is_thirsty = " & .flags.Sed & ", "
-        query = query & "is_ban = " & .flags.Ban & ", "
-        query = query & "is_dead = " & .flags.Muerto & ", "
-        query = query & "is_sailing = " & .flags.Navegando & ", "
-        query = query & "is_paralyzed = " & .flags.Paralizado & ", "
-        query = query & "counter_pena = " & .Counters.Pena & ", "
-        query = query & "pertenece_consejo_real = " & (.flags.Privilegios And PlayerType.RoyalCouncil) & ", "
-        query = query & "pertenece_consejo_caos = " & (.flags.Privilegios And PlayerType.ChaosCouncil) & ", "
-        query = query & "pertenece_real = " & .Faccion.ArmadaReal & ", "
-        query = query & "pertenece_caos = " & .Faccion.FuerzasCaos & ", "
-        query = query & "ciudadanos_matados = " & .Faccion.CiudadanosMatados & ", "
-        query = query & "criminales_matados = " & .Faccion.CriminalesMatados & ", "
-        query = query & "recibio_armadura_real = " & .Faccion.RecibioArmaduraReal & ", "
-        query = query & "recibio_armadura_caos = " & .Faccion.RecibioArmaduraCaos & ", "
-        query = query & "recibio_exp_real = " & .Faccion.RecibioExpInicialReal & ", "
-        query = query & "recibio_exp_caos = " & .Faccion.RecibioExpInicialCaos & ", "
-        query = query & "recompensas_real = " & .Faccion.RecompensasReal & ", "
-        query = query & "recompensas_caos = " & .Faccion.RecompensasCaos & ", "
-        query = query & "reenlistadas = " & .Faccion.Reenlistadas & ", "
-        query = query & "fecha_ingreso = " & IIf(.Faccion.FechaIngreso <> vbNullString, "'" & .Faccion.FechaIngreso & "'", "NULL") & ", "
-        query = query & "nivel_ingreso = " & .Faccion.NivelIngreso & ", "
-        query = query & "matados_ingreso = " & .Faccion.MatadosIngreso & ", "
-        query = query & "siguiente_recompensa = " & .Faccion.NextRecompensa & ", "
-        query = query & "guild_index = " & .GuildIndex & ", "
-        query = query & "is_global = " & .flags.Global & ", "
-        query = query & "profesionA = " & .Profesion(0).Profesion & ", "
-        query = query & "profesionB = " & .Profesion(1).Profesion & ", "
-        query = query & "modocombate = " & IIf(.flags.ModoCombate = True, "1", "0") & ", "
-        query = query & "seguro = " & IIf(.flags.Seguro = True, "1", "0") & " "
-        query = query & "WHERE id = " & .ID & ";"
-        Call User_Database.Database_Connection.Execute(query)
+            Call User_Database.MakeQuery(query, True, .Name, .Stats.ELV, .Stats.Exp, .Stats.ELU, .Genero, .Raza, .clase, .Hogar, .Desc, .Stats.Gld, .Stats.Banco, .Stats.SkillPts, .Counters.AsignedSkills, .Stats.ELO, .NroMascotas, _
+                                        .Pos.Map, .Pos.X, .Pos.Y, .flags.lastMap, .Char.body, .Char.Head, .Char.WeaponAnim, .Char.CascoAnim, .Char.ShieldAnim, .Char.AuraAnim, .Char.AuraColor, .Char.Heading, .Invent.NroItems, _
+                                        .Invent.ArmourEqpSlot, .Invent.WeaponEqpSlot, .Invent.CascoEqpSlot, .Invent.EscudoEqpSlot, .Invent.MunicionEqpSlot, .Invent.BarcoSlot, .Invent.AnilloEqpSlot, .Invent.MochilaEqpSlot, _
+                                        .Stats.MinHp, .Stats.MaxHp, .Stats.MinMAN, .Stats.MaxMAN, .Stats.MinSta, .Stats.MaxSta, .Stats.MinHam, .Stats.MaxHam, .Stats.MinAGU, .Stats.MaxAGU, .Stats.MinHIT, .Stats.MaxHIT, _
+                                        .Stats.NPCsMuertos, .Stats.UsuariosMatados, .Reputacion.AsesinoRep, .Reputacion.BandidoRep, .Reputacion.BurguesRep, .Reputacion.LadronesRep, .Reputacion.NobleRep, .Reputacion.PlebeRep, _
+                                        .Reputacion.Promedio, .flags.Desnudo, .flags.Envenenado, .flags.Incinerado, .flags.Escondido, .flags.Hambre, .flags.Sed, .flags.Ban, .flags.Muerto, .flags.Navegando, .flags.Paralizado, _
+                                        .Counters.Pena, (.flags.Privilegios And PlayerType.RoyalCouncil), (.flags.Privilegios And PlayerType.ChaosCouncil), .Faccion.ArmadaReal, .Faccion.FuerzasCaos, .Faccion.CiudadanosMatados, _
+                                        .Faccion.CriminalesMatados, .Faccion.RecibioArmaduraReal, .Faccion.RecibioArmaduraCaos, .Faccion.RecibioExpInicialReal, .Faccion.RecibioExpInicialCaos, .Faccion.RecompensasReal, _
+                                        .Faccion.RecompensasCaos, .Faccion.Reenlistadas, .Faccion.FechaIngreso, .Faccion.NivelIngreso, .Faccion.MatadosIngreso, .Faccion.NextRecompensa, .GuildIndex, .flags.Global, .Profesion(0).Profesion, _
+                                        .Profesion(1).Profesion, IIf(.flags.ModoCombate = True, "1", "0"), IIf(.flags.Seguro = True, "1", "0"), .ID)
+                                        
 
         '*******************************************************************
         'Hechizos
@@ -792,8 +690,8 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
         .flags.Paralizado = User_Database.Database_RecordSet!is_paralyzed
         .Counters.Pena = User_Database.Database_RecordSet!counter_pena
         .flags.Global = User_Database.Database_RecordSet!is_global
-        .Profesion(0).Profesion = User_Database.Database_RecordSet!ProfesionA
-        .Profesion(1).Profesion = User_Database.Database_RecordSet!ProfesionB
+        .Profesion(0).Profesion = User_Database.Database_RecordSet!profesionA
+        .Profesion(1).Profesion = User_Database.Database_RecordSet!profesionB
         .flags.ModoCombate = User_Database.Database_RecordSet!ModoCombate
         .flags.Seguro = User_Database.Database_RecordSet!Seguro
         

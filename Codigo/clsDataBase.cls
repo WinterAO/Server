@@ -142,4 +142,57 @@ Public Function CheckSQLStatus() As Boolean
 
 End Function
 
+Public Function MakeQuery(query As String, ByVal NoResult As Boolean, ParamArray Query_Parameters() As Variant) As Boolean
+    ' 17/10/2020 Autor: Alexis Caraballo (WyroX)
+    ' Hace una unica query a la db. Asume una conexion.
+    ' Si NoResult = False, el metodo lee el resultado de la query
+    ' Guarda el resultado en QueryData
+    
+    On Error GoTo ErrorHandler
+    
+    Dim query_Params As Variant
+    Dim RecordsAffected As Long
+    
+    Set Database_Command = New ADODB.Command
 
+    If UBound(Query_Parameters) < 0 Then
+        query_Params = Null
+    Else
+        query_Params = Query_Parameters
+
+    End If
+
+    With Database_Command
+    
+        ' Clear old params
+        Dim i As Integer
+        For i = 0 To .Parameters.Count - 1
+            Call .Parameters.Delete(0)
+        Next
+        
+        .ActiveConnection = Database_Connection
+        .CommandText = query
+
+        If NoResult Then
+            Call .Execute(RecordsAffected, query_Params, adExecuteNoRecords)
+    
+        Else
+            Set Database_RecordSet = .Execute(RecordsAffected, query_Params)
+    
+            If Database_RecordSet.BOF Or Database_RecordSet.EOF Then
+                Set Database_RecordSet = Nothing
+            End If
+    
+        End If
+        
+    End With
+    
+    Set Database_Command = Nothing
+    
+    Exit Function
+    
+ErrorHandler:
+
+    MakeQuery = False
+
+End Function
