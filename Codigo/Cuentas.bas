@@ -19,12 +19,16 @@ Public Sub LoginAccountDatabase(ByVal UserIndex As Integer, ByVal UserName As St
     #End If
     
     With UserList(UserIndex)
-    
-    
-        query = "SELECT id, username, email, password, salt, gemas, status FROM cuentas "
-        query = query & "WHERE UPPER(username) = '" & UCase$(UserName) & "';"
         
-        Set Database_RecordSet = Database_Connection.Execute(query)
+        Set Database_Command = New ADODB.Command
+
+        With Database_Command
+            .ActiveConnection = Database_Connection
+            .CommandType = adCmdText
+            .CommandText = "SELECT id, username, email, password, salt, gemas, status FROM cuentas WHERE UPPER(username) = (?)"
+            .Parameters.Append .CreateParameter(, adVarChar, adParamInput, Len(UserName), UCase$(UserName))
+            Set Database_RecordSet = .Execute
+        End With
         
         If Database_RecordSet.BOF Or Database_RecordSet.EOF Then
             Call WriteErrorMsg(UserIndex, "Error al cargar la cuenta.")
@@ -43,12 +47,16 @@ Public Sub LoginAccountDatabase(ByVal UserIndex As Integer, ByVal UserName As St
         .AccountInfo.status = CBool(Database_RecordSet!status)
             
         Set Database_RecordSet = Nothing
+        'Reset
+        Set Database_Command = New ADODB.Command
         
-        'Now the characters
-        query = "SELECT id, name, level, body_id, head_id, weapon_id, shield_id, helmet_id, race_id, class_id, pos_map, rep_average, is_dead FROM personaje "
-        query = query & "WHERE cuenta_id = " & .AccountInfo.ID & " AND deleted = FALSE;"
-        
-        Set Database_RecordSet = Database_Connection.Execute(query)
+        With Database_Command
+            .ActiveConnection = Database_Connection
+            .CommandType = adCmdText
+            .CommandText = "SELECT id, name, level, body_id, head_id, weapon_id, shield_id, helmet_id, race_id, class_id, pos_map, rep_average, is_dead FROM personaje WHERE cuenta_id = (?) AND deleted = FALSE"
+            .Parameters.Append .CreateParameter(, adInteger, adParamInput, 8, UserList(UserIndex).AccountInfo.ID)
+            Set Database_RecordSet = .Execute
+        End With
         
         .AccountInfo.NumPjs = 0
     
@@ -155,16 +163,16 @@ Public Function CuentaExisteDatabase(ByVal UserName As String) As Boolean
         If CheckSQLStatus = False Then Database_Reconnect
     #End If
 
-    query = "SELECT id FROM cuentas WHERE UPPER(username) = '" & UCase$(UserName) & "';"
+    Set Database_Command = New ADODB.Command
 
-    Set Database_RecordSet = Database_Connection.Execute(query)
-
-    If Database_RecordSet.BOF Or Database_RecordSet.EOF Then
-        CuentaExisteDatabase = False
-        Exit Function
-
-    End If
-
+    With Database_Command
+        .ActiveConnection = Database_Connection
+        .CommandType = adCmdText
+        .CommandText = "SELECT id FROM cuentas WHERE UPPER(username) = (?)"
+        .Parameters.Append .CreateParameter(, adVarChar, adParamInput, Len(UserName), UCase$(UserName))
+        Set Database_RecordSet = .Execute
+    End With
+    
     CuentaExisteDatabase = (Database_RecordSet.RecordCount > 0)
     Set Database_RecordSet = Nothing
     

@@ -14,6 +14,7 @@ Public Database_Username   As String
 Public Database_Password   As String
 Public Database_Connection As ADODB.Connection
 Public Database_RecordSet  As ADODB.Recordset
+Public Database_Command As ADODB.Command
  
 Public Sub Database_Connect()
 
