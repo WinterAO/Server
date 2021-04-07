@@ -1146,11 +1146,11 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
             ' If map has different initial coords, update it
             Dim StartMap As Integer
 
-            StartMap = MapInfo(Mapa).StartPos.Map
+            StartMap = MapZonas(Mapa, UserZonaId(UserIndex)).StartPos.Map
 
             If StartMap <> 0 Then
                 If MapaValido(StartMap) Then
-                    .Pos = MapInfo(Mapa).StartPos
+                    .Pos = MapZonas(Mapa, UserZonaId(UserIndex)).StartPos
                     Mapa = StartMap
 
                 End If
@@ -1284,10 +1284,7 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
     
         'Info
         Call WriteUserIndexInServer(UserIndex) 'Enviamos el User index
-        Call WriteChangeMap(UserIndex, .Pos.Map, MapInfo(.Pos.Map).MapVersion) 'Carga el mapa
-
-        'Si tiene MP3 el mapa mandamos que lo reproduzca
-        Call WritePlayMusic(UserIndex, val(ReadField(1, MapInfo(.Pos.Map).music, 45)))
+        Call WriteChangeMap(UserIndex, .Pos.Map, MapZonas(.Pos.Map, UserZonaId(UserIndex)).MapVersion) 'Carga el mapa
         
         If .flags.Privilegios = PlayerType.Dios Then
             .flags.ChatColor = RGB(250, 250, 150)
@@ -1360,7 +1357,7 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
 
         End If
     
-        MapInfo(.Pos.Map).NumUsers = MapInfo(.Pos.Map).NumUsers + 1
+        MapZonas(.Pos.Map, UserZonaId(UserIndex)).NumUsers = MapZonas(.Pos.Map, UserZonaId(UserIndex)).NumUsers + 1
     
         If NumUsers > RecordUsuariosOnline Then
             Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Record de usuarios conectados simultaneamente. Hay " & NumUsers & " usuarios.", FontTypeNames.FONTTYPE_INFOBOLD))
@@ -1371,7 +1368,7 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
             frmMain.txtRecordOnline.Text = RecordUsuariosOnline
         End If
     
-        If .NroMascotas > 0 And MapInfo(.Pos.Map).Pk Then
+        If .NroMascotas > 0 And MapZonas(.Pos.Map, UserZonaId(UserIndex)).Pk Then
 
             Dim i As Integer
 
@@ -1474,6 +1471,13 @@ Sub SendMOTD(ByVal UserIndex As Integer)
     For j = 1 To MaxLines
         Call WriteGuildChat(UserIndex, MOTD(j).texto)
     Next j
+    
+    If NumFortalezas > 0 Then
+        Call WriteGuildChat(UserIndex, "Estado de las fortalezas:")
+        For j = 1 To NumFortalezas
+            Call WriteGuildChat(UserIndex, Fortaleza(j).NombreFortaleza & " " & Fortaleza(j).ClanConquistador)
+        Next j
+    End If
 
 End Sub
 
@@ -2049,12 +2053,12 @@ Sub CloseUser(ByVal UserIndex As Integer)
         Call UpdateUserLogged(.Name, 0)
         
         'Quitar el dialogo
-        'If MapInfo(Map).NumUsers > 0 Then
+        'If MapZonas(Map,UserZonaId(UserIndex)).NumUsers > 0 Then
         '    Call SendToUserArea(UserIndex, "QDL" & .Char.charindex)
         'End If
     
         If Map > 0 Then
-            If MapInfo(Map).NumUsers > 0 Then _
+            If MapZonas(Map, UserZonaId(UserIndex)).NumUsers > 0 Then _
                 Call SendData(SendTarget.ToPCAreaButIndex, UserIndex, PrepareMessageRemoveCharDialog(.Char.CharIndex))
 
         End If
@@ -2077,10 +2081,10 @@ Sub CloseUser(ByVal UserIndex As Integer)
     
         'Update Map Users
         If Map > 0 Then
-            MapInfo(Map).NumUsers = MapInfo(Map).NumUsers - 1
+            MapZonas(Map, UserZonaId(UserIndex)).NumUsers = MapZonas(Map, UserZonaId(UserIndex)).NumUsers - 1
     
-            If MapInfo(Map).NumUsers < 0 Then
-                MapInfo(Map).NumUsers = 0
+            If MapZonas(Map, UserZonaId(UserIndex)).NumUsers < 0 Then
+                MapZonas(Map, UserZonaId(UserIndex)).NumUsers = 0
             End If
             
         End If
@@ -2140,7 +2144,7 @@ Public Sub EnviarNoche(ByVal UserIndex As Integer)
     '
     '***************************************************
 
-    Call WriteSendNight(UserIndex, IIf(DeNoche And (MapInfo(UserList(UserIndex).Pos.Map).Zona = Campo Or MapInfo(UserList(UserIndex).Pos.Map).Zona = Ciudad), True, False))
+    Call WriteSendNight(UserIndex, IIf(DeNoche And (MapZonas(UserList(UserIndex).Pos.Map, UserZonaId(UserIndex)).Zona = Campo Or MapZonas(UserList(UserIndex).Pos.Map, UserZonaId(UserIndex)).Zona = Ciudad), True, False))
     Call WriteSendNight(UserIndex, IIf(DeNoche, True, False))
 
 End Sub

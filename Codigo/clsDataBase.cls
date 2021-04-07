@@ -181,6 +181,9 @@ Public Function MakeQuery(query As String, ByVal NoResult As Boolean, ParamArray
     
             If Database_RecordSet.BOF Or Database_RecordSet.EOF Then
                 Set Database_RecordSet = Nothing
+                Set Database_Command = Nothing
+                MakeQuery = False
+                Exit Function
             End If
     
         End If
@@ -188,7 +191,7 @@ Public Function MakeQuery(query As String, ByVal NoResult As Boolean, ParamArray
     End With
     
     Set Database_Command = Nothing
-    
+    MakeQuery = True
     Exit Function
     
 ErrorHandler:
@@ -196,3 +199,4 @@ ErrorHandler:
     MakeQuery = False
 
 End Function
+

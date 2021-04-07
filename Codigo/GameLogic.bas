@@ -80,7 +80,7 @@ Public Sub DoTileEvents(ByVal UserIndex As Integer, _
     'Handles the Map passage of Users. Allows the existance
     'of exclusive maps for Newbies, Royal Army and Caos Legion members
     'and enables GMs to enter every map without restriction.
-    'Uses: Mapinfo(map).Restringir = "NEWBIE" (newbies), "ARMADA", "CAOS", "FACCION" or "NO".
+    'Uses: MapZonas(map).Restringir = "NEWBIE" (newbies), "ARMADA", "CAOS", "FACCION" or "NO".
     ' 06/03/2010 : Now we have 5 attemps to not fall into a map change or another teleport while going into a teleport. (Marco)
     '***************************************************
 
@@ -107,9 +107,9 @@ Public Sub DoTileEvents(ByVal UserIndex As Integer, _
             
             If .TileExit.Map > 0 And .TileExit.Map <= NumMaps Then
             
-                If UserList(UserIndex).Stats.ELV < MapInfo(.TileExit.Map).lvlMinimo Then
+                If UserList(UserIndex).Stats.ELV < MapZonas(.TileExit.Map, UserZonaId(UserIndex)).lvlMinimo Then
                 
-                    Call WriteConsoleMsg(UserIndex, "Percibes un gran peligro más allá donde vas y no te atreves a continuar. Sientes que al nivel " & MapInfo(.TileExit.Map).lvlMinimo & " estarás preparado para afrontar el peligro.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "Percibes un gran peligro más allá donde vas y no te atreves a continuar. Sientes que al nivel " & MapZonas(.TileExit.Map, UserZonaId(UserIndex)).lvlMinimo & " estarás preparado para afrontar el peligro.", FontTypeNames.FONTTYPE_INFO)
                     Call ClosestStablePos(UserList(UserIndex).Pos, nPos)
             
                     If nPos.X <> 0 And nPos.Y <> 0 Then
@@ -121,8 +121,8 @@ Public Sub DoTileEvents(ByVal UserIndex As Integer, _
                 
                 If UserList(UserIndex).flags.Equitando Then
                     
-                    If ObjData(UserList(UserIndex).Invent.MonturaObjIndex).MontTipo = 1 And MapInfo(.TileExit.Map).Zona <> "DUNGEON" Or _
-                            ObjData(UserList(UserIndex).Invent.MonturaObjIndex).MontTipo <> 1 And MapInfo(.TileExit.Map).Zona = "DUNGEON" Then
+                    If ObjData(UserList(UserIndex).Invent.MonturaObjIndex).MontTipo = 1 And MapZonas(.TileExit.Map, UserZonaId(UserIndex)).Zona <> "DUNGEON" Or _
+                            ObjData(UserList(UserIndex).Invent.MonturaObjIndex).MontTipo <> 1 And MapZonas(.TileExit.Map, UserZonaId(UserIndex)).Zona = "DUNGEON" Then
                         
                         Call UnmountMontura(UserIndex)
                         Call WriteEquitandoToggle(UserIndex)
@@ -169,7 +169,7 @@ Public Sub DoTileEvents(ByVal UserIndex As Integer, _
                 End If
                 
                 ' Si es un mapa que no admite muertos
-                If MapInfo(DestPos.Map).OnDeathGoTo.Map <> 0 Then
+                If MapZonas(DestPos.Map, UserZonaId(UserIndex)).OnDeathGoTo.Map <> 0 Then
 
                     ' Si esta muerto no puede entrar
                     If UserList(UserIndex).flags.Muerto = 1 Then
@@ -188,7 +188,7 @@ Public Sub DoTileEvents(ByVal UserIndex As Integer, _
                 End If
                 
                 'Es mapa de newbies?
-                If MapInfo(DestPos.Map).Restringir = eRestrict.restrict_newbie Then
+                If MapZonas(DestPos.Map, UserZonaId(UserIndex)).Restringir = eRestrict.restrict_newbie Then
 
                     'El usuario es un newbie?
                     If EsNewbie(UserIndex) Or EsGm(UserIndex) Then
@@ -215,7 +215,7 @@ Public Sub DoTileEvents(ByVal UserIndex As Integer, _
 
                     End If
 
-                ElseIf MapInfo(DestPos.Map).Restringir = eRestrict.restrict_armada Then 'Es mapa de Armadas?
+                ElseIf MapZonas(DestPos.Map, UserZonaId(UserIndex)).Restringir = eRestrict.restrict_armada Then 'Es mapa de Armadas?
 
                     'El usuario es Armada?
                     If esArmada(UserIndex) Or EsGm(UserIndex) Then
@@ -242,7 +242,7 @@ Public Sub DoTileEvents(ByVal UserIndex As Integer, _
 
                     End If
 
-                ElseIf MapInfo(DestPos.Map).Restringir = eRestrict.restrict_caos Then 'Es mapa de Caos?
+                ElseIf MapZonas(DestPos.Map, UserZonaId(UserIndex)).Restringir = eRestrict.restrict_caos Then 'Es mapa de Caos?
 
                     'El usuario es Caos?
                     If esCaos(UserIndex) Or EsGm(UserIndex) Then
@@ -269,7 +269,7 @@ Public Sub DoTileEvents(ByVal UserIndex As Integer, _
 
                     End If
 
-                ElseIf MapInfo(DestPos.Map).Restringir = eRestrict.restrict_faccion Then 'Es mapa de faccionarios?
+                ElseIf MapZonas(DestPos.Map, UserZonaId(UserIndex)).Restringir = eRestrict.restrict_faccion Then 'Es mapa de faccionarios?
 
                     'El usuario es Armada o Caos?
                     If esArmada(UserIndex) Or esCaos(UserIndex) Or EsGm(UserIndex) Then
@@ -714,7 +714,7 @@ Sub ClosestLegalPos(Pos As WorldPos, _
     ' La primera posicion es valida?
     If LegalPos(Pos.Map, nPos.X, nPos.Y, PuedeAgua, PuedeTierra, CheckExitTile) Then
         Found = True
-    
+        
         ' Busca en las demas posiciones, en forma de "rombo"
     Else
 
@@ -731,7 +731,7 @@ Sub ClosestLegalPos(Pos As WorldPos, _
         Wend
         
     End If
-    
+
     If Not Found Then
         nPos.X = 0
         nPos.Y = 0

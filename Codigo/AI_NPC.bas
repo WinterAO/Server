@@ -1258,7 +1258,7 @@ Sub NPCAI(ByVal NPCIndex As Integer)
 ErrorHandler:
 
     With Npclist(NPCIndex)
-        Call LogError("Error en NPCAI. Error: " & Err.Number & " - " & Err.description & ". " & "Npc: " & .Name & ", Index: " & NPCIndex & ", MaestroUser: " & .MaestroUser & ", MaestroNpc: " & .MaestroNpc & ", Mapa: " & .Pos.Map & " x:" & .Pos.X & " y:" & .Pos.Y & " Mov:" & .Movement & " TargU:" & .Target & " TargN:" & .TargetNPC)
+        Call LogError("Error en NPCAI. Error: " & Err.Number & " - " & Err.description & ". " & "Npc: " & .Name & ", Index: " & NPCIndex & ", MaestroUser: " & .MaestroUser & ", MaestroNpc: " & .MaestroNpc & ", Mapa: " & .Pos.Map & " x:" & .Pos.X & " y:" & .Pos.Y & "ZONA: " & NPCZonaId(NPCIndex) & " Mov:" & .Movement & " TargU:" & .Target & " TargN:" & .TargetNPC)
 
     End With
     

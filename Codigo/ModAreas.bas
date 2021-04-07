@@ -29,10 +29,10 @@ Option Explicit
 '************************************************
 
 ' Tamanio del mapa
-Public Const XMaxMapSize        As Byte = 100
-Public Const XMinMapSize        As Byte = 1
-Public Const YMaxMapSize        As Byte = 100
-Public Const YMinMapSize        As Byte = 1
+Public Const XMaxMapSize        As Integer = 1100
+Public Const XMinMapSize        As Integer = 1
+Public Const YMaxMapSize        As Integer = 1100
+Public Const YMinMapSize        As Integer = 1
 
 ' Tamanio en tiles de la pantalla.
 'ADVERTENCIA: TIENEN QUE SER IMPAR!
@@ -269,7 +269,7 @@ Public Sub CheckUpdateNeededNpc(ByVal NPCIndex As Integer, ByVal Heading As Byte
         Call CalcularNuevaArea(.Pos.X, .Pos.Y, Heading, MinX, MaxX, MinY, MaxY)
 
         ' Si no hay usuarios en el mapa ahorramos tiempo y salimos
-        If MapInfo(.Pos.Map).NumUsers <> 0 Then
+        If MapZonas(.Pos.Map, NPCZonaId(NPCIndex)).NumUsers <> 0 Then
         
             For X = MinX To MaxX
                 For Y = MinY To MaxY

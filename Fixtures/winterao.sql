@@ -1553,9 +1553,9 @@ CREATE TABLE `personaje` (
   `elo` int(10) UNSIGNED NOT NULL,
   `pet_amount` tinyint(3) UNSIGNED NOT NULL DEFAULT 0,
   `votes_amount` smallint(5) UNSIGNED DEFAULT 0,
-  `pos_map` smallint(5) UNSIGNED NOT NULL,
-  `pos_x` tinyint(3) UNSIGNED NOT NULL,
-  `pos_y` tinyint(3) UNSIGNED NOT NULL,
+  `pos_map` smallint(3) UNSIGNED NOT NULL,
+  `pos_x` int(4) UNSIGNED NOT NULL,
+  `pos_y` int(4) UNSIGNED NOT NULL,
   `last_map` tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
   `body_id` smallint(5) UNSIGNED NOT NULL,
   `head_id` smallint(5) UNSIGNED NOT NULL,
@@ -1679,6 +1679,13 @@ ALTER TABLE `skillpoint`
 --
 ALTER TABLE `spell`
   ADD PRIMARY KEY (`user_id`);
+
+--
+-- Indices de la tabla `personaje`
+--
+ALTER TABLE `personaje`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `name` (`name`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas

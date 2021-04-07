@@ -63,7 +63,7 @@ Sub NpcLanzaSpellSobreUser(ByVal NPCIndex As Integer, _
         End If
         
         ' Si no se peude usar magia en el mapa, no le deja hacerlo.
-        If MapInfo(UserList(UserIndex).Pos.Map).MagiaSinEfecto > 0 Then Exit Sub
+        If MapZonas(UserList(UserIndex).Pos.Map, UserZonaId(UserIndex)).MagiaSinEfecto > 0 Then Exit Sub
 
         Dim dano As Integer
     
@@ -679,8 +679,10 @@ Sub HechizoTerrenoEstado(ByVal UserIndex As Integer, ByRef b As Boolean)
                 For TempY = PosCasteadaY - Hechizos(h).RadioArea To PosCasteadaY + Hechizos(h).RadioArea
                 
                     If MapData(PosCasteadaM, TempX, TempY).UserIndex > 0 Then '¿Hay un usuario en esa posicion?
-                        Call UserHechizoDanoUser(UserIndex, MapData(PosCasteadaM, TempX, TempY).UserIndex, h, True)
-                        Count = Count + 1
+                        If MapData(PosCasteadaM, TempX, TempY).UserIndex <> UserIndex Then '¿No es el propio usuario?
+                            Call UserHechizoDanoUser(UserIndex, MapData(PosCasteadaM, TempX, TempY).UserIndex, h, True)
+                            Count = Count + 1
+                        End If
                         
                     ElseIf MapData(PosCasteadaM, TempX, TempY).NPCIndex > 0 Then '¿Hay un NPC en esa posicion?
                         'Si no es atacable no hacemos nada
@@ -727,14 +729,14 @@ Sub HechizoInvocacion(ByVal UserIndex As Integer, ByRef HechizoCasteado As Boole
         Mapa = .Pos.Map
     
         'No permitimos se invoquen criaturas en zonas seguras
-        If MapInfo(Mapa).Pk = False Or MapData(Mapa, .Pos.X, .Pos.Y).Trigger = eTrigger.ZONASEGURA Then
+        If MapZonas(Mapa, UserZonaId(UserIndex)).Pk = False Or MapData(Mapa, .Pos.X, .Pos.Y).Trigger = eTrigger.ZONASEGURA Then
             Call WriteConsoleMsg(UserIndex, "No puedes invocar criaturas en zona segura.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
 
         End If
     
         'No permitimos se invoquen criaturas en mapas donde esta prohibido hacerlo
-        If MapInfo(Mapa).InvocarSinEfecto = 1 Then
+        If MapZonas(Mapa, UserZonaId(UserIndex)).InvocarSinEfecto = 1 Then
             Call WriteConsoleMsg(UserIndex, "Invocar no esta permitido aqui! Retirate de la Zona si deseas utilizar el Hechizo.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
 
@@ -1192,7 +1194,7 @@ Sub HechizoEstadoUsuario(ByVal UserIndex As Integer, ByRef HechizoCasteado As Bo
             End If
         
             'No usar invi mapas InviSinEfecto
-            If MapInfo(UserList(targetIndex).Pos.Map).InviSinEfecto > 0 Then
+            If MapZonas(UserList(targetIndex).Pos.Map, UserZonaId(targetIndex)).InviSinEfecto > 0 Then
                 Call WriteConsoleMsg(UserIndex, "La invisibilidad no funciona aqui!", FontTypeNames.FONTTYPE_INFO)
                 HechizoCasteado = False
                 Exit Sub
@@ -1520,7 +1522,7 @@ Sub HechizoEstadoUsuario(ByVal UserIndex As Integer, ByRef HechizoCasteado As Bo
                 End If
         
                 'No usar resu en mapas con ResuSinEfecto
-                If MapInfo(UserList(targetIndex).Pos.Map).ResuSinEfecto > 0 Then
+                If MapZonas(UserList(targetIndex).Pos.Map, UserZonaId(targetIndex)).ResuSinEfecto > 0 Then
                     Call WriteConsoleMsg(UserIndex, "Revivir no esta permitido aqui! Retirate de la Zona si deseas utilizar el Hechizo.", FontTypeNames.FONTTYPE_INFO)
                     HechizoCasteado = False
                     Exit Sub
@@ -2342,12 +2344,12 @@ Public Function HechizoPropUsuario(ByVal UserIndex As Integer) As Boolean
         ' <-------- Cura salud ---------->
         If Hechizos(spellIndex).SubeHP = 1 Then
         
-            Call UserHechizoCuraUser(UserIndex, targetIndex, spellIndex)
+            If Not UserHechizoCuraUser(UserIndex, targetIndex, spellIndex) Then Exit Function
         
             ' <-------- Quita salud (Dana) ---------->
         ElseIf Hechizos(spellIndex).SubeHP = 2 Then
         
-            Call UserHechizoDanoUser(UserIndex, targetIndex, spellIndex)
+            If Not UserHechizoDanoUser(UserIndex, targetIndex, spellIndex) Then Exit Function
         
         End If
     
@@ -2830,7 +2832,7 @@ Public Sub DisNobAuBan(ByVal UserIndex As Integer, NoblePts As Long, BandidoPts 
 
 End Sub
 
-Public Function Puede_Crear_Portal(ByVal UserIndex As Integer, ByVal Map As Integer, ByVal X As Byte, ByVal Y As Byte, ByVal h As Integer) As Boolean
+Public Function Puede_Crear_Portal(ByVal UserIndex As Integer, ByVal Map As Integer, ByVal X As Integer, ByVal Y As Integer, ByVal h As Integer) As Boolean
     '***************************************************
     'Author: Unknown
     'Last Modification: -
@@ -2978,7 +2980,7 @@ Private Sub HechizoTerrenoMaterializa(ByVal UserIndex As Integer, ByRef Cast As 
                 Exit Sub
             End If
 
-            If MapInfo(.Pos.Map).Pk = False Or (.Counters.Pena <> 0) Then
+            If MapZonas(.Pos.Map, UserZonaId(UserIndex)).Pk = False Or (.Counters.Pena <> 0) Then
                 Call WriteConsoleMsg(UserIndex, "Una fuerza misteriosa no te permite abrir portales aquí.", FontTypeNames.FONTTYPE_INFO)
                 Cast = False
                 Exit Sub
@@ -3044,7 +3046,7 @@ Public Sub CancelCast(ByVal UserIndex As Integer)
     End With
 End Sub
 
-Private Sub UserHechizoDanoUser(ByVal UserIndex As Integer, ByVal targetIndex As Integer, ByVal spellIndex As Integer, Optional ByVal NoFX As Boolean = False)
+Private Function UserHechizoDanoUser(ByVal UserIndex As Integer, ByVal targetIndex As Integer, ByVal spellIndex As Integer, Optional ByVal NoFX As Boolean = False) As Boolean
 '***************************************
 'Autor: Lorwik
 'Fecha: 25/08/2020
@@ -3055,7 +3057,10 @@ Private Sub UserHechizoDanoUser(ByVal UserIndex As Integer, ByVal targetIndex As
 
     With UserList(targetIndex)
     
-        If UserIndex = targetIndex Then Exit Sub
+        If UserIndex = targetIndex Then
+            UserHechizoDanoUser = False
+            Exit Function
+        End If
         
         dano = RandomNumber(Hechizos(spellIndex).MinHp, Hechizos(spellIndex).MaxHp)
         
@@ -3093,7 +3098,10 @@ Private Sub UserHechizoDanoUser(ByVal UserIndex As Integer, ByVal targetIndex As
         
         If dano < 0 Then dano = 0
         
-        If Not PuedeAtacar(UserIndex, targetIndex) Then Exit Sub
+        If Not PuedeAtacar(UserIndex, targetIndex) Then
+            UserHechizoDanoUser = False
+            Exit Function
+        End If
         
         If UserIndex <> targetIndex Then
             Call UsuarioAtacadoPorUsuario(UserIndex, targetIndex)
@@ -3131,9 +3139,11 @@ Private Sub UserHechizoDanoUser(ByVal UserIndex As Integer, ByVal targetIndex As
         
     End With
     
-End Sub
+    UserHechizoDanoUser = True
+    
+End Function
 
-Private Function UserHechizoCuraUser(ByVal UserIndex As Integer, ByVal targetIndex As Integer, ByVal spellIndex As Integer, Optional ByVal NoFX As Boolean = False)
+Private Function UserHechizoCuraUser(ByVal UserIndex As Integer, ByVal targetIndex As Integer, ByVal spellIndex As Integer, Optional ByVal NoFX As Boolean = False) As Boolean
 '***************************************
 'Autor: Lorwik
 'Fecha: 25/08/2020
@@ -3147,12 +3157,16 @@ Private Function UserHechizoCuraUser(ByVal UserIndex As Integer, ByVal targetInd
         'Verifica que el usuario no este muerto
         If .flags.Muerto = 1 Then
             Call WriteConsoleMsg(UserIndex, "El usuario esta muerto!", FontTypeNames.FONTTYPE_INFO)
+            UserHechizoCuraUser = False
             Exit Function
 
         End If
         
         ' Chequea si el status permite ayudar al otro usuario
-        If Not CanSupportUser(UserIndex, targetIndex) Then Exit Function
+        If Not CanSupportUser(UserIndex, targetIndex) Then
+            UserHechizoCuraUser = False
+            Exit Function
+        End If
            
         cura = RandomNumber(Hechizos(spellIndex).MinHp, Hechizos(spellIndex).MaxHp)
         cura = cura + Porcentaje(cura, 3 * UserList(UserIndex).Stats.ELV)
@@ -3160,9 +3174,9 @@ Private Function UserHechizoCuraUser(ByVal UserIndex As Integer, ByVal targetInd
         If NoFX = False Then _
             Call InfoHechizo(UserIndex, NoFX)
     
-        .Stats.MinHp = .Stats.MinHp + cura
+        UserList(targetIndex).Stats.MinHp = UserList(targetIndex).Stats.MinHp + cura
 
-        If .Stats.MinHp > .Stats.MaxHp Then .Stats.MinHp = .Stats.MaxHp
+        If UserList(targetIndex).Stats.MinHp > UserList(targetIndex).Stats.MaxHp Then UserList(targetIndex).Stats.MinHp = UserList(targetIndex).Stats.MaxHp
         
         Call WriteUpdateHP(targetIndex)
         

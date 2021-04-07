@@ -37,19 +37,19 @@ Public usersClan2   As Byte
 Public menorCant    As Byte
 
 'constantes de pos..
-Const PRIMER_CLAN_X As Byte = 39
-Const SECOND_CLAN_X As Byte = 20
-Const PRIMER_CLAN_Y As Byte = 78
-Const SECOND_CLAN_Y As Byte = 74
+Const PRIMER_CLAN_X As Integer = 39
+Const SECOND_CLAN_X As Integer = 20
+Const PRIMER_CLAN_Y As Integer = 78
+Const SECOND_CLAN_Y As Integer = 74
 Const MAPA_CVC      As Integer = 273
 
-Public Sub Enviar(ByVal Userindex As Integer, _
+Public Sub Enviar(ByVal UserIndex As Integer, _
                   ByVal targetIndex As Integer) ', ByVal max_Users_Guild As Byte)
 
     '
     ' @ Envia una solicitud.
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         Dim other_Guild As Integer
 
@@ -72,29 +72,29 @@ Public Sub Enviar(ByVal Userindex As Integer, _
         'seteo el target al otro usuario
         .cvcUser.cvc_Target = targetIndex
         .cvcUser.cvc_MaxUsers = menorCant
-        UserList(targetIndex).cvcUser.cvc_Target = Userindex
+        UserList(targetIndex).cvcUser.cvc_Target = UserIndex
                 
         Call Protocol.WriteConsoleMsg(targetIndex, "El clan " & modGuilds.GuildName(my_Guild) & " desafia tu clan a un duelo de modalidad Clan vs Clan, si aceptas hazle click y tipea /ACVC.", FontTypeNames.FONTTYPE_GUILD)
         Call Protocol.WriteConsoleMsg(targetIndex, "La cantidad maxima de usuarios por clan es de : " & CStr(menorCant) & ".", FontTypeNames.FONTTYPE_GUILD)
-        Call Protocol.WriteConsoleMsg(Userindex, "Ahora debes esperar que el lider acepte.", FontTypeNames.FONTTYPE_GUILD)
+        Call Protocol.WriteConsoleMsg(UserIndex, "Ahora debes esperar que el lider acepte.", FontTypeNames.FONTTYPE_GUILD)
 
     End With
 
 End Sub
  
-Public Sub Aceptar(ByVal Userindex As Integer, ByVal targetIndex As Integer)
+Public Sub Aceptar(ByVal UserIndex As Integer, ByVal targetIndex As Integer)
 
     '
     ' @ Acepta cvc.
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
 
         'clickio a quien le envio?
 
         If (targetIndex = .cvcUser.cvc_Target) Then
-            Call Iniciar(targetIndex, Userindex, .GuildIndex, UserList(targetIndex).GuildIndex, UserList(targetIndex).cvcUser.cvc_MaxUsers)
+            Call Iniciar(targetIndex, UserIndex, .GuildIndex, UserList(targetIndex).GuildIndex, UserList(targetIndex).cvcUser.cvc_MaxUsers)
         Else
-            Call Protocol.WriteConsoleMsg(Userindex, UserList(targetIndex).Name & " no solicito ningun Clan vs Clan.", FontTypeNames.FONTTYPE_GUILD)
+            Call Protocol.WriteConsoleMsg(UserIndex, UserList(targetIndex).Name & " no solicito ningun Clan vs Clan.", FontTypeNames.FONTTYPE_GUILD)
 
         End If
 
@@ -209,7 +209,7 @@ Private Sub EnviarMensajeCVC(ByVal to_Guild As Byte, ByRef send_Msg As String)
 
 End Sub
  
-Public Sub MuereCVC(ByVal Userindex As Integer)
+Public Sub MuereCVC(ByVal UserIndex As Integer)
 
     '
     ' @ Muere un usuario en cvc.
@@ -220,7 +220,7 @@ Public Sub MuereCVC(ByVal Userindex As Integer)
 
     Dim guild_Win   As Byte
 
-    guild_Num = Find_Guild_Num(UserList(Userindex).GuildIndex)
+    guild_Num = Find_Guild_Num(UserList(UserIndex).GuildIndex)
     num_Muertos = Get_Num_Dies(guild_Num)
 
     'murieron todos?
@@ -258,9 +258,9 @@ Private Sub ReiniciarCVC()
 
     Dim i  As Long
 
-    Dim sX As Byte
+    Dim sX As Integer
 
-    Dim sY As Byte
+    Dim sY As Integer
 
     With CVC_Info
 
@@ -361,9 +361,9 @@ Private Sub GanaCVC(ByVal guildWinner As Byte, ByVal guildLooser As Byte)
 
         Dim i      As Long
 
-        Dim startX As Byte
+        Dim startX As Integer
 
-        Dim startY As Byte
+        Dim startY As Integer
 
         startX = Ramx.X
         startY = Ramx.Y
@@ -412,7 +412,7 @@ Private Sub GanaCVC(ByVal guildWinner As Byte, ByVal guildLooser As Byte)
 
 End Sub
  
-Public Sub ConectarCVC(ByVal Userindex As Integer, _
+Public Sub ConectarCVC(ByVal UserIndex As Integer, _
                        Optional ByVal check_Enabled As Boolean = False)
 
     '
@@ -428,14 +428,14 @@ Public Sub ConectarCVC(ByVal Userindex As Integer, _
 
         'no puede entrar ,lo informo.
 
-        If (Can_Ingress(Userindex, ref_Error) = False) Then
-            Call Protocol.WriteConsoleMsg(Userindex, ref_Error, FontTypeNames.FONTTYPE_GUILD)
+        If (Can_Ingress(UserIndex, ref_Error) = False) Then
+            Call Protocol.WriteConsoleMsg(UserIndex, ref_Error, FontTypeNames.FONTTYPE_GUILD)
 
             Exit Sub
 
         End If
 
-        guild_Num = Find_Guild_Num(UserList(Userindex).GuildIndex)
+        guild_Num = Find_Guild_Num(UserList(UserIndex).GuildIndex)
 
     End If
 
@@ -443,31 +443,31 @@ Public Sub ConectarCVC(ByVal Userindex As Integer, _
 
         Dim user_Gindex As Byte
 
-        Dim user_toPosX As Byte
+        Dim user_toPosX As Integer
 
-        Dim user_toPosY As Byte
+        Dim user_toPosY As Integer
 
         user_Gindex = index_In_CVC(guild_Num)
 
         'tenemos un slot
 
         If (user_Gindex <> 0) Then
-            .UsUaRiOs(user_Gindex) = Userindex
-            Call EnviarMensajeCVC(0, UserList(Userindex).Name & " ingreso al cvc para el clan " & modGuilds.GuildName(UserList(Userindex).GuildIndex) & "!")
+            .UsUaRiOs(user_Gindex) = UserIndex
+            Call EnviarMensajeCVC(0, UserList(UserIndex).Name & " ingreso al cvc para el clan " & modGuilds.GuildName(UserList(UserIndex).GuildIndex) & "!")
             'buscamos una pos
-            Call Get_Pos_By_Guild(Userindex, guild_Num, user_toPosX, user_toPosY)
+            Call Get_Pos_By_Guild(UserIndex, guild_Num, user_toPosX, user_toPosY)
 
             'tenemos una pos
 
             If (user_toPosX <> 0) And (user_toPosY <> 0) Then
-                Call WarpUserChar(Userindex, MAPA_CVC, user_toPosX, user_toPosY, True)
+                Call WarpUserChar(UserIndex, MAPA_CVC, user_toPosX, user_toPosY, True)
 
             End If
 
-            UserList(Userindex).cvcUser.en_CVC = True
+            UserList(UserIndex).cvcUser.en_CVC = True
         Else
             'no ai mas espacio..
-            Call Protocol.WriteConsoleMsg(Userindex, "No puedes entrar al CVC porque tu clan ya tiene " & CStr(CVC_Info.max_Users) & " jugadores.", FontTypeNames.FONTTYPE_GUILD)
+            Call Protocol.WriteConsoleMsg(UserIndex, "No puedes entrar al CVC porque tu clan ya tiene " & CStr(CVC_Info.max_Users) & " jugadores.", FontTypeNames.FONTTYPE_GUILD)
 
         End If
 
@@ -475,7 +475,7 @@ Public Sub ConectarCVC(ByVal Userindex As Integer, _
 
 End Sub
  
-Public Function Can_Ingress(ByVal Userindex As Integer, _
+Public Function Can_Ingress(ByVal UserIndex As Integer, _
                             ByRef errorMsg As String) As Boolean
 
     '
@@ -485,42 +485,42 @@ Public Function Can_Ingress(ByVal Userindex As Integer, _
 
     Can_Ingress = False
 
-    If UserList(Userindex).Stats.ELV < 40 Then
+    If UserList(UserIndex).Stats.ELV < 40 Then
         errorMsg = "No puedes entrar si eres menor del nivel 40."
 
         Exit Function
 
     End If
 
-    If UserList(Userindex).GuildIndex = 0 Then
+    If UserList(UserIndex).GuildIndex = 0 Then
         errorMsg = "No perteneces a ningun clan.!"
 
         Exit Function
 
     End If
 
-    If UCase$(modGuilds.GuildLeader(UserList(Userindex).GuildIndex)) <> UCase$(UserList(Userindex).Name) Then
+    If UCase$(modGuilds.GuildLeader(UserList(UserIndex).GuildIndex)) <> UCase$(UserList(UserIndex).Name) Then
         errorMsg = "No eres el lider de ningun clan."
 
         Exit Function
 
     End If
 
-    If UserList(Userindex).cvcUser.en_CVC = True Then
+    If UserList(UserIndex).cvcUser.en_CVC = True Then
         errorMsg = "Estas en el cvc!"
 
         Exit Function
 
     End If
 
-    If UserList(Userindex).flags.Muerto <> 0 Then
+    If UserList(UserIndex).flags.Muerto <> 0 Then
         errorMsg = "Estas muerto."
 
         Exit Function
 
     End If
 
-    If UserList(Userindex).Counters.Pena <> 0 Then
+    If UserList(UserIndex).Counters.Pena <> 0 Then
         errorMsg = "Estas en la carcel."
 
         Exit Function
@@ -528,7 +528,7 @@ Public Function Can_Ingress(ByVal Userindex As Integer, _
     End If
 
     'obtengo el 1 o 2 segun su gi
-    guild_Num = Find_Guild_Num(UserList(Userindex).GuildIndex)
+    guild_Num = Find_Guild_Num(UserList(UserIndex).GuildIndex)
 
     'tenemos clan
 
@@ -593,10 +593,10 @@ Private Function index_In_CVC(ByVal guild_Num As Byte) As Byte
 
 End Function
  
-Private Sub Get_Pos_By_Guild(ByVal Userindex As Integer, _
+Private Sub Get_Pos_By_Guild(ByVal UserIndex As Integer, _
                              ByVal guild_Num As Byte, _
-                             ByRef tPosX As Byte, _
-                             ByRef tPosY As Byte)
+                             ByRef tPosX As Integer, _
+                             ByRef tPosY As Integer)
 
     '
     ' @ Devuelve una pos para un usuario.
@@ -611,7 +611,7 @@ Private Sub Get_Pos_By_Guild(ByVal Userindex As Integer, _
     End If
 
     'tenemos la pos default , ahora buscamos un tile
-    Call FindLegalPos(Userindex, MAPA_CVC, CInt(tPosX), CInt(tPosY))
+    Call FindLegalPos(UserIndex, MAPA_CVC, CInt(tPosX), CInt(tPosY))
 
 End Sub
  

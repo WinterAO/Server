@@ -1176,8 +1176,8 @@ Public Type ObjData
     'Pasajes
     DesdeMap As Integer
     HastaMap As Integer
-    HastaY As Byte
-    HastaX As Byte
+    HastaY As Integer
+    HastaX As Integer
     NecesitaSkill As Byte
     CantidadSkill As Byte
     
@@ -1960,6 +1960,8 @@ Public Type NPC
     Instruye As Byte 'Instruye un profesion
     
     SpeedVar As Long
+    
+    EsdeFortaleza As Boolean
 
 End Type
 
@@ -1980,10 +1982,11 @@ Public Type MapBlock
     Trigger As eTrigger
     Particulas As Integer
     
+    ZonaIndex As Integer
 End Type
 
 'Info del mapa
-Type MapInfo
+Type tZonaInfo
 
     NumUsers As Integer
     music As String
@@ -2053,10 +2056,10 @@ Public DatPath                            As String
 
 ''
 'Bordes del mapa
-Public MinXBorder                         As Byte
-Public MaxXBorder                         As Byte
-Public MinYBorder                         As Byte
-Public MaxYBorder                         As Byte
+Public MinXBorder                         As Integer
+Public MaxXBorder                         As Integer
+Public MinYBorder                         As Integer
+Public MaxYBorder                         As Integer
 
 
 ''
@@ -2130,7 +2133,7 @@ Public Npclist(1 To MAXNPCS)              As NPC 'NPCS
 
 Public MapData()                          As MapBlock
 
-Public MapInfo()                          As MapInfo
+Public MapZonas()                         As tZonaInfo
 
 Public Hechizos()                         As tHechizo
 
@@ -2375,17 +2378,17 @@ Public Enum eGMCommands
     DoBackUp                '/DOBACKUP
     ShowGuildMessages       '/SHOWCMSG
     SaveMap                 '/GUARDAMAPA
-    ChangeMapInfoPK         '/MODMAPINFO PK
-    ChangeMapInfoBackup     '/MODMAPINFO BACKUP
-    ChangeMapInfoRestricted '/MODMAPINFO RESTRINGIR
-    ChangeMapInfoNoMagic    '/MODMAPINFO MAGIASINEFECTO
-    ChangeMapInfoNoInvi     '/MODMAPINFO INVISINEFECTO
-    ChangeMapInfoNoResu     '/MODMAPINFO RESUSINEFECTO
-    ChangeMapInfoLand       '/MODMAPINFO TERRENO
-    ChangeMapInfoZone       '/MODMAPINFO ZONA
-    ChangeMapInfoStealNpc   '/MODMAPINFO ROBONPC
-    ChangeMapInfoNoOcultar  '/MODMAPINFO OCULTARSINEFECTO
-    ChangeMapInfoNoInvocar  '/MODMAPINFO INVOCARSINEFECTO
+    ChangeZonaPK            '/MODZona PK
+    ChangeZonaBackup        '/MODZona BACKUP
+    ChangeZonaRestricted    '/MODZona RESTRINGIR
+    ChangeZonaNoMagic       '/MODZona MAGIASINEFECTO
+    ChangeZonaNoInvi        '/MODZona INVISINEFECTO
+    ChangeZonaNoResu        '/MODZona RESUSINEFECTO
+    ChangeZonaLand          '/MODZona TERRENO
+    ChangeZonaZone          '/MODZona ZONA
+    ChangeZonaStealNpc      '/MODZona ROBONPC
+    ChangeZonaNoOcultar     '/MODZona OCULTARSINEFECTO
+    ChangeZonaNoInvocar     '/MODZona INVOCARSINEFECTO
     SaveChars               '/GRABAR
     CleanSOS                '/BORRAR SOS
     ShowServerForm          '/SHOW INT
@@ -2567,8 +2570,8 @@ Public Account_Database As New clsDataBase
 Type tRetarded
     Tiempo As Long
     Mapa As Byte
-    X As Byte
-    Y As Byte
+    X As Integer
+    Y As Integer
     NPCNUM As Integer
 End Type
 

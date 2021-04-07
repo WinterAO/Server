@@ -523,6 +523,9 @@ Public Sub QuitarNPC(ByVal NPCIndex As Integer)
     '***************************************************
     On Error GoTo errHandler
 
+    '¿NPC Invalido?
+    If NPCIndex < 1 Then Exit Sub
+
     '¿Es un NPC de invocacion? Reseteamos la invocacion
     If Npclist(NPCIndex).flags.Invocacion = 1 Then _
         Call ResetearInvocacion(NPCIndex)
@@ -1079,7 +1082,7 @@ Function SpawnNpc(ByVal NPCIndex As Integer, _
 
     PuedeAgua = Npclist(nIndex).flags.AguaValida
     PuedeTierra = Not Npclist(nIndex).flags.TierraInvalida = 1
-        
+
     Call ClosestLegalPos(Pos, newPos, PuedeAgua, PuedeTierra)  'Nos devuelve la posicion valida mas cercana
     Call ClosestLegalPos(Pos, altpos, PuedeAgua)
     'Si X e Y son iguales a 0 significa que no se encontro posicion valida
@@ -1417,6 +1420,8 @@ Public Function OpenNPC(ByVal NpcNumber As Integer, _
         .Instruye = val(Leer.GetValue("NPC" & NpcNumber, "Instruye"))
         
         .SpeedVar = val(Leer.GetValue("NPC" & NpcNumber, "Speed"))
+        
+        .EsdeFortaleza = val(Leer.GetValue("NPC" & NpcNumber, "Fortaleza"))
 
     End With
     
@@ -1497,8 +1502,8 @@ Public Sub RandomNPCTepeable(ByVal NPCIndex As Integer)
 'Desscripción: El NPC Se teletransporta a una ubicacion aleatoria
 '***************************************************
     
-    Dim xX As Byte
-    Dim yY As Byte
+    Dim xX As Integer
+    Dim yY As Integer
     Dim TpPos As WorldPos
     
     With Npclist(NPCIndex)

@@ -1386,38 +1386,38 @@ Private Sub HandleGMCommands(ByVal UserIndex As Integer)
             Case eGMCommands.SaveMap                 '/GUARDAMAPA
                 Call HandleSaveMap(UserIndex)
         
-            Case eGMCommands.ChangeMapInfoPK         '/MODMAPINFO PK
-                Call HandleChangeMapInfoPK(UserIndex)
+            Case eGMCommands.ChangeZonaPK         '/MODZona PK
+                Call HandleChangeZonaPK(UserIndex)
             
-            Case eGMCommands.ChangeMapInfoBackup     '/MODMAPINFO BACKUP
-                Call HandleChangeMapInfoBackup(UserIndex)
+            Case eGMCommands.ChangeZonaBackup     '/MODZona BACKUP
+                Call HandleChangeZonaBackup(UserIndex)
         
-            Case eGMCommands.ChangeMapInfoRestricted '/MODMAPINFO RESTRINGIR
-                Call HandleChangeMapInfoRestricted(UserIndex)
+            Case eGMCommands.ChangeZonaRestricted '/MODZona RESTRINGIR
+                Call HandleChangeZonaRestricted(UserIndex)
         
-            Case eGMCommands.ChangeMapInfoNoMagic    '/MODMAPINFO MAGIASINEFECTO
-                Call HandleChangeMapInfoNoMagic(UserIndex)
+            Case eGMCommands.ChangeZonaNoMagic    '/MODZona MAGIASINEFECTO
+                Call HandleChangeZonaNoMagic(UserIndex)
         
-            Case eGMCommands.ChangeMapInfoNoInvi     '/MODMAPINFO INVISINEFECTO
-                Call HandleChangeMapInfoNoInvi(UserIndex)
+            Case eGMCommands.ChangeZonaNoInvi     '/MODZona INVISINEFECTO
+                Call HandleChangeZonaNoInvi(UserIndex)
         
-            Case eGMCommands.ChangeMapInfoNoResu     '/MODMAPINFO RESUSINEFECTO
-                Call HandleChangeMapInfoNoResu(UserIndex)
+            Case eGMCommands.ChangeZonaNoResu     '/MODZona RESUSINEFECTO
+                Call HandleChangeZonaNoResu(UserIndex)
         
-            Case eGMCommands.ChangeMapInfoLand       '/MODMAPINFO TERRENO
-                Call HandleChangeMapInfoLand(UserIndex)
+            Case eGMCommands.ChangeZonaLand       '/MODZona TERRENO
+                Call HandleChangeZonaLand(UserIndex)
         
-            Case eGMCommands.ChangeMapInfoZone       '/MODMAPINFO ZONA
-                Call HandleChangeMapInfoZone(UserIndex)
+            Case eGMCommands.ChangeZonaZone       '/MODZona ZONA
+                Call HandleChangeZonaZone(UserIndex)
         
-            Case eGMCommands.ChangeMapInfoStealNpc   '/MODMAPINFO ROBONPC
-                Call HandleChangeMapInfoStealNpc(UserIndex)
+            Case eGMCommands.ChangeZonaStealNpc   '/MODZona ROBONPC
+                Call HandleChangeZonaStealNpc(UserIndex)
             
-            Case eGMCommands.ChangeMapInfoNoOcultar  '/MODMAPINFO OCULTARSINEFECTO
-                Call HandleChangeMapInfoNoOcultar(UserIndex)
+            Case eGMCommands.ChangeZonaNoOcultar  '/MODZona OCULTARSINEFECTO
+                Call HandleChangeZonaNoOcultar(UserIndex)
             
-            Case eGMCommands.ChangeMapInfoNoInvocar  '/MODMAPINFO INVOCARSINEFECTO
-                Call HandleChangeMapInfoNoInvocar(UserIndex)
+            Case eGMCommands.ChangeZonaNoInvocar  '/MODZona INVOCARSINEFECTO
+                Call HandleChangeZonaNoInvocar(UserIndex)
             
             Case eGMCommands.SaveChars               '/GRABAR
                 Call HandleSaveChars(UserIndex)
@@ -2238,33 +2238,7 @@ Private Sub HandleWalk(ByVal UserIndex As Integer)
 
         Dim TiempoDeWalk As Byte
         
-        'Prevent SpeedHack
-        If .flags.TimesWalk >= 31 + (.flags.Velocidad * 2) Then
-            TempTick = GetTickCount And &H7FFFFFFF
-            dummy = getInterval(TempTick, .flags.StartWalk) ' 0.13.5
-            
-            ' 5800 is actually less than what would be needed in perfect conditions to take 30 steps
-            '(it's about 193 ms per step against the over 200 needed in perfect conditions)
-            If dummy < 5800 Then
-                If getInterval(TempTick, .flags.CountSH) > 30000 Then ' 0.13.5
-                    .flags.CountSH = 0
-                End If
-        
-                If Not .flags.CountSH = 0 Then
-                    If dummy <> 0 Then dummy = 126000 \ dummy
-         
-                    Call LogHackAttemp("SpeedHack: " & .Name & " , " & dummy)
-                    Call SendData(SendTarget.ToAdmins, 0, PrepareMessageConsoleMsg("Servidor> " & .Name & " ha sido echado por el servidor por posible uso de SpeedHack.", FontTypeNames.FONTTYPE_SERVER))
-                    Call CloseSocket(UserIndex)
-         
-                    Exit Sub
-                Else
-                    .flags.CountSH = TempTick
-                End If
-            End If
-            .flags.StartWalk = TempTick
-            .flags.TimesWalk = 0
-        End If
+  
         
         .flags.TimesWalk = .flags.TimesWalk + 1
         
@@ -2902,7 +2876,7 @@ Private Sub HandleDrop(ByVal UserIndex As Integer)
         End If
         
         '¿Puede tirar items en el mapa?
-        If MapInfo(.Pos.Map).NoTirarItems = True Then
+        If MapZonas(.Pos.Map, UserZonaId(UserIndex)).NoTirarItems = True Then
             Call WriteConsoleMsg(UserIndex, "No puedes tirar objetos en el mapa.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
         End If
@@ -3015,12 +2989,12 @@ Private Sub HandleLeftClick(ByVal UserIndex As Integer)
         'Remove packet ID
         Call .ReadByte
         
-        Dim X As Byte
+        Dim X As Integer
 
-        Dim Y As Byte
+        Dim Y As Integer
         
-        X = .ReadByte()
-        Y = .ReadByte()
+        X = .ReadInteger()
+        Y = .ReadInteger()
         
         Call LookatTile(UserIndex, UserList(UserIndex).Pos.Map, X, Y)
 
@@ -3050,12 +3024,12 @@ Private Sub HandleAccionClick(ByVal UserIndex As Integer)
         'Remove packet ID
         Call .ReadByte
         
-        Dim X As Byte
+        Dim X As Integer
 
-        Dim Y As Byte
+        Dim Y As Integer
         
-        X = .ReadByte()
-        Y = .ReadByte()
+        X = .ReadInteger()
+        Y = .ReadInteger()
         
         Call Accion(UserIndex, UserList(UserIndex).Pos.Map, X, Y)
 
@@ -3105,7 +3079,7 @@ Private Sub HandleWork(ByVal UserIndex As Integer)
             Case Ocultarse
                 
                 ' Verifico si se peude ocultar en este mapa
-                If MapInfo(.Pos.Map).OcultarSinEfecto = 1 Then
+                If MapZonas(.Pos.Map, UserZonaId(UserIndex)).OcultarSinEfecto = 1 Then
                     Call WriteConsoleMsg(UserIndex, "Ocultarse no funciona aqui!", FontTypeNames.FONTTYPE_INFO)
                     Exit Sub
 
@@ -3354,9 +3328,9 @@ Private Sub HandleWorkLeftClick(ByVal UserIndex As Integer)
         'Remove packet ID
         Call .incomingData.ReadByte
         
-        Dim X           As Byte
+        Dim X           As Integer
 
-        Dim Y           As Byte
+        Dim Y           As Integer
 
         Dim Skill       As eSkill
 
@@ -3368,8 +3342,8 @@ Private Sub HandleWorkLeftClick(ByVal UserIndex As Integer)
         
         Dim WeaponIndex As Integer
         
-        X = .incomingData.ReadByte()
-        Y = .incomingData.ReadByte()
+        X = .incomingData.ReadInteger()
+        Y = .incomingData.ReadInteger()
         
         Skill = .incomingData.ReadByte()
         
@@ -3405,7 +3379,7 @@ Private Sub HandleWorkLeftClick(ByVal UserIndex As Integer)
             Case eSkill.Magia
 
                 'Check the map allows spells to be casted.
-                If MapInfo(.Pos.Map).MagiaSinEfecto > 0 Then
+                If MapZonas(.Pos.Map, UserZonaId(UserIndex)).MagiaSinEfecto > 0 Then
                     Call WriteConsoleMsg(UserIndex, "Una fuerza oscura te impide canalizar tu energia.", FontTypeNames.FONTTYPE_FIGHT)
                     Exit Sub
                 End If
@@ -3444,7 +3418,7 @@ Private Sub HandleWorkLeftClick(ByVal UserIndex As Integer)
             Case eSkill.Robar
 
                 'Does the map allow us to steal here?
-                If MapInfo(.Pos.Map).Pk Then
+                If MapZonas(.Pos.Map, UserZonaId(UserIndex)).Pk Then
                     
                     'Check interval
                     If Not IntervaloPermiteTrabajar(UserIndex) Then Exit Sub
@@ -3665,17 +3639,17 @@ Private Sub HandleInvitarPartyClick(ByVal UserIndex As Integer)
     
         End If
         
-        Dim X           As Byte
+        Dim X           As Integer
     
-        Dim Y           As Byte
+        Dim Y           As Integer
     
         Dim Aleatorio   As Integer
         
         'Remove packet ID
         Call .incomingData.ReadByte
             
-        X = .incomingData.ReadByte()
-        Y = .incomingData.ReadByte()
+        X = .incomingData.ReadInteger()
+        Y = .incomingData.ReadInteger()
     
         If .flags.Muerto = 1 Or .flags.Descansar Or .flags.Meditando Or Not InMapBounds(.Pos.Map, X, Y) Then Exit Sub
     
@@ -9481,7 +9455,7 @@ Private Sub HandleCreaturesInMap(ByVal UserIndex As Integer)
             For i = 1 To LastNPC
 
                 'VB isn't lazzy, so we put more restrictive condition first to speed up the process
-                If Npclist(i).Pos.Map = Map Then
+                If NPCZonaId(i) = UserZonaId(UserIndex) Then
 
                     'esta vivo?
                     If Npclist(i).flags.NPCActive And Npclist(i).Hostile = 1 And Npclist(i).Stats.Alineacion = 2 Then
@@ -9553,7 +9527,7 @@ Private Sub HandleCreaturesInMap(ByVal UserIndex As Integer)
 
             Next i
             
-            Call WriteConsoleMsg(UserIndex, "Npcs Hostiles en mapa: ", FontTypeNames.FONTTYPE_WARNING)
+            Call WriteConsoleMsg(UserIndex, "Npcs Hostiles en zona: ", FontTypeNames.FONTTYPE_WARNING)
 
             If NPCcount1 = 0 Then
                 Call WriteConsoleMsg(UserIndex, "No hay NPCS Hostiles.", FontTypeNames.FONTTYPE_INFO)
@@ -9565,7 +9539,7 @@ Private Sub HandleCreaturesInMap(ByVal UserIndex As Integer)
 
             End If
 
-            Call WriteConsoleMsg(UserIndex, "Otros Npcs en mapa: ", FontTypeNames.FONTTYPE_WARNING)
+            Call WriteConsoleMsg(UserIndex, "Otros Npcs en la Zona: ", FontTypeNames.FONTTYPE_WARNING)
 
             If NPCcount2 = 0 Then
                 Call WriteConsoleMsg(UserIndex, "No hay mas NPCS.", FontTypeNames.FONTTYPE_INFO)
@@ -9577,7 +9551,7 @@ Private Sub HandleCreaturesInMap(ByVal UserIndex As Integer)
 
             End If
 
-            Call LogGM(.Name, "Numero enemigos en mapa " & Map)
+            Call LogGM(.Name, "Numero enemigos en zona " & Map)
 
         End If
 
@@ -9662,8 +9636,8 @@ Private Sub HandleWarpChar(ByVal UserIndex As Integer)
         
         UserName = buffer.ReadASCIIString()
         Map = buffer.ReadInteger()
-        X = buffer.ReadByte()
-        Y = buffer.ReadByte()
+        X = buffer.ReadInteger()
+        Y = buffer.ReadInteger()
         
         If Not .flags.Privilegios And PlayerType.User Then
             If MapaValido(Map) And LenB(UserName) <> 0 Then
@@ -12792,15 +12766,15 @@ Private Sub HandleTeleportCreate(ByVal UserIndex As Integer)
         
         Dim Mapa  As Integer
 
-        Dim X     As Byte
+        Dim X     As Integer
 
-        Dim Y     As Byte
+        Dim Y     As Integer
 
         Dim Radio As Byte
         
         Mapa = .incomingData.ReadInteger()
-        X = .incomingData.ReadByte()
-        Y = .incomingData.ReadByte()
+        X = .incomingData.ReadInteger()
+        Y = .incomingData.ReadInteger()
         Radio = .incomingData.ReadByte()
         
         Radio = MinimoInt(Radio, 6)
@@ -13158,7 +13132,7 @@ Private Sub HanldeForceMIDIToMap(ByVal UserIndex As Integer)
         
             If musicID = 0 Then
                 'Ponemos el default del mapa
-                Call SendData(SendTarget.toMap, Mapa, PrepareMessagePlayMusic(MapInfo(.Pos.Map).music))
+                Call SendData(SendTarget.toMap, Mapa, PrepareMessagePlayMusic(MapZonas(.Pos.Map).music, UserZonaId(UserIndex)))
             Else
                 'Ponemos el pedido por el GM
                 Call SendData(SendTarget.toMap, Mapa, PrepareMessagePlayMusic(musicID))
@@ -13197,14 +13171,14 @@ Private Sub HandleForceWAVEToMap(ByVal UserIndex As Integer)
 
         Dim Mapa   As Integer
 
-        Dim X      As Byte
+        Dim X      As Integer
 
-        Dim Y      As Byte
+        Dim Y      As Integer
         
         waveID = .incomingData.ReadByte()
         Mapa = .incomingData.ReadInteger()
-        X = .incomingData.ReadByte()
-        Y = .incomingData.ReadByte()
+        X = .incomingData.ReadInteger()
+        Y = .incomingData.ReadInteger()
         
         'Solo dioses, admins y RMS
         If .flags.Privilegios And (PlayerType.Dios Or PlayerType.Admin Or PlayerType.RoleMaster) Then
@@ -15578,11 +15552,11 @@ Public Sub HandleSaveChars(ByVal UserIndex As Integer)
 End Sub
 
 ''
-' Handle the "ChangeMapInfoBackup" message
+' Handle the "ChangeMapZonasBackup" message
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleChangeMapInfoBackup(ByVal UserIndex As Integer)
+Public Sub HandleChangeZonaBackup(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Lucas Tavolaro Ortiz (Tavo)
@@ -15610,27 +15584,27 @@ Public Sub HandleChangeMapInfoBackup(ByVal UserIndex As Integer)
         
         'Change the boolean to byte in a fast way
         If doTheBackUp Then
-            MapInfo(.Pos.Map).BackUp = 1
+            MapZonas(.Pos.Map, UserZonaId(UserIndex)).BackUp = 1
         Else
-            MapInfo(.Pos.Map).BackUp = 0
+            MapZonas(.Pos.Map, UserZonaId(UserIndex)).BackUp = 0
 
         End If
         
         'Change the boolean to string in a fast way
-        Call WriteVar(App.Path & MapPath & "mapa" & .Pos.Map & ".dat", "Mapa" & .Pos.Map, "backup", MapInfo(.Pos.Map).BackUp)
+        Call WriteVar(App.Path & MapPath & "mapa" & .Pos.Map & ".dat", "Mapa" & .Pos.Map, "backup", MapZonas(.Pos.Map, UserZonaId(UserIndex)).BackUp)
         
-        Call WriteConsoleMsg(UserIndex, "Mapa " & .Pos.Map & " Backup: " & MapInfo(.Pos.Map).BackUp, FontTypeNames.FONTTYPE_INFO)
+        Call WriteConsoleMsg(UserIndex, "Mapa " & .Pos.Map & " Backup: " & MapZonas(.Pos.Map, UserZonaId(UserIndex)).BackUp, FontTypeNames.FONTTYPE_INFO)
 
     End With
 
 End Sub
 
 ''
-' Handle the "ChangeMapInfoPK" message
+' Handle the "ChangeZonaPK" message
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleChangeMapInfoPK(ByVal UserIndex As Integer)
+Public Sub HandleChangeZonaPK(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Lucas Tavolaro Ortiz (Tavo)
@@ -15656,23 +15630,23 @@ Public Sub HandleChangeMapInfoPK(ByVal UserIndex As Integer)
         
         Call LogGM(.Name, .Name & " ha cambiado la informacion sobre si es PK el mapa.")
         
-        MapInfo(.Pos.Map).Pk = isMapPk
+        MapZonas(.Pos.Map, UserZonaId(UserIndex)).Pk = isMapPk
         
         'Change the boolean to string in a fast way
         Call WriteVar(App.Path & MapPath & "mapa" & .Pos.Map & ".dat", "Mapa" & .Pos.Map, "Pk", IIf(isMapPk, "1", "0"))
 
-        Call WriteConsoleMsg(UserIndex, "Mapa " & .Pos.Map & " PK: " & MapInfo(.Pos.Map).Pk, FontTypeNames.FONTTYPE_INFO)
+        Call WriteConsoleMsg(UserIndex, "Mapa " & .Pos.Map & " PK: " & MapZonas(.Pos.Map, UserZonaId(UserIndex)).Pk, FontTypeNames.FONTTYPE_INFO)
 
     End With
 
 End Sub
 
 ''
-' Handle the "ChangeMapInfoRestricted" message
+' Handle the "ChangeZonaRestricted" message
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleChangeMapInfoRestricted(ByVal UserIndex As Integer)
+Public Sub HandleChangeZonaRestricted(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Pablo (ToxicWaste)
@@ -15706,10 +15680,10 @@ Public Sub HandleChangeMapInfoRestricted(ByVal UserIndex As Integer)
             If tStr = "NEWBIE" Or tStr = "NO" Or tStr = "ARMADA" Or tStr = "CAOS" Or tStr = "FACCION" Then
                 Call LogGM(.Name, .Name & " ha cambiado la informacion sobre si es restringido el mapa.")
                 
-                MapInfo(UserList(UserIndex).Pos.Map).Restringir = RestrictStringToByte(tStr)
+                MapZonas(UserList(UserIndex).Pos.Map, UserZonaId(UserIndex)).Restringir = RestrictStringToByte(tStr)
                 
                 Call WriteVar(App.Path & MapPath & "mapa" & UserList(UserIndex).Pos.Map & ".dat", "Mapa" & UserList(UserIndex).Pos.Map, "Restringir", tStr)
-                Call WriteConsoleMsg(UserIndex, "Mapa " & .Pos.Map & " Restringido: " & RestrictByteToString(MapInfo(.Pos.Map).Restringir), FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "Mapa " & .Pos.Map & " Restringido: " & RestrictByteToString(MapZonas(.Pos.Map, UserZonaId(UserIndex)).Restringir), FontTypeNames.FONTTYPE_INFO)
             Else
                 Call WriteConsoleMsg(UserIndex, "Opciones para restringir: 'NEWBIE', 'NO', 'ARMADA', 'CAOS', 'FACCION'", FontTypeNames.FONTTYPE_INFO)
 
@@ -15738,11 +15712,11 @@ errHandler:
 End Sub
 
 ''
-' Handle the "ChangeMapInfoNoMagic" message
+' Handle the "ChangeZonaNoMagic" message
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleChangeMapInfoNoMagic(ByVal UserIndex As Integer)
+Public Sub HandleChangeZonaNoMagic(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Pablo (ToxicWaste)
@@ -15765,9 +15739,9 @@ Public Sub HandleChangeMapInfoNoMagic(ByVal UserIndex As Integer)
         
         If (.flags.Privilegios And (PlayerType.Admin Or PlayerType.Dios)) <> 0 Then
             Call LogGM(.Name, .Name & " ha cambiado la informacion sobre si esta permitido usar la magia el mapa.")
-            MapInfo(UserList(UserIndex).Pos.Map).MagiaSinEfecto = nomagic
+            MapZonas(UserList(UserIndex).Pos.Map, UserZonaId(UserIndex)).MagiaSinEfecto = nomagic
             Call WriteVar(App.Path & MapPath & "mapa" & UserList(UserIndex).Pos.Map & ".dat", "Mapa" & UserList(UserIndex).Pos.Map, "MagiaSinEfecto", nomagic)
-            Call WriteConsoleMsg(UserIndex, "Mapa " & .Pos.Map & " MagiaSinEfecto: " & MapInfo(.Pos.Map).MagiaSinEfecto, FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Mapa " & .Pos.Map & " MagiaSinEfecto: " & MapZonas(.Pos.Map, UserZonaId(UserIndex)).MagiaSinEfecto, FontTypeNames.FONTTYPE_INFO)
 
         End If
 
@@ -15776,11 +15750,11 @@ Public Sub HandleChangeMapInfoNoMagic(ByVal UserIndex As Integer)
 End Sub
 
 ''
-' Handle the "ChangeMapInfoNoInvi" message
+' Handle the "ChangeZonaNoInvi" message
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleChangeMapInfoNoInvi(ByVal UserIndex As Integer)
+Public Sub HandleChangeZonaNoInvi(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Pablo (ToxicWaste)
@@ -15803,9 +15777,9 @@ Public Sub HandleChangeMapInfoNoInvi(ByVal UserIndex As Integer)
         
         If (.flags.Privilegios And (PlayerType.Admin Or PlayerType.Dios)) <> 0 Then
             Call LogGM(.Name, .Name & " ha cambiado la informacion sobre si esta permitido usar la invisibilidad en el mapa.")
-            MapInfo(UserList(UserIndex).Pos.Map).InviSinEfecto = noinvi
+            MapZonas(UserList(UserIndex).Pos.Map, UserZonaId(UserIndex)).InviSinEfecto = noinvi
             Call WriteVar(App.Path & MapPath & "mapa" & UserList(UserIndex).Pos.Map & ".dat", "Mapa" & UserList(UserIndex).Pos.Map, "InviSinEfecto", noinvi)
-            Call WriteConsoleMsg(UserIndex, "Mapa " & .Pos.Map & " InviSinEfecto: " & MapInfo(.Pos.Map).InviSinEfecto, FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Mapa " & .Pos.Map & " InviSinEfecto: " & MapZonas(.Pos.Map, UserZonaId(UserIndex)).InviSinEfecto, FontTypeNames.FONTTYPE_INFO)
 
         End If
 
@@ -15814,11 +15788,11 @@ Public Sub HandleChangeMapInfoNoInvi(ByVal UserIndex As Integer)
 End Sub
             
 ''
-' Handle the "ChangeMapInfoNoResu" message
+' Handle the "ChangeZonaNoResu" message
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleChangeMapInfoNoResu(ByVal UserIndex As Integer)
+Public Sub HandleChangeZonaNoResu(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Pablo (ToxicWaste)
@@ -15841,9 +15815,9 @@ Public Sub HandleChangeMapInfoNoResu(ByVal UserIndex As Integer)
         
         If (.flags.Privilegios And (PlayerType.Admin Or PlayerType.Dios)) <> 0 Then
             Call LogGM(.Name, .Name & " ha cambiado la informacion sobre si esta permitido usar el resucitar en el mapa.")
-            MapInfo(UserList(UserIndex).Pos.Map).ResuSinEfecto = noresu
+            MapZonas(UserList(UserIndex).Pos.Map, UserZonaId(UserIndex)).ResuSinEfecto = noresu
             Call WriteVar(App.Path & MapPath & "mapa" & UserList(UserIndex).Pos.Map & ".dat", "Mapa" & UserList(UserIndex).Pos.Map, "ResuSinEfecto", noresu)
-            Call WriteConsoleMsg(UserIndex, "Mapa " & .Pos.Map & " ResuSinEfecto: " & MapInfo(.Pos.Map).ResuSinEfecto, FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Mapa " & .Pos.Map & " ResuSinEfecto: " & MapZonas(.Pos.Map, UserZonaId(UserIndex)).ResuSinEfecto, FontTypeNames.FONTTYPE_INFO)
 
         End If
 
@@ -15852,11 +15826,11 @@ Public Sub HandleChangeMapInfoNoResu(ByVal UserIndex As Integer)
 End Sub
 
 ''
-' Handle the "ChangeMapInfoLand" message
+' Handle the "ChangeZonaLand" message
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleChangeMapInfoLand(ByVal UserIndex As Integer)
+Public Sub HandleChangeZonaLand(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Pablo (ToxicWaste)
@@ -15890,10 +15864,10 @@ Public Sub HandleChangeMapInfoLand(ByVal UserIndex As Integer)
             If tStr = "BOSQUE" Or tStr = "NIEVE" Or tStr = "DESIERTO" Or tStr = "CIUDAD" Or tStr = "CAMPO" Or tStr = "DUNGEON" Then
                 Call LogGM(.Name, .Name & " ha cambiado la informacion del terreno del mapa.")
                 
-                MapInfo(UserList(UserIndex).Pos.Map).Terreno = TerrainStringToByte(tStr)
+                MapZonas(UserList(UserIndex).Pos.Map, UserZonaId(UserIndex)).Terreno = TerrainStringToByte(tStr)
                 
                 Call WriteVar(App.Path & MapPath & "mapa" & UserList(UserIndex).Pos.Map & ".dat", "Mapa" & UserList(UserIndex).Pos.Map, "Terreno", tStr)
-                Call WriteConsoleMsg(UserIndex, "Mapa " & .Pos.Map & " Terreno: " & TerrainByteToString(MapInfo(.Pos.Map).Terreno), FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "Mapa " & .Pos.Map & " Terreno: " & TerrainByteToString(MapZonas(.Pos.Map, UserZonaId(UserIndex)).Terreno), FontTypeNames.FONTTYPE_INFO)
             Else
                 Call WriteConsoleMsg(UserIndex, "Opciones para terreno: 'BOSQUE', 'NIEVE', 'DESIERTO', 'CIUDAD', 'CAMPO', 'DUNGEON'", FontTypeNames.FONTTYPE_INFO)
                 Call WriteConsoleMsg(UserIndex, "Igualmente, el Unico Util es 'NIEVE' ya que al ingresarlo, la gente muere de frio en el mapa.", FontTypeNames.FONTTYPE_INFO)
@@ -15923,11 +15897,11 @@ errHandler:
 End Sub
 
 ''
-' Handle the "ChangeMapInfoZone" message
+' Handle the "ChangeZonaZone" message
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleChangeMapInfoZone(ByVal UserIndex As Integer)
+Public Sub HandleChangeZonaZone(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Pablo (ToxicWaste)
@@ -15960,9 +15934,9 @@ Public Sub HandleChangeMapInfoZone(ByVal UserIndex As Integer)
         If (.flags.Privilegios And (PlayerType.Admin Or PlayerType.Dios)) <> 0 Then
             If tStr = "BOSQUE" Or tStr = "NIEVE" Or tStr = "DESIERTO" Or tStr = "CIUDAD" Or tStr = "CAMPO" Or tStr = "DUNGEON" Then
                 Call LogGM(.Name, .Name & " ha cambiado la informacion de la zona del mapa.")
-                MapInfo(UserList(UserIndex).Pos.Map).Zona = tStr
+                MapZonas(UserList(UserIndex).Pos.Map, UserZonaId(UserIndex)).Zona = tStr
                 Call WriteVar(App.Path & MapPath & "mapa" & UserList(UserIndex).Pos.Map & ".dat", "Mapa" & UserList(UserIndex).Pos.Map, "Zona", tStr)
-                Call WriteConsoleMsg(UserIndex, "Mapa " & .Pos.Map & " Zona: " & MapInfo(.Pos.Map).Zona, FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "Mapa " & .Pos.Map & " Zona: " & MapZonas(.Pos.Map, UserZonaId(UserIndex)).Zona, FontTypeNames.FONTTYPE_INFO)
             Else
                 Call WriteConsoleMsg(UserIndex, "Opciones para terreno: 'BOSQUE', 'NIEVE', 'DESIERTO', 'CIUDAD', 'CAMPO', 'DUNGEON'", FontTypeNames.FONTTYPE_INFO)
                 Call WriteConsoleMsg(UserIndex, "Igualmente, el Unico Util es 'DUNGEON' ya que al ingresarlo, NO se sentira el efecto de la lluvia en este mapa.", FontTypeNames.FONTTYPE_INFO)
@@ -15992,11 +15966,11 @@ errHandler:
 End Sub
             
 ''
-' Handle the "ChangeMapInfoStealNp" message
+' Handle the "ChangeZonaStealNp" message
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleChangeMapInfoStealNpc(ByVal UserIndex As Integer)
+Public Sub HandleChangeZonaStealNpc(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: ZaMa
@@ -16020,10 +15994,10 @@ Public Sub HandleChangeMapInfoStealNpc(ByVal UserIndex As Integer)
         If (.flags.Privilegios And (PlayerType.Admin Or PlayerType.Dios)) <> 0 Then
             Call LogGM(.Name, .Name & " ha cambiado la informacion sobre si esta permitido robar npcs en el mapa.")
             
-            MapInfo(UserList(UserIndex).Pos.Map).RoboNpcsPermitido = RoboNpc
+            MapZonas(UserList(UserIndex).Pos.Map, UserZonaId(UserIndex)).RoboNpcsPermitido = RoboNpc
             
             Call WriteVar(App.Path & MapPath & "mapa" & UserList(UserIndex).Pos.Map & ".dat", "Mapa" & UserList(UserIndex).Pos.Map, "RoboNpcsPermitido", RoboNpc)
-            Call WriteConsoleMsg(UserIndex, "Mapa " & .Pos.Map & " RoboNpcsPermitido: " & MapInfo(.Pos.Map).RoboNpcsPermitido, FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Mapa " & .Pos.Map & " RoboNpcsPermitido: " & MapZonas(.Pos.Map, UserZonaId(UserIndex)).RoboNpcsPermitido, FontTypeNames.FONTTYPE_INFO)
 
         End If
 
@@ -16032,11 +16006,11 @@ Public Sub HandleChangeMapInfoStealNpc(ByVal UserIndex As Integer)
 End Sub
             
 ''
-' Handle the "ChangeMapInfoNoOcultar" message
+' Handle the "ChangeZonaNoOcultar" message
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleChangeMapInfoNoOcultar(ByVal UserIndex As Integer)
+Public Sub HandleChangeZonaNoOcultar(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: ZaMa
@@ -16066,7 +16040,7 @@ Public Sub HandleChangeMapInfoNoOcultar(ByVal UserIndex As Integer)
             
             Call LogGM(.Name, .Name & " ha cambiado la informacion sobre si esta permitido ocultarse en el mapa " & Mapa & ".")
             
-            MapInfo(Mapa).OcultarSinEfecto = NoOcultar
+            MapZonas(Mapa, UserZonaId(UserIndex)).OcultarSinEfecto = NoOcultar
 
             Call WriteVar(App.Path & MapPath & "mapa" & Mapa & ".dat", "Mapa" & Mapa, "OcultarSinEfecto", NoOcultar)
             Call WriteConsoleMsg(UserIndex, "Mapa " & Mapa & " OcultarSinEfecto: " & NoOcultar, FontTypeNames.FONTTYPE_INFO)
@@ -16078,11 +16052,11 @@ Public Sub HandleChangeMapInfoNoOcultar(ByVal UserIndex As Integer)
 End Sub
            
 ''
-' Handle the "ChangeMapInfoNoInvocar" message
+' Handle the "ChangeZonaNoInvocar" message
 '
 ' @param userIndex The index of the user sending the message
 
-Public Sub HandleChangeMapInfoNoInvocar(ByVal UserIndex As Integer)
+Public Sub HandleChangeZonaNoInvocar(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: ZaMa
@@ -16112,7 +16086,7 @@ Public Sub HandleChangeMapInfoNoInvocar(ByVal UserIndex As Integer)
             
             Call LogGM(.Name, .Name & " ha cambiado la informacion sobre si esta permitido invocar en el mapa " & Mapa & ".")
             
-            MapInfo(Mapa).InvocarSinEfecto = NoInvocar
+            MapZonas(Mapa, UserZonaId(UserIndex)).InvocarSinEfecto = NoInvocar
 
             Call WriteVar(App.Path & MapPath & "mapa" & Mapa & ".dat", "Mapa" & Mapa, "InvocarSinEfecto", NoInvocar)
             Call WriteConsoleMsg(UserIndex, "Mapa " & Mapa & " InvocarSinEfecto: " & NoInvocar, FontTypeNames.FONTTYPE_INFO)
@@ -17213,8 +17187,8 @@ Public Sub HandleCreatePretorianClan(ByVal UserIndex As Integer)
     On Error GoTo errHandler
 
     Dim Map   As Integer
-    Dim X     As Byte
-    Dim Y     As Byte
+    Dim X     As Integer
+    Dim Y     As Integer
     Dim index As Long
     
     With UserList(UserIndex)
@@ -17223,8 +17197,8 @@ Public Sub HandleCreatePretorianClan(ByVal UserIndex As Integer)
         Call .incomingData.ReadByte
         
         Map = .incomingData.ReadInteger()
-        X = .incomingData.ReadByte()
-        Y = .incomingData.ReadByte()
+        X = .incomingData.ReadInteger()
+        Y = .incomingData.ReadInteger()
         
         ' User Admin?
         If .flags.Privilegios And (PlayerType.Admin Or PlayerType.Dios) = 0 Then Exit Sub
@@ -18016,7 +17990,6 @@ Public Sub WriteChangeMap(ByVal UserIndex As Integer, _
     With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.ChangeMap)
         Call .WriteInteger(Map)
-        Call .WriteASCIIString(MapInfo(Map).Name)
         Call .WriteInteger(version)
 
     End With
@@ -18330,8 +18303,8 @@ Public Sub WriteCharacterCreate(ByVal UserIndex As Integer, _
                                 ByVal Head As Integer, _
                                 ByVal Heading As eHeading, _
                                 ByVal CharIndex As Integer, _
-                                ByVal X As Byte, _
-                                ByVal Y As Byte, _
+                                ByVal X As Integer, _
+                                ByVal Y As Integer, _
                                 ByVal weapon As Integer, _
                                 ByVal shield As Integer, _
                                 ByVal FX As Integer, _
@@ -18406,8 +18379,8 @@ End Sub
 
 Public Sub WriteCharacterMove(ByVal UserIndex As Integer, _
                               ByVal CharIndex As Integer, _
-                              ByVal X As Byte, _
-                              ByVal Y As Byte)
+                              ByVal X As Integer, _
+                              ByVal Y As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -18513,8 +18486,8 @@ End Sub
 Public Sub WriteObjectCreate(ByVal UserIndex As Integer, _
                              ByVal GrhIndex As Long, _
                              ByVal ParticulaIndex As Integer, _
-                             ByVal X As Byte, _
-                             ByVal Y As Byte, _
+                             ByVal X As Integer, _
+                             ByVal Y As Integer, _
                              Optional ByVal Shadow As Byte = 0)
 
     '***************************************************
@@ -18545,7 +18518,7 @@ End Sub
 ' @param    Y Y coord of the character's new position.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteObjectDelete(ByVal UserIndex As Integer, ByVal X As Byte, ByVal Y As Byte)
+Public Sub WriteObjectDelete(ByVal UserIndex As Integer, ByVal X As Integer, ByVal Y As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -18577,8 +18550,8 @@ End Sub
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
 Public Sub WriteBlockPosition(ByVal UserIndex As Integer, _
-                              ByVal X As Byte, _
-                              ByVal Y As Byte, _
+                              ByVal X As Integer, _
+                              ByVal Y As Integer, _
                               ByVal Blocked As Boolean)
 
     '***************************************************
@@ -18590,8 +18563,8 @@ Public Sub WriteBlockPosition(ByVal UserIndex As Integer, _
 
     With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.BlockPosition)
-        Call .WriteByte(X)
-        Call .WriteByte(Y)
+        Call .WriteInteger(X)
+        Call .WriteInteger(Y)
         Call .WriteBoolean(Blocked)
 
     End With
@@ -18651,8 +18624,8 @@ End Sub
 
 Public Sub WritePlayWave(ByVal UserIndex As Integer, _
                          ByVal wave As Byte, _
-                         ByVal X As Byte, _
-                         ByVal Y As Byte)
+                         ByVal X As Integer, _
+                         ByVal Y As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -18738,8 +18711,8 @@ Public Sub WriteAreaChanged(ByVal UserIndex As Integer)
 
     With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.AreaChanged)
-        Call .WriteByte(UserList(UserIndex).Pos.X)
-        Call .WriteByte(UserList(UserIndex).Pos.Y)
+        Call .WriteInteger(UserList(UserIndex).Pos.X)
+        Call .WriteInteger(UserList(UserIndex).Pos.Y)
 
     End With
 
@@ -21203,8 +21176,8 @@ End Function
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
 Public Function PrepareMessagePlayWave(ByVal wave As Integer, _
-                                       ByVal X As Byte, _
-                                       ByVal Y As Byte) As String
+                                       ByVal X As Integer, _
+                                       ByVal Y As Integer) As String
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -21215,8 +21188,8 @@ Public Function PrepareMessagePlayWave(ByVal wave As Integer, _
     With auxiliarBuffer
         Call .WriteByte(ServerPacketID.PlayWave)
         Call .WriteInteger(wave)
-        Call .WriteByte(X)
-        Call .WriteByte(Y)
+        Call .WriteInteger(X)
+        Call .WriteInteger(Y)
         
         PrepareMessagePlayWave = .ReadASCIIStringFixed(.Length)
 
@@ -21351,7 +21324,7 @@ End Function
 ' @return   The formated message ready to be writen as is on outgoing buffers.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Function PrepareMessageObjectDelete(ByVal X As Byte, ByVal Y As Byte) As String
+Public Function PrepareMessageObjectDelete(ByVal X As Integer, ByVal Y As Integer) As String
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -21360,8 +21333,8 @@ Public Function PrepareMessageObjectDelete(ByVal X As Byte, ByVal Y As Byte) As 
     '***************************************************
     With auxiliarBuffer
         Call .WriteByte(ServerPacketID.ObjectDelete)
-        Call .WriteByte(X)
-        Call .WriteByte(Y)
+        Call .WriteInteger(X)
+        Call .WriteInteger(Y)
         
         PrepareMessageObjectDelete = .ReadASCIIStringFixed(.Length)
 
@@ -21378,8 +21351,8 @@ End Function
 ' @return   The formated message ready to be writen as is on outgoing buffers.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Function PrepareMessageBlockPosition(ByVal X As Byte, _
-                                            ByVal Y As Byte, _
+Public Function PrepareMessageBlockPosition(ByVal X As Integer, _
+                                            ByVal Y As Integer, _
                                             ByVal Blocked As Boolean) As String
 
     '***************************************************
@@ -21389,8 +21362,8 @@ Public Function PrepareMessageBlockPosition(ByVal X As Byte, _
     '***************************************************
     With auxiliarBuffer
         Call .WriteByte(ServerPacketID.BlockPosition)
-        Call .WriteByte(X)
-        Call .WriteByte(Y)
+        Call .WriteInteger(X)
+        Call .WriteInteger(Y)
         Call .WriteBoolean(Blocked)
         
         PrepareMessageBlockPosition = .ReadASCIIStringFixed(.Length)
@@ -21410,8 +21383,8 @@ End Function
 
 Public Function PrepareMessageObjectCreate(ByVal GrhIndex As Long, _
                                            ByVal ParticulaIndex As Integer, _
-                                           ByVal X As Byte, _
-                                           ByVal Y As Byte, _
+                                           ByVal X As Integer, _
+                                           ByVal Y As Integer, _
                                            ByVal Shadow As Byte) As String
 
     '***************************************************
@@ -21421,8 +21394,8 @@ Public Function PrepareMessageObjectCreate(ByVal GrhIndex As Long, _
     '***************************************************
     With auxiliarBuffer
         Call .WriteByte(ServerPacketID.ObjectCreate)
-        Call .WriteByte(X)
-        Call .WriteByte(Y)
+        Call .WriteInteger(X)
+        Call .WriteInteger(Y)
         Call .WriteLong(GrhIndex)
         Call .WriteInteger(ParticulaIndex)
         Call .WriteByte(Shadow)
@@ -21505,8 +21478,8 @@ Public Function PrepareMessageCharacterCreate(ByVal body As Integer, _
                                               ByVal Head As Integer, _
                                               ByVal Heading As eHeading, _
                                               ByVal CharIndex As Integer, _
-                                              ByVal X As Byte, _
-                                              ByVal Y As Byte, _
+                                              ByVal X As Integer, _
+                                              ByVal Y As Integer, _
                                               ByVal weapon As Integer, _
                                               ByVal shield As Integer, _
                                               ByVal FX As Integer, _
@@ -21533,8 +21506,8 @@ Public Function PrepareMessageCharacterCreate(ByVal body As Integer, _
         Call .WriteInteger(body)
         Call .WriteInteger(Head)
         Call .WriteByte(Heading)
-        Call .WriteByte(X)
-        Call .WriteByte(Y)
+        Call .WriteInteger(X)
+        Call .WriteInteger(Y)
         Call .WriteInteger(weapon)
         Call .WriteInteger(shield)
         Call .WriteInteger(helmet)
@@ -21639,8 +21612,8 @@ End Function
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
 Public Function PrepareMessageCharacterMove(ByVal CharIndex As Integer, _
-                                            ByVal X As Byte, _
-                                            ByVal Y As Byte) As String
+                                            ByVal X As Integer, _
+                                            ByVal Y As Integer) As String
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -21650,8 +21623,8 @@ Public Function PrepareMessageCharacterMove(ByVal CharIndex As Integer, _
     With auxiliarBuffer
         Call .WriteByte(ServerPacketID.CharacterMove)
         Call .WriteInteger(CharIndex)
-        Call .WriteByte(X)
-        Call .WriteByte(Y)
+        Call .WriteInteger(X)
+        Call .WriteInteger(Y)
         
         PrepareMessageCharacterMove = .ReadASCIIStringFixed(.Length)
 
@@ -22809,14 +22782,14 @@ errHandler:
 
 End Sub
 
-Public Function PrepareMessageCreateDamage(ByVal X As Byte, ByVal Y As Byte, ByVal DamageValue As Long, ByVal DamageType As Byte)
+Public Function PrepareMessageCreateDamage(ByVal X As Integer, ByVal Y As Integer, ByVal DamageValue As Long, ByVal DamageType As Byte)
  
 ' @ Envia el paquete para crear dano (Y)
  
 With auxiliarBuffer
      .WriteByte ServerPacketID.CreateDamage
-     .WriteByte X
-     .WriteByte Y
+     .WriteInteger X
+     .WriteInteger Y
      .WriteLong DamageValue
      .WriteByte DamageType
      
@@ -23316,7 +23289,7 @@ Private Sub HandleChatGlobal(ByVal UserIndex As Integer)
 '***************************************************
 'Autor: Lorwik
 'Fecha: 09/06/2020
-'Descripción: Conversiones por chat global
+'Descripción: Conversaciones por chat global
 '***************************************************
 
     If UserList(UserIndex).incomingData.Length < 3 Then
@@ -23325,6 +23298,7 @@ Private Sub HandleChatGlobal(ByVal UserIndex As Integer)
     End If
 
 On Error GoTo errHandler
+
     With UserList(UserIndex)
         'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
         Dim buffer As clsByteQueue: Set buffer = New clsByteQueue
@@ -23336,6 +23310,9 @@ On Error GoTo errHandler
         Dim Message As String
         Message = buffer.ReadASCIIString()
       
+        'If we got here then packet is complete, copy data back to original queue
+        Call .incomingData.CopyBuffer(buffer)
+      
         '¿El chat global esta activo?
         If GlobalChatActive = True Then
 
@@ -23344,10 +23321,10 @@ On Error GoTo errHandler
                 Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
                 Exit Sub
             End If
-            
+
             '¿Tiene el nivel requerido?
-            If .Stats.ELV >= MINLVLGLOBAL Then
-                Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
+            If .Stats.ELV < MINLVLGLOBAL Then
+                Call WriteConsoleMsg(UserIndex, "Para usar el chat global debes ser nivel " & MINLVLGLOBAL & " como minimo.", FontTypeNames.FONTTYPE_INFO)
                 Exit Sub
             End If
             
@@ -23372,8 +23349,6 @@ On Error GoTo errHandler
             Call WriteConsoleMsg(UserIndex, "El chat global se encuentra deshabilitado en estos momentos.", FontTypeNames.FONTTYPE_INFO)
         End If
           
-        'If we got here then packet is complete, copy data back to original queue
-        Call .incomingData.CopyBuffer(buffer)
     End With
 
 errHandler:
@@ -23893,7 +23868,7 @@ Public Sub HandleOnAmigo(ByVal UserIndex As Integer)
         For i = 1 To MAXAMIGOS
 
             If .Amigos(i).index > 0 Then
-                list = list & "[" & UserList(.Amigos(i).index).Name & "-" & MapInfo(UserList(.Amigos(i).index).Pos.Map).Name & "];"
+                list = list & "[" & UserList(.Amigos(i).index).Name & "-" & MapZonas(UserList(.Amigos(i).index).Pos.Map, UserZonaId(UserIndex)).Name & "];"
             End If
 
         Next i

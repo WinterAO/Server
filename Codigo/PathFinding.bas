@@ -78,11 +78,11 @@ Attribute VB_Name = "PathFinding"
 
 Option Explicit
 
-Private Const rows   As Integer = 100
+Private Const rows   As Integer = YMaxMapSize
 
-Private Const COLUMS As Integer = 100
+Private Const COLUMS As Integer = XMaxMapSize
 
-Private Const MAXINT As Integer = 1000
+Private Const MAXINT As Integer = 10000
 
 Private Type tIntermidiateWork
 
@@ -107,7 +107,7 @@ End Function
 Private Function IsWalkable(ByVal Map As Integer, _
                             ByVal row As Integer, _
                             ByVal Col As Integer, _
-                            ByVal NpcIndex As Integer) As Boolean
+                            ByVal NPCIndex As Integer) As Boolean
     '***************************************************
     'Author: Unknown
     'Last Modification: -
@@ -115,10 +115,10 @@ Private Function IsWalkable(ByVal Map As Integer, _
     '***************************************************
 
     With MapData(Map, row, Col)
-        IsWalkable = ((.Blocked Or .NpcIndex) = 0)
+        IsWalkable = ((.Blocked Or .NPCIndex) = 0)
     
-        If .Userindex <> 0 Then
-            If .Userindex <> Npclist(NpcIndex).PFINFO.TargetUser Then IsWalkable = False
+        If .UserIndex <> 0 Then
+            If .UserIndex <> Npclist(NPCIndex).PFINFO.TargetUser Then IsWalkable = False
 
         End If
 
@@ -127,10 +127,10 @@ Private Function IsWalkable(ByVal Map As Integer, _
 End Function
 
 Private Sub ProcessAdjacents(ByVal MapIndex As Integer, _
-                             ByRef T() As tIntermidiateWork, _
+                             ByRef t() As tIntermidiateWork, _
                              ByRef vfila As Integer, _
                              ByRef vcolu As Integer, _
-                             ByVal NpcIndex As Integer)
+                             ByVal NPCIndex As Integer)
     '***************************************************
     'Author: Unknown
     'Last Modification: -
@@ -145,18 +145,18 @@ Private Sub ProcessAdjacents(ByVal MapIndex As Integer, _
     j = vfila - 1
 
     If Limites(j, vcolu) Then
-        If IsWalkable(MapIndex, j, vcolu, NpcIndex) Then
+        If IsWalkable(MapIndex, j, vcolu, NPCIndex) Then
 
-            With T(j, vcolu)
+            With t(j, vcolu)
 
                 'Nos aseguramos que no hay un camino mas corto
                 If .DistV = MAXINT Then
                     'Actualizamos la tabla de calculos intermedios
-                    .DistV = T(vfila, vcolu).DistV + 1
-                    .PrevV.x = vcolu
+                    .DistV = t(vfila, vcolu).DistV + 1
+                    .PrevV.X = vcolu
                     .PrevV.Y = vfila
                     'Mete el vertice en la cola
-                    V.x = vcolu
+                    V.X = vcolu
                     V.Y = j
                     Call Push(V)
 
@@ -172,18 +172,18 @@ Private Sub ProcessAdjacents(ByVal MapIndex As Integer, _
 
     'look to south
     If Limites(j, vcolu) Then
-        If IsWalkable(MapIndex, j, vcolu, NpcIndex) Then
+        If IsWalkable(MapIndex, j, vcolu, NPCIndex) Then
 
-            With T(j, vcolu)
+            With t(j, vcolu)
 
                 'Nos aseguramos que no hay un camino mas corto
                 If .DistV = MAXINT Then
                     'Actualizamos la tabla de calculos intermedios
-                    .DistV = T(vfila, vcolu).DistV + 1
-                    .PrevV.x = vcolu
+                    .DistV = t(vfila, vcolu).DistV + 1
+                    .PrevV.X = vcolu
                     .PrevV.Y = vfila
                     'Mete el vertice en la cola
-                    V.x = vcolu
+                    V.X = vcolu
                     V.Y = j
                     Call Push(V)
 
@@ -199,18 +199,18 @@ Private Sub ProcessAdjacents(ByVal MapIndex As Integer, _
 
     'look to west
     If Limites(vfila, j) Then
-        If IsWalkable(MapIndex, vfila, j, NpcIndex) Then
+        If IsWalkable(MapIndex, vfila, j, NPCIndex) Then
 
-            With T(vfila, j)
+            With t(vfila, j)
 
                 'Nos aseguramos que no hay un camino mas corto
                 If .DistV = MAXINT Then
                     'Actualizamos la tabla de calculos intermedios
-                    .DistV = T(vfila, vcolu).DistV + 1
-                    .PrevV.x = vcolu
+                    .DistV = t(vfila, vcolu).DistV + 1
+                    .PrevV.X = vcolu
                     .PrevV.Y = vfila
                     'Mete el vertice en la cola
-                    V.x = j
+                    V.X = j
                     V.Y = vfila
                     Call Push(V)
 
@@ -226,18 +226,18 @@ Private Sub ProcessAdjacents(ByVal MapIndex As Integer, _
 
     'look to east
     If Limites(vfila, j) Then
-        If IsWalkable(MapIndex, vfila, j, NpcIndex) Then
+        If IsWalkable(MapIndex, vfila, j, NPCIndex) Then
 
-            With T(vfila, j)
+            With t(vfila, j)
 
                 'Nos aseguramos que no hay un camino mas corto
                 If .DistV = MAXINT Then
                     'Actualizamos la tabla de calculos intermedios
-                    .DistV = T(vfila, vcolu).DistV + 1
-                    .PrevV.x = vcolu
+                    .DistV = t(vfila, vcolu).DistV + 1
+                    .PrevV.X = vcolu
                     .PrevV.Y = vfila
                     'Mete el vertice en la cola
-                    V.x = j
+                    V.X = j
                     V.Y = vfila
                     Call Push(V)
 
@@ -251,7 +251,7 @@ Private Sub ProcessAdjacents(ByVal MapIndex As Integer, _
    
 End Sub
 
-Public Sub SeekPath(ByVal NpcIndex As Integer, Optional ByVal MaxSteps As Integer = 30)
+Public Sub SeekPath(ByVal NPCIndex As Integer, Optional ByVal MaxSteps As Integer = 30)
     '***************************************************
     'Author: Unknown
     'Last Modification: -
@@ -271,13 +271,13 @@ Public Sub SeekPath(ByVal NpcIndex As Integer, Optional ByVal MaxSteps As Intege
 
     Dim steps       As Integer
     
-    With Npclist(NpcIndex)
+    With Npclist(NPCIndex)
         NpcMap = .Pos.Map
         
-        cur_npc_pos.x = .Pos.Y
-        cur_npc_pos.Y = .Pos.x
+        cur_npc_pos.X = .Pos.Y
+        cur_npc_pos.Y = .Pos.X
         
-        tar_npc_pos.x = .PFINFO.Target.x '  UserList(.PFINFO.TargetUser).Pos.X
+        tar_npc_pos.X = .PFINFO.Target.X '  UserList(.PFINFO.TargetUser).Pos.X
         tar_npc_pos.Y = .PFINFO.Target.Y '  UserList(.PFINFO.TargetUser).Pos.Y
         
         Call InitializeTable(TmpArray, cur_npc_pos)
@@ -291,17 +291,17 @@ Public Sub SeekPath(ByVal NpcIndex As Integer, Optional ByVal MaxSteps As Intege
             If steps > MaxSteps Then Exit Do
             V = Pop
 
-            If (V.x = tar_npc_pos.x) And (V.Y = tar_npc_pos.Y) Then Exit Do
-            Call ProcessAdjacents(NpcMap, TmpArray, V.Y, V.x, NpcIndex)
+            If (V.X = tar_npc_pos.X) And (V.Y = tar_npc_pos.Y) Then Exit Do
+            Call ProcessAdjacents(NpcMap, TmpArray, V.Y, V.X, NPCIndex)
         Loop
         
-        Call MakePath(NpcIndex)
+        Call MakePath(NPCIndex)
 
     End With
 
 End Sub
 
-Private Sub MakePath(ByVal NpcIndex As Integer)
+Private Sub MakePath(ByVal NPCIndex As Integer)
     '***************************************************
     'Author: Unknown
     'Last Modification: -
@@ -314,8 +314,8 @@ Private Sub MakePath(ByVal NpcIndex As Integer)
 
     Dim i     As Integer
     
-    With Npclist(NpcIndex)
-        Pasos = TmpArray(.PFINFO.Target.Y, .PFINFO.Target.x).DistV
+    With Npclist(NPCIndex)
+        Pasos = TmpArray(.PFINFO.Target.Y, .PFINFO.Target.X).DistV
         .PFINFO.PathLenght = Pasos
         
         If Pasos = MAXINT Then
@@ -328,12 +328,12 @@ Private Sub MakePath(ByVal NpcIndex As Integer)
         
         ReDim .PFINFO.Path(1 To Pasos) As tVertice
         
-        miV.x = .PFINFO.Target.x
+        miV.X = .PFINFO.Target.X
         miV.Y = .PFINFO.Target.Y
         
         For i = Pasos To 1 Step -1
             .PFINFO.Path(i) = miV
-            miV = TmpArray(miV.Y, miV.x).PrevV
+            miV = TmpArray(miV.Y, miV.X).PrevV
         Next i
         
         .PFINFO.CurPos = 1
@@ -343,7 +343,7 @@ Private Sub MakePath(ByVal NpcIndex As Integer)
    
 End Sub
 
-Private Sub InitializeTable(ByRef T() As tIntermidiateWork, _
+Private Sub InitializeTable(ByRef t() As tIntermidiateWork, _
                             ByRef S As tVertice, _
                             Optional ByVal MaxSteps As Integer = 30)
     '***************************************************
@@ -357,13 +357,13 @@ Private Sub InitializeTable(ByRef T() As tIntermidiateWork, _
     Const anymap = 1
 
     For j = S.Y - MaxSteps To S.Y + MaxSteps
-        For K = S.x - MaxSteps To S.x + MaxSteps
+        For K = S.X - MaxSteps To S.X + MaxSteps
 
             If InMapBounds(anymap, j, K) Then
 
-                With T(j, K)
+                With t(j, K)
                     .DistV = MAXINT
-                    .PrevV.x = 0
+                    .PrevV.X = 0
                     .PrevV.Y = 0
 
                 End With
@@ -373,6 +373,6 @@ Private Sub InitializeTable(ByRef T() As tIntermidiateWork, _
         Next K
     Next j
 
-    T(S.Y, S.x).DistV = 0
+    t(S.Y, S.X).DistV = 0
 
 End Sub

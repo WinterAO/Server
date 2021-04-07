@@ -51,6 +51,13 @@ Estos valores son muy dificiles de ajustar, por lo que se recomienda ir subiendo
 A partir de "Speed=480" la lentitud se empieza a notar con respecto a la velocidad standar.
 
 ##############################################
+############# NPC DE FORTALEZAS ##############
+##############################################
+
+Los NPC destinados a las fortalezas no podran tener respawn, o romperian el sistema.
+Todos los NPC de fortalezas tienen que tener la propiedad Fortaleza=1
+
+##############################################
 ################ORDEN EN DAT##################
 ##############################################
 
@@ -2338,6 +2345,216 @@ Comercia=1
 TipoItems=9
 NROITEMS=0
 BackUp=1
+Speed=370
+
+##############################################################
+###################### FUERTE WINTER #########################
+##############################################################
+
+[NPC250]
+Name=Sacerdote
+NpcType=1
+Desc=¿Tienes frio? Ven, acercate y deja que cure tus heridas.
+Head=526
+Heading=1
+Fortaleza=1
+Body=159
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=0
+BackUp=0
+Speed=370
+
+[NPC251]
+Name=Banquero
+NpcType=4
+Desc=Hola, bienvenido a la sede de Haverwood de la cadena de finanzas Goliath. Somos la cadena mas grande en Argentum, contamos con bancos en las ciudades mas importantes.
+Head=118
+Heading=1
+Fortaleza=1
+Body=299
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=0
+BackUp=0
+Speed=370
+
+[NPC252]
+Name=Marinero
+NpcType=15
+Desc=¡Corre! ¡El barco va a zarpar!
+Head=35
+Heading=1
+Fortaleza=1
+Body=174
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=1
+TipoItems=20
+NROITEMS=4
+Obj1=1322-1000
+Obj2=1323-1000
+Obj3=1324-1000
+Obj4=1325-1000
+BackUp=1
+Speed=370
+
+[NPC253] 'Vende Pociones
+Name=Judith
+NpcType=0
+Desc=Mis pociones te daran fuerzas y curaran cualquier dolencia.
+Head=487
+Heading=1
+Body=275
+Movement=1
+Fortaleza=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Comercia=1
+TipoItems=11
+NROITEMS=8
+Obj1=37-1000 'Pocion Azul
+Obj2=38-1000 'Pocion Roja
+Obj3=1202-1000 'Pocion Azul de Principiantes
+Obj4=1203-1000 'Pocion Roja de Principiantes
+Obj5=39-1000 'Pocion Verde
+Obj6=36-1000 'Pocion Amarilla
+Obj7=166-1000 'Pocion Violeta
+Obj8=645-1000 'Pocion Negra
+BackUp=1
+Speed=370
+
+[NPC254] 'Herrero
+Name=Herrero
+NpcType=0
+Desc=Forjamos las mejores armas con el mejor acero de estas tierras.
+Head=38
+Heading=1
+Fortaleza=1
+Body=374
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=1
+TipoItems=2
+NROITEMS=8
+Obj1=2-1000 'Espada Larga
+Obj2=19-1000 'Espada Dos Manos
+Obj3=123-1000 'Espada Vikinga
+Obj4=401-1000 'Martillo de Guerra
+Obj5=125-1000 'Sable
+Obj6=753-1000 'Mayal Triple
+Obj7=404-1000 'Escudo de Tortuga
+Obj8=990-1000 'Mazo del Juicio
+BackUp=1
+Speed=370
+
+[NPC255] 'Sastre Fortaleza
+Name=Sastre
+NpcType=0
+Desc=Amigo, en estas tierras heladas debes ir bien abrigado o podrias morir.
+Head=385
+Heading=1
+Fortaleza=1
+Body=298
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=1
+TipoItems=3
+NROITEMS=15
+obj1=1298-1000 'Kit de Costura
+Obj2=1300-1000 'Hilo Burdo
+Obj3=1299-1000 'Hilo
+Obj4=1301-1000 'Ovillo de lana
+Obj5=671-1000 'Tunica de Monje (E/G)
+Obj6=519-1000 'Tunica Legendaria
+Obj7=873-1000 'Guantesde Hurto
+Obj8=370-1000 'Capucha de Cazador
+Obj9=357-1000 'Tunica de Monje
+Obj10=525-1000 'Tunica Combinada (E/G)
+Obj11=524-1000 'Tunica Roja Especial (E/G)
+Obj12=969-1000 'Tunica Dorada de Gala (E/G)
+Obj13=901-1000 'Coraza Compuesta de Mujer (H/E/EO-M)
+Obj14=887-1000 'Cotas de Manto Marron (H/E/EO)
+Obj15=890-1000 'Armadura de Cuero de Oso Pardo (H/E/EO)
+BackUp=1
+Speed=370
+
+[NPC256] 'NO RESPAWN
+Name=Puerta de Fortaleza
+NpcType=0
+Head=507
+Heading=1
+Body=196
+Movement=1
+Fortaleza=1
+AguaValida=0
+Attackable=1
+Respawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=0
+GiveGLD=0
+MinHP=250
+MaxHP=250
+MaxHIT=70
+MinHIT=40
+DEF=20
+PoderAtaque=180
+PoderEvasion=20
+SND2=33
+BackUp=0
+Speed=370
+
+[NPC257] 'NO RESPAWN
+Name=Rey de la Fortaleza
+NpcType=0
+Head=507
+Heading=1
+Body=196
+Movement=1
+Fortaleza=1
+AguaValida=0
+Attackable=1
+Respawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=0
+GiveGLD=0
+MinHP=250
+MaxHP=250
+MaxHIT=70
+MinHIT=40
+DEF=20
+PoderAtaque=180
+PoderEvasion=20
+SND2=33
+BackUp=0
 Speed=370
 
 ##############################################################

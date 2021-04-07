@@ -101,7 +101,7 @@ Public Function PuedeExtraer(ByVal UserIndex As Integer, ByVal Skill As Byte) As
         End If
         
         
-        If MapInfo(UserList(UserIndex).Pos.Map).Pk = False Then
+        If MapZonas(UserList(UserIndex).Pos.Map, UserZonaId(UserIndex)).Pk = False Then
             Call WriteConsoleMsg(UserIndex, "No puedes extraer recursos dentro de la ciudad.", FontTypeNames.FONTTYPE_INFO)
             Call DejardeTrabajar(UserIndex)
             PuedeExtraer = False

@@ -413,7 +413,7 @@ Sub AccionParaRamita(ByVal Map As Integer, _
 
         End If
     
-        If MapData(Map, X, Y).Trigger = eTrigger.ZONASEGURA Or MapInfo(Map).Pk = False Then
+        If MapData(Map, X, Y).Trigger = eTrigger.ZONASEGURA Or MapZonas(Map, UserZonaId(UserIndex)).Pk = False Then
             Call WriteConsoleMsg(UserIndex, "No puedes hacer fogatas en zona segura.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
 
@@ -435,7 +435,7 @@ Sub AccionParaRamita(ByVal Map As Integer, _
         exito = RandomNumber(1, Suerte)
     
         If exito = 1 Then
-            If MapInfo(.Pos.Map).Zona <> Ciudad Then
+            If MapZonas(.Pos.Map, UserZonaId(UserIndex)).Zona <> Ciudad Then
             
                 With obj
                     .ObjIndex = FOGATA

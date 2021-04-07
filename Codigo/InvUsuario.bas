@@ -184,7 +184,7 @@ Sub QuitarNewbieObj(ByVal UserIndex As Integer)
     
         '[Barrin 17-12-03] Si el usuario dejo de ser Newbie, y estaba en el Newbie Dungeon
         'es transportado a su hogar de origen ;)
-        If MapInfo(.Pos.Map).Restringir = eRestrict.restrict_newbie Then
+        If MapZonas(.Pos.Map, UserZonaId(UserIndex)).Restringir = eRestrict.restrict_newbie Then
         
             Dim DeDonde As WorldPos
         
@@ -2058,7 +2058,7 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                 
                 If obj.Real Then 'Es el Cuerno Real?
                     If FaccionPuedeUsarItem(UserIndex, ObjIndex) Then
-                        If MapInfo(.Pos.Map).Pk = False Then
+                        If MapZonas(.Pos.Map, UserZonaId(UserIndex)).Pk = False Then
                             Call WriteConsoleMsg(UserIndex, "No hay peligro aqui. Es zona segura.", FontTypeNames.FONTTYPE_INFO)
                             Exit Sub
 
@@ -2083,7 +2083,7 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                 ElseIf obj.Caos Then 'Es el Cuerno Legion?
 
                     If FaccionPuedeUsarItem(UserIndex, ObjIndex) Then
-                        If MapInfo(.Pos.Map).Pk = False Then
+                        If MapZonas(.Pos.Map, UserZonaId(UserIndex)).Pk = False Then
                             Call WriteConsoleMsg(UserIndex, "No hay peligro aqui. Es zona segura.", FontTypeNames.FONTTYPE_INFO)
                             Exit Sub
 
@@ -2264,7 +2264,7 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                 If .flags.Muerto = 1 Then
     
                     'Si es un mapa comun y no esta en cana
-                    If (MapInfo(.Pos.Map).Restringir = eRestrict.restrict_no) And (.Counters.Pena = 0) Then
+                    If (MapZonas(.Pos.Map, UserZonaId(UserIndex)).Restringir = eRestrict.restrict_no) And (.Counters.Pena = 0) Then
                         If Ciudades(.Hogar).Map <> .Pos.Map Then
                             Call MandaraCasa(UserIndex)
                         Else
@@ -2330,7 +2330,7 @@ Sub TirarTodo(ByVal UserIndex As Integer)
         Dim Cantidad As Long: Cantidad = .Stats.Gld - CLng(.Stats.ELV) * 10000
        
         ' Si estas en zona segura tampoco se tira el oro.
-        If MapInfo(.Pos.Map).Pk Then
+        If MapZonas(.Pos.Map, UserZonaId(UserIndex)).Pk Then
             
             'Si supera los 100k no se cae
             If Cantidad > 0 And Cantidad < 100000 Then

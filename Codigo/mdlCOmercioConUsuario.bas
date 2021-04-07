@@ -59,7 +59,7 @@ Public Sub IniciarComercioConUsuario(ByVal Origen As Integer, ByVal Destino As I
     'Last Modification: 25/11/2009
     '
     '***************************************************
-    On Error GoTo Errhandler
+    On Error GoTo errHandler
     
     'Si ambos pusieron /comerciar entonces
     If UserList(Origen).ComUsu.DestUsu = Destino And UserList(Destino).ComUsu.DestUsu = Origen Then
@@ -92,7 +92,7 @@ Public Sub IniciarComercioConUsuario(ByVal Origen As Integer, ByVal Destino As I
     End If
     
     Exit Sub
-Errhandler:
+errHandler:
     Call LogError("Error en IniciarComercioConUsuario: " & Err.description)
 
 End Sub
@@ -230,7 +230,7 @@ Public Sub AceptarComercioUsu(ByVal UserIndex As Integer)
 
                 ' Log
                 If .ComUsu.GoldAmount > MAX_ORO_LOGUEABLE Then Call LogDesarrollo(.Name & " solto oro en comercio seguro con " & UserList(OtroUserIndex).Name & ". Cantidad: " & .ComUsu.GoldAmount)
-                ' Update Usuario
+                ' UPDATE personaje
                 Call WriteUpdateUserStats(UserIndex)
                 ' Se la doy al otro
                 UserList(OtroUserIndex).Stats.Gld = UserList(OtroUserIndex).Stats.Gld + .ComUsu.GoldAmount
@@ -281,7 +281,7 @@ Public Sub AceptarComercioUsu(ByVal UserIndex As Integer)
 
                 ' Log
                 If .ComUsu.GoldAmount > MAX_ORO_LOGUEABLE Then Call LogDesarrollo(.Name & " solto oro en comercio seguro con " & UserList(UserIndex).Name & ". Cantidad: " & .ComUsu.GoldAmount)
-                ' Update Usuario
+                ' UPDATE personaje
                 Call WriteUpdateUserStats(OtroUserIndex)
                 'y se la doy al otro
                 UserList(UserIndex).Stats.Gld = UserList(UserIndex).Stats.Gld + .ComUsu.GoldAmount

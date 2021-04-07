@@ -29,18 +29,20 @@ Attribute VB_Name = "ES"
 
 Option Explicit
 
-'***************************
-'Map format .CSM
-'***************************
+'********************************
+'Load Map with .CSM format
+'********************************
 Private Type tMapHeader
     NumeroBloqueados As Long
     NumeroLayers(2 To 4) As Long
     NumeroTriggers As Long
-    NumeroLuces As Long
     NumeroParticulas As Long
+    NumeroLuces As Long
+    NumeroZonas As Integer
     NumeroNPCs As Long
     NumeroOBJs As Long
     NumeroTE As Long
+    NumeroData As Integer
 End Type
 
 Private Type tDatosBloqueados
@@ -60,7 +62,13 @@ Private Type tDatosTrigger
     Trigger As Integer
 End Type
 
-Private Type tDatosLuces
+Private Type tDatosZonas
+    X As Integer
+    Y As Integer
+    Zona As Integer
+End Type
+
+Public Type tDatosLuces
     R As Integer
     g As Integer
     b As Integer
@@ -111,7 +119,7 @@ Private Type tMapDat
     music_number As String
     zone As String
     terrain As String
-    ambient As String
+    Ambient As String
     lvlMinimo As String
     RoboNpcsPermitido As Boolean
     InvocarSinEfecto As Boolean
@@ -125,7 +133,8 @@ Private Type tMapDat
 End Type
 
 Public MapSize As tMapSize
-Public MapDat As tMapDat
+'Private MapDat() As tMapDat
+Public CantZonas() As Integer
 '********************************
 'END - Load Map with .CSM format
 '********************************
@@ -692,185 +701,7 @@ Public Sub DoBackUp()
 End Sub
 
 Public Sub GrabarMapa(ByVal Map As Long, ByRef MAPFILE As String)
-    '***************************************************
-    'Author: Unknown
-    'Last Modification: 12/01/2011
-    '10/08/2010 - Pato: Implemento el clsByteBuffer para el grabado de mapas
-    '28/10/2010:ZaMa - Ahora no se hace backup de los pretorianos.
-    '12/01/2011 - Amraphen: Ahora no se hace backup de NPCs prohibidos (Pretorianos, Mascotas, Invocados )
-    '***************************************************
-
-    On Error Resume Next
-
-    Dim FreeFileMap As Long
-    Dim FreeFileInf As Long
-
-    Dim Y           As Long
-    Dim X           As Long
-
-    Dim ByFlags     As Byte
-
-    Dim LoopC       As Long
-
-    Dim MapWriter   As clsByteBuffer
-    Dim InfWriter   As clsByteBuffer
-    Dim IniManager  As clsIniManager
-
-    Dim NpcInvalido As Boolean
-    
-    Set MapWriter = New clsByteBuffer
-    Set InfWriter = New clsByteBuffer
-    Set IniManager = New clsIniManager
-    
-    If FileExist(MAPFILE & ".map", vbNormal) Then
-        Call Kill(MAPFILE & ".map")
-    End If
-    
-    If FileExist(MAPFILE & ".inf", vbNormal) Then
-        Call Kill(MAPFILE & ".inf")
-    End If
-    
-    'Open .map file
-    FreeFileMap = FreeFile
-    
-    Open MAPFILE & ".Map" For Binary As FreeFileMap
-    
-    Call MapWriter.initializeWriter(FreeFileMap)
-    
-    'Open .inf file
-    FreeFileInf = FreeFile
-    Open MAPFILE & ".Inf" For Binary As FreeFileInf
-    
-    Call InfWriter.initializeWriter(FreeFileInf)
-    
-    'map Header
-    Call MapWriter.putInteger(MapInfo(Map).MapVersion)
-        
-    Call MapWriter.putString(MiCabecera.Desc, False)
-    Call MapWriter.putLong(MiCabecera.crc)
-    Call MapWriter.putLong(MiCabecera.MagicWord)
-    
-    Call MapWriter.putDouble(0)
-    
-    'inf Header
-    Call InfWriter.putDouble(0)
-    Call InfWriter.putInteger(0)
-    
-    'Write .map file
-    For Y = YMinMapSize To YMaxMapSize
-        For X = XMinMapSize To XMaxMapSize
-
-            With MapData(Map, X, Y)
-                ByFlags = 0
-                
-                If .Blocked Then ByFlags = ByFlags Or 1
-                If .Graphic(2) Then ByFlags = ByFlags Or 2
-                If .Graphic(3) Then ByFlags = ByFlags Or 4
-                If .Graphic(4) Then ByFlags = ByFlags Or 8
-                If .Trigger Then ByFlags = ByFlags Or 16
-                
-                Call MapWriter.putByte(ByFlags)
-                
-                Call MapWriter.putLong(.Graphic(1))
-                
-                For LoopC = 2 To 4
-                    If .Graphic(LoopC) Then Call MapWriter.putLong(.Graphic(LoopC))
-                Next LoopC
-                
-                If .Trigger Then Call MapWriter.putInteger(CInt(.Trigger))
-                
-                '.inf file
-                ByFlags = 0
-                
-                If .ObjInfo.ObjIndex > 0 Then
-                    
-                    If ObjData(.ObjInfo.ObjIndex).OBJType = eOBJType.otFogata Then
-                        .ObjInfo.ObjIndex = 0
-                        .ObjInfo.Amount = 0
-                    End If
-
-                End If
-    
-                If .TileExit.Map Then ByFlags = ByFlags Or 1
-                
-                ' No hacer backup de los NPCs invalidos (Pretorianos, Mascotas, Invocados )
-                If .NPCIndex Then
-                    
-                    NpcInvalido = (Npclist(.NPCIndex).NPCtype = eNPCType.Pretoriano) Or _
-                                  (Npclist(.NPCIndex).MaestroUser > 0)
-                    
-                    If Not NpcInvalido Then ByFlags = ByFlags Or 2
-
-                End If
-                
-                If .ObjInfo.ObjIndex Then ByFlags = ByFlags Or 4
-                
-                Call InfWriter.putByte(ByFlags)
-                
-                If .TileExit.Map Then
-                    Call InfWriter.putInteger(.TileExit.Map)
-                    Call InfWriter.putInteger(.TileExit.X)
-                    Call InfWriter.putInteger(.TileExit.Y)
-                End If
-                
-                If .NPCIndex And Not NpcInvalido Then Call InfWriter.putInteger(Npclist(.NPCIndex).Numero)
-                
-                If .ObjInfo.ObjIndex Then
-                    Call InfWriter.putInteger(.ObjInfo.ObjIndex)
-                    Call InfWriter.putInteger(.ObjInfo.Amount)
-                End If
-                
-                NpcInvalido = False
-
-            End With
-
-        Next X
-    Next Y
-    
-    Call MapWriter.saveBuffer
-    Call InfWriter.saveBuffer
-    
-    'Close .map file
-    Close FreeFileMap
-
-    'Close .inf file
-    Close FreeFileInf
-    
-    Set MapWriter = Nothing
-    Set InfWriter = Nothing
-
-    With MapInfo(Map)
-        'write .dat file
-        Call IniManager.ChangeValue("Mapa" & Map, "Name", .Name)
-        Call IniManager.ChangeValue("Mapa" & Map, "MusicNum", .music)
-        Call IniManager.ChangeValue("Mapa" & Map, "MagiaSinefecto", .MagiaSinEfecto)
-        Call IniManager.ChangeValue("Mapa" & Map, "InviSinEfecto", .InviSinEfecto)
-        Call IniManager.ChangeValue("Mapa" & Map, "ResuSinEfecto", .ResuSinEfecto)
-        Call IniManager.ChangeValue("Mapa" & Map, "StartPos", .StartPos.Map & "-" & .StartPos.X & "-" & .StartPos.Y)
-        Call IniManager.ChangeValue("Mapa" & Map, "OnDeathGoTo", .OnDeathGoTo.Map & "-" & .OnDeathGoTo.X & "-" & .OnDeathGoTo.Y)
-    
-        Call IniManager.ChangeValue("Mapa" & Map, "Terreno", TerrainByteToString(.Terreno))
-        Call IniManager.ChangeValue("Mapa" & Map, "Zona", .Zona)
-        Call IniManager.ChangeValue("Mapa" & Map, "Restringir", RestrictByteToString(.Restringir))
-        Call IniManager.ChangeValue("Mapa" & Map, "BackUp", Str(.BackUp))
-    
-        If .Pk Then
-            Call IniManager.ChangeValue("Mapa" & Map, "Pk", "0")
-        Else
-            Call IniManager.ChangeValue("Mapa" & Map, "Pk", "1")
-
-        End If
-        
-        Call IniManager.ChangeValue("Mapa" & Map, "OcultarSinEfecto", .OcultarSinEfecto)
-        Call IniManager.ChangeValue("Mapa" & Map, "InvocarSinEfecto", .InvocarSinEfecto)
-        Call IniManager.ChangeValue("Mapa" & Map, "RoboNpcsPermitido", .RoboNpcsPermitido)
-    
-        Call IniManager.DumpFile(MAPFILE & ".dat")
-
-    End With
-    
-    Set IniManager = Nothing
-
+    'LORWIK> PENDIENTE DE PROGRAMAR
 End Sub
 
 Sub LoadBalance()
@@ -1410,8 +1241,8 @@ Sub CargarBackUp()
     MapPath = GetVar(DatPath & "Map.dat", "INIT", "MapPath")
         
     ReDim MapData(1 To NumMaps, XMinMapSize To XMaxMapSize, YMinMapSize To YMaxMapSize) As MapBlock
-    ReDim MapInfo(1 To NumMaps) As MapInfo
-        
+    ReDim CantZonas(1 To NumMaps) As Integer
+    
     For Map = 1 To NumMaps
 
         If val(GetVar(App.Path & MapPath & "Mapa" & Map & ".Dat", "Mapa" & Map, "BackUp")) <> 0 Then
@@ -1467,7 +1298,7 @@ Sub LoadMapData()
     MapPath = GetVar(DatPath & "Map.dat", "INIT", "MapPath")
         
     ReDim MapData(1 To NumMaps, XMinMapSize To XMaxMapSize, YMinMapSize To YMaxMapSize) As MapBlock
-    ReDim MapInfo(1 To NumMaps) As MapInfo
+    ReDim CantZonas(1 To NumMaps) As Integer
           
     For Map = 1 To NumMaps
             
@@ -1497,12 +1328,15 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
     On Error GoTo errh
     
     Dim fh              As Integer
+    
     Dim MH              As tMapHeader
     Dim Blqs()          As tDatosBloqueados
+    
     Dim L1()            As Long
     Dim L2()            As tDatosGrh
     Dim L3()            As tDatosGrh
     Dim L4()            As tDatosGrh
+    
     Dim Triggers()      As tDatosTrigger
     Dim Luces()         As tDatosLuces
     Dim Particulas()    As tDatosParticulas
@@ -1510,11 +1344,16 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
     Dim NPCs()          As tDatosNPC
     Dim TEs()           As tDatosTE
     Dim MapSize         As tMapSize
-    Dim MapDat          As tMapDat
+    Dim MapDat()          As tMapDat
+    Dim Zonas()         As tDatosZonas
+    
     Dim npcfile         As String
+    Dim LaCabecera      As tCabecera
+    
     Dim i               As Long
     Dim j               As Long
-    Dim LaCabecera      As tCabecera
+    
+    Static ZonaMaxima   As Integer
     
     fh = FreeFile
     
@@ -1524,6 +1363,17 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
     
         Get #fh, , MH
         Get #fh, , MapSize
+        
+        CantZonas(Map) = MH.NumeroData
+        
+        'Lorwik> Explicación: Debemos darle una dimensión al Array de MapZonas, para optimizar y
+        'no poner un numero excesivo de zonas mediante una constante, vamos a establecer el numero de zonas
+        'según el mapa que mas zonas tenga.
+        If CantZonas(Map) > ZonaMaxima Then ZonaMaxima = CantZonas(Map)
+
+        ReDim Preserve MapZonas(NumMaps, ZonaMaxima) As tZonaInfo
+        ReDim MapDat(CantZonas(Map)) As tMapDat
+        
         Get #fh, , MapDat
         
         ReDim L1(MapSize.XMin To MapSize.XMax, MapSize.YMin To MapSize.YMax) As Long
@@ -1581,6 +1431,14 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
                 Get #fh, , Luces
             End If
             
+            If .NumeroZonas > 0 Then
+                ReDim Zonas(1 To .NumeroZonas)
+                Get #fh, , Zonas
+                For i = 1 To .NumeroZonas
+                    MapData(Map, Zonas(i).X, Zonas(i).Y).ZonaIndex = Zonas(i).Zona
+                Next i
+            End If
+            
             If .NumeroOBJs > 0 Then
                 ReDim Objetos(1 To .NumeroOBJs)
                 Get #fh, , Objetos
@@ -1634,7 +1492,6 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
         End With
     
     Close fh
-    
         
     For j = MapSize.YMin To MapSize.YMax
         For i = MapSize.XMin To MapSize.XMax
@@ -1645,32 +1502,34 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
     Next j
     
     'Cargamos los extras
-    With MapInfo(Map)
-        .Name = MapDat.map_name
-        .music = MapDat.music_number
-        
-        .MagiaSinEfecto = MapDat.MagiaSinEfecto
-        .InviSinEfecto = MapDat.InviSinEfecto
-        .ResuSinEfecto = MapDat.ResuSinEfecto
-        .OcultarSinEfecto = MapDat.OcultarSinEfecto
-        .InvocarSinEfecto = MapDat.InvocarSinEfecto
-        .RoboNpcsPermitido = MapDat.RoboNpcsPermitido
-        .NoTirarItems = MapDat.NoTirarItems
-
-        If MapDat.lvlMinimo = "" Then
-            .lvlMinimo = 0
-        Else
-            .lvlMinimo = MapDat.lvlMinimo
-        End If
-
-        .Pk = MapDat.battle_mode
-        
-        .Terreno = MapDat.terrain
-        .Zona = MapDat.zone
-        .Restringir = RestrictStringToByte(MapDat.restrict_mode)
-        .BackUp = MapDat.backup_mode
-        
-    End With
+    For i = 0 To CantZonas(Map)
+        With MapZonas(Map, i)
+            .Name = MapDat(i).map_name
+            .music = MapDat(i).music_number
+            
+            .MagiaSinEfecto = MapDat(i).MagiaSinEfecto
+            .InviSinEfecto = MapDat(i).InviSinEfecto
+            .ResuSinEfecto = MapDat(i).ResuSinEfecto
+            .OcultarSinEfecto = MapDat(i).OcultarSinEfecto
+            .InvocarSinEfecto = MapDat(i).InvocarSinEfecto
+            .RoboNpcsPermitido = MapDat(i).RoboNpcsPermitido
+            .NoTirarItems = MapDat(i).NoTirarItems
+    
+            If MapDat(i).lvlMinimo = "" Then
+                .lvlMinimo = 0
+            Else
+                .lvlMinimo = MapDat(i).lvlMinimo
+            End If
+    
+            .Pk = MapDat(i).battle_mode
+            
+            .Terreno = MapDat(i).terrain
+            .Zona = MapDat(i).zone
+            .Restringir = RestrictStringToByte(MapDat(i).restrict_mode)
+            .BackUp = MapDat(i).backup_mode
+            
+        End With
+    Next i
     
 Exit Sub
 
@@ -2063,9 +1922,12 @@ Sub BackUPnPc(ByVal NPCIndex As Integer, ByVal hFile As Integer)
         Print #hFile, "TiempoRetardoMax= " & val(.flags.TiempoRetardoMax)
         Print #hFile, "Explota" & val(.flags.Explota)
         
-        Print #hFile, "LanzaMensaje" & .flags.LanzaMensaje
-        Print #hFile, "AumentaPotencia" & val(.flags.AumentaPotencia)
-        Print #hFile, "Tepeable" & val(.flags.Tepeable)
+        Print #hFile, "LanzaMensaje=" & .flags.LanzaMensaje
+        Print #hFile, "AumentaPotencia=" & val(.flags.AumentaPotencia)
+        Print #hFile, "Tepeable=" & val(.flags.Tepeable)
+        
+        Print #hFile, "Speed=" & val(.SpeedVar)
+        Print #hFile, "Fortaleza=" & val(.EsdeFortaleza)
         
         'Inventario
         Print #hFile, "NroItems=" & val(.Invent.NroItems)
@@ -2173,6 +2035,9 @@ Sub CargarNpcBackUp(ByVal NPCIndex As Integer, ByVal NpcNumber As Integer)
         .flags.LanzaMensaje = GetVar(npcfile, "NPC" & NpcNumber, "LanzaMensaje")
         .flags.AumentaPotencia = val(GetVar(npcfile, "NPC" & NpcNumber, "AumentaPotencia"))
         .flags.Tepeable = val(GetVar(npcfile, "NPC", NpcNumber, "Tepeable"))
+        
+        .SpeedVar = val(GetVar(npcfile, "NPC", NpcNumber, "Speed"))
+        .EsdeFortaleza = val(GetVar(npcfile, "NPC", NpcNumber, "Fortaleza"))
         
         
         'Tipo de items con los que comercia

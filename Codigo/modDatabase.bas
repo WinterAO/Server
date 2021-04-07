@@ -1,7 +1,4 @@
 Attribute VB_Name = "modDatabase"
-'Modulo gestor de la base de datos.
-'Adaptado y mejorado por Lorwik
-
 Option Explicit
 
 Sub SaveUserToDatabase(ByVal UserIndex As Integer, _
@@ -616,9 +613,7 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
     With UserList(UserIndex)
         query = "SELECT *, DATE_FORMAT(fecha_ingreso, '%Y-%m-%d') as 'fecha_ingreso_format' FROM personaje WHERE UPPER(name) = (?)"
         
-        Call User_Database.MakeQuery(query, False, UCase$(.Name))
-
-        If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then Exit Sub
+        If Not User_Database.MakeQuery(query, False, UCase$(.Name)) Then Exit Sub
 
         'Start setting data
         .ID = User_Database.Database_RecordSet!ID
@@ -922,9 +917,8 @@ Public Sub LoadQuestStats(ByVal UserIndex As Integer)
 
     With UserList(UserIndex).QuestStats
 
-        Call User_Database.MakeQuery("SELECT * FROM quest WHERE user_id = (?)", False, UserList(UserIndex).ID)
-    
-        If Not User_Database.Database_RecordSet.RecordCount = 0 Then
+        If Not User_Database.MakeQuery("SELECT * FROM quest WHERE user_id = (?)", False, UserList(UserIndex).ID) Then
+        
             User_Database.Database_RecordSet.MoveFirst
             
             For LoopC = 1 To NumQuests
@@ -993,9 +987,7 @@ Public Function PersonajeExisteDatabase(ByVal UserName As String) As Boolean
 
     query = "SELECT id FROM personaje WHERE UPPER(name) = (?) AND deleted = FALSE;"
 
-    Call User_Database.MakeQuery(query, False, UCase$(UserName))
-
-    If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then
+    If Not User_Database.MakeQuery(query, False, UCase$(UserName)) Then
         PersonajeExisteDatabase = False
         Exit Function
 
@@ -1034,9 +1026,7 @@ Public Function BANCheckDatabase(ByVal UserName As String) As Boolean
 
     query = "SELECT is_ban FROM personaje WHERE UPPER(name) = (?)"
 
-    Call User_Database.MakeQuery(query, False, UCase$(UserName))
-
-    If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then
+    If Not User_Database.MakeQuery(query, False, UCase$(UserName)) Then
         BANCheckDatabase = False
         Exit Function
 
@@ -1104,9 +1094,7 @@ Public Function GetUserGuildIndexDatabase(ByVal UserName As String) As Integer
 
     query = "SELECT guild_index FROM personaje WHERE UPPER(name) = (?)"
     
-    Call User_Database.MakeQuery(query, False, UCase$(UserName))
-
-    If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then
+    If Not User_Database.MakeQuery(query, False, UCase$(UserName)) Then
         GetUserGuildIndexDatabase = 0
         Exit Function
 
@@ -1202,9 +1190,7 @@ Public Function PersonajeCantidadVotosDatabase(ByVal UserName As String) As Inte
 
     query = "SELECT votes_amount FROM personaje WHERE UPPER(name) = (?)"
     
-    Call User_Database.MakeQuery(query, False, UCase$(UserName))
-
-    If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then
+    If Not User_Database.MakeQuery(query, False, UCase$(UserName)) Then
         PersonajeCantidadVotosDatabase = 0
         Exit Function
 
@@ -1281,9 +1267,8 @@ Public Function GetUserAmountOfPunishments(ByVal UserName As String) As Integer
     #End If
 
     query = "SELECT COUNT(1) as punishments FROM punishment WHERE user_id = (SELECT id FROM personaje WHERE UPPER(name) = (?))"
-    Call User_Database.MakeQuery(query, False, UCase$(UserName))
-
-    If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then
+    
+    If Not User_Database.MakeQuery(query, False, UCase$(UserName)) Then
         GetUserAmountOfPunishments = 0
         Exit Function
 
@@ -1322,9 +1307,8 @@ Public Sub SendUserPunishments(ByVal UserIndex As Integer, _
     #End If
 
     query = "SELECT * FROM punishment WHERE user_id = (SELECT id FROM personaje WHERE UPPER(name) = (?))"
-    Call User_Database.MakeQuery(query, False, UCase$(UserName))
-
-    If Not User_Database.Database_RecordSet.RecordCount = 0 Then
+    
+    If Not User_Database.MakeQuery(query, False, UCase$(UserName)) Then
         User_Database.Database_RecordSet.MoveFirst
 
         While Not User_Database.Database_RecordSet.EOF
@@ -1366,9 +1350,8 @@ Public Function GetUserPos(ByVal UserName As String) As String
     #End If
 
     query = "SELECT pos_map, pos_x, pos_y FROM personaje WHERE UPPER(name) = (?)"
-    Call User_Database.MakeQuery(query, False, UCase$(UserName))
-
-    If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then
+    
+    If Not User_Database.MakeQuery(query, False, UCase$(UserName)) Then
         GetUserPos = vbNullString
         Exit Function
 
@@ -1653,9 +1636,8 @@ Public Function GetUserLastIps(ByVal UserName As String) As String
     #End If
 
     query = "SELECT last_ip FROM cuentas WHERE id = (SELECT cuenta_id FROM personaje WHERE UPPER(name) = (?)"
-    Call User_Database.MakeQuery(query, False, UCase$(UserName))
-
-    If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then
+    
+    If Not User_Database.MakeQuery(query, False, UCase$(UserName)) Then
         GetUserLastIps = vbNullString
         Exit Function
 
@@ -1694,9 +1676,8 @@ Public Function GetUserSkills(ByVal UserName As String) As String
     #End If
 
     query = "SELECT number, value FROM skillpoint WHERE user_id = (SELECT id FROM personaje WHERE UPPER(name) = (?))"
-   Call User_Database.MakeQuery(query, False, UCase$(UserName))
-
-    If Not User_Database.Database_RecordSet.RecordCount = 0 Then
+    
+   If Not User_Database.MakeQuery(query, False, UCase$(UserName)) Then
         User_Database.Database_RecordSet.MoveFirst
 
         While Not User_Database.Database_RecordSet.EOF
@@ -1738,9 +1719,7 @@ Public Function GetUserFreeSkills(ByVal UserName As String) As Integer
     #End If
 
     query = "SELECT free_skillpoints FROM personaje WHERE UPPER(name) = (?)"
-    Call User_Database.MakeQuery(query, False, UCase$(UserName))
-
-    If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then
+    If Not User_Database.MakeQuery(query, False, UCase$(UserName)) Then
         GetUserFreeSkills = 0
         Exit Function
 
@@ -1808,9 +1787,8 @@ Public Function GetUserTrainingTime(ByVal UserName As String) As Long
     #End If
 
     query = "SELECT counter_training FROM personaje WHERE UPPER(name) = (?)"
-    Call User_Database.MakeQuery(query, False, UCase$(UserName))
-
-    If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then
+    
+    If Not User_Database.MakeQuery(query, False, UCase$(UserName)) Then
         GetUserTrainingTime = 0
         Exit Function
 
@@ -1847,9 +1825,8 @@ Public Function UserBelongsToRoyalArmy(ByVal UserName As String) As Boolean
     #End If
 
     query = "SELECT pertenece_real FROM personaje WHERE UPPER(name) = (?) AND deleted = FALSE;"
-    Call User_Database.MakeQuery(query, False, UCase$(UserName))
-
-    If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then
+    
+    If Not User_Database.MakeQuery(query, False, UCase$(UserName)) Then
         UserBelongsToRoyalArmy = False
         Exit Function
 
@@ -1887,9 +1864,8 @@ Public Function UserBelongsToChaosLegion(ByVal UserName As String) As Boolean
     #End If
 
     query = "SELECT pertenece_caos FROM personaje WHERE UPPER(name) = (?) AND deleted = FALSE;"
-    Call User_Database.MakeQuery(query, False, UCase$(UserName))
-
-    If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then
+    
+    If Not User_Database.MakeQuery(query, False, UCase$(UserName)) Then
         UserBelongsToChaosLegion = False
         Exit Function
 
@@ -1927,9 +1903,8 @@ Public Function GetUserLevel(ByVal UserName As String) As Byte
     #End If
 
     query = "SELECT level FROM personaje WHERE UPPER(name) = (?)"
-    Call User_Database.MakeQuery(query, False, UCase$(UserName))
-
-    If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then
+    
+    If Not User_Database.MakeQuery(query, False, UCase$(UserName)) Then
         GetUserLevel = 0
         Exit Function
 
@@ -1967,9 +1942,8 @@ Public Function GetUserPromedio(ByVal UserName As String) As Long
     #End If
 
     query = "SELECT rep_average FROM personaje WHERE UPPER(name) = (?)"
-    Call User_Database.MakeQuery(query, False, UCase$(UserName))
-
-    If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then
+    
+    If Not User_Database.MakeQuery(query, False, UCase$(UserName)) Then
         GetUserPromedio = 0
         Exit Function
 
@@ -2007,9 +1981,8 @@ Public Function GetUserReenlists(ByVal UserName As String) As Byte
     #End If
 
     query = "SELECT reenlistadas FROM personaje WHERE UPPER(name) = (?)"
-    Call User_Database.MakeQuery(query, False, UCase$(UserName))
-
-    If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then
+    
+    If Not User_Database.MakeQuery(query, False, UCase$(UserName)) Then
         GetUserReenlists = 0
         Exit Function
 
@@ -2083,9 +2056,8 @@ Public Sub SendUserStatsTxtDatabase(ByVal sendIndex As Integer, ByVal UserName A
     #End If
     
         query = "SELECT level, exp, elu, min_sta, max_sta, min_hp, max_hp, min_man, max_man, min_hit, max_hit, gold FROM personaje WHERE UPPER(name) = (?)"
-        Call User_Database.MakeQuery(query, False, UCase$(UserName))
-
-        If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then
+        
+        If Not User_Database.MakeQuery(query, False, UCase$(UserName)) Then
             Call WriteConsoleMsg(sendIndex, "Pj Inexistente", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
 
@@ -2136,9 +2108,8 @@ Public Sub SendUserMiniStatsTxtFromDatabase(ByVal sendIndex As Integer, _
     #End If
     
         query = "SELECT killed_npcs, killed_users, ciudadanos_matados, criminales_matados, class_id, genre_id, race_id FROM personaje WHERE UPPER(name) = (?)"
-        Call User_Database.MakeQuery(query, False, UCase$(UserName))
-
-        If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then
+        
+        If Not User_Database.MakeQuery(query, False, UCase$(UserName)) Then
             Call WriteConsoleMsg(sendIndex, "Pj Inexistente", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
 
@@ -2187,9 +2158,8 @@ Public Sub SendUserOROTxtFromDatabase(ByVal sendIndex As Integer, _
         #End If
 
         query = "SELECT bank_gold FROM personaje WHERE UPPER(name) = (?)"
-        Call User_Database.MakeQuery(query, False, UCase$(UserName))
-
-        If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then
+        
+        If Not User_Database.MakeQuery(query, False, UCase$(UserName)) Then
             Call WriteConsoleMsg(sendIndex, "Pj Inexistente", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
 
@@ -2244,9 +2214,8 @@ Public Sub SendUserInvTxtFromDatabase(ByVal sendIndex As Integer, _
         Next LoopC
 
         query = query & " FROM inventario_items WHERE user_id = (SELECT id FROM personaje WHERE UPPER(name) = (?))"
-        Call User_Database.MakeQuery(query, False, UCase$(UserName))
-
-        If Not User_Database.Database_RecordSet.RecordCount = 0 Then
+        
+        If Not User_Database.MakeQuery(query, False, UCase$(UserName)) Then
             User_Database.Database_RecordSet.MoveFirst
 
             While Not User_Database.Database_RecordSet.EOF
@@ -2311,9 +2280,8 @@ Public Sub SendUserBovedaTxtFromDatabase(ByVal sendIndex As Integer, _
         Next LoopC
         
         query = query & " FROM banco_items WHERE user_id = (SELECT id FROM personaje WHERE UPPER(name) = (?))"
-        Call User_Database.MakeQuery(query, False, UCase$(UserName))
-
-        If Not User_Database.Database_RecordSet.RecordCount = 0 Then
+        
+        If Not User_Database.MakeQuery(query, False, UCase$(UserName)) Then
             User_Database.Database_RecordSet.MoveFirst
 
             While Not User_Database.Database_RecordSet.EOF
@@ -2370,9 +2338,8 @@ Public Sub SendCharacterInfoDatabase(ByVal UserIndex As Integer, ByVal UserName 
     #End If
 
     query = "SELECT race_id, class_id, genre_id, level, gold, bank_gold, rep_average, guild_requests_history, guild_index, guild_member_history, pertenece_real, pertenece_caos, ciudadanos_matados, criminales_matados FROM personaje WHERE UPPER(name) = (?)"
-    Call User_Database.MakeQuery(query, False, UCase$(UserName))
-
-    If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then
+    
+    If Not User_Database.MakeQuery(query, False, UCase$(UserName)) Then
         Call WriteConsoleMsg(UserIndex, "Pj Inexistente", FontTypeNames.FONTTYPE_INFO)
         Exit Sub
 
@@ -2426,9 +2393,8 @@ Public Function GetUserGuildMemberDatabase(ByVal UserName As String) As String
     #End If
 
     query = "SELECT guild_member_history FROM personaje WHERE UPPER(name) = (?)"
-    Call User_Database.MakeQuery(query, False, UCase$(UserName))
-
-    If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then
+    
+    If Not User_Database.MakeQuery(query, False, UCase$(UserName)) Then
         GetUserGuildMemberDatabase = vbNullString
         Exit Function
 
@@ -2466,9 +2432,8 @@ Public Function GetUserGuildAspirantDatabase(ByVal UserName As String) As Intege
     #End If
 
     query = "SELECT guild_aspirant_index FROM personaje WHERE UPPER(name) = (?)"
-    Call User_Database.MakeQuery(query, False, UCase$(UserName))
-
-    If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then
+    
+    If Not User_Database.MakeQuery(query, False, UCase$(UserName)) Then
         GetUserGuildAspirantDatabase = 0
         Exit Function
 
@@ -2506,9 +2471,8 @@ Public Function GetUserGuildRejectionReasonDatabase(ByVal UserName As String) As
     #End If
 
     query = "SELECT guild_rejected_because FROM personaje WHERE UPPER(name) = (?)"
-    Call User_Database.MakeQuery(query, False, UCase$(UserName))
-
-    If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then
+    
+    If Not User_Database.MakeQuery(query, False, UCase$(UserName)) Then
         GetUserGuildRejectionReasonDatabase = vbNullString
         Exit Function
 
@@ -2546,9 +2510,8 @@ Public Function GetUserGuildPedidosDatabase(ByVal UserName As String) As String
     #End If
 
     query = "SELECT guild_requests_history FROM personaje WHERE UPPER(name) = (?)"
-    Call User_Database.MakeQuery(query, False, UCase$(UserName))
-
-    If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then
+    
+    If Not User_Database.MakeQuery(query, False, UCase$(UserName)) Then
         GetUserGuildPedidosDatabase = vbNullString
         Exit Function
 
@@ -2721,38 +2684,9 @@ ErrorHandler:
 
 End Sub
 
-Public Sub SaveAccountLastLoginDatabase(ByVal UserName As String, ByVal UserIP As String)
-
-    '***************************************************
-    'Author: Lorwik
-    'Last Modification: 07/04/2021
-    '***************************************************
-    On Error GoTo ErrorHandler
-
-    Dim query As String
-    
-    #If DBConexionUnica = 0 Then
-        Call User_Database.Database_Connect
-    #Else
-        'Si perdimos la conexion reconectamos
-        If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
-    #End If
-
-    query = "UPDATE cuentas SET date_last_login = NOW(), last_ip = (?) WHERE UPPER(username) = (?)"
-    Call User_Database.MakeQuery(query, True, UserIP, UCase$(UserName))
-
-    #If DBConexionUnica = 0 Then
-        Call User_Database.Database_Close
-    #End If
-
-    Exit Sub
-ErrorHandler:
-    Call LogDatabaseError("Error in SaveAccountLastLoginDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
-
-End Sub
-
 Public Function SanitizeNullValue(ByVal Value As Variant, _
                                   ByVal defaultValue As Variant) As Variant
     SanitizeNullValue = IIf(IsNull(Value), defaultValue, Value)
 
 End Function
+

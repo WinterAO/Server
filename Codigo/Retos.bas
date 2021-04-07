@@ -23,10 +23,10 @@ End Type
 
 Private Type tMapEvent
     Map As Integer
-    X As Byte
-    Y As Byte
-    X2 As Byte
-    Y2 As Byte
+    X As Integer
+    Y As Integer
+    X2 As Integer
+    Y2 As Integer
 End Type
 
 Private Type tRetos
@@ -411,7 +411,7 @@ Private Function ValidateFight_Users(ByVal UserIndex As Integer, _
                     Exit Function
                 End If
                               
-                If MapInfo(.Pos.Map).Pk = True Then
+                If MapZonas(.Pos.Map, UserZonaId(UserIndex)).Pk = True Then
                     ValidateFight_Users = False
                     Exit Function
                 End If
