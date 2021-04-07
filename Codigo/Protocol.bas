@@ -16875,7 +16875,7 @@ Public Sub HandleRequestCharMail(ByVal UserIndex As Integer)
         
         If (Not .flags.Privilegios And PlayerType.RoleMaster) <> 0 And (.flags.Privilegios And (PlayerType.Admin Or PlayerType.Dios)) Or .flags.PrivEspecial Then
             If PersonajeExiste(UserName) Then
-                'mail = GetUserEmail(UserName)
+                mail = GetUserEmail(UserName)
                 
                 Call WriteConsoleMsg(UserIndex, "Last email de " & UserName & ":" & mail, FontTypeNames.FONTTYPE_INFO)
 

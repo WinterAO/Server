@@ -303,8 +303,8 @@ End Function
 Public Sub BorrarUsuarioDatabase(ByVal UserName As String)
 
     '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 10/10/2018
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     '***************************************************
     On Error GoTo ErrorHandler
 
@@ -371,8 +371,8 @@ End Function
 Public Function GetAccountPassword(ByVal AccountName As String) As String
 
     '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 10/10/2018
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     '***************************************************
     On Error GoTo ErrorHandler
 
@@ -443,6 +443,44 @@ Public Function GetAccountID(ByVal UserName As String) As Long
     
 ErrorHandler:
     Call LogDatabaseError("Error in GetAccountID: " & UserName & ". " & Err.Number & " - " & Err.description)
+
+End Function
+
+Public Function GetUserEmail(ByVal UserName As String) As String
+
+    '***************************************************
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
+    '***************************************************
+    On Error GoTo ErrorHandler
+
+    Dim query As String
+
+    #If DBConexionUnica = 0 Then
+        Call Account_Database.Database_Connect
+    #Else
+        'Si perdimos la conexion reconectamos
+        If Account_Database.CheckSQLStatus = False Then Account_Database.Database_Reconnect
+    #End If
+
+    Call User_Database.MakeQuery("SELECT email FROM cuentas WHERE id = (?)", False, GetAccountID(UserName))
+
+    If Account_Database.Database_RecordSet.BOF Or Account_Database.Database_RecordSet.EOF Then
+        GetUserEmail = vbNullString
+        Exit Function
+
+    End If
+
+    GetUserEmail = Account_Database.Database_RecordSet!UserName
+    Set Account_Database.Database_RecordSet = Nothing
+    
+    #If DBConexionUnica = 0 Then
+        Call Account_Database.Database_Close
+    #End If
+
+    Exit Function
+ErrorHandler:
+    Call LogDatabaseError("Error in GetUserEmail: " & UserName & ". " & Err.Number & " - " & Err.description)
 
 End Function
 
