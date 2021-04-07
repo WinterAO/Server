@@ -34,9 +34,9 @@ End Sub
 
 Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
                          Optional ByVal SaveTimeOnline As Boolean = True)
-    '*************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last modified: 04/10/2018
+    '**************************************************
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     'Inserts a new user to the database, then gets its ID and assigns it
     '*************************************************
 
@@ -56,62 +56,31 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
     #End If
 
     'Basic user data
+
+    query = "INSERT INTO personaje SET name = (?), cuenta_id = (?), level = (?), exp = (?), elu = (?), genre_id = (?), race_id = (?), class_id = (?), "
+    query = query & "home_id = (?), description = (?), gold = (?), free_skillpoints = (?), assigned_skillpoints = (?), elo = (?), "
+    query = query & "pos_map = (?), pos_x = (?), pos_y = (?), body_id = (?), head_id = (?), weapon_id = (?), helmet_id = (?), shield_id = (?), "
+    query = query & "items_amount = (?), slot_armour = (?), slot_weapon = (?), min_hp = (?), max_hp = (?), min_man = (?), max_man = (?), "
+    query = query & "min_sta = (?), max_sta = (?), min_ham = (?), max_ham = (?), min_sed = (?), max_sed = (?), min_hit = (?), max_hit = (?), "
+    query = query & "rep_noble = (?), rep_plebe = (?), rep_average = (?), profesionA = (?), ProfesionB = (?)"
+
     With UserList(UserIndex)
-        query = "INSERT INTO personaje SET "
-        query = query & "name = '" & .Name & "', "
-        query = query & "cuenta_id = " & .AccountInfo.ID & ", "
-        query = query & "level = " & .Stats.ELV & ", "
-        query = query & "exp = " & .Stats.Exp & ", "
-        query = query & "elu = " & .Stats.ELU & ", "
-        query = query & "genre_id = " & .Genero & ", "
-        query = query & "race_id = " & .Raza & ", "
-        query = query & "class_id = " & .clase & ", "
-        query = query & "home_id = " & .Hogar & ", "
-        query = query & "description = '" & .Desc & "', "
-        query = query & "gold = " & .Stats.Gld & ", "
-        query = query & "free_skillpoints = " & .Stats.SkillPts & ", "
-        query = query & "assigned_skillpoints = " & .Counters.AsignedSkills & ", "
-        query = query & "elo = " & .Stats.ELO & ", "
-        query = query & "pos_map = " & .Pos.Map & ", "
-        query = query & "pos_x = " & .Pos.X & ", "
-        query = query & "pos_y = " & .Pos.Y & ", "
-        query = query & "body_id = " & .Char.body & ", "
-        query = query & "head_id = " & .Char.Head & ", "
-        query = query & "weapon_id = " & .Char.WeaponAnim & ", "
-        query = query & "helmet_id = " & .Char.CascoAnim & ", "
-        query = query & "shield_id = " & .Char.ShieldAnim & ", "
-        query = query & "items_amount = " & .Invent.NroItems & ", "
-        query = query & "slot_armour = " & .Invent.ArmourEqpSlot & ", "
-        query = query & "slot_weapon = " & .Invent.WeaponEqpSlot & ", "
-        query = query & "min_hp = " & .Stats.MinHp & ", "
-        query = query & "max_hp = " & .Stats.MaxHp & ", "
-        query = query & "min_man = " & .Stats.MinMAN & ", "
-        query = query & "max_man = " & .Stats.MaxMAN & ", "
-        query = query & "min_sta = " & .Stats.MinSta & ", "
-        query = query & "max_sta = " & .Stats.MaxSta & ", "
-        query = query & "min_ham = " & .Stats.MinHam & ", "
-        query = query & "max_ham = " & .Stats.MaxHam & ", "
-        query = query & "min_sed = " & .Stats.MinAGU & ", "
-        query = query & "max_sed = " & .Stats.MaxAGU & ", "
-        query = query & "min_hit = " & .Stats.MinHIT & ", "
-        query = query & "max_hit = " & .Stats.MaxHIT & ", "
-        query = query & "rep_noble = " & .Reputacion.NobleRep & ", "
-        query = query & "rep_plebe = " & .Reputacion.PlebeRep & ", "
-        query = query & "rep_average = " & .Reputacion.Promedio & ","
-        query = query & "profesionA = " & .Profesion(0).Profesion & ","
-        query = query & "ProfesionB = " & .Profesion(1).Profesion & ";"
 
-        'Insert the user
-        Call User_Database.Database_Connection.Execute(query)
-
-        'Get the user ID
+        Call User_Database.MakeQuery(query, True, .Name, .AccountInfo.ID, .Stats.ELV, .Stats.Exp, .Stats.ELU, .Genero, .Raza, .clase, .Hogar, .Desc, .Stats.Gld, .Stats.SkillPts, .Counters.AsignedSkills, _
+                                    .Stats.ELO, .Pos.Map, .Pos.X, .Pos.Y, .Char.body, .Char.Head, .Char.WeaponAnim, .Char.CascoAnim, .Char.ShieldAnim, .Invent.NroItems, .Invent.ArmourEqpSlot, _
+                                    .Invent.WeaponEqpSlot, .Stats.MinHp, .Stats.MaxHp, .Stats.MinMAN, .Stats.MaxMAN, .Stats.MinSta, .Stats.MaxSta, .Stats.MinHam, .Stats.MaxHam, _
+                                    .Stats.MinAGU, .Stats.MaxAGU, .Stats.MinHIT, .Stats.MaxHIT, .Reputacion.NobleRep, .Reputacion.PlebeRep, .Reputacion.Promedio, _
+                                    .Profesion(0).Profesion, .Profesion(1).Profesion)
+        
+        
+        'Obtenemos el ID del usuario
         Set User_Database.Database_RecordSet = User_Database.Database_Connection.Execute("SELECT LAST_INSERT_ID();")
-
+    
         If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then
             UserID = 1
-
+            
         End If
-
+    
         UserID = val(User_Database.Database_RecordSet.Fields(0).Value)
         Set User_Database.Database_RecordSet = Nothing
 
@@ -324,9 +293,9 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
         '*******************************************************************
         'Amigos
         '*******************************************************************
-        query = "INSERT INTO amigos (user_id) VALUES (" & .ID & ");"
+        query = "INSERT INTO amigos (user_id) VALUES (?)"
 
-        Call User_Database.Database_Connection.Execute(query)
+        Call User_Database.MakeQuery(query, True, .ID)
         
     End With
     
@@ -343,9 +312,9 @@ End Sub
 
 Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
                          Optional ByVal SaveTimeOnline As Boolean = True)
-    '*************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last modified: 04/10/2018
+    '**************************************************
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     'Updates an existing user in the database
     '*************************************************
 
@@ -365,101 +334,30 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
     #End If
 
     'Basic user data
+        query = "UPDATE personaje SET name = (?), level = (?), exp = (?), elu = (?), genre_id = (?), race_id = (?), class_id = (?), home_id = (?), description = (?), "
+        query = query & "gold = (?), bank_gold = (?), free_skillpoints = (?), assigned_skillpoints = (?), elo = (?), pet_amount = (?), pos_map = (?), pos_x = (?), pos_y = (?), last_map = (?), "
+        query = query & "body_id = (?), head_id = (?), weapon_id = (?), helmet_id = (?), shield_id = (?), aura_id = (?), aura_color = (?), heading = (?), items_amount = (?), "
+        query = query & "slot_armour = (?), slot_weapon = (?), slot_helmet = (?), slot_shield = (?), slot_ammo = (?), slot_ship = (?), slot_ring = (?), slot_bag = (?), "
+        query = query & "min_hp = (?), max_hp = (?), min_man = (?), max_man = (?), min_sta = (?), max_sta = (?), min_ham = (?), max_ham = (?), min_sed = (?), max_sed = (?), min_hit = (?), max_hit = (?), "
+        query = query & "killed_npcs = (?), killed_users = (?), rep_asesino = (?), rep_bandido = (?), rep_burgues = (?), rep_ladron = (?), rep_noble = (?), rep_plebe = (?), rep_average = (?), "
+        query = query & "is_naked = (?), is_poisoned = (?), is_incinerado = (?), is_hidden = (?), is_hungry = (?), is_thirsty = (?), is_ban = (?), is_dead = (?), is_sailing = (?), is_paralyzed = (?), "
+        query = query & "counter_pena = (?), pertenece_consejo_real = (?), pertenece_consejo_caos = (?), pertenece_real = (?), pertenece_caos = (?), ciudadanos_matados = (?), criminales_matados = (?), "
+        query = query & "recibio_armadura_real = (?), recibio_armadura_caos = (?), recibio_exp_real = (?), recibio_exp_caos = (?), recompensas_real = (?), recompensas_caos = (?), "
+        query = query & "reenlistadas = (?), fecha_ingreso = (?), nivel_ingreso = (?), matados_ingreso = (?), siguiente_recompensa = (?), guild_index = (?), is_global = (?), profesionA = (?), profesionB = (?), "
+        query = query & "modocombate = (?), seguro = (?) WHERE id = (?)"
+
     With UserList(UserIndex)
-        query = "UPDATE personaje SET "
-        query = query & "name = '" & .Name & "', "
-        query = query & "level = " & .Stats.ELV & ", "
-        query = query & "exp = " & .Stats.Exp & ", "
-        query = query & "elu = " & .Stats.ELU & ", "
-        query = query & "genre_id = " & .Genero & ", "
-        query = query & "race_id = " & .Raza & ", "
-        query = query & "class_id = " & .clase & ", "
-        query = query & "home_id = " & .Hogar & ", "
-        query = query & "description = '" & .Desc & "', "
-        query = query & "gold = " & .Stats.Gld & ", "
-        query = query & "bank_gold = " & .Stats.Banco & ", "
-        query = query & "free_skillpoints = " & .Stats.SkillPts & ", "
-        query = query & "assigned_skillpoints = " & .Counters.AsignedSkills & ", "
-        query = query & "elo = " & .Stats.ELO & ", "
-        query = query & "pet_amount = " & .NroMascotas & ", "
-        query = query & "pos_map = " & .Pos.Map & ", "
-        query = query & "pos_x = " & .Pos.X & ", "
-        query = query & "pos_y = " & .Pos.Y & ", "
-        query = query & "last_map = " & .flags.lastMap & ", "
-        query = query & "body_id = " & .Char.body & ", "
-        query = query & "head_id = " & .OrigChar.Head & ", "
-        query = query & "weapon_id = " & .Char.WeaponAnim & ", "
-        query = query & "helmet_id = " & .Char.CascoAnim & ", "
-        query = query & "shield_id = " & .Char.ShieldAnim & ", "
-        query = query & "aura_id = " & .Char.AuraAnim & ", "
-        query = query & "aura_color = " & .Char.AuraColor & ", "
-        query = query & "heading = " & .Char.Heading & ", "
-        query = query & "items_amount = " & .Invent.NroItems & ", "
-        query = query & "slot_armour = " & .Invent.ArmourEqpSlot & ", "
-        query = query & "slot_weapon = " & .Invent.WeaponEqpSlot & ", "
-        query = query & "slot_helmet = " & .Invent.CascoEqpSlot & ", "
-        query = query & "slot_shield = " & .Invent.EscudoEqpSlot & ", "
-        query = query & "slot_ammo = " & .Invent.MunicionEqpSlot & ", "
-        query = query & "slot_ship = " & .Invent.BarcoSlot & ", "
-        query = query & "slot_ring = " & .Invent.AnilloEqpSlot & ", "
-        query = query & "slot_bag = " & .Invent.MochilaEqpSlot & ", "
-        query = query & "min_hp = " & .Stats.MinHp & ", "
-        query = query & "max_hp = " & .Stats.MaxHp & ", "
-        query = query & "min_man = " & .Stats.MinMAN & ", "
-        query = query & "max_man = " & .Stats.MaxMAN & ", "
-        query = query & "min_sta = " & .Stats.MinSta & ", "
-        query = query & "max_sta = " & .Stats.MaxSta & ", "
-        query = query & "min_ham = " & .Stats.MinHam & ", "
-        query = query & "max_ham = " & .Stats.MaxHam & ", "
-        query = query & "min_sed = " & .Stats.MinAGU & ", "
-        query = query & "max_sed = " & .Stats.MaxAGU & ", "
-        query = query & "min_hit = " & .Stats.MinHIT & ", "
-        query = query & "max_hit = " & .Stats.MaxHIT & ", "
-        query = query & "killed_npcs = " & .Stats.NPCsMuertos & ", "
-        query = query & "killed_users = " & .Stats.UsuariosMatados & ", "
-        query = query & "rep_asesino = " & .Reputacion.AsesinoRep & ", "
-        query = query & "rep_bandido = " & .Reputacion.BandidoRep & ", "
-        query = query & "rep_burgues = " & .Reputacion.BurguesRep & ", "
-        query = query & "rep_ladron = " & .Reputacion.LadronesRep & ", "
-        query = query & "rep_noble = " & .Reputacion.NobleRep & ", "
-        query = query & "rep_plebe = " & .Reputacion.PlebeRep & ", "
-        query = query & "rep_average = " & .Reputacion.Promedio & ", "
-        query = query & "is_naked = " & .flags.Desnudo & ", "
-        query = query & "is_poisoned = " & .flags.Envenenado & ", "
-        query = query & "is_incinerado = " & .flags.Incinerado & ", "
-        query = query & "is_hidden = " & .flags.Escondido & ", "
-        query = query & "is_hungry = " & .flags.Hambre & ", "
-        query = query & "is_thirsty = " & .flags.Sed & ", "
-        query = query & "is_ban = " & .flags.Ban & ", "
-        query = query & "is_dead = " & .flags.Muerto & ", "
-        query = query & "is_sailing = " & .flags.Navegando & ", "
-        query = query & "is_paralyzed = " & .flags.Paralizado & ", "
-        query = query & "counter_pena = " & .Counters.Pena & ", "
-        query = query & "pertenece_consejo_real = " & (.flags.Privilegios And PlayerType.RoyalCouncil) & ", "
-        query = query & "pertenece_consejo_caos = " & (.flags.Privilegios And PlayerType.ChaosCouncil) & ", "
-        query = query & "pertenece_real = " & .Faccion.ArmadaReal & ", "
-        query = query & "pertenece_caos = " & .Faccion.FuerzasCaos & ", "
-        query = query & "ciudadanos_matados = " & .Faccion.CiudadanosMatados & ", "
-        query = query & "criminales_matados = " & .Faccion.CriminalesMatados & ", "
-        query = query & "recibio_armadura_real = " & .Faccion.RecibioArmaduraReal & ", "
-        query = query & "recibio_armadura_caos = " & .Faccion.RecibioArmaduraCaos & ", "
-        query = query & "recibio_exp_real = " & .Faccion.RecibioExpInicialReal & ", "
-        query = query & "recibio_exp_caos = " & .Faccion.RecibioExpInicialCaos & ", "
-        query = query & "recompensas_real = " & .Faccion.RecompensasReal & ", "
-        query = query & "recompensas_caos = " & .Faccion.RecompensasCaos & ", "
-        query = query & "reenlistadas = " & .Faccion.Reenlistadas & ", "
-        query = query & "fecha_ingreso = " & IIf(.Faccion.FechaIngreso <> vbNullString, "'" & .Faccion.FechaIngreso & "'", "NULL") & ", "
-        query = query & "nivel_ingreso = " & .Faccion.NivelIngreso & ", "
-        query = query & "matados_ingreso = " & .Faccion.MatadosIngreso & ", "
-        query = query & "siguiente_recompensa = " & .Faccion.NextRecompensa & ", "
-        query = query & "guild_index = " & .GuildIndex & ", "
-        query = query & "is_global = " & .flags.Global & ", "
-        query = query & "profesionA = " & .Profesion(0).Profesion & ", "
-        query = query & "profesionB = " & .Profesion(1).Profesion & ", "
-        query = query & "modocombate = " & IIf(.flags.ModoCombate = True, "1", "0") & ", "
-        query = query & "seguro = " & IIf(.flags.Seguro = True, "1", "0") & " "
-        query = query & "WHERE id = " & .ID & ";"
-        Call User_Database.Database_Connection.Execute(query)
+            Call User_Database.MakeQuery(query, True, .Name, .Stats.ELV, .Stats.Exp, .Stats.ELU, .Genero, .Raza, .clase, .Hogar, .Desc, .Stats.Gld, .Stats.Banco, .Stats.SkillPts, .Counters.AsignedSkills, .Stats.ELO, .NroMascotas, _
+                                        .Pos.Map, .Pos.X, .Pos.Y, .flags.lastMap, .Char.body, .Char.Head, .Char.WeaponAnim, .Char.CascoAnim, .Char.ShieldAnim, .Char.AuraAnim, .Char.AuraColor, .Char.Heading, .Invent.NroItems, _
+                                        .Invent.ArmourEqpSlot, .Invent.WeaponEqpSlot, .Invent.CascoEqpSlot, .Invent.EscudoEqpSlot, .Invent.MunicionEqpSlot, .Invent.BarcoSlot, .Invent.AnilloEqpSlot, .Invent.MochilaEqpSlot, _
+                                        .Stats.MinHp, .Stats.MaxHp, .Stats.MinMAN, .Stats.MaxMAN, .Stats.MinSta, .Stats.MaxSta, .Stats.MinHam, .Stats.MaxHam, .Stats.MinAGU, .Stats.MaxAGU, .Stats.MinHIT, .Stats.MaxHIT, _
+                                        .Stats.NPCsMuertos, .Stats.UsuariosMatados, .Reputacion.AsesinoRep, .Reputacion.BandidoRep, .Reputacion.BurguesRep, .Reputacion.LadronesRep, .Reputacion.NobleRep, .Reputacion.PlebeRep, _
+                                        .Reputacion.Promedio, .flags.Desnudo, .flags.Envenenado, .flags.Incinerado, .flags.Escondido, .flags.Hambre, .flags.Sed, .flags.Ban, .flags.Muerto, .flags.Navegando, .flags.Paralizado, _
+                                        .Counters.Pena, (.flags.Privilegios And PlayerType.RoyalCouncil), (.flags.Privilegios And PlayerType.ChaosCouncil), .Faccion.ArmadaReal, .Faccion.FuerzasCaos, .Faccion.CiudadanosMatados, _
+                                        .Faccion.CriminalesMatados, .Faccion.RecibioArmaduraReal, .Faccion.RecibioArmaduraCaos, .Faccion.RecibioExpInicialReal, .Faccion.RecibioExpInicialCaos, .Faccion.RecompensasReal, _
+                                        .Faccion.RecompensasCaos, .Faccion.Reenlistadas, .Faccion.FechaIngreso, .Faccion.NivelIngreso, .Faccion.MatadosIngreso, .Faccion.NextRecompensa, .GuildIndex, .flags.Global, .Profesion(0).Profesion, _
+                                        .Profesion(1).Profesion, IIf(.flags.ModoCombate = True, "1", "0"), IIf(.flags.Seguro = True, "1", "0"), .ID)
+                                        
 
         '*******************************************************************
         'Hechizos
@@ -695,9 +593,9 @@ ErrorHandler:
 End Sub
 
 Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
-    '*************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last modified: 09/10/2018
+    '**************************************************
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     'Loads the user from the database
     '*************************************************
 
@@ -716,8 +614,9 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
 
     'Basic user data
     With UserList(UserIndex)
-        query = "SELECT *, DATE_FORMAT(fecha_ingreso, '%Y-%m-%d') as 'fecha_ingreso_format' FROM personaje WHERE UPPER(name) ='" & UCase$(.Name) & "';"
-        Set User_Database.Database_RecordSet = User_Database.Database_Connection.Execute(query)
+        query = "SELECT *, DATE_FORMAT(fecha_ingreso, '%Y-%m-%d') as 'fecha_ingreso_format' FROM personaje WHERE UPPER(name) = (?)"
+        
+        Call User_Database.MakeQuery(query, False, UCase$(.Name))
 
         If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then Exit Sub
 
@@ -792,8 +691,8 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
         .flags.Paralizado = User_Database.Database_RecordSet!is_paralyzed
         .Counters.Pena = User_Database.Database_RecordSet!counter_pena
         .flags.Global = User_Database.Database_RecordSet!is_global
-        .Profesion(0).Profesion = User_Database.Database_RecordSet!ProfesionA
-        .Profesion(1).Profesion = User_Database.Database_RecordSet!ProfesionB
+        .Profesion(0).Profesion = User_Database.Database_RecordSet!profesionA
+        .Profesion(1).Profesion = User_Database.Database_RecordSet!profesionB
         .flags.ModoCombate = User_Database.Database_RecordSet!ModoCombate
         .flags.Seguro = User_Database.Database_RecordSet!Seguro
         
@@ -830,8 +729,7 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
         '*******************************************************************
         'Atributos
         '*******************************************************************
-        query = "SELECT * FROM atributos WHERE user_id = " & .ID & ";"
-        Set User_Database.Database_RecordSet = User_Database.Database_Connection.Execute(query)
+        Call User_Database.MakeQuery("SELECT * FROM atributos WHERE user_id = (?)", False, .ID)
     
         If Not User_Database.Database_RecordSet.RecordCount = 0 Then
             
@@ -851,8 +749,7 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
         '*******************************************************************
         'Hechizos
         '*******************************************************************
-        query = "SELECT * FROM spell WHERE user_id = " & .ID & ";"
-        Set User_Database.Database_RecordSet = User_Database.Database_Connection.Execute(query)
+        Call User_Database.MakeQuery("SELECT * FROM spell WHERE user_id = (?)", False, .ID)
 
         If Not User_Database.Database_RecordSet.RecordCount = 0 Then
             User_Database.Database_RecordSet.MoveFirst
@@ -868,8 +765,7 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
         '*******************************************************************
         'Mascotas
         '*******************************************************************
-        query = "SELECT * FROM pet WHERE user_id = " & .ID & ";"
-        Set User_Database.Database_RecordSet = User_Database.Database_Connection.Execute(query)
+        Call User_Database.MakeQuery("SELECT * FROM pet WHERE user_id = (?)", False, .ID)
 
         If Not User_Database.Database_RecordSet.RecordCount = 0 Then
             User_Database.Database_RecordSet.MoveFirst
@@ -885,8 +781,7 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
         '*******************************************************************
         'Inventario
         '*******************************************************************
-        query = "SELECT * FROM inventario_items WHERE user_id = " & .ID & ";"
-        Set User_Database.Database_RecordSet = User_Database.Database_Connection.Execute(query)
+        Call User_Database.MakeQuery("SELECT * FROM inventario_items WHERE user_id = (?)", False, .ID)
 
         If Not User_Database.Database_RecordSet.RecordCount = 0 Then
             User_Database.Database_RecordSet.MoveFirst
@@ -904,8 +799,7 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
         '*******************************************************************
         'Boveda
         '*******************************************************************
-        query = "SELECT * FROM banco_items WHERE user_id = " & .ID & ";"
-        Set User_Database.Database_RecordSet = User_Database.Database_Connection.Execute(query)
+        Call User_Database.MakeQuery("SELECT * FROM banco_items WHERE user_id = (?)", False, .ID)
 
         If Not User_Database.Database_RecordSet.RecordCount = 0 Then
             User_Database.Database_RecordSet.MoveFirst
@@ -922,8 +816,7 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
         '*******************************************************************
         'Skills
         '*******************************************************************
-        query = "SELECT * FROM skillpoint WHERE user_id = " & .ID & ";"
-        Set User_Database.Database_RecordSet = User_Database.Database_Connection.Execute(query)
+        Call User_Database.MakeQuery("SELECT * FROM skillpoint WHERE user_id = (?)", False, .ID)
 
         If Not User_Database.Database_RecordSet.RecordCount = 0 Then
             User_Database.Database_RecordSet.MoveFirst
@@ -941,8 +834,7 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
         '*******************************************************************
         'Profesion primaria
         '*******************************************************************
-        query = "SELECT * FROM profesion_primaria WHERE user_id = " & .ID & ";"
-        Set User_Database.Database_RecordSet = User_Database.Database_Connection.Execute(query)
+        Call User_Database.MakeQuery("SELECT * FROM profesion_primaria WHERE user_id = (?)", False, .ID)
 
         If Not User_Database.Database_RecordSet.RecordCount = 0 Then
             User_Database.Database_RecordSet.MoveFirst
@@ -960,8 +852,7 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
         '*******************************************************************
         'Profesion secundaria
         '*******************************************************************
-        query = "SELECT * FROM profesion_secundaria WHERE user_id = " & .ID & ";"
-        Set User_Database.Database_RecordSet = User_Database.Database_Connection.Execute(query)
+        Call User_Database.MakeQuery("SELECT * FROM profesion_secundaria WHERE user_id = (?)", False, .ID)
 
         If Not User_Database.Database_RecordSet.RecordCount = 0 Then
             User_Database.Database_RecordSet.MoveFirst
@@ -979,8 +870,7 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
         '*******************************************************************
         'Amigos
         '*******************************************************************
-        query = "SELECT * FROM amigos WHERE user_id = " & .ID & ";"
-        Set User_Database.Database_RecordSet = User_Database.Database_Connection.Execute(query)
+        Call User_Database.MakeQuery("SELECT * FROM amigos WHERE user_id = (?)", False, .ID)
 
         If Not User_Database.Database_RecordSet.RecordCount = 0 Then
             User_Database.Database_RecordSet.MoveFirst
@@ -1032,8 +922,7 @@ Public Sub LoadQuestStats(ByVal UserIndex As Integer)
 
     With UserList(UserIndex).QuestStats
 
-        query = "SELECT * FROM quest WHERE user_id = '" & UserList(UserIndex).ID & "';"
-        Set User_Database.Database_RecordSet = User_Database.Database_Connection.Execute(query)
+        Call User_Database.MakeQuery("SELECT * FROM quest WHERE user_id = (?)", False, UserList(UserIndex).ID)
     
         If Not User_Database.Database_RecordSet.RecordCount = 0 Then
             User_Database.Database_RecordSet.MoveFirst
@@ -1087,8 +976,8 @@ End Sub
 
 Public Function PersonajeExisteDatabase(ByVal UserName As String) As Boolean
     '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 10/10/2018
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     '***************************************************
     
     On Error GoTo ErrorHandler
@@ -1102,9 +991,9 @@ Public Function PersonajeExisteDatabase(ByVal UserName As String) As Boolean
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "SELECT id FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "' AND deleted = FALSE;"
+    query = "SELECT id FROM personaje WHERE UPPER(name) = (?) AND deleted = FALSE;"
 
-    Set User_Database.Database_RecordSet = User_Database.Database_Connection.Execute(query)
+    Call User_Database.MakeQuery(query, False, UCase$(UserName))
 
     If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then
         PersonajeExisteDatabase = False
@@ -1129,8 +1018,8 @@ End Function
 Public Function BANCheckDatabase(ByVal UserName As String) As Boolean
 
     '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 09/10/2018
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     '***************************************************
     On Error GoTo ErrorHandler
 
@@ -1143,9 +1032,9 @@ Public Function BANCheckDatabase(ByVal UserName As String) As Boolean
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "SELECT is_ban FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "';"
+    query = "SELECT is_ban FROM personaje WHERE UPPER(name) = (?)"
 
-    Set User_Database.Database_RecordSet = User_Database.Database_Connection.Execute(query)
+    Call User_Database.MakeQuery(query, False, UCase$(UserName))
 
     If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then
         BANCheckDatabase = False
@@ -1171,12 +1060,10 @@ End Function
 Public Sub UnBanDatabase(ByVal UserName As String)
 
     '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 10/10/2018
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     '***************************************************
     On Error GoTo ErrorHandler
-
-    Dim query As String
     
     #If DBConexionUnica = 0 Then
         Call Database_Connect
@@ -1185,9 +1072,7 @@ Public Sub UnBanDatabase(ByVal UserName As String)
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "UPDATE personaje SET is_ban = FALSE WHERE UPPER(name) = '" & UCase$(UserName) & "';"
-
-    User_Database.Database_Connection.Execute (query)
+    Call User_Database.MakeQuery("UPDATE personaje SET is_ban = FALSE WHERE UPPER(name) = (?)", True, UCase$(UserName))
 
     #If DBConexionUnica = 0 Then
         Call User_Database.Database_Close
@@ -1203,8 +1088,8 @@ End Sub
 Public Function GetUserGuildIndexDatabase(ByVal UserName As String) As Integer
 
     '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 09/10/2018
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     '***************************************************
     On Error GoTo ErrorHandler
 
@@ -1217,9 +1102,9 @@ Public Function GetUserGuildIndexDatabase(ByVal UserName As String) As Integer
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "SELECT guild_index FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "';"
-
-    Set User_Database.Database_RecordSet = User_Database.Database_Connection.Execute(query)
+    query = "SELECT guild_index FROM personaje WHERE UPPER(name) = (?)"
+    
+    Call User_Database.MakeQuery(query, False, UCase$(UserName))
 
     If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then
         GetUserGuildIndexDatabase = 0
@@ -1244,12 +1129,10 @@ End Function
 Public Sub CopyUserDatabase(ByVal UserName As String, ByVal newName As String)
 
     '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 10/10/2018
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     '***************************************************
     On Error GoTo ErrorHandler
-
-    Dim query As String
 
     #If DBConexionUnica = 0 Then
         Call User_Database.Database_Connect
@@ -1258,9 +1141,7 @@ Public Sub CopyUserDatabase(ByVal UserName As String, ByVal newName As String)
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "UPDATE personaje SET name = '" & UCase$(newName) & "' WHERE UPPER(name) = '" & UCase$(UserName) & "';"
-
-    User_Database.Database_Connection.Execute (query)
+    Call User_Database.MakeQuery("UPDATE personaje SET name = (?) WHERE UPPER(name) = (?)", True, newName, UCase$(UserName))
 
     #If DBConexionUnica = 0 Then
         Call User_Database.Database_Close
@@ -1277,12 +1158,10 @@ Public Sub MarcarPjComoQueYaVotoDatabase(ByVal UserIndex As Integer, _
                                          ByVal NumeroEncuesta As Integer)
 
     '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 10/10/2018
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     '***************************************************
     On Error GoTo ErrorHandler
-
-    Dim query As String
 
     #If DBConexionUnica = 0 Then
         Call User_Database.Database_Connect
@@ -1291,9 +1170,7 @@ Public Sub MarcarPjComoQueYaVotoDatabase(ByVal UserIndex As Integer, _
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "UPDATE personaje SET votes_amount = " & NumeroEncuesta & " WHERE id = " & UserList(UserIndex).ID & ";"
-
-    User_Database.Database_Connection.Execute (query)
+    Call User_Database.MakeQuery("UPDATE personaje SET votes_amount = (?) WHERE id = (?)", True, NumeroEncuesta, UserList(UserIndex).ID)
     
     #If DBConexionUnica = 0 Then
         Call User_Database.Database_Close
@@ -1309,8 +1186,8 @@ End Sub
 Public Function PersonajeCantidadVotosDatabase(ByVal UserName As String) As Integer
 
     '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 10/10/2018
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     '***************************************************
     On Error GoTo ErrorHandler
 
@@ -1323,9 +1200,9 @@ Public Function PersonajeCantidadVotosDatabase(ByVal UserName As String) As Inte
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "SELECT votes_amount FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "';"
-
-    Set User_Database.Database_RecordSet = User_Database.Database_Connection.Execute(query)
+    query = "SELECT votes_amount FROM personaje WHERE UPPER(name) = (?)"
+    
+    Call User_Database.MakeQuery(query, False, UCase$(UserName))
 
     If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then
         PersonajeCantidadVotosDatabase = 0
@@ -1352,8 +1229,8 @@ Public Sub SaveBan(ByVal UserName As String, _
                            ByVal BannedBy As String)
 
     '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 10/10/2018
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     '***************************************************
     On Error GoTo ErrorHandler
 
@@ -1370,16 +1247,10 @@ Public Sub SaveBan(ByVal UserName As String, _
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "UPDATE personaje SET is_ban = TRUE WHERE UPPER(name) = '" & UCase$(UserName) & "';"
+    Call User_Database.MakeQuery("UPDATE personaje SET is_ban = TRUE WHERE UPPER(name) = (?)", True, UCase$(UserName))
 
-    User_Database.Database_Connection.Execute (query)
-
-    query = "INSERT INTO punishment SET "
-    query = query & "user_id = (SELECT id FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "'), "
-    query = query & "number = " & (cantPenas + 1) & ", "
-    query = query & "reason = '" & BannedBy & ": BAN POR " & LCase$(Reason) & " " & Date & " " & time & "';"
-
-    User_Database.Database_Connection.Execute (query)
+    query = "INSERT INTO punishment SET user_id = (SELECT id FROM personaje WHERE UPPER(name) = (?)), number = (?), reason = (?)"
+    Call User_Database.MakeQuery(query, True, UCase$(UserName), (cantPenas + 1), BannedBy & ": BAN POR " & LCase$(Reason) & " " & Date & " " & time)
 
     #If DBConexionUnica = 0 Then
         Call User_Database.Database_Close
@@ -1395,8 +1266,8 @@ End Sub
 Public Function GetUserAmountOfPunishments(ByVal UserName As String) As Integer
 
     '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 10/10/2018
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     '***************************************************
     On Error GoTo ErrorHandler
 
@@ -1409,9 +1280,8 @@ Public Function GetUserAmountOfPunishments(ByVal UserName As String) As Integer
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "SELECT COUNT(1) as punishments FROM punishment WHERE user_id = (SELECT id FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "')"
-
-    Set User_Database.Database_RecordSet = User_Database.Database_Connection.Execute(query)
+    query = "SELECT COUNT(1) as punishments FROM punishment WHERE user_id = (SELECT id FROM personaje WHERE UPPER(name) = (?))"
+    Call User_Database.MakeQuery(query, False, UCase$(UserName))
 
     If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then
         GetUserAmountOfPunishments = 0
@@ -1437,8 +1307,8 @@ Public Sub SendUserPunishments(ByVal UserIndex As Integer, _
                                        ByVal Count As Integer)
 
     '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 10/10/2018
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     '***************************************************
     On Error GoTo ErrorHandler
 
@@ -1451,9 +1321,8 @@ Public Sub SendUserPunishments(ByVal UserIndex As Integer, _
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "SELECT * FROM punishment WHERE user_id = (SELECT id FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "');"
-
-    Set User_Database.Database_RecordSet = User_Database.Database_Connection.Execute(query)
+    query = "SELECT * FROM punishment WHERE user_id = (SELECT id FROM personaje WHERE UPPER(name) = (?))"
+    Call User_Database.MakeQuery(query, False, UCase$(UserName))
 
     If Not User_Database.Database_RecordSet.RecordCount = 0 Then
         User_Database.Database_RecordSet.MoveFirst
@@ -1482,8 +1351,8 @@ End Sub
 Public Function GetUserPos(ByVal UserName As String) As String
 
     '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 10/10/2018
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     '***************************************************
     On Error GoTo ErrorHandler
 
@@ -1496,9 +1365,8 @@ Public Function GetUserPos(ByVal UserName As String) As String
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "SELECT pos_map, pos_x, pos_y FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "';"
-
-    Set User_Database.Database_RecordSet = User_Database.Database_Connection.Execute(query)
+    query = "SELECT pos_map, pos_x, pos_y FROM personaje WHERE UPPER(name) = (?)"
+    Call User_Database.MakeQuery(query, False, UCase$(UserName))
 
     If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then
         GetUserPos = vbNullString
@@ -1524,8 +1392,8 @@ Public Sub SaveUserPunishment(ByVal UserName As String, _
                                       ByVal Reason As String)
 
     '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 10/10/2018
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     '***************************************************
     On Error GoTo ErrorHandler
 
@@ -1538,12 +1406,8 @@ Public Sub SaveUserPunishment(ByVal UserName As String, _
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "INSERT INTO punishment SET "
-    query = query & "user_id = (SELECT id FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "'), "
-    query = query & "number = " & Number & ", "
-    query = query & "reason = '" & Reason & "';"
-
-    User_Database.Database_Connection.Execute (query)
+    query = "INSERT INTO punishment SET user_id = (SELECT id FROM personaje WHERE UPPER(name) = (?)), number = (?), reason = (?)"
+    Call User_Database.MakeQuery(query, True, UCase$(UserName), Number, Reason)
 
     #If DBConexionUnica = 0 Then
         Call User_Database.Database_Close
@@ -1560,8 +1424,8 @@ Public Sub AlterUserPunishment(ByVal UserName As String, _
                                        ByVal Reason As String)
 
     '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 10/10/2018
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     '***************************************************
     On Error GoTo ErrorHandler
 
@@ -1574,11 +1438,8 @@ Public Sub AlterUserPunishment(ByVal UserName As String, _
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "UPDATE punishment SET "
-    query = query & "reason = '" & Reason & "' "
-    query = query & "WHERE number = " & Number & " AND user_id = (SELECT id FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "');"
-
-    User_Database.Database_Connection.Execute (query)
+    query = "UPDATE punishment SET reason = (?) WHERE number = (?) AND user_id = (SELECT id FROM personaje WHERE UPPER(name) = (?)"
+    Call User_Database.MakeQuery(query, True, Reason, Number, UCase$(UserName))
 
     #If DBConexionUnica = 0 Then
         Call User_Database.Database_Close
@@ -1593,8 +1454,8 @@ End Sub
 Public Sub ResetUserFacciones(ByVal UserName As String)
 
     '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 10/10/2018
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     '***************************************************
     On Error GoTo ErrorHandler
 
@@ -1607,25 +1468,12 @@ Public Sub ResetUserFacciones(ByVal UserName As String)
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "UPDATE personaje SET "
-    query = query & "pertenece_real = FALSE, "
-    query = query & "pertenece_caos = FALSE, "
-    query = query & "ciudadanos_matados = 0, "
-    query = query & "criminales_matados = FALSE, "
-    query = query & "recibio_armadura_real = FALSE, "
-    query = query & "recibio_armadura_caos = FALSE, "
-    query = query & "recibio_exp_real = FALSE, "
-    query = query & "recibio_exp_caos = FALSE, "
-    query = query & "recompensas_real = 0, "
-    query = query & "recompensas_caos = 0, "
-    query = query & "reenlistadas = 0, "
-    query = query & "fecha_ingreso = NULL, "
-    query = query & "nivel_ingreso = NULL, "
-    query = query & "matados_ingreso = NULL, "
-    query = query & "siguiente_recompensa = NULL "
-    query = query & "WHERE UPPER(name) = '" & UCase$(UserName) & "';"
+    query = "UPDATE personaje SET pertenece_real = FALSE, pertenece_caos = FALSE, ciudadanos_matados = 0, criminales_matados = FALSE, "
+    query = query & "recibio_armadura_real = FALSE, recibio_armadura_caos = FALSE, recibio_exp_real = FALSE, recibio_exp_caos = FALSE, "
+    query = query & "recompensas_real = 0, recompensas_caos = 0, reenlistadas = 0, fecha_ingreso = NULL, nivel_ingreso = NULL, "
+    query = query & "matados_ingreso = NULL, siguiente_recompensa = NULL WHERE UPPER(name) = (?)"
 
-    User_Database.Database_Connection.Execute (query)
+    Call User_Database.MakeQuery(query, True, UCase$(UserName))
 
     #If DBConexionUnica = 0 Then
         Call User_Database.Database_Close
@@ -1640,8 +1488,8 @@ End Sub
 Public Sub KickUserCouncils(ByVal UserName As String)
 
     '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 10/10/2018
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     '***************************************************
     On Error GoTo ErrorHandler
 
@@ -1654,12 +1502,8 @@ Public Sub KickUserCouncils(ByVal UserName As String)
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "UPDATE personaje SET "
-    query = query & "pertenece_consejo_real = FALSE, "
-    query = query & "pertenece_consejo_caos = FALSE "
-    query = query & "WHERE UPPER(name) = '" & UCase$(UserName) & "';"
-
-    User_Database.Database_Connection.Execute (query)
+    query = "UPDATE personaje SET pertenece_consejo_real = FALSE, pertenece_consejo_caos = FALSE WHERE UPPER(name) = (?)"
+    Call User_Database.MakeQuery(query, True, UCase$(UserName))
 
     #If DBConexionUnica = 0 Then
         Call User_Database.Database_Close
@@ -1674,8 +1518,8 @@ End Sub
 Public Sub KickUserFacciones(ByVal UserName As String)
 
     '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 10/10/2018
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     '***************************************************
     On Error GoTo ErrorHandler
 
@@ -1688,12 +1532,8 @@ Public Sub KickUserFacciones(ByVal UserName As String)
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "UPDATE personaje SET "
-    query = query & "pertenece_real = FALSE, "
-    query = query & "pertenece_caos = FALSE "
-    query = query & "WHERE UPPER(name) = '" & UCase$(UserName) & "';"
-
-    User_Database.Database_Connection.Execute (query)
+    query = "UPDATE personaje SET pertenece_real = FALSE, pertenece_caos = FALSE WHERE UPPER(name) = (?)"
+    Call User_Database.MakeQuery(query, True, UCase$(UserName))
     
     #If DBConexionUnica = 0 Then
         Call User_Database.Database_Close
@@ -1708,8 +1548,8 @@ End Sub
 Public Sub KickUserChaosLegion(ByVal UserName As String)
 
     '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 10/10/2018
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     '***************************************************
     On Error GoTo ErrorHandler
 
@@ -1722,12 +1562,8 @@ Public Sub KickUserChaosLegion(ByVal UserName As String)
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "UPDATE personaje SET "
-    query = query & "pertenece_caos = FALSE, "
-    query = query & "reenlistadas = 200 "
-    query = query & "WHERE UPPER(name) = '" & UCase$(UserName) & "';"
-
-    User_Database.Database_Connection.Execute (query)
+    query = "UPDATE personaje SET pertenece_caos = FALSE, reenlistadas = 200 WHERE UPPER(name) = (?)"
+    Call User_Database.MakeQuery(query, True, UCase$(UserName))
 
     #If DBConexionUnica = 0 Then
         Call User_Database.Database_Close
@@ -1742,8 +1578,8 @@ End Sub
 Public Sub KickUserRoyalArmy(ByVal UserName As String)
 
     '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 10/10/2018
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     '***************************************************
     On Error GoTo ErrorHandler
 
@@ -1756,12 +1592,8 @@ Public Sub KickUserRoyalArmy(ByVal UserName As String)
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "UPDATE personaje SET "
-    query = query & "pertenece_real = FALSE, "
-    query = query & "reenlistadas = 200 "
-    query = query & "WHERE UPPER(name) = '" & UCase$(UserName) & "';"
-
-    User_Database.Database_Connection.Execute (query)
+    query = "UPDATE personaje SET pertenece_real = FALSE, reenlistadas = 200 WHERE UPPER(name) = (?)"
+    Call User_Database.MakeQuery(query, True, UCase$(UserName))
 
     #If DBConexionUnica = 0 Then
         Call User_Database.Database_Close
@@ -1776,8 +1608,8 @@ End Sub
 Public Sub UpdateUserLogged(ByVal UserName As String, ByVal Logged As Byte)
 
     '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 10/10/2018
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     '***************************************************
     On Error GoTo ErrorHandler
 
@@ -1790,11 +1622,8 @@ Public Sub UpdateUserLogged(ByVal UserName As String, ByVal Logged As Byte)
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "UPDATE personaje SET "
-    query = query & "is_logged = " & IIf(Logged = 1, "TRUE", "FALSE") & " "
-    query = query & "WHERE UPPER(name) = '" & UCase$(UserName) & "';"
-
-    User_Database.Database_Connection.Execute (query)
+    query = "UPDATE personaje SET is_logged = " & IIf(Logged = 1, "TRUE", "FALSE") & " WHERE UPPER(name) = (?)"
+    Call User_Database.MakeQuery(query, True, UCase$(UserName))
 
     #If DBConexionUnica = 0 Then
         Call User_Database.Database_Close
@@ -1809,8 +1638,8 @@ End Sub
 Public Function GetUserLastIps(ByVal UserName As String) As String
 
     '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 10/10/2018
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     '***************************************************
     On Error GoTo ErrorHandler
 
@@ -1823,9 +1652,8 @@ Public Function GetUserLastIps(ByVal UserName As String) As String
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "SELECT last_ip FROM cuentas WHERE id = (SELECT cuenta_id FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "');"
-
-    Set User_Database.Database_RecordSet = User_Database.Database_Connection.Execute(query)
+    query = "SELECT last_ip FROM cuentas WHERE id = (SELECT cuenta_id FROM personaje WHERE UPPER(name) = (?)"
+    Call User_Database.MakeQuery(query, False, UCase$(UserName))
 
     If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then
         GetUserLastIps = vbNullString
@@ -1849,8 +1677,8 @@ End Function
 Public Function GetUserSkills(ByVal UserName As String) As String
 
     '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 10/10/2018
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     '***************************************************
     On Error GoTo ErrorHandler
 
@@ -1865,9 +1693,8 @@ Public Function GetUserSkills(ByVal UserName As String) As String
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "SELECT number, value FROM skillpoint WHERE user_id = (SELECT id FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "');"
-
-    Set User_Database.Database_RecordSet = User_Database.Database_Connection.Execute(query)
+    query = "SELECT number, value FROM skillpoint WHERE user_id = (SELECT id FROM personaje WHERE UPPER(name) = (?))"
+   Call User_Database.MakeQuery(query, False, UCase$(UserName))
 
     If Not User_Database.Database_RecordSet.RecordCount = 0 Then
         User_Database.Database_RecordSet.MoveFirst
@@ -1896,8 +1723,8 @@ End Function
 Public Function GetUserFreeSkills(ByVal UserName As String) As Integer
 
     '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 10/10/2018
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     '***************************************************
     On Error GoTo ErrorHandler
 
@@ -1910,9 +1737,8 @@ Public Function GetUserFreeSkills(ByVal UserName As String) As Integer
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "SELECT free_skillpoints FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "';"
-
-    Set User_Database.Database_RecordSet = User_Database.Database_Connection.Execute(query)
+    query = "SELECT free_skillpoints FROM personaje WHERE UPPER(name) = (?)"
+    Call User_Database.MakeQuery(query, False, UCase$(UserName))
 
     If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then
         GetUserFreeSkills = 0
@@ -1937,8 +1763,8 @@ Public Sub SaveUserTrainingTime(ByVal UserName As String, _
                                         ByVal trainingTime As Long)
 
     '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 10/10/2018
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     '***************************************************
     On Error GoTo ErrorHandler
 
@@ -1951,11 +1777,8 @@ Public Sub SaveUserTrainingTime(ByVal UserName As String, _
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "UPDATE personaje SET "
-    query = query & "counter_training = " & trainingTime & " "
-    query = query & "WHERE UPPER(name) = '" & UCase$(UserName) & "';"
-
-    User_Database.Database_Connection.Execute (query)
+    query = "UPDATE personaje SET counter_training = (?) WHERE UPPER(name) = (?)"
+    Call User_Database.MakeQuery(query, True, trainingTime, UCase$(UserName))
 
     #If DBConexionUnica = 0 Then
         Call User_Database.Database_Close
@@ -1970,8 +1793,8 @@ End Sub
 Public Function GetUserTrainingTime(ByVal UserName As String) As Long
 
     '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 10/10/2018
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     '***************************************************
     On Error GoTo ErrorHandler
 
@@ -1984,9 +1807,8 @@ Public Function GetUserTrainingTime(ByVal UserName As String) As Long
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "SELECT counter_training FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "';"
-
-    Set User_Database.Database_RecordSet = User_Database.Database_Connection.Execute(query)
+    query = "SELECT counter_training FROM personaje WHERE UPPER(name) = (?)"
+    Call User_Database.MakeQuery(query, False, UCase$(UserName))
 
     If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then
         GetUserTrainingTime = 0
@@ -2010,8 +1832,8 @@ End Function
 Public Function UserBelongsToRoyalArmy(ByVal UserName As String) As Boolean
 
     '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 10/10/2018
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     '***************************************************
     On Error GoTo ErrorHandler
 
@@ -2024,9 +1846,8 @@ Public Function UserBelongsToRoyalArmy(ByVal UserName As String) As Boolean
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "SELECT pertenece_real FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "' AND deleted = FALSE;"
-
-    Set User_Database.Database_RecordSet = User_Database.Database_Connection.Execute(query)
+    query = "SELECT pertenece_real FROM personaje WHERE UPPER(name) = (?) AND deleted = FALSE;"
+    Call User_Database.MakeQuery(query, False, UCase$(UserName))
 
     If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then
         UserBelongsToRoyalArmy = False
@@ -2051,8 +1872,8 @@ End Function
 Public Function UserBelongsToChaosLegion(ByVal UserName As String) As Boolean
 
     '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 10/10/2018
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     '***************************************************
     On Error GoTo ErrorHandler
 
@@ -2065,9 +1886,8 @@ Public Function UserBelongsToChaosLegion(ByVal UserName As String) As Boolean
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "SELECT pertenece_caos FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "' AND deleted = FALSE;"
-
-    Set User_Database.Database_RecordSet = User_Database.Database_Connection.Execute(query)
+    query = "SELECT pertenece_caos FROM personaje WHERE UPPER(name) = (?) AND deleted = FALSE;"
+    Call User_Database.MakeQuery(query, False, UCase$(UserName))
 
     If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then
         UserBelongsToChaosLegion = False
@@ -2092,8 +1912,8 @@ End Function
 Public Function GetUserLevel(ByVal UserName As String) As Byte
 
     '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 09/10/2018
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     '***************************************************
     On Error GoTo ErrorHandler
 
@@ -2106,9 +1926,8 @@ Public Function GetUserLevel(ByVal UserName As String) As Byte
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "SELECT level FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "';"
-
-    Set User_Database.Database_RecordSet = User_Database.Database_Connection.Execute(query)
+    query = "SELECT level FROM personaje WHERE UPPER(name) = (?)"
+    Call User_Database.MakeQuery(query, False, UCase$(UserName))
 
     If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then
         GetUserLevel = 0
@@ -2133,8 +1952,8 @@ End Function
 Public Function GetUserPromedio(ByVal UserName As String) As Long
 
     '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 09/10/2018
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     '***************************************************
     On Error GoTo ErrorHandler
 
@@ -2147,9 +1966,8 @@ Public Function GetUserPromedio(ByVal UserName As String) As Long
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "SELECT rep_average FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "';"
-
-    Set User_Database.Database_RecordSet = User_Database.Database_Connection.Execute(query)
+    query = "SELECT rep_average FROM personaje WHERE UPPER(name) = (?)"
+    Call User_Database.MakeQuery(query, False, UCase$(UserName))
 
     If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then
         GetUserPromedio = 0
@@ -2174,8 +1992,8 @@ End Function
 Public Function GetUserReenlists(ByVal UserName As String) As Byte
 
     '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 09/10/2018
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     '***************************************************
     On Error GoTo ErrorHandler
 
@@ -2188,9 +2006,8 @@ Public Function GetUserReenlists(ByVal UserName As String) As Byte
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "SELECT reenlistadas FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "';"
-
-    Set User_Database.Database_RecordSet = User_Database.Database_Connection.Execute(query)
+    query = "SELECT reenlistadas FROM personaje WHERE UPPER(name) = (?)"
+    Call User_Database.MakeQuery(query, False, UCase$(UserName))
 
     If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then
         GetUserReenlists = 0
@@ -2215,8 +2032,8 @@ End Function
 Public Sub SaveUserReenlists(ByVal UserName As String, ByVal Reenlists As Byte)
 
     '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 10/10/2018
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     '***************************************************
     On Error GoTo ErrorHandler
 
@@ -2229,11 +2046,9 @@ Public Sub SaveUserReenlists(ByVal UserName As String, ByVal Reenlists As Byte)
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "UPDATE personaje SET "
-    query = query & "reenlistadas = " & Reenlists & " "
-    query = query & "WHERE UPPER(name) = '" & UCase$(UserName) & "';"
+    query = "UPDATE personaje SET reenlistadas = (?) WHERE UPPER(name) = (?)"
 
-    User_Database.Database_Connection.Execute (query)
+    Call User_Database.MakeQuery(query, True, Reenlists, UCase$(UserName))
 
     #If DBConexionUnica = 0 Then
         Call User_Database.Database_Close
@@ -2248,8 +2063,8 @@ End Sub
 Public Sub SendUserStatsTxtDatabase(ByVal sendIndex As Integer, ByVal UserName As String)
 
     '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 30/10/2018
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     '***************************************************
     On Error GoTo ErrorHandler
 
@@ -2267,9 +2082,8 @@ Public Sub SendUserStatsTxtDatabase(ByVal sendIndex As Integer, ByVal UserName A
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
     
-        query = "SELECT level, exp, elu, min_sta, max_sta, min_hp, max_hp, min_man, max_man, min_hit, max_hit, gold FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "';"
-
-        Set User_Database.Database_RecordSet = User_Database.Database_Connection.Execute(query)
+        query = "SELECT level, exp, elu, min_sta, max_sta, min_hp, max_hp, min_man, max_man, min_hit, max_hit, gold FROM personaje WHERE UPPER(name) = (?)"
+        Call User_Database.MakeQuery(query, False, UCase$(UserName))
 
         If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then
             Call WriteConsoleMsg(sendIndex, "Pj Inexistente", FontTypeNames.FONTTYPE_INFO)
@@ -2302,8 +2116,8 @@ Public Sub SendUserMiniStatsTxtFromDatabase(ByVal sendIndex As Integer, _
                                             ByVal UserName As String)
 
     '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 11/10/2018
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     '***************************************************
     On Error GoTo ErrorHandler
 
@@ -2321,9 +2135,8 @@ Public Sub SendUserMiniStatsTxtFromDatabase(ByVal sendIndex As Integer, _
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
     
-        query = "SELECT killed_npcs, killed_users, ciudadanos_matados, criminales_matados, class_id, genre_id, race_id FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "';"
-
-        Set User_Database.Database_RecordSet = User_Database.Database_Connection.Execute(query)
+        query = "SELECT killed_npcs, killed_users, ciudadanos_matados, criminales_matados, class_id, genre_id, race_id FROM personaje WHERE UPPER(name) = (?)"
+        Call User_Database.MakeQuery(query, False, UCase$(UserName))
 
         If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then
             Call WriteConsoleMsg(sendIndex, "Pj Inexistente", FontTypeNames.FONTTYPE_INFO)
@@ -2356,8 +2169,8 @@ Public Sub SendUserOROTxtFromDatabase(ByVal sendIndex As Integer, _
                                       ByVal UserName As String)
 
     '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 11/10/2018
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     '***************************************************
     On Error GoTo ErrorHandler
 
@@ -2373,9 +2186,8 @@ Public Sub SendUserOROTxtFromDatabase(ByVal sendIndex As Integer, _
             If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
         #End If
 
-        query = "SELECT bank_gold FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "';"
-
-        Set User_Database.Database_RecordSet = User_Database.Database_Connection.Execute(query)
+        query = "SELECT bank_gold FROM personaje WHERE UPPER(name) = (?)"
+        Call User_Database.MakeQuery(query, False, UCase$(UserName))
 
         If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then
             Call WriteConsoleMsg(sendIndex, "Pj Inexistente", FontTypeNames.FONTTYPE_INFO)
@@ -2404,8 +2216,8 @@ Public Sub SendUserInvTxtFromDatabase(ByVal sendIndex As Integer, _
                                       ByVal UserName As String)
 
     '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 11/10/2018
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     '***************************************************
     On Error GoTo ErrorHandler
 
@@ -2431,9 +2243,8 @@ Public Sub SendUserInvTxtFromDatabase(ByVal sendIndex As Integer, _
             If LoopC < MAX_INVENTORY_SLOTS Then query = query & ", "
         Next LoopC
 
-        query = query & " FROM inventario_items WHERE user_id = (SELECT id FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "')"
-
-        Set User_Database.Database_RecordSet = User_Database.Database_Connection.Execute(query)
+        query = query & " FROM inventario_items WHERE user_id = (SELECT id FROM personaje WHERE UPPER(name) = (?))"
+        Call User_Database.MakeQuery(query, False, UCase$(UserName))
 
         If Not User_Database.Database_RecordSet.RecordCount = 0 Then
             User_Database.Database_RecordSet.MoveFirst
@@ -2472,8 +2283,8 @@ Public Sub SendUserBovedaTxtFromDatabase(ByVal sendIndex As Integer, _
                                          ByVal UserName As String)
 
     '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 11/10/2018
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     '***************************************************
     On Error GoTo ErrorHandler
 
@@ -2499,9 +2310,8 @@ Public Sub SendUserBovedaTxtFromDatabase(ByVal sendIndex As Integer, _
             If LoopC < MAX_BANCOINVENTORY_SLOTS Then query = query & ", "
         Next LoopC
         
-        query = query & " FROM banco_items WHERE user_id = (SELECT id FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "')"
-
-        Set User_Database.Database_RecordSet = User_Database.Database_Connection.Execute(query)
+        query = query & " FROM banco_items WHERE user_id = (SELECT id FROM personaje WHERE UPPER(name) = (?))"
+        Call User_Database.MakeQuery(query, False, UCase$(UserName))
 
         If Not User_Database.Database_RecordSet.RecordCount = 0 Then
             User_Database.Database_RecordSet.MoveFirst
@@ -2539,8 +2349,8 @@ End Sub
 Public Sub SendCharacterInfoDatabase(ByVal UserIndex As Integer, ByVal UserName As String)
 
     '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 11/10/2018
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     '***************************************************
     On Error GoTo ErrorHandler
 
@@ -2559,9 +2369,8 @@ Public Sub SendCharacterInfoDatabase(ByVal UserIndex As Integer, ByVal UserName 
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "SELECT race_id, class_id, genre_id, level, gold, bank_gold, rep_average, guild_requests_history, guild_index, guild_member_history, pertenece_real, pertenece_caos, ciudadanos_matados, criminales_matados FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "';"
-
-    Set User_Database.Database_RecordSet = User_Database.Database_Connection.Execute(query)
+    query = "SELECT race_id, class_id, genre_id, level, gold, bank_gold, rep_average, guild_requests_history, guild_index, guild_member_history, pertenece_real, pertenece_caos, ciudadanos_matados, criminales_matados FROM personaje WHERE UPPER(name) = (?)"
+    Call User_Database.MakeQuery(query, False, UCase$(UserName))
 
     If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then
         Call WriteConsoleMsg(UserIndex, "Pj Inexistente", FontTypeNames.FONTTYPE_INFO)
@@ -2602,8 +2411,8 @@ End Sub
 Public Function GetUserGuildMemberDatabase(ByVal UserName As String) As String
 
     '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 11/10/2018
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     '***************************************************
     On Error GoTo ErrorHandler
 
@@ -2616,9 +2425,8 @@ Public Function GetUserGuildMemberDatabase(ByVal UserName As String) As String
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "SELECT guild_member_history FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "';"
-
-    Set User_Database.Database_RecordSet = User_Database.Database_Connection.Execute(query)
+    query = "SELECT guild_member_history FROM personaje WHERE UPPER(name) = (?)"
+    Call User_Database.MakeQuery(query, False, UCase$(UserName))
 
     If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then
         GetUserGuildMemberDatabase = vbNullString
@@ -2643,8 +2451,8 @@ End Function
 Public Function GetUserGuildAspirantDatabase(ByVal UserName As String) As Integer
 
     '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 11/10/2018
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     '***************************************************
     On Error GoTo ErrorHandler
 
@@ -2657,9 +2465,8 @@ Public Function GetUserGuildAspirantDatabase(ByVal UserName As String) As Intege
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "SELECT guild_aspirant_index FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "';"
-
-    Set User_Database.Database_RecordSet = User_Database.Database_Connection.Execute(query)
+    query = "SELECT guild_aspirant_index FROM personaje WHERE UPPER(name) = (?)"
+    Call User_Database.MakeQuery(query, False, UCase$(UserName))
 
     If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then
         GetUserGuildAspirantDatabase = 0
@@ -2684,8 +2491,8 @@ End Function
 Public Function GetUserGuildRejectionReasonDatabase(ByVal UserName As String) As String
 
     '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 11/10/2018
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     '***************************************************
     On Error GoTo ErrorHandler
 
@@ -2698,9 +2505,8 @@ Public Function GetUserGuildRejectionReasonDatabase(ByVal UserName As String) As
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "SELECT guild_rejected_because FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "';"
-
-    Set User_Database.Database_RecordSet = User_Database.Database_Connection.Execute(query)
+    query = "SELECT guild_rejected_because FROM personaje WHERE UPPER(name) = (?)"
+    Call User_Database.MakeQuery(query, False, UCase$(UserName))
 
     If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then
         GetUserGuildRejectionReasonDatabase = vbNullString
@@ -2725,8 +2531,8 @@ End Function
 Public Function GetUserGuildPedidosDatabase(ByVal UserName As String) As String
 
     '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 11/10/2018
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     '***************************************************
     On Error GoTo ErrorHandler
 
@@ -2739,9 +2545,8 @@ Public Function GetUserGuildPedidosDatabase(ByVal UserName As String) As String
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "SELECT guild_requests_history FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "';"
-
-    Set User_Database.Database_RecordSet = User_Database.Database_Connection.Execute(query)
+    query = "SELECT guild_requests_history FROM personaje WHERE UPPER(name) = (?)"
+    Call User_Database.MakeQuery(query, False, UCase$(UserName))
 
     If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then
         GetUserGuildPedidosDatabase = vbNullString
@@ -2767,8 +2572,8 @@ Public Sub SaveUserGuildRejectionReasonDatabase(ByVal UserName As String, _
                                                 ByVal Reason As String)
 
     '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 11/10/2018
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     '***************************************************
     On Error GoTo ErrorHandler
 
@@ -2781,11 +2586,8 @@ Public Sub SaveUserGuildRejectionReasonDatabase(ByVal UserName As String, _
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "UPDATE personaje SET "
-    query = query & "guild_rejected_because = '" & Reason & "' "
-    query = query & "WHERE UPPER(name) = '" & UCase$(UserName) & "';"
-
-    User_Database.Database_Connection.Execute (query)
+    query = "UPDATE personaje SET guild_rejected_because = (?) WHERE UPPER(name) = (?)"
+    Call User_Database.MakeQuery(query, True, Reason, UCase$(UserName))
     
 #If DBConexionUnica = 0 Then
     Call User_Database.Database_Close
@@ -2801,8 +2603,8 @@ Public Sub SaveUserGuildIndexDatabase(ByVal UserName As String, _
                                       ByVal GuildIndex As Integer)
 
     '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 11/10/2018
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     '***************************************************
     On Error GoTo ErrorHandler
 
@@ -2815,11 +2617,8 @@ Public Sub SaveUserGuildIndexDatabase(ByVal UserName As String, _
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "UPDATE personaje SET "
-    query = query & "guild_index = " & GuildIndex & " "
-    query = query & "WHERE UPPER(name) = '" & UCase$(UserName) & "';"
-
-    User_Database.Database_Connection.Execute (query)
+    query = "UPDATE personaje SET guild_index = (?) WHERE UPPER(name) = (?)"
+    Call User_Database.MakeQuery(query, True, GuildIndex, UCase$(UserName))
     
 #If DBConexionUnica = 0 Then
     Call User_Database.Database_Close
@@ -2835,8 +2634,8 @@ Public Sub SaveUserGuildAspirantDatabase(ByVal UserName As String, _
                                          ByVal AspirantIndex As Integer)
 
     '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 11/10/2018
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     '***************************************************
     On Error GoTo ErrorHandler
 
@@ -2849,11 +2648,8 @@ Public Sub SaveUserGuildAspirantDatabase(ByVal UserName As String, _
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "UPDATE personaje SET "
-    query = query & "guild_aspirant_index = " & AspirantIndex & " "
-    query = query & "WHERE UPPER(name) = '" & UCase$(UserName) & "';"
-
-    User_Database.Database_Connection.Execute (query)
+    query = "UPDATE personaje SET guild_aspirant_index = (?) WHERE UPPER(name) = (?)"
+    Call User_Database.MakeQuery(query, True, AspirantIndex, UCase$(UserName))
 
 #If DBConexionUnica = 0 Then
     Call User_Database.Database_Close
@@ -2868,8 +2664,8 @@ End Sub
 Public Sub SaveUserGuildMemberDatabase(ByVal UserName As String, ByVal guilds As String)
 
     '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 11/10/2018
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     '***************************************************
     On Error GoTo ErrorHandler
 
@@ -2882,11 +2678,8 @@ Public Sub SaveUserGuildMemberDatabase(ByVal UserName As String, ByVal guilds As
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "UPDATE personaje SET "
-    query = query & "guild_member_history = '" & guilds & "' "
-    query = query & "WHERE UPPER(name) = '" & UCase$(UserName) & "';"
-
-    User_Database.Database_Connection.Execute (query)
+    query = "UPDATE personaje SET guild_member_history = (?) WHERE UPPER(name) = (?)"
+    Call User_Database.MakeQuery(query, True, guilds, UCase$(UserName))
 
     #If DBConexionUnica = 0 Then
         Call User_Database.Database_Close
@@ -2901,8 +2694,8 @@ End Sub
 Public Sub SaveUserGuildPedidosDatabase(ByVal UserName As String, ByVal Pedidos As String)
 
     '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 11/10/2018
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     '***************************************************
     On Error GoTo ErrorHandler
 
@@ -2915,11 +2708,8 @@ Public Sub SaveUserGuildPedidosDatabase(ByVal UserName As String, ByVal Pedidos 
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "UPDATE personaje SET "
-    query = query & "guild_requests_history = '" & Pedidos & "' "
-    query = query & "WHERE UPPER(name) = '" & UCase$(UserName) & "';"
-
-    User_Database.Database_Connection.Execute (query)
+    query = "UPDATE personaje SET guild_requests_history = (?) WHERE UPPER(name) = (?)"
+    Call User_Database.MakeQuery(query, True, Pedidos, UCase$(UserName))
 
     #If DBConexionUnica = 0 Then
         Call User_Database.Database_Close
@@ -2934,8 +2724,8 @@ End Sub
 Public Sub SaveAccountLastLoginDatabase(ByVal UserName As String, ByVal UserIP As String)
 
     '***************************************************
-    'Author: Juan Andres Dalmasso (CHOTS)
-    'Last Modification: 12/10/2018
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
     '***************************************************
     On Error GoTo ErrorHandler
 
@@ -2948,12 +2738,8 @@ Public Sub SaveAccountLastLoginDatabase(ByVal UserName As String, ByVal UserIP A
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    query = "UPDATE cuentas SET "
-    query = query & "date_last_login = NOW(), "
-    query = query & "last_ip = '" & UserIP & "' "
-    query = query & "WHERE UPPER(username) = '" & UCase$(UserName) & "';"
-
-    User_Database.Database_Connection.Execute (query)
+    query = "UPDATE cuentas SET date_last_login = NOW(), last_ip = (?) WHERE UPPER(username) = (?)"
+    Call User_Database.MakeQuery(query, True, UserIP, UCase$(UserName))
 
     #If DBConexionUnica = 0 Then
         Call User_Database.Database_Close
@@ -2964,140 +2750,6 @@ ErrorHandler:
     Call LogDatabaseError("Error in SaveAccountLastLoginDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
 
 End Sub
-
-Public Sub SaveAccountEditGemasDatabase(ByVal UserName As String, ByVal Gemas As Long)
-
-    '***************************************************
-    'Author: Lorwik
-    'Last Modification: 30/04/2020
-    '***************************************************
-    On Error GoTo ErrorHandler
-
-    Dim query As String
-
-    #If DBConexionUnica = 0 Then
-        Call User_Database.Database_Connect
-    #Else
-        'Si perdimos la conexion reconectamos
-        If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
-    #End If
-    
-    query = "UPDATE cuentas SET gemas = '" & Gemas & "' WHERE id = (SELECT cuenta_id FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "');"
-
-    User_Database.Database_Connection.Execute (query)
-
-    #If DBConexionUnica = 0 Then
-        Call User_Database.Database_Close
-    #End If
-
-    Exit Sub
-ErrorHandler:
-    Call LogDatabaseError("Error in SaveAccountLastLoginDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
-
-End Sub
-
-Public Sub SaveAccountSumaGemasDatabase(ByVal UserName As String, ByVal Gemas As Long)
-
-    '***************************************************
-    'Author: Lorwik
-    'Last Modification: 30/04/2020
-    '***************************************************
-    On Error GoTo ErrorHandler
-
-    Dim query As String
-    
-    #If DBConexionUnica = 0 Then
-        Call User_Database.Database_Connect
-    #Else
-        'Si perdimos la conexion reconectamos
-        If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
-    #End If
-
-    query = "UPDATE cuentas SET gemas = gemas + '" & Gemas & "' WHERE id = (SELECT cuenta_id FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "');"
-
-    User_Database.Database_Connection.Execute (query)
-
-    #If DBConexionUnica = 0 Then
-        Call DUser_Database.atabase_Close
-    #End If
-
-    Exit Sub
-ErrorHandler:
-    Call LogDatabaseError("Error in SaveAccountLastLoginDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
-
-End Sub
-
-Public Sub SaveAccountRestaGemasDatabase(ByVal UserName As String, ByVal Gemas As Long)
-
-    '***************************************************
-    'Author: Lorwik
-    'Last Modification: 30/04/2020
-    '***************************************************
-    On Error GoTo ErrorHandler
-
-    Dim query As String
-
-    #If DBConexionUnica = 0 Then
-        Call User_Database.Database_Connect
-    #Else
-        'Si perdimos la conexion reconectamos
-        If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
-    #End If
-
-    query = "UPDATE cuentas SET gemas = gemas - '" & Gemas & "' WHERE id = (SELECT cuenta_id FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "');"
-
-    User_Database.Database_Connection.Execute (query)
-
-    #If DBConexionUnica = 0 Then
-        Call User_Database.Database_Close
-    #End If
-
-    Exit Sub
-ErrorHandler:
-    Call LogDatabaseError("Error in SaveAccountLastLoginDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
-
-End Sub
-
-Public Function GetGemasDatabase(ByVal UserName As String) As Long
-
-    '***************************************************
-    'Author: Lorwik
-    'Last Modification: 30/04/2020
-    '***************************************************
-    On Error GoTo ErrorHandler
-
-    Dim query As String
-
-    #If DBConexionUnica = 0 Then
-        Call User_Database.Database_Connect
-    #Else
-        'Si perdimos la conexion reconectamos
-        If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
-    #End If
-
-    query = "SELECT gemas FROM cuentas WHERE id = (SELECT cuenta_id FROM personaje WHERE UPPER(name) = '" & UCase$(UserName) & "');"
-    Debug.Print query
-    Set User_Database.Database_RecordSet = User_Database.Database_Connection.Execute(query)
-
-    If User_Database.Database_RecordSet.BOF Or User_Database.Database_RecordSet.EOF Then
-        GetGemasDatabase = 0
-        Exit Function
-
-    End If
-
-    GetGemasDatabase = CLng(User_Database.Database_RecordSet!Gemas)
-    Set User_Database.Database_RecordSet = Nothing
-    
-    #If DBConexionUnica = 0 Then
-        Call User_Database.Database_Close
-    #End If
-
-    Exit Function
-
-ErrorHandler:
-    Call LogDatabaseError("Error in GetUserPromedioDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
-
-End Function
 
 Public Function SanitizeNullValue(ByVal Value As Variant, _
                                   ByVal defaultValue As Variant) As Variant

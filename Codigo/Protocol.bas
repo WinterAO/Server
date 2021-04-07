@@ -946,7 +946,7 @@ Public Function HandleIncomingData(ByVal UserIndex As Integer) As Boolean
     
     ElseIf Err.Number <> 0 And Not Err.Number = UserList(UserIndex).incomingData.NotEnoughDataErrCode Then
         'An error ocurred, log it and kick player.
-        Call LogError("Error: " & Err.Number & " [" & Err.description & "] " & " Source: " & Err.source & vbTab & " HelpFile: " & Err.HelpFile & vbTab & " HelpContext: " & Err.HelpContext & vbTab & " LastDllError: " & Err.LastDllError & vbTab & " - UserIndex: " & UserIndex & " - producido al manejar el paquete: " & CStr(packetID))
+        Call LogError("Error: " & Err.Number & " [" & Err.description & "] " & " Source: " & Err.Source & vbTab & " HelpFile: " & Err.HelpFile & vbTab & " HelpContext: " & Err.HelpContext & vbTab & " LastDllError: " & Err.LastDllError & vbTab & " - UserIndex: " & UserIndex & " - producido al manejar el paquete: " & CStr(packetID))
         Call CloseSocket(UserIndex)
 
         HandleIncomingData = False
@@ -23106,17 +23106,31 @@ Public Sub HandleEditGems(ByVal UserIndex As Integer)
         Select Case opcion
         
             Case 0 'Editar las gemas
-                Call modDatabase.SaveAccountEditGemasDatabase(UserName, CantGems)
-                Call WriteConsoleMsg(UserIndex, "Se editaron " & CantGems & " Gemas Winter a la cuenta de " & UserName, FontTypeNames.FONTTYPE_INFO)
+                If Cuentas.SaveAccountEditGemasDatabase(UserName, CantGems) Then
+                    Call WriteConsoleMsg(UserIndex, "Se editaron " & CantGems & " Gemas Winter a la cuenta de " & UserName, FontTypeNames.FONTTYPE_INFO)
+                    
+                Else
+                    Call WriteConsoleMsg(UserIndex, "ERROR: No se pudo editar las gemas a la cuenta del usuario." & UserName, FontTypeNames.FONTTYPE_INFO)
+                    
+                End If
             
             Case 1 'Sumar las gemas
-                Call modDatabase.SaveAccountSumaGemasDatabase(UserName, CantGems)
-                Call WriteConsoleMsg(UserIndex, "Se sumaron " & CantGems & " Gemas Winter a la cuenta de " & UserName & ". Ahora tiene " & modDatabase.GetGemasDatabase(UserName) & " Gemas Winter. ", FontTypeNames.FONTTYPE_INFO)
+                If Cuentas.SaveAccountSumaGemasDatabase(UserName, CantGems) Then
+                    Call WriteConsoleMsg(UserIndex, "Se sumaron " & CantGems & " Gemas Winter a la cuenta de " & UserName & ". Ahora tiene " & Cuentas.GetGemasDatabase(UserName) & " Gemas Winter. ", FontTypeNames.FONTTYPE_INFO)
+                    
+                Else
+                    Call WriteConsoleMsg(UserIndex, "ERROR: No se pudo sumar las gemas a la cuenta del usuario." & UserName, FontTypeNames.FONTTYPE_INFO)
+                    
+                End If
                 
             Case 2 'Restar las gemas
-                Call modDatabase.SaveAccountRestaGemasDatabase(UserName, CantGems)
-                Call WriteConsoleMsg(UserIndex, "Se restaron " & CantGems & " Gemas Winter a la cuenta de " & UserName & ". Ahora tiene " & modDatabase.GetGemasDatabase(UserName) & " Gemas Winter. ", FontTypeNames.FONTTYPE_INFO)
-                
+                If Cuentas.SaveAccountRestaGemasDatabase(UserName, CantGems) Then
+                    Call WriteConsoleMsg(UserIndex, "Se restaron " & CantGems & " Gemas Winter a la cuenta de " & UserName & ". Ahora tiene " & Cuentas.GetGemasDatabase(UserName) & " Gemas Winter. ", FontTypeNames.FONTTYPE_INFO)
+                    
+                Else
+                    Call WriteConsoleMsg(UserIndex, "ERROR: No se pudo restar las gemas de la cuenta del usuario." & UserName, FontTypeNames.FONTTYPE_INFO)
+                    
+                End If
         End Select
     End With
     
@@ -23146,7 +23160,7 @@ Public Sub HandleConsultarGemas(ByVal UserIndex As Integer)
             Exit Sub
         End If
         
-        Call WriteConsoleMsg(UserIndex, UserName & " tiene " & modDatabase.GetGemasDatabase(UserName) & " Gemas Winter en su cuenta.", FontTypeNames.FONTTYPE_INFO)
+        Call WriteConsoleMsg(UserIndex, UserName & " tiene " & Cuentas.GetGemasDatabase(UserName) & " Gemas Winter en su cuenta.", FontTypeNames.FONTTYPE_INFO)
     
     End With
 End Sub
