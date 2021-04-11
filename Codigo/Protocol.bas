@@ -7667,7 +7667,7 @@ Private Sub HandleGMRequest(ByVal UserIndex As Integer)
         Message = .incomingData.ReadASCIIString()
         
         'Ruta donde se guardan los reportes
-        FileDir = App.Path & "\REPORTES\"
+        FileDir = App.Path & "\logs\REPORTES\"
         
         'Si es una Consulta:
         Select Case Tipo

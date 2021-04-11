@@ -10,9 +10,9 @@ Public Type TimeIntervalos
  
 End Type
  
-Public Sub ResetAllCount(ByVal Userindex As Integer)
+Public Sub ResetAllCount(ByVal UserIndex As Integer)
  
-    With UserList(Userindex)
+    With UserList(UserIndex)
         
         If (.Counters.Cheat.AtacaArco <> 0) Then
             .Counters.Cheat.AtacaArco = 0
@@ -34,13 +34,13 @@ Public Sub ResetAllCount(ByVal Userindex As Integer)
  
 End Sub
  
-Public Sub RestaCount(ByVal Userindex As Integer, _
+Public Sub RestaCount(ByVal UserIndex As Integer, _
                       Optional ByVal Flecha As Byte = 0, _
                       Optional ByVal Golpe As Byte = 0, _
                       Optional ByVal Cast As Byte = 0, _
                       Optional ByVal Usar As Byte = 0)
 
-    With UserList(Userindex)
+    With UserList(UserIndex)
  
         If (Flecha <> 0) Then
             .Counters.Cheat.AtacaArco = 0
@@ -62,7 +62,7 @@ Public Sub RestaCount(ByVal Userindex As Integer, _
  
 End Sub
  
-Public Sub AddCount(ByVal Userindex As Integer, _
+Public Sub AddCount(ByVal UserIndex As Integer, _
                     Optional ByVal AddFlecha As Byte = 0, _
                     Optional ByVal AddGolpe As Byte = 0, _
                     Optional ByVal AddCast As Byte = 0, _
@@ -70,13 +70,13 @@ Public Sub AddCount(ByVal Userindex As Integer, _
  
     Dim Msj As String
  
-    With UserList(Userindex)
+    With UserList(UserIndex)
  
         If (AddFlecha <> 0) Then
             .Counters.Cheat.AtacaArco = (.Counters.Cheat.AtacaArco + 1)
  
-            If CheckInt(Userindex, Msj, 1) Then
-                Call MsjCheat(Userindex, Msj)
+            If CheckInt(UserIndex, Msj, 1) Then
+                Call MsjCheat(UserIndex, Msj)
             End If
                         
         End If
@@ -84,8 +84,8 @@ Public Sub AddCount(ByVal Userindex As Integer, _
         If (AddGolpe <> 0) Then
             .Counters.Cheat.AtacaComun = (.Counters.Cheat.AtacaComun + 1)
  
-            If CheckInt(Userindex, Msj, 2) Then
-                Call MsjCheat(Userindex, Msj)
+            If CheckInt(UserIndex, Msj, 2) Then
+                Call MsjCheat(UserIndex, Msj)
             End If
                         
         End If
@@ -93,8 +93,8 @@ Public Sub AddCount(ByVal Userindex As Integer, _
         If (AddCast <> 0) Then
             .Counters.Cheat.CastSpell = (.Counters.Cheat.CastSpell + 1)
  
-            If CheckInt(Userindex, Msj, 3) Then
-                Call MsjCheat(Userindex, Msj)
+            If CheckInt(UserIndex, Msj, 3) Then
+                Call MsjCheat(UserIndex, Msj)
             End If
                         
         End If
@@ -102,8 +102,8 @@ Public Sub AddCount(ByVal Userindex As Integer, _
         If (AddUsar <> 0) Then
             .Counters.Cheat.UsarItem = (.Counters.Cheat.UsarItem + 1)
  
-            If CheckInt(Userindex, Msj, 4) Then
-                Call MsjCheat(Userindex, Msj)
+            If CheckInt(UserIndex, Msj, 4) Then
+                Call MsjCheat(UserIndex, Msj)
             End If
                         
         End If
@@ -112,13 +112,13 @@ Public Sub AddCount(ByVal Userindex As Integer, _
         
 End Sub
  
-Private Function CheckInt(ByVal Userindex As Integer, _
+Private Function CheckInt(ByVal UserIndex As Integer, _
                           ByRef Msj As String, _
                           ByVal Intervalo As Byte) As Boolean
  
     Const MaxTol As Byte = 3
  
-    With UserList(Userindex)
+    With UserList(UserIndex)
  
         Select Case Intervalo
         
@@ -176,11 +176,11 @@ Private Function CheckInt(ByVal Userindex As Integer, _
         
 End Function
  
-Private Sub MsjCheat(ByVal Userindex As Integer, ByVal Msj As String)
+Private Sub MsjCheat(ByVal UserIndex As Integer, ByVal Msj As String)
  
     Dim sndData As String
  
-    With UserList(Userindex)
+    With UserList(UserIndex)
         
         sndData = PrepareMessageConsoleMsg(.Name & Msj, FontTypeNames.FONTTYPE_SERVER)
                 
@@ -200,7 +200,7 @@ Private Sub LogIntervalos(ByVal Nombre As String, ByVal Str As String)
  
     nfile = FreeFile
         
-    Open App.Path & "\AntiCheats\" & Nombre & ".log" For Append Shared As #nfile
+    Open App.Path & "\logs\AntiCheats\" & Nombre & ".log" For Append Shared As #nfile
     Print #nfile, Date$ & " " & time$ & " " & Str
     Close #nfile
     
