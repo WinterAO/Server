@@ -1629,8 +1629,6 @@ Private Sub HandleDeleteChar(ByVal UserIndex As Integer)
     If BorrarUsuario(UserIndex, PJSeleccionado) Then
         'Si se pudo borrar enviamos paquete para mostrar mensaje satisfactorio en el cliente
         Call UserList(UserIndex).outgoingData.WriteByte(ServerPacketID.DeletedChar)
-        'Mandamos la actualizacion de personajes de la cuenta
-        Call LoginAccountDatabase(UserIndex, UserList(UserIndex).AccountInfo.UserName)
         
     Else
         Call WriteErrorMsg(UserIndex, "Error al borrar el PJ. Intentelo de nuevo o contacte con un Administrador.")

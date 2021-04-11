@@ -540,7 +540,7 @@ Public Function SaveAccountEditGemasDatabase(ByVal UserName As String, ByVal Gem
 
     Exit Function
 ErrorHandler:
-    Call LogDatabaseError("Error in SaveAccountLastLoginDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Error in SaveAccountEditGemasDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
     SaveAccountEditGemasDatabase = False
 
 End Function
@@ -583,7 +583,7 @@ Public Function SaveAccountSumaGemasDatabase(ByVal UserName As String, ByVal Gem
 
     Exit Function
 ErrorHandler:
-    Call LogDatabaseError("Error in SaveAccountLastLoginDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Error in SaveAccountSumaGemasDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
     SaveAccountSumaGemasDatabase = False
 
 End Function
@@ -626,7 +626,7 @@ Public Function SaveAccountRestaGemasDatabase(ByVal UserName As String, ByVal Ge
 
     Exit Function
 ErrorHandler:
-    Call LogDatabaseError("Error in SaveAccountLastLoginDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Error in SaveAccountRestaGemasDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
     SaveAccountRestaGemasDatabase = False
     
 End Function
@@ -666,7 +666,7 @@ Public Function GetGemasDatabase(ByVal UserName As String) As Long
     Exit Function
 
 ErrorHandler:
-    Call LogDatabaseError("Error in GetUserPromedioDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Error in GetGemasDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
 
 End Function
 
@@ -816,6 +816,8 @@ Public Sub DeletePJCuenta(ByVal UserIndex As Integer, ByVal Slot As Byte)
         
         End If
 
+        'Restamos 1
+        .NumPjs = .NumPjs - 1
 
     End With
 
@@ -846,8 +848,6 @@ Public Sub ResetPJAccountSlot(ByVal UserIndex As Integer, ByVal Slot As Byte)
         .AccountPJ(Slot).dead = False
         .AccountPJ(Slot).gameMaster = False
         
-        'Restamos 1
-        .NumPjs = .NumPjs - 1
     End With
             
 End Sub
