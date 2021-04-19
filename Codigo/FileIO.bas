@@ -38,7 +38,7 @@ Private Type tMapHeader
     NumeroTriggers As Long
     NumeroParticulas As Long
     NumeroLuces As Long
-    NumeroZonas As Integer
+    NumeroZonas As Long
     NumeroNPCs As Long
     NumeroOBJs As Long
     NumeroTE As Long
