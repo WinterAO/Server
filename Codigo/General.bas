@@ -367,9 +367,9 @@ Sub Main()
         Call LoadMapData
 
     End If
-    
+
     Call InitializeAreas
-    
+
     ' Fortalezas (No pueden ir antes o los npc no hacen spawn)
     frmCargando.Label1(2).Caption = "Cargando Fortalezas.dat"
     Call CargarFortalezas

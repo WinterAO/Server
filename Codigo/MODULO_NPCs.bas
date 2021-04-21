@@ -680,7 +680,7 @@ Public Function CrearNPC(NroNPC As Integer, _
         Y = OrigPos.Y
         Npclist(nIndex).Orig = OrigPos
         Npclist(nIndex).Pos = OrigPos
-       
+        
     Else
         
         Pos.Map = Mapa 'mapa
@@ -751,6 +751,9 @@ Public Function CrearNPC(NroNPC As Integer, _
         Map = Npclist(nIndex).Pos.Map
         X = Npclist(nIndex).Pos.X
         Y = Npclist(nIndex).Pos.Y
+        
+        'Anotamos la zona donde hizo spawn
+        Npclist(nIndex).ZonaOrig = MapData(Map, X, Y).ZonaIndex
 
     End If
             

@@ -1912,6 +1912,8 @@ Public Type NPC
 
     Pos As WorldPos 'Posicion
     Orig As WorldPos
+    ZonaOrig As Integer
+    
     SkillDomar As Integer
 
     Movement As TipoAI

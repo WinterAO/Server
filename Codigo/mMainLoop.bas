@@ -59,8 +59,6 @@ Public Sub TIMER_AI()
     On Error GoTo ErrorHandler
 
     Dim NPCIndex As Long
-    Dim Mapa     As Integer
-    Dim Zona     As Integer
     Dim e_p      As Integer
     Dim i        As Integer
     
@@ -99,21 +97,13 @@ Public Sub TIMER_AI()
                                 If Contador >= INTERVALO_AI_GENERAL Then Call EfectoParalisisNpc(NPCIndex)
 
                             End If
-                            
-                            Mapa = .Pos.Map
-                            Zona = NPCZonaId(NPCIndex)
-                            
-                            If Mapa > 0 Then
 
-                                'Si no hay usuarios en la zona en al que se encuentra el NPC no hacemos nada
-                                If MapZonas(Mapa, Zona).NumUsers > 0 Then
+                            If .Pos.Map > 0 Then
 
-                                    '¿El NPC tiene movimiento?
-                                    If .Movement <> TipoAI.ESTATICO Then _
-                                        Call NPCAI(NPCIndex)
-
-                                End If
-
+                                '¿El NPC tiene movimiento?
+                                If .Movement <> TipoAI.ESTATICO Then _
+                                    Call NPCAI(NPCIndex)
+                                        
                             End If
 
                         End If

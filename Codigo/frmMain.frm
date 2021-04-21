@@ -418,11 +418,13 @@ Begin VB.Form frmMain
       Top             =   240
       Width           =   4935
       Begin VB.Timer GameTimer 
+         Enabled         =   0   'False
          Interval        =   40
          Left            =   2160
          Top             =   1440
       End
       Begin VB.Timer TIMER_AI 
+         Enabled         =   0   'False
          Interval        =   1
          Left            =   1680
          Top             =   1440

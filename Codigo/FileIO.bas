@@ -1308,7 +1308,7 @@ Sub LoadMapData()
         frmCargando.cargar.Value = frmCargando.cargar.Value + 1
         DoEvents
     Next Map
-    
+ 
     Exit Sub
 
     If frmMain.Visible Then frmMain.txtStatus.Text = Date & " " & time & " - Se cargaron todos los mapas. Operacion Realizada con exito."
@@ -1463,14 +1463,18 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
                             Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Orig.Map = Map
                             Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Orig.X = NPCs(i).X
                             Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Orig.Y = NPCs(i).Y
+
                         Else
                             MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex = OpenNPC(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex)
+                            
                         End If
                         
                         If Not MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex = 0 Then
                             Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Pos.Map = Map
                             Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Pos.X = NPCs(i).X
                             Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Pos.Y = NPCs(i).Y
+                            
+                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).ZonaOrig = MapData(Map, NPCs(i).X, NPCs(i).Y).ZonaIndex
        
                             Call MakeNPCChar(True, 0, MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex, Map, NPCs(i).X, NPCs(i).Y)
                         End If
@@ -1478,7 +1482,7 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
                     End If
                 Next i
             End If
-                
+
             If .NumeroTE > 0 Then
                 ReDim TEs(1 To .NumeroTE)
                 Get #fh, , TEs
@@ -1514,12 +1518,7 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
             .InvocarSinEfecto = MapDat(i).InvocarSinEfecto
             .RoboNpcsPermitido = MapDat(i).RoboNpcsPermitido
             .NoTirarItems = MapDat(i).NoTirarItems
-    
-            If MapDat(i).lvlMinimo = "" Then
-                .lvlMinimo = 0
-            Else
-                .lvlMinimo = MapDat(i).lvlMinimo
-            End If
+            .lvlMinimo = val(MapDat(i).lvlMinimo)
     
             .Pk = MapDat(i).battle_mode
             
@@ -1530,7 +1529,7 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
             
         End With
     Next i
-    
+
 Exit Sub
 
 errh:
