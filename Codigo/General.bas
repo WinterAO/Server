@@ -1987,3 +1987,40 @@ Public Function CheckZona(ByVal UserIndex As Integer) As Boolean
 
 End Function
 
+Public Function ObtenerCuadranteUser(ByVal UserIndex As Integer) As Integer
+    '**************************************************************
+    'Author: Lorwik
+    'Fecha: 23/04/2021
+    'Descripción: Devuelve el numero del cuadrante en el que el usuario se encuentra
+    '**************************************************************
+    Dim cx As Integer
+    Dim cy As Integer
+    Dim AnchoMap As Byte
+    
+    AnchoMap = 11
+    
+    cx = Fix((UserList(UserIndex).Pos.X / 100))
+    cy = Fix((UserList(UserIndex).Pos.Y / 100))
+    
+    ObtenerCuadranteUser = ((cy) * AnchoMap) + cx + 1
+    
+End Function
+
+Public Function ObtenerCuadrante(ByVal tX As Long, ByVal tY As Long) As Integer
+    '**************************************************************
+    'Author: Lorwik
+    'Fecha: 23/04/2021
+    'Descripción: Devuelve el numero del cuadrante segun las coordenadas proporcionadas
+    '**************************************************************
+    Dim cx As Integer
+    Dim cy As Integer
+    Dim AnchoMap As Byte
+    
+    AnchoMap = 11
+    
+    cx = Fix((tX / 100))
+    cy = Fix((tY / 100))
+    
+    ObtenerCuadrante = ((cy) * AnchoMap) + cx + 1
+    
+End Function

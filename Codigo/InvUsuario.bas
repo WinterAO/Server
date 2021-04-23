@@ -2263,9 +2263,9 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
             Case eOBJType.otPiedraHogar
                 If .flags.Muerto = 1 Then
     
-                    'Si es un mapa comun y no esta en cana
+                    'Si es un mapa NO carcel y no esta en casa lo mandamos
                     If (MapZonas(.Pos.Map, UserZonaId(UserIndex)).Restringir = eRestrict.restrict_no) And (.Counters.Pena = 0) Then
-                        If Ciudades(.Hogar).Map <> .Pos.Map Then
+                        If Ciudades(.Hogar).Map <> .Pos.Map Or ObtenerCuadrante(Ciudades(.Hogar).X, Ciudades(.Hogar).Y) <> ObtenerCuadranteUser(UserIndex) Then
                             Call MandaraCasa(UserIndex)
                         Else
                             Call WriteConsoleMsg(UserIndex, "Ya te encuentras en tu hogar.", FontTypeNames.FONTTYPE_INFO)
