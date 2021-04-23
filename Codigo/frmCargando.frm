@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{6B7E6392-850A-101B-AFC0-4210102A8DA7}#1.3#0"; "COMCTL32.OCX"
+Object = "{6B7E6392-850A-101B-AFC0-4210102A8DA7}#1.4#0"; "comctl32.ocx"
 Object = "{48E59290-9880-11CF-9754-00AA00C00908}#1.0#0"; "MSINET.OCX"
 Begin VB.Form frmCargando 
    BackColor       =   &H00C0C0C0&
@@ -21,7 +21,7 @@ Begin VB.Form frmCargando
    Begin ComctlLib.ProgressBar cargar 
       Height          =   255
       Left            =   120
-      TabIndex        =   2
+      TabIndex        =   1
       Top             =   2880
       Width           =   3855
       _ExtentX        =   6800
@@ -46,28 +46,6 @@ Begin VB.Form frmCargando
          _ExtentY        =   1005
          _Version        =   393216
       End
-      Begin VB.Label Label1 
-         Alignment       =   2  'Center
-         AutoSize        =   -1  'True
-         BackStyle       =   0  'Transparent
-         Caption         =   "Cargando, por favor espere..."
-         BeginProperty Font 
-            Name            =   "MS Sans Serif"
-            Size            =   8.25
-            Charset         =   0
-            Weight          =   700
-            Underline       =   0   'False
-            Italic          =   0   'False
-            Strikethrough   =   0   'False
-         EndProperty
-         ForeColor       =   &H000000FF&
-         Height          =   195
-         Index           =   3
-         Left            =   2160
-         TabIndex        =   1
-         Top             =   2280
-         Width           =   2535
-      End
    End
    Begin VB.Label Label1 
       Alignment       =   1  'Right Justify
@@ -87,7 +65,7 @@ Begin VB.Form frmCargando
       Height          =   195
       Index           =   2
       Left            =   6000
-      TabIndex        =   3
+      TabIndex        =   2
       Top             =   2880
       Width           =   375
    End

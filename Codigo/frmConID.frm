@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin VB.Form frmConID 
-   BackColor       =   &H00FFC0C0&
+   BackColor       =   &H00E0E0E0&
    BorderStyle     =   1  'Fixed Single
    Caption         =   "ConID"
    ClientHeight    =   4440
@@ -13,7 +13,7 @@ Begin VB.Form frmConID
    ScaleWidth      =   4680
    StartUpPosition =   2  'CenterScreen
    Begin VB.CommandButton Command3 
-      BackColor       =   &H00FFC0C0&
+      BackColor       =   &H00E0E0E0&
       Caption         =   "Liberar todos los slots"
       BeginProperty Font 
          Name            =   "MS Sans Serif"
@@ -25,14 +25,14 @@ Begin VB.Form frmConID
          Strikethrough   =   0   'False
       EndProperty
       Height          =   390
-      Left            =   135
+      Left            =   120
       Style           =   1  'Graphical
       TabIndex        =   3
-      Top             =   3495
+      Top             =   3480
       Width           =   4290
    End
    Begin VB.CommandButton Command2 
-      BackColor       =   &H00FFC0C0&
+      BackColor       =   &H00E0E0E0&
       Caption         =   "Ver estado"
       BeginProperty Font 
          Name            =   "MS Sans Serif"
@@ -68,7 +68,7 @@ Begin VB.Form frmConID
       Width           =   4215
    End
    Begin VB.CommandButton Command1 
-      BackColor       =   &H00FFC0C0&
+      BackColor       =   &H00E0E0E0&
       Caption         =   "Cerrar"
       BeginProperty Font 
          Name            =   "MS Sans Serif"

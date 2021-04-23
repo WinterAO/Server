@@ -713,7 +713,7 @@ Private Sub SeguirAgresor(ByVal NPCIndex As Integer)
         End If
 
         'Si no hay usuarios y no esta en su pos de respawn, hacemos que vuelva
-        If .Pos.X <> .Orig.X Or .Pos.Y <> .Orig.Y Or Npclist(NPCIndex).ZonaOrin <> MapData(.Pos.Map, .Pos.X, .Pos.Y).ZonaIndex Then Call NPCVuelveOrigin(NPCIndex)
+        If .Pos.X <> .Orig.X Or .Pos.Y <> .Orig.Y Or Npclist(NPCIndex).ZonaOrig <> MapData(.Pos.Map, .Pos.X, .Pos.Y).ZonaIndex Then Call NPCVuelveOrigin(NPCIndex)
 
     End With
     

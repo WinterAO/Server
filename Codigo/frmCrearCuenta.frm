@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin VB.Form frmCrearCuenta 
-   BackColor       =   &H00FFC0C0&
+   BackColor       =   &H00E0E0E0&
    Caption         =   "Crear Nueva Cuenta"
    ClientHeight    =   3015
    ClientLeft      =   120
@@ -21,7 +21,7 @@ Begin VB.Form frmCrearCuenta
    ScaleWidth      =   6270
    StartUpPosition =   2  'CenterScreen
    Begin VB.CommandButton cmdCancelar 
-      BackColor       =   &H00FFC0C0&
+      BackColor       =   &H00E0E0E0&
       Caption         =   "Cancelar"
       Height          =   375
       Left            =   240
@@ -41,7 +41,7 @@ Begin VB.Form frmCrearCuenta
       Width           =   1575
    End
    Begin VB.Frame FraNuevaCuenta 
-      BackColor       =   &H00FFC0C0&
+      BackColor       =   &H00E0E0E0&
       Caption         =   "Nueva Cuenta"
       BeginProperty Font 
          Name            =   "Tahoma"

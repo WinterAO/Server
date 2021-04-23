@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin VB.Form frmMain 
    BackColor       =   &H00E0E0E0&
-   BorderStyle     =   3  'Fixed Dialog
+   BorderStyle     =   4  'Fixed ToolWindow
    Caption         =   "WinterAO Resurrection Server"
    ClientHeight    =   5880
    ClientLeft      =   1950
@@ -26,6 +26,7 @@ Begin VB.Form frmMain
    PaletteMode     =   1  'UseZOrder
    ScaleHeight     =   5880
    ScaleWidth      =   10875
+   ShowInTaskbar   =   0   'False
    StartUpPosition =   2  'CenterScreen
    WindowState     =   1  'Minimized
    Begin VB.Frame Frame2 
@@ -36,6 +37,28 @@ Begin VB.Form frmMain
       TabIndex        =   19
       Top             =   240
       Width           =   5655
+      Begin VB.CommandButton cmdDebugRapido 
+         BackColor       =   &H00E0E0E0&
+         Caption         =   "Stats de Slots"
+         Height          =   375
+         Index           =   1
+         Left            =   3960
+         Style           =   1  'Graphical
+         TabIndex        =   31
+         Top             =   840
+         Width           =   1455
+      End
+      Begin VB.CommandButton cmdDebugRapido 
+         BackColor       =   &H00E0E0E0&
+         Caption         =   "Debug UserList"
+         Height          =   375
+         Index           =   0
+         Left            =   3960
+         Style           =   1  'Graphical
+         TabIndex        =   30
+         Top             =   360
+         Width           =   1455
+      End
       Begin VB.TextBox txtNumUsers 
          Alignment       =   2  'Center
          Appearance      =   0  'Flat
@@ -937,14 +960,14 @@ Private Sub cmdConfiguracion_Click()
 
 End Sub
 
-Private Sub cmdDB_Click(index As Integer)
+Private Sub cmdDB_Click(Index As Integer)
 
 #If DBConexionUnica = 0 Then
     MsgBox ("El server esta configurado para conexion/desconexion por cada query, no es posible conectar ni desconectar en este modo. Cambie la configuracion desde los argunmentos en el codigo.")
     Exit Sub
 #End If
 
-    Select Case index
+    Select Case Index
     
         Case 0 'Conectar
             If MsgBox("¿Desea CONECTAR a la base de datos MYSQL? ¡Si ya esta conectada podria provocar errores!!!", vbYesNo, "¡CONEXION A LA MYSQL!") = vbNo Then Exit Sub
@@ -974,6 +997,18 @@ Private Sub cmdDB_Click(index As Integer)
             Call User_Database.Database_Reconnect
             Call Account_Database.Database_Reconnect
             
+    End Select
+End Sub
+
+Private Sub cmdDebugRapido_Click(Index As Integer)
+    Select Case Index
+    
+        Case 0
+            frmUserList.Show
+            
+        Case 1
+            frmConID.Show
+    
     End Select
 End Sub
 
