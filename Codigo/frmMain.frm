@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin VB.Form frmMain 
    BackColor       =   &H00E0E0E0&
-   BorderStyle     =   4  'Fixed ToolWindow
+   BorderStyle     =   1  'Fixed Single
    Caption         =   "WinterAO Resurrection Server"
    ClientHeight    =   5880
    ClientLeft      =   1950
@@ -26,7 +26,6 @@ Begin VB.Form frmMain
    PaletteMode     =   1  'UseZOrder
    ScaleHeight     =   5880
    ScaleWidth      =   10875
-   ShowInTaskbar   =   0   'False
    StartUpPosition =   2  'CenterScreen
    WindowState     =   1  'Minimized
    Begin VB.Frame Frame2 
@@ -960,14 +959,14 @@ Private Sub cmdConfiguracion_Click()
 
 End Sub
 
-Private Sub cmdDB_Click(Index As Integer)
+Private Sub cmdDB_Click(index As Integer)
 
 #If DBConexionUnica = 0 Then
     MsgBox ("El server esta configurado para conexion/desconexion por cada query, no es posible conectar ni desconectar en este modo. Cambie la configuracion desde los argunmentos en el codigo.")
     Exit Sub
 #End If
 
-    Select Case Index
+    Select Case index
     
         Case 0 'Conectar
             If MsgBox("¿Desea CONECTAR a la base de datos MYSQL? ¡Si ya esta conectada podria provocar errores!!!", vbYesNo, "¡CONEXION A LA MYSQL!") = vbNo Then Exit Sub
@@ -1000,8 +999,8 @@ Private Sub cmdDB_Click(Index As Integer)
     End Select
 End Sub
 
-Private Sub cmdDebugRapido_Click(Index As Integer)
-    Select Case Index
+Private Sub cmdDebugRapido_Click(index As Integer)
+    Select Case index
     
         Case 0
             frmUserList.Show
