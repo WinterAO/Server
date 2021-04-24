@@ -70,6 +70,7 @@ Private Enum ServerPacketID
     PosUpdate                   ' PU
     ChatOverHead                ' ||
     ConsoleMsg                  ' || - Beware!! its the same as above, but it was properly splitted
+    ScreenMsg
     GuildChat                   ' |+
     ShowMessageBox              ' !!
     UserIndexInServer           ' IU
@@ -162,7 +163,6 @@ Private Enum ServerPacketID
     QuestListSend
     CreateDamage                ' CDMG
     UserInEvent
-    RenderMsg
     DeletedChar
     EquitandoToggle
     InitCraftman
@@ -18104,13 +18104,27 @@ errHandler:
     End If
 
 End Sub
-Public Sub WriteRenderMsg(ByVal UserIndex As Integer, _
-                           ByVal Chat As String, _
-                           ByVal FontIndex As Integer)
 
+''
+' Writes the "ScreenMsg" message to the given user's outgoing data buffer.
+'
+' @param    UserIndex User to which the message is intended.
+' @param    Chat Text to be displayed over the char's head.
+' @param    FontIndex Index of the FONTTYPE structure to use.
+' @remarks  The data is not actually sent until the buffer is properly flushed.
+
+Public Sub WriteScreenMsg(ByVal UserIndex As Integer, _
+                           ByVal msgPrimario As String, _
+                           ByVal msgScundario As String)
+
+    '***************************************************
+    'Author: Lorwik
+    'Last Modification: 24/04/2021
+    'Writes the "ScreenMsg" message to the given user's outgoing data buffer
+    '***************************************************
     On Error GoTo errHandler
 
-    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareRenderConsoleMsg(Chat, FontIndex))
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageScreenMsg(msgPrimario, msgScundario))
     Exit Sub
 
 errHandler:
@@ -21096,24 +21110,26 @@ Public Function PrepareMessageConsoleMsg(ByVal Chat As String, _
     End With
 
 End Function
-Public Function PrepareRenderConsoleMsg(ByVal Chat As String, _
-                                         ByVal FontIndex As Integer) As String
+
+Public Function PrepareMessageScreenMsg(ByVal msgPrimario As String, _
+                                         ByVal msgSecundario As String) As String
 
     '***************************************************
-    'Author: Juan Martin Sotuyo Dodero (Maraxus)
-    'Last Modification: 05/17/06
-    'Prepares the "ConsoleMsg" message and returns it.
+    'Author: Lorwik
+    'Last Modification: 24/04/2021
+    'Prepares the "RenderMsg" message and returns it.
     '***************************************************
     With auxiliarBuffer
-        Call .WriteByte(ServerPacketID.RenderMsg)
-        Call .WriteASCIIString(Chat)
-        Call .WriteInteger(FontIndex)
+        Call .WriteByte(ServerPacketID.ScreenMsg)
+        Call .WriteASCIIString(msgPrimario)
+        Call .WriteASCIIString(msgSecundario)
 
-        PrepareRenderConsoleMsg = .ReadASCIIStringFixed(.Length)
+        PrepareMessageScreenMsg = .ReadASCIIStringFixed(.Length)
 
     End With
 
 End Function
+
 Public Function PrepareCommerceConsoleMsg(ByRef Chat As String, _
                                           ByVal FontIndex As FontTypeNames) As String
 

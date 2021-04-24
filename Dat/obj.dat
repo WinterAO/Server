@@ -1,4 +1,4 @@
-##############################################
+﻿##############################################
 #########TIPOS  DE OBJETOS (ObjType)##########
 ##############################################
 
@@ -1752,7 +1752,7 @@ Name=Foro
 ID=Nix
 GrhIndex=529
 ObjType=10
-Agarrable=1
+Agarrable=1os
 
 [OBJ138]
 Name=Equipo de Pescar
@@ -5606,7 +5606,7 @@ MinSkill=45
 Materiales=58-1006-0-0
 CantMateriales=1000-10000-0-0
 SkCarpinteria=65
-Speed=2
+Speed=0.020
 
 [OBJ476]
 Name=Galeon
@@ -5624,7 +5624,7 @@ MinSkill=50
 Materiales=58-1006-0-0
 CantMateriales=2000-15000-0-0
 SkCarpinteria=90
-Speed=2.2
+Speed=0.022
 
 [OBJ477]
 Name=Fragata Fantasmal
@@ -8271,7 +8271,6 @@ ObjType=30
 Agarrable=0
 Valor=0
 Crucial=0
-newbie=1
 
 [OBJ667]
 Name=Cota de Mallas (E/G)
@@ -14093,7 +14092,7 @@ NoSeCae=1
 Valor=0
 Crucial=0
 MinSkill=50
-Speed=2.4
+Speed=0.024
 
 [OBJ1115]
 Name=Montura gran Rey Mono
@@ -14107,7 +14106,7 @@ NoSeCae=1
 MinSkill=80
 Valor=0
 Crucial=0
-Speed=8.4
+Speed=0.024
 
 [OBJ1116]
 Name=Montura Acuatica
@@ -14225,7 +14224,7 @@ NoSeCae=1
 MinSkill=100
 Valor=0
 Crucial=0
-Speed=2.4
+Speed=0.024
 
 [OBJ1122]
 Name=Manual de Equitacion SUPREMO
@@ -14481,7 +14480,7 @@ NoSeCae=1
 Valor=3500000
 Crucial=0
 MinSkill=50
-Speed=2.4
+Speed=0.024
 
 [OBJ1140]
 Name=Espada de las almas
@@ -14786,7 +14785,7 @@ NoSeCae=1
 Valor=5000000
 Crucial=0
 MinSkill=50
-Speed=2.4
+Speed=0.024
 
 [OBJ1157]
 Name=Montura de Gran Dragon negro
@@ -14800,7 +14799,7 @@ NoSeCae=1
 Valor=5000000
 Crucial=0
 MinSkill=50
-Speed=2.4
+Speed=0.024
 
 [OBJ1158]
 Name=Daga +5
@@ -14839,7 +14838,7 @@ MinDef=120
 NoSeCae=1
 Valor=2400000
 Crucial=0
-Speed=2.4
+Speed=0.024
 
 [OBJ1160]
 Name=Montura de Caballo
@@ -14852,7 +14851,7 @@ MinDef=120
 NoSeCae=1
 Valor=2400000
 Crucial=0
-Speed=2.4
+Speed=0.024
 
 [OBJ1161]
 Name=Cuchara Legendaria (Prueba)
@@ -15743,7 +15742,6 @@ ObjType=30
 Agarrable=0
 Valor=0
 Crucial=0
-newbie=1
 
 [OBJ1250]
 Name=Fragmento de arma
@@ -15752,7 +15750,6 @@ ObjType=30
 Agarrable=0
 Valor=0
 Crucial=0
-newbie=1
 
 [OBJ1251]
 Name=Amuleto de la hermandad

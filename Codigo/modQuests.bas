@@ -610,7 +610,7 @@ Public Sub LoadQuests()
     
     'Lo inicializamos para el archivo Quests.DAT
     Call Reader.Initialize(DatPath & "Quests.DAT")
-    
+
     'Redimensionamos el array
     NumQuests = Reader.GetValue("INIT", "NumQuests")
     ReDim QuestList(1 To NumQuests)
