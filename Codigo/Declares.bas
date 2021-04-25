@@ -1592,6 +1592,7 @@ Public Type UserCounters
     TimerPuedeSerAtacado As Long
     TimerPerteneceNpc As Long
     TimerEstadoAtacable As Long
+    TimerPuedeOcultar As Long
     
     Trabajando As Long  ' Para el centinela
     Ocultando As Long   ' Unico trabajo no revisado por el centinela

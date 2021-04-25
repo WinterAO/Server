@@ -178,3 +178,6 @@ Private Sub Command3_Click()
 
 End Sub
 
+Private Sub Label1_Click()
+
+End Sub

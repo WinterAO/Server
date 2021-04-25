@@ -477,6 +477,33 @@ Public Function IntervaloEstadoAtacable(ByVal UserIndex As Integer, _
 
 End Function
 
+Public Function IntervaloPuedeOcultar(ByVal UserIndex As Integer, _
+                                     Optional ByVal Actualizar As Boolean = True) As Boolean
+    '**************************************************************
+    'Author: Lorwik
+    'Last Modify Date: 18/03/2021
+    '**************************************************************
+
+    Dim TActual As Long
+    
+    TActual = GetTickCount() And &H7FFFFFFF
+    
+    If TActual - UserList(UserIndex).Counters.TimerPuedeOcultar >= IntervaloOcultable Then
+        If Actualizar Then
+            UserList(UserIndex).Counters.TimerPuedeOcultar = TActual
+
+            'UserList(UserIndex).Counters.failedUsageAttempts = 0
+        End If
+
+        Call modAntiCheat.RestaCount(UserIndex, 0, 0, 0, 1)
+        IntervaloPuedeOcultar = True
+    Else
+        IntervaloPuedeOcultar = False
+        Call modAntiCheat.AddCount(UserIndex, 0, 0, 0, 1)
+    End If
+
+End Function
+
 Public Function checkInterval(ByRef startTime As Long, _
                               ByVal timeNow As Long, _
                               ByVal interval As Long) As Boolean

@@ -127,6 +127,8 @@ Public IntervaloAtacable                 As Long
 
 Public IntervaloOwnedNpc                 As Long
 
+Public IntervaloOcultable                As Long
+
 Public INTERVALO_GLOBAL                  As Long
 
 'BALANCE

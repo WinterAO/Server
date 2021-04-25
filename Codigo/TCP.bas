@@ -1546,6 +1546,7 @@ Sub ResetContadores(ByVal UserIndex As Integer)
         .STACounter = 0
         .TiempoOculto = 0
         .TimerEstadoAtacable = 0
+        .TimerPuedeOcultar = 0
         .TimerGolpeMagia = 0
         .TimerGolpeUsar = 0
         .TimerLanzarSpell = 0
