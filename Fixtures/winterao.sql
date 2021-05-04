@@ -641,101 +641,10 @@ CREATE TABLE `amigos` (
 
 CREATE TABLE `skillpoint` (
   `user_id` mediumint(8) UNSIGNED NOT NULL,
-  `sk1` tinyint(3) UNSIGNED NOT NULL,
-  `exp1` int(10) UNSIGNED NOT NULL,
-  `elu1` int(10) UNSIGNED NOT NULL,
-  
-  `sk2` tinyint(3) UNSIGNED NOT NULL,
-  `exp2` int(10) UNSIGNED NOT NULL,
-  `elu2` int(10) UNSIGNED NOT NULL,
-  
-  `sk3` tinyint(3) UNSIGNED NOT NULL,
-  `exp3` int(10) UNSIGNED NOT NULL,
-  `elu3` int(10) UNSIGNED NOT NULL,
-  
-  `sk4` tinyint(3) UNSIGNED NOT NULL,
-  `exp4` int(10) UNSIGNED NOT NULL,
-  `elu4` int(10) UNSIGNED NOT NULL,
-  
-  `sk5` tinyint(3) UNSIGNED NOT NULL,
-  `exp5` int(10) UNSIGNED NOT NULL,
-  `elu5` int(10) UNSIGNED NOT NULL,
-  
-  `sk6` tinyint(3) UNSIGNED NOT NULL,
-  `exp6` int(10) UNSIGNED NOT NULL,
-  `elu6` int(10) UNSIGNED NOT NULL,
-  
-  `sk7` tinyint(3) UNSIGNED NOT NULL,
-  `exp7` int(10) UNSIGNED NOT NULL,
-  `elu7` int(10) UNSIGNED NOT NULL,
-  
-  `sk8` tinyint(3) UNSIGNED NOT NULL,
-  `exp8` int(10) UNSIGNED NOT NULL,
-  `elu8` int(10) UNSIGNED NOT NULL,
-  
-  `sk9` tinyint(3) UNSIGNED NOT NULL,
-  `exp9` int(10) UNSIGNED NOT NULL,
-  `elu9` int(10) UNSIGNED NOT NULL,
-  
-  `sk10` tinyint(3) UNSIGNED NOT NULL,
-  `exp10` int(10) UNSIGNED NOT NULL,
-  `elu10` int(10) UNSIGNED NOT NULL,
-  
-  `sk11` tinyint(3) UNSIGNED NOT NULL,
-  `exp11` int(10) UNSIGNED NOT NULL,
-  `elu11` int(10) UNSIGNED NOT NULL,
-  
-  `sk12` tinyint(3) UNSIGNED NOT NULL,
-  `exp12` int(10) UNSIGNED NOT NULL,
-  `elu12` int(10) UNSIGNED NOT NULL,
-  
-  `sk13` tinyint(3) UNSIGNED NOT NULL,
-  `exp13` int(10) UNSIGNED NOT NULL,
-  `elu13` int(10) UNSIGNED NOT NULL,
-  
-  `sk14` tinyint(3) UNSIGNED NOT NULL,
-  `exp14` int(10) UNSIGNED NOT NULL,
-  `elu14` int(10) UNSIGNED NOT NULL,
-  
-  `sk15` tinyint(3) UNSIGNED NOT NULL,
-  `exp15` int(10) UNSIGNED NOT NULL,
-  `elu15` int(10) UNSIGNED NOT NULL,
-  
-  `sk16` tinyint(3) UNSIGNED NOT NULL,
-  `exp16` int(10) UNSIGNED NOT NULL,
-  `elu16` int(10) UNSIGNED NOT NULL,
-  
-  `sk17` tinyint(3) UNSIGNED NOT NULL,
-  `exp17` int(10) UNSIGNED NOT NULL,
-  `elu17` int(10) UNSIGNED NOT NULL,
-  
-  `sk18` tinyint(3) UNSIGNED NOT NULL,
-  `exp18` int(10) UNSIGNED NOT NULL,
-  `elu18` int(10) UNSIGNED NOT NULL,
-  
-  `sk19` tinyint(3) UNSIGNED NOT NULL,
-  `exp19` int(10) UNSIGNED NOT NULL,
-  `elu19` int(10) UNSIGNED NOT NULL,
-  
-  `sk20` tinyint(3) UNSIGNED NOT NULL,
-  `exp20` int(10) UNSIGNED NOT NULL,
-  `elu20` int(10) UNSIGNED NOT NULL,
-  
-  `sk21` tinyint(3) UNSIGNED NOT NULL,
-  `exp21` int(10) UNSIGNED NOT NULL,
-  `elu21` int(10) UNSIGNED NOT NULL,
-  
-  `sk22` tinyint(3) UNSIGNED NOT NULL,
-  `exp22` int(10) UNSIGNED NOT NULL,
-  `elu22` int(10) UNSIGNED NOT NULL,
-  
-  `sk23` tinyint(3) UNSIGNED NOT NULL,
-  `exp23` int(10) UNSIGNED NOT NULL,
-  `elu23` int(10) UNSIGNED NOT NULL,
-  
-  `sk24` tinyint(3) UNSIGNED NOT NULL,
-  `exp24` int(10) UNSIGNED NOT NULL,
-  `elu24` int(10) UNSIGNED NOT NULL
+  `skill_id` tinyint(3) UNSIGNED NOT NULL,
+  `sk` tinyint(3) UNSIGNED NOT NULL,
+  `exp` int(10) UNSIGNED NOT NULL,
+  `elu` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -908,7 +817,7 @@ ALTER TABLE `amigos`
 -- Indices de la tabla `skillpoint`
 --
 ALTER TABLE `skillpoint`
-  ADD PRIMARY KEY (`user_id`);
+  ADD PRIMARY KEY (`user_id`,`skill_id`);
 
 --
 -- Indices de la tabla `spell`
