@@ -106,28 +106,6 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
         Call User_Database.Database_Connection.Execute(query)
 
         '*******************************************************************
-        'Hechizos
-        '*******************************************************************
-        query = "INSERT INTO spell (user_id, "
-
-        For LoopC = 1 To MAXUSERHECHIZOS
-            query = query & " spell_id" & LoopC
-            If LoopC < MAXUSERHECHIZOS Then query = query & ", "
-        Next LoopC
-
-        query = query & ") VALUES (" & .ID & ", "
-
-        For LoopC = 1 To MAXUSERHECHIZOS
-            query = query & .Stats.UserHechizos(LoopC)
-            If LoopC < MAX_INVENTORY_SLOTS Then query = query & ", "
-
-        Next LoopC
-        
-        query = query & ");"
-
-        Call User_Database.Database_Connection.Execute(query)
-
-        '*******************************************************************
         'Skills
         '*******************************************************************
         query = "INSERT INTO skillpoint (user_id, "
@@ -187,27 +165,6 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
         For LoopC = 1 To MAXUSERRECETAS
             query = query & .Profesion(1).Recetas(LoopC)
             If LoopC < MAXUSERRECETAS Then query = query & ", "
-        Next LoopC
-
-        query = query & ");"
-
-        Call User_Database.Database_Connection.Execute(query)
-        
-        '*******************************************************************
-        'Mascotas
-        '*******************************************************************
-        query = "INSERT INTO pet (user_id, "
-        
-        For LoopC = 1 To MAXMASCOTAS
-            query = query & "pet" & LoopC
-            If LoopC < MAXMASCOTAS Then query = query & ", "
-        Next LoopC
-
-        query = query & ") VALUES (" & .ID & ", "
-
-        For LoopC = 1 To MAXMASCOTAS
-            query = query & .MascotasIndex(LoopC)
-            If LoopC < MAXMASCOTAS Then query = query & ", "
         Next LoopC
 
         query = query & ");"
@@ -287,16 +244,20 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
         'Hechizos
         '*******************************************************************
         
-        query = "UPDATE spell SET "
+        query = "INSERT INTO spell (user_id, slot, spell_id) VALUES "
         
         For LoopC = 1 To MAXUSERHECHIZOS
             
-            query = query & "spell_id" & LoopC & " = '" & .Stats.UserHechizos(LoopC) & "' "
+            query = query & "("
+            query = query & .ID & ", "
+            query = query & LoopC & ", "
+            query = query & .Stats.UserHechizos(LoopC) & ") "
+            
             If LoopC < MAXUSERHECHIZOS Then query = query & ", "
             
         Next LoopC
         
-        query = query & " WHERE user_id = '" & .ID & "'"
+        query = query & " ON DUPLICATE KEY UPDATE spell_id=VALUES(spell_id); "
 
         Call User_Database.Database_Connection.Execute(query)
 
@@ -394,14 +355,19 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
         '*******************************************************************
         Dim petType As Integer
         
-        query = "UPDATE pet SET "
+        query = "INSERT INTO pet (user_id, slot, pet_id) VALUES "
         
         For LoopC = 1 To MAXMASCOTAS
             
-            'CHOTS | I got this logic from SaveUserToCharfile
+            query = query & "("
+            query = query & .ID & ", "
+            query = query & LoopC & ", "
+            
             If .MascotasIndex(LoopC) > 0 Then
+            
                 If Npclist(.MascotasIndex(LoopC)).Contadores.TiempoExistencia = 0 Then
                     petType = .MascotasType(LoopC)
+                    
                 Else
                     petType = 0
 
@@ -412,11 +378,12 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
 
             End If
 
-            query = query & "pet" & LoopC & " = '" & petType & "' "
+            query = query & petType & ")"
+            
             If LoopC < MAXMASCOTAS Then query = query & ", "
         Next LoopC
         
-        query = query & "WHERE user_id = '" & .ID & "'"
+        query = query & " ON DUPLICATE KEY UPDATE pet_id=VALUES(pet_id); "
 
         Call User_Database.Database_Connection.Execute(query)
         
@@ -675,14 +642,19 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
         '*******************************************************************
         'Hechizos
         '*******************************************************************
-        Call User_Database.MakeQuery("SELECT * FROM spell WHERE user_id = (?)", False, .ID)
+        If User_Database.MakeQuery("SELECT * FROM spell WHERE user_id = (?)", False, .ID) Then
 
-        If Not User_Database.Database_RecordSet.RecordCount = 0 Then
             User_Database.Database_RecordSet.MoveFirst
 
-            For LoopC = 1 To MAXUSERHECHIZOS
-                .Stats.UserHechizos(LoopC) = User_Database.Database_RecordSet("spell_id" & LoopC)
-            Next LoopC
+            While Not User_Database.Database_RecordSet.EOF
+            
+                LoopC = User_Database.Database_RecordSet!Slot
+                
+                .Stats.UserHechizos(LoopC) = User_Database.Database_RecordSet!spell_id
+                
+                User_Database.Database_RecordSet.MoveNext
+                
+            Wend
 
         End If
 
@@ -691,14 +663,18 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
         '*******************************************************************
         'Mascotas
         '*******************************************************************
-        Call User_Database.MakeQuery("SELECT * FROM pet WHERE user_id = (?)", False, .ID)
-
-        If Not User_Database.Database_RecordSet.RecordCount = 0 Then
+        If User_Database.MakeQuery("SELECT * FROM pet WHERE user_id = (?)", False, .ID) Then
             User_Database.Database_RecordSet.MoveFirst
 
-            For LoopC = 1 To MAXMASCOTAS
-                .MascotasType(LoopC) = User_Database.Database_RecordSet("pet" & LoopC)
-            Next LoopC
+            While Not User_Database.Database_RecordSet.EOF
+            
+                LoopC = User_Database.Database_RecordSet!Slot
+                
+                .MascotasType(LoopC) = User_Database.Database_RecordSet!pet_id
+                
+                User_Database.Database_RecordSet.MoveNext
+                
+            Wend
 
         End If
 

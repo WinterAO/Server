@@ -71,11 +71,11 @@ CREATE TABLE `inventario_items` (
 -- Estructura de tabla para la tabla `pet`
 --
 
+DROP TABLE IF EXISTS `pet`;
 CREATE TABLE `pet` (
   `user_id` mediumint(8) UNSIGNED NOT NULL,
-  `pet1` smallint(5) UNSIGNED DEFAULT NULL,
-  `pet2` smallint(5) UNSIGNED DEFAULT NULL,
-  `pet3` smallint(5) UNSIGNED DEFAULT NULL
+  `slot` tinyint(3) UNSIGNED NOT NULL,
+  `pet_id` smallint(5) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -744,43 +744,11 @@ CREATE TABLE `skillpoint` (
 -- Estructura de tabla para la tabla `spell`
 --
 
+DROP TABLE IF EXISTS `spell`;
 CREATE TABLE `spell` (
   `user_id` mediumint(8) UNSIGNED NOT NULL,
-  `spell_id1` smallint(5) UNSIGNED DEFAULT 0,
-  `spell_id2` smallint(5) UNSIGNED DEFAULT 0,
-  `spell_id3` smallint(5) UNSIGNED DEFAULT 0,
-  `spell_id4` smallint(5) UNSIGNED DEFAULT 0,
-  `spell_id5` smallint(5) UNSIGNED DEFAULT 0,
-  `spell_id6` smallint(5) UNSIGNED DEFAULT 0,
-  `spell_id7` smallint(5) UNSIGNED DEFAULT 0,
-  `spell_id8` smallint(5) UNSIGNED DEFAULT 0,
-  `spell_id9` smallint(5) UNSIGNED DEFAULT 0,
-  `spell_id10` smallint(5) UNSIGNED DEFAULT 0,
-  `spell_id11` smallint(5) UNSIGNED DEFAULT 0,
-  `spell_id12` smallint(5) UNSIGNED DEFAULT 0,
-  `spell_id13` smallint(5) UNSIGNED DEFAULT 0,
-  `spell_id14` smallint(5) UNSIGNED DEFAULT 0,
-  `spell_id15` smallint(5) UNSIGNED DEFAULT 0,
-  `spell_id16` smallint(5) UNSIGNED DEFAULT 0,
-  `spell_id17` smallint(5) UNSIGNED DEFAULT 0,
-  `spell_id18` smallint(5) UNSIGNED DEFAULT 0,
-  `spell_id19` smallint(5) UNSIGNED DEFAULT 0,
-  `spell_id20` smallint(5) UNSIGNED DEFAULT 0,
-  `spell_id21` smallint(5) UNSIGNED DEFAULT 0,
-  `spell_id22` smallint(5) UNSIGNED DEFAULT 0,
-  `spell_id23` smallint(5) UNSIGNED DEFAULT 0,
-  `spell_id24` smallint(5) UNSIGNED DEFAULT 0,
-  `spell_id25` smallint(5) UNSIGNED DEFAULT 0,
-  `spell_id26` smallint(5) UNSIGNED DEFAULT 0,
-  `spell_id27` smallint(5) UNSIGNED DEFAULT 0,
-  `spell_id28` smallint(5) UNSIGNED DEFAULT 0,
-  `spell_id29` smallint(5) UNSIGNED DEFAULT 0,
-  `spell_id30` smallint(5) UNSIGNED DEFAULT 0,
-  `spell_id31` smallint(5) UNSIGNED DEFAULT 0,
-  `spell_id32` smallint(5) UNSIGNED DEFAULT 0,
-  `spell_id33` smallint(5) UNSIGNED DEFAULT 0,
-  `spell_id34` smallint(5) UNSIGNED DEFAULT 0,
-  `spell_id35` smallint(5) UNSIGNED DEFAULT 0
+  `slot` tinyint(3) UNSIGNED NOT NULL,
+  `spell_id` smallint(5) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -916,7 +884,7 @@ ALTER TABLE `atributos`
 -- Indices de la tabla `pet`
 --
 ALTER TABLE `pet`
-  ADD PRIMARY KEY (`user_id`);
+  ADD PRIMARY KEY (`user_id`,`slot`);
 
 --
 -- Indices de la tabla `punishment`
@@ -946,7 +914,7 @@ ALTER TABLE `skillpoint`
 -- Indices de la tabla `spell`
 --
 ALTER TABLE `spell`
-  ADD PRIMARY KEY (`user_id`);
+  ADD PRIMARY KEY (`user_id`,`slot`);
 
 --
 -- Indices de la tabla `personaje`
