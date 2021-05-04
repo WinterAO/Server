@@ -147,13 +147,6 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
 
         Call User_Database.Database_Connection.Execute(query)
         
-        '*******************************************************************
-        'Amigos
-        '*******************************************************************
-        query = "INSERT INTO amigos (user_id) VALUES (?)"
-
-        Call User_Database.MakeQuery(query, True, .ID)
-        
     End With
     
     #If DBConexionUnica = 0 Then
@@ -369,15 +362,19 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
         '*******************************************************************
         'Amigos
         '*******************************************************************
-        query = "UPDATE amigos SET "
+        query = "INSERT INTO amigos (user_id, slot, amigo, ignorado) VALUES "
         
         For LoopC = 1 To MAXAMIGOS
-            query = query & "amigo" & LoopC & " = '" & .Amigos(LoopC).Nombre & "', "
-            query = query & "ignorado" & LoopC & " = '" & .Amigos(LoopC).Ignorado & "'"
+            query = query & "("
+            query = query & .ID & ", "
+            query = query & LoopC & ", "
+            query = query & "'" & .Amigos(LoopC).Nombre & "', "
+            query = query & .Amigos(LoopC).Ignorado & ")"
+            
             If LoopC < MAXAMIGOS Then query = query & ", "
         Next LoopC
         
-        query = query & " WHERE user_id = '" & .ID & "'"
+        query = query & " ON DUPLICATE KEY UPDATE amigo=VALUES(amigo), ignorado=VALUES(ignorado); "
             
         Call User_Database.Database_Connection.Execute(query)
 
@@ -707,16 +704,16 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
         If User_Database.MakeQuery("SELECT * FROM skillpoint WHERE user_id = (?)", False, .ID) Then
             User_Database.Database_RecordSet.MoveFirst
 
-            For LoopC = 1 To NUMSKILLS
+            While Not User_Database.Database_RecordSet.EOF
             
-                LoopC = User_Database.Database_RecordSet!Slot
+                LoopC = User_Database.Database_RecordSet!skill_id
                 
                 .Stats.UserSkills(LoopC) = User_Database.Database_RecordSet!sk
                 .Stats.ExpSkills(LoopC) = User_Database.Database_RecordSet!Exp
                 .Stats.EluSkills(LoopC) = User_Database.Database_RecordSet!ELU
                 
                 User_Database.Database_RecordSet.MoveNext
-            Next LoopC
+            Wend
 
         End If
 
@@ -761,15 +758,18 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
         '*******************************************************************
         'Amigos
         '*******************************************************************
-        Call User_Database.MakeQuery("SELECT * FROM amigos WHERE user_id = (?)", False, .ID)
-
-        If Not User_Database.Database_RecordSet.RecordCount = 0 Then
+        If User_Database.MakeQuery("SELECT * FROM amigos WHERE user_id = (?)", False, .ID) Then
             User_Database.Database_RecordSet.MoveFirst
 
-            For LoopC = 1 To MAXAMIGOS
-                .Amigos(LoopC).Nombre = User_Database.Database_RecordSet("amigo" & LoopC)
-                .Amigos(LoopC).Ignorado = User_Database.Database_RecordSet("ignorado" & LoopC)
-            Next LoopC
+            While Not User_Database.Database_RecordSet.EOF
+            
+                LoopC = User_Database.Database_RecordSet!Slot
+                
+                .Amigos(LoopC).Nombre = User_Database.Database_RecordSet!Amigo
+                .Amigos(LoopC).Ignorado = User_Database.Database_RecordSet!Ignorado
+                
+                User_Database.Database_RecordSet.MoveNext
+            Wend
 
         End If
 
