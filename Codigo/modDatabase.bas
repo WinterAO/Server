@@ -130,27 +130,27 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
         '*******************************************************************
         'Inventario
         '*******************************************************************
-        query = "INSERT INTO inventario_items (user_id, "
-        
-        For LoopC = 1 To MAX_INVENTORY_SLOTS
-            query = query & "item_id" & LoopC & ", amount" & LoopC & ", is_equipped" & LoopC
-            If LoopC < MAX_INVENTORY_SLOTS Then query = query & ", "
-        Next LoopC
-        
-        query = query & ") VALUES (" & .ID & ", "
-        
-        For LoopC = 1 To MAX_INVENTORY_SLOTS
-
-            query = query & .Invent.Object(LoopC).ObjIndex & ", "
-            query = query & .Invent.Object(LoopC).Amount & ", "
-            query = query & .Invent.Object(LoopC).Equipped
-            If LoopC < MAX_INVENTORY_SLOTS Then query = query & ", "
-            
-        Next LoopC
-        
-        query = query & ");"
-
-        Call User_Database.Database_Connection.Execute(query)
+'        query = "INSERT INTO inventario_items (user_id, "
+'
+'        For LoopC = 1 To MAX_INVENTORY_SLOTS
+'            query = query & "item_id" & LoopC & ", amount" & LoopC & ", is_equipped" & LoopC
+'            If LoopC < MAX_INVENTORY_SLOTS Then query = query & ", "
+'        Next LoopC
+'
+'        query = query & ") VALUES (" & .ID & ", "
+'
+'        For LoopC = 1 To MAX_INVENTORY_SLOTS
+'
+'            query = query & .Invent.Object(LoopC).ObjIndex & ", "
+'            query = query & .Invent.Object(LoopC).Amount & ", "
+'            query = query & .Invent.Object(LoopC).Equipped
+'            If LoopC < MAX_INVENTORY_SLOTS Then query = query & ", "
+'
+'        Next LoopC
+'
+'        query = query & ");"
+'
+'        Call User_Database.Database_Connection.Execute(query)
 
         '*******************************************************************
         'Boveda
@@ -199,30 +199,6 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
         query = query & ");"
 
         Call User_Database.Database_Connection.Execute(query)
-        
-        '*******************************************************************
-        'Quests
-        '*******************************************************************
-'        query = "INSERT INTO quest (user_id, "
-'
-'        For LoopC = 1 To MAXQUESTS
-'
-'            query = query & "npcs" & LoopC & ", estado" & LoopC
-'            If LoopC < MAXQUESTS Then query = query & ", "
-'
-'        Next LoopC
-'
-'        query = query & ") VALUES (" & .ID & ", "
-'
-'        For LoopC = 1 To MAXQUESTS
-'            query = query & "0, 0"
-'            If LoopC < MAXQUESTS Then query = query & ", "
-'
-'        Next LoopC
-'
-'        query = query & ");"
-'
-'        Call User_Database.Database_Connection.Execute(query)
         
         '*******************************************************************
         'Profesion primaria
@@ -377,20 +353,23 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
         'Inventario
         '*******************************************************************
         
-        query = "UPDATE inventario_items SET "
+        query = "INSERT INTO inventario_items (user_id, slot, item_id, Amount, is_equipped) VALUES "
         
         For LoopC = 1 To MAX_INVENTORY_SLOTS
-            
-            query = query & "item_id" & LoopC & " = '" & .Invent.Object(LoopC).ObjIndex & "', "
-            query = query & "amount" & LoopC & " = '" & .Invent.Object(LoopC).Amount & "', "
-            query = query & "is_equipped" & LoopC & " = '" & .Invent.Object(LoopC).Equipped & "'"
+        
+            query = query & "("
+            query = query & .ID & ", "
+            query = query & LoopC & ", "
+            query = query & .Invent.Object(LoopC).ObjIndex & ", "
+            query = query & .Invent.Object(LoopC).Amount & ", "
+            query = query & .Invent.Object(LoopC).Equipped & ")"
             
             If LoopC < MAX_INVENTORY_SLOTS Then query = query & ", "
             
         Next LoopC
         
-        query = query & " WHERE user_id = '" & .ID & "'"
-        
+        query = query & " ON DUPLICATE KEY UPDATE item_id=VALUES(item_id), amount=VALUES(Amount); "
+        Debug.Print query
         Call User_Database.Database_Connection.Execute(query)
 
         '*******************************************************************
@@ -776,16 +755,20 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
         '*******************************************************************
         'Inventario
         '*******************************************************************
-        Call User_Database.MakeQuery("SELECT * FROM inventario_items WHERE user_id = (?)", False, .ID)
 
-        If Not User_Database.Database_RecordSet.RecordCount = 0 Then
+        If User_Database.MakeQuery("SELECT * FROM inventario_items WHERE user_id = (?)", False, .ID) Then
             User_Database.Database_RecordSet.MoveFirst
                 
-            For LoopC = 1 To MAX_INVENTORY_SLOTS
-                .Invent.Object(LoopC).ObjIndex = User_Database.Database_RecordSet("item_id" & LoopC)
-                .Invent.Object(LoopC).Amount = User_Database.Database_RecordSet("Amount" & LoopC)
-                .Invent.Object(LoopC).Equipped = User_Database.Database_RecordSet("is_equipped" & LoopC)
-            Next LoopC
+            While Not User_Database.Database_RecordSet.EOF
+            
+                LoopC = User_Database.Database_RecordSet!Slot
+                
+                .Invent.Object(LoopC).ObjIndex = User_Database.Database_RecordSet!item_id
+                .Invent.Object(LoopC).Amount = User_Database.Database_RecordSet!Amount
+                .Invent.Object(LoopC).Equipped = User_Database.Database_RecordSet!is_equipped
+                
+                 User_Database.Database_RecordSet.MoveNext
+            Wend
                 
         End If
 
