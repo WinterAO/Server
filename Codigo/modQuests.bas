@@ -455,6 +455,7 @@ Public Sub CleanQuestSlot(ByVal UserIndex As Integer, ByVal QuestSlot As Integer
         '¿El slot de quest es mayor al numero de quest cargadas o no tiene la quest aceptada?
         If QuestSlot > NumQuests Then Exit Sub
         
+        ' Si la quest requiere NPC y sigue en curso...
         If QuestList(QuestSlot).RequiredNPCs Then
 
             For i = 1 To QuestList(QuestSlot).RequiredNPCs

@@ -18021,8 +18021,8 @@ Public Sub WritePosUpdate(ByVal UserIndex As Integer)
 
     With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.PosUpdate)
-        Call .WriteByte(UserList(UserIndex).Pos.X)
-        Call .WriteByte(UserList(UserIndex).Pos.Y)
+        Call .WriteInteger(UserList(UserIndex).Pos.X)
+        Call .WriteInteger(UserList(UserIndex).Pos.Y)
 
     End With
 
