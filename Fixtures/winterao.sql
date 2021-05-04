@@ -895,6 +895,18 @@ CREATE TABLE `personaje` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
+-- Indices de la tabla `inventario_items`
+--
+ALTER TABLE `inventario_items`
+  ADD PRIMARY KEY (`user_id`,`slot`);
+  
+ --
+-- Indices de la tabla `banco_items`
+--
+ALTER TABLE `banco_items`
+  ADD PRIMARY KEY (`user_id`,`slot`);
+
+--
 -- Indices de la tabla `atributos`
 --
 ALTER TABLE `atributos`

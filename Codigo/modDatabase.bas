@@ -319,7 +319,7 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
             
         Next LoopC
         
-        query = query & " ON DUPLICATE KEY UPDATE item_id=VALUES(item_id), amount=VALUES(Amount); "
+        query = query & " ON DUPLICATE KEY UPDATE item_id=VALUES(item_id), amount=VALUES(Amount), is_equipped=VALUES(is_equipped); "
         Call User_Database.Database_Connection.Execute(query)
 
         '*******************************************************************
