@@ -917,7 +917,7 @@ Public Sub LoadQuestStats(ByVal UserIndex As Integer)
 
     With UserList(UserIndex).QuestStats
 
-        If Not User_Database.MakeQuery("SELECT * FROM quest WHERE user_id = (?)", False, UserList(UserIndex).ID) Then
+        If User_Database.MakeQuery("SELECT * FROM quest WHERE user_id = (?)", False, UserList(UserIndex).ID) Then
         
             User_Database.Database_RecordSet.MoveFirst
             

@@ -859,19 +859,19 @@ Public Function HandleIncomingData(ByVal UserIndex As Integer) As Boolean
             Call HandleDragAndDropHechizos(UserIndex)
   
         Case ClientPacketID.Quest
-            Call Quests.HandleQuest(UserIndex)
+            Call HandleQuest(UserIndex)
             
         Case ClientPacketID.QuestAccept
-            Call Quests.HandleQuestAccept(UserIndex)
+            Call HandleQuestAccept(UserIndex)
         
         Case ClientPacketID.QuestListRequest
-            Call Quests.HandleQuestListRequest(UserIndex)
+            Call HandleQuestListRequest(UserIndex)
         
         Case ClientPacketID.QuestDetailsRequest
-            Call Quests.HandleQuestDetailsRequest(UserIndex)
+            Call HandleQuestDetailsRequest(UserIndex)
         
         Case ClientPacketID.QuestAbandon
-            Call Quests.HandleQuestAbandon(UserIndex)
+            Call HandleQuestAbandon(UserIndex)
 
         Case ClientPacketID.FightSend
             Call HandleFightSend(UserIndex)
@@ -24101,4 +24101,95 @@ errHandler:
         Call FlushBuffer(UserIndex)
         Resume
     End If
+End Sub
+
+Public Sub HandleQuestListRequest(ByVal UserIndex As Integer)
+    '****************************************************
+    'Autor: Amraphen
+    'Fecha: 30/01/2010
+    'Descripcion: Maneja el paquete QuestListRequest.
+    '****************************************************
+ 
+    'Leemos el paquete
+    Call UserList(UserIndex).incomingData.ReadByte
+    
+    Call WriteQuestListSend(UserIndex)
+
+End Sub
+
+Public Sub HandleQuestDetailsRequest(ByVal UserIndex As Integer)
+    '****************************************************
+    'Autor: Amraphen
+    'Fecha: 30/01/2010
+    'Descripcion: Maneja el paquete QuestInfoRequest.
+    '****************************************************
+    
+    Dim QuestSlot As Byte
+ 
+    With UserList(UserIndex)
+        'Leemos el paquete
+        Call .incomingData.ReadByte
+        
+        QuestSlot = .incomingData.ReadByte
+
+        Call WriteQuestDetails(UserIndex, .QuestStats.QuestEnCurso(QuestSlot), QuestSlot)
+    End With
+
+End Sub
+ 
+Public Sub HandleQuestAbandon(ByVal UserIndex As Integer)
+    '****************************************************
+    'Autor: Lorwik
+    'Fecha: 04/05/2021
+    'Descripcion: El usuario quiere abandonar una quest
+    '****************************************************
+    
+    Dim QuestSlot As Integer
+    Dim QuestIndex As Integer
+    
+    With UserList(UserIndex)
+    
+        'Leemos el paquete.
+        Call .incomingData.ReadByte
+        
+        QuestSlot = .incomingData.ReadByte
+        QuestIndex = .QuestStats.QuestEnCurso(QuestSlot)
+        
+        Call modQuests.userAbandonaQuest(UserIndex, QuestSlot, QuestIndex)
+        
+    End With
+    
+End Sub
+
+Public Sub HandleQuestAccept(ByVal UserIndex As Integer)
+    '****************************************************
+    'Autor: Lorwik
+    'Fecha: 04/05/2021
+    'Descripcion: El usuario quiere aceptar una quest
+    '****************************************************
+ 
+    Call UserList(UserIndex).incomingData.ReadByte
+ 
+    Call modQuests.userAceptaquest(UserIndex)
+
+End Sub
+ 
+ Public Sub HandleQuest(ByVal UserIndex As Integer)
+
+    '****************************************************
+    'Maneja el paquete Quest.
+    'Last modified: 18/05/2020
+    'Lorwik: Paso todo el chequeo y la accion a otro sub refractorio
+    '****************************************************
+    
+    Dim NPCIndex As Integer
+
+    'Leemos el paquete
+    Call UserList(UserIndex).incomingData.ReadByte
+ 
+    NPCIndex = UserList(UserIndex).flags.TargetNPC
+    
+    
+    Call accionUseraNPCQuest(UserIndex, NPCIndex)
+
 End Sub

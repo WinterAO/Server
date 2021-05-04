@@ -163,7 +163,7 @@ Sub Accion(ByVal UserIndex As Integer, _
                     
                 ElseIf Npclist(tempIndex).NPCtype = eNPCType.Quest Then
                 
-                    Call Quests.AccionParaQuest(UserIndex, tempIndex)
+                    Call modQuests.accionUseraNPCQuest(UserIndex, tempIndex)
                     
                 ElseIf Npclist(tempIndex).NPCtype = eNPCType.Subastador Then
                 

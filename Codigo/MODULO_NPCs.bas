@@ -794,7 +794,7 @@ Public Sub MakeNPCChar(ByVal toMap As Boolean, _
         If .NPCtype = WorldBoss Then color = 8
         
         If .QuestNumber(1) > 0 Then
-            Estadoquest = Quests.Estadoquest(sndIndex, .QuestNumber(1))
+            Estadoquest = modQuests.Estadoquest(sndIndex, .QuestNumber(1))
         Else
             Estadoquest = 255 'El NPC No tiene quest
         End If
