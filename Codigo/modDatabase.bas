@@ -128,55 +128,6 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
         Call User_Database.Database_Connection.Execute(query)
 
         '*******************************************************************
-        'Inventario
-        '*******************************************************************
-'        query = "INSERT INTO inventario_items (user_id, "
-'
-'        For LoopC = 1 To MAX_INVENTORY_SLOTS
-'            query = query & "item_id" & LoopC & ", amount" & LoopC & ", is_equipped" & LoopC
-'            If LoopC < MAX_INVENTORY_SLOTS Then query = query & ", "
-'        Next LoopC
-'
-'        query = query & ") VALUES (" & .ID & ", "
-'
-'        For LoopC = 1 To MAX_INVENTORY_SLOTS
-'
-'            query = query & .Invent.Object(LoopC).ObjIndex & ", "
-'            query = query & .Invent.Object(LoopC).Amount & ", "
-'            query = query & .Invent.Object(LoopC).Equipped
-'            If LoopC < MAX_INVENTORY_SLOTS Then query = query & ", "
-'
-'        Next LoopC
-'
-'        query = query & ");"
-'
-'        Call User_Database.Database_Connection.Execute(query)
-
-        '*******************************************************************
-        'Boveda
-        '*******************************************************************
-        query = "INSERT INTO banco_items (user_id, "
-        
-        For LoopC = 1 To MAX_BANCOINVENTORY_SLOTS
-            query = query & "item_id" & LoopC & ", amount" & LoopC
-            If LoopC < MAX_BANCOINVENTORY_SLOTS Then query = query & ", "
-        Next LoopC
-        
-        query = query & ") VALUES (" & .ID & ", "
-        
-        For LoopC = 1 To MAX_BANCOINVENTORY_SLOTS
-
-            query = query & .BancoInvent.Object(LoopC).ObjIndex & ", "
-            query = query & .BancoInvent.Object(LoopC).Amount
-            If LoopC < MAX_BANCOINVENTORY_SLOTS Then query = query & ", "
-            
-        Next LoopC
-        
-        query = query & ");"
-
-        Call User_Database.Database_Connection.Execute(query)
-
-        '*******************************************************************
         'Skills
         '*******************************************************************
         query = "INSERT INTO skillpoint (user_id, "
@@ -369,25 +320,26 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
         Next LoopC
         
         query = query & " ON DUPLICATE KEY UPDATE item_id=VALUES(item_id), amount=VALUES(Amount); "
-        Debug.Print query
         Call User_Database.Database_Connection.Execute(query)
 
         '*******************************************************************
         'Boveda
         '*******************************************************************
         
-        query = "UPDATE banco_items SET "
+        query = "INSERT INTO banco_items (user_id, slot, item_id, Amount) VALUES "
         
         For LoopC = 1 To MAX_BANCOINVENTORY_SLOTS
-            
-            query = query & "item_id" & LoopC & " = '" & .BancoInvent.Object(LoopC).ObjIndex & "', "
-            query = query & "amount" & LoopC & " = '" & .BancoInvent.Object(LoopC).Amount & "'"
+            query = query & "("
+            query = query & .ID & ", "
+            query = query & LoopC & ", "
+            query = query & .BancoInvent.Object(LoopC).ObjIndex & ", "
+            query = query & .BancoInvent.Object(LoopC).Amount & ")"
             
             If LoopC < MAX_BANCOINVENTORY_SLOTS Then query = query & ", "
             
         Next LoopC
         
-        query = query & " WHERE user_id = '" & .ID & "'"
+        query = query & " ON DUPLICATE KEY UPDATE item_id=VALUES(item_id), amount=VALUES(Amount); "
         
         Call User_Database.Database_Connection.Execute(query)
 
@@ -777,15 +729,18 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
         '*******************************************************************
         'Boveda
         '*******************************************************************
-        Call User_Database.MakeQuery("SELECT * FROM banco_items WHERE user_id = (?)", False, .ID)
-
-        If Not User_Database.Database_RecordSet.RecordCount = 0 Then
+        If User_Database.MakeQuery("SELECT * FROM banco_items WHERE user_id = (?)", False, .ID) Then
             User_Database.Database_RecordSet.MoveFirst
                 
-            For LoopC = 1 To MAX_BANCOINVENTORY_SLOTS
-                .BancoInvent.Object(LoopC).ObjIndex = User_Database.Database_RecordSet("item_id" & LoopC)
-                .BancoInvent.Object(LoopC).Amount = User_Database.Database_RecordSet("Amount" & LoopC)
-            Next LoopC
+            While Not User_Database.Database_RecordSet.EOF
+            
+                LoopC = User_Database.Database_RecordSet!Slot
+            
+                .BancoInvent.Object(LoopC).ObjIndex = User_Database.Database_RecordSet!item_id
+                .BancoInvent.Object(LoopC).Amount = User_Database.Database_RecordSet!Amount
+                
+                User_Database.Database_RecordSet.MoveNext
+            Wend
                 
         End If
 
