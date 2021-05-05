@@ -25,7 +25,7 @@ Sub SaveUserToDatabase(ByVal UserIndex As Integer, _
     Exit Sub
 
 ErrorHandler:
-    Call LogDatabaseError("Unable to save User to Mysql Database: " & UserList(UserIndex).Name & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Unable to save User to Mysql Database: " & UserList(UserIndex).name & ". " & Err.Number & " - " & Err.description)
 
 End Sub
 
@@ -63,7 +63,7 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
 
     With UserList(UserIndex)
 
-        Call User_Database.MakeQuery(query, True, .Name, .AccountInfo.ID, .Stats.ELV, .Stats.Exp, .Stats.ELU, .Genero, .Raza, .clase, .Hogar, .Desc, .Stats.Gld, .Stats.SkillPts, .Counters.AsignedSkills, _
+        Call User_Database.MakeQuery(query, True, .name, .AccountInfo.ID, .Stats.ELV, .Stats.Exp, .Stats.ELU, .Genero, .Raza, .clase, .Hogar, .Desc, .Stats.Gld, .Stats.SkillPts, .Counters.AsignedSkills, _
                                     .Stats.ELO, .Pos.Map, .Pos.X, .Pos.Y, .Char.body, .Char.Head, .Char.WeaponAnim, .Char.CascoAnim, .Char.ShieldAnim, .Invent.NroItems, .Invent.ArmourEqpSlot, _
                                     .Invent.WeaponEqpSlot, .Stats.MinHp, .Stats.MaxHp, .Stats.MinMAN, .Stats.MaxMAN, .Stats.MinSta, .Stats.MaxSta, .Stats.MinHam, .Stats.MaxHam, _
                                     .Stats.MinAGU, .Stats.MaxAGU, .Stats.MinHIT, .Stats.MaxHIT, .Reputacion.NobleRep, .Reputacion.PlebeRep, .Reputacion.Promedio, _
@@ -156,7 +156,7 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
     Exit Sub
 
 ErrorHandler:
-    Call LogDatabaseError("Unable to INSERT User to Mysql Database: " & UserList(UserIndex).Name & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Unable to INSERT User to Mysql Database: " & UserList(UserIndex).name & ". " & Err.Number & " - " & Err.description)
 
 End Sub
 
@@ -197,7 +197,7 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
         query = query & "modocombate = (?), seguro = (?) WHERE id = (?)"
 
     With UserList(UserIndex)
-            Call User_Database.MakeQuery(query, True, .Name, .Stats.ELV, .Stats.Exp, .Stats.ELU, .Genero, .Raza, .clase, .Hogar, .Desc, .Stats.Gld, .Stats.Banco, .Stats.SkillPts, .Counters.AsignedSkills, .Stats.ELO, .NroMascotas, _
+            Call User_Database.MakeQuery(query, True, .name, .Stats.ELV, .Stats.Exp, .Stats.ELU, .Genero, .Raza, .clase, .Hogar, .Desc, .Stats.Gld, .Stats.Banco, .Stats.SkillPts, .Counters.AsignedSkills, .Stats.ELO, .NroMascotas, _
                                         .Pos.Map, .Pos.X, .Pos.Y, .flags.lastMap, .Char.body, .Char.Head, .Char.WeaponAnim, .Char.CascoAnim, .Char.ShieldAnim, .Char.AuraAnim, .Char.AuraColor, .Char.Heading, .Invent.NroItems, _
                                         .Invent.ArmourEqpSlot, .Invent.WeaponEqpSlot, .Invent.CascoEqpSlot, .Invent.EscudoEqpSlot, .Invent.MunicionEqpSlot, .Invent.BarcoSlot, .Invent.AnilloEqpSlot, .Invent.MochilaEqpSlot, _
                                         .Stats.MinHp, .Stats.MaxHp, .Stats.MinMAN, .Stats.MaxMAN, .Stats.MinSta, .Stats.MaxSta, .Stats.MinHam, .Stats.MaxHam, .Stats.MinAGU, .Stats.MaxAGU, .Stats.MinHIT, .Stats.MaxHIT, _
@@ -368,7 +368,7 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
             query = query & "("
             query = query & .ID & ", "
             query = query & LoopC & ", "
-            query = query & "'" & .Amigos(LoopC).Nombre & "', "
+            query = query & "'" & .Amigos(LoopC).nombre & "', "
             query = query & .Amigos(LoopC).Ignorado & ")"
             
             If LoopC < MAXAMIGOS Then query = query & ", "
@@ -387,7 +387,7 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
     Exit Sub
 
 ErrorHandler:
-    Call LogDatabaseError("Unable to UPDATE personaje to Mysql Database: " & UserList(UserIndex).Name & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Unable to UPDATE personaje to Mysql Database: " & UserList(UserIndex).name & ". " & Err.Number & " - " & Err.description)
 
 End Sub
 
@@ -460,7 +460,7 @@ Public Sub UpdateUserQuest(ByVal UserIndex As Integer)
     Exit Sub
 
 ErrorHandler:
-    Call LogDatabaseError("Unable to UPDATE personaje to Mysql Database: " & UserList(UserIndex).Name & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Unable to UPDATE personaje to Mysql Database: " & UserList(UserIndex).name & ". " & Err.Number & " - " & Err.description)
 End Sub
 
 Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
@@ -487,11 +487,11 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
     With UserList(UserIndex)
         query = "SELECT *, DATE_FORMAT(fecha_ingreso, '%Y-%m-%d') as 'fecha_ingreso_format' FROM personaje WHERE UPPER(name) = (?)"
         
-        If Not User_Database.MakeQuery(query, False, UCase$(.Name)) Then Exit Sub
+        If Not User_Database.MakeQuery(query, False, UCase$(.name)) Then Exit Sub
 
         'Start setting data
         .ID = User_Database.Database_RecordSet!ID
-        .Name = User_Database.Database_RecordSet!Name
+        .name = User_Database.Database_RecordSet!name
         .Stats.ELV = User_Database.Database_RecordSet!level
         .Stats.Exp = User_Database.Database_RecordSet!Exp
         .Stats.ELU = User_Database.Database_RecordSet!ELU
@@ -765,7 +765,7 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
             
                 LoopC = User_Database.Database_RecordSet!Slot
                 
-                .Amigos(LoopC).Nombre = User_Database.Database_RecordSet!Amigo
+                .Amigos(LoopC).nombre = User_Database.Database_RecordSet!Amigo
                 .Amigos(LoopC).Ignorado = User_Database.Database_RecordSet!Ignorado
                 
                 User_Database.Database_RecordSet.MoveNext
@@ -784,7 +784,7 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
     Exit Sub
 
 ErrorHandler:
-    Call LogDatabaseError("Unable to LOAD User from Mysql Database: " & UserList(UserIndex).Name & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Unable to LOAD User from Mysql Database: " & UserList(UserIndex).name & ". " & Err.Number & " - " & Err.description)
 
 End Sub
 
@@ -872,7 +872,7 @@ Public Sub LoadQuestStats(ByVal UserIndex As Integer)
         Exit Sub
 
 ErrorHandler:
-        Call LogDatabaseError("Unable to LOAD User from Mysql Database: " & UserList(UserIndex).Name & ". " & Err.Number & " - " & Err.description)
+        Call LogDatabaseError("Unable to LOAD User from Mysql Database: " & UserList(UserIndex).name & ". " & Err.Number & " - " & Err.description)
 
     End Sub
 
@@ -952,6 +952,48 @@ Public Function BANCheckDatabase(ByVal UserName As String) As Boolean
 
 ErrorHandler:
     Call LogDatabaseError("Error in BANCheckDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
+
+End Function
+
+Public Function BanTimeCheck(ByVal UserName As String) As Date
+
+    '***************************************************
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
+    '***************************************************
+    On Error GoTo ErrorHandler
+
+    Dim query As String
+
+    #If DBConexionUnica = 0 Then
+        Call User_Database.Database_Connect
+        
+    #Else
+        'Si perdimos la conexion reconectamos
+        If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
+        
+    #End If
+
+    query = "SELECT ban_time FROM personaje WHERE UPPER(name) = (?)"
+
+    If Not User_Database.MakeQuery(query, False, UCase$(UserName)) Then
+        BanTimeCheck = False
+        Exit Function
+
+    End If
+
+    BanTimeCheck = User_Database.Database_RecordSet!ban_time
+
+    Set User_Database.Database_RecordSet = Nothing
+    
+    #If DBConexionUnica = 0 Then
+        Call User_Database.Database_Close
+    #End If
+
+    Exit Function
+
+ErrorHandler:
+    Call LogDatabaseError("Error in BanTimeCheck: " & UserName & ". " & Err.Number & " - " & Err.description)
 
 End Function
 
@@ -1075,7 +1117,7 @@ Public Sub MarcarPjComoQueYaVotoDatabase(ByVal UserIndex As Integer, _
     Exit Sub
 
 ErrorHandler:
-    Call LogDatabaseError("Error in MarcarPjComoQueYaVotoDatabase: " & UserList(UserIndex).Name & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Error in MarcarPjComoQueYaVotoDatabase: " & UserList(UserIndex).name & ". " & Err.Number & " - " & Err.description)
 
 End Sub
 
@@ -1120,7 +1162,8 @@ End Function
 
 Public Sub SaveBan(ByVal UserName As String, _
                            ByVal Reason As String, _
-                           ByVal BannedBy As String)
+                           ByVal BannedBy As String, _
+                           Optional ByVal Tiempo As Date = 0)
 
     '***************************************************
     'Author: Lorwik
@@ -1141,7 +1184,7 @@ Public Sub SaveBan(ByVal UserName As String, _
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    Call User_Database.MakeQuery("UPDATE personaje SET is_ban = TRUE WHERE UPPER(name) = (?)", True, UCase$(UserName))
+    Call User_Database.MakeQuery("UPDATE personaje SET is_ban = TRUE, ban_time = (?) WHERE UPPER(name) = (?)", True, Tiempo, UCase$(UserName))
 
     query = "INSERT INTO punishment SET user_id = (SELECT id FROM personaje WHERE UPPER(name) = (?)), number = (?), reason = (?)"
     Call User_Database.MakeQuery(query, True, UCase$(UserName), (cantPenas + 1), BannedBy & ": BAN POR " & LCase$(Reason) & " " & Date & " " & time)
@@ -1910,6 +1953,44 @@ ErrorHandler:
 
 End Function
 
+Public Function GetAccountID(ByVal UserName As String) As Long
+
+    '***************************************************
+    'Author: Lorwik
+    'Last Modification: 06/04/2021
+    'Descripcion: Devuelve la ID de la cuenta del usuario solicitado
+    '***************************************************
+    On Error GoTo ErrorHandler
+
+    Dim query As String
+
+    #If DBConexionUnica = 0 Then
+        Call User_Database.Database_Connect
+    #Else
+        'Si perdimos la conexion reconectamos
+        If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
+    #End If
+
+    If Not User_Database.MakeQuery("SELECT cuenta_id FROM personaje WHERE UPPER(name) = (?)", False, UCase$(UserName)) Then
+        GetAccountID = -1
+        Exit Function
+
+    End If
+
+    GetAccountID = User_Database.Database_RecordSet!cuenta_id
+    Set Account_Database.Database_RecordSet = Nothing
+        
+    #If DBConexionUnica = 0 Then
+        Call User_Database.Database_Close
+    #End If
+
+    Exit Function
+    
+ErrorHandler:
+    Call LogDatabaseError("Error in GetAccountID: " & UserName & ". " & Err.Number & " - " & Err.description)
+
+End Function
+
 Public Sub SaveUserReenlists(ByVal UserName As String, ByVal Reenlists As Byte)
 
     '***************************************************
@@ -2131,7 +2212,7 @@ Public Sub SendUserInvTxtFromDatabase(ByVal sendIndex As Integer, _
                 ObjInd = val(User_Database.Database_RecordSet!item_id)
 
                 If ObjInd > 0 Then
-                    Call WriteConsoleMsg(sendIndex, "Objeto " & User_Database.Database_RecordSet!Number & " " & ObjData(ObjInd).Name & " Cantidad:" & User_Database.Database_RecordSet!Amount, FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(sendIndex, "Objeto " & User_Database.Database_RecordSet!Number & " " & ObjData(ObjInd).name & " Cantidad:" & User_Database.Database_RecordSet!Amount, FontTypeNames.FONTTYPE_INFO)
 
                 End If
 
@@ -2197,7 +2278,7 @@ Public Sub SendUserBovedaTxtFromDatabase(ByVal sendIndex As Integer, _
                 ObjInd = val(User_Database.Database_RecordSet!item_id)
 
                 If ObjInd > 0 Then
-                    Call WriteConsoleMsg(sendIndex, "Objeto " & User_Database.Database_RecordSet!Number & " " & ObjData(ObjInd).Name & " Cantidad:" & User_Database.Database_RecordSet!Amount, FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(sendIndex, "Objeto " & User_Database.Database_RecordSet!Number & " " & ObjData(ObjInd).name & " Cantidad:" & User_Database.Database_RecordSet!Amount, FontTypeNames.FONTTYPE_INFO)
 
                 End If
 

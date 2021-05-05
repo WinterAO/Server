@@ -825,7 +825,7 @@ End Type
 
 Public Type tHechizo
 
-    Nombre As String
+    nombre As String
     Desc As String
     PalabrasMagicas As String
     
@@ -976,7 +976,7 @@ End Type
 
 Public Type FXdata
 
-    Nombre As String
+    nombre As String
     GrhIndex As Long
     Delay As Integer
 
@@ -1026,7 +1026,7 @@ End Enum
 'Tipos de objetos
 Public Type ObjData
 
-    Name As String 'Nombre del obj
+    name As String 'Nombre del obj
     
     OBJType As eOBJType 'Tipo enum que determina cuales son las caract del obj
     
@@ -1324,7 +1324,7 @@ End Type
 
 Public Type tQuest
 
-    Nombre As String
+    nombre As String
     Desc As String
     RequiredLevel As Byte
     
@@ -1630,7 +1630,7 @@ End Type
 
 Public Type AccountCharacters
     ID As String
-    Name As String
+    name As String
     body As Integer
     Head As Integer
     weapon As Integer
@@ -1655,6 +1655,8 @@ Public Type AccountUser
     Salt As String
     status As Boolean
     Gemas As Long
+    macAddress As String
+    hdSerial As Long
     
     NumPjs As Byte
     AccountPJ(1 To MAXPJACCOUNTS) As AccountCharacters
@@ -1671,7 +1673,7 @@ End Type
 
 'Info de los Amigos
 Public Type Amigos
-  Nombre As String
+  nombre As String
   Ignorado As Byte
 index As Integer
 
@@ -1687,7 +1689,7 @@ Public Type User
     PosAnt As WorldPos
     RetoTemp As tUserRetoTemp
     
-    Name As String
+    name As String
     ID As Long 'Id del PJ logeado actualmente
     
     AccountInfo As AccountUser
@@ -1894,7 +1896,7 @@ End Type
 
 Public Type NPC
 
-    Name As String
+    name As String
     Char As Char 'Define como se vera
     Desc As String
 
@@ -1993,7 +1995,7 @@ Type tZonaInfo
 
     NumUsers As Integer
     music As String
-    Name As String
+    name As String
     StartPos As WorldPos
     OnDeathGoTo As WorldPos
     
@@ -2429,6 +2431,9 @@ Public Enum eGMCommands
     ConsultarGemas          '/CONSULTARGEMS
     SilenciarGlobal         '/SILENCIARGLOBAL
     ToggleGlobal            '/TOGGLEGLOBAL
+    BanSerial
+    UnBanSerial
+    BanTemporal
 End Enum
 
 Public Const MATRIX_INITIAL_MAP                     As Integer = 1

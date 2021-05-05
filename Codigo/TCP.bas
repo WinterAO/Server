@@ -744,7 +744,9 @@ End Sub
 
 Sub ConnectAccount(ByVal UserIndex As Integer, _
                    ByRef UserName As String, _
-                   ByRef Password As String)
+                   ByRef Password As String, _
+                   ByVal macAddress As String, _
+                   ByVal hdSerial As Long)
 
 '*************************************************
 'Author: Juan Andres Dalmasso (CHOTS)
@@ -803,6 +805,20 @@ Sub ConnectAccount(ByVal UserIndex As Integer, _
         Call CloseSocket(UserIndex)
         Exit Sub
     End If
+    
+    If CheckMAC(macAddress) Then
+        Call WriteErrorMsg(UserIndex, "Se te ha prohibido la entrada a WinterAO. Contacte con la administración si desea obtener mas información. Cod: BAN01")
+        Call CloseSocket(UserIndex)
+        Exit Sub
+
+    End If
+    
+    If CheckHD(hdSerial) Then
+        Call WriteErrorMsg(UserIndex, "Se te ha prohibido la entrada a WinterAO. Contacte con la administración si desea obtener mas información. Cod: BAN02")
+        Call CloseSocket(UserIndex)
+        Exit Sub
+
+    End If
 
     'Aqui solo vamos a hacer un request a los endpoints de la aplicacion en Node.js
     'el repositorio para hacer funcionar esto, es este: https://github.com/ao-libre/ao-api-server
@@ -812,8 +828,14 @@ Sub ConnectAccount(ByVal UserIndex As Integer, _
         Call ApiEndpointSendLoginAccountEmail(UserName)
     End If
 
-    Call SaveAccountLastLoginDatabase(UserName, UserList(UserIndex).IP)
+    'Guardamos la data de seguridad
+    UserList(UserIndex).AccountInfo.macAddress = macAddress
+    UserList(UserIndex).AccountInfo.hdSerial = hdSerial
+
     Call LoginAccountDatabase(UserIndex, UserName)
+    
+    'Una vez logeados registramos el acceso:
+    Call SaveAccountLastLoginDatabase(UserIndex, UserName)
 
 End Sub
 
@@ -1609,6 +1631,8 @@ Sub ResetUseRaccount(ByVal UserIndex As Integer)
         .AccountInfo.Salt = vbNullString
         .AccountInfo.Gemas = 0
         .AccountInfo.status = False
+        .AccountInfo.macAddress = vbNullString
+        .AccountInfo.hdSerial = 0
         
         For i = 1 To .AccountInfo.NumPjs
             Call ResetPJAccountSlot(UserIndex, i)

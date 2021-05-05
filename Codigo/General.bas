@@ -280,8 +280,11 @@ Sub Main()
 
     On Error Resume Next
     
+    ' Paths
     ChDir App.Path
     ChDrive App.Path
+    DatPath = App.Path & "\Dat\"
+    ConfigPath = App.Path & "\Configuracion\"
     
     'Inicializamos la cabecera
     Call IniciarCabecera
@@ -443,10 +446,6 @@ Private Sub LoadConstants()
    
     LastBackup = Format(Now, "Short Time")
     Minutos = Format(Now, "Short Time")
-    
-    ' Paths
-    DatPath = App.Path & "\Dat\"
-    ConfigPath = App.Path & "\Configuracion\"
     
     'Lorwik: Nueva subida de Skills, subira de 2 en 2 hasta el lvl max.
     LevelSkill(1).LevelValue = 2
@@ -1819,7 +1818,7 @@ Public Sub BanGlobalChatCargar()
     Dim Tmp As String
     Dim ArchivoLog As String
 
-    ArchivoLog = App.Path & "\Dat\BanGlobalChat.dat"
+    ArchivoLog = DatPath & "\Ban\BanGlobalChat.dat"
 
     Set BanUsersChatGlobal = New Collection
 
