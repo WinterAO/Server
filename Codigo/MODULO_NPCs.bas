@@ -468,9 +468,8 @@ Private Sub ResetNpcMainInfo(ByVal NPCIndex As Integer)
         .Hostile = 0
         .InvReSpawn = 0
         
-        For j = 1 To 5
-            .QuestNumber(j) = 0
-        Next j
+        .NumQuest = 0
+        Erase .QuestNumber
         
         If .MaestroUser > 0 Then Call QuitarMascota(.MaestroUser, NPCIndex)
         If .MaestroNpc > 0 Then Call QuitarMascotaNpc(.MaestroNpc)
@@ -793,10 +792,12 @@ Public Sub MakeNPCChar(ByVal toMap As Boolean, _
         
         If .NPCtype = WorldBoss Then color = 8
         
-        If .QuestNumber(1) > 0 Then
+        If .NumQuest > 0 Then
             Estadoquest = modQuests.Estadoquest(sndIndex, .QuestNumber(1))
+            
         Else
             Estadoquest = 255 'El NPC No tiene quest
+            
         End If
         
         'Si el NPC no es hostil o es un WorldBoss, tendra nombre
@@ -1319,11 +1320,21 @@ Public Function OpenNPC(ByVal NpcNumber As Integer, _
         
         .GiveGLD = val(Leer.GetValue("NPC" & NpcNumber, "GiveGLD"))
         
-        ln = Leer.GetValue("NPC" & NpcNumber, "QuestNumber")
+        .NumQuest = val(Leer.GetValue("NPC" & NpcNumber, "NumQuest"))
         
-        For LoopC = 1 To 5
-            .QuestNumber(LoopC) = val(ReadField(LoopC, ln, 45))
-        Next LoopC
+        If .NumQuest > 0 Then
+        
+            ReDim .QuestNumber(.NumQuest) As Integer
+        
+            ln = Leer.GetValue("NPC" & NpcNumber, "QuestNumber")
+            
+            For LoopC = 1 To .NumQuest
+            
+                .QuestNumber(LoopC) = val(ReadField(LoopC, ln, 45))
+                
+            Next LoopC
+            
+        End If
         
         .PoderAtaque = val(Leer.GetValue("NPC" & NpcNumber, "PoderAtaque"))
         .PoderEvasion = val(Leer.GetValue("NPC" & NpcNumber, "PoderEvasion"))

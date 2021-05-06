@@ -825,7 +825,7 @@ End Type
 
 Public Type tHechizo
 
-    nombre As String
+    Nombre As String
     Desc As String
     PalabrasMagicas As String
     
@@ -976,7 +976,7 @@ End Type
 
 Public Type FXdata
 
-    nombre As String
+    Nombre As String
     GrhIndex As Long
     Delay As Integer
 
@@ -1026,7 +1026,7 @@ End Enum
 'Tipos de objetos
 Public Type ObjData
 
-    name As String 'Nombre del obj
+    Name As String 'Nombre del obj
     
     OBJType As eOBJType 'Tipo enum que determina cuales son las caract del obj
     
@@ -1324,7 +1324,7 @@ End Type
 
 Public Type tQuest
 
-    nombre As String
+    Nombre As String
     Desc As String
     RequiredLevel As Byte
     
@@ -1630,7 +1630,7 @@ End Type
 
 Public Type AccountCharacters
     ID As String
-    name As String
+    Name As String
     body As Integer
     Head As Integer
     weapon As Integer
@@ -1673,7 +1673,7 @@ End Type
 
 'Info de los Amigos
 Public Type Amigos
-  nombre As String
+  Nombre As String
   Ignorado As Byte
 index As Integer
 
@@ -1689,7 +1689,7 @@ Public Type User
     PosAnt As WorldPos
     RetoTemp As tUserRetoTemp
     
-    name As String
+    Name As String
     ID As Long 'Id del PJ logeado actualmente
     
     AccountInfo As AccountUser
@@ -1896,7 +1896,7 @@ End Type
 
 Public Type NPC
 
-    name As String
+    Name As String
     Char As Char 'Define como se vera
     Desc As String
 
@@ -1930,7 +1930,8 @@ Public Type NPC
     GiveEXP As Long
     GiveGLD As Long
     
-    QuestNumber(1 To 5) As Integer
+    NumQuest As Integer
+    QuestNumber() As Integer
     
     Stats As NPCStats
     flags As NPCFlags
@@ -1995,7 +1996,7 @@ Type tZonaInfo
 
     NumUsers As Integer
     music As String
-    name As String
+    Name As String
     StartPos As WorldPos
     OnDeathGoTo As WorldPos
     

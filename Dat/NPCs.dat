@@ -204,6 +204,7 @@ Domable=0
 Alineacion=0
 Comercia=0
 BackUp=0
+NumQuest=1
 QuestNumber=1
 Speed=370
 
@@ -222,6 +223,7 @@ Domable=0
 Alineacion=0
 Comercia=0
 BackUp=0
+NumQuest=1
 QuestNumber=4
 Speed=370
 
@@ -240,6 +242,7 @@ Domable=0
 Alineacion=0
 Comercia=0
 BackUp=0
+NumQuest=1
 QuestNumber=2
 Speed=370
 
@@ -258,6 +261,7 @@ Domable=0
 Alineacion=0
 Comercia=0
 BackUp=0
+NumQuest=1
 QuestNumber=3
 Speed=370
 
