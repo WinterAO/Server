@@ -22735,7 +22735,7 @@ Public Sub WriteQuestDetails(ByVal UserIndex As Integer, _
 
                 'Si es una quest ya empezada, entonces mandamos los NPCs que mat�.
                 If QuestSlot Then
-                    Call .WriteInteger(UserList(UserIndex).QuestStats.Quests(QuestIndex).NPCsKilled(i))
+                    Call .WriteInteger(UserList(UserIndex).QuestStats.Quests(UserList(UserIndex).QuestStats.QuestEnCurso(QuestSlot)).NPCsKilled(i))
 
                 End If
 
@@ -22803,12 +22803,12 @@ Public Sub WriteQuestListSend(ByVal UserIndex As Integer)
  
     With UserList(UserIndex)
         .outgoingData.WriteByte ServerPacketID.QuestListSend
-    
-        For i = 1 To MAXUSERQUESTS
+        
+        For i = 1 To .QuestStats.nQuestCurso
 
             If .QuestStats.QuestEnCurso(i) > 0 Then
                 tmpByte = tmpByte + 1
-                tmpStr = tmpStr & QuestList(.QuestStats.QuestEnCurso(i)).Nombre & "-"
+                tmpStr = tmpStr & QuestList(.QuestStats.Quests(.QuestStats.QuestEnCurso(i)).QuestIndex).Nombre & "-"
 
             End If
 
@@ -24173,7 +24173,7 @@ Public Sub HandleQuestDetailsRequest(ByVal UserIndex As Integer)
         
         QuestSlot = .incomingData.ReadByte
 
-        Call WriteQuestDetails(UserIndex, .QuestStats.QuestEnCurso(QuestSlot), QuestSlot)
+        Call WriteQuestDetails(UserIndex, .QuestStats.Quests(.QuestStats.QuestEnCurso(QuestSlot)).QuestIndex, QuestSlot)
     End With
 
 End Sub
@@ -24186,7 +24186,6 @@ Public Sub HandleQuestAbandon(ByVal UserIndex As Integer)
     '****************************************************
     
     Dim QuestSlot As Integer
-    Dim QuestIndex As Integer
     
     With UserList(UserIndex)
     
@@ -24194,9 +24193,8 @@ Public Sub HandleQuestAbandon(ByVal UserIndex As Integer)
         Call .incomingData.ReadByte
         
         QuestSlot = .incomingData.ReadByte
-        QuestIndex = .QuestStats.QuestEnCurso(QuestSlot)
         
-        Call modQuests.userAbandonaQuest(UserIndex, QuestSlot, QuestIndex)
+        Call modQuests.userAbandonaQuest(UserIndex, QuestSlot)
         
     End With
     

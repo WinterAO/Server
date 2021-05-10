@@ -1210,15 +1210,53 @@ End Type
 Public Type tUserQuest
 
     NPCsKilled() As Integer
+    NPCsTarget() As Integer
+    
+    QuestIndex As Integer
     QuestStatus As Byte
+    fechaFin As Date
     
 End Type
  
 Public Type tQuestStats
 
-    QuestEnCurso(1 To MAXUSERQUESTS) As Integer 'Guarda las ID de las quest en curso
-    Quests(1 To MAXQUESTS) As tUserQuest
-    NumQuestsDone As Integer
+    Quests() As tUserQuest
+    
+    QuestDone() As Integer
+    QuestEnCurso() As Integer
+    QuestLeave() As Integer
+    
+    TotalQuest As Integer
+    nQuestDone As Integer
+    nQuestCurso As Integer
+    nQuestLeave As Integer
+
+End Type
+
+Public Type tQuest
+
+    Nombre As String
+    Desc As String
+    RequiredLevel As Byte
+    RequiredQuest As Integer
+    
+    RequiredOBJs As Byte
+    RequiredOBJ() As obj
+    
+    RequiredNPCs As Byte
+    RequiredNPC() As tQuestNpc
+    
+    RequiredTargetNPCs As Byte
+    RequiredTargetNPC() As tQuestNpc
+    
+    RewardGLD As Long
+    RewardEXP As Long
+    
+    RewardOBJs As Byte
+    RewardOBJ() As obj
+    
+    Repetible As Boolean
+    Tiempo As Byte
 
 End Type
 
@@ -1319,26 +1357,6 @@ Public Type tForo
     StickyPost(1 To MAX_STICKY_POST) As String
     GeneralTitle(1 To MAX_GENERAL_POST) As String
     GeneralPost(1 To MAX_GENERAL_POST) As String
-
-End Type
-
-Public Type tQuest
-
-    Nombre As String
-    Desc As String
-    RequiredLevel As Byte
-    
-    RequiredOBJs As Byte
-    RequiredOBJ() As obj
-    
-    RequiredNPCs As Byte
-    RequiredNPC() As tQuestNpc
-    
-    RewardGLD As Long
-    RewardEXP As Long
-    
-    RewardOBJs As Byte
-    RewardOBJ() As obj
 
 End Type
 
@@ -1461,6 +1479,10 @@ Public Type UserFlags
     DuracionEfecto As Long
     TargetNPC As Integer ' Npc senalado por el usuario
     TargetNpcTipo As eNPCType ' Tipo del npc senalado
+    
+    TargetQuest As Integer 'Quest que esta mirando
+    TargetreQuest As Boolean
+    
     OwnedNpc As Integer ' Npc que le pertenece (no puede ser atacado)
     NpcInv As Integer
     

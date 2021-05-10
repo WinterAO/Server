@@ -112,8 +112,10 @@ Public Sub MuereNpc(ByVal NPCIndex As Integer, ByVal UserIndex As Integer)
         RetardoSpawn(MiNPC.Numero).X = MiNPC.Orig.X
         RetardoSpawn(MiNPC.Numero).Y = MiNPC.Orig.Y
         RetardoSpawn(MiNPC.Numero).NPCNUM = MiNPC.Numero
+
     End If
-  '/Respawn de NPC con retardo
+
+    '/Respawn de NPC con retardo
    
     ' Es pretoriano?
     If MiNPC.NPCtype = eNPCType.Pretoriano Then
@@ -131,7 +133,9 @@ Public Sub MuereNpc(ByVal NPCIndex As Integer, ByVal UserIndex As Integer)
             '¿El NPC explota al matarlo?
             '50% de probabilidad de que explote
             If Npclist(NPCIndex).flags.Explota = 1 And RandomNumber(1, 100) > 50 Then
+
                 Dim dano As Long
+
                 'El daño de la explosión sera el doble del minimo golpe
                 dano = MiNPC.Stats.MinHIT * 2
                 .Stats.MinHp = .Stats.MinHp - dano
@@ -140,6 +144,7 @@ Public Sub MuereNpc(ByVal NPCIndex As Integer, ByVal UserIndex As Integer)
                 Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(27, UserList(UserIndex).Pos.X, UserList(UserIndex).Pos.Y))
                 Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageCreateFX(UserList(UserIndex).Char.CharIndex, 27, 0))
                 Call WriteConsoleMsg(UserIndex, "¡La explosion de la criatura te ha quitado " & dano & " puntos de vida!", FontTypeNames.FONTTYPE_FIGHT)
+
             End If
         
             If MiNPC.flags.Snd3 > 0 Then
@@ -171,12 +176,14 @@ Public Sub MuereNpc(ByVal NPCIndex As Integer, ByVal UserIndex As Integer)
             
             '[KEVIN]
             If MiNPC.flags.ExpCount > 0 Then
+
                 Dim ExpaDar As Long
                 
                 'Si hay una diferencia de 7 niveles por encima, el bicho solo dara el 5% de la experiencia
                 If (Npclist(NPCIndex).Stats.ELV - 7) > UserList(UserIndex).Stats.ELV Then
                     ExpaDar = Porcentaje(MiNPC.flags.ExpCount, 5)
                     Call WriteConsoleMsg(UserIndex, "La criatura es muy fuerte, no consigues obtener demasiada experiencia.", FontTypeNames.FONTTYPE_VENENO)
+
                 End If
             
                 If .PartyIndex > 0 Then
@@ -199,6 +206,7 @@ Public Sub MuereNpc(ByVal NPCIndex As Integer, ByVal UserIndex As Integer)
             '¿Es un worldboss?
             If MiNPC.NPCtype = WorldBoss Then
                 Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(UserList(UserIndex).Name & " ha matado al WorldBoss " & MiNPC.Name, FontTypeNames.FONTTYPE_SERVER))
+
             End If
             
             If .Stats.NPCsMuertos < 32000 Then .Stats.NPCsMuertos = .Stats.NPCsMuertos + 1
@@ -280,6 +288,7 @@ Public Sub MuereNpc(ByVal NPCIndex As Integer, ByVal UserIndex As Integer)
     If MiNPC.MaestroUser = 0 Then
         'Tiramos el inventario
         Call NPC_TIRAR_ITEMS(UserIndex, MiNPC, MiNPC.NPCtype = eNPCType.Pretoriano)
+
         'ReSpawn o no
         If MiNPC.flags.TiempoRetardoMin = 0 Then Call ReSpawnNpc(MiNPC)
 
@@ -292,20 +301,21 @@ Public Sub MuereNpc(ByVal NPCIndex As Integer, ByVal UserIndex As Integer)
 
     End If
                         
-    ' ++ Si el npc lo mata un elemental Userindex 0 y japish
-    Dim i As Long, j As Long
+    '¿El usuario esta en quest y posiblemente la quest requiera matar al NPC que acaba de morir?
+    If UserList(UserIndex).QuestStats.nQuestCurso > 0 Then
+                        
+        Dim i As Long, j As Long
 
-    For i = 1 To MAXQUESTS
+        For i = 1 To UserList(UserIndex).QuestStats.nQuestCurso
 
-        With UserList(UserIndex).QuestStats.Quests(i)
+            With UserList(UserIndex).QuestStats.Quests(UserList(UserIndex).QuestStats.QuestEnCurso(i))
 
-            If UserList(UserIndex).QuestStats.Quests(i).QuestStatus = eStatusQuest.EnCurso Then
-                If QuestList(i).RequiredNPCs Then
+                If QuestList(.QuestIndex).RequiredNPCs Then
 
-                    For j = 1 To QuestList(i).RequiredNPCs
+                    For j = 1 To QuestList(.QuestIndex).RequiredNPCs
 
-                        If QuestList(i).RequiredNPC(j).NPCIndex = MiNPC.Numero Then
-                            If QuestList(i).RequiredNPC(j).Amount > .NPCsKilled(j) Then
+                        If QuestList(.QuestIndex).RequiredNPC(j).NPCIndex = MiNPC.Numero Then
+                            If QuestList(.QuestIndex).RequiredNPC(j).Amount > .NPCsKilled(j) Then
                                 .NPCsKilled(j) = .NPCsKilled(j) + 1
 
                             End If
@@ -316,16 +326,16 @@ Public Sub MuereNpc(ByVal NPCIndex As Integer, ByVal UserIndex As Integer)
 
                 End If
 
-            End If
+            End With
 
-        End With
-
-    Next i
+        Next i
+        
+    End If
 
     Exit Sub
 
 errHandler:
-    Call LogError("Error en MuereNpc - Error: " & Err.Number & " - Desc: " & Err.description)
+        Call LogError("Error en MuereNpc - Error: " & Err.Number & " - Desc: " & Err.description)
 
 End Sub
 
@@ -793,7 +803,7 @@ Public Sub MakeNPCChar(ByVal toMap As Boolean, _
         If .NPCtype = WorldBoss Then color = 8
         
         If .NumQuest > 0 Then
-            Estadoquest = modQuests.Estadoquest(sndIndex, .QuestNumber(1))
+            'Estadoquest = modQuests.Estadoquest(sndIndex, .QuestNumber(1))
             
         Else
             Estadoquest = 255 'El NPC No tiene quest

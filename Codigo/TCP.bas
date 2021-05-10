@@ -1031,6 +1031,7 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
         'Reseteamos los FLAGS
         .flags.Escondido = 0
         .flags.TargetNPC = 0
+        .flags.TargetQuest = 0
         .flags.TargetNpcTipo = eNPCType.Comun
         .flags.TargetObj = 0
         .flags.TargetUser = 0

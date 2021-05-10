@@ -1636,6 +1636,7 @@ Sub LookatTile(ByVal UserIndex As Integer, _
                     .TargetNPC = TempCharIndex
                     .TargetUser = 0
                     .TargetObj = 0
+                    .TargetQuest = 0
 
                 End If
             
@@ -1655,6 +1656,7 @@ Sub LookatTile(ByVal UserIndex As Integer, _
                     .TargetObjMap = 0
                     .TargetObjX = 0
                     .TargetObjY = 0
+                    .TargetQuest = 0
 
                 End If
 
@@ -1672,6 +1674,7 @@ Sub LookatTile(ByVal UserIndex As Integer, _
                     .TargetObjMap = 0
                     .TargetObjX = 0
                     .TargetObjY = 0
+                    .TargetQuest = 0
 
                 End With
 

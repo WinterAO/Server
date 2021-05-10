@@ -163,6 +163,13 @@ Sub Accion(ByVal UserIndex As Integer, _
                     
                 ElseIf Npclist(tempIndex).NPCtype = eNPCType.Quest Then
                 
+                    'Esta el user muerto? Si es asi no puede comerciar
+                    If .flags.Muerto = 1 Then
+                        Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
+                        Exit Sub
+
+                    End If
+                
                     Call modQuests.accionUseraNPCQuest(UserIndex, tempIndex)
                     
                 ElseIf Npclist(tempIndex).NPCtype = eNPCType.Subastador Then
@@ -180,6 +187,12 @@ Sub Accion(ByVal UserIndex As Integer, _
                     If Distancia(Npclist(tempIndex).Pos, .Pos) > 3 Then
                         Call WriteConsoleMsg(UserIndex, "Estas demasiado lejos.", FontTypeNames.FONTTYPE_INFO)
                         Exit Sub
+                    End If
+                    
+                    If Distancia(Npclist(tempIndex).Pos, .Pos) > 3 Then
+                        Call WriteConsoleMsg(UserIndex, "Estas demasiado lejos.", FontTypeNames.FONTTYPE_INFO)
+                        Exit Sub
+
                     End If
                     
                     Call AccionInstructor(UserIndex, tempIndex)

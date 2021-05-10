@@ -1,6 +1,8 @@
 Attribute VB_Name = "modDatabase"
 Option Explicit
 
+Private QueryBuilder As cStringBuilder
+
 Sub SaveUserToDatabase(ByVal UserIndex As Integer, _
                        Optional ByVal SaveTimeOnline As Boolean = True)
     '*************************************************
@@ -25,7 +27,7 @@ Sub SaveUserToDatabase(ByVal UserIndex As Integer, _
     Exit Sub
 
 ErrorHandler:
-    Call LogDatabaseError("Unable to save User to Mysql Database: " & UserList(UserIndex).name & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Unable to save User to Mysql Database: " & UserList(UserIndex).Name & ". " & Err.Number & " - " & Err.description)
 
 End Sub
 
@@ -63,7 +65,7 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
 
     With UserList(UserIndex)
 
-        Call User_Database.MakeQuery(query, True, .name, .AccountInfo.ID, .Stats.ELV, .Stats.Exp, .Stats.ELU, .Genero, .Raza, .clase, .Hogar, .Desc, .Stats.Gld, .Stats.SkillPts, .Counters.AsignedSkills, _
+        Call User_Database.MakeQuery(query, True, .Name, .AccountInfo.ID, .Stats.ELV, .Stats.Exp, .Stats.ELU, .Genero, .Raza, .clase, .Hogar, .Desc, .Stats.Gld, .Stats.SkillPts, .Counters.AsignedSkills, _
                                     .Stats.ELO, .Pos.Map, .Pos.X, .Pos.Y, .Char.body, .Char.Head, .Char.WeaponAnim, .Char.CascoAnim, .Char.ShieldAnim, .Invent.NroItems, .Invent.ArmourEqpSlot, _
                                     .Invent.WeaponEqpSlot, .Stats.MinHp, .Stats.MaxHp, .Stats.MinMAN, .Stats.MaxMAN, .Stats.MinSta, .Stats.MaxSta, .Stats.MinHam, .Stats.MaxHam, _
                                     .Stats.MinAGU, .Stats.MaxAGU, .Stats.MinHIT, .Stats.MaxHIT, .Reputacion.NobleRep, .Reputacion.PlebeRep, .Reputacion.Promedio, _
@@ -156,7 +158,7 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
     Exit Sub
 
 ErrorHandler:
-    Call LogDatabaseError("Unable to INSERT User to Mysql Database: " & UserList(UserIndex).name & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Unable to INSERT User to Mysql Database: " & UserList(UserIndex).Name & ". " & Err.Number & " - " & Err.description)
 
 End Sub
 
@@ -197,7 +199,7 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
         query = query & "modocombate = (?), seguro = (?) WHERE id = (?)"
 
     With UserList(UserIndex)
-            Call User_Database.MakeQuery(query, True, .name, .Stats.ELV, .Stats.Exp, .Stats.ELU, .Genero, .Raza, .clase, .Hogar, .Desc, .Stats.Gld, .Stats.Banco, .Stats.SkillPts, .Counters.AsignedSkills, .Stats.ELO, .NroMascotas, _
+            Call User_Database.MakeQuery(query, True, .Name, .Stats.ELV, .Stats.Exp, .Stats.ELU, .Genero, .Raza, .clase, .Hogar, .Desc, .Stats.Gld, .Stats.Banco, .Stats.SkillPts, .Counters.AsignedSkills, .Stats.ELO, .NroMascotas, _
                                         .Pos.Map, .Pos.X, .Pos.Y, .flags.lastMap, .Char.body, .Char.Head, .Char.WeaponAnim, .Char.CascoAnim, .Char.ShieldAnim, .Char.AuraAnim, .Char.AuraColor, .Char.Heading, .Invent.NroItems, _
                                         .Invent.ArmourEqpSlot, .Invent.WeaponEqpSlot, .Invent.CascoEqpSlot, .Invent.EscudoEqpSlot, .Invent.MunicionEqpSlot, .Invent.BarcoSlot, .Invent.AnilloEqpSlot, .Invent.MochilaEqpSlot, _
                                         .Stats.MinHp, .Stats.MaxHp, .Stats.MinMAN, .Stats.MaxMAN, .Stats.MinSta, .Stats.MaxSta, .Stats.MinHam, .Stats.MaxHam, .Stats.MinAGU, .Stats.MaxAGU, .Stats.MinHIT, .Stats.MaxHIT, _
@@ -368,7 +370,7 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
             query = query & "("
             query = query & .ID & ", "
             query = query & LoopC & ", "
-            query = query & "'" & .Amigos(LoopC).nombre & "', "
+            query = query & "'" & .Amigos(LoopC).Nombre & "', "
             query = query & .Amigos(LoopC).Ignorado & ")"
             
             If LoopC < MAXAMIGOS Then query = query & ", "
@@ -387,69 +389,92 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
     Exit Sub
 
 ErrorHandler:
-    Call LogDatabaseError("Unable to UPDATE personaje to Mysql Database: " & UserList(UserIndex).name & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Unable to UPDATE personaje to Mysql Database: " & UserList(UserIndex).Name & ". " & Err.Number & " - " & Err.description)
 
 End Sub
 
 Public Sub UpdateUserQuest(ByVal UserIndex As Integer)
-'************************************************************
-'Autor: Lorwik
-'Fecha: 28/06/2020
-'Descripción: Guarda las quest del usuario en la base de datos
-'************************************************************
+    '************************************************************
+    'Autor: Lorwik
+    'Fecha: 28/06/2020
+    'Descripción: Guarda las quest del usuario en la base de datos
+    '************************************************************
 
-    Dim query  As String
-    Dim LoopC  As Integer
-    Dim j      As Integer
-    Dim tmpst  As String
+    Dim LoopC As Integer
+
+    Dim j     As Integer
+
+    Dim tmpst As String
+    
+    Set QueryBuilder = New cStringBuilder
     
     #If DBConexionUnica = 0 Then
         Call User_Database.Database_Connect
     #Else
+
         'Si perdimos la conexion reconectamos
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
     
     'Basic user data
     With UserList(UserIndex)
+    
+        '¿El usuario tiene alguna quest que guardar?
+        If .QuestStats.TotalQuest = 0 Then Exit Sub
 
-        query = "INSERT INTO quest (user_id, quest_id, estado, npcs) VALUES "
-
-        For LoopC = 1 To MAXQUESTS
+        QueryBuilder.Append "INSERT INTO quest (user_id, quest_id, npcs, target, fechafin, estado) VALUES "
         
-            'ID del usuario + ID de la quest
-            query = query & "(" & .ID & ", " & LoopC & ", "
+        For LoopC = 1 To .QuestStats.TotalQuest
             
-            'Comienza los NPC
-            tmpst = "0"
-            If .QuestStats.Quests(LoopC).QuestStatus = eStatusQuest.EnCurso Then
-            
-                '¿La quest requiere matar NPC?
-                If QuestList(LoopC).RequiredNPCs > 0 Then
-                    tmpst = vbNullString
-                    For j = 1 To QuestList(LoopC).RequiredNPCs
-                    
-                        tmpst = tmpst & val(.QuestStats.Quests(LoopC).NPCsKilled(j))   'Cuantos NPCs se ha matado de los que requeridos
-                        
-                        If Not j = QuestList(LoopC).RequiredNPCs Then tmpst = tmpst & "."
-                    Next j
-                    
-                    tmpst = tmpst
-
-                End If
+            QueryBuilder.Append "("
+            QueryBuilder.Append .ID & ", "
+            QueryBuilder.Append .QuestStats.Quests(LoopC).QuestIndex & ", '"
                 
-            End If
-            
-            'Estado de la quest y NPC's
-            query = query & CInt(.QuestStats.Quests(LoopC).QuestStatus) & ", " & tmpst & ")"
-            
-            If LoopC < MAXQUESTS Then query = query & ", "
+            'NPC
+            If .QuestStats.Quests(LoopC).QuestIndex > 0 Then
+                tmpst = QuestList(.QuestStats.Quests(LoopC).QuestIndex).RequiredNPCs
+    
+                If tmpst Then
+    
+                    For j = 1 To tmpst
+                        QueryBuilder.Append CStr(.QuestStats.Quests(LoopC).NPCsKilled(j))
 
+                        If j < tmpst Then QueryBuilder.Append "-"
+                    Next j
+    
+                End If
+    
+            End If
+                
+            QueryBuilder.Append "', '"
+          
+            'TARGETs
+            If .QuestStats.Quests(LoopC).QuestIndex > 0 Then
+              
+                tmpst = QuestList(.QuestStats.Quests(LoopC).QuestIndex).RequiredTargetNPCs
+                  
+                For j = 1 To tmpst
+                    QueryBuilder.Append CStr(.QuestStats.Quests(LoopC).NPCsTarget(j))
+
+                    If j < tmpst Then QueryBuilder.Append "-"
+                Next j
+          
+            End If
+          
+            QueryBuilder.Append "', '"
+            QueryBuilder.Append Format(.QuestStats.Quests(LoopC).fechaFin, "yyyy/MM/dd") & "', "
+            QueryBuilder.Append CInt(.QuestStats.Quests(LoopC).QuestStatus)
+            QueryBuilder.Append ")"
+                
+            If LoopC < .QuestStats.TotalQuest Then QueryBuilder.Append ", "
+    
         Next LoopC
         
-        query = query & " ON DUPLICATE KEY UPDATE estado = VALUES(estado), npcs = VALUES(npcs); "
+        QueryBuilder.Append " ON DUPLICATE KEY UPDATE estado = VALUES(estado), npcs = VALUES(npcs), target = VALUES(target); "
 
-        Call User_Database.Database_Connection.Execute(query)
+        Call User_Database.Database_Connection.Execute(QueryBuilder.toString)
+        
+        Set QueryBuilder = Nothing
 
     End With
 
@@ -460,7 +485,8 @@ Public Sub UpdateUserQuest(ByVal UserIndex As Integer)
     Exit Sub
 
 ErrorHandler:
-    Call LogDatabaseError("Unable to UPDATE personaje to Mysql Database: " & UserList(UserIndex).name & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Unable to UPDATE personaje to Mysql Database: " & UserList(UserIndex).Name & ". " & Err.Number & " - " & Err.description)
+
 End Sub
 
 Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
@@ -487,11 +513,11 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
     With UserList(UserIndex)
         query = "SELECT *, DATE_FORMAT(fecha_ingreso, '%Y-%m-%d') as 'fecha_ingreso_format' FROM personaje WHERE UPPER(name) = (?)"
         
-        If Not User_Database.MakeQuery(query, False, UCase$(.name)) Then Exit Sub
+        If Not User_Database.MakeQuery(query, False, UCase$(.Name)) Then Exit Sub
 
         'Start setting data
         .ID = User_Database.Database_RecordSet!ID
-        .name = User_Database.Database_RecordSet!name
+        .Name = User_Database.Database_RecordSet!Name
         .Stats.ELV = User_Database.Database_RecordSet!level
         .Stats.Exp = User_Database.Database_RecordSet!Exp
         .Stats.ELU = User_Database.Database_RecordSet!ELU
@@ -765,7 +791,7 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
             
                 LoopC = User_Database.Database_RecordSet!Slot
                 
-                .Amigos(LoopC).nombre = User_Database.Database_RecordSet!Amigo
+                .Amigos(LoopC).Nombre = User_Database.Database_RecordSet!Amigo
                 .Amigos(LoopC).Ignorado = User_Database.Database_RecordSet!Ignorado
                 
                 User_Database.Database_RecordSet.MoveNext
@@ -784,7 +810,7 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
     Exit Sub
 
 ErrorHandler:
-    Call LogDatabaseError("Unable to LOAD User from Mysql Database: " & UserList(UserIndex).name & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Unable to LOAD User from Mysql Database: " & UserList(UserIndex).Name & ". " & Err.Number & " - " & Err.description)
 
 End Sub
 
@@ -825,35 +851,65 @@ Public Sub LoadQuestStats(ByVal UserIndex As Integer)
             
             While Not User_Database.Database_RecordSet.EOF
             
-                questID = User_Database.Database_RecordSet!quest_id
+                .TotalQuest = .TotalQuest + 1
+                
+                ReDim Preserve .Quests(1 To .TotalQuest) As tUserQuest
+            
+                .Quests(.TotalQuest).QuestIndex = User_Database.Database_RecordSet!quest_id
+                questID = .Quests(.TotalQuest).QuestIndex
 
-                '¿La quest requiere matar NPC?
+                '¿La quest requiere matar NPC's?
                 If QuestList(questID).RequiredNPCs Then
-                    ReDim .Quests(questID).NPCsKilled(1 To QuestList(questID).RequiredNPCs)
+                    ReDim .Quests(.TotalQuest).NPCsKilled(1 To QuestList(questID).RequiredNPCs)
             
                     NPCRequeridos = User_Database.Database_RecordSet("npcs")
-            
-                    Fields = Split(NPCRequeridos, ".")
+                    Fields = Split(NPCRequeridos, "-")
                         
                     For j = 1 To QuestList(questID).RequiredNPCs
-
-                        If UBound(Fields()) > 0 Then
-                            .Quests(questID).NPCsKilled(j) = CInt(Fields(j - 1))
-                        Else
-                            .Quests(questID).NPCsKilled(j) = NPCRequeridos
-
-                        End If
-
+                        .Quests(.TotalQuest).NPCsKilled(j) = val(Fields(j - 1))
                     Next j
-     
-                    .Quests(questID).QuestStatus = CByte(User_Database.Database_RecordSet("estado"))
-                             
-                    'Si la quest actual se termino, lo sumamos al contador de terminados
-                    If .Quests(questID).QuestStatus = eStatusQuest.Terminada Then .NumQuestsDone = .NumQuestsDone + 1
-                        
+ 
                 End If
                 
-                Call ListarQuestsenCurso(UserIndex)
+                '¿La quest requiere hablar con NPC's?
+                If QuestList(questID).RequiredTargetNPCs Then
+                    ReDim .Quests(.TotalQuest).NPCsKilled(1 To QuestList(questID).RequiredTargetNPCs)
+            
+                    NPCRequeridos = User_Database.Database_RecordSet("target")
+                    Fields = Split(NPCRequeridos, "-")
+                        
+                    For j = 1 To QuestList(questID).RequiredTargetNPCs
+                        .Quests(.TotalQuest).NPCsTarget(j) = val(Fields(j - 1))
+                    Next j
+ 
+                End If
+                
+                .Quests(.TotalQuest).fechaFin = User_Database.Database_RecordSet("fechafin")
+                .Quests(.TotalQuest).QuestStatus = CByte(User_Database.Database_RecordSet("estado"))
+                
+                'Clasificacion de quest por estado
+                'Vamos guardando el slot donde se encuentra la quest en su array correspondiente
+                Select Case .Quests(.TotalQuest).QuestStatus
+                
+                    Case eStatusQuest.NoAceptada
+                        .nQuestLeave = .nQuestLeave + 1
+                        
+                        ReDim Preserve .QuestLeave(1 To .nQuestLeave) As Integer
+                        .QuestLeave(.nQuestLeave) = .TotalQuest
+                    
+                    Case eStatusQuest.EnCurso
+                        .nQuestCurso = .nQuestCurso + 1
+                        
+                        ReDim Preserve .QuestEnCurso(1 To .nQuestCurso) As Integer
+                        .QuestEnCurso(.nQuestCurso) = .TotalQuest
+                    
+                    Case eStatusQuest.Terminada
+                        .nQuestDone = .nQuestDone + 1
+                        
+                        ReDim Preserve .QuestDone(1 To .nQuestCurso) As Integer
+                        .QuestDone(.nQuestDone) = .TotalQuest
+                
+                End Select
            
                 User_Database.Database_RecordSet.MoveNext
                 
@@ -863,18 +919,18 @@ Public Sub LoadQuestStats(ByVal UserIndex As Integer)
 
     End With
     
-        Set User_Database.Database_RecordSet = Nothing
+    Set User_Database.Database_RecordSet = Nothing
 
-        #If DBConexionUnica = 0 Then
-            Call User_Database.Database_Close
-        #End If
+    #If DBConexionUnica = 0 Then
+        Call User_Database.Database_Close
+    #End If
     
-        Exit Sub
+    Exit Sub
 
 ErrorHandler:
-        Call LogDatabaseError("Unable to LOAD User from Mysql Database: " & UserList(UserIndex).name & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Unable to LOAD User from Mysql Database: " & UserList(UserIndex).Name & ". " & Err.Number & " - " & Err.description)
 
-    End Sub
+End Sub
 
 Public Function PersonajeExisteDatabase(ByVal UserName As String) As Boolean
     '***************************************************
@@ -1117,7 +1173,7 @@ Public Sub MarcarPjComoQueYaVotoDatabase(ByVal UserIndex As Integer, _
     Exit Sub
 
 ErrorHandler:
-    Call LogDatabaseError("Error in MarcarPjComoQueYaVotoDatabase: " & UserList(UserIndex).name & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Error in MarcarPjComoQueYaVotoDatabase: " & UserList(UserIndex).Name & ". " & Err.Number & " - " & Err.description)
 
 End Sub
 
@@ -2212,7 +2268,7 @@ Public Sub SendUserInvTxtFromDatabase(ByVal sendIndex As Integer, _
                 ObjInd = val(User_Database.Database_RecordSet!item_id)
 
                 If ObjInd > 0 Then
-                    Call WriteConsoleMsg(sendIndex, "Objeto " & User_Database.Database_RecordSet!Number & " " & ObjData(ObjInd).name & " Cantidad:" & User_Database.Database_RecordSet!Amount, FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(sendIndex, "Objeto " & User_Database.Database_RecordSet!Number & " " & ObjData(ObjInd).Name & " Cantidad:" & User_Database.Database_RecordSet!Amount, FontTypeNames.FONTTYPE_INFO)
 
                 End If
 
@@ -2278,7 +2334,7 @@ Public Sub SendUserBovedaTxtFromDatabase(ByVal sendIndex As Integer, _
                 ObjInd = val(User_Database.Database_RecordSet!item_id)
 
                 If ObjInd > 0 Then
-                    Call WriteConsoleMsg(sendIndex, "Objeto " & User_Database.Database_RecordSet!Number & " " & ObjData(ObjInd).name & " Cantidad:" & User_Database.Database_RecordSet!Amount, FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(sendIndex, "Objeto " & User_Database.Database_RecordSet!Number & " " & ObjData(ObjInd).Name & " Cantidad:" & User_Database.Database_RecordSet!Amount, FontTypeNames.FONTTYPE_INFO)
 
                 End If
 

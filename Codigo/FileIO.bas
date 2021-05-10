@@ -2258,6 +2258,7 @@ Public Sub LoadQuests()
             .Nombre = Reader.GetValue("QUEST" & i, "Nombre")
             .Desc = Reader.GetValue("QUEST" & i, "Desc")
             .RequiredLevel = val(Reader.GetValue("QUEST" & i, "RequiredLevel"))
+            .RequiredQuest = val(Reader.GetValue("QUEST" & i, "RequiredQuest"))
             
             'CARGAMOS OBJETOS REQUERIDOS
             .RequiredOBJs = val(Reader.GetValue("QUEST" & i, "RequiredOBJs"))
@@ -2288,6 +2289,24 @@ Public Sub LoadQuests()
                 Next j
 
             End If
+            
+            'CARGAMOS Target's REQUERIDOS
+            .RequiredTargetNPCs = val(Reader.GetValue("QUEST" & i, "RequiredTargetNPCs"))
+
+            If .RequiredTargetNPCs > 0 Then
+                ReDim .RequiredTargetNPC(1 To .RequiredTargetNPCs)
+
+                For j = 1 To .RequiredNPCs
+                    tmpStr = Reader.GetValue("QUEST" & i, "RequiredTargetNPC" & j)
+                    
+                    .RequiredTargetNPC(j).NPCIndex = val(ReadField(1, tmpStr, 45))
+                    .RequiredTargetNPC(j).Amount = val(ReadField(2, tmpStr, 45))
+                Next j
+
+            End If
+            
+            .Repetible = CBool(val(Reader.GetValue("QUEST" & i, "Repetible")))
+            .Tiempo = val(Reader.GetValue("QUEST" & i, "Tiempo"))
             
             .RewardGLD = val(Reader.GetValue("QUEST" & i, "RewardGLD"))
             .RewardEXP = val(Reader.GetValue("QUEST" & i, "RewardEXP"))
