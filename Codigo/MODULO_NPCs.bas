@@ -786,7 +786,7 @@ Public Sub MakeNPCChar(ByVal toMap As Boolean, _
     
     Dim CharIndex As Integer
     Dim color As Byte
-    Dim Estadoquest As Integer
+    Dim estadoQuest As Integer
     Dim NombreNPC As String
     
     With Npclist(NPCIndex)
@@ -803,10 +803,10 @@ Public Sub MakeNPCChar(ByVal toMap As Boolean, _
         If .NPCtype = WorldBoss Then color = 8
         
         If .NumQuest > 0 Then
-            'Estadoquest = modQuests.Estadoquest(sndIndex, .QuestNumber(1))
+            estadoQuest = modQuests.estadoQuest(sndIndex, .QuestNumber(1))
             
         Else
-            Estadoquest = 255 'El NPC No tiene quest
+            estadoQuest = 255 'El NPC No tiene quest
             
         End If
         
@@ -819,7 +819,7 @@ Public Sub MakeNPCChar(ByVal toMap As Boolean, _
         
         If Not toMap Then
             Call WriteCharacterCreate(sndIndex, .Char.body, .Char.Head, .Char.Heading, .Char.CharIndex, _
-                X, Y, .Char.WeaponAnim, .Char.ShieldAnim, 0, 0, .Char.CascoAnim, .Char.AnimAtaque, NombreNPC, color, 0, NingunAura, NingunAura, .NoShadow, Estadoquest)
+                X, Y, .Char.WeaponAnim, .Char.ShieldAnim, 0, 0, .Char.CascoAnim, .Char.AnimAtaque, NombreNPC, color, 0, NingunAura, NingunAura, .NoShadow, estadoQuest)
     '
         Else
             Call AgregarNpc(NPCIndex)

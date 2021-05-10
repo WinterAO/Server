@@ -161,6 +161,7 @@ Private Enum ServerPacketID
     SearchList
     QuestDetails
     QuestListSend
+    ActualizarNPCQuest
     CreateDamage                ' CDMG
     UserInEvent
     DeletedChar
@@ -18361,7 +18362,7 @@ Public Sub WriteCharacterCreate(ByVal UserIndex As Integer, _
                                 ByVal GrhAura As Long, _
                                 ByVal AuraColor As Long, _
                                 Optional ByVal NoShadow As Byte = False, _
-                                Optional ByVal Estadoquest As Byte = 255)
+                                Optional ByVal estadoQuest As Byte = 255)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -18370,7 +18371,7 @@ Public Sub WriteCharacterCreate(ByVal UserIndex As Integer, _
     '***************************************************
     On Error GoTo errHandler
 
-    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterCreate(body, Head, Heading, CharIndex, X, Y, weapon, shield, FX, FXLoops, helmet, AnimAtaque, Name, NickColor, Privileges, GrhAura, AuraColor, NoShadow, Estadoquest))
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterCreate(body, Head, Heading, CharIndex, X, Y, weapon, shield, FX, FXLoops, helmet, AnimAtaque, Name, NickColor, Privileges, GrhAura, AuraColor, NoShadow, estadoQuest))
     Exit Sub
 
 errHandler:
@@ -21538,7 +21539,7 @@ Public Function PrepareMessageCharacterCreate(ByVal body As Integer, _
                                               ByVal GrhAura As Long, _
                                               ByVal AuraColor As Long, _
                                               ByVal NoShadow As Byte, _
-                                              ByVal Estadoquest As Byte) As String
+                                              ByVal estadoQuest As Byte) As String
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -21566,7 +21567,7 @@ Public Function PrepareMessageCharacterCreate(ByVal body As Integer, _
         Call .WriteLong(GrhAura)
         Call .WriteLong(AuraColor)
         Call .WriteByte(NoShadow)
-        Call .WriteByte(Estadoquest)
+        Call .WriteByte(estadoQuest)
         
         PrepareMessageCharacterCreate = .ReadASCIIStringFixed(.Length)
 
@@ -22701,12 +22702,12 @@ End Sub
 
 Public Sub WriteQuestDetails(ByVal UserIndex As Integer, _
                              ByVal QuestIndex As Integer, _
-                             Optional QuestSlot As Byte = 0)
+                             Optional Questslot As Byte = 0)
 
-    '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+    '*******************************************************
     'Env�a el paquete QuestDetails y la informaci�n correspondiente.
     'Last modified: 30/01/2010 by Amraphen
-    '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+    '*******************************************************
     Dim i As Integer
  
     On Error GoTo errHandler
@@ -22716,7 +22717,7 @@ Public Sub WriteQuestDetails(ByVal UserIndex As Integer, _
         Call .WriteByte(ServerPacketID.QuestDetails)
         
         'Se usa la variable QuestSlot para saber si enviamos la info de una quest ya empezada o la info de una quest que no se acept� todav�a (1 para el primer caso y 0 para el segundo)
-        Call .WriteByte(IIf(QuestSlot, 1, 0))
+        Call .WriteByte(IIf(Questslot, 1, 0))
 
         'Enviamos nombre, descripci�n y nivel requerido de la quest
         Call .WriteASCIIString(QuestList(QuestIndex).Nombre)
@@ -22734,8 +22735,8 @@ Public Sub WriteQuestDetails(ByVal UserIndex As Integer, _
                 Call .WriteASCIIString(GetVar(DatPath & "NPCs.dat", "NPC" & QuestList(QuestIndex).RequiredNPC(i).NPCIndex, "Name"))
 
                 'Si es una quest ya empezada, entonces mandamos los NPCs que mat�.
-                If QuestSlot Then
-                    Call .WriteInteger(UserList(UserIndex).QuestStats.Quests(UserList(UserIndex).QuestStats.QuestEnCurso(QuestSlot)).NPCsKilled(i))
+                If Questslot Then
+                    Call .WriteInteger(UserList(UserIndex).QuestStats.Quests(UserList(UserIndex).QuestStats.QuestEnCurso(Questslot)).NPCsKilled(i))
 
                 End If
 
@@ -22789,10 +22790,10 @@ End Sub
  
 Public Sub WriteQuestListSend(ByVal UserIndex As Integer)
 
-    '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+    '*******************************************************
     'Env�a el paquete QuestList y la informaci�n correspondiente.
     'Last modified: 30/01/2010 by Amraphen
-    '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+    '*******************************************************
     Dim i       As Integer
 
     Dim tmpStr  As String
@@ -22835,6 +22836,33 @@ errHandler:
 
     End If
 
+End Sub
+
+Public Sub WriteActualizarNPCQuest(ByVal UserIndex As Integer, ByVal NPCIndex As Integer, ByVal Estado As Byte)
+    '*******************************************************
+    'Autor: lorwik
+    'Fecha: 10/05/2021
+    'Descripcion: Manda actualizar el simbolo de quest de los NPC
+    '*******************************************************
+    On Error GoTo errHandler
+ 
+    With UserList(UserIndex)
+        .outgoingData.WriteByte ServerPacketID.ActualizarNPCQuest
+        
+        Call .outgoingData.WriteInteger(Npclist(NPCIndex).Char.CharIndex)
+        Call .outgoingData.WriteByte(Estado)
+        
+    End With
+
+    Exit Sub
+ 
+errHandler:
+
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
+        Resume
+
+    End If
 End Sub
 
 Public Function PrepareMessageCreateDamage(ByVal X As Integer, ByVal Y As Integer, ByVal DamageValue As Long, ByVal DamageType As Byte)
@@ -24165,15 +24193,15 @@ Public Sub HandleQuestDetailsRequest(ByVal UserIndex As Integer)
     'Descripcion: Maneja el paquete QuestInfoRequest.
     '****************************************************
     
-    Dim QuestSlot As Byte
+    Dim Questslot As Byte
  
     With UserList(UserIndex)
         'Leemos el paquete
         Call .incomingData.ReadByte
         
-        QuestSlot = .incomingData.ReadByte
+        Questslot = .incomingData.ReadByte
 
-        Call WriteQuestDetails(UserIndex, .QuestStats.Quests(.QuestStats.QuestEnCurso(QuestSlot)).QuestIndex, QuestSlot)
+        Call WriteQuestDetails(UserIndex, .QuestStats.Quests(.QuestStats.QuestEnCurso(Questslot)).QuestIndex, Questslot)
     End With
 
 End Sub
@@ -24185,16 +24213,16 @@ Public Sub HandleQuestAbandon(ByVal UserIndex As Integer)
     'Descripcion: El usuario quiere abandonar una quest
     '****************************************************
     
-    Dim QuestSlot As Integer
+    Dim Questslot As Integer
     
     With UserList(UserIndex)
     
         'Leemos el paquete.
         Call .incomingData.ReadByte
         
-        QuestSlot = .incomingData.ReadByte
+        Questslot = .incomingData.ReadByte
         
-        Call modQuests.userAbandonaQuest(UserIndex, QuestSlot)
+        Call modQuests.userAbandonaQuest(UserIndex, Questslot)
         
     End With
     

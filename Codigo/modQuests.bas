@@ -183,7 +183,7 @@ Public Sub userAceptaquest(ByVal UserIndex As Integer)
         Call WriteConsoleMsg(UserIndex, "Has aceptado la mision " & Chr(34) & QuestList(QuestIndex).Nombre & Chr(34) & ".", FontTypeNames.FONTTYPE_INFO)
         
         'Actualizamos el simbolito del NPC
-        'Call ActualizarNPCQuest(UserIndex, NPCIndex)
+        Call WriteActualizarNPCQuest(UserIndex, NPCIndex, eStatusQuest.EnCurso)
 
     End With
     
@@ -375,7 +375,8 @@ Public Sub userFinalizaQuest(ByVal UserIndex As Integer, ByVal Questslot As Byte
         Call UpdateUserInv(True, UserIndex, 0)
         Call WriteUpdateGold(UserIndex)
   
-        'Call ActualizarNPCQuest(UserIndex, NPCIndex)
+        'Actualizamos el simbolito del NPC
+        Call WriteActualizarNPCQuest(UserIndex, NPCIndex, eStatusQuest.EnCurso)
     
     End With
     
@@ -737,4 +738,73 @@ Private Function userYaHizoQuest(ByVal UserIndex As Integer, ByVal QuestIndex As
 ErrorHandler:
     userYaHizoQuest = 0
     Call LogError("CuserYaHizoQuest: " & Err.Number & " - " & Err.description)
+End Function
+
+Public Function estadoQuest(ByVal UserIndex As Integer, ByVal QuestIndex As Integer) As Byte
+    '****************************************************
+    'Autor: Lorwik
+    'Fecha: 10/05/2021
+    'Devuelve el estado en el que se encuentra la quest
+    '****************************************************
+    On Error GoTo ErrorHandler
+    
+    Dim i As Byte
+    
+    With UserList(UserIndex).QuestStats
+    
+        'Si no tiene ninguna quest, directamente no esta aceptada
+        If .TotalQuest = 0 Then
+            estadoQuest = eStatusQuest.NoAceptada
+            Exit Function
+        End If
+        
+        'Buscamos en las listas de probabilidad mas chicas a mas grande
+        If .nQuestCurso > 0 Then
+        
+            For i = 1 To .nQuestCurso
+                
+                If .Quests(.QuestEnCurso(i)).QuestIndex = QuestIndex Then
+                    estadoQuest = eStatusQuest.EnCurso
+                    Exit Function
+                End If
+                
+            Next i
+        
+        End If
+        
+        If .nQuestLeave > 0 Then
+            
+            For i = 1 To .nQuestLeave
+            
+                If .Quests(.QuestLeave(i)).QuestIndex = QuestIndex Then
+                    estadoQuest = eStatusQuest.NoAceptada
+                    Exit Function
+                End If
+            
+            Next i
+            
+        End If
+        
+        If .nQuestDone > 0 Then
+            
+            For i = 1 To .nQuestDone
+            
+                If .Quests(.QuestDone(i)).QuestIndex = QuestIndex Then
+                    estadoQuest = eStatusQuest.Terminada
+                    Exit Function
+                End If
+            
+            Next i
+            
+        End If
+        
+    End With
+        
+    'No deberiamos llegar aca, pero por si acaso:
+    estadoQuest = eStatusQuest.Terminada
+    Exit Function
+    
+ErrorHandler:
+    estadoQuest = eStatusQuest.Terminada
+    Call LogError("estadoQuest: " & Err.Number & " - " & Err.description)
 End Function
