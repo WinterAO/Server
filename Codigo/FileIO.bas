@@ -2297,10 +2297,10 @@ Public Sub LoadQuests()
                 ReDim .RequiredTargetNPC(1 To .RequiredTargetNPCs)
 
                 For j = 1 To .RequiredNPCs
-                    tmpStr = Reader.GetValue("QUEST" & i, "RequiredTargetNPC" & j)
+                    tmpStr = Reader.GetValue("QUEST" & i, "RequiredTargetNPC")
                     
-                    .RequiredTargetNPC(j).NPCIndex = val(ReadField(1, tmpStr, 45))
-                    .RequiredTargetNPC(j).Amount = val(ReadField(2, tmpStr, 45))
+                    .RequiredTargetNPC(j).NPCIndex = val(ReadField(j, tmpStr, 45))
+                    .RequiredTargetNPC(j).Amount = 1
                 Next j
 
             End If

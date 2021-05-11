@@ -1765,6 +1765,8 @@ Private Sub InicializarSonidos()
     SND_PESCAR = 71
     SND_MINERO = 261
     SND_WARP = 3
+    SND_QUEST = 109
+    SND_QUESTTARGET = 444
     SND_PUERTA = 5
     SND_NIVEL = 128
     SND_USERMUERTE = 11

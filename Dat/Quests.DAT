@@ -5,11 +5,13 @@ NumQuests=146
 Nombre=Gallos Envenenados
 Desc=Las viboras se han multiplicado envenenando inclusive a las gallinas, acaba con 10 viboras y 10 gallinas envenenadas y te daré una recompensa. Ademas, si me traes 5 venenos de vibora podre elaborar una poción.
 RequiredLevel=1
-RequiredQuest=5
  
 RequiredNPCs=2
 RequiredNPC1=518-10 'Vibora
 RequiredNPC2=517-10 'Pollo Envenenado
+
+RequiredTargetNPCs=2
+RequiredTargetNPC=1-2
 
 RequiredOBJs=1
 RequiredOBJ1=1249-5

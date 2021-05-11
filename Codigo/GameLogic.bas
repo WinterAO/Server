@@ -1188,15 +1188,15 @@ Sub LookatTile(ByVal UserIndex As Integer, _
     On Error GoTo errHandler
 
     'Responde al click del usuario sobre el mapa
-    Dim FoundChar      As Byte
+    Dim FoundChar          As Byte
 
-    Dim FoundSomething As Byte
+    Dim FoundSomething     As Byte
 
-    Dim TempCharIndex  As Integer
+    Dim TempCharIndex      As Integer
 
-    Dim Stat           As String
+    Dim Stat               As String
 
-    Dim ft             As FontTypeNames
+    Dim ft                 As FontTypeNames
     
     Dim SupervivenciaSkill As Byte
 
@@ -1257,7 +1257,7 @@ Sub LookatTile(ByVal UserIndex As Integer, _
                     End If
 
                 End If
-            
+      
                 If FoundSomething = 1 Then
                     .TargetObj = MapData(Map, .TargetObjX, .TargetObjY).ObjInfo.ObjIndex
 
@@ -1267,7 +1267,7 @@ Sub LookatTile(ByVal UserIndex As Integer, _
                         Call WriteConsoleMsg(UserIndex, ObjData(.TargetObj).Name, FontTypeNames.FONTTYPE_INFO)
 
                     End If
-            
+      
                 End If
 
                 'Es un personaje?
@@ -1316,6 +1316,7 @@ Sub LookatTile(ByVal UserIndex As Integer, _
                                 Stat = Stat & " Nivel: ??"
                             Else
                                 Stat = Stat & " Nivel: " & UserList(TempCharIndex).Stats.ELV
+
                             End If
 
                             'Aqui ponemos o no la descripcion si tiene
@@ -1323,14 +1324,16 @@ Sub LookatTile(ByVal UserIndex As Integer, _
                                 Stat = UserList(TempCharIndex).Name & " - " & UserList(TempCharIndex).Desc & " (" & ListaClases(UserList(TempCharIndex).clase) & " " & ListaRazas(UserList(TempCharIndex).Raza) & Stat & " |"
                             Else
                                 Stat = UserList(TempCharIndex).Name & " (" & ListaClases(UserList(TempCharIndex).clase) & " " & ListaRazas(UserList(TempCharIndex).Raza) & Stat & " |"
+
                             End If
 
                             'Aqui le damos informacion sobre el estado de salud del pj.
                             SupervivenciaSkill = UserList(UserIndex).Stats.UserSkills(eSkill.Supervivencia)
-                            
+                      
                             If SupervivenciaSkill <= 10 And Not TempCharIndex = UserIndex Then
                                 Stat = Stat + " (Dudoso) "
                             Else
+
                                 If UserList(TempCharIndex).Stats.MinHp < (UserList(TempCharIndex).Stats.MaxHp * 0.05) Then
                                     Stat = Stat & " Muerto)"
                                 ElseIf UserList(TempCharIndex).Stats.MinHp < (UserList(TempCharIndex).Stats.MaxHp * 0.1) Then
@@ -1345,23 +1348,23 @@ Sub LookatTile(ByVal UserIndex As Integer, _
                                     Stat = Stat & " Levemente Herido)"
                                 Else
                                     Stat = Stat & " Intacto)"
+
                                 End If
+
                             End If
-                            
+                      
                             If UserList(TempCharIndex).flags.Paralizado = 1 Then
                                 Stat = Stat & " [Paralizado]"
-                                
+                          
                             ElseIf UserList(TempCharIndex).flags.Inmovilizado = 1 Then
                                 Stat = Stat & " [Inmovilizado]"
-                                
+                          
                             End If
-                            
-                            If UserList(TempCharIndex).flags.Incinerado = 1 Then _
-                                Stat = Stat & " [Incinerado]"
-                                
-                            If UserList(TempCharIndex).flags.Envenenado = 1 Then _
-                                Stat = Stat & " [Envenenado]"
-                                        
+                      
+                            If UserList(TempCharIndex).flags.Incinerado = 1 Then Stat = Stat & " [Incinerado]"
+                          
+                            If UserList(TempCharIndex).flags.Envenenado = 1 Then Stat = Stat & " [Envenenado]"
+                                  
                             If .flags.Privilegios And PlayerType.RoyalCouncil Then
                                 Stat = Stat & " [CONSEJO DE BELLEUVE]"
                                 ft = FontTypeNames.FONTTYPE_CONSEJOVesA
@@ -1372,7 +1375,7 @@ Sub LookatTile(ByVal UserIndex As Integer, _
 
                                 If Not .flags.Privilegios And PlayerType.User Then
                                     Stat = Stat & " <GAME MASTER>"
-                                
+                          
                                     ' Elijo el color segun el rango del GM:
                                     ' Dios
                                     If .flags.Privilegios = PlayerType.Dios Then
@@ -1388,7 +1391,7 @@ Sub LookatTile(ByVal UserIndex As Integer, _
                                         ft = FontTypeNames.FONTTYPE_EJECUCION
 
                                     End If
-                                
+                          
                                 ElseIf criminal(TempCharIndex) Then
                                     Stat = Stat & " <Renegado>"
                                     ft = FontTypeNames.FONTTYPE_CRIMINAL
@@ -1397,35 +1400,35 @@ Sub LookatTile(ByVal UserIndex As Integer, _
                                     ft = FontTypeNames.FONTTYPE_CITIZEN
 
                                 End If
-                                
-                            If EsNewbie(TempCharIndex) Then
-                                Stat = Stat & " <Newbie>"
+                          
+                                If EsNewbie(TempCharIndex) Then
+                                    Stat = Stat & " <Newbie>"
 
-                            End If
-                        
-                            If .Faccion.ArmadaReal = 1 Then
-                                Stat = Stat & " <Ejercito Real> " & "<" & TituloReal(TempCharIndex) & ">"
-                            ElseIf .Faccion.FuerzasCaos = 1 Then
-                                Stat = Stat & " <Legion Oscura> " & "<" & TituloCaos(TempCharIndex) & ">"
+                                End If
+                  
+                                If .Faccion.ArmadaReal = 1 Then
+                                    Stat = Stat & " <Ejercito Real> " & "<" & TituloReal(TempCharIndex) & ">"
+                                ElseIf .Faccion.FuerzasCaos = 1 Then
+                                    Stat = Stat & " <Legion Oscura> " & "<" & TituloCaos(TempCharIndex) & ">"
 
-                            End If
-                        
-                            If .GuildIndex > 0 Then
-                                Stat = Stat & " Clan: '" & modGuilds.GuildName(.GuildIndex) & "'"
+                                End If
+                  
+                                If .GuildIndex > 0 Then
+                                    Stat = Stat & " Clan: '" & modGuilds.GuildName(.GuildIndex) & "'"
 
-                            End If
+                                End If
 
                             End If
 
                         End If
 
                     End With
-                
+          
                     If LenB(Stat) > 0 Then
                         Call WriteConsoleMsg(UserIndex, Stat, ft)
 
                     End If
-                
+          
                     FoundSomething = 1
                     .flags.TargetUser = TempCharIndex
                     .flags.TargetNPC = 0
@@ -1434,6 +1437,7 @@ Sub LookatTile(ByVal UserIndex As Integer, _
                 Else  'Si tiene descRM la muestro siempre.
                     Stat = .DescRM
                     ft = FontTypeNames.FONTTYPE_INFOBOLD
+
                 End If
 
             End If
@@ -1442,33 +1446,40 @@ Sub LookatTile(ByVal UserIndex As Integer, _
 
                 If FoundChar = 2 Then 'Encontro un NPC?
 
-                    Dim estatus            As String
-                    Dim MinHp              As Long
-                    Dim MaxHp              As Long
-                    Dim sDesc              As String
-                    Dim Paralisis          As String
-                    Dim Incinerado         As String
-                    Dim Envenenado         As String
-                
+                    Dim estatus    As String
+
+                    Dim MinHp      As Long
+
+                    Dim MaxHp      As Long
+
+                    Dim sDesc      As String
+
+                    Dim Paralisis  As String
+
+                    Dim Incinerado As String
+
+                    Dim Envenenado As String
+          
                     If Npclist(TempCharIndex).Stats.ELV = 0 Or (Npclist(TempCharIndex).Stats.ELV - 7) > UserList(UserIndex).Stats.ELV Then
                         estatus = "- Nivel: ??"
                     Else
                         estatus = "- Nivel: " & Npclist(TempCharIndex).Stats.ELV
+
                     End If
-                
+          
                     MinHp = Npclist(TempCharIndex).Stats.MinHp
                     MaxHp = Npclist(TempCharIndex).Stats.MaxHp
                     SupervivenciaSkill = UserList(UserIndex).Stats.UserSkills(eSkill.Supervivencia)
-                
+          
                     If .Privilegios And (PlayerType.SemiDios Or PlayerType.Dios Or PlayerType.Admin) Then
                         estatus = estatus + " (" & MinHp & "/" & MaxHp & ") "
                     Else
 
                         If .Muerto = 0 Then
-                    
+              
                             If SupervivenciaSkill <= 10 Then
                                 estatus = estatus + " (Dudoso)"
-                            
+                      
                             ElseIf SupervivenciaSkill <= 20 Then
 
                                 If MinHp < (MaxHp / 2) Then
@@ -1477,7 +1488,7 @@ Sub LookatTile(ByVal UserIndex As Integer, _
                                     estatus = estatus + " (Sano)"
 
                                 End If
-                            
+                      
                             ElseIf SupervivenciaSkill <= 30 Then
 
                                 If MinHp < (MaxHp * 0.5) Then
@@ -1488,7 +1499,7 @@ Sub LookatTile(ByVal UserIndex As Integer, _
                                     estatus = estatus + " (Sano)"
 
                                 End If
-                            
+                      
                             ElseIf SupervivenciaSkill <= 40 Then
 
                                 If MinHp < (MaxHp * 0.25) Then
@@ -1501,7 +1512,7 @@ Sub LookatTile(ByVal UserIndex As Integer, _
                                     estatus = estatus + " (Sano)"
 
                                 End If
-                            
+                      
                             ElseIf SupervivenciaSkill < 60 Then
 
                                 If MinHp < (MaxHp * 0.05) Then
@@ -1529,24 +1540,22 @@ Sub LookatTile(ByVal UserIndex As Integer, _
                         End If
 
                     End If
-                    
+              
                     If Npclist(TempCharIndex).flags.Paralizado = 1 Then
                         Paralisis = " [Paralizado]"
-                        
+                  
                     ElseIf Npclist(TempCharIndex).flags.Inmovilizado = 1 Then
                         Paralisis = " [Inmovilizado]"
-                        
+                  
                     End If
-                    
-                    If Npclist(TempCharIndex).flags.Incinerado = 1 Then _
-                        Incinerado = " [Incinerado]"
-                        
-                    If Npclist(TempCharIndex).flags.Envenenado = 1 Then _
-                        Envenenado = " [Envenenado]"
-                    
+              
+                    If Npclist(TempCharIndex).flags.Incinerado = 1 Then Incinerado = " [Incinerado]"
+                  
+                    If Npclist(TempCharIndex).flags.Envenenado = 1 Then Envenenado = " [Envenenado]"
+              
                     If Len(Npclist(TempCharIndex).Desc) > 1 Then
                         Stat = Npclist(TempCharIndex).Desc
-                    
+              
                         'Es el rey o el demonio?
                         If Npclist(TempCharIndex).NPCtype = eNPCType.Noble Then
                             If Npclist(TempCharIndex).flags.Faccion = 0 Then 'Es el Rey.
@@ -1599,54 +1608,100 @@ Sub LookatTile(ByVal UserIndex As Integer, _
                             End If
 
                         End If
-                        
-                       'Centinela
+                  
+                        'Centinela
                         If Npclist(TempCharIndex).Numero = NUM_CENTI Then
                             If UserList(UserIndex).CentinelaUsuario.Revisando Then
                                 Stat = "Sigo esperando, ingresa el codigo que te he solicitado."
                             Else
                                 Stat = "No estoy hablando contigo."
+
                             End If
-                            
+                      
                             'Enviamos el mensaje propiamente dicho:
                             Call WriteChatOverHead(UserIndex, Stat, Npclist(TempCharIndex).Char.CharIndex, vbYellow)
-                            
+                      
                         Else
                             'Enviamos el mensaje propiamente dicho:
                             Call WriteChatOverHead(UserIndex, Stat, Npclist(TempCharIndex).Char.CharIndex, vbWhite)
+
                         End If
-                    
+              
                     Else
 
                         If Npclist(TempCharIndex).MaestroUser > 0 Then
                             Call WriteConsoleMsg(UserIndex, Npclist(TempCharIndex).Name & " es mascota de " & UserList(Npclist(TempCharIndex).MaestroUser).Name & " " & estatus & Paralisis & Incinerado & Envenenado, FontTypeNames.FONTTYPE_INFO)
-                        
+                  
                         Else
                             Call WriteConsoleMsg(UserIndex, Npclist(TempCharIndex).Name & " " & estatus & Paralisis & Incinerado & Envenenado, FontTypeNames.FONTTYPE_INFO)
-                            
+                      
                             If Len(Npclist(TempCharIndex).flags.AttackedFirstBy) > 0 And (UserList(UserIndex).flags.Privilegios And (PlayerType.Dios Or PlayerType.Admin)) Then
                                 Call WriteConsoleMsg(UserIndex, "Le pego primero: " & Npclist(TempCharIndex).flags.AttackedFirstBy & ".", FontTypeNames.FONTTYPE_INFO)
+
                             End If
+
                         End If
-                        
+                  
                     End If
-                
+          
                     FoundSomething = 1
                     .TargetNpcTipo = Npclist(TempCharIndex).NPCtype
                     .TargetNPC = TempCharIndex
                     .TargetUser = 0
                     .TargetObj = 0
                     .TargetQuest = 0
+              
+                    If UserList(UserIndex).QuestStats.nQuestCurso > 0 Then
+
+                        Dim i As Long, j As Long
+              
+                        For i = 1 To UserList(UserIndex).QuestStats.nQuestCurso
+              
+                            With UserList(UserIndex).QuestStats.Quests(UserList(UserIndex).QuestStats.QuestEnCurso(i))
+              
+                                If .QuestIndex Then
+                                    If QuestList(.QuestIndex).RequiredTargetNPCs Then
+              
+                                        For j = 1 To QuestList(.QuestIndex).RequiredTargetNPCs
+              
+                                            If QuestList(.QuestIndex).RequiredTargetNPC(j).NPCIndex = Npclist(TempCharIndex).Numero Then
+                                                If QuestList(.QuestIndex).RequiredTargetNPC(j).Amount > .NPCsTarget(j) Then
+                                                    .NPCsTarget(j) = .NPCsTarget(j) + 1
+              
+                                                    'End If
+                                                
+                                                    'If QuestList(.QuestIndex).RequiredTargetNPC(j).Amount = .NPCsTarget(j) Then
+                                                    'Call FinishQuest(UserIndex, .QuestIndex, i)
+                                                    'Call WriteUpdateNPCSimbolo(UserIndex, TempCharIndex, 1)
+                                                    Call WriteConsoleMsg(UserIndex, "Has cumplido un objetivo de la misión " & QuestList(.QuestIndex).Nombre, FontTypeNames.FONTTYPE_INFO)
+                                                    Call SendData(SendTarget.ToNPCArea, UserIndex, PrepareMessagePlayWave(SND_QUESTTARGET, UserList(UserIndex).Pos.X, UserList(UserIndex).Pos.Y))
+                                                    Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageCreateFX(Npclist(TempCharIndex).Char.CharIndex, 59, 0))
+
+                                                End If
+              
+                                            End If
+              
+                                        Next j
+              
+                                    End If
+              
+                                End If
+              
+                            End With
+              
+                        Next i
+
+                    End If
 
                 End If
-            
+      
                 If FoundChar = 0 Then
                     .TargetNPC = 0
                     .TargetNpcTipo = eNPCType.Comun
                     .TargetUser = 0
 
                 End If
-            
+      
                 '*** NO ENCOTRO NADA ***
                 If FoundSomething = 0 Then
                     .TargetNPC = 0

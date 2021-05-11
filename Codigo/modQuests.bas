@@ -317,7 +317,8 @@ Public Sub userFinalizaQuest(ByVal UserIndex As Integer, ByVal Questslot As Byte
         
         'A esta altura ya cumplio los objetivos, entonces se le entregan las recompensas.
         Call WriteConsoleMsg(UserIndex, "Has completado la mision " & Chr(34) & .Nombre & Chr(34) & "!", FontTypeNames.FONTTYPE_INFO)
-  
+        Call SendData(SendTarget.ToNPCArea, UserIndex, PrepareMessagePlayWave(SND_QUEST, UserList(UserIndex).Pos.X, UserList(UserIndex).Pos.Y))
+        
         'Si la quest pedia objetos, se los saca al personaje.
         If .RequiredOBJs Then
 
@@ -750,6 +751,8 @@ Public Function estadoQuest(ByVal UserIndex As Integer, ByVal QuestIndex As Inte
     
     Dim i As Byte
     
+    If UserIndex = 0 Then Exit Function
+    
     With UserList(UserIndex).QuestStats
     
         'Si no tiene ninguna quest, directamente no esta aceptada
@@ -801,7 +804,7 @@ Public Function estadoQuest(ByVal UserIndex As Integer, ByVal QuestIndex As Inte
     End With
         
     'No deberiamos llegar aca, pero por si acaso:
-    estadoQuest = eStatusQuest.Terminada
+    estadoQuest = eStatusQuest.NoAceptada
     Exit Function
     
 ErrorHandler:

@@ -873,7 +873,7 @@ Public Sub LoadQuestStats(ByVal UserIndex As Integer)
                 
                 '¿La quest requiere hablar con NPC's?
                 If QuestList(questID).RequiredTargetNPCs Then
-                    ReDim .Quests(.TotalQuest).NPCsKilled(1 To QuestList(questID).RequiredTargetNPCs)
+                    ReDim .Quests(.TotalQuest).NPCsTarget(1 To QuestList(questID).RequiredTargetNPCs)
             
                     NPCRequeridos = User_Database.Database_RecordSet("target")
                     Fields = Split(NPCRequeridos, "-")

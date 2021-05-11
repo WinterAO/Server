@@ -668,6 +668,10 @@ Public SND_MINERO                       As Integer
 
 Public SND_WARP                         As Byte
 
+Public SND_QUEST                        As Byte
+
+Public SND_QUESTTARGET                  As Integer
+
 Public SND_PUERTA                       As Byte
 
 Public SND_NIVEL                        As Byte

@@ -22724,11 +22724,10 @@ Public Sub WriteQuestDetails(ByVal UserIndex As Integer, _
         Call .WriteASCIIString(QuestList(QuestIndex).Desc)
         Call .WriteByte(QuestList(QuestIndex).RequiredLevel)
         
-        'Enviamos la cantidad de npcs requeridos
+        'Enviamos la cantidad de npcs a matar
         Call .WriteByte(QuestList(QuestIndex).RequiredNPCs)
 
         If QuestList(QuestIndex).RequiredNPCs Then
-
             'Si hay npcs entonces enviamos la lista
             For i = 1 To QuestList(QuestIndex).RequiredNPCs
                 Call .WriteInteger(QuestList(QuestIndex).RequiredNPC(i).Amount)
@@ -22737,6 +22736,23 @@ Public Sub WriteQuestDetails(ByVal UserIndex As Integer, _
                 'Si es una quest ya empezada, entonces mandamos los NPCs que mat�.
                 If Questslot Then
                     Call .WriteInteger(UserList(UserIndex).QuestStats.Quests(UserList(UserIndex).QuestStats.QuestEnCurso(Questslot)).NPCsKilled(i))
+
+                End If
+
+            Next i
+        End If
+        
+        'Enviamos la cantidad de npcs a hablar
+        Call .WriteByte(QuestList(QuestIndex).RequiredTargetNPCs)
+        
+        If QuestList(QuestIndex).RequiredTargetNPCs Then
+            'Si hay objetivos entonces enviamos la lista
+            For i = 1 To QuestList(QuestIndex).RequiredTargetNPCs
+                Call .WriteASCIIString(GetVar(DatPath & "NPCs.dat", "NPC" & QuestList(QuestIndex).RequiredTargetNPC(i).NPCIndex, "Name"))
+
+                'Si es una quest ya empezada, entonces mandamos los NPCs que mat�.
+                If Questslot Then
+                    Call .WriteInteger(UserList(UserIndex).QuestStats.Quests(UserList(UserIndex).QuestStats.QuestEnCurso(Questslot)).NPCsTarget(i))
 
                 End If
 
