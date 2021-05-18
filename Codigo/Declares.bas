@@ -1941,6 +1941,7 @@ Public Type NPC
 
     Pos As WorldPos 'Posicion
     Orig As WorldPos
+    PosOrig As Integer
     ZonaOrig As Integer
     
     SkillDomar As Integer

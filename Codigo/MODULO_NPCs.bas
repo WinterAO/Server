@@ -640,13 +640,14 @@ End Function
 Public Function CrearNPC(NroNPC As Integer, _
                          Mapa As Integer, _
                          OrigPos As WorldPos, _
-                         Optional ByVal CustomHead As Integer) As Integer
+                         Optional ByVal CustomHead As Integer, _
+                         Optional ByVal PosOrig As Boolean = False) As Integer
     '***************************************************
     'Author: Unknown
     'Last Modification: 22/07/2019 - WyroX: Intentamos NO spawnear NPCs de agua en tierra, a menos que se alcance el límite de iteraciones.
     '
     '***************************************************
-
+'
     'Crea un NPC del tipo NRONPC
 
     Dim Pos            As WorldPos
@@ -670,6 +671,8 @@ Public Function CrearNPC(NroNPC As Integer, _
     Dim X              As Integer
 
     Dim Y              As Integer
+    
+    Dim RandomPos      As Byte
 
     nIndex = OpenNPC(NroNPC) 'Conseguimos un indice
     
@@ -682,7 +685,7 @@ Public Function CrearNPC(NroNPC As Integer, _
     PuedeTierra = IIf(Npclist(nIndex).flags.TierraInvalida = 1, False, True)
     
     'Necesita ser respawned en un lugar especifico
-    If InMapBounds(OrigPos.Map, OrigPos.X, OrigPos.Y) Then
+    If InMapBounds(OrigPos.Map, OrigPos.X, OrigPos.Y) And PosOrig = True Then
         
         Map = OrigPos.Map
         X = OrigPos.X
@@ -696,8 +699,21 @@ Public Function CrearNPC(NroNPC As Integer, _
         altpos.Map = Mapa
         
         Do While Not PosicionValida
-            Pos.X = RandomNumber(MinXBorder, MaxXBorder)    'Obtenemos posicion al azar en x
-            Pos.Y = RandomNumber(MinYBorder, MaxYBorder)    'Obtenemos posicion al azar en y
+        
+            RandomPos = 20
+        
+            Do While RandomPos <> 0
+                Pos.X = RandomNumber(OrigPos.X - RandomPos, OrigPos.X + RandomPos)    'Obtenemos posicion al azar en x
+                Pos.Y = RandomNumber(OrigPos.Y - RandomPos, OrigPos.Y + RandomPos)   'Obtenemos posicion al azar en y
+                
+                'Obligamos al NPC hacer respawn dentro de su misma zona
+                If MapData(OrigPos.Map, OrigPos.X, OrigPos.Y).ZonaIndex <> MapData(OrigPos.Map, Pos.X, Pos.Y).ZonaIndex Then
+                    RandomPos = RandomPos - 1
+                Else
+                    RandomPos = 0
+                End If
+            
+            Loop
             
             Call ClosestLegalPos(Pos, newPos, PuedeAgua, PuedeTierra)  'Nos devuelve la posicion valida mas cercana
 
@@ -760,6 +776,12 @@ Public Function CrearNPC(NroNPC As Integer, _
         Map = Npclist(nIndex).Pos.Map
         X = Npclist(nIndex).Pos.X
         Y = Npclist(nIndex).Pos.Y
+        
+        If Npclist(nIndex).Orig.Map = 0 Then
+            Npclist(nIndex).Orig.Map = Map
+            Npclist(nIndex).Orig.X = X
+            Npclist(nIndex).Orig.Y = Y
+        End If
         
         'Anotamos la zona donde hizo spawn
         Npclist(nIndex).ZonaOrig = MapData(Map, X, Y).ZonaIndex
@@ -1160,7 +1182,7 @@ Sub ReSpawnNpc(MiNPC As NPC)
     '
     '***************************************************
 
-    If (MiNPC.flags.Respawn = 0) Then Call CrearNPC(MiNPC.Numero, MiNPC.Pos.Map, MiNPC.Orig)
+    If (MiNPC.flags.Respawn = 0) Then Call CrearNPC(MiNPC.Numero, MiNPC.Pos.Map, MiNPC.Orig, , MiNPC.PosOrig)
 
 End Sub
 
@@ -1297,6 +1319,8 @@ Public Function OpenNPC(ByVal NpcNumber As Integer, _
         
         .Movement = val(Leer.GetValue("NPC" & NpcNumber, "Movement"))
         .flags.OldMovement = .Movement
+        
+        .PosOrig = val(Leer.GetValue("NPC" & NpcNumber, "PosOrig"))
         
         .flags.AguaValida = val(Leer.GetValue("NPC" & NpcNumber, "AguaValida"))
         .flags.TierraInvalida = val(Leer.GetValue("NPC" & NpcNumber, "TierraInValida"))

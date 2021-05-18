@@ -17227,7 +17227,7 @@ Public Sub HandleCreatePretorianClan(ByVal UserIndex As Integer)
         'Remove packet ID
         Call .incomingData.ReadByte
         
-        Map = .incomingData.ReadInteger()
+        Map = .incomingData.ReadByte()
         X = .incomingData.ReadInteger()
         Y = .incomingData.ReadInteger()
         

@@ -198,7 +198,7 @@ Public Function SpawnClan(ByVal Mapa As Integer, _
     CenterPos.Map = Mapa
     CenterPos.X = X
     CenterPos.Y = Y
-    
+
     ReDim Pretorianos(1 To NRO_PRETORIANOS) As tPretorianData
     
     ClanIndex = PretoClanIndex
@@ -223,7 +223,11 @@ Public Function SpawnClan(ByVal Mapa As Integer, _
 
     End If
 
-    nPos = CenterPos
+    nPos.Map = Mapa
+    nPos.X = X
+    nPos.Y = Y
+    
+    Debug.Print "Mapa: " & nPos.Map & " X: " & nPos.X & " Y: " & nPos.Y
 
     ' Spawn clan members
     ClanMembersAlive = NRO_PRETORIANOS
@@ -321,12 +325,12 @@ Private Sub InitializePretoriansVars()
     '********************************************************
 
     LeftSpawnPos.Map = MAPA_PRETORIANO
-    LeftSpawnPos.X = 35
-    LeftSpawnPos.Y = 25
+    LeftSpawnPos.X = 830
+    LeftSpawnPos.Y = 425
     
     RightSpawnPos.Map = MAPA_PRETORIANO
-    RightSpawnPos.X = 67
-    RightSpawnPos.Y = 25
+    RightSpawnPos.X = 867
+    RightSpawnPos.Y = 425
     
 End Sub
 
@@ -357,7 +361,7 @@ Private Sub SpawnPretorian(ByRef SpawnPos As WorldPos, _
         Head = RandomShortHead
 
     End If
-                      
+              Debug.Print SpawnPos.Map & " - " & SpawnPos.X & " - " & SpawnPos.Y
     ' The King has to spawn always in the given position
     If IsKing Then
         

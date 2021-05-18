@@ -1457,17 +1457,10 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
                         
                         npcfile = DatPath & "NPCs.dat"
                         
-                        'Si el npc debe hacer respawn en la pos original la guardamos
-                        If val(GetVar(npcfile, "NPC" & MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex, "PosOrig")) = 1 Then
-                            MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex = OpenNPC(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex)
-                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Orig.Map = Map
-                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Orig.X = NPCs(i).X
-                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Orig.Y = NPCs(i).Y
-
-                        Else
-                            MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex = OpenNPC(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex)
-                            
-                        End If
+                        MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex = OpenNPC(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex)
+                        Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Orig.Map = Map
+                        Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Orig.X = NPCs(i).X
+                        Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Orig.Y = NPCs(i).Y
                         
                         If Not MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex = 0 Then
                             Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Pos.Map = Map
