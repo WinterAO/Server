@@ -538,6 +538,51 @@ ErrorHandler:
 
 End Function
 
+Public Function SaveAccountEditPassDatabase(ByVal UserName As String, _
+                                  ByVal Password As String, _
+                                  ByVal Salt As String) As Boolean
+
+    '***************************************************
+    'Author: Lorwik
+    'Last Modification: 30/04/2020
+    '***************************************************
+    On Error GoTo ErrorHandler
+
+    Dim query As String
+    Dim UserAccId As Long
+    
+    #If DBConexionUnica = 0 Then
+        Call Account_Database.Database_Connect
+    #Else
+        'Si perdimos la conexion reconectamos
+        If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
+    #End If
+    
+    UserAccId = GetAccountID(UserName)
+    
+    '¿Obtuvimos una ID nula?
+    If UserAccId <> -1 Then
+    
+        Call Account_Database.MakeQuery("UPDATE cuentas SET password = (?), salt = (?) WHERE id = " & UserAccId, True, Password, Salt)
+        
+        SaveAccountEditPassDatabase = True
+        
+    Else
+        SaveAccountEditPassDatabase = False
+        
+    End If
+
+    #If DBConexionUnica = 0 Then
+        Call Account_Database.Database_Close
+    #End If
+
+    Exit Function
+ErrorHandler:
+    Call LogDatabaseError("Error in SaveAccountEditPassDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
+    SaveAccountEditPassDatabase = False
+
+End Function
+
 Public Function SaveAccountEditGemasDatabase(ByVal UserName As String, ByVal Gemas As Long) As Boolean
 
     '***************************************************
