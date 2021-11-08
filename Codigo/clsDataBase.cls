@@ -24,14 +24,14 @@ Public Database_RecordSet   As ADODB.Recordset
 Public Database_Command     As ADODB.Command
 
 'CONSTRUCTOR
-Public Sub Inicialiar(ByVal Source As String, _
+Public Sub Inicialiar(ByVal source As String, _
                       ByVal Host As String, _
                       ByVal Name As String, _
                       ByVal User As String, _
                       ByVal Pass As String)
                       
     
-    Database_DataSource = Source
+    Database_DataSource = source
     Database_Host = Host
     Database_Name = Name
     Database_Username = User
@@ -39,7 +39,7 @@ Public Sub Inicialiar(ByVal Source As String, _
 
 End Sub
 
-Public Sub Database_Connect()
+Public Function Database_Connect() As Boolean
     '************************************************************************************
     'Author: Juan Andres Dalmasso
     'Last Modification: 21/09/2019
@@ -69,13 +69,16 @@ Public Sub Database_Connect()
     Database_Connection.CursorLocation = adUseClient
     Database_Connection.Open
     
-    Exit Sub
+    Database_Connect = True
+    
+    Exit Function
     
 ErrorHandler:
     Call LogDatabaseError("Database Error: " & Err.Number & " - " & Err.description)
     Debug.Print "Database Error: " & Err.Number & " - " & Err.description
+    Database_Connect = False
 
-End Sub
+End Function
 
 Public Sub Database_Close()
 

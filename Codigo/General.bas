@@ -328,8 +328,15 @@ Sub Main()
     Set Account_Database = New clsDataBase
     
     Call Load_ConfigDatBase
-    Call User_Database.Database_Connect
-    Call Account_Database.Database_Connect
+    If Not User_Database.Database_Connect Then
+        MsgBox "No se ha podido establecer conexión con la base de datos de USUARIOS. Revise las credenciales o la configuración de la base de datos.", vbOKOnly Or vbCritical, "Error al establecer conexión!"
+        End
+    End If
+    
+    If Not Account_Database.Database_Connect Then
+        MsgBox "No se ha podido establecer conexión con la base de datos de CUENTAS. Revise las credenciales o la configuración de la base de datos.", vbOKOnly Or vbCritical, "Error al establecer conexión!"
+        End
+    End If
 #End If
 
     ' Npcs.dat
