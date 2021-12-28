@@ -38,7 +38,7 @@ Private Type tMapHeader
     NumeroTriggers As Long
     NumeroParticulas As Long
     NumeroLuces As Long
-    NumeroZonas As Integer
+    NumeroZonas As Long
     NumeroNPCs As Long
     NumeroOBJs As Long
     NumeroTE As Long
@@ -1308,7 +1308,7 @@ Sub LoadMapData()
         frmCargando.cargar.Value = frmCargando.cargar.Value + 1
         DoEvents
     Next Map
-    
+ 
     Exit Sub
 
     If frmMain.Visible Then frmMain.txtStatus.Text = Date & " " & time & " - Se cargaron todos los mapas. Operacion Realizada con exito."
@@ -1457,20 +1457,17 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
                         
                         npcfile = DatPath & "NPCs.dat"
                         
-                        'Si el npc debe hacer respawn en la pos original la guardamos
-                        If val(GetVar(npcfile, "NPC" & MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex, "PosOrig")) = 1 Then
-                            MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex = OpenNPC(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex)
-                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Orig.Map = Map
-                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Orig.X = NPCs(i).X
-                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Orig.Y = NPCs(i).Y
-                        Else
-                            MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex = OpenNPC(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex)
-                        End If
+                        MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex = OpenNPC(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex)
+                        Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Orig.Map = Map
+                        Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Orig.X = NPCs(i).X
+                        Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Orig.Y = NPCs(i).Y
                         
                         If Not MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex = 0 Then
                             Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Pos.Map = Map
                             Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Pos.X = NPCs(i).X
                             Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Pos.Y = NPCs(i).Y
+                            
+                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).ZonaOrig = MapData(Map, NPCs(i).X, NPCs(i).Y).ZonaIndex
        
                             Call MakeNPCChar(True, 0, MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex, Map, NPCs(i).X, NPCs(i).Y)
                         End If
@@ -1478,7 +1475,7 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
                     End If
                 Next i
             End If
-                
+
             If .NumeroTE > 0 Then
                 ReDim TEs(1 To .NumeroTE)
                 Get #fh, , TEs
@@ -1514,12 +1511,7 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
             .InvocarSinEfecto = MapDat(i).InvocarSinEfecto
             .RoboNpcsPermitido = MapDat(i).RoboNpcsPermitido
             .NoTirarItems = MapDat(i).NoTirarItems
-    
-            If MapDat(i).lvlMinimo = "" Then
-                .lvlMinimo = 0
-            Else
-                .lvlMinimo = MapDat(i).lvlMinimo
-            End If
+            .lvlMinimo = val(MapDat(i).lvlMinimo)
     
             .Pk = MapDat(i).battle_mode
             
@@ -1530,7 +1522,7 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
             
         End With
     Next i
-    
+
 Exit Sub
 
 errh:
@@ -1645,6 +1637,7 @@ Sub LoadSini()
     IntervaloMagiaGolpe = val(Lector.GetValue("INTERVALOS", "IntervaloMagiaGolpe"))
     IntervaloGolpeMagia = val(Lector.GetValue("INTERVALOS", "IntervaloGolpeMagia"))
     IntervaloGolpeUsar = val(Lector.GetValue("INTERVALOS", "IntervaloGolpeUsar"))
+    IntervaloOcultable = val(Lector.GetValue("INTERVALOS", "IntervaloPuedeOcultar"))
     
     '&&&&&&&&&&&&&&&&&&&&& TIMERS &&&&&&&&&&&&&&&&&&&&&&&
     IntervaloPuedeSerAtacado = val(Lector.GetValue("TIMERS", "IntervaloPuedeSerAtacado"))
@@ -2220,5 +2213,121 @@ Public Sub LoadArmadurasFaccion()
     Next ClassIndex
 
     If frmMain.Visible Then frmMain.txtStatus.Text = Date & " " & time & " - Se cargo el archivo ArmadurasFaccionarias.dat"
+
+End Sub
+
+Public Sub LoadQuests()
+
+    '****************************************************
+    'Autor: Amraphen
+    'Fecha: 27/01/2010
+    'Carga el archivo QUESTS.DAT en el array QuestList.
+    '****************************************************
+     
+    On Error GoTo ErrorHandler
+
+    Dim Reader    As clsIniManager
+
+    Dim tmpStr    As String
+
+    Dim i         As Integer
+
+    Dim j         As Integer
+    
+    'Cargamos el clsIniManager en memoria
+    Set Reader = New clsIniManager
+    
+    'Lo inicializamos para el archivo Quests.DAT
+    Call Reader.Initialize(DatPath & "Quests.DAT")
+
+    'Redimensionamos el array
+    NumQuests = Reader.GetValue("INIT", "NumQuests")
+    ReDim QuestList(1 To NumQuests)
+
+    'Cargamos los datos
+    For i = 1 To NumQuests
+
+        With QuestList(i)
+            .Nombre = Reader.GetValue("QUEST" & i, "Nombre")
+            .Desc = Reader.GetValue("QUEST" & i, "Desc")
+            .RequiredLevel = val(Reader.GetValue("QUEST" & i, "RequiredLevel"))
+            .RequiredQuest = val(Reader.GetValue("QUEST" & i, "RequiredQuest"))
+            
+            'CARGAMOS OBJETOS REQUERIDOS
+            .RequiredOBJs = val(Reader.GetValue("QUEST" & i, "RequiredOBJs"))
+
+            If .RequiredOBJs > 0 Then
+                ReDim .RequiredOBJ(1 To .RequiredOBJs)
+
+                For j = 1 To .RequiredOBJs
+                    tmpStr = Reader.GetValue("QUEST" & i, "RequiredOBJ" & j)
+                    
+                    .RequiredOBJ(j).ObjIndex = val(ReadField(1, tmpStr, 45))
+                    .RequiredOBJ(j).Amount = val(ReadField(2, tmpStr, 45))
+                Next j
+
+            End If
+            
+            'CARGAMOS NPCS REQUERIDOS
+            .RequiredNPCs = val(Reader.GetValue("QUEST" & i, "RequiredNPCs"))
+
+            If .RequiredNPCs > 0 Then
+                ReDim .RequiredNPC(1 To .RequiredNPCs)
+
+                For j = 1 To .RequiredNPCs
+                    tmpStr = Reader.GetValue("QUEST" & i, "RequiredNPC" & j)
+                    
+                    .RequiredNPC(j).NPCIndex = val(ReadField(1, tmpStr, 45))
+                    .RequiredNPC(j).Amount = val(ReadField(2, tmpStr, 45))
+                Next j
+
+            End If
+            
+            'CARGAMOS Target's REQUERIDOS
+            .RequiredTargetNPCs = val(Reader.GetValue("QUEST" & i, "RequiredTargetNPCs"))
+
+            If .RequiredTargetNPCs > 0 Then
+                ReDim .RequiredTargetNPC(1 To .RequiredTargetNPCs)
+
+                For j = 1 To .RequiredNPCs
+                    tmpStr = Reader.GetValue("QUEST" & i, "RequiredTargetNPC")
+                    
+                    .RequiredTargetNPC(j).NPCIndex = val(ReadField(j, tmpStr, 45))
+                    .RequiredTargetNPC(j).Amount = 1
+                Next j
+
+            End If
+            
+            .Repetible = CBool(val(Reader.GetValue("QUEST" & i, "Repetible")))
+            .Tiempo = val(Reader.GetValue("QUEST" & i, "Tiempo"))
+            
+            .RewardGLD = val(Reader.GetValue("QUEST" & i, "RewardGLD"))
+            .RewardEXP = val(Reader.GetValue("QUEST" & i, "RewardEXP"))
+            
+            'CARGAMOS OBJETOS DE RECOMPENSA
+            .RewardOBJs = val(Reader.GetValue("QUEST" & i, "RewardOBJs"))
+
+            If .RewardOBJs > 0 Then
+                ReDim .RewardOBJ(1 To .RewardOBJs)
+
+                For j = 1 To .RewardOBJs
+                    tmpStr = Reader.GetValue("QUEST" & i, "RewardOBJ" & j)
+                    
+                    .RewardOBJ(j).ObjIndex = val(ReadField(1, tmpStr, 45))
+                    .RewardOBJ(j).Amount = val(ReadField(2, tmpStr, 45))
+                Next j
+
+            End If
+
+        End With
+
+    Next i
+    
+    'Eliminamos la clase
+    Set Reader = Nothing
+    Exit Sub
+                    
+ErrorHandler:
+    MsgBox "Error cargando el archivo QUESTS.DAT.", vbOKOnly + vbCritical
 
 End Sub

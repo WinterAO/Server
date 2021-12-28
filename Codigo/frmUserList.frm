@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin VB.Form frmUserList 
-   BackColor       =   &H00FFC0C0&
+   BackColor       =   &H00E0E0E0&
    BorderStyle     =   1  'Fixed Single
    Caption         =   "Debug de Userlist"
    ClientHeight    =   5115
@@ -13,7 +13,7 @@ Begin VB.Form frmUserList
    ScaleWidth      =   5520
    StartUpPosition =   2  'CenterScreen
    Begin VB.CommandButton cmdDesconectar 
-      BackColor       =   &H00FFC0C0&
+      BackColor       =   &H00E0E0E0&
       Caption         =   "Desconectar Cuenta"
       BeginProperty Font 
          Name            =   "MS Sans Serif"
@@ -33,7 +33,7 @@ Begin VB.Form frmUserList
       Width           =   2175
    End
    Begin VB.CommandButton cmdDesconectar 
-      BackColor       =   &H00FFC0C0&
+      BackColor       =   &H00E0E0E0&
       Caption         =   "Desconectar PJ"
       BeginProperty Font 
          Name            =   "MS Sans Serif"
@@ -53,7 +53,7 @@ Begin VB.Form frmUserList
       Width           =   2175
    End
    Begin VB.CommandButton Command2 
-      BackColor       =   &H00FFC0C0&
+      BackColor       =   &H00E0E0E0&
       Caption         =   "Echar todos los no Logged"
       BeginProperty Font 
          Name            =   "MS Sans Serif"
@@ -112,7 +112,7 @@ Begin VB.Form frmUserList
       Width           =   3015
    End
    Begin VB.CommandButton Command1 
-      BackColor       =   &H00FFC0C0&
+      BackColor       =   &H00E0E0E0&
       Caption         =   "Actualiza"
       BeginProperty Font 
          Name            =   "MS Sans Serif"
@@ -174,7 +174,7 @@ Attribute VB_Exposed = False
 
 Option Explicit
 
-Private Sub cmdDesconectar_Click(Index As Integer)
+Private Sub cmdDesconectar_Click(index As Integer)
 '********************************************
 'Autor: Lorwik
 'Fecha: 13/07/2020
@@ -190,7 +190,7 @@ Private Sub cmdDesconectar_Click(Index As Integer)
         Exit Sub
     End If
     
-    Select Case Index
+    Select Case index
     
         Case 0 'Desconectar PJ
             If MsgBox("¿Seguro que quieres forzar la desconexion de este PJ?", vbYesNo, "¡DESCONEXION PJ!") = vbNo Then Exit Sub

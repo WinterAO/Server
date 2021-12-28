@@ -5,7 +5,8 @@ Logs/*
 WorldBackup/*
 Guilds/*
 Codigo/*.log
-Reportes/*
+Logs/Reportes/*
+Logs/Anticheat/*
 R
 .DS_Store
 *.vbw

@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin VB.Form frmDebugNpc 
-   BackColor       =   &H00FFC0C0&
+   BackColor       =   &H00E0E0E0&
    BorderStyle     =   1  'Fixed Single
    Caption         =   "Debug Npcs"
    ClientHeight    =   2460
@@ -13,7 +13,7 @@ Begin VB.Form frmDebugNpc
    ScaleWidth      =   4680
    StartUpPosition =   2  'CenterScreen
    Begin VB.CommandButton Command2 
-      BackColor       =   &H00FFC0C0&
+      BackColor       =   &H00E0E0E0&
       Cancel          =   -1  'True
       Caption         =   "Salir (Esc)"
       BeginProperty Font 
@@ -33,7 +33,7 @@ Begin VB.Form frmDebugNpc
       Width           =   4455
    End
    Begin VB.CommandButton Command1 
-      BackColor       =   &H00FFC0C0&
+      BackColor       =   &H00E0E0E0&
       Caption         =   "ActualizarInfo"
       BeginProperty Font 
          Name            =   "MS Sans Serif"

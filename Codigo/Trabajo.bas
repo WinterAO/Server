@@ -109,6 +109,9 @@ Public Sub DoOcultarse(ByVal UserIndex As Integer)
     Dim Skill  As Integer
     
     With UserList(UserIndex)
+    
+        If Not IntervaloPuedeOcultar(UserIndex) Then Exit Sub
+    
         Skill = .Stats.UserSkills(eSkill.Ocultarse)
         
         Suerte = (((0.000002 * Skill - 0.0002) * Skill + 0.0064) * Skill + 0.1124) * 100

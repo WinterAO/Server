@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin VB.Form frmAdmin 
-   BackColor       =   &H00FFC0C0&
+   BackColor       =   &H00E0E0E0&
    BorderStyle     =   1  'Fixed Single
    Caption         =   "Administracion del servidor"
    ClientHeight    =   2865
@@ -13,7 +13,7 @@ Begin VB.Form frmAdmin
    ScaleWidth      =   4680
    StartUpPosition =   2  'CenterScreen
    Begin VB.Frame Frame1 
-      BackColor       =   &H00FFC0C0&
+      BackColor       =   &H00E0E0E0&
       Caption         =   "Personajes"
       BeginProperty Font 
          Name            =   "Tahoma"
@@ -42,7 +42,7 @@ Begin VB.Form frmAdmin
          Width           =   3135
       End
       Begin VB.CommandButton Command3 
-         BackColor       =   &H00FFC0C0&
+         BackColor       =   &H00E0E0E0&
          Caption         =   "Echar todos los PJS no privilegiados"
          BeginProperty Font 
             Name            =   "MS Sans Serif"
@@ -61,7 +61,7 @@ Begin VB.Form frmAdmin
          Width           =   3135
       End
       Begin VB.CommandButton Command2 
-         BackColor       =   &H00FFC0C0&
+         BackColor       =   &H00E0E0E0&
          Caption         =   "R"
          BeginProperty Font 
             Name            =   "MS Sans Serif"
@@ -88,7 +88,7 @@ Begin VB.Form frmAdmin
          Width           =   3135
       End
       Begin VB.CommandButton Command1 
-         BackColor       =   &H00FFC0C0&
+         BackColor       =   &H00E0E0E0&
          Caption         =   "Echar"
          BeginProperty Font 
             Name            =   "MS Sans Serif"

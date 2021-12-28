@@ -127,6 +127,8 @@ Public IntervaloAtacable                 As Long
 
 Public IntervaloOwnedNpc                 As Long
 
+Public IntervaloOcultable                As Long
+
 Public INTERVALO_GLOBAL                  As Long
 
 'BALANCE
@@ -503,7 +505,7 @@ Public Sub BanIpGuardar()
 
     Dim LoopC        As Long
     
-    ArchivoBanIp = App.Path & "\Dat\BanIps.dat"
+    ArchivoBanIp = DatPath & "\Ban\BanIps.dat"
     
     ArchN = FreeFile()
     Open ArchivoBanIp For Output As #ArchN
@@ -529,7 +531,7 @@ Public Sub BanIpCargar()
 
     Dim ArchivoBanIp As String
     
-    ArchivoBanIp = App.Path & "\Dat\BanIps.dat"
+    ArchivoBanIp = DatPath & "\Ban\BanIps.dat"
     
     Set BanIps = New Collection
     
@@ -543,6 +545,139 @@ Public Sub BanIpCargar()
     
     Close #ArchN
 
+End Sub
+
+Public Sub BanSerialOK(ByVal bannerUserIndex As Integer, ByVal UserName As String)
+  
+    On Error GoTo BanSerialOK_Err
+
+    '***************************************************
+    'Author: Juan Martín Sotuyo Dodero (Maraxus)
+    'Last Modification: 03/02/07
+    '
+    '***************************************************
+    Dim tUser     As Integer
+
+    Dim userPriv  As Byte
+
+    Dim cantPenas As Byte
+
+    Dim rank      As Integer
+
+    Dim CuentaID  As Long
+    
+    Dim Serial    As Long
+
+    Dim MacAdress As String
+    
+    If InStrB(UserName, "+") Then
+        UserName = Replace(UserName, "+", " ")
+
+    End If
+    
+    tUser = NameIndex(UserName)
+    
+    rank = PlayerType.Admin Or PlayerType.Dios Or PlayerType.SemiDios Or PlayerType.Consejero
+    
+    With UserList(bannerUserIndex)
+      
+        If PersonajeExiste(UserName) Then
+          
+            CuentaID = GetAccountID(UserName)
+            Serial = GetUserSerial(CuentaID)
+            MacAdress = GetUserMacAdress(CuentaID)
+
+            Open "" & DatPath & "\Ban\BanHds.dat" For Append As #1
+            Print #1, Serial
+            Close #1
+          
+            Open "" & DatPath & "\Ban\BanMacs.dat" For Append As #1
+            Print #1, MacAdress
+            Close #1
+
+            Call SendData(SendTarget.ToAdmins, 0, PrepareMessageConsoleMsg("Servidor> " & .Name & " ha baneado la computadora de: " & UserName & "(" & CuentaID & ").", FontTypeNames.FONTTYPE_SERVER))
+      
+            Call LogGM(.Name, "Baneo la computadora de " & UserName & ".")
+
+        Else
+            Call WriteConsoleMsg(bannerUserIndex, "El pj " & UserName & " no existe.", FontTypeNames.FONTTYPE_INFO)
+
+        End If
+  
+        If tUser > 0 Then
+            Call WriteConsoleMsg(bannerUserIndex, "Servidor> Usuario expulsado.", FontTypeNames.FONTTYPE_SERVER)
+            Call CloseSocket(tUser)
+
+        End If
+
+    End With
+  
+    Exit Sub
+
+BanSerialOK_Err:
+    Call LogError(Err.Number & " - " & Err.description & " Admin.BanSerialOK " & Erl)
+
+    Resume Next
+  
+End Sub
+
+Public Sub UnBanSerialOK(ByVal bannerUserIndex As Integer, ByVal UserName As String)
+  
+    On Error GoTo UnBanSerialOK_Err
+
+    '***************************************************
+    'Author: Juan Martín Sotuyo Dodero (Maraxus)
+    'Last Modification: 03/02/07
+    '
+    '***************************************************
+    Dim tUser     As Integer
+
+    Dim userPriv  As Byte
+
+    Dim cantPenas As Byte
+
+    Dim rank      As Integer
+
+    Dim CuentaID  As Long
+    
+    Dim Serial    As Long
+
+    Dim MacAdress As String
+    
+    If InStrB(UserName, "+") Then
+        UserName = Replace(UserName, "+", " ")
+
+    End If
+    
+    tUser = NameIndex(UserName)
+    
+    rank = PlayerType.Admin Or PlayerType.Dios Or PlayerType.SemiDios Or PlayerType.Consejero
+    
+    With UserList(bannerUserIndex)
+
+        '¿Existe el usuario?
+        If PersonajeExiste(UserName) Then
+          
+            CuentaID = GetAccountID(UserName)
+            Serial = GetUserSerial(CuentaID)
+            MacAdress = GetUserMacAdress(CuentaID)
+      
+            Call WriteConsoleMsg(bannerUserIndex, "Solamente desbaneo manual: HDSerial:" & Serial & ". MacAdress:" & MacAdress & ".", FontTypeNames.FONTTYPE_INFO)
+
+        Else
+            Call WriteConsoleMsg(bannerUserIndex, "El pj " & UserName & " no existe.", FontTypeNames.FONTTYPE_INFO)
+
+        End If
+  
+    End With
+  
+    Exit Sub
+
+UnBanSerialOK_Err:
+    Call LogError(Err.Number & " - " & Err.description & " Admin.UnBanSerialOK " & Erl)
+
+    Resume Next
+  
 End Sub
 
 Public Function UserDarPrivilegioLevel(ByVal Name As String) As PlayerType
@@ -569,7 +704,8 @@ End Function
 
 Public Sub BanCharacter(ByVal bannerUserIndex As Integer, _
                         ByVal UserName As String, _
-                        ByVal Reason As String)
+                        ByVal Reason As String, _
+                        Optional ByVal Dias As Date = 0)
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
     'Last Modification: 03/02/07
@@ -578,7 +714,7 @@ Public Sub BanCharacter(ByVal bannerUserIndex As Integer, _
 
     Dim tUser     As Integer
 
-    Dim UserPriv  As Byte
+    Dim userPriv  As Byte
 
     Dim cantPenas As Byte
 
@@ -599,21 +735,29 @@ Public Sub BanCharacter(ByVal bannerUserIndex As Integer, _
             Call WriteConsoleMsg(bannerUserIndex, "El usuario no esta online.", FontTypeNames.FONTTYPE_SERVER)
             
             If PersonajeExiste(UserName) Then
-                UserPriv = UserDarPrivilegioLevel(UserName)
+                userPriv = UserDarPrivilegioLevel(UserName)
                 
-                If (UserPriv And rank) > (.flags.Privilegios And rank) Then
+                If (userPriv And rank) > (.flags.Privilegios And rank) Then
                     Call WriteConsoleMsg(bannerUserIndex, "No puedes banear a al alguien de mayor jerarquia.", FontTypeNames.FONTTYPE_INFO)
                 Else
 
                     If BANCheck(UserName) Then
                         Call WriteConsoleMsg(bannerUserIndex, "El personaje ya se encuentra baneado.", FontTypeNames.FONTTYPE_INFO)
+                        
                     Else
                         Call LogBanFromName(UserName, bannerUserIndex, Reason)
                         Call SendData(SendTarget.ToAdmins, 0, PrepareMessageConsoleMsg("Servidor> " & .Name & " ha baneado a " & UserName & ".", FontTypeNames.FONTTYPE_SERVER))
                         
-                        Call SaveBan(UserName, Reason, .Name)
+                        '¿Es un baneo permanente?
+                        If Dias = 0 Then
+                            Call SaveBan(UserName, Reason, .Name)
+                            
+                        Else
+                            Call SaveBan(UserName, Reason, .Name, (Now + Dias))
+                            
+                        End If
                         
-                        If (UserPriv And rank) = (.flags.Privilegios And rank) Then
+                        If (userPriv And rank) = (.flags.Privilegios And rank) Then
                             .flags.Ban = 1
                             Call SendData(SendTarget.ToAdmins, 0, PrepareMessageConsoleMsg(.Name & " banned by the server por bannear un Administrador.", FontTypeNames.FONTTYPE_FIGHT))
                             Call CloseUser(bannerUserIndex)
@@ -652,7 +796,14 @@ Public Sub BanCharacter(ByVal bannerUserIndex As Integer, _
                 
                 Call LogGM(.Name, "BAN a " & UserName)
                 
-                Call SaveBan(UserName, Reason, .Name)
+                '¿Es un baneo permanente?
+                If Dias = 0 Then
+                    Call SaveBan(UserName, Reason, .Name)
+                            
+                Else
+                    Call SaveBan(UserName, Reason, .Name, (Now + Dias))
+                            
+                End If
                 
                 Call CloseUser(tUser)
 
@@ -664,3 +815,80 @@ Public Sub BanCharacter(ByVal bannerUserIndex As Integer, _
 
 End Sub
 
+Public Function CheckHD(ByVal hd As String) As Boolean
+  
+    On Error GoTo CheckHD_Err
+
+    '***************************************************
+    'Author: Nahuel Casas (Zagen)
+    'Last Modify Date: 07/12/2009
+    ' 07/12/2009: Zagen - Agregè la funcion de agregar los digitos de un Serial Baneado.
+    '***************************************************
+    Dim handle As Integer
+
+    handle = FreeFile
+
+    Open DatPath & "\Ban\BanHds.dat" For Input As #handle
+
+    Dim Linea As String, Total As String
+
+    Do Until EOF(handle)
+        Line Input #handle, Linea
+        Total = Total + Linea + vbCrLf
+    Loop
+    Close #handle
+    
+    Dim ret As String
+
+    If InStr(1, Total, hd) Then
+        CheckHD = True
+
+    End If
+  
+    Exit Function
+
+CheckHD_Err:
+    Call LogError(Err.Number & " - " & Err.description & " - Admin.CheckHD - " & Erl)
+
+    Resume Next
+  
+End Function
+
+Public Function CheckMAC(ByVal Mac As String) As Boolean
+  
+    On Error GoTo CheckMAC_Err
+
+    '***************************************************
+    'Author: Nahuel Casas (Zagen)
+    'Last Modify Date: 07/12/2009
+    ' 07/12/2009: Zagen - Agregè la funcion de agregar los digitos de un Serial Baneado.
+    '***************************************************
+    Dim handle As Integer
+
+    handle = FreeFile
+
+    Open DatPath & "\Ban\BanMacs.dat" For Input As #handle
+
+    Dim Linea As String, Total As String
+
+    Do Until EOF(handle)
+        Line Input #handle, Linea
+        Total = Total + Linea + vbCrLf
+    Loop
+    Close #handle
+
+    Dim ret As String
+
+    If InStr(1, Total, Mac) Then
+        CheckMAC = True
+
+    End If
+  
+    Exit Function
+
+CheckMAC_Err:
+    Call LogError(Err.Number & " - " & Err.description & " - Admin.CheckMAC - " & Erl)
+
+    Resume Next
+  
+End Function

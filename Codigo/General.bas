@@ -280,8 +280,11 @@ Sub Main()
 
     On Error Resume Next
     
+    ' Paths
     ChDir App.Path
     ChDrive App.Path
+    DatPath = App.Path & "\Dat\"
+    ConfigPath = App.Path & "\Configuracion\"
     
     'Inicializamos la cabecera
     Call IniciarCabecera
@@ -325,8 +328,15 @@ Sub Main()
     Set Account_Database = New clsDataBase
     
     Call Load_ConfigDatBase
-    Call User_Database.Database_Connect
-    Call Account_Database.Database_Connect
+    If Not User_Database.Database_Connect Then
+        MsgBox "No se ha podido establecer conexión con la base de datos de USUARIOS. Revise las credenciales o la configuración de la base de datos.", vbOKOnly Or vbCritical, "Error al establecer conexión!"
+        End
+    End If
+    
+    If Not Account_Database.Database_Connect Then
+        MsgBox "No se ha podido establecer conexión con la base de datos de CUENTAS. Revise las credenciales o la configuración de la base de datos.", vbOKOnly Or vbCritical, "Error al establecer conexión!"
+        End
+    End If
 #End If
 
     ' Npcs.dat
@@ -367,9 +377,9 @@ Sub Main()
         Call LoadMapData
 
     End If
-    
+
     Call InitializeAreas
-    
+
     ' Fortalezas (No pueden ir antes o los npc no hacen spawn)
     frmCargando.Label1(2).Caption = "Cargando Fortalezas.dat"
     Call CargarFortalezas
@@ -443,10 +453,6 @@ Private Sub LoadConstants()
    
     LastBackup = Format(Now, "Short Time")
     Minutos = Format(Now, "Short Time")
-    
-    ' Paths
-    DatPath = App.Path & "\Dat\"
-    ConfigPath = App.Path & "\Configuracion\"
     
     'Lorwik: Nueva subida de Skills, subira de 2 en 2 hasta el lvl max.
     LevelSkill(1).LevelValue = 2
@@ -1766,6 +1772,8 @@ Private Sub InicializarSonidos()
     SND_PESCAR = 71
     SND_MINERO = 261
     SND_WARP = 3
+    SND_QUEST = 109
+    SND_QUESTTARGET = 444
     SND_PUERTA = 5
     SND_NIVEL = 128
     SND_USERMUERTE = 11
@@ -1819,7 +1827,7 @@ Public Sub BanGlobalChatCargar()
     Dim Tmp As String
     Dim ArchivoLog As String
 
-    ArchivoLog = App.Path & "\Dat\BanGlobalChat.dat"
+    ArchivoLog = DatPath & "\Ban\BanGlobalChat.dat"
 
     Set BanUsersChatGlobal = New Collection
 
@@ -1987,3 +1995,40 @@ Public Function CheckZona(ByVal UserIndex As Integer) As Boolean
 
 End Function
 
+Public Function ObtenerCuadranteUser(ByVal UserIndex As Integer) As Integer
+    '**************************************************************
+    'Author: Lorwik
+    'Fecha: 23/04/2021
+    'Descripción: Devuelve el numero del cuadrante en el que el usuario se encuentra
+    '**************************************************************
+    Dim cx As Integer
+    Dim cy As Integer
+    Dim AnchoMap As Byte
+    
+    AnchoMap = 11
+    
+    cx = Fix((UserList(UserIndex).Pos.X / 100))
+    cy = Fix((UserList(UserIndex).Pos.Y / 100))
+    
+    ObtenerCuadranteUser = ((cy) * AnchoMap) + cx + 1
+    
+End Function
+
+Public Function ObtenerCuadrante(ByVal tX As Long, ByVal tY As Long) As Integer
+    '**************************************************************
+    'Author: Lorwik
+    'Fecha: 23/04/2021
+    'Descripción: Devuelve el numero del cuadrante segun las coordenadas proporcionadas
+    '**************************************************************
+    Dim cx As Integer
+    Dim cy As Integer
+    Dim AnchoMap As Byte
+    
+    AnchoMap = 11
+    
+    cx = Fix((tX / 100))
+    cy = Fix((tY / 100))
+    
+    ObtenerCuadrante = ((cy) * AnchoMap) + cx + 1
+    
+End Function

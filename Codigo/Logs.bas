@@ -461,7 +461,7 @@ Public Sub LogAntiCheat(texto As String)
     Dim nfile As Integer
 
     nfile = FreeFile ' obtenemos un canal
-    Open App.Path & "\logs\AntiCheat.log" For Append Shared As #nfile
+    Open App.Path & "\logs\AntiCheats\AntiCheat.log" For Append Shared As #nfile
     Print #nfile, Date & " " & time & " " & texto
     Print #nfile, ""
     Close #nfile

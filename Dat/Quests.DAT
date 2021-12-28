@@ -10,6 +10,9 @@ RequiredNPCs=2
 RequiredNPC1=518-10 'Vibora
 RequiredNPC2=517-10 'Pollo Envenenado
 
+RequiredTargetNPCs=2
+RequiredTargetNPC=1-2
+
 RequiredOBJs=1
 RequiredOBJ1=1249-5
  
@@ -69,6 +72,9 @@ RewardGLD=3500
  
 RewardOBJs=1
 RewardOBJ1=559-1
+
+Repetible=1
+Tiempo=1
 
 [QUEST5]
 Nombre=Prueba de hermandad
@@ -2462,3 +2468,9 @@ RewardEXP=0
 
 RewardOBJs=1
 RewardOBJ1=1129-1 'Manual de navegación
+
+
+
+
+
+

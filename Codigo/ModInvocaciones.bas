@@ -39,7 +39,7 @@ Public Sub InitInvocaciones()
 'Descripcion: Cargamos los datos de las invocaciones
 '***************************************************
 
-On Error GoTo Errhandler
+On Error GoTo errHandler
 
     If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando Invocaciones."
     
@@ -92,7 +92,7 @@ On Error GoTo Errhandler
     If frmMain.Visible Then frmMain.txtStatus.Text = Date & " " & time & " - Se inicializaron las invocaciones con exito. Operacion Realizada con exito."
     
     Exit Sub
-Errhandler:
+errHandler:
     MsgBox "error inicializando las invocaciones " & Err.Number & ": " & Err.description
     
 End Sub
@@ -138,7 +138,7 @@ Public Sub IniciarRitoInvocacion(ByVal UserIndex As Integer)
         '¿La invocacion requiere quest?
         If Invocacion(InvocID).Quest = 0 Then
             '¿Tiene la quest en curso?
-            If TieneQuest(UserIndex, Invocacion(InvocID).Quest) > 0 Then
+            If buscarQuestenCurso(UserIndex, Invocacion(InvocID).Quest) > 0 Then
                 Call WriteConsoleMsg(UserIndex, "Para invocar esta criatura necesitas tener activa la quest '" & QuestList(Invocacion(InvocID).Quest).Nombre & "'", FontTypeNames.FONTTYPE_INFO)
                 Exit Sub
             End If

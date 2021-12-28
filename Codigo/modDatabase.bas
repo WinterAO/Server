@@ -1,6 +1,8 @@
 Attribute VB_Name = "modDatabase"
 Option Explicit
 
+Private QueryBuilder As cStringBuilder
+
 Sub SaveUserToDatabase(ByVal UserIndex As Integer, _
                        Optional ByVal SaveTimeOnline As Boolean = True)
     '*************************************************
@@ -104,125 +106,6 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
         query = query & ");"
 
         Call User_Database.Database_Connection.Execute(query)
-
-        '*******************************************************************
-        'Hechizos
-        '*******************************************************************
-        query = "INSERT INTO spell (user_id, "
-
-        For LoopC = 1 To MAXUSERHECHIZOS
-            query = query & " spell_id" & LoopC
-            If LoopC < MAXUSERHECHIZOS Then query = query & ", "
-        Next LoopC
-
-        query = query & ") VALUES (" & .ID & ", "
-
-        For LoopC = 1 To MAXUSERHECHIZOS
-            query = query & .Stats.UserHechizos(LoopC)
-            If LoopC < MAX_INVENTORY_SLOTS Then query = query & ", "
-
-        Next LoopC
-        
-        query = query & ");"
-
-        Call User_Database.Database_Connection.Execute(query)
-
-        '*******************************************************************
-        'Inventario
-        '*******************************************************************
-        query = "INSERT INTO inventario_items (user_id, "
-        
-        For LoopC = 1 To MAX_INVENTORY_SLOTS
-            query = query & "item_id" & LoopC & ", amount" & LoopC & ", is_equipped" & LoopC
-            If LoopC < MAX_INVENTORY_SLOTS Then query = query & ", "
-        Next LoopC
-        
-        query = query & ") VALUES (" & .ID & ", "
-        
-        For LoopC = 1 To MAX_INVENTORY_SLOTS
-
-            query = query & .Invent.Object(LoopC).ObjIndex & ", "
-            query = query & .Invent.Object(LoopC).Amount & ", "
-            query = query & .Invent.Object(LoopC).Equipped
-            If LoopC < MAX_INVENTORY_SLOTS Then query = query & ", "
-            
-        Next LoopC
-        
-        query = query & ");"
-
-        Call User_Database.Database_Connection.Execute(query)
-
-        '*******************************************************************
-        'Boveda
-        '*******************************************************************
-        query = "INSERT INTO banco_items (user_id, "
-        
-        For LoopC = 1 To MAX_BANCOINVENTORY_SLOTS
-            query = query & "item_id" & LoopC & ", amount" & LoopC
-            If LoopC < MAX_BANCOINVENTORY_SLOTS Then query = query & ", "
-        Next LoopC
-        
-        query = query & ") VALUES (" & .ID & ", "
-        
-        For LoopC = 1 To MAX_BANCOINVENTORY_SLOTS
-
-            query = query & .BancoInvent.Object(LoopC).ObjIndex & ", "
-            query = query & .BancoInvent.Object(LoopC).Amount
-            If LoopC < MAX_BANCOINVENTORY_SLOTS Then query = query & ", "
-            
-        Next LoopC
-        
-        query = query & ");"
-
-        Call User_Database.Database_Connection.Execute(query)
-
-        '*******************************************************************
-        'Skills
-        '*******************************************************************
-        query = "INSERT INTO skillpoint (user_id, "
-        
-        For LoopC = 1 To NUMSKILLS
-            query = query & "sk" & LoopC & ", exp" & LoopC & ", elu" & LoopC
-            If LoopC < NUMSKILLS Then query = query & ", "
-        Next LoopC
-        
-        query = query & ") VALUES (" & .ID & ", "
-
-        For LoopC = 1 To NUMSKILLS
-            query = query & .Stats.UserSkills(LoopC) & ", "
-            query = query & .Stats.ExpSkills(LoopC) & ", "
-            query = query & .Stats.EluSkills(LoopC)
-            If LoopC < NUMSKILLS Then query = query & ", "
-
-        Next LoopC
-        
-        query = query & ");"
-
-        Call User_Database.Database_Connection.Execute(query)
-        
-        '*******************************************************************
-        'Quests
-        '*******************************************************************
-        query = "INSERT INTO quest (user_id, "
-        
-        For LoopC = 1 To MAXQUESTS
-        
-            query = query & "npcs" & LoopC & ", estado" & LoopC
-            If LoopC < MAXQUESTS Then query = query & ", "
-        
-        Next LoopC
-        
-        query = query & ") VALUES (" & .ID & ", "
-        
-        For LoopC = 1 To MAXQUESTS
-            query = query & "0, 0"
-            If LoopC < MAXQUESTS Then query = query & ", "
-            
-        Next LoopC
-        
-        query = query & ");"
-        
-        Call User_Database.Database_Connection.Execute(query)
         
         '*******************************************************************
         'Profesion primaria
@@ -265,34 +148,6 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
         query = query & ");"
 
         Call User_Database.Database_Connection.Execute(query)
-        
-        '*******************************************************************
-        'Mascotas
-        '*******************************************************************
-        query = "INSERT INTO pet (user_id, "
-        
-        For LoopC = 1 To MAXMASCOTAS
-            query = query & "pet" & LoopC
-            If LoopC < MAXMASCOTAS Then query = query & ", "
-        Next LoopC
-
-        query = query & ") VALUES (" & .ID & ", "
-
-        For LoopC = 1 To MAXMASCOTAS
-            query = query & .MascotasIndex(LoopC)
-            If LoopC < MAXMASCOTAS Then query = query & ", "
-        Next LoopC
-
-        query = query & ");"
-
-        Call User_Database.Database_Connection.Execute(query)
-        
-        '*******************************************************************
-        'Amigos
-        '*******************************************************************
-        query = "INSERT INTO amigos (user_id) VALUES (?)"
-
-        Call User_Database.MakeQuery(query, True, .ID)
         
     End With
     
@@ -360,16 +215,20 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
         'Hechizos
         '*******************************************************************
         
-        query = "UPDATE spell SET "
+        query = "INSERT INTO spell (user_id, slot, spell_id) VALUES "
         
         For LoopC = 1 To MAXUSERHECHIZOS
             
-            query = query & "spell_id" & LoopC & " = '" & .Stats.UserHechizos(LoopC) & "' "
+            query = query & "("
+            query = query & .ID & ", "
+            query = query & LoopC & ", "
+            query = query & .Stats.UserHechizos(LoopC) & ") "
+            
             If LoopC < MAXUSERHECHIZOS Then query = query & ", "
             
         Next LoopC
         
-        query = query & " WHERE user_id = '" & .ID & "'"
+        query = query & " ON DUPLICATE KEY UPDATE spell_id=VALUES(spell_id); "
 
         Call User_Database.Database_Connection.Execute(query)
 
@@ -377,56 +236,63 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
         'Inventario
         '*******************************************************************
         
-        query = "UPDATE inventario_items SET "
+        query = "INSERT INTO inventario_items (user_id, slot, item_id, Amount, is_equipped) VALUES "
         
         For LoopC = 1 To MAX_INVENTORY_SLOTS
-            
-            query = query & "item_id" & LoopC & " = '" & .Invent.Object(LoopC).ObjIndex & "', "
-            query = query & "amount" & LoopC & " = '" & .Invent.Object(LoopC).Amount & "', "
-            query = query & "is_equipped" & LoopC & " = '" & .Invent.Object(LoopC).Equipped & "'"
+        
+            query = query & "("
+            query = query & .ID & ", "
+            query = query & LoopC & ", "
+            query = query & .Invent.Object(LoopC).ObjIndex & ", "
+            query = query & .Invent.Object(LoopC).Amount & ", "
+            query = query & .Invent.Object(LoopC).Equipped & ")"
             
             If LoopC < MAX_INVENTORY_SLOTS Then query = query & ", "
             
         Next LoopC
         
-        query = query & " WHERE user_id = '" & .ID & "'"
-        
+        query = query & " ON DUPLICATE KEY UPDATE item_id=VALUES(item_id), amount=VALUES(Amount), is_equipped=VALUES(is_equipped); "
         Call User_Database.Database_Connection.Execute(query)
 
         '*******************************************************************
         'Boveda
         '*******************************************************************
         
-        query = "UPDATE banco_items SET "
+        query = "INSERT INTO banco_items (user_id, slot, item_id, Amount) VALUES "
         
         For LoopC = 1 To MAX_BANCOINVENTORY_SLOTS
-            
-            query = query & "item_id" & LoopC & " = '" & .BancoInvent.Object(LoopC).ObjIndex & "', "
-            query = query & "amount" & LoopC & " = '" & .BancoInvent.Object(LoopC).Amount & "'"
+            query = query & "("
+            query = query & .ID & ", "
+            query = query & LoopC & ", "
+            query = query & .BancoInvent.Object(LoopC).ObjIndex & ", "
+            query = query & .BancoInvent.Object(LoopC).Amount & ")"
             
             If LoopC < MAX_BANCOINVENTORY_SLOTS Then query = query & ", "
             
         Next LoopC
         
-        query = query & " WHERE user_id = '" & .ID & "'"
+        query = query & " ON DUPLICATE KEY UPDATE item_id=VALUES(item_id), amount=VALUES(Amount); "
         
         Call User_Database.Database_Connection.Execute(query)
 
         '*******************************************************************
         'Skills
         '*******************************************************************
-        query = "UPDATE skillpoint SET "
+        query = "INSERT INTO skillpoint (user_id, skill_id, sk, exp, elu) VALUES "
         
         For LoopC = 1 To NUMSKILLS
+            query = query & "("
+            query = query & .ID & ", "
+            query = query & LoopC & ", "
+            query = query & .Stats.UserSkills(LoopC) & ", "
+            query = query & .Stats.ExpSkills(LoopC) & ", "
+            query = query & .Stats.EluSkills(LoopC) & ")"
             
-            query = query & "sk" & LoopC & " = '" & .Stats.UserSkills(LoopC) & "', "
-            query = query & "exp" & LoopC & " = '" & .Stats.ExpSkills(LoopC) & "', "
-            query = query & "elu" & LoopC & " = '" & .Stats.EluSkills(LoopC) & "'"
             If LoopC < NUMSKILLS Then query = query & ", "
 
         Next LoopC
         
-        query = query & " WHERE user_id = '" & .ID & "'"
+        query = query & " ON DUPLICATE KEY UPDATE sk=VALUES(sk), exp=VALUES(exp), elu=VALUES(elu); "
         
         Call User_Database.Database_Connection.Execute(query)
        
@@ -463,14 +329,19 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
         '*******************************************************************
         Dim petType As Integer
         
-        query = "UPDATE pet SET "
+        query = "INSERT INTO pet (user_id, slot, pet_id) VALUES "
         
         For LoopC = 1 To MAXMASCOTAS
             
-            'CHOTS | I got this logic from SaveUserToCharfile
+            query = query & "("
+            query = query & .ID & ", "
+            query = query & LoopC & ", "
+            
             If .MascotasIndex(LoopC) > 0 Then
+            
                 If Npclist(.MascotasIndex(LoopC)).Contadores.TiempoExistencia = 0 Then
                     petType = .MascotasType(LoopC)
+                    
                 Else
                     petType = 0
 
@@ -481,26 +352,31 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
 
             End If
 
-            query = query & "pet" & LoopC & " = '" & petType & "' "
+            query = query & petType & ")"
+            
             If LoopC < MAXMASCOTAS Then query = query & ", "
         Next LoopC
         
-        query = query & "WHERE user_id = '" & .ID & "'"
+        query = query & " ON DUPLICATE KEY UPDATE pet_id=VALUES(pet_id); "
 
         Call User_Database.Database_Connection.Execute(query)
         
         '*******************************************************************
         'Amigos
         '*******************************************************************
-        query = "UPDATE amigos SET "
+        query = "INSERT INTO amigos (user_id, slot, amigo, ignorado) VALUES "
         
         For LoopC = 1 To MAXAMIGOS
-            query = query & "amigo" & LoopC & " = '" & .Amigos(LoopC).Nombre & "', "
-            query = query & "ignorado" & LoopC & " = '" & .Amigos(LoopC).Ignorado & "'"
+            query = query & "("
+            query = query & .ID & ", "
+            query = query & LoopC & ", "
+            query = query & "'" & .Amigos(LoopC).Nombre & "', "
+            query = query & .Amigos(LoopC).Ignorado & ")"
+            
             If LoopC < MAXAMIGOS Then query = query & ", "
         Next LoopC
         
-        query = query & " WHERE user_id = '" & .ID & "'"
+        query = query & " ON DUPLICATE KEY UPDATE amigo=VALUES(amigo), ignorado=VALUES(ignorado); "
             
         Call User_Database.Database_Connection.Execute(query)
 
@@ -518,64 +394,87 @@ ErrorHandler:
 End Sub
 
 Public Sub UpdateUserQuest(ByVal UserIndex As Integer)
-'************************************************************
-'Autor: Lorwik
-'Fecha: 28/06/2020
-'Descripción: Guarda las quest del usuario en la base de datos
-'************************************************************
+    '************************************************************
+    'Autor: Lorwik
+    'Fecha: 28/06/2020
+    'Descripción: Guarda las quest del usuario en la base de datos
+    '************************************************************
 
-    Dim query  As String
-    Dim LoopC  As Integer
-    Dim j      As Integer
-    Dim tmpst  As String
+    Dim LoopC As Integer
+
+    Dim j     As Integer
+
+    Dim tmpst As String
+    
+    Set QueryBuilder = New cStringBuilder
     
     #If DBConexionUnica = 0 Then
         Call User_Database.Database_Connect
     #Else
+
         'Si perdimos la conexion reconectamos
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
     
     'Basic user data
     With UserList(UserIndex)
+    
+        '¿El usuario tiene alguna quest que guardar?
+        If .QuestStats.TotalQuest = 0 Then Exit Sub
 
-        query = "UPDATE quest SET "
-
-        For LoopC = 1 To MAXQUESTS
+        QueryBuilder.Append "INSERT INTO quest (user_id, quest_id, npcs, target, fechafin, estado) VALUES "
+        
+        For LoopC = 1 To .QuestStats.TotalQuest
             
-            query = query & "estado" & LoopC & " = '" & CInt(.QuestStats.Quests(LoopC).QuestStatus) & "', "           'Estado de la quest
-            
-            tmpst = "npcs" & LoopC & " = '0' "
-            
-            If .QuestStats.Quests(LoopC).QuestStatus = eStatusQuest.EnCurso Then
-            
-                '¿La quest requiere matar NPC?
-                If QuestList(LoopC).RequiredNPCs > 0 Then
-                    tmpst = "npcs" & LoopC & " = '"
-                    For j = 1 To QuestList(LoopC).RequiredNPCs
-                    
-                        tmpst = tmpst & val(.QuestStats.Quests(LoopC).NPCsKilled(j))   'Cuantos NPCs se ha matado de los que requeridos
-                        
-                        If Not j = QuestList(LoopC).RequiredNPCs Then tmpst = tmpst & "."
-                    Next j
-                    
-                    tmpst = tmpst & "' "
-
-                End If
+            QueryBuilder.Append "("
+            QueryBuilder.Append .ID & ", "
+            QueryBuilder.Append .QuestStats.Quests(LoopC).QuestIndex & ", '"
                 
-            End If
-            
-            If LoopC < MAXQUESTS Then tmpst = tmpst & ","
-            
-            query = query & tmpst
+            'NPC
+            If .QuestStats.Quests(LoopC).QuestIndex > 0 Then
+                tmpst = QuestList(.QuestStats.Quests(LoopC).QuestIndex).RequiredNPCs
+    
+                If tmpst Then
+    
+                    For j = 1 To tmpst
+                        QueryBuilder.Append CStr(.QuestStats.Quests(LoopC).NPCsKilled(j))
 
+                        If j < tmpst Then QueryBuilder.Append "-"
+                    Next j
+    
+                End If
+    
+            End If
+                
+            QueryBuilder.Append "', '"
+          
+            'TARGETs
+            If .QuestStats.Quests(LoopC).QuestIndex > 0 Then
+              
+                tmpst = QuestList(.QuestStats.Quests(LoopC).QuestIndex).RequiredTargetNPCs
+                  
+                For j = 1 To tmpst
+                    QueryBuilder.Append CStr(.QuestStats.Quests(LoopC).NPCsTarget(j))
+
+                    If j < tmpst Then QueryBuilder.Append "-"
+                Next j
+          
+            End If
+          
+            QueryBuilder.Append "', '"
+            QueryBuilder.Append Format(.QuestStats.Quests(LoopC).fechaFin, "yyyy/MM/dd") & "', "
+            QueryBuilder.Append CInt(.QuestStats.Quests(LoopC).QuestStatus)
+            QueryBuilder.Append ")"
+                
+            If LoopC < .QuestStats.TotalQuest Then QueryBuilder.Append ", "
+    
         Next LoopC
         
-        query = query & " WHERE user_id = '" & .ID & "'"
+        QueryBuilder.Append " ON DUPLICATE KEY UPDATE estado = VALUES(estado), npcs = VALUES(npcs), target = VALUES(target); "
 
-        Call User_Database.Database_Connection.Execute(query)
+        Call User_Database.Database_Connection.Execute(QueryBuilder.toString)
         
-        'Debug.Print query
+        Set QueryBuilder = Nothing
 
     End With
 
@@ -587,6 +486,7 @@ Public Sub UpdateUserQuest(ByVal UserIndex As Integer)
 
 ErrorHandler:
     Call LogDatabaseError("Unable to UPDATE personaje to Mysql Database: " & UserList(UserIndex).Name & ". " & Err.Number & " - " & Err.description)
+
 End Sub
 
 Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
@@ -744,14 +644,19 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
         '*******************************************************************
         'Hechizos
         '*******************************************************************
-        Call User_Database.MakeQuery("SELECT * FROM spell WHERE user_id = (?)", False, .ID)
+        If User_Database.MakeQuery("SELECT * FROM spell WHERE user_id = (?)", False, .ID) Then
 
-        If Not User_Database.Database_RecordSet.RecordCount = 0 Then
             User_Database.Database_RecordSet.MoveFirst
 
-            For LoopC = 1 To MAXUSERHECHIZOS
-                .Stats.UserHechizos(LoopC) = User_Database.Database_RecordSet("spell_id" & LoopC)
-            Next LoopC
+            While Not User_Database.Database_RecordSet.EOF
+            
+                LoopC = User_Database.Database_RecordSet!Slot
+                
+                .Stats.UserHechizos(LoopC) = User_Database.Database_RecordSet!spell_id
+                
+                User_Database.Database_RecordSet.MoveNext
+                
+            Wend
 
         End If
 
@@ -760,14 +665,18 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
         '*******************************************************************
         'Mascotas
         '*******************************************************************
-        Call User_Database.MakeQuery("SELECT * FROM pet WHERE user_id = (?)", False, .ID)
-
-        If Not User_Database.Database_RecordSet.RecordCount = 0 Then
+        If User_Database.MakeQuery("SELECT * FROM pet WHERE user_id = (?)", False, .ID) Then
             User_Database.Database_RecordSet.MoveFirst
 
-            For LoopC = 1 To MAXMASCOTAS
-                .MascotasType(LoopC) = User_Database.Database_RecordSet("pet" & LoopC)
-            Next LoopC
+            While Not User_Database.Database_RecordSet.EOF
+            
+                LoopC = User_Database.Database_RecordSet!Slot
+                
+                .MascotasType(LoopC) = User_Database.Database_RecordSet!pet_id
+                
+                User_Database.Database_RecordSet.MoveNext
+                
+            Wend
 
         End If
 
@@ -776,16 +685,20 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
         '*******************************************************************
         'Inventario
         '*******************************************************************
-        Call User_Database.MakeQuery("SELECT * FROM inventario_items WHERE user_id = (?)", False, .ID)
 
-        If Not User_Database.Database_RecordSet.RecordCount = 0 Then
+        If User_Database.MakeQuery("SELECT * FROM inventario_items WHERE user_id = (?)", False, .ID) Then
             User_Database.Database_RecordSet.MoveFirst
                 
-            For LoopC = 1 To MAX_INVENTORY_SLOTS
-                .Invent.Object(LoopC).ObjIndex = User_Database.Database_RecordSet("item_id" & LoopC)
-                .Invent.Object(LoopC).Amount = User_Database.Database_RecordSet("Amount" & LoopC)
-                .Invent.Object(LoopC).Equipped = User_Database.Database_RecordSet("is_equipped" & LoopC)
-            Next LoopC
+            While Not User_Database.Database_RecordSet.EOF
+            
+                LoopC = User_Database.Database_RecordSet!Slot
+                
+                .Invent.Object(LoopC).ObjIndex = User_Database.Database_RecordSet!item_id
+                .Invent.Object(LoopC).Amount = User_Database.Database_RecordSet!Amount
+                .Invent.Object(LoopC).Equipped = User_Database.Database_RecordSet!is_equipped
+                
+                 User_Database.Database_RecordSet.MoveNext
+            Wend
                 
         End If
 
@@ -794,15 +707,18 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
         '*******************************************************************
         'Boveda
         '*******************************************************************
-        Call User_Database.MakeQuery("SELECT * FROM banco_items WHERE user_id = (?)", False, .ID)
-
-        If Not User_Database.Database_RecordSet.RecordCount = 0 Then
+        If User_Database.MakeQuery("SELECT * FROM banco_items WHERE user_id = (?)", False, .ID) Then
             User_Database.Database_RecordSet.MoveFirst
                 
-            For LoopC = 1 To MAX_BANCOINVENTORY_SLOTS
-                .BancoInvent.Object(LoopC).ObjIndex = User_Database.Database_RecordSet("item_id" & LoopC)
-                .BancoInvent.Object(LoopC).Amount = User_Database.Database_RecordSet("Amount" & LoopC)
-            Next LoopC
+            While Not User_Database.Database_RecordSet.EOF
+            
+                LoopC = User_Database.Database_RecordSet!Slot
+            
+                .BancoInvent.Object(LoopC).ObjIndex = User_Database.Database_RecordSet!item_id
+                .BancoInvent.Object(LoopC).Amount = User_Database.Database_RecordSet!Amount
+                
+                User_Database.Database_RecordSet.MoveNext
+            Wend
                 
         End If
 
@@ -811,16 +727,19 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
         '*******************************************************************
         'Skills
         '*******************************************************************
-        Call User_Database.MakeQuery("SELECT * FROM skillpoint WHERE user_id = (?)", False, .ID)
-
-        If Not User_Database.Database_RecordSet.RecordCount = 0 Then
+        If User_Database.MakeQuery("SELECT * FROM skillpoint WHERE user_id = (?)", False, .ID) Then
             User_Database.Database_RecordSet.MoveFirst
 
-            For LoopC = 1 To NUMSKILLS
-                .Stats.UserSkills(LoopC) = User_Database.Database_RecordSet("sk" & LoopC)
-                .Stats.ExpSkills(LoopC) = User_Database.Database_RecordSet("exp" & LoopC)
-                .Stats.EluSkills(LoopC) = User_Database.Database_RecordSet("elu" & LoopC)
-            Next LoopC
+            While Not User_Database.Database_RecordSet.EOF
+            
+                LoopC = User_Database.Database_RecordSet!skill_id
+                
+                .Stats.UserSkills(LoopC) = User_Database.Database_RecordSet!sk
+                .Stats.ExpSkills(LoopC) = User_Database.Database_RecordSet!Exp
+                .Stats.EluSkills(LoopC) = User_Database.Database_RecordSet!ELU
+                
+                User_Database.Database_RecordSet.MoveNext
+            Wend
 
         End If
 
@@ -865,15 +784,18 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
         '*******************************************************************
         'Amigos
         '*******************************************************************
-        Call User_Database.MakeQuery("SELECT * FROM amigos WHERE user_id = (?)", False, .ID)
-
-        If Not User_Database.Database_RecordSet.RecordCount = 0 Then
+        If User_Database.MakeQuery("SELECT * FROM amigos WHERE user_id = (?)", False, .ID) Then
             User_Database.Database_RecordSet.MoveFirst
 
-            For LoopC = 1 To MAXAMIGOS
-                .Amigos(LoopC).Nombre = User_Database.Database_RecordSet("amigo" & LoopC)
-                .Amigos(LoopC).Ignorado = User_Database.Database_RecordSet("ignorado" & LoopC)
-            Next LoopC
+            While Not User_Database.Database_RecordSet.EOF
+            
+                LoopC = User_Database.Database_RecordSet!Slot
+                
+                .Amigos(LoopC).Nombre = User_Database.Database_RecordSet!Amigo
+                .Amigos(LoopC).Ignorado = User_Database.Database_RecordSet!Ignorado
+                
+                User_Database.Database_RecordSet.MoveNext
+            Wend
 
         End If
 
@@ -901,56 +823,98 @@ Public Sub LoadQuestStats(ByVal UserIndex As Integer)
 
     On Error GoTo ErrorHandler
 
-    Dim query           As String
-    Dim Fields()        As String
-    Dim j               As Integer
-    Dim tmpint          As Integer
-    Dim LoopC           As Integer
-    Dim NPCRequeridos   As String
+    Dim query         As String
+
+    Dim Fields()      As String
+
+    Dim j             As Integer
+
+    Dim tmpint        As Integer
+
+    Dim questID       As Integer
+
+    Dim NPCRequeridos As String
     
     #If DBConexionUnica = 0 Then
         Call User_Database.Database_Connect
     #Else
+
         'Si perdimos la conexion reconectamos
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
     With UserList(UserIndex).QuestStats
 
-        If Not User_Database.MakeQuery("SELECT * FROM quest WHERE user_id = (?)", False, UserList(UserIndex).ID) Then
+        If User_Database.MakeQuery("SELECT * FROM quest WHERE user_id = (?)", False, UserList(UserIndex).ID) Then
         
             User_Database.Database_RecordSet.MoveFirst
             
-            For LoopC = 1 To NumQuests
-
-                    '¿La quest requiere matar NPC?
-                    If QuestList(LoopC).RequiredNPCs Then
-                        ReDim .Quests(LoopC).NPCsKilled(1 To QuestList(LoopC).RequiredNPCs)
+            While Not User_Database.Database_RecordSet.EOF
             
-                        NPCRequeridos = User_Database.Database_RecordSet("npcs" & LoopC)
+                .TotalQuest = .TotalQuest + 1
+                
+                ReDim Preserve .Quests(1 To .TotalQuest) As tUserQuest
             
-                        Fields = Split(NPCRequeridos, ".")
-                        
-                        For j = 1 To QuestList(LoopC).RequiredNPCs
+                .Quests(.TotalQuest).QuestIndex = User_Database.Database_RecordSet!quest_id
+                questID = .Quests(.TotalQuest).QuestIndex
 
-                            If UBound(Fields()) > 0 Then
-                                .Quests(LoopC).NPCsKilled(j) = CInt(Fields(j - 1))
-                            Else
-                                .Quests(LoopC).NPCsKilled(j) = NPCRequeridos
-                            End If
-                        Next j
-     
-                    .Quests(LoopC).QuestStatus = CByte(User_Database.Database_RecordSet("estado" & LoopC))
-                             
-                    'Si la quest actual se termino, lo sumamos al contador de terminados
-                    If .Quests(LoopC).QuestStatus = eStatusQuest.Terminada Then .NumQuestsDone = .NumQuestsDone + 1
+                '¿La quest requiere matar NPC's?
+                If QuestList(questID).RequiredNPCs Then
+                    ReDim .Quests(.TotalQuest).NPCsKilled(1 To QuestList(questID).RequiredNPCs)
+            
+                    NPCRequeridos = User_Database.Database_RecordSet("npcs")
+                    Fields = Split(NPCRequeridos, "-")
                         
+                    For j = 1 To QuestList(questID).RequiredNPCs
+                        .Quests(.TotalQuest).NPCsKilled(j) = val(Fields(j - 1))
+                    Next j
+ 
                 End If
                 
-            Next LoopC
+                '¿La quest requiere hablar con NPC's?
+                If QuestList(questID).RequiredTargetNPCs Then
+                    ReDim .Quests(.TotalQuest).NPCsTarget(1 To QuestList(questID).RequiredTargetNPCs)
+            
+                    NPCRequeridos = User_Database.Database_RecordSet("target")
+                    Fields = Split(NPCRequeridos, "-")
+                        
+                    For j = 1 To QuestList(questID).RequiredTargetNPCs
+                        .Quests(.TotalQuest).NPCsTarget(j) = val(Fields(j - 1))
+                    Next j
+ 
+                End If
                 
-           Call ListarQuestsenCurso(UserIndex)
+                .Quests(.TotalQuest).fechaFin = User_Database.Database_RecordSet("fechafin")
+                .Quests(.TotalQuest).QuestStatus = CByte(User_Database.Database_RecordSet("estado"))
                 
+                'Clasificacion de quest por estado
+                'Vamos guardando el slot donde se encuentra la quest en su array correspondiente
+                Select Case .Quests(.TotalQuest).QuestStatus
+                
+                    Case eStatusQuest.NoAceptada
+                        .nQuestLeave = .nQuestLeave + 1
+                        
+                        ReDim Preserve .QuestLeave(1 To .nQuestLeave) As Integer
+                        .QuestLeave(.nQuestLeave) = .TotalQuest
+                    
+                    Case eStatusQuest.EnCurso
+                        .nQuestCurso = .nQuestCurso + 1
+                        
+                        ReDim Preserve .QuestEnCurso(1 To .nQuestCurso) As Integer
+                        .QuestEnCurso(.nQuestCurso) = .TotalQuest
+                    
+                    Case eStatusQuest.Terminada
+                        .nQuestDone = .nQuestDone + 1
+                        
+                        ReDim Preserve .QuestDone(1 To .nQuestCurso) As Integer
+                        .QuestDone(.nQuestDone) = .TotalQuest
+                
+                End Select
+           
+                User_Database.Database_RecordSet.MoveNext
+                
+            Wend
+            
         End If
 
     End With
@@ -1044,6 +1008,48 @@ Public Function BANCheckDatabase(ByVal UserName As String) As Boolean
 
 ErrorHandler:
     Call LogDatabaseError("Error in BANCheckDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
+
+End Function
+
+Public Function BanTimeCheck(ByVal UserName As String) As Date
+
+    '***************************************************
+    'Author: Lorwik
+    'Last Modification: 07/04/2021
+    '***************************************************
+    On Error GoTo ErrorHandler
+
+    Dim query As String
+
+    #If DBConexionUnica = 0 Then
+        Call User_Database.Database_Connect
+        
+    #Else
+        'Si perdimos la conexion reconectamos
+        If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
+        
+    #End If
+
+    query = "SELECT ban_time FROM personaje WHERE UPPER(name) = (?)"
+
+    If Not User_Database.MakeQuery(query, False, UCase$(UserName)) Then
+        BanTimeCheck = False
+        Exit Function
+
+    End If
+
+    BanTimeCheck = User_Database.Database_RecordSet!ban_time
+
+    Set User_Database.Database_RecordSet = Nothing
+    
+    #If DBConexionUnica = 0 Then
+        Call User_Database.Database_Close
+    #End If
+
+    Exit Function
+
+ErrorHandler:
+    Call LogDatabaseError("Error in BanTimeCheck: " & UserName & ". " & Err.Number & " - " & Err.description)
 
 End Function
 
@@ -1212,7 +1218,8 @@ End Function
 
 Public Sub SaveBan(ByVal UserName As String, _
                            ByVal Reason As String, _
-                           ByVal BannedBy As String)
+                           ByVal BannedBy As String, _
+                           Optional ByVal Tiempo As Date = 0)
 
     '***************************************************
     'Author: Lorwik
@@ -1233,7 +1240,7 @@ Public Sub SaveBan(ByVal UserName As String, _
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
-    Call User_Database.MakeQuery("UPDATE personaje SET is_ban = TRUE WHERE UPPER(name) = (?)", True, UCase$(UserName))
+    Call User_Database.MakeQuery("UPDATE personaje SET is_ban = TRUE, ban_time = (?) WHERE UPPER(name) = (?)", True, Tiempo, UCase$(UserName))
 
     query = "INSERT INTO punishment SET user_id = (SELECT id FROM personaje WHERE UPPER(name) = (?)), number = (?), reason = (?)"
     Call User_Database.MakeQuery(query, True, UCase$(UserName), (cantPenas + 1), BannedBy & ": BAN POR " & LCase$(Reason) & " " & Date & " " & time)
@@ -1999,6 +2006,44 @@ Public Function GetUserReenlists(ByVal UserName As String) As Byte
 
 ErrorHandler:
     Call LogDatabaseError("Error in GetUserReenlists: " & UserName & ". " & Err.Number & " - " & Err.description)
+
+End Function
+
+Public Function GetAccountID(ByVal UserName As String) As Long
+
+    '***************************************************
+    'Author: Lorwik
+    'Last Modification: 06/04/2021
+    'Descripcion: Devuelve la ID de la cuenta del usuario solicitado
+    '***************************************************
+    On Error GoTo ErrorHandler
+
+    Dim query As String
+
+    #If DBConexionUnica = 0 Then
+        Call User_Database.Database_Connect
+    #Else
+        'Si perdimos la conexion reconectamos
+        If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
+    #End If
+
+    If Not User_Database.MakeQuery("SELECT cuenta_id FROM personaje WHERE UPPER(name) = (?)", False, UCase$(UserName)) Then
+        GetAccountID = -1
+        Exit Function
+
+    End If
+
+    GetAccountID = User_Database.Database_RecordSet!cuenta_id
+    Set Account_Database.Database_RecordSet = Nothing
+        
+    #If DBConexionUnica = 0 Then
+        Call User_Database.Database_Close
+    #End If
+
+    Exit Function
+    
+ErrorHandler:
+    Call LogDatabaseError("Error in GetAccountID: " & UserName & ". " & Err.Number & " - " & Err.description)
 
 End Function
 

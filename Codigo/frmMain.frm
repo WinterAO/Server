@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin VB.Form frmMain 
    BackColor       =   &H00E0E0E0&
-   BorderStyle     =   3  'Fixed Dialog
+   BorderStyle     =   1  'Fixed Single
    Caption         =   "WinterAO Resurrection Server"
    ClientHeight    =   5880
    ClientLeft      =   1950
@@ -36,6 +36,28 @@ Begin VB.Form frmMain
       TabIndex        =   19
       Top             =   240
       Width           =   5655
+      Begin VB.CommandButton cmdDebugRapido 
+         BackColor       =   &H00E0E0E0&
+         Caption         =   "Stats de Slots"
+         Height          =   375
+         Index           =   1
+         Left            =   3960
+         Style           =   1  'Graphical
+         TabIndex        =   31
+         Top             =   840
+         Width           =   1455
+      End
+      Begin VB.CommandButton cmdDebugRapido 
+         BackColor       =   &H00E0E0E0&
+         Caption         =   "Debug UserList"
+         Height          =   375
+         Index           =   0
+         Left            =   3960
+         Style           =   1  'Graphical
+         TabIndex        =   30
+         Top             =   360
+         Width           =   1455
+      End
       Begin VB.TextBox txtNumUsers 
          Alignment       =   2  'Center
          Appearance      =   0  'Flat
@@ -418,11 +440,13 @@ Begin VB.Form frmMain
       Top             =   240
       Width           =   4935
       Begin VB.Timer GameTimer 
+         Enabled         =   0   'False
          Interval        =   40
          Left            =   2160
          Top             =   1440
       End
       Begin VB.Timer TIMER_AI 
+         Enabled         =   0   'False
          Interval        =   1
          Left            =   1680
          Top             =   1440
@@ -972,6 +996,18 @@ Private Sub cmdDB_Click(index As Integer)
             Call User_Database.Database_Reconnect
             Call Account_Database.Database_Reconnect
             
+    End Select
+End Sub
+
+Private Sub cmdDebugRapido_Click(index As Integer)
+    Select Case index
+    
+        Case 0
+            frmUserList.Show
+            
+        Case 1
+            frmConID.Show
+    
     End Select
 End Sub
 

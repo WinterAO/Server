@@ -713,6 +713,7 @@ Public Sub CheckUserLevel(ByVal UserIndex As Integer, Optional ByVal PrintInCons
             If PrintInConsole Then
                 Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_NIVEL, .Pos.X, .Pos.Y))
                 Call WriteConsoleMsg(UserIndex, "Has subido de nivel!", FontTypeNames.FONTTYPE_INFO)
+                Call WriteScreenMsg(UserIndex, "Nivel " & .Stats.ELV + 1, "Has alcanzado el")
             End If
             
             If .Stats.ELV = 1 Then
@@ -3102,4 +3103,3 @@ Public Sub MandaraCasa(ByVal UserIndex As Integer)
     End With
     
 End Sub
-

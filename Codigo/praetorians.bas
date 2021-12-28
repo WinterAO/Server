@@ -51,9 +51,9 @@ Attribute VB_Name = "PraetoriansCoopNPC"
 ''la fortaleza pretoriana (no es lo mismo de
 ''donde estan los NPCs!).
 ''Se extrae el dato del server.ini en sub LoadSIni
-Public MAPA_PRETORIANO          As Integer
-Public PRETORIANO_X             As Byte
-Public PRETORIANO_Y             As Byte
+Public MAPA_PRETORIANO          As Byte
+Public PRETORIANO_X             As Integer
+Public PRETORIANO_Y             As Integer
 
 ''''''''''''''''''''''''''''''''''''''''''''''
 ''Estos numeros son necesarios por cuestiones de

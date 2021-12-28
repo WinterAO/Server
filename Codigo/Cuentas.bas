@@ -398,44 +398,6 @@ ErrorHandler:
 
 End Function
 
-Public Function GetAccountID(ByVal UserName As String) As Long
-
-    '***************************************************
-    'Author: Lorwik
-    'Last Modification: 06/04/2021
-    'Descripcion: Devuelve la ID de la cuenta del usuario solicitado
-    '***************************************************
-    On Error GoTo ErrorHandler
-
-    Dim query As String
-
-    #If DBConexionUnica = 0 Then
-        Call User_Database.Database_Connect
-    #Else
-        'Si perdimos la conexion reconectamos
-        If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
-    #End If
-
-    If Not User_Database.MakeQuery("SELECT cuenta_id FROM personaje WHERE UPPER(name) = (?)", False, UCase$(UserName)) Then
-        GetAccountID = -1
-        Exit Function
-
-    End If
-
-    GetAccountID = User_Database.Database_RecordSet!cuenta_id
-    Set Account_Database.Database_RecordSet = Nothing
-        
-    #If DBConexionUnica = 0 Then
-        Call User_Database.Database_Close
-    #End If
-
-    Exit Function
-    
-ErrorHandler:
-    Call LogDatabaseError("Error in GetAccountID: " & UserName & ". " & Err.Number & " - " & Err.description)
-
-End Function
-
 Public Function GetUserEmail(ByVal UserName As String) As String
 
     '***************************************************
@@ -453,13 +415,13 @@ Public Function GetUserEmail(ByVal UserName As String) As String
         If Account_Database.CheckSQLStatus = False Then Account_Database.Database_Reconnect
     #End If
 
-    If Not User_Database.MakeQuery("SELECT email FROM cuentas WHERE id = (?)", False, GetAccountID(UserName)) Then
+    If Not Account_Database.MakeQuery("SELECT email FROM cuentas WHERE id = (?)", False, GetAccountID(UserName)) Then
         GetUserEmail = vbNullString
         Exit Function
 
     End If
 
-    GetUserEmail = Account_Database.Database_RecordSet!UserName
+    GetUserEmail = Account_Database.Database_RecordSet!Email
     Set Account_Database.Database_RecordSet = Nothing
     
     #If DBConexionUnica = 0 Then
@@ -469,6 +431,80 @@ Public Function GetUserEmail(ByVal UserName As String) As String
     Exit Function
 ErrorHandler:
     Call LogDatabaseError("Error in GetUserEmail: " & UserName & ". " & Err.Number & " - " & Err.description)
+
+End Function
+
+Public Function GetUserSerial(ByVal ID As Long) As String
+
+    '***************************************************
+    'Author: Lorwik
+    'Last Modification: 05/05/2021
+    'Descripcion: Devuelve el serial hd del usuario
+    '***************************************************
+    On Error GoTo ErrorHandler
+
+    Dim query As String
+
+    #If DBConexionUnica = 0 Then
+        Call Account_Database.Database_Connect
+    #Else
+        'Si perdimos la conexion reconectamos
+        If Account_Database.CheckSQLStatus = False Then Account_Database.Database_Reconnect
+    #End If
+
+    If Not Account_Database.MakeQuery("SELECT serialhd FROM cuentas WHERE id = (?)", False, ID) Then
+        GetUserSerial = vbNullString
+        Exit Function
+
+    End If
+
+    GetUserSerial = Account_Database.Database_RecordSet!serialHD
+    Set Account_Database.Database_RecordSet = Nothing
+    
+    #If DBConexionUnica = 0 Then
+        Call Account_Database.Database_Close
+    #End If
+
+    Exit Function
+ErrorHandler:
+    Call LogDatabaseError("Error in GetUserSerial: " & ID & ". " & Err.Number & " - " & Err.description)
+
+End Function
+
+Public Function GetUserMacAdress(ByVal ID As Long) As String
+
+    '***************************************************
+    'Author: Lorwik
+    'Last Modification: 05/05/2021
+    'Descripcion: Devuelve el macaddress del usuario
+    '***************************************************
+    On Error GoTo ErrorHandler
+
+    Dim query As String
+
+    #If DBConexionUnica = 0 Then
+        Call Account_Database.Database_Connect
+    #Else
+        'Si perdimos la conexion reconectamos
+        If Account_Database.CheckSQLStatus = False Then Account_Database.Database_Reconnect
+    #End If
+
+    If Not Account_Database.MakeQuery("SELECT macaddress FROM cuentas WHERE id = (?)", False, ID) Then
+        GetUserMacAdress = vbNullString
+        Exit Function
+
+    End If
+
+    GetUserMacAdress = Account_Database.Database_RecordSet!macAddress
+    Set Account_Database.Database_RecordSet = Nothing
+    
+    #If DBConexionUnica = 0 Then
+        Call Account_Database.Database_Close
+    #End If
+
+    Exit Function
+ErrorHandler:
+    Call LogDatabaseError("Error in GetUserMacAdress: " & ID & ". " & Err.Number & " - " & Err.description)
 
 End Function
 
@@ -499,6 +535,51 @@ Public Function SaveNewAccount(ByVal UserName As String, _
 ErrorHandler:
     Call LogDatabaseError("Error in SaveNewAccountDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
     SaveNewAccount = False
+
+End Function
+
+Public Function SaveAccountEditPassDatabase(ByVal UserName As String, _
+                                  ByVal Password As String, _
+                                  ByVal Salt As String) As Boolean
+
+    '***************************************************
+    'Author: Lorwik
+    'Last Modification: 30/04/2020
+    '***************************************************
+    On Error GoTo ErrorHandler
+
+    Dim query As String
+    Dim UserAccId As Long
+    
+    #If DBConexionUnica = 0 Then
+        Call Account_Database.Database_Connect
+    #Else
+        'Si perdimos la conexion reconectamos
+        If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
+    #End If
+    
+    UserAccId = GetAccountID(UserName)
+    
+    '¿Obtuvimos una ID nula?
+    If UserAccId <> -1 Then
+    
+        Call Account_Database.MakeQuery("UPDATE cuentas SET password = (?), salt = (?) WHERE id = " & UserAccId, True, Password, Salt)
+        
+        SaveAccountEditPassDatabase = True
+        
+    Else
+        SaveAccountEditPassDatabase = False
+        
+    End If
+
+    #If DBConexionUnica = 0 Then
+        Call Account_Database.Database_Close
+    #End If
+
+    Exit Function
+ErrorHandler:
+    Call LogDatabaseError("Error in SaveAccountEditPassDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
+    SaveAccountEditPassDatabase = False
 
 End Function
 
@@ -540,7 +621,7 @@ Public Function SaveAccountEditGemasDatabase(ByVal UserName As String, ByVal Gem
 
     Exit Function
 ErrorHandler:
-    Call LogDatabaseError("Error in SaveAccountLastLoginDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Error in SaveAccountEditGemasDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
     SaveAccountEditGemasDatabase = False
 
 End Function
@@ -583,7 +664,7 @@ Public Function SaveAccountSumaGemasDatabase(ByVal UserName As String, ByVal Gem
 
     Exit Function
 ErrorHandler:
-    Call LogDatabaseError("Error in SaveAccountLastLoginDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Error in SaveAccountSumaGemasDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
     SaveAccountSumaGemasDatabase = False
 
 End Function
@@ -626,7 +707,7 @@ Public Function SaveAccountRestaGemasDatabase(ByVal UserName As String, ByVal Ge
 
     Exit Function
 ErrorHandler:
-    Call LogDatabaseError("Error in SaveAccountLastLoginDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Error in SaveAccountRestaGemasDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
     SaveAccountRestaGemasDatabase = False
     
 End Function
@@ -666,11 +747,11 @@ Public Function GetGemasDatabase(ByVal UserName As String) As Long
     Exit Function
 
 ErrorHandler:
-    Call LogDatabaseError("Error in GetUserPromedioDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
+    Call LogDatabaseError("Error in GetGemasDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
 
 End Function
 
-Public Sub SaveAccountLastLoginDatabase(ByVal UserName As String, ByVal UserIP As String)
+Public Sub SaveAccountLastLoginDatabase(ByVal UserIndex As Integer, ByVal UserName As String)
 
     '***************************************************
     'Author: Lorwik
@@ -687,8 +768,8 @@ Public Sub SaveAccountLastLoginDatabase(ByVal UserName As String, ByVal UserIP A
         If Account_Database.CheckSQLStatus = False Then Account_Database.Database_Reconnect
     #End If
 
-    query = "UPDATE cuentas SET date_last_login = NOW(), last_ip = (?) WHERE UPPER(username) = (?)"
-    Call Account_Database.MakeQuery(query, True, UserIP, UCase$(UserName))
+    query = "UPDATE cuentas SET date_last_login = NOW(), last_ip = (?), macaddress = (?), serialhd = (?) WHERE UPPER(username) = (?)"
+    Call Account_Database.MakeQuery(query, True, UserList(UserIndex).IP, UserList(UserIndex).AccountInfo.macAddress, UserList(UserIndex).AccountInfo.hdSerial, UCase$(UserName))
 
     #If DBConexionUnica = 0 Then
         Call Account_Database.Database_Close
@@ -816,6 +897,8 @@ Public Sub DeletePJCuenta(ByVal UserIndex As Integer, ByVal Slot As Byte)
         
         End If
 
+        'Restamos 1
+        .NumPjs = .NumPjs - 1
 
     End With
 
@@ -846,8 +929,6 @@ Public Sub ResetPJAccountSlot(ByVal UserIndex As Integer, ByVal Slot As Byte)
         .AccountPJ(Slot).dead = False
         .AccountPJ(Slot).gameMaster = False
         
-        'Restamos 1
-        .NumPjs = .NumPjs - 1
     End With
             
 End Sub

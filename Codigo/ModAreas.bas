@@ -77,6 +77,7 @@ End Type
 Public Sub InitializeAreas()
     Dim i As Long
     ReDim ConnGroups(1 To NumMaps) As Collection
+    
     For i = 1 To NumMaps
         Set ConnGroups(i) = New Collection
     Next i

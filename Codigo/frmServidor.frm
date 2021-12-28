@@ -1,8 +1,8 @@
 VERSION 5.00
 Begin VB.Form frmServidor 
-   BackColor       =   &H00FFC0C0&
+   BackColor       =   &H00E0E0E0&
    Caption         =   "Configuracion del Servidor"
-   ClientHeight    =   6315
+   ClientHeight    =   5940
    ClientLeft      =   60
    ClientTop       =   345
    ClientWidth     =   6600
@@ -17,148 +17,128 @@ Begin VB.Form frmServidor
       Strikethrough   =   0   'False
    EndProperty
    LinkTopic       =   "Form1"
-   ScaleHeight     =   421
+   ScaleHeight     =   396
    ScaleMode       =   3  'Pixel
    ScaleWidth      =   440
    StartUpPosition =   2  'CenterScreen
    Begin VB.ListBox listDats 
       Height          =   1425
       Left            =   2160
-      TabIndex        =   23
+      TabIndex        =   21
       Top             =   360
       Width           =   4095
    End
    Begin VB.CommandButton cmdReiniciar 
-      BackColor       =   &H00FFC0C0&
+      BackColor       =   &H00E0E0E0&
       Caption         =   "Reiniciar"
       Enabled         =   0   'False
       Height          =   375
       Left            =   1920
       Style           =   1  'Graphical
       TabIndex        =   10
-      Top             =   5880
+      Top             =   5520
       Width           =   1695
    End
    Begin VB.Frame Frame3 
-      BackColor       =   &H00FFC0C0&
+      BackColor       =   &H00E0E0E0&
       Caption         =   "Administracion"
-      Height          =   2895
+      Height          =   2535
       Left            =   120
       TabIndex        =   9
       Top             =   2040
       Width           =   6375
       Begin VB.CommandButton cmdCrearNueva 
-         BackColor       =   &H00FFC0C0&
+         BackColor       =   &H00E0E0E0&
          Caption         =   "Crear Nueva Cuenta"
          Height          =   375
-         Left            =   240
+         Left            =   4320
          Style           =   1  'Graphical
-         TabIndex        =   25
-         Top             =   2400
+         TabIndex        =   23
+         Top             =   840
          Width           =   1935
       End
       Begin VB.CommandButton cmdRecargarGuardiasPosOrig 
-         BackColor       =   &H00FFC0C0&
+         BackColor       =   &H00E0E0E0&
          Caption         =   "Guardias en pos original"
          Height          =   495
          Left            =   4320
          Style           =   1  'Graphical
-         TabIndex        =   24
-         Top             =   1860
+         TabIndex        =   22
+         Top             =   1320
          Width           =   1935
       End
       Begin VB.CommandButton cmdResetListen 
-         BackColor       =   &H00FFC0C0&
+         BackColor       =   &H00E0E0E0&
          Caption         =   "Reset Listen"
          Height          =   375
          Left            =   2280
          Style           =   1  'Graphical
-         TabIndex        =   21
+         TabIndex        =   19
          Top             =   1920
          Width           =   1935
       End
       Begin VB.CommandButton cmdResetSockets 
-         BackColor       =   &H00FFC0C0&
+         BackColor       =   &H00E0E0E0&
          Caption         =   "Reset sockets"
          Height          =   375
          Left            =   240
          Style           =   1  'Graphical
-         TabIndex        =   20
+         TabIndex        =   18
          Top             =   1920
          Width           =   1935
       End
-      Begin VB.CommandButton cmdDebugUserlist 
-         BackColor       =   &H00FFC0C0&
-         Caption         =   "Debug UserList"
-         Height          =   495
-         Left            =   4320
-         Style           =   1  'Graphical
-         TabIndex        =   19
-         Top             =   1320
-         Width           =   1935
-      End
       Begin VB.CommandButton cmdUnbanAllIps 
-         BackColor       =   &H00FFC0C0&
+         BackColor       =   &H00E0E0E0&
          Caption         =   "Unban All IPs (PELIGRO!)"
          Height          =   495
          Left            =   2280
-         Style           =   1  'Graphical
-         TabIndex        =   18
-         Top             =   1320
-         Width           =   1935
-      End
-      Begin VB.CommandButton cmdUnbanAll 
-         BackColor       =   &H00FFC0C0&
-         Caption         =   "Unban All (PELIGRO!)"
-         Height          =   495
-         Left            =   240
          Style           =   1  'Graphical
          TabIndex        =   17
          Top             =   1320
          Width           =   1935
       End
+      Begin VB.CommandButton cmdUnbanAll 
+         BackColor       =   &H00E0E0E0&
+         Caption         =   "Unban All (PELIGRO!)"
+         Height          =   495
+         Left            =   240
+         Style           =   1  'Graphical
+         TabIndex        =   16
+         Top             =   1320
+         Width           =   1935
+      End
       Begin VB.CommandButton cmdDebugNpcs 
-         BackColor       =   &H00FFC0C0&
+         BackColor       =   &H00E0E0E0&
          Caption         =   "Debug Npcs"
          Height          =   375
          Left            =   4320
          Style           =   1  'Graphical
-         TabIndex        =   16
-         Top             =   840
+         TabIndex        =   15
+         Top             =   360
          Width           =   1935
       End
       Begin VB.CommandButton frmAdministracion 
-         BackColor       =   &H00FFC0C0&
+         BackColor       =   &H00E0E0E0&
          Caption         =   "Administracion"
          Height          =   375
          Left            =   2280
-         Style           =   1  'Graphical
-         TabIndex        =   15
-         Top             =   840
-         Width           =   1935
-      End
-      Begin VB.CommandButton cmdPausarServidor 
-         BackColor       =   &H00FFC0C0&
-         Caption         =   "Pausar el servidor"
-         Height          =   375
-         Left            =   240
          Style           =   1  'Graphical
          TabIndex        =   14
          Top             =   840
          Width           =   1935
       End
-      Begin VB.CommandButton cmdStatsSlots 
-         BackColor       =   &H00FFC0C0&
-         Caption         =   "Stats de Slots"
+      Begin VB.CommandButton cmdPausarServidor 
+         BackColor       =   &H00E0E0E0&
+         Caption         =   "Pausar el servidor"
          Height          =   375
-         Left            =   4320
+         Left            =   240
          Style           =   1  'Graphical
          TabIndex        =   13
-         Top             =   360
+         Top             =   840
          Width           =   1935
       End
       Begin VB.CommandButton cmdVerTrafico 
-         BackColor       =   &H00FFC0C0&
+         BackColor       =   &H00E0E0E0&
          Caption         =   "Trafico"
          Height          =   375
          Left            =   2280
@@ -168,7 +148,7 @@ Begin VB.Form frmServidor
          Width           =   1935
       End
       Begin VB.CommandButton cmdConfigIntervalos 
-         BackColor       =   &H00FFC0C0&
+         BackColor       =   &H00E0E0E0&
          Caption         =   "Config. Intervalos"
          Height          =   375
          Left            =   240
@@ -179,14 +159,14 @@ Begin VB.Form frmServidor
       End
    End
    Begin VB.CommandButton cmdCerrar 
-      BackColor       =   &H00FFC0C0&
+      BackColor       =   &H00E0E0E0&
       Cancel          =   -1  'True
       Caption         =   "Salir (Esc)"
       Height          =   375
       Left            =   120
       Style           =   1  'Graphical
       TabIndex        =   8
-      Top             =   5880
+      Top             =   5520
       Width           =   1695
    End
    Begin VB.CommandButton cmdForzarCierre 
@@ -196,19 +176,19 @@ Begin VB.Form frmServidor
       Left            =   3720
       Style           =   1  'Graphical
       TabIndex        =   7
-      Top             =   5880
+      Top             =   5520
       Width           =   2775
    End
    Begin VB.Frame Frame2 
-      BackColor       =   &H00FFC0C0&
+      BackColor       =   &H00E0E0E0&
       Caption         =   "Backup"
       Height          =   735
       Left            =   120
       TabIndex        =   3
-      Top             =   5040
+      Top             =   4680
       Width           =   6375
       Begin VB.CommandButton cmdLoadWorldBackup 
-         BackColor       =   &H00FFC0C0&
+         BackColor       =   &H00E0E0E0&
          Caption         =   "Cargar Mapas"
          Height          =   375
          Left            =   4320
@@ -218,7 +198,7 @@ Begin VB.Form frmServidor
          Width           =   1935
       End
       Begin VB.CommandButton cmdCharBackup 
-         BackColor       =   &H00FFC0C0&
+         BackColor       =   &H00E0E0E0&
          Caption         =   "Guardar Chars"
          Height          =   375
          Left            =   2280
@@ -228,7 +208,7 @@ Begin VB.Form frmServidor
          Width           =   1935
       End
       Begin VB.CommandButton cmdWorldBackup 
-         BackColor       =   &H00FFC0C0&
+         BackColor       =   &H00E0E0E0&
          Caption         =   "Guardar Mapas"
          Height          =   375
          Left            =   240
@@ -239,7 +219,7 @@ Begin VB.Form frmServidor
       End
    End
    Begin VB.Frame Frame1 
-      BackColor       =   &H00FFC0C0&
+      BackColor       =   &H00E0E0E0&
       Caption         =   "Recargar"
       Height          =   1815
       Left            =   120
@@ -252,12 +232,12 @@ Begin VB.Form frmServidor
          Height          =   375
          Left            =   240
          Style           =   1  'Graphical
-         TabIndex        =   22
+         TabIndex        =   20
          Top             =   840
          Width           =   1575
       End
       Begin VB.CommandButton cmdRecargarClanes 
-         BackColor       =   &H00FFC0C0&
+         BackColor       =   &H00E0E0E0&
          Caption         =   "Clanes"
          Height          =   375
          Left            =   240
@@ -267,7 +247,7 @@ Begin VB.Form frmServidor
          Width           =   1575
       End
       Begin VB.CommandButton cmdRecargarConfigIni 
-         BackColor       =   &H00FFC0C0&
+         BackColor       =   &H00E0E0E0&
          Caption         =   "Configuración"
          Height          =   375
          Left            =   240
@@ -461,11 +441,6 @@ Private Sub cmdResetSockets_Click()
     If MsgBox("Esta seguro que desea reiniciar los sockets? Se cerraran todas las conexiones activas.", vbYesNo, "Reiniciar Sockets") = vbYes Then
         Call WSApiReiniciarSockets
     End If
-
-End Sub
-
-Private Sub cmdStatsSlots_Click()
-    frmConID.Show
 
 End Sub
 
