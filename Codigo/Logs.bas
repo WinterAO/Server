@@ -472,3 +472,25 @@ errHandler:
 
 End Sub
 
+Public Sub LogCreaciondeCuentas(ByVal Mensaje As String)
+    '***************************************************
+    'Author: Unknown
+    'Last Modification: -
+    '
+    '***************************************************
+
+    On Error GoTo errHandler
+
+    Dim nfile As Integer
+
+    nfile = FreeFile ' obtenemos un canal
+    Open App.Path & "\logs\CreaciondeCuentas.log" For Append Shared As #nfile
+    Print #nfile, Date & " " & time & Mensaje
+    Print #nfile, ""
+    Close #nfile
+    
+    Exit Sub
+
+errHandler:
+
+End Sub

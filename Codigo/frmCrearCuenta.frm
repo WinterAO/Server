@@ -290,7 +290,7 @@ Private Sub cmdCrearCuenta_Click()
     Salt = RandomString(32)
     
     If SaveNewAccount(TxtNick.Text, txtEmail.Text, oSHA256.SHA256(txtPass.Text & Salt), Salt) Then
-        MsgBox "Cuenta " & TxtNick.Text & " creada con exito."
+        MsgBox "Cuenta " & TxtNick.Text & " creada con exito, revisa tu email para verificar la cuenta."
         
     Else
         MsgBox "Error al crear la cuenta."

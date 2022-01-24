@@ -511,7 +511,8 @@ End Function
 Public Function SaveNewAccount(ByVal UserName As String, _
                                   ByVal Email As String, _
                                   ByVal Password As String, _
-                                  ByVal Salt As String) As Boolean
+                                  ByVal Salt As String, _
+                                  Optional ByVal Verificada As Boolean = False) As Boolean
 
     '***************************************************
     'Author: Lorwik
@@ -521,13 +522,34 @@ Public Function SaveNewAccount(ByVal UserName As String, _
     On Error GoTo ErrorHandler
 
     Dim query As String
+    Dim CodigoVerificacion As String
 
     'Si perdimos la conexion reconectamos
     If Account_Database.CheckSQLStatus = False Then Account_Database.Database_Reconnect
 
-    query = "INSERT INTO cuentas SET username = (?), email = (?), password = (?), salt = (?), id_confirmacion = 'VERIFICADA', status = '1', date_created = NOW(), date_last_login = NOW();"
+    '¿Creamos una cuenta ya verificada o una cuenta normal?
+    If Not Verificada Then
+    
+        'Obtenemos el codigo de verificacion
+        CodigoVerificacion = RandomNumber(100000, 999999)
+    
+        query = "INSERT INTO cuentas SET username = (?), email = (?), password = (?), salt = (?), id_confirmacion = (?), status = '0', date_created = NOW(), date_last_login = NOW();"
+    
+    Else
+    
+        query = "INSERT INTO cuentas SET username = (?), email = (?), password = (?), salt = (?), id_confirmacion = 'VERIFICADA', status = '1', date_created = NOW(), date_last_login = NOW();"
+        
+    End If
 
-    Call Account_Database.MakeQuery(query, True, UserName, Email, Password, Salt)
+    Call Account_Database.MakeQuery(query, True, UserName, Email, Password, Salt, CodigoVerificacion)
+    
+    If Not Verificada Then
+        If enviarMailVerificacion(UserName, Email, CodigoVerificacion) = False Then
+            SaveNewAccount = False
+            Exit Function
+        End If
+    End If
+          
 
     SaveNewAccount = True
     
