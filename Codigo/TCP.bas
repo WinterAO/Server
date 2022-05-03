@@ -442,9 +442,8 @@ Sub ConnectNewUser(ByVal UserIndex As Integer, _
         '???????????????? INVENTARIO
         Call AddItemsToNewUser(UserIndex, UserClase, UserRaza)
 
-        If EstadisticasInicialesUsarConfiguracionPersonalizada Then
+        If EstadisticasInicialesUsarConfiguracionPersonalizada Or Battlegrounds Then _
             Call SetAttributesCustomToNewUser(UserIndex)
-        End If
 
         Call DarCuerpo(UserIndex)
         .Char.Heading = eHeading.SOUTH
@@ -1181,6 +1180,8 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
             End If
         
         End If
+        
+        Call WriteBattlegrounds(UserIndex, Battlegrounds)
     
         'Tratamos de evitar en lo posible el "Telefrag". Solo 1 intento de loguear en pos adjacentes.
         'Codigo por Pablo (ToxicWaste) y revisado por Nacho (Integer), corregido para que realmetne ande y no tire el server por Juan Martin Sotuyo Dodero (Maraxus)
@@ -1304,7 +1305,7 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
             Call WriteMultiMessage(UserIndex, eMessages.SafeModeOn)
 
         End If
-    
+        
         'Info
         Call WriteUserIndexInServer(UserIndex) 'Enviamos el User index
         Call WriteChangeMap(UserIndex, .Pos.Map, MapZonas(.Pos.Map, UserZonaId(UserIndex)).MapVersion) 'Carga el mapa

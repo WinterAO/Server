@@ -176,6 +176,7 @@ Private Enum ServerPacketID
     ConfirmarInstruccion
     SetSpeed
     AtaqueNPC
+    BattleGs                        'Battlegrounds
 End Enum
 
 Private Enum ClientPacketID
@@ -332,6 +333,7 @@ Private Enum ClientPacketID
     OfertarSubasta 'Ofertamos en la subasta
     ConsultaSubasta 'Si existe una subasta enviamos la Info, sino Abrimos el panel para iniciar una subasta.
     RespuestaInstruccion
+    LoginNewAccount
     GMCommands
 End Enum
 
@@ -433,21 +435,26 @@ Public Function HandleIncomingData(ByVal UserIndex As Integer) As Boolean
         'Se castea a long por que VB6 cuando usa SELECT CASE
         'Lo hace de manera mas efectiva https://www.gs-zone.org/temas/las-consecuencias-de-usar-byte-en-handleincomingdata.99245/
         Dim packetID As Long: packetID = CLng(.incomingData.PeekByte())
+        
+        'Debug.Print "packetID: " & packetID
 
         'Verifico si el paquete necesita que el user este logeado
         If Not (packetID = ClientPacketID.LoginExistingChar _
                 Or packetID = ClientPacketID.LoginNewChar _
+                Or packetID = ClientPacketID.LoginNewAccount _
                 Or packetID = ClientPacketID.LoginExistingAccount _
                 Or packetID = ClientPacketID.DeleteChar) Then
              
-            'Vierifico si el user esta logeado
+            'Verifico si el user esta logeado
             If Not .flags.AccountLogged Then
                 Call CloseSocket(UserIndex)
                 Exit Function
+                
             ElseIf Not .flags.UserLogged Then
                 Call Cerrar_Usuario(UserIndex)
                 Exit Function
-                'El usuario ya logueo. Reseteamos el tiempo AFK si el ID es valido.
+                
+            'El usuario ya logueo. Reseteamos el tiempo AFK si el ID es valido.
             ElseIf packetID <= LAST_CLIENT_PACKET_ID Then
                 .Counters.IdleCount = 0
     
@@ -931,9 +938,12 @@ Public Function HandleIncomingData(ByVal UserIndex As Integer) As Boolean
         Case ClientPacketID.RespuestaInstruccion
             Call HandleRespuestaInstruccion(UserIndex)
             
+        Case ClientPacketID.LoginNewAccount
+            Call HandleLoginNewAccount(UserIndex)
+            
         Case ClientPacketID.GMCommands              'GM Messages
             Call HandleGMCommands(UserIndex)
-            
+
         Case Else
             'ERROR : Abort!
             Call CloseSocket(UserIndex)
@@ -947,7 +957,7 @@ Public Function HandleIncomingData(ByVal UserIndex As Integer) As Boolean
     
     ElseIf Err.Number <> 0 And Not Err.Number = UserList(UserIndex).incomingData.NotEnoughDataErrCode Then
         'An error ocurred, log it and kick player.
-        Call LogError("Error: " & Err.Number & " [" & Err.description & "] " & " Source: " & Err.Source & vbTab & " HelpFile: " & Err.HelpFile & vbTab & " HelpContext: " & Err.HelpContext & vbTab & " LastDllError: " & Err.LastDllError & vbTab & " - UserIndex: " & UserIndex & " - producido al manejar el paquete: " & CStr(packetID))
+        Call LogError("Error: " & Err.Number & " [" & Err.description & "] " & " Source: " & Err.source & vbTab & " HelpFile: " & Err.HelpFile & vbTab & " HelpContext: " & Err.HelpContext & vbTab & " LastDllError: " & Err.LastDllError & vbTab & " - UserIndex: " & UserIndex & " - producido al manejar el paquete: " & CStr(packetID))
         Call CloseSocket(UserIndex)
 
         HandleIncomingData = False
@@ -24177,8 +24187,36 @@ End Sub
 
 Public Sub WriteAtaqueNPC(ByVal UserIndex As Integer, ByVal NPCIndex As Integer)
 On Error GoTo errHandler
-    Call UserList(UserIndex).outgoingData.WriteByte(ServerPacketID.AtaqueNPC)
-    Call UserList(UserIndex).outgoingData.WriteInteger(NPCIndex)
+
+    With UserList(UserIndex).outgoingData
+        Call .WriteByte(ServerPacketID.AtaqueNPC)
+        Call .WriteInteger(NPCIndex)
+    End With
+    
+Exit Sub
+
+errHandler:
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
+        Resume
+    End If
+End Sub
+
+Public Sub WriteBattlegrounds(ByVal UserIndex As Integer, ByVal BGs As Boolean)
+'**************************************
+'Autor Lorwik
+'Fecha: 02/05/2022
+'Descripción: Envia la variable Battlegrounds al cliente
+'**************************************
+On Error GoTo errHandler
+
+    With UserList(UserIndex).outgoingData
+    
+        Call .WriteByte(ServerPacketID.BattleGs)
+        Call .WriteBoolean(BGs)
+    
+    End With
+
 Exit Sub
 
 errHandler:
@@ -24439,6 +24477,71 @@ Private Sub HandleBanTemporal(ByVal UserIndex As Integer)
 
     End With
 
+errHandler:
+
+    Dim Error As Long
+
+    Error = Err.Number
+
+    On Error GoTo 0
+    
+    'Destroy auxiliar buffer
+    Set Buffer = Nothing
+    
+    If Error <> 0 Then Err.Raise Error
+
+End Sub
+
+Private Sub HandleLoginNewAccount(ByVal UserIndex As Integer)
+
+    '***************************************************
+    'Author: Lorwik
+    'Last Modification: 05/05/2021
+    '
+    '***************************************************
+
+    If UserList(UserIndex).incomingData.Length < 9 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
+        Exit Sub
+
+    End If
+    
+On Error GoTo errHandler
+
+    With UserList(UserIndex)
+    
+        'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
+        Dim Buffer As New clsByteQueue
+        Set Buffer = New clsByteQueue
+        
+        Call Buffer.CopyBuffer(.incomingData)
+        
+        'Remove packet ID
+        Call Buffer.ReadByte
+    
+        Dim UserName As String
+        Dim Email As String
+        Dim Password As String
+        Dim version  As String
+        
+        'Convert version number to string
+        version = CStr(Buffer.ReadByte()) & "." & CStr(Buffer.ReadByte()) & "." & CStr(Buffer.ReadByte())
+        
+        UserName = Buffer.ReadASCIIString()
+        Email = Buffer.ReadASCIIString()
+        Password = Buffer.ReadASCIIString()
+    
+        If Not VersionOK(version) Then
+            Call WriteErrorMsg(UserIndex, "Esta version del juego es obsoleta, la ultima version es la " & ULTIMAVERSION & ". Tu Version " & version & ". La misma se encuentra disponible en www.winterao.com.ar")
+        Else
+            Call CrearCuenta(UserName, Email, Password)
+        End If
+        
+        'If we got here then packet is complete, copy data back to original queue
+        Call .incomingData.CopyBuffer(Buffer)
+    
+    End With
+    
 errHandler:
 
     Dim Error As Long

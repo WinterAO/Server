@@ -1220,59 +1220,59 @@ Function GetVar(ByVal File As String, _
 End Function
 
 Sub CargarBackUp()
-    '***************************************************
-    'Author: Unknown
-    'Last Modification: -
-    '
-    '***************************************************
-
-    If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando backup."
-    
-    Dim Map       As Integer
-
-    Dim tFileName As String
-    
-    On Error GoTo man
-        
-    NumMaps = val(GetVar(DatPath & "Map.dat", "INIT", "NumMaps"))
-        
-    frmCargando.cargar.min = 0
-    frmCargando.cargar.max = NumMaps
-    frmCargando.cargar.Value = 0
-        
-    MapPath = GetVar(DatPath & "Map.dat", "INIT", "MapPath")
-        
-    ReDim MapData(1 To NumMaps, XMinMapSize To XMaxMapSize, YMinMapSize To YMaxMapSize) As MapBlock
-    ReDim CantZonas(1 To NumMaps) As Integer
-    
-    For Map = 1 To NumMaps
-
-        If val(GetVar(App.Path & MapPath & "Mapa" & Map & ".Dat", "Mapa" & Map, "BackUp")) <> 0 Then
-            tFileName = App.Path & "\WorldBackUp\Mapa" & Map
-                
-            If Not FileExist(tFileName & ".*") Then 'Miramos que exista al menos uno de los 3 archivos, sino lo cargamos de la carpeta de los mapas
-                tFileName = App.Path & MapPath & "Mapa" & Map
-
-            End If
-
-        Else
-            tFileName = App.Path & MapPath & "Mapa" & Map
-
-        End If
-            
-        Call CargarMapa(Map, tFileName)
-            
-        frmCargando.cargar.Value = frmCargando.cargar.Value + 1
-        DoEvents
-    Next Map
-    
-    Exit Sub
-
-    If frmMain.Visible Then frmMain.txtStatus.Text = Date & " " & time & " - Se termino de cargar el backup."
-
-man:
-    MsgBox ("Error durante la carga de mapas, el mapa " & Map & " contiene errores")
-    Call LogError(Date & " " & Err.description & " " & Err.HelpContext & " " & Err.HelpFile & " " & Err.source)
+'    '***************************************************
+'    'Author: Unknown
+'    'Last Modification: -
+'    '
+'    '***************************************************
+'
+'    If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando backup."
+'
+'    Dim Map       As Integer
+'
+'    Dim tFileName As String
+'
+'    On Error GoTo man
+'
+'    NumMaps = val(GetVar(DatPath & "Map.dat", "INIT", "NumMaps"))
+'
+'    frmCargando.cargar.min = 0
+'    frmCargando.cargar.max = NumMaps
+'    frmCargando.cargar.Value = 0
+'
+'    MapPath = GetVar(DatPath & "Map.dat", "INIT", "MapPath")
+'
+'    ReDim MapData(1 To NumMaps, XMinMapSize To XMaxMapSize, YMinMapSize To YMaxMapSize) As MapBlock
+'    ReDim CantZonas(1 To NumMaps) As Integer
+'
+'    For Map = 1 To NumMaps
+'
+'        If val(GetVar(App.Path & MapPath & "Mapa" & Map & ".Dat", "Mapa" & Map, "BackUp")) <> 0 Then
+'            tFileName = App.Path & "\WorldBackUp\Mapa" & Map
+'
+'            If Not FileExist(tFileName & ".*") Then 'Miramos que exista al menos uno de los 3 archivos, sino lo cargamos de la carpeta de los mapas
+'                tFileName = App.Path & MapPath & "Mapa" & Map
+'
+'            End If
+'
+'        Else
+'            tFileName = App.Path & MapPath & "Mapa" & Map
+'
+'        End If
+'
+'        Call CargarMapa(Map, tFileName)
+'
+'        frmCargando.cargar.Value = frmCargando.cargar.Value + 1
+'        DoEvents
+'    Next Map
+'
+'    Exit Sub
+'
+'    If frmMain.Visible Then frmMain.txtStatus.Text = Date & " " & time & " - Se termino de cargar el backup."
+'
+'man:
+'    MsgBox ("Error durante la carga de mapas, el mapa " & Map & " contiene errores")
+'    Call LogError(Date & " " & Err.description & " " & Err.HelpContext & " " & Err.HelpFile & " " & Err.source)
  
 End Sub
 
@@ -1291,7 +1291,11 @@ Sub LoadMapData()
     
     On Error GoTo man
         
-    NumMaps = val(GetVar(DatPath & "Map.dat", "INIT", "NumMaps"))
+    If Battlegrounds Then
+        NumMaps = val(GetVar(DatPath & "Map.dat", "INIT", "NumBgs"))
+    Else
+        NumMaps = val(GetVar(DatPath & "Map.dat", "INIT", "NumMaps"))
+    End If
         
     frmCargando.cargar.min = 0
     frmCargando.cargar.max = NumMaps
@@ -1304,7 +1308,12 @@ Sub LoadMapData()
           
     For Map = 1 To NumMaps
             
-        tFileName = App.Path & MapPath & "Mapa" & Map
+        If Battlegrounds Then
+            tFileName = App.Path & MapPath & "Bg" & Map
+        Else
+            tFileName = App.Path & MapPath & "Mapa" & Map
+        End If
+        
         Call CargarMapa(Map, tFileName)
             
         frmCargando.cargar.Value = frmCargando.cargar.Value + 1
@@ -1572,6 +1581,8 @@ Sub LoadSini()
 
     PuedeCrearPersonajes = val(Lector.GetValue("INIT", "PuedeCrearPersonajes"))
     ServerSoloGMs = val(Lector.GetValue("INIT", "ServerSoloGMs"))
+    
+    Battlegrounds = CBool(val(Lector.GetValue("INIT", "Battlegrounds")))
     
     ArmaduraImperial1 = val(Lector.GetValue("INIT", "ArmaduraImperial1"))
     ArmaduraImperial2 = val(Lector.GetValue("INIT", "ArmaduraImperial2"))

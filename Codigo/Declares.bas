@@ -2141,6 +2141,8 @@ Public PuedeCrearPersonajes               As Integer
 
 Public ServerSoloGMs                      As Integer
 
+Public Battlegrounds                      As Boolean
+
 Public NumRecords                         As Integer
 
 Public EnPausa                            As Boolean

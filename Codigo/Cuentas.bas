@@ -179,6 +179,46 @@ ErrorHandler:
 
 End Function
 
+Public Function EmailExisteDatabase(ByVal Email As String) As Boolean
+
+    '***************************************************
+    'Author: Lorwik
+    'Last Modification: 30/01/2022
+    '***************************************************
+    On Error GoTo ErrorHandler
+
+    Dim query As String
+
+    #If DBConexionUnica = 0 Then
+        Call Account_Database.Database_Connect
+    #Else
+        'Si perdimos la conexion reconectamos
+        If Account_Database.CheckSQLStatus = False Then Account_Database.Database_Reconnect
+    #End If
+
+    If Not Account_Database.MakeQuery("SELECT id FROM cuentas WHERE UPPER(email) = (?)", False, UCase$(Email)) Then
+        EmailExisteDatabase = False
+        Exit Function
+
+    End If
+
+    EmailExisteDatabase = (Account_Database.Database_RecordSet.RecordCount > 0)
+    Set Account_Database.Database_RecordSet = Nothing
+    
+    #If DBConexionUnica = 0 Then
+        Call Account_Database.Database_Close
+    #End If
+
+    Exit Function
+
+ErrorHandler:
+    If Err.Number = -1207576359 Then _
+        Call Account_Database.Database_Reconnect
+
+    Call LogDatabaseError("Error in EmailExisteDatabase: " & Email & ". " & Err.Number & " - " & Err.description)
+
+End Function
+
 Public Function CuentaVerificada(ByVal UserName As String) As Boolean
 
     '***************************************************
@@ -955,4 +995,77 @@ Public Sub ResetPJAccountSlot(ByVal UserIndex As Integer, ByVal Slot As Byte)
             
 End Sub
 
+Public Sub CrearCuenta(ByVal Nombre As String, ByVal Email As String, ByVal Password As String, Optional ByVal UserIndex As Integer, Optional ByVal Manual As Boolean = False)
 
+    Dim Salt As String
+    
+    Dim oSHA256 As CSHA256
+
+    Set oSHA256 = New CSHA256
+    
+    If LenB(Nombre) > 24 Or LenB(Nombre) = 0 Then
+        If Manual Then
+            MsgBox "El nombre de cuenta debe tener un minimo de 4 caracteres y un maximo de 24."
+        Else
+            Call WriteErrorMsg(UserIndex, "El nombre de cuenta debe tener un minimo de 4 caracteres y un maximo de 24.")
+        End If
+        Exit Sub
+
+    End If
+    
+    If LenB(Email) = 0 Then
+        If Manual Then
+            MsgBox "El campo de Email esta vacio."
+        Else
+            Call WriteErrorMsg(UserIndex, "El campo de Email esta vacio.")
+        End If
+        Exit Sub
+    End If
+    
+    If LenB(Password) = 0 Then
+        If Manual Then
+            MsgBox "El campo de contraseña esta vacio."
+        Else
+            Call WriteErrorMsg(UserIndex, "El campo de contraseña esta vacio.")
+        End If
+        
+        Exit Sub
+    End If
+    
+    If CuentaExisteDatabase(Nombre) Then
+        If Manual Then
+            MsgBox "El nombre de la cuenta ya existe."
+        Else
+            Call WriteErrorMsg(UserIndex, "El nombre de la cuenta ya existe.")
+        End If
+        Exit Sub
+    End If
+    
+    If EmailExisteDatabase(Email) Then
+        If Manual Then
+            MsgBox "El email ya esta en uso."
+        Else
+            Call WriteErrorMsg(UserIndex, "El email ya esta en uso.")
+        End If
+        Exit Sub
+    End If
+    
+    Salt = RandomString(32)
+    
+    If SaveNewAccount(Nombre, Email, oSHA256.SHA256(Password & Salt), Salt) Then
+        If Manual Then
+            MsgBox "Cuenta " & Nombre & " creada con exito, revisa tu email para verificar la cuenta."
+        Else
+            Call WriteErrorMsg(UserIndex, "Cuenta " & Nombre & " creada con exito, revisa tu email para verificar la cuenta.")
+        End If
+        
+    Else
+        If Manual Then
+            MsgBox "Error al crear la cuenta. Intentelo mas tarde o contacte con el soporte."
+        Else
+            Call WriteErrorMsg(UserIndex, "Error al crear la cuenta. Intentelo mas tarde o contacte con el soporte.")
+        End If
+    
+    End If
+
+End Sub
