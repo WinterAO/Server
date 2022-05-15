@@ -332,6 +332,7 @@ Private Enum ClientPacketID
     OfertarSubasta 'Ofertamos en la subasta
     ConsultaSubasta 'Si existe una subasta enviamos la Info, sino Abrimos el panel para iniciar una subasta.
     RespuestaInstruccion
+    LoginNewAccount
     GMCommands
 End Enum
 
@@ -931,6 +932,9 @@ Public Function HandleIncomingData(ByVal UserIndex As Integer) As Boolean
         Case ClientPacketID.RespuestaInstruccion
             Call HandleRespuestaInstruccion(UserIndex)
             
+        Case ClientPacketID.LoginNewAccount
+            Call HandleLoginNewAccount(UserIndex)
+            
         Case ClientPacketID.GMCommands              'GM Messages
             Call HandleGMCommands(UserIndex)
             
@@ -947,7 +951,7 @@ Public Function HandleIncomingData(ByVal UserIndex As Integer) As Boolean
     
     ElseIf Err.Number <> 0 And Not Err.Number = UserList(UserIndex).incomingData.NotEnoughDataErrCode Then
         'An error ocurred, log it and kick player.
-        Call LogError("Error: " & Err.Number & " [" & Err.description & "] " & " Source: " & Err.Source & vbTab & " HelpFile: " & Err.HelpFile & vbTab & " HelpContext: " & Err.HelpContext & vbTab & " LastDllError: " & Err.LastDllError & vbTab & " - UserIndex: " & UserIndex & " - producido al manejar el paquete: " & CStr(packetID))
+        Call LogError("Error: " & Err.Number & " [" & Err.description & "] " & " Source: " & Err.source & vbTab & " HelpFile: " & Err.HelpFile & vbTab & " HelpContext: " & Err.HelpContext & vbTab & " LastDllError: " & Err.LastDllError & vbTab & " - UserIndex: " & UserIndex & " - producido al manejar el paquete: " & CStr(packetID))
         Call CloseSocket(UserIndex)
 
         HandleIncomingData = False
@@ -23897,6 +23901,64 @@ Public Sub HandleRespuestaInstruccion(ByVal UserIndex As Integer)
         
     End With
     
+End Sub
+
+Private Sub HandleLoginNewAccount(ByVal UserIndex As Integer)
+
+    '***************************************************
+    'Author: Lorwik
+    'Last Modification: 09/05/2022
+    '
+    '***************************************************
+
+    If UserList(UserIndex).incomingData.Length < 10 Then
+        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
+        Exit Sub
+
+    End If
+    
+    On Error GoTo errHandler
+
+    'This packet contains strings, make a copy of the data to prevent losses if it's not complete yet...
+    Dim Buffer As clsByteQueue
+    Set Buffer = New clsByteQueue
+    Call Buffer.CopyBuffer(UserList(UserIndex).incomingData)
+    
+    'Remove packet ID
+    Call Buffer.ReadByte
+    
+    Dim version     As String
+    Dim accName     As String
+    Dim accMail     As String
+    Dim accPassword As String
+        
+    version = CStr(Buffer.ReadByte()) & "." & CStr(Buffer.ReadByte()) & "." & CStr(Buffer.ReadByte())
+    
+    accName = Buffer.ReadASCIIString()
+    accMail = Buffer.ReadASCIIString()
+    accPassword = Buffer.ReadASCIIString()
+    
+    'If we got here then packet is complete, copy data back to original queue
+    Call UserList(UserIndex).incomingData.CopyBuffer(Buffer)
+    
+    If Not VersionOK(version) Then
+        Call WriteErrorMsg(UserIndex, "Esta version del juego es obsoleta, la version correcta es la " & ULTIMAVERSION & ". La misma se encuentra disponible en www.winterao.com.ar")
+    Else
+        'CREAR CUENTA
+    End If
+        
+errHandler:
+
+    Dim Error As Long
+
+    Error = Err.Number
+
+    On Error GoTo 0
+    
+    'Destroy auxiliar buffer
+    Set Buffer = Nothing
+    
+    If Error <> 0 Then Err.Raise Error
 End Sub
 
 Public Sub HandleMsgAmigo(ByVal UserIndex As Integer)

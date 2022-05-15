@@ -29,9 +29,9 @@ Option Explicit
 '************************************************
 
 ' Tamanio del mapa
-Public Const XMaxMapSize        As Integer = 1100
+Public Const XMaxMapSize        As Integer = 1000
 Public Const XMinMapSize        As Integer = 1
-Public Const YMaxMapSize        As Integer = 1100
+Public Const YMaxMapSize        As Integer = 1000
 Public Const YMinMapSize        As Integer = 1
 
 ' Tamanio en tiles de la pantalla.
