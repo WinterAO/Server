@@ -134,6 +134,7 @@ Private Enum ServerPacketID
     SendNight                    ' NOC
     Pong
     UpdateTagAndStatus
+    BattleGs                     'Battlegrounds
     
     'GM =  messages
     SpawnList                    ' SPL
@@ -176,7 +177,6 @@ Private Enum ServerPacketID
     ConfirmarInstruccion
     SetSpeed
     AtaqueNPC
-    BattleGs                        'Battlegrounds
 End Enum
 
 Private Enum ClientPacketID
@@ -15632,7 +15632,7 @@ Public Sub HandleChangeZonaBackup(ByVal UserIndex As Integer)
         End If
         
         'Change the boolean to string in a fast way
-        Call WriteVar(App.Path & MapPath & "mapa" & .Pos.Map & ".dat", "Mapa" & .Pos.Map, "backup", MapZonas(.Pos.Map, UserZonaId(UserIndex)).BackUp)
+        Call WriteVar(MapPath & "mapa" & .Pos.Map & ".dat", "Mapa" & .Pos.Map, "backup", MapZonas(.Pos.Map, UserZonaId(UserIndex)).BackUp)
         
         Call WriteConsoleMsg(UserIndex, "Mapa " & .Pos.Map & " Backup: " & MapZonas(.Pos.Map, UserZonaId(UserIndex)).BackUp, FontTypeNames.FONTTYPE_INFO)
 
@@ -15674,7 +15674,7 @@ Public Sub HandleChangeZonaPK(ByVal UserIndex As Integer)
         MapZonas(.Pos.Map, UserZonaId(UserIndex)).Pk = isMapPk
         
         'Change the boolean to string in a fast way
-        Call WriteVar(App.Path & MapPath & "mapa" & .Pos.Map & ".dat", "Mapa" & .Pos.Map, "Pk", IIf(isMapPk, "1", "0"))
+        Call WriteVar(MapPath & "mapa" & .Pos.Map & ".dat", "Mapa" & .Pos.Map, "Pk", IIf(isMapPk, "1", "0"))
 
         Call WriteConsoleMsg(UserIndex, "Mapa " & .Pos.Map & " PK: " & MapZonas(.Pos.Map, UserZonaId(UserIndex)).Pk, FontTypeNames.FONTTYPE_INFO)
 
@@ -15723,7 +15723,7 @@ Public Sub HandleChangeZonaRestricted(ByVal UserIndex As Integer)
                 
                 MapZonas(UserList(UserIndex).Pos.Map, UserZonaId(UserIndex)).Restringir = RestrictStringToByte(tStr)
                 
-                Call WriteVar(App.Path & MapPath & "mapa" & UserList(UserIndex).Pos.Map & ".dat", "Mapa" & UserList(UserIndex).Pos.Map, "Restringir", tStr)
+                Call WriteVar(MapPath & "mapa" & UserList(UserIndex).Pos.Map & ".dat", "Mapa" & UserList(UserIndex).Pos.Map, "Restringir", tStr)
                 Call WriteConsoleMsg(UserIndex, "Mapa " & .Pos.Map & " Restringido: " & RestrictByteToString(MapZonas(.Pos.Map, UserZonaId(UserIndex)).Restringir), FontTypeNames.FONTTYPE_INFO)
             Else
                 Call WriteConsoleMsg(UserIndex, "Opciones para restringir: 'NEWBIE', 'NO', 'ARMADA', 'CAOS', 'FACCION'", FontTypeNames.FONTTYPE_INFO)
@@ -15781,7 +15781,7 @@ Public Sub HandleChangeZonaNoMagic(ByVal UserIndex As Integer)
         If (.flags.Privilegios And (PlayerType.Admin Or PlayerType.Dios)) <> 0 Then
             Call LogGM(.Name, .Name & " ha cambiado la informacion sobre si esta permitido usar la magia el mapa.")
             MapZonas(UserList(UserIndex).Pos.Map, UserZonaId(UserIndex)).MagiaSinEfecto = nomagic
-            Call WriteVar(App.Path & MapPath & "mapa" & UserList(UserIndex).Pos.Map & ".dat", "Mapa" & UserList(UserIndex).Pos.Map, "MagiaSinEfecto", nomagic)
+            Call WriteVar(MapPath & "mapa" & UserList(UserIndex).Pos.Map & ".dat", "Mapa" & UserList(UserIndex).Pos.Map, "MagiaSinEfecto", nomagic)
             Call WriteConsoleMsg(UserIndex, "Mapa " & .Pos.Map & " MagiaSinEfecto: " & MapZonas(.Pos.Map, UserZonaId(UserIndex)).MagiaSinEfecto, FontTypeNames.FONTTYPE_INFO)
 
         End If
@@ -15819,7 +15819,7 @@ Public Sub HandleChangeZonaNoInvi(ByVal UserIndex As Integer)
         If (.flags.Privilegios And (PlayerType.Admin Or PlayerType.Dios)) <> 0 Then
             Call LogGM(.Name, .Name & " ha cambiado la informacion sobre si esta permitido usar la invisibilidad en el mapa.")
             MapZonas(UserList(UserIndex).Pos.Map, UserZonaId(UserIndex)).InviSinEfecto = noinvi
-            Call WriteVar(App.Path & MapPath & "mapa" & UserList(UserIndex).Pos.Map & ".dat", "Mapa" & UserList(UserIndex).Pos.Map, "InviSinEfecto", noinvi)
+            Call WriteVar(MapPath & "mapa" & UserList(UserIndex).Pos.Map & ".dat", "Mapa" & UserList(UserIndex).Pos.Map, "InviSinEfecto", noinvi)
             Call WriteConsoleMsg(UserIndex, "Mapa " & .Pos.Map & " InviSinEfecto: " & MapZonas(.Pos.Map, UserZonaId(UserIndex)).InviSinEfecto, FontTypeNames.FONTTYPE_INFO)
 
         End If
@@ -15857,7 +15857,7 @@ Public Sub HandleChangeZonaNoResu(ByVal UserIndex As Integer)
         If (.flags.Privilegios And (PlayerType.Admin Or PlayerType.Dios)) <> 0 Then
             Call LogGM(.Name, .Name & " ha cambiado la informacion sobre si esta permitido usar el resucitar en el mapa.")
             MapZonas(UserList(UserIndex).Pos.Map, UserZonaId(UserIndex)).ResuSinEfecto = noresu
-            Call WriteVar(App.Path & MapPath & "mapa" & UserList(UserIndex).Pos.Map & ".dat", "Mapa" & UserList(UserIndex).Pos.Map, "ResuSinEfecto", noresu)
+            Call WriteVar(MapPath & "mapa" & UserList(UserIndex).Pos.Map & ".dat", "Mapa" & UserList(UserIndex).Pos.Map, "ResuSinEfecto", noresu)
             Call WriteConsoleMsg(UserIndex, "Mapa " & .Pos.Map & " ResuSinEfecto: " & MapZonas(.Pos.Map, UserZonaId(UserIndex)).ResuSinEfecto, FontTypeNames.FONTTYPE_INFO)
 
         End If
@@ -15907,7 +15907,7 @@ Public Sub HandleChangeZonaLand(ByVal UserIndex As Integer)
                 
                 MapZonas(UserList(UserIndex).Pos.Map, UserZonaId(UserIndex)).Terreno = TerrainStringToByte(tStr)
                 
-                Call WriteVar(App.Path & MapPath & "mapa" & UserList(UserIndex).Pos.Map & ".dat", "Mapa" & UserList(UserIndex).Pos.Map, "Terreno", tStr)
+                Call WriteVar(MapPath & "mapa" & UserList(UserIndex).Pos.Map & ".dat", "Mapa" & UserList(UserIndex).Pos.Map, "Terreno", tStr)
                 Call WriteConsoleMsg(UserIndex, "Mapa " & .Pos.Map & " Terreno: " & TerrainByteToString(MapZonas(.Pos.Map, UserZonaId(UserIndex)).Terreno), FontTypeNames.FONTTYPE_INFO)
             Else
                 Call WriteConsoleMsg(UserIndex, "Opciones para terreno: 'BOSQUE', 'NIEVE', 'DESIERTO', 'CIUDAD', 'CAMPO', 'DUNGEON'", FontTypeNames.FONTTYPE_INFO)
@@ -15976,7 +15976,7 @@ Public Sub HandleChangeZonaZone(ByVal UserIndex As Integer)
             If tStr = "BOSQUE" Or tStr = "NIEVE" Or tStr = "DESIERTO" Or tStr = "CIUDAD" Or tStr = "CAMPO" Or tStr = "DUNGEON" Then
                 Call LogGM(.Name, .Name & " ha cambiado la informacion de la zona del mapa.")
                 MapZonas(UserList(UserIndex).Pos.Map, UserZonaId(UserIndex)).Zona = tStr
-                Call WriteVar(App.Path & MapPath & "mapa" & UserList(UserIndex).Pos.Map & ".dat", "Mapa" & UserList(UserIndex).Pos.Map, "Zona", tStr)
+                Call WriteVar(MapPath & "mapa" & UserList(UserIndex).Pos.Map & ".dat", "Mapa" & UserList(UserIndex).Pos.Map, "Zona", tStr)
                 Call WriteConsoleMsg(UserIndex, "Mapa " & .Pos.Map & " Zona: " & MapZonas(.Pos.Map, UserZonaId(UserIndex)).Zona, FontTypeNames.FONTTYPE_INFO)
             Else
                 Call WriteConsoleMsg(UserIndex, "Opciones para terreno: 'BOSQUE', 'NIEVE', 'DESIERTO', 'CIUDAD', 'CAMPO', 'DUNGEON'", FontTypeNames.FONTTYPE_INFO)
@@ -16037,7 +16037,7 @@ Public Sub HandleChangeZonaStealNpc(ByVal UserIndex As Integer)
             
             MapZonas(UserList(UserIndex).Pos.Map, UserZonaId(UserIndex)).RoboNpcsPermitido = RoboNpc
             
-            Call WriteVar(App.Path & MapPath & "mapa" & UserList(UserIndex).Pos.Map & ".dat", "Mapa" & UserList(UserIndex).Pos.Map, "RoboNpcsPermitido", RoboNpc)
+            Call WriteVar(MapPath & "mapa" & UserList(UserIndex).Pos.Map & ".dat", "Mapa" & UserList(UserIndex).Pos.Map, "RoboNpcsPermitido", RoboNpc)
             Call WriteConsoleMsg(UserIndex, "Mapa " & .Pos.Map & " RoboNpcsPermitido: " & MapZonas(.Pos.Map, UserZonaId(UserIndex)).RoboNpcsPermitido, FontTypeNames.FONTTYPE_INFO)
 
         End If
@@ -16083,7 +16083,7 @@ Public Sub HandleChangeZonaNoOcultar(ByVal UserIndex As Integer)
             
             MapZonas(Mapa, UserZonaId(UserIndex)).OcultarSinEfecto = NoOcultar
 
-            Call WriteVar(App.Path & MapPath & "mapa" & Mapa & ".dat", "Mapa" & Mapa, "OcultarSinEfecto", NoOcultar)
+            Call WriteVar(MapPath & "mapa" & Mapa & ".dat", "Mapa" & Mapa, "OcultarSinEfecto", NoOcultar)
             Call WriteConsoleMsg(UserIndex, "Mapa " & Mapa & " OcultarSinEfecto: " & NoOcultar, FontTypeNames.FONTTYPE_INFO)
 
         End If
@@ -16129,7 +16129,7 @@ Public Sub HandleChangeZonaNoInvocar(ByVal UserIndex As Integer)
             
             MapZonas(Mapa, UserZonaId(UserIndex)).InvocarSinEfecto = NoInvocar
 
-            Call WriteVar(App.Path & MapPath & "mapa" & Mapa & ".dat", "Mapa" & Mapa, "InvocarSinEfecto", NoInvocar)
+            Call WriteVar(MapPath & "mapa" & Mapa & ".dat", "Mapa" & Mapa, "InvocarSinEfecto", NoInvocar)
             Call WriteConsoleMsg(UserIndex, "Mapa " & Mapa & " InvocarSinEfecto: " & NoInvocar, FontTypeNames.FONTTYPE_INFO)
 
         End If

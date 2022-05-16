@@ -271,6 +271,30 @@ Public Function GetVersionOfTheServer() As String
     GetVersionOfTheServer = GetVar(App.Path & "\Server.ini", "INIT", "VersionTagRelease")
 End Function
 
+Private Function setRutas() As Boolean
+    '***************************************************
+    'Autor: Lorwik
+    'Fecha: 16/05/2022
+    'Descripción: Establece el directorios de las rutas
+    '***************************************************
+    
+    'Este directorio se mantendrá si o si
+    ConfigPath = App.Path & "\Configuracion\"
+    
+    '¿Existe el archivos de rutas?
+    If Not FileExist(ConfigPath & "Directorios.ini", vbArchive) Then
+        MsgBox "No se ha encontrado el archivo de directorios."
+        setRutas = False
+        Exit Function
+    End If
+    
+    DatPath = GetVar(ConfigPath & "Directorios.ini", "DIRECTORIOS", "DatPath")
+    MapPath = GetVar(ConfigPath & "Directorios.ini", "DIRECTORIOS", "MapPath")
+    
+    setRutas = True
+    
+End Function
+
 Sub Main()
     '***************************************************
     'Author: Unknown
@@ -283,8 +307,8 @@ Sub Main()
     ' Paths
     ChDir App.Path
     ChDrive App.Path
-    DatPath = App.Path & "\Dat\"
-    ConfigPath = App.Path & "\Configuracion\"
+    
+    If Not setRutas Then Exit Sub
     
     'Inicializamos la cabecera
     Call IniciarCabecera

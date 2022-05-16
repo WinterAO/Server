@@ -1247,16 +1247,16 @@ Sub CargarBackUp()
 '
 '    For Map = 1 To NumMaps
 '
-'        If val(GetVar(App.Path & MapPath & "Mapa" & Map & ".Dat", "Mapa" & Map, "BackUp")) <> 0 Then
+'        If val(GetVar( MapPath & "Mapa" & Map & ".Dat", "Mapa" & Map, "BackUp")) <> 0 Then
 '            tFileName = App.Path & "\WorldBackUp\Mapa" & Map
 '
 '            If Not FileExist(tFileName & ".*") Then 'Miramos que exista al menos uno de los 3 archivos, sino lo cargamos de la carpeta de los mapas
-'                tFileName = App.Path & MapPath & "Mapa" & Map
+'                tFileName =  MapPath & "Mapa" & Map
 '
 '            End If
 '
 '        Else
-'            tFileName = App.Path & MapPath & "Mapa" & Map
+'            tFileName =  MapPath & "Mapa" & Map
 '
 '        End If
 '
@@ -1301,17 +1301,15 @@ Sub LoadMapData()
     frmCargando.cargar.max = NumMaps
     frmCargando.cargar.Value = 0
         
-    MapPath = GetVar(DatPath & "Map.dat", "INIT", "MapPath")
-        
     ReDim MapData(1 To NumMaps, XMinMapSize To XMaxMapSize, YMinMapSize To YMaxMapSize) As MapBlock
     ReDim CantZonas(1 To NumMaps) As Integer
           
     For Map = 1 To NumMaps
             
         If Battlegrounds Then
-            tFileName = App.Path & MapPath & "Bg" & Map
+            tFileName = MapPath & "Bg" & Map
         Else
-            tFileName = App.Path & MapPath & "Mapa" & Map
+            tFileName = MapPath & "Mapa" & Map
         End If
         
         Call CargarMapa(Map, tFileName)
