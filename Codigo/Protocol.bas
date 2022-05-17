@@ -135,6 +135,8 @@ Private Enum ServerPacketID
     Pong
     UpdateTagAndStatus
     BattleGs                     'Battlegrounds
+    MostrarShop
+    ActualizarGemasShop
     
     'GM =  messages
     SpawnList                    ' SPL
@@ -334,6 +336,8 @@ Private Enum ClientPacketID
     ConsultaSubasta 'Si existe una subasta enviamos la Info, sino Abrimos el panel para iniciar una subasta.
     RespuestaInstruccion
     LoginNewAccount
+    ShopInit
+    BuyShop
     GMCommands
 End Enum
 
@@ -940,6 +944,12 @@ Public Function HandleIncomingData(ByVal UserIndex As Integer) As Boolean
             
         Case ClientPacketID.LoginNewAccount
             Call HandleLoginNewAccount(UserIndex)
+            
+        Case ClientPacketID.ShopInit
+            Call HandleShopInit(UserIndex)
+            
+        Case ClientPacketID.BuyShop
+            Call HandleBuyShop(UserIndex)
             
         Case ClientPacketID.GMCommands              'GM Messages
             Call HandleGMCommands(UserIndex)
@@ -23162,6 +23172,8 @@ Public Sub HandleEditGems(ByVal UserIndex As Integer)
     Dim UserName As String
     Dim CantGems As Long
     Dim Opcion As Byte
+    Dim gemasBack As Long
+    Dim modificado As Boolean
     
     With UserList(UserIndex)
 
@@ -23185,35 +23197,52 @@ Public Sub HandleEditGems(ByVal UserIndex As Integer)
             Exit Sub
         End If
         
+        gemasBack = .AccountInfo.Gemas
+        
         Select Case Opcion
         
             Case 0 'Editar las gemas
-                If Cuentas.SaveAccountEditGemasDatabase(UserName, CantGems) Then
+                .AccountInfo.Gemas = CantGems
+                If Cuentas.SaveAccountGemasDatabase(UserName, .AccountInfo.Gemas) Then
                     Call WriteConsoleMsg(UserIndex, "Se editaron " & CantGems & " Gemas Winter a la cuenta de " & UserName, FontTypeNames.FONTTYPE_INFO)
+                    modificado = True
                     
                 Else
                     Call WriteConsoleMsg(UserIndex, "ERROR: No se pudo editar las gemas a la cuenta del usuario." & UserName, FontTypeNames.FONTTYPE_INFO)
+                    modificado = False
                     
                 End If
             
             Case 1 'Sumar las gemas
-                If Cuentas.SaveAccountSumaGemasDatabase(UserName, CantGems) Then
+                .AccountInfo.Gemas = .AccountInfo.Gemas + CantGems
+                
+                If Cuentas.SaveAccountGemasDatabase(UserName, .AccountInfo.Gemas) Then
                     Call WriteConsoleMsg(UserIndex, "Se sumaron " & CantGems & " Gemas Winter a la cuenta de " & UserName & ". Ahora tiene " & Cuentas.GetGemasDatabase(UserName) & " Gemas Winter. ", FontTypeNames.FONTTYPE_INFO)
+                    modificado = True
                     
                 Else
                     Call WriteConsoleMsg(UserIndex, "ERROR: No se pudo sumar las gemas a la cuenta del usuario." & UserName, FontTypeNames.FONTTYPE_INFO)
+                    modificado = False
                     
                 End If
                 
             Case 2 'Restar las gemas
-                If Cuentas.SaveAccountRestaGemasDatabase(UserName, CantGems) Then
+                .AccountInfo.Gemas = .AccountInfo.Gemas - CantGems
+            
+                If Cuentas.SaveAccountGemasDatabase(UserName, .AccountInfo.Gemas) Then
                     Call WriteConsoleMsg(UserIndex, "Se restaron " & CantGems & " Gemas Winter a la cuenta de " & UserName & ". Ahora tiene " & Cuentas.GetGemasDatabase(UserName) & " Gemas Winter. ", FontTypeNames.FONTTYPE_INFO)
+                    modificado = True
                     
                 Else
                     Call WriteConsoleMsg(UserIndex, "ERROR: No se pudo restar las gemas de la cuenta del usuario." & UserName, FontTypeNames.FONTTYPE_INFO)
+                    modificado = False
                     
                 End If
         End Select
+        
+        If Not modificado Then _
+            .AccountInfo.Gemas = gemasBack
+        
     End With
     
 End Sub
@@ -24226,6 +24255,61 @@ errHandler:
     End If
 End Sub
 
+Public Sub WriteMostrarShop(ByVal UserIndex As Integer)
+'**************************************
+'Autor Lorwik
+'Fecha: 16/05/2022
+'Descripción: Envia la Shop al usuario
+'**************************************
+
+On Error GoTo errHandler
+
+    Dim i As Integer
+
+    With UserList(UserIndex).outgoingData
+    
+        Call .WriteByte(ServerPacketID.MostrarShop)
+        Call .WriteInteger(UserList(UserIndex).AccountInfo.Gemas)
+        Call .WriteInteger(NUMSHOPS)
+        
+        For i = 1 To NUMSHOPS
+        
+            Call .WriteInteger(ObjData(ShopObject(i).ObjIndex).GrhIndex)
+            Call .WriteASCIIString(ObjData(ShopObject(i).ObjIndex).Name)
+            Call .WriteInteger(ShopObject(i).Amount)
+            Call .WriteInteger(ShopObject(i).Valor)
+        
+        Next i
+    
+    End With
+
+Exit Sub
+
+errHandler:
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
+        Resume
+    End If
+    
+    
+End Sub
+
+Public Sub WriteActualizarGemasShop(ByVal UserIndex As Integer)
+'****************************************
+'Autor: Lorwik
+'Fecha: 16/05/2022
+'Descripción: Actualiza la cantidad de gemas en la Shop
+'****************************************
+
+    With UserList(UserIndex).outgoingData
+    
+        Call .WriteByte(ServerPacketID.ActualizarGemasShop)
+        Call .WriteLong(UserList(UserIndex).AccountInfo.Gemas)
+        
+    End With
+
+End Sub
+
 Public Sub HandleQuestListRequest(ByVal UserIndex As Integer)
     '****************************************************
     'Autor: Amraphen
@@ -24555,5 +24639,76 @@ errHandler:
     
     If Error <> 0 Then Err.Raise Error
 
+End Sub
+
+Private Sub HandleShopInit(ByVal UserIndex As Integer)
+    '****************************************************
+    'Autor: Lorwik
+    'Fecha: 16/05/2022
+    'Descripcion: El usuario quiere abrir la Shop
+    '****************************************************
+ 
+    Call UserList(UserIndex).incomingData.ReadByte
+ 
+    Call WriteMostrarShop(UserIndex)
+End Sub
+
+Private Sub HandleBuyShop(ByVal UserIndex As Integer)
+    '****************************************************
+    'Autor: Lorwik
+    'Fecha: 16/05/2022
+    'Descripcion: El usuario quiere abrir la Shop
+    '****************************************************
+ 
+    Dim Objeto As Integer
+    Dim gemasBack As Long
+ 
+    With UserList(UserIndex)
+    
+        Call .incomingData.ReadByte
+        
+        Objeto = .incomingData.ReadInteger
+                
+        If Objeto < 1 Then
+            Call WriteConsoleMsg(UserIndex, "Selecciona un item.", FontTypeNames.FONTTYPE_INFO)
+            Exit Sub
+        End If
+        
+        If ShopObject(Objeto).Valor > .AccountInfo.Gemas Then
+            Call WriteConsoleMsg(UserIndex, "No tienes gemas suficiente para comprar ese producto.", FontTypeNames.FONTTYPE_INFO)
+            Exit Sub
+        End If
+        
+        'Me fijo si tiene espacio en el inventario
+        Dim objInventario As obj
+        
+        objInventario.Amount = ShopObject(Objeto).Amount
+        objInventario.ObjIndex = ShopObject(Objeto).ObjIndex
+        
+        If Not MeterItemEnInventario(UserIndex, objInventario) Then
+            Call WriteConsoleMsg(UserIndex, "No tienes espacio en tu inventario.", FontTypeNames.FONTTYPE_INFO)
+            
+        Else
+        
+            gemasBack = .AccountInfo.Gemas
+            'Restamos las gemas
+            .AccountInfo.Gemas = .AccountInfo.Gemas - ShopObject(Objeto).Valor
+            
+            If Cuentas.SaveAccountGemasDatabase(.Name, .AccountInfo.Gemas) Then
+                'Guardamos el log de la transacción
+                Call LogShopTransactions(.Name & " | Compró -> " & ObjData(objInventario.ObjIndex).Name & " | Valor -> " & ShopObject(Objeto).Valor & " | Gemas Actuales -> " & .AccountInfo.Gemas)
+                Call WriteActualizarGemasShop(UserIndex)
+                    
+            Else
+                Call WriteConsoleMsg(UserIndex, "ERROR: No se pudo restar las gemas de la cuenta del usuario." & .Name, FontTypeNames.FONTTYPE_INFO)
+                'Transacción no realizada, devolvemos las gemas
+                .AccountInfo.Gemas = gemasBack
+                    
+            End If
+        
+        End If
+    
+    End With
+ 
 End Sub
 

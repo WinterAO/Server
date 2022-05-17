@@ -645,7 +645,7 @@ ErrorHandler:
 
 End Function
 
-Public Function SaveAccountEditGemasDatabase(ByVal UserName As String, ByVal Gemas As Long) As Boolean
+Public Function SaveAccountGemasDatabase(ByVal UserName As String, ByVal Gemas As Long) As Boolean
 
     '***************************************************
     'Author: Lorwik
@@ -670,10 +670,10 @@ Public Function SaveAccountEditGemasDatabase(ByVal UserName As String, ByVal Gem
     
         Call Account_Database.MakeQuery("UPDATE cuentas SET gemas = (?) WHERE id = " & UserAccId, True, Gemas)
         
-        SaveAccountEditGemasDatabase = True
+        SaveAccountGemasDatabase = True
         
     Else
-        SaveAccountEditGemasDatabase = False
+        SaveAccountGemasDatabase = False
         
     End If
 
@@ -683,95 +683,9 @@ Public Function SaveAccountEditGemasDatabase(ByVal UserName As String, ByVal Gem
 
     Exit Function
 ErrorHandler:
-    Call LogDatabaseError("Error in SaveAccountEditGemasDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
-    SaveAccountEditGemasDatabase = False
+    Call LogDatabaseError("Error in SaveAccountGemasDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
+    SaveAccountGemasDatabase = False
 
-End Function
-
-Public Function SaveAccountSumaGemasDatabase(ByVal UserName As String, ByVal Gemas As Long) As Boolean
-
-    '***************************************************
-    'Author: Lorwik
-    'Last Modification: 30/04/2020
-    '***************************************************
-    On Error GoTo ErrorHandler
-
-    Dim query As String
-    Dim UserAccId As Long
-    
-    #If DBConexionUnica = 0 Then
-        Call Account_Database.Database_Connect
-    #Else
-        'Si perdimos la conexion reconectamos
-        If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
-    #End If
-
-    UserAccId = GetAccountID(UserName)
-    
-    '¿Obtuvimos una ID nula?
-    If UserAccId <> -1 Then
-    
-        Call Account_Database.MakeQuery("UPDATE cuentas SET gemas = gemas + (?) WHERE id = " & UserAccId, True, Gemas)
-        
-        SaveAccountSumaGemasDatabase = True
-        
-    Else
-        SaveAccountSumaGemasDatabase = False
-        
-    End If
-
-    #If DBConexionUnica = 0 Then
-        Call Account_Database.Database_Close
-    #End If
-
-    Exit Function
-ErrorHandler:
-    Call LogDatabaseError("Error in SaveAccountSumaGemasDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
-    SaveAccountSumaGemasDatabase = False
-
-End Function
-
-Public Function SaveAccountRestaGemasDatabase(ByVal UserName As String, ByVal Gemas As Long) As Boolean
-
-    '***************************************************
-    'Author: Lorwik
-    'Last Modification: 30/04/2020
-    '***************************************************
-    On Error GoTo ErrorHandler
-
-    Dim query As String
-    Dim UserAccId As Long
-
-    #If DBConexionUnica = 0 Then
-        Call Account_Database.Database_Connect
-    #Else
-        'Si perdimos la conexion reconectamos
-        If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
-    #End If
-
-    UserAccId = GetAccountID(UserName)
-    
-    '¿Obtuvimos una ID nula?
-    If UserAccId <> -1 Then
-    
-        Call Account_Database.MakeQuery("UPDATE cuentas SET gemas = gemas - (?) WHERE id = " & UserAccId, True, Gemas)
-        
-        SaveAccountRestaGemasDatabase = True
-        
-    Else
-        SaveAccountRestaGemasDatabase = False
-        
-    End If
-
-    #If DBConexionUnica = 0 Then
-        Call Account_Database.Database_Close
-    #End If
-
-    Exit Function
-ErrorHandler:
-    Call LogDatabaseError("Error in SaveAccountRestaGemasDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
-    SaveAccountRestaGemasDatabase = False
-    
 End Function
 
 Public Function GetGemasDatabase(ByVal UserName As String) As Long

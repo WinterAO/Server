@@ -1194,6 +1194,50 @@ errHandler:
 
 End Sub
 
+Sub LoadShop()
+'**********************************************
+'Autor: Lorwik
+'Fecha: 16/05/2022
+'Descripcion: Carga la lista de items de Shop
+'**********************************************
+
+    On Error GoTo errHandler
+
+    If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando base de datos de Shop."
+    
+    Dim i      As Integer
+    Dim Leer   As clsIniManager
+
+    Set Leer = New clsIniManager
+    
+    Call Leer.Initialize(DatPath & "Shop.dat")
+    
+    NUMSHOPS = val(Leer.GetValue("INIT", "NumObjs"))
+    
+    frmCargando.cargar.min = 0
+    frmCargando.cargar.max = NUMSHOPS
+    frmCargando.cargar.Value = 0
+    
+    ReDim Preserve ShopObject(1 To NUMSHOPS) As ShopObj
+    
+    For i = 1 To NUMSHOPS
+    
+        ShopObject(i).ObjIndex = Leer.GetValue("OBJ" & i, "Index")
+        ShopObject(i).Amount = Leer.GetValue("OBJ" & i, "Cant")
+        ShopObject(i).Valor = Leer.GetValue("OBJ" & i, "Valor")
+    
+    Next i
+    
+    Set Leer = Nothing
+    
+    If frmMain.Visible Then frmMain.txtStatus.Text = Date & " " & time & " - Se cargo base de datos de la shop. Operacion Realizada con exito."
+    
+    Exit Sub
+errHandler:
+    MsgBox "error cargando lista de shop " & Err.Number & ": " & Err.description
+    
+End Sub
+
 Function GetVar(ByVal File As String, _
                 ByVal Main As String, _
                 ByVal Var As String, _

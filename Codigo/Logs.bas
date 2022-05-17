@@ -494,3 +494,25 @@ Public Sub LogCreaciondeCuentas(ByVal Mensaje As String)
 errHandler:
 
 End Sub
+
+Public Sub LogShopTransactions(ByRef Mensaje As String)
+    '***************************************************
+    'Author: Lorwik
+    'Last Modification: 16/05/2022
+    '
+    '***************************************************
+
+    On Error GoTo errHandler
+
+    Dim nfile As Integer
+
+    nfile = FreeFile ' obtenemos un canal
+    Open App.Path & "\logs\LogShopTransactions.log" For Append Shared As #nfile
+    Print #nfile, Date & " " & time & " " & Mensaje
+    Print #nfile, ""
+    Close #nfile
+    
+    Exit Sub
+
+errHandler:
+End Sub

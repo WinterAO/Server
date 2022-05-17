@@ -2597,8 +2597,6 @@ Public ApiPath As String
 'Esta variable es para poder luego cerrar el programa cuando cerramos el cliente.
 Public ApiNodeJsTaskId As Double
 
-Public NombreServidor As String
-
 Public Security As New clsSecurity
 
 Public User_Database As New clsDataBase
@@ -2621,15 +2619,22 @@ Public BanUsersChatGlobal As Collection
 Public GlobalChatActive As Boolean
 
 'DROP GLOBALES
-
 Public Type GlobalObj
-
     ObjIndex As Integer
     MinAmount As Integer
     MaxAmount As Integer
     Prob As Byte
-        
 End Type
 
 Public GlobalDROPObject() As GlobalObj
 Public NUMGLOBALDROPS As Integer
+
+'ITEMS DE SHOP
+Public Type ShopObj
+    ObjIndex As Integer
+    Amount As Integer
+    Valor As Long
+End Type
+
+Public ShopObject() As ShopObj
+Public NUMSHOPS As Integer
