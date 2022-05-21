@@ -3644,18 +3644,18 @@ Private Sub HandleWorkLeftClick(ByVal UserIndex As Integer)
                     Call WriteConsoleMsg(UserIndex, "Comienzas a trabajar.", FontTypeNames.FONTTYPE_INFO)
                 End If
             
-            Case eSkill.herreria
+            Case eSkill.Herreria
                 'Target wehatever is in that tile
                 Call LookatTile(UserIndex, .Pos.Map, X, Y)
                 
-                If ConoceProfesion(UserIndex, eSkill.herreria) < 0 Then
+                If ConoceProfesion(UserIndex, eSkill.Herreria) < 0 Then
                     Call WriteConsoleMsg(UserIndex, "No conoces esa profesion.", FontTypeNames.FONTTYPE_INFOBOLD)
                     Exit Sub
                 End If
                 
                 If .flags.TargetObj > 0 Then
                     If ObjData(.flags.TargetObj).OBJType = eOBJType.otYunque Then
-                        Call WriteInitTrabajo(UserIndex, eSkill.herreria)
+                        Call WriteInitTrabajo(UserIndex, eSkill.Herreria)
                         
                     Else
                         Call WriteConsoleMsg(UserIndex, "Ahi no hay ningUn yunque.", FontTypeNames.FONTTYPE_INFO)
@@ -4097,7 +4097,7 @@ Private Sub HandleModifySkills(ByVal UserIndex As Integer)
         For i = 1 To NUMSKILLS
             If points(i) > 0 Then
                 '¿El skill asignado es uno de los fijos?
-                If i = eSkill.Talar Or i = eSkill.Mineria Or i = eSkill.Carpinteria Or i = eSkill.herreria Or _
+                If i = eSkill.Talar Or i = eSkill.Mineria Or i = eSkill.Carpinteria Or i = eSkill.Herreria Or _
                     i = eSkill.Liderazgo Or i = eSkill.Navegacion Or i = eSkill.Equitacion Or i = eSkill.pesca Then
                     
                     Call LogHackAttemp(.Name & " IP:" & .IP & " trato de hackear los skills.")
@@ -19150,6 +19150,7 @@ Public Sub WriteInitTrabajo(ByVal UserIndex As Integer, ByVal Profesion As Byte)
     Dim validIndexes()              As Integer
     Dim Count                       As Integer
     Dim SlotProfesion               As Integer
+    Dim PrecioConstruccion          As Long
     
     With UserList(UserIndex)
     
@@ -19180,6 +19181,24 @@ Public Sub WriteInitTrabajo(ByVal UserIndex As Integer, ByVal Profesion As Byte)
         For i = 1 To Count
             Call .outgoingData.WriteASCIIString(ObjData(obj(i)).Name)
             Call .outgoingData.WriteLong(ObjData(obj(i)).GrhIndex)
+            
+            Select Case Profesion
+            
+                Case eSkill.Alquimia
+                    PrecioConstruccion = ObjData(obj(i)).SkAlquimia * 3000
+                    
+                Case eSkill.Herreria
+                    PrecioConstruccion = ObjData(obj(i)).SkHerreria * 3000
+                    
+                Case eSkill.Carpinteria
+                    PrecioConstruccion = ObjData(obj(i)).SkCarpinteria * 3000
+            
+            End Select
+            
+            If .AccountInfo.esVIP = True Then _
+                PrecioConstruccion = PrecioConstruccion / 2
+            
+            Call .outgoingData.WriteLong(PrecioConstruccion)
             
             For j = 1 To MAXMATERIALES
                 If ObjData(obj(i)).Materiales(j) > 0 Then
@@ -22445,6 +22464,9 @@ Public Sub WriteEnviarPJUserAccount(ByVal UserIndex As Integer)
         Call .outgoingData.WriteByte(.Redundance)
         Call .outgoingData.WriteASCIIString(.AccountInfo.UserName)
         Call .outgoingData.WriteByte(.AccountInfo.NumPjs)
+        
+        Call .outgoingData.WriteASCIIString(.AccountInfo.VIP)
+        Call .outgoingData.WriteBoolean(.AccountInfo.esVIP)
 
         If .AccountInfo.NumPjs > 0 Then
 

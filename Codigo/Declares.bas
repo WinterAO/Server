@@ -767,6 +767,7 @@ Public Enum eOBJType
     otYacimientoPez = 38
     otPiedraHogar = 39
     otInstruye = 40
+    otPaseVIP = 41
     otCualquiera = 1000
 
 End Enum
@@ -1195,6 +1196,8 @@ Public Type ObjData
     Efecto As tEfectos
     
     Speed As Double
+    
+    TiempoVIP As Integer
 End Type
 
 Public Type obj
@@ -1683,6 +1686,8 @@ Public Type AccountUser
     Gemas As Long
     macAddress As String
     hdSerial As Long
+    VIP As Date
+    esVIP As Boolean
     
     NumPjs As Byte
     AccountPJ(1 To MAXPJACCOUNTS) As AccountCharacters
@@ -1699,9 +1704,9 @@ End Type
 
 'Info de los Amigos
 Public Type Amigos
-  Nombre As String
-  Ignorado As Byte
-index As Integer
+    Nombre As String
+    Ignorado As Byte
+    index As Integer
 
 End Type
 

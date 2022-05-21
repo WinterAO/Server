@@ -981,6 +981,9 @@ Sub LoadOBJData()
                     .IndiceSkill = val(Leer.GetValue("OBJ" & Object, "IndiceSkill"))
                     .CuantosSkill = val(Leer.GetValue("OBJ" & Object, "CuantosSkill"))
                     .SkNecesarios = val(Leer.GetValue("OBJ" & Object, "SkNecesarios"))
+                    
+                Case eOBJType.otPaseVIP
+                    .TiempoVIP = val(Leer.GetValue("OBJ" & Object, "TiempoVIP"))
 
             End Select
             

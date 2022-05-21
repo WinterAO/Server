@@ -25,13 +25,14 @@ Public Sub LoginAccountDatabase(ByVal UserIndex As Integer, ByVal UserName As St
         '***********************
         'LOGIN DE LA CUENTA
         '***********************
-        If Not Account_Database.MakeQuery("SELECT id, username, email, password, salt, gemas, status FROM cuentas WHERE UPPER(username) = (?)", False, UCase$(UserName)) Then
+        If Not Account_Database.MakeQuery("SELECT id, username, email, password, salt, gemas, status, vip FROM cuentas WHERE UPPER(username) = (?)", False, UCase$(UserName)) Then
             Call WriteErrorMsg(UserIndex, "Error al cargar la cuenta.")
             Call CloseUser(UserIndex)
             Exit Sub
         
         End If
-            
+        
+
         'Guardo la información de la cuenta
         .AccountInfo.ID = CInt(Account_Database.Database_RecordSet!ID)
         .AccountInfo.UserName = Account_Database.Database_RecordSet!UserName
@@ -40,6 +41,14 @@ Public Sub LoginAccountDatabase(ByVal UserIndex As Integer, ByVal UserName As St
         .AccountInfo.Salt = Account_Database.Database_RecordSet!Salt
         .AccountInfo.Gemas = CLng(Account_Database.Database_RecordSet!Gemas)
         .AccountInfo.status = CBool(Account_Database.Database_RecordSet!status)
+        .AccountInfo.VIP = Format(Account_Database.Database_RecordSet!VIP, "dd/mm/yyyy")
+        
+        '¿Tiene el VIP activo?
+        If .AccountInfo.VIP >= Format(Now, "dd/mm/yyyy") Then
+            .AccountInfo.esVIP = True
+        Else
+            .AccountInfo.esVIP = False
+        End If
             
         Set Account_Database.Database_RecordSet = Nothing
             
@@ -756,6 +765,78 @@ ErrorHandler:
     Call LogDatabaseError("Error in SaveAccountLastLoginDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
 
 End Sub
+
+Public Function SaveAccountVIPDatabase(ByVal UserIndex As Integer, ByVal UserName As String) As Boolean
+
+    '***************************************************
+    'Author: Lorwik
+    'Last Modification: 21/05/2022
+    '***************************************************
+    On Error GoTo ErrorHandler
+
+    Dim query As String
+    
+    #If DBConexionUnica = 0 Then
+        Call Account_Database.Database_Connect
+    #Else
+        'Si perdimos la conexion reconectamos
+        If Account_Database.CheckSQLStatus = False Then Account_Database.Database_Reconnect
+    #End If
+
+    query = "UPDATE cuentas SET vip = (?) WHERE UPPER(username) = (?)"
+    Call Account_Database.MakeQuery(query, True, UserList(UserIndex).AccountInfo.VIP, UCase$(UserName))
+
+    SaveAccountVIPDatabase = True
+
+    #If DBConexionUnica = 0 Then
+        Call Account_Database.Database_Close
+    #End If
+
+    Exit Function
+ErrorHandler:
+    Call LogDatabaseError("Error in SaveAccountLastLoginDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
+    SaveAccountVIPDatabase = False
+
+End Function
+
+Public Function GetTiempoVIPDatabase(ByVal UserName As String) As Long
+
+    '***************************************************
+    'Author: Lorwik
+    'Last Modification: 21/05/2022
+    '***************************************************
+    On Error GoTo ErrorHandler
+
+    Dim UserAccId As Long
+    
+    #If DBConexionUnica = 0 Then
+        Call Account_Database.Database_Connect
+    #Else
+        'Si perdimos la conexion reconectamos
+        If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
+    #End If
+
+    UserAccId = GetAccountID(UserName)
+    
+    If Not Account_Database.MakeQuery("SELECT vip FROM cuentas WHERE id = (?)", False, UserAccId) Then
+        GetTiempoVIPDatabase = 0
+        Exit Function
+
+    End If
+
+    GetTiempoVIPDatabase = CLng(Account_Database.Database_RecordSet!VIP)
+    Set Account_Database.Database_RecordSet = Nothing
+    
+    #If DBConexionUnica = 0 Then
+        Call Account_Database.Database_Close
+    #End If
+
+    Exit Function
+
+ErrorHandler:
+    Call LogDatabaseError("Error in GetTiempoVIPDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
+
+End Function
 
 Public Sub ActualizarPJCuentas(ByVal UserIndex As Integer)
 '****************************************************
