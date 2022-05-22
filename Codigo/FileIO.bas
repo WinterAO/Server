@@ -1879,6 +1879,12 @@ Sub CargarCiudades()
             .X = Lector.GetValue("IslaNew", "X")
             .Y = Lector.GetValue("IslaNew", "Y")
         End With
+        
+        With Battleground
+            .Map = Lector.GetValue("Battle", "Mapa")
+            .X = Lector.GetValue("Battle", "X")
+            .Y = Lector.GetValue("Battle", "Y")
+        End With
 
     Set Lector = Nothing
     
@@ -1887,6 +1893,7 @@ Sub CargarCiudades()
     Ciudades(eCiudad.cBelleuve) = Belleuve
     Ciudades(eCiudad.cIslaZharkel) = IslaZharkel
     Ciudades(eCiudad.cHaverwood) = Haverwood
+    Ciudades(eCiudad.cBattle) = Battleground
 
     If frmMain.Visible Then frmMain.txtStatus.Text = Date & " " & time & " - Se cargaron las ciudades.dat"
 

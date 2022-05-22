@@ -423,7 +423,12 @@ Sub ConnectNewUser(ByVal UserIndex As Integer, _
         .clase = UserClase
         .Raza = UserRaza
         .Genero = UserSexo
-        .Hogar = eCiudad.cRamx
+        
+        If Not Battlegrounds Then
+            .Hogar = eCiudad.cRamx
+        Else
+            .Hogar = eCiudad.cBattle
+        End If
         
         For i = 0 To 1
             .Profesion(i).Profesion = 0
@@ -451,8 +456,11 @@ Sub ConnectNewUser(ByVal UserIndex As Integer, _
     
         .OrigChar = .Char
         
-        'Comenzara en la isla Newbie
-        .Pos = IslaNew
+        If Not Battlegrounds Then
+            .Pos = IslaNew
+        Else
+            .Pos = Battleground
+        End If
             
         'De primeras podra hablar por global
         .flags.Global = 1

@@ -202,6 +202,7 @@ Public Enum eCiudad
     cBelleuve
     cIslaZharkel
     cHaverwood
+    cBattle
 
 End Enum
 
@@ -2244,6 +2245,8 @@ Public Prision         As WorldPos
 Public Libertad        As WorldPos
 
 Public IslaNew         As WorldPos
+
+Public Battleground    As WorldPos
 
 Public Ayuda           As cCola
 
