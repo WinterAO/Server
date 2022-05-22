@@ -989,6 +989,72 @@ errHandler:
 
 End Sub
 
+''
+' Checks if the user gets the next level PVP.
+'
+' @param UserIndex Specifies reference to user
+
+Public Sub CheckUserLevelPVP(ByVal UserIndex As Integer, Optional ByVal PrintInConsole As Boolean = True)
+
+    '*************************************************
+    'Author: Unknown
+    'Last modified: 22/05/2022
+    'Chequea que el usuario no halla alcanzado el siguiente nivel de PVP
+    '*************************************************
+    Dim Pts              As Integer
+    Dim AumentoHIT       As Integer
+    Dim AumentoMANA      As Integer
+    Dim AumentoSTA       As Integer
+    Dim AumentoHP        As Integer
+    Dim WasNewbie        As Boolean
+    Dim Promedio         As Double
+    Dim aux              As Integer
+    Dim DistVida(1 To 5) As Integer
+    Dim GI               As Integer 'Guild Index
+    Dim SubiodeLvL       As Boolean
+    
+    On Error GoTo errHandler
+    
+    WasNewbie = EsNewbie(UserIndex)
+    SubiodeLvL = False
+    
+    With UserList(UserIndex)
+
+        Do While .Stats.ExpPVP >= .Stats.ELUPVP
+            
+            'Checkea si alcanzo el maximo nivel
+            If .Stats.ELVPVP >= STAT_MAXELV Then
+                .Stats.ExpPVP = 0
+                .Stats.ELUPVP = 0
+                Exit Sub
+
+            End If
+            
+            'Store it!
+            Call Statistics.UserLevelUp(UserIndex)
+            
+            If PrintInConsole Then
+                Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_NIVEL, .Pos.X, .Pos.Y))
+                Call WriteConsoleMsg(UserIndex, "Has subido de nivel de PVP!", FontTypeNames.FONTTYPE_INFO)
+                Call WriteScreenMsg(UserIndex, "Nivel " & .Stats.ELVPVP + 1, "Has alcanzado el")
+            End If
+            
+            .Stats.ELVPVP = .Stats.ELVPVP + 1
+            
+            .Stats.ExpPVP = .Stats.ExpPVP - .Stats.ELUPVP
+                  
+            .Stats.ELUPVP = .Stats.ELUPVP * 1.4
+            
+        Loop
+    End With
+    
+    Exit Sub
+
+errHandler:
+    Call LogError("Error en la subrutina CheckUserLevelPVP - Error : " & Err.Number & " - Description : " & Err.description)
+
+End Sub
+
 Public Function PuedeAtravesarAgua(ByVal UserIndex As Integer) As Boolean
     '***************************************************
     'Author: Unknown

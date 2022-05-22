@@ -1422,6 +1422,11 @@ Public Type UserStats
     Exp As Double
     ELV As Byte
     ELU As Long
+    
+    ExpPVP As Double
+    ELVPVP As Byte
+    ELUPVP As Long
+    
     UserSkills(1 To NUMSKILLS) As Byte
     UserAtributos(1 To NUMATRIBUTOS) As Byte
     UserAtributosBackUP(1 To NUMATRIBUTOS) As Byte

@@ -275,6 +275,7 @@ Public Sub MuereNpc(ByVal NPCIndex As Integer, ByVal UserIndex As Integer)
             End If
                         
             Call CheckUserLevel(UserIndex)
+            Call CheckUserLevelPVP(UserIndex)
             
             If NPCIndex = .flags.ParalizedByNpcIndex Then
                 Call RemoveParalisis(UserIndex)

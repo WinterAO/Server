@@ -61,7 +61,7 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
     query = query & "pos_map = (?), pos_x = (?), pos_y = (?), body_id = (?), head_id = (?), weapon_id = (?), helmet_id = (?), shield_id = (?), "
     query = query & "items_amount = (?), slot_armour = (?), slot_weapon = (?), min_hp = (?), max_hp = (?), min_man = (?), max_man = (?), "
     query = query & "min_sta = (?), max_sta = (?), min_ham = (?), max_ham = (?), min_sed = (?), max_sed = (?), min_hit = (?), max_hit = (?), "
-    query = query & "rep_noble = (?), rep_plebe = (?), rep_average = (?), profesionA = (?), ProfesionB = (?)"
+    query = query & "rep_noble = (?), rep_plebe = (?), rep_average = (?), profesionA = (?), ProfesionB = (?), levelPVP = (?), expPVP = (?), eluPVP = (?)"
 
     With UserList(UserIndex)
 
@@ -69,7 +69,7 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
                                     .Stats.ELO, .Pos.Map, .Pos.X, .Pos.Y, .Char.body, .Char.Head, .Char.WeaponAnim, .Char.CascoAnim, .Char.ShieldAnim, .Invent.NroItems, .Invent.ArmourEqpSlot, _
                                     .Invent.WeaponEqpSlot, .Stats.MinHp, .Stats.MaxHp, .Stats.MinMAN, .Stats.MaxMAN, .Stats.MinSta, .Stats.MaxSta, .Stats.MinHam, .Stats.MaxHam, _
                                     .Stats.MinAGU, .Stats.MaxAGU, .Stats.MinHIT, .Stats.MaxHIT, .Reputacion.NobleRep, .Reputacion.PlebeRep, .Reputacion.Promedio, _
-                                    .Profesion(0).Profesion, .Profesion(1).Profesion)
+                                    .Profesion(0).Profesion, .Profesion(1).Profesion, .Stats.ELVPVP, .Stats.ExpPVP, .Stats.ELUPVP)
         
         
         'Obtenemos el ID del usuario
@@ -196,7 +196,7 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
         query = query & "counter_pena = (?), pertenece_consejo_real = (?), pertenece_consejo_caos = (?), pertenece_real = (?), pertenece_caos = (?), ciudadanos_matados = (?), criminales_matados = (?), "
         query = query & "recibio_armadura_real = (?), recibio_armadura_caos = (?), recibio_exp_real = (?), recibio_exp_caos = (?), recompensas_real = (?), recompensas_caos = (?), "
         query = query & "reenlistadas = (?), fecha_ingreso = (?), nivel_ingreso = (?), matados_ingreso = (?), siguiente_recompensa = (?), guild_index = (?), is_global = (?), profesionA = (?), profesionB = (?), "
-        query = query & "modocombate = (?), seguro = (?) WHERE id = (?)"
+        query = query & "modocombate = (?), seguro = (?), levelPVP = (?), expPVP = (?), eluPVP = (?) WHERE id = (?)"
 
     With UserList(UserIndex)
             Call User_Database.MakeQuery(query, True, .Name, .Stats.ELV, .Stats.Exp, .Stats.ELU, .Genero, .Raza, .clase, .Hogar, .Desc, .Stats.Gld, .Stats.Banco, .Stats.SkillPts, .Counters.AsignedSkills, .Stats.ELO, .NroMascotas, _
@@ -208,7 +208,7 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
                                         .Counters.Pena, (.flags.Privilegios And PlayerType.RoyalCouncil), (.flags.Privilegios And PlayerType.ChaosCouncil), .Faccion.ArmadaReal, .Faccion.FuerzasCaos, .Faccion.CiudadanosMatados, _
                                         .Faccion.CriminalesMatados, .Faccion.RecibioArmaduraReal, .Faccion.RecibioArmaduraCaos, .Faccion.RecibioExpInicialReal, .Faccion.RecibioExpInicialCaos, .Faccion.RecompensasReal, _
                                         .Faccion.RecompensasCaos, .Faccion.Reenlistadas, .Faccion.FechaIngreso, .Faccion.NivelIngreso, .Faccion.MatadosIngreso, .Faccion.NextRecompensa, .GuildIndex, .flags.Global, .Profesion(0).Profesion, _
-                                        .Profesion(1).Profesion, IIf(.flags.ModoCombate = True, "1", "0"), IIf(.flags.Seguro = True, "1", "0"), .ID)
+                                        .Profesion(1).Profesion, IIf(.flags.ModoCombate = True, "1", "0"), IIf(.flags.Seguro = True, "1", "0"), .Stats.ELVPVP, .Stats.ExpPVP, .Stats.ELUPVP, .ID)
                                         
 
         '*******************************************************************
@@ -590,6 +590,9 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
         .Profesion(1).Profesion = User_Database.Database_RecordSet!profesionB
         .flags.ModoCombate = User_Database.Database_RecordSet!ModoCombate
         .flags.Seguro = User_Database.Database_RecordSet!Seguro
+        .Stats.ELVPVP = User_Database.Database_RecordSet!levelPVP
+        .Stats.ExpPVP = User_Database.Database_RecordSet!ExpPVP
+        .Stats.ELUPVP = User_Database.Database_RecordSet!ELUPVP
         
         If User_Database.Database_RecordSet!pertenece_consejo_real Then
             .flags.Privilegios = .flags.Privilegios Or PlayerType.RoyalCouncil

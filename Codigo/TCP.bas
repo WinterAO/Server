@@ -587,6 +587,10 @@ Private Sub SetAttributesToNewUser(ByVal UserIndex As Integer, ByVal UserClase A
         .Stats.Exp = 0
         .Stats.ELV = 1
         .Stats.ELU = 300
+        
+        .Stats.ExpPVP = 0
+        .Stats.ELVPVP = 1
+        .Stats.ELUPVP = 300
     End With
 
 End Sub
@@ -1341,6 +1345,7 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
         Call DoTileEvents(UserIndex, .Pos.Map, .Pos.X, .Pos.Y)
     
         Call CheckUserLevel(UserIndex)
+        Call CheckUserLevelPVP(UserIndex)
         Call WriteUpdateUserStats(UserIndex)
     
         Call WriteUpdateHungerAndThirst(UserIndex)
