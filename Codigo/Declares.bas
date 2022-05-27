@@ -75,6 +75,8 @@ Public Const FXSANGRE = 14
 
 Public Const FX_PASA_NIVEL = 51
 
+Public Const FX_PASA_NIVELPVP = 45
+
 Public Const MAXAMIGOS As Byte = 50   'Cantidad Maxima de Amigos
 
 Public Const MINLVLGLOBAL As Byte = 5 'Nivel minimo para poder usar el chat global.
@@ -202,7 +204,7 @@ Public Enum eCiudad
     cBelleuve
     cIslaZharkel
     cHaverwood
-    cBattle
+    cbattle
 
 End Enum
 
@@ -831,7 +833,7 @@ End Type
 
 Public Type tHechizo
 
-    Nombre As String
+    nombre As String
     Desc As String
     PalabrasMagicas As String
     
@@ -982,7 +984,7 @@ End Type
 
 Public Type FXdata
 
-    Nombre As String
+    nombre As String
     GrhIndex As Long
     Delay As Integer
 
@@ -1243,7 +1245,7 @@ End Type
 
 Public Type tQuest
 
-    Nombre As String
+    nombre As String
     Desc As String
     RequiredLevel As Byte
     RequiredQuest As Integer
@@ -1577,6 +1579,17 @@ Public Type UserFlags
     
     Velocidad As Double
     
+    EsperandoDueloSet As Boolean
+    EstaDueleandoSet As Boolean
+    OponenteSet As Integer
+    PerdioRondaSet As Byte
+    TimeDueloSet As Byte
+    GanoDueloSet As Boolean
+    DuelosClasicos As Integer
+    EstaDuelosClasicos As Boolean
+    
+    ArenaRinkel As Boolean
+    
 End Type
 
 Public Type UserCounters
@@ -1710,7 +1723,7 @@ End Type
 
 'Info de los Amigos
 Public Type Amigos
-    Nombre As String
+    nombre As String
     Ignorado As Byte
     index As Integer
 
@@ -1900,6 +1913,8 @@ Public Type NPCFlags
     Invocacion As Byte
     
     Recurso As tProfesion
+    
+    ArenasRinkel As Byte 'Identifica si un NPC pertenece al evento de arenas de Rinkel
     
 End Type
 

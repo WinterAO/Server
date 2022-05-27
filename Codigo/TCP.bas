@@ -288,7 +288,7 @@ Function Numeric(ByVal cad As String) As Boolean
 
 End Function
 
-Function NombrePermitido(ByVal Nombre As String) As Boolean
+Function NombrePermitido(ByVal nombre As String) As Boolean
     '***************************************************
     'Author: Unknown
     'Last Modification: -
@@ -299,7 +299,7 @@ Function NombrePermitido(ByVal Nombre As String) As Boolean
 
     For i = 1 To UBound(ForbidenNames)
 
-        If InStr(Nombre, ForbidenNames(i)) Then
+        If InStr(nombre, ForbidenNames(i)) Then
             NombrePermitido = False
             Exit Function
 
@@ -427,7 +427,7 @@ Sub ConnectNewUser(ByVal UserIndex As Integer, _
         If Not Battlegrounds Then
             .Hogar = eCiudad.cRamx
         Else
-            .Hogar = eCiudad.cBattle
+            .Hogar = eCiudad.cbattle
         End If
         
         For i = 0 To 1
@@ -591,6 +591,7 @@ Private Sub SetAttributesToNewUser(ByVal UserIndex As Integer, ByVal UserClase A
         .Stats.MinHIT = 1
     
         .Stats.Gld = 0
+        .Stats.ELO = 500
     
         .Stats.Exp = 0
         .Stats.ELV = 1
@@ -719,7 +720,7 @@ Private Sub AddItemsToNewUser(ByVal UserIndex As Integer, ByVal UserClase As eCl
 
         Dim i As Long
         For i = 1 To MAXAMIGOS
-            .Amigos(i).Nombre = vbNullString
+            .Amigos(i).nombre = vbNullString
             .Amigos(i).Ignorado = 0
             .Amigos(i).index = 0
         Next i
@@ -1835,6 +1836,10 @@ Sub ResetUserFlags(ByVal UserIndex As Integer)
         .Instruyendo = 0
         .Trabajando = 0
         .Velocidad = 0
+        .ArenaRinkel = False
+        .EstaDueleandoSet = False
+        .EstaDuelosClasicos = False
+        .EsperandoDueloSet = False
 
         Call ResetCasteo(UserIndex)
         
@@ -2235,7 +2240,7 @@ Public Sub ResetUserExtras(ByVal UserIndex As Integer)
   Dim i As Integer
   For i = 1 To MAXAMIGOS
 
-  UserList(UserIndex).Amigos(i).Nombre = vbNullString
+  UserList(UserIndex).Amigos(i).nombre = vbNullString
 
   UserList(UserIndex).Amigos(i).Ignorado = 0
 

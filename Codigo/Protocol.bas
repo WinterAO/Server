@@ -179,6 +179,7 @@ Private Enum ServerPacketID
     ConfirmarInstruccion
     SetSpeed
     AtaqueNPC
+    MostrarPVP
 End Enum
 
 Private Enum ClientPacketID
@@ -338,6 +339,8 @@ Private Enum ClientPacketID
     LoginNewAccount
     ShopInit
     BuyShop
+    InitPVP
+    DueloSet
     GMCommands
 End Enum
 
@@ -394,6 +397,7 @@ Public Enum eEditOptions
     eo_Vida
     eo_Poss
     eo_Speed
+    eo_ExperiencePVP
 
 End Enum
 
@@ -950,6 +954,12 @@ Public Function HandleIncomingData(ByVal UserIndex As Integer) As Boolean
             
         Case ClientPacketID.BuyShop
             Call HandleBuyShop(UserIndex)
+            
+        Case ClientPacketID.InitPVP
+            Call HandleInitPVP(UserIndex)
+            
+        Case ClientPacketID.DueloSet
+            Call HandleDueloSet(UserIndex)
             
         Case ClientPacketID.GMCommands              'GM Messages
             Call HandleGMCommands(UserIndex)
@@ -3644,18 +3654,18 @@ Private Sub HandleWorkLeftClick(ByVal UserIndex As Integer)
                     Call WriteConsoleMsg(UserIndex, "Comienzas a trabajar.", FontTypeNames.FONTTYPE_INFO)
                 End If
             
-            Case eSkill.Herreria
+            Case eSkill.herreria
                 'Target wehatever is in that tile
                 Call LookatTile(UserIndex, .Pos.Map, X, Y)
                 
-                If ConoceProfesion(UserIndex, eSkill.Herreria) < 0 Then
+                If ConoceProfesion(UserIndex, eSkill.herreria) < 0 Then
                     Call WriteConsoleMsg(UserIndex, "No conoces esa profesion.", FontTypeNames.FONTTYPE_INFOBOLD)
                     Exit Sub
                 End If
                 
                 If .flags.TargetObj > 0 Then
                     If ObjData(.flags.TargetObj).OBJType = eOBJType.otYunque Then
-                        Call WriteInitTrabajo(UserIndex, eSkill.Herreria)
+                        Call WriteInitTrabajo(UserIndex, eSkill.herreria)
                         
                     Else
                         Call WriteConsoleMsg(UserIndex, "Ahi no hay ningUn yunque.", FontTypeNames.FONTTYPE_INFO)
@@ -3923,7 +3933,7 @@ Private Sub HandleSpellInfo(ByVal UserIndex As Integer)
             With Hechizos(Spell)
                 'Send information
                 Call WriteConsoleMsg(UserIndex, "%%%%%%%%%%%% INFO DEL HECHIZO %%%%%%%%%%%%" & vbCrLf _
-                                               & "Nombre:" & .Nombre & vbCrLf _
+                                               & "Nombre:" & .nombre & vbCrLf _
                                                & "Descripción:" & .Desc & vbCrLf _
                                                & "Skill requerido: " & .MinSkill & " de magia." & vbCrLf _
                                                & "Mana necesario: " & .ManaRequerido & vbCrLf _
@@ -4097,7 +4107,7 @@ Private Sub HandleModifySkills(ByVal UserIndex As Integer)
         For i = 1 To NUMSKILLS
             If points(i) > 0 Then
                 '¿El skill asignado es uno de los fijos?
-                If i = eSkill.Talar Or i = eSkill.Mineria Or i = eSkill.Carpinteria Or i = eSkill.Herreria Or _
+                If i = eSkill.Talar Or i = eSkill.Mineria Or i = eSkill.Carpinteria Or i = eSkill.herreria Or _
                     i = eSkill.Liderazgo Or i = eSkill.Navegacion Or i = eSkill.Equitacion Or i = eSkill.pesca Then
                     
                     Call LogHackAttemp(.Name & " IP:" & .IP & " trato de hackear los skills.")
@@ -8708,9 +8718,9 @@ Private Sub HandlePartySetLeader(ByVal UserIndex As Integer)
 
         Dim tUser    As Integer
 
-        Dim rank     As Integer
+        Dim Rank     As Integer
 
-        rank = PlayerType.Admin Or PlayerType.Dios Or PlayerType.SemiDios Or PlayerType.Consejero
+        Rank = PlayerType.Admin Or PlayerType.Dios Or PlayerType.SemiDios Or PlayerType.Consejero
         
         UserName = Buffer.ReadASCIIString()
 
@@ -8720,7 +8730,7 @@ Private Sub HandlePartySetLeader(ByVal UserIndex As Integer)
             If tUser > 0 Then
 
                 'Don't allow users to spoof online GMs
-                If (UserDarPrivilegioLevel(UserName) And rank) <= (.flags.Privilegios And rank) Then
+                If (UserDarPrivilegioLevel(UserName) And Rank) <= (.flags.Privilegios And Rank) Then
                     Call mdParty.TransformarEnLider(UserIndex, tUser)
                 Else
                     Call WriteConsoleMsg(UserIndex, LCase(UserList(tUser).Name) & " no pertenece a tu party.", FontTypeNames.FONTTYPE_INFO)
@@ -8796,11 +8806,11 @@ Private Sub HandlePartyAcceptMember(ByVal UserIndex As Integer)
 
         Dim tUser     As Integer
 
-        Dim rank      As Integer
+        Dim Rank      As Integer
 
         Dim bUserVivo As Boolean
         
-        rank = PlayerType.Admin Or PlayerType.Dios Or PlayerType.SemiDios Or PlayerType.Consejero
+        Rank = PlayerType.Admin Or PlayerType.Dios Or PlayerType.SemiDios Or PlayerType.Consejero
         
         UserName = Buffer.ReadASCIIString()
 
@@ -8817,7 +8827,7 @@ Private Sub HandlePartyAcceptMember(ByVal UserIndex As Integer)
             If tUser > 0 Then
 
                 'Validate administrative ranks - don't allow users to spoof online GMs
-                If (UserList(tUser).flags.Privilegios And rank) <= (.flags.Privilegios And rank) Then
+                If (UserList(tUser).flags.Privilegios And Rank) <= (.flags.Privilegios And Rank) Then
                     Call mdParty.AprobarIngresoAParty(UserIndex, tUser)
                 Else
                     Call WriteConsoleMsg(UserIndex, "No puedes incorporar a tu party a personajes de mayor jerarquia.", FontTypeNames.FONTTYPE_INFO)
@@ -8832,7 +8842,7 @@ Private Sub HandlePartyAcceptMember(ByVal UserIndex As Integer)
                 End If
                 
                 'Don't allow users to spoof online GMs
-                If (UserDarPrivilegioLevel(UserName) And rank) <= (.flags.Privilegios And rank) Then
+                If (UserDarPrivilegioLevel(UserName) And Rank) <= (.flags.Privilegios And Rank) Then
                     Call WriteConsoleMsg(UserIndex, LCase(UserName) & " no ha solicitado ingresar a tu party.", FontTypeNames.FONTTYPE_PARTY)
                 Else
                     Call WriteConsoleMsg(UserIndex, "No puedes incorporar a tu party a personajes de mayor jerarquia.", FontTypeNames.FONTTYPE_INFO)
@@ -10649,6 +10659,26 @@ Private Sub HandleEditChar(ByVal UserIndex As Integer)
                         
                         ' Log it
                         CommandString = CommandString & "EXP "
+                        
+                    Case eEditOptions.eo_ExperiencePVP
+
+                        If val(Arg1) <= MAX_EXP_EDIT Then
+                        
+                            If tUser <= 0 Then ' Offline
+                                Call WriteConsoleMsg(UserIndex, "El usuario esta offline o no existe.", FontTypeNames.FONTTYPE_INFO)
+                                Call LogGM(.Name, "Intento editar un usuario inexistente u offline.")
+                            Else ' Online
+                                UserList(tUser).Stats.ExpPVP = UserList(tUser).Stats.ExpPVP + val(Arg1)
+                                Call CheckUserLevelPVP(tUser)
+    
+                            End If
+                        Else
+                            Call WriteConsoleMsg(UserIndex, "No esta permitido utilizar valores mayores a " & MAX_EXP_EDIT & ". Su comando ha quedado en los logs del juego.", FontTypeNames.FONTTYPE_INFO)
+
+                        End If
+                        
+                        ' Log it
+                        CommandString = CommandString & "EXPPVP "
                     
                 Case eEditOptions.eo_Body
 
@@ -11902,11 +11932,11 @@ Private Sub HandleKick(ByVal UserIndex As Integer)
 
         Dim tUser    As Integer
 
-        Dim rank     As Integer
+        Dim Rank     As Integer
 
         Dim IsAdmin  As Boolean
         
-        rank = PlayerType.Admin Or PlayerType.Dios Or PlayerType.SemiDios Or PlayerType.Consejero
+        Rank = PlayerType.Admin Or PlayerType.Dios Or PlayerType.SemiDios Or PlayerType.Consejero
         
         UserName = Buffer.ReadASCIIString()
         IsAdmin = (.flags.Privilegios And (PlayerType.Admin Or PlayerType.Dios)) <> 0
@@ -11924,7 +11954,7 @@ Private Sub HandleKick(ByVal UserIndex As Integer)
 
             Else
 
-                If (UserList(tUser).flags.Privilegios And rank) > (.flags.Privilegios And rank) Then
+                If (UserList(tUser).flags.Privilegios And Rank) > (.flags.Privilegios And Rank) Then
                     Call WriteConsoleMsg(UserIndex, "No puedes echar a alguien con jerarquia mayor a la tuya.", FontTypeNames.FONTTYPE_INFO)
                 Else
                     Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(.Name & " echo a " & UserName & ".", FontTypeNames.FONTTYPE_INFO))
@@ -19078,7 +19108,7 @@ On Error GoTo errHandler
         Call .WriteInteger(UserList(UserIndex).Stats.UserHechizos(Slot))
         
         If UserList(UserIndex).Stats.UserHechizos(Slot) > 0 Then
-            Call .WriteASCIIString(Hechizos(UserList(UserIndex).Stats.UserHechizos(Slot)).Nombre)
+            Call .WriteASCIIString(Hechizos(UserList(UserIndex).Stats.UserHechizos(Slot)).nombre)
         Else
             Call .WriteASCIIString("(None)")
         End If
@@ -19187,7 +19217,7 @@ Public Sub WriteInitTrabajo(ByVal UserIndex As Integer, ByVal Profesion As Byte)
                 Case eSkill.Alquimia
                     PrecioConstruccion = ObjData(obj(i)).SkAlquimia * 3000
                     
-                Case eSkill.Herreria
+                Case eSkill.herreria
                     PrecioConstruccion = ObjData(obj(i)).SkHerreria * 3000
                     
                 Case eSkill.Carpinteria
@@ -22762,7 +22792,7 @@ Public Sub WriteQuestDetails(ByVal UserIndex As Integer, _
         Call .WriteByte(IIf(Questslot, 1, 0))
 
         'Enviamos nombre, descripciï¿½n y nivel requerido de la quest
-        Call .WriteASCIIString(QuestList(QuestIndex).Nombre)
+        Call .WriteASCIIString(QuestList(QuestIndex).nombre)
         Call .WriteASCIIString(QuestList(QuestIndex).Desc)
         Call .WriteByte(QuestList(QuestIndex).RequiredLevel)
         
@@ -22867,7 +22897,7 @@ Public Sub WriteQuestListSend(ByVal UserIndex As Integer)
 
             If .QuestStats.QuestEnCurso(i) > 0 Then
                 tmpByte = tmpByte + 1
-                tmpStr = tmpStr & QuestList(.QuestStats.Quests(.QuestStats.QuestEnCurso(i)).QuestIndex).Nombre & "-"
+                tmpStr = tmpStr & QuestList(.QuestStats.Quests(.QuestStats.QuestEnCurso(i)).QuestIndex).nombre & "-"
 
             End If
 
@@ -23413,7 +23443,7 @@ Public Sub WriteCargarListaDeAmigos(ByVal UserIndex As Integer, ByVal Slot As By
         
                 Call .WriteByte(ServerPacketID.EnviarListDeAmigos)
         Call .WriteByte(Slot)
-        Call .WriteASCIIString(UserList(UserIndex).Amigos(Slot).Nombre)
+        Call .WriteASCIIString(UserList(UserIndex).Amigos(Slot).nombre)
 
     End With
 
@@ -24104,14 +24134,14 @@ Public Sub HandleAddAmigo(ByVal UserIndex As Integer)
 
                         Slot = BuscarSlotAmigoVacio(UserIndex)
 
-                        .Amigos(Slot).Nombre = UserList(tUser).Name
+                        .Amigos(Slot).nombre = UserList(tUser).Name
                         .Amigos(Slot).Ignorado = 0
 
                         Call ActualizarSlotAmigo(UserIndex, Slot)
 
                         Slot = BuscarSlotAmigoVacio(tUser)
 
-                        UserList(tUser).Amigos(Slot).Nombre = .Name
+                        UserList(tUser).Amigos(Slot).nombre = .Name
                         UserList(tUser).Amigos(Slot).Ignorado = 0
 
                         Call ActualizarSlotAmigo(tUser, Slot)
@@ -24185,15 +24215,15 @@ Public Sub HandleDelAmigo(ByVal UserIndex As Integer)
         If Slot <= 0 Or Slot > MAXAMIGOS Then Exit Sub
 
         'Por las duditas :P
-        If LenB(.Amigos(Slot).Nombre) = 0 Then Exit Sub
+        If LenB(.Amigos(Slot).nombre) = 0 Then Exit Sub
 
-        tUser = NameIndex(.Amigos(Slot).Nombre)
-        UserName = .Amigos(Slot).Nombre
+        tUser = NameIndex(.Amigos(Slot).nombre)
+        UserName = .Amigos(Slot).nombre
 
-        Call WriteConsoleMsg(UserIndex, .Amigos(Slot).Nombre & " ha sido borrado de la lista de amigos.", FontTypeNames.FONTTYPE_GMMSG)
+        Call WriteConsoleMsg(UserIndex, .Amigos(Slot).nombre & " ha sido borrado de la lista de amigos.", FontTypeNames.FONTTYPE_GMMSG)
 
         'reseteamos el slot
-        .Amigos(Slot).Nombre = vbNullString
+        .Amigos(Slot).nombre = vbNullString
         .Amigos(Slot).Ignorado = 0
         Call ActualizarSlotAmigo(UserIndex, Slot)
 
@@ -24207,7 +24237,7 @@ Public Sub HandleDelAmigo(ByVal UserIndex As Integer)
                 Slot = BuscarSlotAmigoNameSlot(tUser, .Name)
 
                 UserList(tUser).Amigos(Slot).Ignorado = 0
-                UserList(tUser).Amigos(Slot).Nombre = vbNullString
+                UserList(tUser).Amigos(Slot).nombre = vbNullString
 
                 Call ActualizarSlotAmigo(tUser, Slot)
 
@@ -24330,6 +24360,26 @@ Public Sub WriteActualizarGemasShop(ByVal UserIndex As Integer)
         
     End With
 
+End Sub
+
+Public Sub WriteMostrarPVP(ByVal UserIndex As Integer)
+    '****************************************************
+    'Autor: Lorwik
+    'Fecha: 22/05/2022
+    'Descripcion: Envia los datos de PVP del usuario al cliente
+    '****************************************************
+    
+    With UserList(UserIndex)
+    
+        Call .outgoingData.WriteByte(ServerPacketID.MostrarPVP)
+        
+        Call .outgoingData.WriteByte(.Stats.ELVPVP)
+        Call .outgoingData.WriteInteger(.Stats.ExpPVP)
+        Call .outgoingData.WriteInteger(.Stats.ELUPVP)
+        Call .outgoingData.WriteLong(.Stats.ELO)
+    
+    End With
+    
 End Sub
 
 Public Sub HandleQuestListRequest(ByVal UserIndex As Integer)
@@ -24734,3 +24784,44 @@ Private Sub HandleBuyShop(ByVal UserIndex As Integer)
  
 End Sub
 
+Private Sub HandleInitPVP(ByVal UserIndex As Integer)
+    '****************************************************
+    'Autor: Lorwik
+    'Fecha: 22/05/2022
+    'Descripcion: El usuario quiere abrir el PVP
+    '****************************************************
+    
+    Call UserList(UserIndex).incomingData.ReadByte
+    
+    Call WriteMostrarPVP(UserIndex)
+    
+End Sub
+
+Public Sub HandleDueloSet(ByVal UserIndex As Integer)
+    '****************************************************
+    'Autor: Lorwik
+    'Fecha: 27/05/2022
+    'Descripcion: El usuario quiere Duelos
+    '****************************************************
+    Dim TipoDuelo As Byte
+    Dim MapaDuelo As Byte
+    With UserList(UserIndex)
+        Call .incomingData.ReadByte
+        
+        TipoDuelo = .incomingData.ReadByte
+        Select Case TipoDuelo
+            Case 0
+                Call EsperarOponenteDuelo(UserIndex)
+            Case 1 'Duelo Clasico sin ELO
+                Call EsperarOponenteDueloClasico(UserIndex, False)
+            Case 2 'Duelo Clasico con ELO
+                Call EsperarOponenteDueloClasico(UserIndex, True)
+            Case 3 'Arena de Rinkel
+                Call modArenaRinkel.EntrarArenaRinkel(UserIndex)
+            Case 50 'Comenzar Arena de Rinkel
+                Call modArenaRinkel.Preparar(UserIndex)
+            Case Else
+                Exit Sub
+        End Select
+    End With
+End Sub

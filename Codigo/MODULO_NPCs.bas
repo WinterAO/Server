@@ -1083,7 +1083,8 @@ End Sub
 Function SpawnNpc(ByVal NPCIndex As Integer, _
                   Pos As WorldPos, _
                   ByVal FX As Boolean, _
-                  ByVal Respawn As Boolean, Optional ByVal OrigPos As Boolean = False) As Integer
+                  ByVal Respawn As Boolean, Optional ByVal OrigPos As Boolean = False, _
+                  Optional ByVal IncrementoVida As Integer = 0) As Integer
 
     '***************************************************
     'Autor: Unknown (orginal version)
@@ -1161,6 +1162,11 @@ Function SpawnNpc(ByVal NPCIndex As Integer, _
         Npclist(nIndex).Orig.Map = Map
         Npclist(nIndex).Orig.X = X
         Npclist(nIndex).Orig.Y = Y
+    End If
+    
+    If IncrementoVida > 0 Then
+        Npclist(nIndex).Stats.MaxHp = Npclist(nIndex).Stats.MaxHp * IncrementoVida
+        Npclist(nIndex).Stats.MinHp = Npclist(nIndex).Stats.MinHp * IncrementoVida
     End If
 
     'Crea el NPC
@@ -1446,6 +1452,8 @@ Public Function OpenNPC(ByVal NpcNumber As Integer, _
             
             .Recurso.Profesion = val(ReadField(1, Leer.GetValue("NPC" & NpcNumber, "Recurso"), Asc("-")))
             .Recurso.Categoria = val(ReadField(2, Leer.GetValue("NPC" & NpcNumber, "Recurso"), Asc("-")))
+            
+            .ArenasRinkel = val(Leer.GetValue("NPC" & NpcNumber, "ArenasRinkel"))
         End With
         
         '<<<<<<<<<<<<<< Expresiones >>>>>>>>>>>>>>>>

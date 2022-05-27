@@ -288,7 +288,7 @@ Private Function setRutas() As Boolean
         Exit Function
     End If
     
-    DatPath = GetVar(ConfigPath & "Directorios.ini", "DIRECTORIOS", "DatPath")
+    DatPath = App.Path & GetVar(ConfigPath & "Directorios.ini", "DIRECTORIOS", "DatPath")
     MapPath = GetVar(ConfigPath & "Directorios.ini", "DIRECTORIOS", "MapPath")
     
     setRutas = True
@@ -371,7 +371,7 @@ Sub Main()
     frmCargando.Label1(2).Caption = "Cargando Obj.Dat"
     Call LoadOBJData
     Call LoadGlobalDrop
-    Call loadShop
+    Call LoadShop
     
     ' Hechizos.dat
     frmCargando.Label1(2).Caption = "Cargando Hechizos.Dat"
@@ -806,7 +806,7 @@ Sub Restart()
     Call ResetForums
     Call LoadOBJData
     Call LoadGlobalDrop
-    Call loadShop
+    Call LoadShop
     
     Call LoadMapData
     

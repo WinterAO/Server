@@ -1033,10 +1033,15 @@ Public Sub CheckUserLevelPVP(ByVal UserIndex As Integer, Optional ByVal PrintInC
             'Store it!
             Call Statistics.UserLevelUp(UserIndex)
             
+            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageCreateFX(UserList(UserIndex).Char.CharIndex, FX_PASA_NIVELPVP, 0))
+            
             If PrintInConsole Then
                 Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_NIVEL, .Pos.X, .Pos.Y))
                 Call WriteConsoleMsg(UserIndex, "Has subido de nivel de PVP!", FontTypeNames.FONTTYPE_INFO)
-                Call WriteScreenMsg(UserIndex, "Nivel " & .Stats.ELVPVP + 1, "Has alcanzado el")
+                Call WriteScreenMsg(UserIndex, "Nivel de PVP " & .Stats.ELVPVP + 1, "Has alcanzado el")
+                Call WriteConsoleMsg(UserIndex, "¡Has ganado 10 Gemas Winter!", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "¡Has ganado 1000 monedas de oro!", FontTypeNames.FONTTYPE_INFO)
+                
             End If
             
             .Stats.ELVPVP = .Stats.ELVPVP + 1
@@ -1044,6 +1049,13 @@ Public Sub CheckUserLevelPVP(ByVal UserIndex As Integer, Optional ByVal PrintInC
             .Stats.ExpPVP = .Stats.ExpPVP - .Stats.ELUPVP
                   
             .Stats.ELUPVP = .Stats.ELUPVP * 1.4
+            
+            .AccountInfo.Gemas = .AccountInfo.Gemas + 10
+            .Stats.Gld = .Stats.Gld + 1000
+            Call WriteUpdateGold(UserIndex)
+            
+            Call SaveUserToDatabase(UserIndex, True)
+            Call SaveAccountGemasDatabase(UserIndex, .AccountInfo.Gemas)
             
         Loop
     End With
@@ -2082,6 +2094,19 @@ Public Sub ContarMuerte(ByVal Muerto As Integer, ByVal Atacante As Integer)
         End If
         
         If .Stats.UsuariosMatados < MAXUSERMATADOS Then .Stats.UsuariosMatados = .Stats.UsuariosMatados + 1
+        
+        If .AccountInfo.esVIP Then
+            .Stats.ExpPVP = .Stats.ExpPVP + 300
+            
+        Else
+            .Stats.ExpPVP = .Stats.ExpPVP + 200
+            
+        End If
+        
+        Call CheckUserLevelPVP(Atacante, True)
+        
+        UserList(Muerto).Stats.ExpPVP = UserList(Muerto).Stats.ExpPVP - 100
+        If UserList(Muerto).Stats.ExpPVP < 1 Then UserList(Muerto).Stats.ExpPVP = 0
 
     End With
 
