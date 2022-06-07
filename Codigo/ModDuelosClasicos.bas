@@ -59,7 +59,7 @@ Si esta en True sera un torneo con ELO.
         '**************************************************
         
         '¿Se encuentra ya en el mapa del torneo?
-        If .Pos.Map = MapaFinal Then
+        If .flags.EstaDuelosClasicos Then
             Call WriteConsoleMsg(UserIndex, "¡Ya estas en la sala de duelos!", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
         End If

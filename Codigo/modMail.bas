@@ -139,13 +139,13 @@ Public Function enviarMailVerificacion(ByVal UserName As String, ByVal Email As 
     On Error GoTo ErrorHandler
     
     txt_Servidor = "smtp.gmail.com"
-    txt_Para = "lorwik@gmail.com"
-    txt_De = "kiwrol1992@gmail.com"
+    txt_Para = Email
+    txt_De = "lwkmanu@gmail.com"
     txt_Asunto = "Activa tu cuenta en WinterAO - Codigo de verificación"
     txt_Mensaje = "Hola " & UserName & "! Acá te enviamos tu codigo de verificacion para que puedas activar tu nueva cuenta en WinterAO. CODIGO: " & CodigoVerificacion
     txt_Puerto = 465
-    txt_Password = "Perolo30?"
-    txt_Usuario = "kiwrol1992@gmail.com"
+    txt_Password = "Peruloso30?"
+    txt_Usuario = "lwlkmanu@gmail.com"
 
     Call Enviar
     

@@ -582,11 +582,11 @@ Public Function SaveNewAccount(ByVal UserName As String, _
         'Obtenemos el codigo de verificacion
         CodigoVerificacion = RandomNumber(100000, 999999)
     
-        query = "INSERT INTO cuentas SET username = (?), email = (?), password = (?), salt = (?), id_confirmacion = (?), status = '0', date_created = NOW(), date_last_login = NOW();"
+        query = "INSERT INTO cuentas SET username = (?), email = (?), password = (?), salt = (?), id_confirmacion = (?), status = '0', createdAt = NOW(), updatedAt = NOW();"
     
     Else
     
-        query = "INSERT INTO cuentas SET username = (?), email = (?), password = (?), salt = (?), id_confirmacion = 'VERIFICADA', status = '1', date_created = NOW(), date_last_login = NOW();"
+        query = "INSERT INTO cuentas SET username = (?), email = (?), password = (?), salt = (?), id_confirmacion = 'VERIFICADA', status = '1', createdAt = NOW(), updatedAt = NOW();"
         
     End If
 
@@ -753,7 +753,7 @@ Public Sub SaveAccountLastLoginDatabase(ByVal UserIndex As Integer, ByVal UserNa
         If Account_Database.CheckSQLStatus = False Then Account_Database.Database_Reconnect
     #End If
 
-    query = "UPDATE cuentas SET date_last_login = NOW(), last_ip = (?), macaddress = (?), serialhd = (?) WHERE UPPER(username) = (?)"
+    query = "UPDATE cuentas SET updatedAt = NOW(), last_ip = (?), macaddress = (?), serialhd = (?) WHERE UPPER(username) = (?)"
     Call Account_Database.MakeQuery(query, True, UserList(UserIndex).IP, UserList(UserIndex).AccountInfo.macAddress, UserList(UserIndex).AccountInfo.hdSerial, UCase$(UserName))
 
     #If DBConexionUnica = 0 Then
@@ -990,7 +990,7 @@ Public Sub ResetPJAccountSlot(ByVal UserIndex As Integer, ByVal Slot As Byte)
             
 End Sub
 
-Public Sub CrearCuenta(ByVal Nombre As String, ByVal Email As String, ByVal Password As String, Optional ByVal UserIndex As Integer, Optional ByVal Manual As Boolean = False)
+Public Sub CrearCuenta(ByVal nombre As String, ByVal Email As String, ByVal Password As String, Optional ByVal UserIndex As Integer, Optional ByVal Manual As Boolean = False)
 
     Dim Salt As String
     
@@ -998,7 +998,7 @@ Public Sub CrearCuenta(ByVal Nombre As String, ByVal Email As String, ByVal Pass
 
     Set oSHA256 = New CSHA256
     
-    If LenB(Nombre) > 24 Or LenB(Nombre) = 0 Then
+    If LenB(nombre) > 24 Or LenB(nombre) = 0 Then
         If Manual Then
             MsgBox "El nombre de cuenta debe tener un minimo de 4 caracteres y un maximo de 24."
         Else
@@ -1027,7 +1027,7 @@ Public Sub CrearCuenta(ByVal Nombre As String, ByVal Email As String, ByVal Pass
         Exit Sub
     End If
     
-    If CuentaExisteDatabase(Nombre) Then
+    If CuentaExisteDatabase(nombre) Then
         If Manual Then
             MsgBox "El nombre de la cuenta ya existe."
         Else
@@ -1047,11 +1047,11 @@ Public Sub CrearCuenta(ByVal Nombre As String, ByVal Email As String, ByVal Pass
     
     Salt = RandomString(32)
     
-    If SaveNewAccount(Nombre, Email, oSHA256.SHA256(Password & Salt), Salt) Then
+    If SaveNewAccount(nombre, Email, oSHA256.SHA256(Password & Salt), Salt) Then
         If Manual Then
-            MsgBox "Cuenta " & Nombre & " creada con exito, revisa tu email para verificar la cuenta."
+            MsgBox "Cuenta " & nombre & " creada con exito, revisa tu email para verificar la cuenta."
         Else
-            Call WriteErrorMsg(UserIndex, "Cuenta " & Nombre & " creada con exito, revisa tu email para verificar la cuenta.")
+            Call WriteErrorMsg(UserIndex, "Cuenta " & nombre & " creada con exito, revisa tu email para verificar la cuenta.")
         End If
         
     Else

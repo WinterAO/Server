@@ -10,16 +10,19 @@ Private RondaActual As Byte
 Public TimerEventoRinkel As Long
 Public TimerRondaEventoRinkel As Long
 
+Private Const TiempoEvento As Long = 1000
+Private Const TiempoRonda As Long = 200
+
 Private Type tParticipantes
     UserIndex As Integer
     Map As Byte
-    X As Long
-    Y As Long
+    X As Integer
+    Y As Integer
 End Type
 
 Public Const MapaEvento As Byte = 1
 
-Private Participantes(MaxCupo) As tParticipantes
+Private Participantes() As tParticipantes
 
 Private Function PuedeParticipar(ByVal UserIndex As Integer) As Boolean
 '****************************************************
@@ -85,6 +88,8 @@ Public Sub EntrarArenaRinkel(ByVal UserIndex As Integer)
         'Aumentamos el contador de cupo
         Cupo = Cupo + 1
         
+        ReDim Participantes(Cupo) As tParticipantes
+        
         'Guardo la información de los participantes
         Participantes(Cupo).UserIndex = UserIndex
         Participantes(Cupo).Map = .Pos.Map
@@ -92,7 +97,9 @@ Public Sub EntrarArenaRinkel(ByVal UserIndex As Integer)
         Participantes(Cupo).Y = .Pos.Y
             
         'Le hacemos TP al usuario
-        Call WarpUserChar(UserIndex, MapaEvento, 58, 62, True)
+        Call WarpUserChar(UserIndex, MapaEvento, 888, 877, True)
+        
+        Call WriteConsoleMsg(UserIndex, "Escribe /Preparado cuando estes listo para iniciar el desafio.", FontTypeNames.FONTTYPE_INFO)
         
     End With
 End Sub
@@ -103,8 +110,8 @@ Public Sub SalirArenaRinkel(ByVal UserIndex As Integer)
 'Fecha: 04/05/2016
 'Descripción: Si un usuario quiere salir del evento, le reseteamos los flags y toda su info.
 '********************************************************************************************
-Dim i As Byte
-Dim Slot As Byte
+    Dim i As Byte
+    Dim Slot As Byte
 
     With UserList(UserIndex)
     
@@ -113,7 +120,7 @@ Dim Slot As Byte
             Exit Sub
         End If
     
-        For i = 1 To 5
+        For i = 1 To Cupo
             If UserIndex = Participantes(i).UserIndex Then Slot = i
         Next i
         
@@ -128,8 +135,13 @@ Dim Slot As Byte
         
         'Ponemos la flags para identificar que el usuario esta participando
         .flags.ArenaRinkel = False
+        
+        Call ReordenarParticipantes(Slot)
+        
         'Aumentamos el contador de cupo
         Cupo = Cupo - 1
+        
+        ReDim Participantes(Cupo) As tParticipantes
         
         If Cupo = 0 Then _
             Call FinalizarEventoRinkel
@@ -154,7 +166,7 @@ Public Sub Preparar(ByVal UserIndex As Integer)
         
     Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Arenas de Rinkel: " & UserList(UserIndex).Name & " va a comenzar el reto de la Arena de Rinkel ¿Quieres acompañarle y luchar junto a el? ¡Tienes 1 minuto para entrar al evento!", FontTypeNames.FONTTYPE_TALK))
         
-    TimerEventoRinkel = 1000
+    TimerEventoRinkel = TiempoEvento
 
 End Sub
 
@@ -175,9 +187,19 @@ Public Sub RestarTimerEvento()
 End Sub
 
 Public Sub RestarTimerRonda()
+
+    Dim i As Byte
+
     If Encurso = False Then Exit Sub
     
     TimerRondaEventoRinkel = TimerRondaEventoRinkel - 1
+    
+    If TimerRondaEventoRinkel = (TiempoRonda / 3) Then
+        For i = 1 To Cupo
+            If Participantes(i).UserIndex > 0 Then _
+                Call WriteConsoleMsg(Participantes(i).UserIndex, "¡Atención! Te queda poco tiempo para que comience la proxima ronda.", FontTypeNames.FONTTYPE_FIGHT)
+        Next i
+    End If
     
     If TimerRondaEventoRinkel = 0 Then Call SiguienteRonda
     
@@ -200,7 +222,7 @@ Private Sub SiguienteRonda()
     RondaActual = RondaActual + 1
     
     'Avisamos a los usuarios de la ronda en la que se encuentran.
-    For i = 1 To 5
+    For i = 1 To Cupo
         If Participantes(i).UserIndex > 0 Then _
             Call WriteConsoleMsg(Participantes(i).UserIndex, "Arena de Rinkel: Ronda nº." & RondaActual, FontTypeNames.FONTTYPE_FIGHT)
     Next i
@@ -215,10 +237,10 @@ Private Sub SiguienteRonda()
             CantBichos = 5 * Cupo
             
             Do While Not LoopC = CantBichos
-                BichoPos.X = RandomNumber(53, 65)
-                BichoPos.Y = RandomNumber(59, 66)
+                BichoPos.X = RandomNumber(880, 890)
+                BichoPos.Y = RandomNumber(870, 880)
                 
-                Call SpawnNpc(634, BichoPos, True, False, True, 0.2 * Cupo)
+                Call SpawnNpc(1224, BichoPos, True, False, True, 0.2 * Cupo)
                 LoopC = LoopC + 1
             Loop
             '****************************************************************
@@ -230,10 +252,10 @@ Private Sub SiguienteRonda()
             CantBichos = 5 * Cupo
             
             Do While Not LoopC = CantBichos
-                BichoPos.X = RandomNumber(53, 65)
-                BichoPos.Y = RandomNumber(59, 66)
+                BichoPos.X = RandomNumber(880, 890)
+                BichoPos.Y = RandomNumber(870, 880)
                 
-                Call SpawnNpc(635, BichoPos, True, False, True, 0.2 * Cupo)
+                Call SpawnNpc(1225, BichoPos, True, False, True, 0.2 * Cupo)
                 LoopC = LoopC + 1
             Loop
             
@@ -245,10 +267,10 @@ Private Sub SiguienteRonda()
             CantBichos = 5 * Cupo
             
             Do While Not LoopC = CantBichos
-                BichoPos.X = RandomNumber(53, 65)
-                BichoPos.Y = RandomNumber(59, 66)
+                BichoPos.X = RandomNumber(880, 890)
+                BichoPos.Y = RandomNumber(870, 880)
                 
-                Call SpawnNpc(635, BichoPos, True, False, True, 0.2 * Cupo)
+                Call SpawnNpc(1226, BichoPos, True, False, True, 0.2 * Cupo)
                 LoopC = LoopC + 1
             Loop
             
@@ -257,10 +279,10 @@ Private Sub SiguienteRonda()
             CantBichos = 3 * Cupo
             
             Do While Not LoopC = CantBichos
-                BichoPos.X = RandomNumber(53, 65)
-                BichoPos.Y = RandomNumber(59, 66)
+                BichoPos.X = RandomNumber(880, 890)
+                BichoPos.Y = RandomNumber(870, 880)
                 
-                Call SpawnNpc(637, BichoPos, True, False, True, 0.2 * Cupo)
+                Call SpawnNpc(1227, BichoPos, True, False, True, 0.2 * Cupo)
                 LoopC = LoopC + 1
             Loop
             
@@ -272,10 +294,10 @@ Private Sub SiguienteRonda()
             CantBichos = 5 * Cupo
             
             Do While Not LoopC = CantBichos
-                BichoPos.X = RandomNumber(53, 65)
-                BichoPos.Y = RandomNumber(59, 66)
+                BichoPos.X = RandomNumber(880, 890)
+                BichoPos.Y = RandomNumber(870, 880)
                 
-                Call SpawnNpc(635, BichoPos, True, False, True, 0.2 * Cupo)
+                Call SpawnNpc(1228, BichoPos, True, False, True, 0.2 * Cupo)
                 LoopC = LoopC + 1
             Loop
                 
@@ -284,10 +306,10 @@ Private Sub SiguienteRonda()
             CantBichos = 3 * Cupo
             
             Do While Not LoopC = CantBichos
-                BichoPos.X = RandomNumber(53, 65)
-                BichoPos.Y = RandomNumber(59, 66)
+                BichoPos.X = RandomNumber(880, 890)
+                BichoPos.Y = RandomNumber(870, 880)
                 
-                Call SpawnNpc(638, BichoPos, True, False, True, 0.2 * Cupo)
+                Call SpawnNpc(1229, BichoPos, True, False, True, 0.2 * Cupo)
                 LoopC = LoopC + 1
             Loop
             
@@ -299,10 +321,10 @@ Private Sub SiguienteRonda()
             CantBichos = 5 * Cupo
             
             Do While Not LoopC = CantBichos
-                BichoPos.X = RandomNumber(53, 65)
-                BichoPos.Y = RandomNumber(59, 66)
+                BichoPos.X = RandomNumber(880, 890)
+                BichoPos.Y = RandomNumber(870, 880)
                 
-                Call SpawnNpc(635, BichoPos, True, False, True, 0.2 * Cupo)
+                Call SpawnNpc(1230, BichoPos, True, False, True, 0.2 * Cupo)
                 LoopC = LoopC + 1
             Loop
                
@@ -311,10 +333,10 @@ Private Sub SiguienteRonda()
             CantBichos = 3 * Cupo
             
             Do While Not LoopC = CantBichos
-                BichoPos.X = RandomNumber(53, 65)
-                BichoPos.Y = RandomNumber(59, 66)
+                BichoPos.X = RandomNumber(880, 890)
+                BichoPos.Y = RandomNumber(870, 880)
                 
-                Call SpawnNpc(638, BichoPos, True, False, True, 0.2 * Cupo)
+                Call SpawnNpc(1229, BichoPos, True, False, True, 0.2 * Cupo)
                 LoopC = LoopC + 1
             Loop
             
@@ -323,10 +345,10 @@ Private Sub SiguienteRonda()
             CantBichos = 2 * Cupo
             
             Do While Not LoopC = CantBichos
-                BichoPos.X = RandomNumber(53, 65)
-                BichoPos.Y = RandomNumber(59, 66)
+                BichoPos.X = RandomNumber(880, 890)
+                BichoPos.Y = RandomNumber(870, 880)
                 
-                Call SpawnNpc(639, BichoPos, True, False, True, 0.2 * Cupo)
+                Call SpawnNpc(1228, BichoPos, True, False, True, 0.2 * Cupo)
                 LoopC = LoopC + 1
             Loop
             
@@ -338,10 +360,10 @@ Private Sub SiguienteRonda()
             CantBichos = 5 * Cupo
             
             Do While Not LoopC = CantBichos
-                BichoPos.X = RandomNumber(53, 65)
-                BichoPos.Y = RandomNumber(59, 66)
+                BichoPos.X = RandomNumber(880, 890)
+                BichoPos.Y = RandomNumber(870, 880)
                 
-                Call SpawnNpc(635, BichoPos, True, False, True, 0.2 * Cupo)
+                Call SpawnNpc(1227, BichoPos, True, False, True, 0.2 * Cupo)
                 LoopC = LoopC + 1
             Loop
                 
@@ -350,10 +372,10 @@ Private Sub SiguienteRonda()
             CantBichos = 3 * Cupo
             
             Do While Not LoopC = CantBichos
-                BichoPos.X = RandomNumber(53, 65)
-                BichoPos.Y = RandomNumber(59, 66)
+                BichoPos.X = RandomNumber(880, 890)
+                BichoPos.Y = RandomNumber(870, 880)
                 
-                Call SpawnNpc(638, BichoPos, True, False, True, 0.2 * Cupo)
+                Call SpawnNpc(1230, BichoPos, True, False, True, 0.2 * Cupo)
                 LoopC = LoopC + 1
             Loop
             
@@ -362,10 +384,10 @@ Private Sub SiguienteRonda()
             CantBichos = 2 * Cupo
             
             Do While Not LoopC = CantBichos
-                BichoPos.X = RandomNumber(53, 65)
-                BichoPos.Y = RandomNumber(59, 66)
+                BichoPos.X = RandomNumber(880, 890)
+                BichoPos.Y = RandomNumber(870, 880)
                 
-                Call SpawnNpc(640, BichoPos, True, False, True, 0.2 * Cupo)
+                Call SpawnNpc(1226, BichoPos, True, False, True, 0.2 * Cupo)
                 LoopC = LoopC + 1
             Loop
             
@@ -377,10 +399,10 @@ Private Sub SiguienteRonda()
             CantBichos = 3 * Cupo
             
             Do While Not LoopC = CantBichos
-                BichoPos.X = RandomNumber(53, 65)
-                BichoPos.Y = RandomNumber(59, 66)
+                BichoPos.X = RandomNumber(880, 890)
+                BichoPos.Y = RandomNumber(870, 880)
                 
-                Call SpawnNpc(641, BichoPos, True, False, True, 0.2 * Cupo)
+                Call SpawnNpc(1230, BichoPos, True, False, True, 0.2 * Cupo)
                 LoopC = LoopC + 1
             Loop
             
@@ -389,10 +411,10 @@ Private Sub SiguienteRonda()
             CantBichos = 2 * Cupo
             
             Do While Not LoopC = CantBichos
-                BichoPos.X = RandomNumber(53, 65)
-                BichoPos.Y = RandomNumber(59, 66)
+                BichoPos.X = RandomNumber(880, 890)
+                BichoPos.Y = RandomNumber(870, 880)
                 
-                Call SpawnNpc(640, BichoPos, True, False, True, 0.2 * Cupo)
+                Call SpawnNpc(1229, BichoPos, True, False, True, 0.2 * Cupo)
                 LoopC = LoopC + 1
             Loop
             
@@ -404,10 +426,10 @@ Private Sub SiguienteRonda()
             CantBichos = 3 * Cupo
             
             Do While Not LoopC = CantBichos
-                BichoPos.X = RandomNumber(53, 65)
-                BichoPos.Y = RandomNumber(59, 66)
+                BichoPos.X = RandomNumber(880, 890)
+                BichoPos.Y = RandomNumber(870, 880)
                 
-                Call SpawnNpc(641, BichoPos, True, False, True, 0.2 * Cupo)
+                Call SpawnNpc(1229, BichoPos, True, False, True, 0.2 * Cupo)
                 LoopC = LoopC + 1
             Loop
             
@@ -416,10 +438,10 @@ Private Sub SiguienteRonda()
             CantBichos = 2 * Cupo
             
             Do While Not LoopC = CantBichos
-                BichoPos.X = RandomNumber(53, 65)
-                BichoPos.Y = RandomNumber(59, 66)
+                BichoPos.X = RandomNumber(880, 890)
+                BichoPos.Y = RandomNumber(870, 880)
                 
-                Call SpawnNpc(642, BichoPos, True, False, True, 0.2 * Cupo)
+                Call SpawnNpc(1230, BichoPos, True, False, True, 0.2 * Cupo)
                 LoopC = LoopC + 1
             Loop
             
@@ -431,10 +453,10 @@ Private Sub SiguienteRonda()
             CantBichos = 3 * Cupo
             
             Do While Not LoopC = CantBichos
-                BichoPos.X = RandomNumber(53, 65)
-                BichoPos.Y = RandomNumber(59, 66)
+                BichoPos.X = RandomNumber(880, 890)
+                BichoPos.Y = RandomNumber(870, 880)
                 
-                Call SpawnNpc(641, BichoPos, True, False, True, 0.2 * Cupo)
+                Call SpawnNpc(1230, BichoPos, True, False, True, 0.2 * Cupo)
                 LoopC = LoopC + 1
             Loop
             
@@ -443,10 +465,10 @@ Private Sub SiguienteRonda()
             CantBichos = 2 * Cupo
             
             Do While Not LoopC = CantBichos
-                BichoPos.X = RandomNumber(53, 65)
-                BichoPos.Y = RandomNumber(59, 66)
+                BichoPos.X = RandomNumber(880, 890)
+                BichoPos.Y = RandomNumber(870, 880)
                 
-                Call SpawnNpc(643, BichoPos, True, False, True, 0.2 * Cupo)
+                Call SpawnNpc(1231, BichoPos, True, False, True, 0.2 * Cupo)
                 LoopC = LoopC + 1
             Loop
             
@@ -458,10 +480,10 @@ Private Sub SiguienteRonda()
             CantBichos = 3 * Cupo
             
             Do While Not LoopC = CantBichos
-                BichoPos.X = RandomNumber(53, 65)
-                BichoPos.Y = RandomNumber(59, 66)
+                BichoPos.X = RandomNumber(880, 890)
+                BichoPos.Y = RandomNumber(870, 880)
                 
-                Call SpawnNpc(644, BichoPos, True, False, True, 0.2 * Cupo)
+                Call SpawnNpc(1232, BichoPos, True, False, True, 0.2 * Cupo)
                 LoopC = LoopC + 1
             Loop
             
@@ -471,10 +493,10 @@ Private Sub SiguienteRonda()
             
         Case 11 'Ultima ronda : BOSS
             'El BOSS aparecera en el centro.
-            BichoPos.X = 58
-            BichoPos.Y = 62
+            BichoPos.X = RandomNumber(880, 890)
+            BichoPos.Y = RandomNumber(870, 880)
                                             
-            Call SpawnNpc(636, BichoPos, True, False, True, 0.2 * Cupo)
+            Call SpawnNpc(1233, BichoPos, True, False, True, 0.2 * Cupo)
             '****************************************************************
     End Select
     
@@ -489,7 +511,7 @@ Private Sub FinalizarEventoRinkel()
 Dim i As Byte
     
     'Buscamos a los participantes del evento y los reseteamos.
-    For i = 1 To 5
+    For i = 1 To Cupo
         If Not Participantes(i).UserIndex = 0 Then
             Call WarpUserChar(Participantes(i).UserIndex, Participantes(i).Map, Participantes(i).X, Participantes(i).Y, True)
             UserList(Participantes(i).UserIndex).flags.ArenaRinkel = False
@@ -503,6 +525,8 @@ Dim i As Byte
     
     'Ponemos el Cupo a 0
     Cupo = 0
+    
+    ReDim Participantes(Cupo) As tParticipantes
     
     'Ponemos la Ronda actual a 0
     RondaActual = 0
@@ -544,7 +568,7 @@ Public Function BichosVivos(ByVal Matar As Boolean)
     
     'Si no encontro ningún bicho pasamos a la siguiente ronda
     If NPCCount = 0 Then
-        TimerRondaEventoRinkel = 200
+        TimerRondaEventoRinkel = TiempoRonda
         For i = 1 To 5
             If Participantes(i).UserIndex > 0 Then _
                 Call WriteConsoleMsg(Participantes(i).UserIndex, "Arena de Rinkel: Ronda superada. 10 segundos para la siguiente ronda.", FontTypeNames.FONTTYPE_INFO)
@@ -552,4 +576,23 @@ Public Function BichosVivos(ByVal Matar As Boolean)
     End If
 End Function
 
+Private Sub ReordenarParticipantes(ByVal Slot As Byte)
 
+    Dim i As Byte
+
+    'Si es el unico participante no hay nada que reordenar
+    If Slot = 1 Then Exit Sub
+    
+    For i = 1 To Cupo
+    
+        If Participantes(i).UserIndex = 0 Then
+            Participantes(i).UserIndex = Participantes(i + 1).UserIndex
+            Participantes(i).Map = Participantes(i + 1).Map
+            Participantes(i).X = Participantes(i + 1).X
+            Participantes(i).Y = Participantes(i + 1).Y
+        End If
+    
+    Next i
+    
+    
+End Sub

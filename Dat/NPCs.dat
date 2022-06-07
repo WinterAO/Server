@@ -2344,6 +2344,29 @@ BackUp=1
 Speed=370
 
 ##############################################################
+################## BATTLEGROUNDS #############################
+##############################################################
+
+[NPC250] 'Arenas de Rinkel
+Name=Gladiador
+NpcType=0
+Desc=Bienvenido a la arena de Rinkel ¿Estas preparado para afrontar el desafio? Escribe /Preparado cuando lo estes.
+Head=26
+Heading=1
+Body=317
+Movement=1
+Attackable=0
+ReSpawn=0
+Hostile=0
+Domable=0
+Alineacion=0
+Comercia=0
+NROITEMS=0
+BackUp=1
+Speed=370
+
+
+##############################################################
 ################## INVOCACIONES HECHIZOS #####################
 ##############################################################
 
@@ -8357,6 +8380,333 @@ Obj2=873-1-100    ' Guantes de hurto
 Obj3=132-1-100    ' Casco de Hierro
 BackUp=0
 Speed=370
+
+##############################################
+##############ARENAS DE RINKEL################
+##############################################
+
+[NPC1224]
+Name=Zombie Decapitado
+NpcType=0
+Head=0
+Heading=1
+Body=197
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=1600
+GiveGLD=800
+MinHP=1300
+MaxHP=1300
+MaxHIT=80
+MinHIT=55
+DEF=0
+ELV=25
+PoderAtaque=40
+PoderEvasion=10
+Veneno=1
+BackUp=0
+NROITEMS=0
+Speed=500
+NROITEMS=5
+Obj1=37-5-5 'Poción Azul
+Obj2=38-5-5 'Poción Roja
+Obj3=39-5-2 'Poción Verde
+Obj4=36-5-2 'Poción Amarilla
+Obj5=166-5-5 'Poción Violeta
+Speed=460
+
+[NPC1225]
+Name=Zombie Descuartizado
+NpcType=0
+Head=0
+Heading=1
+Body=196
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=1400
+GiveGLD=500
+MinHP=1000
+MaxHP=1000
+MaxHIT=50
+MinHIT=30
+DEF=0
+ELV=25
+PoderAtaque=55
+PoderEvasion=10
+Veneno=1
+BackUp=0
+NROITEMS=0
+Speed=500
+NROITEMS=5
+Obj1=37-5-5 'Poción Azul
+Obj2=38-5-5 'Poción Roja
+Obj3=39-5-2 'Poción Verde
+Obj4=36-5-2 'Poción Amarilla
+Obj5=166-5-5 'Poción Violeta
+ArenasRinkel=1
+Speed=460
+
+[NPC71226]
+Name=Esqueleto
+NpcType=0
+Head=0
+Heading=1
+Body=12
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=1100
+GiveGLD=800
+MinHP=900
+MaxHP=900
+MaxHIT=50
+MinHIT=30
+DEF=0
+ELV=25
+PoderAtaque=50
+PoderEvasion=25
+BackUp=0
+NROITEMS=5
+Obj1=37-5-5 'Poción Azul
+Obj2=38-5-5 'Poción Roja
+Obj3=39-5-2 'Poción Verde
+Obj4=36-5-2 'Poción Amarilla
+Obj5=166-5-5 'Poción Violeta
+ArenasRinkel=1
+Speed=460
+
+[NPC1227]
+Name=Esqueleto Guerrero
+NpcType=0
+Head=0
+Heading=1
+Body=393
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=1200
+GiveGLD=1000
+MinHP=950
+MaxHP=950
+MaxHIT=70
+MinHIT=50
+DEF=0
+ELV=25
+PoderAtaque=0
+PoderEvasion=35
+Veneno=1
+BackUp=0
+NROITEMS=5
+Obj1=37-5-5 'Poción Azul
+Obj2=38-5-5 'Poción Roja
+Obj3=39-5-2 'Poción Verde
+Obj4=36-5-2 'Poción Amarilla
+Obj5=166-5-5 'Poción Violeta
+Speed=460
+ArenasRinkel=1
+
+[NPC1228] 'Ex arachnida Sicarius
+Name=Abominacion Elfica
+NpcType=0
+Head=0
+Heading=1
+Body=663
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=10000
+GiveGLD=2500
+MinHP=3500
+MaxHP=3500
+MaxHIT=110
+MinHIT=75
+DEF=0
+ELV=25
+PoderAtaque=200
+PoderEvasion=70
+Veneno=1
+BackUp=0
+Snd1=29
+Snd2=34
+Snd3=215
+NROITEMS=0
+Speed=480
+ArenasRinkel=1
+
+[NPC1229]
+Name=Lobo del Terror
+NpcType=0
+Head=0
+Heading=1
+Body=552
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=1500
+GiveGLD=0
+MinHP=1000
+MaxHP=1000
+MaxHIT=80
+MinHIT=55
+DEF=0
+ELV=25
+PoderAtaque=160
+PoderEvasion=35
+BackUp=0
+NROITEMS=1
+Obj1=414-1-100 'Piel de Lobo
+Speed=480
+ArenasRinkel=1
+
+[NPC1230]
+Name=Guerrero del Desierto
+NpcType=0
+Head=0
+Heading=1
+Body=607
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=2350
+GiveGLD=750
+MinHP=1750
+MaxHP=1750
+MaxHIT=100
+MinHIT=80
+DEF=0
+ELV=25
+PoderAtaque=150
+PoderEvasion=65
+BackUp=0
+Speed=460
+ArenasRinkel=1
+
+[NPC1231] 
+Name=Demogorgon
+NpcType=0
+Head=0
+Heading=1
+Body=658
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=4000
+GiveGLD=4000
+MinHP=4000
+MaxHP=4000
+MaxHIT=75
+MinHIT=50
+DEF=0
+ELV=30
+PoderAtaque=0
+PoderEvasion=0
+Nroitems=1
+BackUp=0
+NROITEMS=0
+Speed=480
+ArenasRinkel=1
+
+[NPC1232] 
+Name=Observador de las Profundidades
+NpcType=0
+Head=0
+Heading=1
+Body=615
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=24000
+GiveGLD=4000
+MinHP=4000
+MaxHP=4000
+MaxHIT=70
+MinHIT=50
+DEF=0
+ELV=35
+PoderAtaque=260
+PoderEvasion=300
+Nroitems=1
+BackUp=0
+NROITEMS=0
+Speed=480
+ArenasRinkel=1
+
+[NP1233] 'WORLDBOSS
+Name=Crolusco 
+NpcType=12
+Head=0
+Heading=1
+Body=557
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=10000
+GiveGLD=10000
+MinHP=10000
+MaxHP=1000
+MaxHIT=220
+MinHIT=180
+DEF=50
+ELV=35
+PoderAtaque=260
+PoderEvasion=150
+Nroitems=1
+BackUp=0
+NROITEMS=0
+Speed=480
+ArenasRinkel=1
 
 ##############################################
 #############RECURSOS NATURALES###############
