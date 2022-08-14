@@ -31,7 +31,7 @@ Option Explicit
 
 #If False Then
 
-    Dim x, Y, Map, K, errHandler, obj, index, n, Email As Variant
+    Dim X, Y, Map, K, errHandler, obj, index, n, Email As Variant
 
 #End If
 
@@ -133,7 +133,7 @@ End Function
 
 Sub Bloquear(ByVal toMap As Boolean, _
              ByVal sndIndex As Integer, _
-             ByVal x As Integer, _
+             ByVal X As Integer, _
              ByVal Y As Integer, _
              ByVal b As Boolean)
     '***************************************************
@@ -149,24 +149,24 @@ Sub Bloquear(ByVal toMap As Boolean, _
     '***************************************************
 
     If toMap Then
-        Call SendData(SendTarget.toMap, sndIndex, PrepareMessageBlockPosition(x, Y, b))
+        Call SendData(SendTarget.toMap, sndIndex, PrepareMessageBlockPosition(X, Y, b))
     Else
-        Call WriteBlockPosition(sndIndex, x, Y, b)
+        Call WriteBlockPosition(sndIndex, X, Y, b)
 
     End If
 
 End Sub
 
-Function HayAgua(ByVal Map As Integer, ByVal x As Integer, ByVal Y As Integer) As Boolean
+Function HayAgua(ByVal Map As Integer, ByVal X As Integer, ByVal Y As Integer) As Boolean
     '*******************************************
     'Author: Unknown
     'Last Modification: -
     '
     '*******************************************
 
-    If Map > 0 And Map < NumMaps + 1 And x > XMinMapSize And x < XMaxMapSize + 1 And Y > YMinMapSize And Y < YMaxMapSize + 1 Then
+    If Map > 0 And Map < NumMaps + 1 And X > XMinMapSize And X < XMaxMapSize + 1 And Y > YMinMapSize And Y < YMaxMapSize + 1 Then
 
-        With MapData(Map, x, Y)
+        With MapData(Map, X, Y)
 
             If ((.Graphic(1) >= 1505 And .Graphic(1) <= 1520) Or _
                 (.Graphic(1) >= 12439 And .Graphic(1) <= 12454) Or _
@@ -191,15 +191,15 @@ Function HayAgua(ByVal Map As Integer, ByVal x As Integer, ByVal Y As Integer) A
 End Function
 
 Private Function HayLava(ByVal Map As Integer, _
-                         ByVal x As Integer, _
+                         ByVal X As Integer, _
                          ByVal Y As Integer) As Boolean
 
     '***************************************************
     'Autor: Nacho (Integer)
     'Last Modification: 03/12/07
     '***************************************************
-    If Map > 0 And Map < NumMaps + 1 And x > 0 And x < 101 And Y > 0 And Y < 101 Then
-        If MapData(Map, x, Y).Graphic(1) >= 5837 And MapData(Map, x, Y).Graphic(1) <= 5852 Then
+    If Map > 0 And Map < NumMaps + 1 And X > 0 And X < 101 And Y > 0 And Y < 101 Then
+        If MapData(Map, X, Y).Graphic(1) >= 5837 And MapData(Map, X, Y).Graphic(1) <= 5852 Then
             HayLava = True
         Else
             HayLava = False
@@ -219,17 +219,17 @@ Function HaySacerdote(ByVal UserIndex As Integer) As Boolean
     'Last Modification: 15/05/2012
     '******************************
  
-    Dim x As Integer, Y As Integer
+    Dim X As Integer, Y As Integer
     
     With UserList(UserIndex)
     
         For Y = .Pos.Y - MinYBorder + 1 To .Pos.Y + MinYBorder - 1
-            For x = .Pos.x - MinXBorder + 1 To .Pos.x + MinXBorder - 1
+            For X = .Pos.X - MinXBorder + 1 To .Pos.X + MinXBorder - 1
        
-                If MapData(.Pos.Map, x, Y).NPCIndex > 0 Then
-                    If Npclist(MapData(.Pos.Map, x, Y).NPCIndex).NPCtype = eNPCType.Revividor Then
+                If MapData(.Pos.Map, X, Y).NPCIndex > 0 Then
+                    If Npclist(MapData(.Pos.Map, X, Y).NPCIndex).NPCtype = eNPCType.Revividor Then
                        
-                        If Distancia(.Pos, Npclist(MapData(.Pos.Map, x, Y).NPCIndex).Pos) < 5 Then
+                        If Distancia(.Pos, Npclist(MapData(.Pos.Map, X, Y).NPCIndex).Pos) < 5 Then
                             HaySacerdote = True
                             Exit Function
                         End If
@@ -238,7 +238,7 @@ Function HaySacerdote(ByVal UserIndex As Integer) As Boolean
 
                 End If
            
-            Next x
+            Next X
         Next Y
     
     End With
@@ -848,9 +848,9 @@ Public Function Intemperie(ByVal UserIndex As Integer) As Boolean
     With UserList(UserIndex)
 
         If MapZonas(.Pos.Map, UserZonaId(UserIndex)).Zona <> "DUNGEON" Then
-            If MapData(.Pos.Map, .Pos.x, .Pos.Y).Trigger <> eTrigger.BAJOTECHO And _
-             MapData(.Pos.Map, .Pos.x, .Pos.Y).Trigger <> eTrigger.CASA And _
-            MapData(.Pos.Map, .Pos.x, .Pos.Y).Trigger <> eTrigger.ZONASEGURA Then _
+            If MapData(.Pos.Map, .Pos.X, .Pos.Y).Trigger <> eTrigger.BAJOTECHO And _
+             MapData(.Pos.Map, .Pos.X, .Pos.Y).Trigger <> eTrigger.CASA And _
+            MapData(.Pos.Map, .Pos.X, .Pos.Y).Trigger <> eTrigger.ZONASEGURA Then _
                 Intemperie = True
         Else
             Intemperie = False
@@ -951,7 +951,7 @@ Public Sub EfectoLava(ByVal UserIndex As Integer)
             .Counters.Lava = .Counters.Lava + 1
         Else
 
-            If HayLava(.Pos.Map, .Pos.x, .Pos.Y) Then
+            If HayLava(.Pos.Map, .Pos.X, .Pos.Y) Then
                 Call WriteConsoleMsg(UserIndex, "Quitate de la lava, te estas quemando!!", FontTypeNames.FONTTYPE_INFO)
                 .Stats.MinHp = .Stats.MinHp - Porcentaje(.Stats.MaxHp, 5)
                     
@@ -1752,7 +1752,7 @@ End Sub
 Public Sub ReproducirSonido(ByVal Destino As SendTarget, _
                             ByVal index As Integer, _
                             ByVal SoundIndex As Integer)
-    Call SendData(Destino, index, PrepareMessagePlayWave(SoundIndex, UserList(index).Pos.x, UserList(index).Pos.Y))
+    Call SendData(Destino, index, PrepareMessagePlayWave(SoundIndex, UserList(index).Pos.X, UserList(index).Pos.Y))
 
 End Sub
 
@@ -1962,13 +1962,13 @@ On Error GoTo errHandler
         UserZonaId = 0
         Exit Function
     
-    ElseIf UserList(UserIndex).Pos.x < 1 Or UserList(UserIndex).Pos.Y < 1 Then
+    ElseIf UserList(UserIndex).Pos.X < 1 Or UserList(UserIndex).Pos.Y < 1 Then
         UserZonaId = 0
         Exit Function
         
     End If
 
-    UserZonaId = MapData(UserList(UserIndex).Pos.Map, UserList(UserIndex).Pos.x, UserList(UserIndex).Pos.Y).ZonaIndex
+    UserZonaId = MapData(UserList(UserIndex).Pos.Map, UserList(UserIndex).Pos.X, UserList(UserIndex).Pos.Y).ZonaIndex
     Exit Function
     
 errHandler:
@@ -1987,13 +1987,13 @@ On Error GoTo errHandler
         NPCZonaId = 0
         Exit Function
     
-    ElseIf Npclist(NPCIndex).Pos.x < 1 Or Npclist(NPCIndex).Pos.Y < 1 Then
+    ElseIf Npclist(NPCIndex).Pos.X < 1 Or Npclist(NPCIndex).Pos.Y < 1 Then
         NPCZonaId = 0
         Exit Function
         
     End If
 
-    NPCZonaId = MapData(Npclist(NPCIndex).Pos.Map, Npclist(NPCIndex).Pos.x, Npclist(NPCIndex).Pos.Y).ZonaIndex
+    NPCZonaId = MapData(Npclist(NPCIndex).Pos.Map, Npclist(NPCIndex).Pos.X, Npclist(NPCIndex).Pos.Y).ZonaIndex
     Exit Function
     
 errHandler:
@@ -2033,9 +2033,9 @@ Public Function ObtenerCuadranteUser(ByVal UserIndex As Integer) As Integer
     Dim cy As Integer
     Dim AnchoMap As Byte
     
-    AnchoMap = 11
+    AnchoMap = 10
     
-    cx = Fix((UserList(UserIndex).Pos.x / 100))
+    cx = Fix((UserList(UserIndex).Pos.X / 100))
     cy = Fix((UserList(UserIndex).Pos.Y / 100))
     
     ObtenerCuadranteUser = ((cy) * AnchoMap) + cx + 1
