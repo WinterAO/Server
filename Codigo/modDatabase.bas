@@ -370,7 +370,7 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
             query = query & "("
             query = query & .ID & ", "
             query = query & LoopC & ", "
-            query = query & "'" & .Amigos(LoopC).Nombre & "', "
+            query = query & "'" & .Amigos(LoopC).nombre & "', "
             query = query & .Amigos(LoopC).Ignorado & ")"
             
             If LoopC < MAXAMIGOS Then query = query & ", "
@@ -794,7 +794,7 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
             
                 LoopC = User_Database.Database_RecordSet!Slot
                 
-                .Amigos(LoopC).Nombre = User_Database.Database_RecordSet!Amigo
+                .Amigos(LoopC).nombre = User_Database.Database_RecordSet!Amigo
                 .Amigos(LoopC).Ignorado = User_Database.Database_RecordSet!Ignorado
                 
                 User_Database.Database_RecordSet.MoveNext
@@ -900,7 +900,7 @@ Public Sub LoadQuestStats(ByVal UserIndex As Integer)
                         ReDim Preserve .QuestLeave(1 To .nQuestLeave) As Integer
                         .QuestLeave(.nQuestLeave) = .TotalQuest
                     
-                    Case eStatusQuest.EnCurso
+                    Case eStatusQuest.Encurso
                         .nQuestCurso = .nQuestCurso + 1
                         
                         ReDim Preserve .QuestEnCurso(1 To .nQuestCurso) As Integer
@@ -1065,7 +1065,7 @@ Public Sub UnBanDatabase(ByVal UserName As String)
     On Error GoTo ErrorHandler
     
     #If DBConexionUnica = 0 Then
-        Call Database_Connect
+        Call User_Database.Database_Connect
     #Else
         'Si perdimos la conexion reconectamos
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
