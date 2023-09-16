@@ -519,9 +519,11 @@ Public Sub HerreroConstruirItem(ByVal UserIndex As Integer, ByVal ItemIndex As I
     '30/05/2010: ZaMa - Los pks no suben plebe al trabajar.
     '***************************************************
 
-    Dim TieneMateriales As Boolean
+    Dim TieneMateriales     As Boolean
 
-    Dim OtroUserIndex   As Integer
+    Dim OtroUserIndex       As Integer
+    
+    Dim PrecioConstruccion  As Long
 
     With UserList(UserIndex)
 
@@ -550,7 +552,20 @@ Public Sub HerreroConstruirItem(ByVal UserIndex As Integer, ByVal ItemIndex As I
 
         End If
 
-        
+        PrecioConstruccion = ObjData(ItemIndex).SkHerreria * 3000
+            
+        'Si es VIP tiene descuento
+        If .AccountInfo.esVIP = True Then _
+            PrecioConstruccion = PrecioConstruccion / 2
+            
+        If .Stats.Gld < PrecioConstruccion Then
+            Call WriteConsoleMsg(UserIndex, "No tienes suficiente oro para construir este item. Necesitas " & PrecioConstruccion & " monedas de oro para construir este item.", FontTypeNames.FONTTYPE_INFO)
+            Exit Sub
+        End If
+            
+        .Stats.Gld = .Stats.Gld - PrecioConstruccion
+        Call WriteUpdateGold(UserIndex)
+            
         Call QuitarMateriales(UserIndex, ItemIndex)
         ' AGREGAR FX
         
@@ -609,11 +624,13 @@ Public Sub CarpinteroConstruirItem(ByVal UserIndex As Integer, ByVal ItemIndex A
     '***************************************************
     On Error GoTo errHandler
 
-    Dim TieneMateriales As Boolean
+    Dim TieneMateriales     As Boolean
 
-    Dim WeaponIndex     As Integer
+    Dim WeaponIndex         As Integer
 
-    Dim OtroUserIndex   As Integer
+    Dim OtroUserIndex       As Integer
+    
+    Dim PrecioConstruccion  As Long
     
     With UserList(UserIndex)
 
@@ -652,6 +669,20 @@ Public Sub CarpinteroConstruirItem(ByVal UserIndex As Integer, ByVal ItemIndex A
                 Exit Sub
 
             End If
+            
+            PrecioConstruccion = ObjData(ItemIndex).SkCarpinteria * 3000
+            
+            'Si es VIP tiene descuento
+            If .AccountInfo.esVIP = True Then _
+                PrecioConstruccion = PrecioConstruccion / 2
+            
+            If .Stats.Gld < PrecioConstruccion Then
+                Call WriteConsoleMsg(UserIndex, "No tienes suficiente oro para construir este item. Necesitas " & PrecioConstruccion & " monedas de oro para construir este item.", FontTypeNames.FONTTYPE_INFO)
+                Exit Sub
+            End If
+            
+            .Stats.Gld = .Stats.Gld - PrecioConstruccion
+            Call WriteUpdateGold(UserIndex)
             
             Call QuitarMateriales(UserIndex, ItemIndex)
             Call WriteConsoleMsg(UserIndex, "Has construido el objeto!.", FontTypeNames.FONTTYPE_INFO)
@@ -801,11 +832,13 @@ Public Sub AlquimistaConstruirItem(ByVal UserIndex As Integer, ByVal ItemIndex A
     '***************************************************
     On Error GoTo errHandler
 
-    Dim TieneMateriales As Boolean
+    Dim TieneMateriales     As Boolean
 
-    Dim WeaponIndex     As Integer
+    Dim WeaponIndex         As Integer
 
-    Dim OtroUserIndex   As Integer
+    Dim OtroUserIndex       As Integer
+    
+    Dim PrecioConstruccion  As Long
     
     With UserList(UserIndex)
 
@@ -844,6 +877,20 @@ Public Sub AlquimistaConstruirItem(ByVal UserIndex As Integer, ByVal ItemIndex A
                 Exit Sub
 
             End If
+            
+            PrecioConstruccion = ObjData(ItemIndex).SkAlquimia * 3000
+            
+            'Si es VIP tiene descuento
+            If .AccountInfo.esVIP = True Then _
+                PrecioConstruccion = PrecioConstruccion / 2
+            
+            If .Stats.Gld < PrecioConstruccion Then
+                Call WriteConsoleMsg(UserIndex, "No tienes suficiente oro para construir este item. Necesitas " & PrecioConstruccion & " monedas de oro para construir este item.", FontTypeNames.FONTTYPE_INFO)
+                Exit Sub
+            End If
+            
+            .Stats.Gld = .Stats.Gld - PrecioConstruccion
+            Call WriteUpdateGold(UserIndex)
             
             Call QuitarMateriales(UserIndex, ItemIndex)
             Call WriteConsoleMsg(UserIndex, "Has construido el objeto!.", FontTypeNames.FONTTYPE_INFO)

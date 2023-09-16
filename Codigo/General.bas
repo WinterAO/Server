@@ -271,6 +271,30 @@ Public Function GetVersionOfTheServer() As String
     GetVersionOfTheServer = GetVar(App.Path & "\Server.ini", "INIT", "VersionTagRelease")
 End Function
 
+Private Function setRutas() As Boolean
+    '***************************************************
+    'Autor: Lorwik
+    'Fecha: 16/05/2022
+    'Descripción: Establece el directorios de las rutas
+    '***************************************************
+    
+    'Este directorio se mantendrá si o si
+    ConfigPath = App.Path & "\Configuracion\"
+    
+    '¿Existe el archivos de rutas?
+    If Not FileExist(ConfigPath & "Directorios.ini", vbArchive) Then
+        MsgBox "No se ha encontrado el archivo de directorios."
+        setRutas = False
+        Exit Function
+    End If
+    
+    DatPath = App.Path & GetVar(ConfigPath & "Directorios.ini", "DIRECTORIOS", "DatPath")
+    MapPath = GetVar(ConfigPath & "Directorios.ini", "DIRECTORIOS", "MapPath")
+    
+    setRutas = True
+    
+End Function
+
 Sub Main()
     '***************************************************
     'Author: Unknown
@@ -283,8 +307,8 @@ Sub Main()
     ' Paths
     ChDir App.Path
     ChDrive App.Path
-    DatPath = App.Path & "\Dat\"
-    ConfigPath = App.Path & "\Configuracion\"
+    
+    If Not setRutas Then Exit Sub
     
     'Inicializamos la cabecera
     Call IniciarCabecera
@@ -347,6 +371,7 @@ Sub Main()
     frmCargando.Label1(2).Caption = "Cargando Obj.Dat"
     Call LoadOBJData
     Call LoadGlobalDrop
+    Call LoadShop
     
     ' Hechizos.dat
     frmCargando.Label1(2).Caption = "Cargando Hechizos.Dat"
@@ -365,8 +390,10 @@ Sub Main()
     Call LoadArmadurasFaccion
     
     ' Pretorianos
-    frmCargando.Label1(2).Caption = "Cargando Pretorianos.dat"
-    Call LoadPretorianData
+    If PRETORIANOS_ACTIVADO Then
+        frmCargando.Label1(2).Caption = "Cargando Pretorianos.dat"
+        Call LoadPretorianData
+    End If
     
     ' Mapas
     If BootDelBackUp Then
@@ -418,17 +445,17 @@ Sub Main()
     
     tInicioServer = GetTickCount() And &H7FFFFFFF
 
-    NombreServidor = GetVar(App.Path & "\Server.ini", "INIT", "Nombre")
-
-    frmMain.Caption = GetVersionOfTheServer() & " - Mundo Seleccionado: " & " - " & NombreServidor
+    frmMain.Caption = GetVersionOfTheServer() & " - Modo " & " - " & IIf(Battlegrounds, "Battleground", "Rol")
 
     'Este ultimo es para saber siempre los records en el frmMain
     frmMain.txtRecordOnline.Text = RecordUsuariosOnline
     
     'Invocamos al Clan Pretoriano en su respectivo mapa.
     'Activando su respawn automatico.
-    If Not ClanPretoriano(ePretorianType.Default).SpawnClan(MAPA_PRETORIANO, PRETORIANO_X, PRETORIANO_Y, ePretorianType.Default) Then
-        Call LogError("No se pudo invocar al Clan Pretoriano.")
+    If PRETORIANOS_ACTIVADO Then
+        If Not ClanPretoriano(ePretorianType.Default).SpawnClan(MAPA_PRETORIANO, PRETORIANO_X, PRETORIANO_Y, ePretorianType.Default) Then
+            Call LogError("No se pudo invocar al Clan Pretoriano.")
+        End If
     End If
 
     'En caso que la API este activada, la abrimos :)
@@ -783,6 +810,7 @@ Sub Restart()
     Call ResetForums
     Call LoadOBJData
     Call LoadGlobalDrop
+    Call LoadShop
     
     Call LoadMapData
     
@@ -2005,7 +2033,7 @@ Public Function ObtenerCuadranteUser(ByVal UserIndex As Integer) As Integer
     Dim cy As Integer
     Dim AnchoMap As Byte
     
-    AnchoMap = 11
+    AnchoMap = 10
     
     cx = Fix((UserList(UserIndex).Pos.X / 100))
     cy = Fix((UserList(UserIndex).Pos.Y / 100))

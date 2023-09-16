@@ -370,6 +370,17 @@ Public Function CuentaExiste(ByVal UserName As String) As Boolean
 
 End Function
 
+Public Function EmailExiste(ByVal UserName As String) As Boolean
+
+    '***************************************************
+    'Author: Lorwik
+    'Last Modification: 30/01/2022
+    '***************************************************
+
+    EmailExiste = EmailExisteDatabase(UserName)
+
+End Function
+
 Public Sub UnBan(ByVal Name As String)
     '***************************************************
     'Author: Unknown

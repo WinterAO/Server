@@ -989,6 +989,84 @@ errHandler:
 
 End Sub
 
+''
+' Checks if the user gets the next level PVP.
+'
+' @param UserIndex Specifies reference to user
+
+Public Sub CheckUserLevelPVP(ByVal UserIndex As Integer, Optional ByVal PrintInConsole As Boolean = True)
+
+    '*************************************************
+    'Author: Unknown
+    'Last modified: 22/05/2022
+    'Chequea que el usuario no halla alcanzado el siguiente nivel de PVP
+    '*************************************************
+    Dim Pts              As Integer
+    Dim AumentoHIT       As Integer
+    Dim AumentoMANA      As Integer
+    Dim AumentoSTA       As Integer
+    Dim AumentoHP        As Integer
+    Dim WasNewbie        As Boolean
+    Dim Promedio         As Double
+    Dim aux              As Integer
+    Dim DistVida(1 To 5) As Integer
+    Dim GI               As Integer 'Guild Index
+    Dim SubiodeLvL       As Boolean
+    
+    On Error GoTo errHandler
+    
+    WasNewbie = EsNewbie(UserIndex)
+    SubiodeLvL = False
+    
+    With UserList(UserIndex)
+
+        Do While .Stats.ExpPVP >= .Stats.ELUPVP
+            
+            'Checkea si alcanzo el maximo nivel
+            If .Stats.ELVPVP >= STAT_MAXELV Then
+                .Stats.ExpPVP = 0
+                .Stats.ELUPVP = 0
+                Exit Sub
+
+            End If
+            
+            'Store it!
+            Call Statistics.UserLevelUp(UserIndex)
+            
+            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageCreateFX(UserList(UserIndex).Char.CharIndex, FX_PASA_NIVELPVP, 0))
+            
+            If PrintInConsole Then
+                Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_NIVEL, .Pos.X, .Pos.Y))
+                Call WriteConsoleMsg(UserIndex, "Has subido de nivel de PVP!", FontTypeNames.FONTTYPE_INFO)
+                Call WriteScreenMsg(UserIndex, "Nivel de PVP " & .Stats.ELVPVP + 1, "Has alcanzado el")
+                Call WriteConsoleMsg(UserIndex, "¡Has ganado 10 Gemas Winter!", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "¡Has ganado 1000 monedas de oro!", FontTypeNames.FONTTYPE_INFO)
+                
+            End If
+            
+            .Stats.ELVPVP = .Stats.ELVPVP + 1
+            
+            .Stats.ExpPVP = .Stats.ExpPVP - .Stats.ELUPVP
+                  
+            .Stats.ELUPVP = .Stats.ELUPVP * 1.4
+            
+            .AccountInfo.Gemas = .AccountInfo.Gemas + 10
+            .Stats.Gld = .Stats.Gld + 1000
+            Call WriteUpdateGold(UserIndex)
+            
+            Call SaveUserToDatabase(UserIndex, True)
+            Call SaveAccountGemasDatabase(UserIndex, .AccountInfo.Gemas)
+            
+        Loop
+    End With
+    
+    Exit Sub
+
+errHandler:
+    Call LogError("Error en la subrutina CheckUserLevelPVP - Error : " & Err.Number & " - Description : " & Err.description)
+
+End Sub
+
 Public Function PuedeAtravesarAgua(ByVal UserIndex As Integer) As Boolean
     '***************************************************
     'Author: Unknown
@@ -2016,6 +2094,19 @@ Public Sub ContarMuerte(ByVal Muerto As Integer, ByVal Atacante As Integer)
         End If
         
         If .Stats.UsuariosMatados < MAXUSERMATADOS Then .Stats.UsuariosMatados = .Stats.UsuariosMatados + 1
+        
+        If .AccountInfo.esVIP Then
+            .Stats.ExpPVP = .Stats.ExpPVP + 300
+            
+        Else
+            .Stats.ExpPVP = .Stats.ExpPVP + 200
+            
+        End If
+        
+        Call CheckUserLevelPVP(Atacante, True)
+        
+        UserList(Muerto).Stats.ExpPVP = UserList(Muerto).Stats.ExpPVP - 100
+        If UserList(Muerto).Stats.ExpPVP < 1 Then UserList(Muerto).Stats.ExpPVP = 0
 
     End With
 

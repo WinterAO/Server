@@ -226,8 +226,6 @@ Public Function SpawnClan(ByVal Mapa As Integer, _
     nPos.Map = Mapa
     nPos.X = X
     nPos.Y = Y
-    
-    Debug.Print "Mapa: " & nPos.Map & " X: " & nPos.X & " Y: " & nPos.Y
 
     ' Spawn clan members
     ClanMembersAlive = NRO_PRETORIANOS
@@ -361,7 +359,7 @@ Private Sub SpawnPretorian(ByRef SpawnPos As WorldPos, _
         Head = RandomShortHead
 
     End If
-              Debug.Print SpawnPos.Map & " - " & SpawnPos.X & " - " & SpawnPos.Y
+
     ' The King has to spawn always in the given position
     If IsKing Then
         

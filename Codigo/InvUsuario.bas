@@ -191,10 +191,18 @@ Sub QuitarNewbieObj(ByVal UserIndex As Integer)
             Select Case .Hogar
             
                 Case eCiudad.cRamx
-                    DeDonde = Ramx
+                    If Not Battlegrounds Then
+                        DeDonde = Ramx
+                    Else
+                        DeDonde = Battleground
+                    End If
 
                 Case Else
-                    DeDonde = Ramx
+                    If Not Battlegrounds Then
+                        DeDonde = Ramx
+                    Else
+                        DeDonde = Battleground
+                    End If
 
             End Select
         
@@ -2303,6 +2311,32 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                 Else
                         Call WriteConsoleMsg(UserIndex, "Estas demasiado hambriento y sediento.", FontTypeNames.FONTTYPE_INFO)
 
+                End If
+                
+            Case eOBJType.otPaseVIP
+            
+                Dim oldVIP As Date
+            
+                oldVIP = .AccountInfo.VIP
+                
+                If .AccountInfo.VIP < Format(Now, "dd/mm/yyyy") Then
+                    .AccountInfo.VIP = Now + obj.TiempoVIP
+                Else
+                    .AccountInfo.VIP = .AccountInfo.VIP + obj.TiempoVIP
+                End If
+        
+                If SaveAccountVIPDatabase(UserIndex, .Name) Then
+                
+                    Call WriteConsoleMsg(UserIndex, "¡Has añadido " & obj.TiempoVIP & " a tu tiempo VIP!", FontTypeNames.FONTTYPE_CENTINELA)
+                    
+                    .AccountInfo.esVIP = True
+                    Call QuitarUserInvItem(UserIndex, Slot, 1)
+                    Call UpdateUserInv(False, UserIndex, Slot)
+                    
+                Else
+                    Call WriteConsoleMsg(UserIndex, "Error interno, no se pudo añadir tiempo VIP. Contacte con los administradores.", FontTypeNames.FONTTYPE_CENTINELA)
+                    .AccountInfo.VIP = oldVIP
+                
                 End If
 
                     
