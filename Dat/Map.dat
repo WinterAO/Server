@@ -4,5 +4,5 @@
 'y podria llegar a explotar la aplicacion
 
 [INIT]
+MapPath=\Mapas\
 NumMaps=3
-NumBgs=2

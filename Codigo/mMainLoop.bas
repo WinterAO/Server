@@ -88,7 +88,7 @@ Public Sub TIMER_AI()
                     Else
 
                         ' Preto? Tienen ai especial
-                        If .NPCtype = eNPCType.Pretoriano And PRETORIANOS_ACTIVADO = True Then
+                        If .NPCtype = eNPCType.Pretoriano Then
                             If Contador >= INTERVALO_AI_GENERAL Then Call ClanPretoriano(.ClanIndex).PerformPretorianAI(NPCIndex)
                         Else
 
@@ -154,8 +154,6 @@ Public Sub GameTimer()
                     bEnviarStats = False
                     bEnviarAyS = False
                     
-                    If TimerEventoRinkel > 0 Then Call modArenaRinkel.RestarTimerEvento
-                    If TimerRondaEventoRinkel > 0 Then Call modArenaRinkel.RestarTimerRonda
                     If .flags.Paralizado = 1 Then Call EfectoParalisisUser(iUserIndex)
                     If .flags.Ceguera = 1 Or .flags.Estupidez Then Call EfectoCegueEstu(iUserIndex)
                     If .flags.Muerto = 0 Then
@@ -460,7 +458,7 @@ Public Sub PasarSegundo()
                  
                         If .Counters.Pena < 1 Then
                             .Counters.Pena = 0
-                            Call WarpUserChar(i, Libertad.Map, Libertad.x, Libertad.Y, True)
+                            Call WarpUserChar(i, Libertad.Map, Libertad.X, Libertad.Y, True)
                             Call WriteConsoleMsg(i, "Has sido liberado!", FontTypeNames.FONTTYPE_INFO)
 
                         End If
@@ -472,7 +470,7 @@ Public Sub PasarSegundo()
                 If Not .Pos.Map = 0 Then
 
                     'Counter de piquete
-                    If MapData(.Pos.Map, .Pos.x, .Pos.Y).Trigger = eTrigger.ANTIPIQUETE Then
+                    If MapData(.Pos.Map, .Pos.X, .Pos.Y).Trigger = eTrigger.ANTIPIQUETE Then
                             If .flags.Muerto = 0 Then
                                 .Counters.PiqueteC = .Counters.PiqueteC + 1
                                 .Counters.ContadorPiquete = .Counters.ContadorPiquete + 1

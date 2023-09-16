@@ -1413,11 +1413,10 @@ Sub LookatTile(ByVal UserIndex As Integer, _
 
                                 End If
                   
-                                If .GuildIndex > 0 Then _
+                                If .GuildIndex > 0 Then
                                     Stat = Stat & " Clan: '" & modGuilds.GuildName(.GuildIndex) & "'"
-                                
-                                If .AccountInfo.esVIP Then _
-                                    Stat = Stat & " [VIP] "
+
+                                End If
 
                             End If
 

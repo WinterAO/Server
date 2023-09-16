@@ -390,7 +390,6 @@ Private Sub cmdLoadWorldBackup_Click()
     Call CargarBackUp
     Call LoadOBJData
     Call LoadGlobalDrop
-    Call loadShop
 
     SockListen = ListenForConnect(Puerto, hWndMsg, vbNullString)
 
@@ -595,9 +594,6 @@ Private Sub listDats_Click()
             
         Case "GLOBAL_DROP.dat"
             Call LoadGlobalDrop
-            
-        Case "SHOP.dat"
-            Call loadShop
             
         Case "OBJARTESANO.DAT"
             Call LoadObjArtesano

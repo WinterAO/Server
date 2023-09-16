@@ -260,7 +260,42 @@ Option Explicit
 
 Private Sub cmdCrearCuenta_Click()
     
-    Call CrearCuenta(TxtNick.Text, txtEmail.Text, txtPass.Text, , True)
+    Dim Salt As String
+    
+    Dim oSHA256 As CSHA256
+
+    Set oSHA256 = New CSHA256
+    
+    If LenB(TxtNick.Text) > 24 Or LenB(TxtNick.Text) = 0 Then
+        MsgBox "Nombre invalido."
+        Exit Sub
+
+    End If
+    
+    If LenB(txtEmail.Text) = 0 Then
+        MsgBox "Escribe un Email"
+        Exit Sub
+    End If
+    
+    If LenB(txtPass.Text) = 0 Then
+        MsgBox "Escribe una contraseña"
+        Exit Sub
+    End If
+    
+    If CuentaExisteDatabase(TxtNick.Text) Then
+        MsgBox "El nombre de la cuenta ya existe"
+        Exit Sub
+    End If
+    
+    Salt = RandomString(32)
+    
+    If SaveNewAccount(TxtNick.Text, txtEmail.Text, oSHA256.SHA256(txtPass.Text & Salt), Salt) Then
+        MsgBox "Cuenta " & TxtNick.Text & " creada con exito."
+        
+    Else
+        MsgBox "Error al crear la cuenta."
+    
+    End If
     
 End Sub
 

@@ -25,14 +25,13 @@ Public Sub LoginAccountDatabase(ByVal UserIndex As Integer, ByVal UserName As St
         '***********************
         'LOGIN DE LA CUENTA
         '***********************
-        If Not Account_Database.MakeQuery("SELECT id, username, email, password, salt, gemas, status, vip FROM cuentas WHERE UPPER(username) = (?)", False, UCase$(UserName)) Then
+        If Not Account_Database.MakeQuery("SELECT id, username, email, password, salt, gemas, status FROM cuentas WHERE UPPER(username) = (?)", False, UCase$(UserName)) Then
             Call WriteErrorMsg(UserIndex, "Error al cargar la cuenta.")
             Call CloseUser(UserIndex)
             Exit Sub
         
         End If
-        
-
+            
         'Guardo la información de la cuenta
         .AccountInfo.ID = CInt(Account_Database.Database_RecordSet!ID)
         .AccountInfo.UserName = Account_Database.Database_RecordSet!UserName
@@ -41,14 +40,6 @@ Public Sub LoginAccountDatabase(ByVal UserIndex As Integer, ByVal UserName As St
         .AccountInfo.Salt = Account_Database.Database_RecordSet!Salt
         .AccountInfo.Gemas = CLng(Account_Database.Database_RecordSet!Gemas)
         .AccountInfo.status = CBool(Account_Database.Database_RecordSet!status)
-        .AccountInfo.VIP = Format(Account_Database.Database_RecordSet!VIP, "dd/mm/yyyy")
-        
-        '¿Tiene el VIP activo?
-        If .AccountInfo.VIP >= Format(Now, "dd/mm/yyyy") Then
-            .AccountInfo.esVIP = True
-        Else
-            .AccountInfo.esVIP = False
-        End If
             
         Set Account_Database.Database_RecordSet = Nothing
             
@@ -185,46 +176,6 @@ ErrorHandler:
         Call Account_Database.Database_Reconnect
 
     Call LogDatabaseError("Error in CuentaExisteDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
-
-End Function
-
-Public Function EmailExisteDatabase(ByVal Email As String) As Boolean
-
-    '***************************************************
-    'Author: Lorwik
-    'Last Modification: 30/01/2022
-    '***************************************************
-    On Error GoTo ErrorHandler
-
-    Dim query As String
-
-    #If DBConexionUnica = 0 Then
-        Call Account_Database.Database_Connect
-    #Else
-        'Si perdimos la conexion reconectamos
-        If Account_Database.CheckSQLStatus = False Then Account_Database.Database_Reconnect
-    #End If
-
-    If Not Account_Database.MakeQuery("SELECT id FROM cuentas WHERE UPPER(email) = (?)", False, UCase$(Email)) Then
-        EmailExisteDatabase = False
-        Exit Function
-
-    End If
-
-    EmailExisteDatabase = (Account_Database.Database_RecordSet.RecordCount > 0)
-    Set Account_Database.Database_RecordSet = Nothing
-    
-    #If DBConexionUnica = 0 Then
-        Call Account_Database.Database_Close
-    #End If
-
-    Exit Function
-
-ErrorHandler:
-    If Err.Number = -1207576359 Then _
-        Call Account_Database.Database_Reconnect
-
-    Call LogDatabaseError("Error in EmailExisteDatabase: " & Email & ". " & Err.Number & " - " & Err.description)
 
 End Function
 
@@ -560,8 +511,7 @@ End Function
 Public Function SaveNewAccount(ByVal UserName As String, _
                                   ByVal Email As String, _
                                   ByVal Password As String, _
-                                  ByVal Salt As String, _
-                                  Optional ByVal Verificada As Boolean = False) As Boolean
+                                  ByVal Salt As String) As Boolean
 
     '***************************************************
     'Author: Lorwik
@@ -571,34 +521,13 @@ Public Function SaveNewAccount(ByVal UserName As String, _
     On Error GoTo ErrorHandler
 
     Dim query As String
-    Dim CodigoVerificacion As String
 
     'Si perdimos la conexion reconectamos
     If Account_Database.CheckSQLStatus = False Then Account_Database.Database_Reconnect
 
-    '¿Creamos una cuenta ya verificada o una cuenta normal?
-    If Not Verificada Then
-    
-        'Obtenemos el codigo de verificacion
-        CodigoVerificacion = RandomNumber(100000, 999999)
-    
-        query = "INSERT INTO cuentas SET username = (?), email = (?), password = (?), salt = (?), id_confirmacion = (?), status = '0', createdAt = NOW(), updatedAt = NOW();"
-    
-    Else
-    
-        query = "INSERT INTO cuentas SET username = (?), email = (?), password = (?), salt = (?), id_confirmacion = 'VERIFICADA', status = '1', createdAt = NOW(), updatedAt = NOW();"
-        
-    End If
+    query = "INSERT INTO cuentas SET username = (?), email = (?), password = (?), salt = (?), id_confirmacion = 'VERIFICADA', status = '1', date_created = NOW(), date_last_login = NOW();"
 
-    Call Account_Database.MakeQuery(query, True, UserName, Email, Password, Salt, CodigoVerificacion)
-    
-    If Not Verificada Then
-        If enviarMailVerificacion(UserName, Email, CodigoVerificacion) = False Then
-            SaveNewAccount = False
-            Exit Function
-        End If
-    End If
-          
+    Call Account_Database.MakeQuery(query, True, UserName, Email, Password, Salt)
 
     SaveNewAccount = True
     
@@ -654,7 +583,7 @@ ErrorHandler:
 
 End Function
 
-Public Function SaveAccountGemasDatabase(ByVal UserName As String, ByVal Gemas As Long) As Boolean
+Public Function SaveAccountEditGemasDatabase(ByVal UserName As String, ByVal Gemas As Long) As Boolean
 
     '***************************************************
     'Author: Lorwik
@@ -679,10 +608,10 @@ Public Function SaveAccountGemasDatabase(ByVal UserName As String, ByVal Gemas A
     
         Call Account_Database.MakeQuery("UPDATE cuentas SET gemas = (?) WHERE id = " & UserAccId, True, Gemas)
         
-        SaveAccountGemasDatabase = True
+        SaveAccountEditGemasDatabase = True
         
     Else
-        SaveAccountGemasDatabase = False
+        SaveAccountEditGemasDatabase = False
         
     End If
 
@@ -692,9 +621,95 @@ Public Function SaveAccountGemasDatabase(ByVal UserName As String, ByVal Gemas A
 
     Exit Function
 ErrorHandler:
-    Call LogDatabaseError("Error in SaveAccountGemasDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
-    SaveAccountGemasDatabase = False
+    Call LogDatabaseError("Error in SaveAccountEditGemasDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
+    SaveAccountEditGemasDatabase = False
 
+End Function
+
+Public Function SaveAccountSumaGemasDatabase(ByVal UserName As String, ByVal Gemas As Long) As Boolean
+
+    '***************************************************
+    'Author: Lorwik
+    'Last Modification: 30/04/2020
+    '***************************************************
+    On Error GoTo ErrorHandler
+
+    Dim query As String
+    Dim UserAccId As Long
+    
+    #If DBConexionUnica = 0 Then
+        Call Account_Database.Database_Connect
+    #Else
+        'Si perdimos la conexion reconectamos
+        If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
+    #End If
+
+    UserAccId = GetAccountID(UserName)
+    
+    '¿Obtuvimos una ID nula?
+    If UserAccId <> -1 Then
+    
+        Call Account_Database.MakeQuery("UPDATE cuentas SET gemas = gemas + (?) WHERE id = " & UserAccId, True, Gemas)
+        
+        SaveAccountSumaGemasDatabase = True
+        
+    Else
+        SaveAccountSumaGemasDatabase = False
+        
+    End If
+
+    #If DBConexionUnica = 0 Then
+        Call Account_Database.Database_Close
+    #End If
+
+    Exit Function
+ErrorHandler:
+    Call LogDatabaseError("Error in SaveAccountSumaGemasDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
+    SaveAccountSumaGemasDatabase = False
+
+End Function
+
+Public Function SaveAccountRestaGemasDatabase(ByVal UserName As String, ByVal Gemas As Long) As Boolean
+
+    '***************************************************
+    'Author: Lorwik
+    'Last Modification: 30/04/2020
+    '***************************************************
+    On Error GoTo ErrorHandler
+
+    Dim query As String
+    Dim UserAccId As Long
+
+    #If DBConexionUnica = 0 Then
+        Call Account_Database.Database_Connect
+    #Else
+        'Si perdimos la conexion reconectamos
+        If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
+    #End If
+
+    UserAccId = GetAccountID(UserName)
+    
+    '¿Obtuvimos una ID nula?
+    If UserAccId <> -1 Then
+    
+        Call Account_Database.MakeQuery("UPDATE cuentas SET gemas = gemas - (?) WHERE id = " & UserAccId, True, Gemas)
+        
+        SaveAccountRestaGemasDatabase = True
+        
+    Else
+        SaveAccountRestaGemasDatabase = False
+        
+    End If
+
+    #If DBConexionUnica = 0 Then
+        Call Account_Database.Database_Close
+    #End If
+
+    Exit Function
+ErrorHandler:
+    Call LogDatabaseError("Error in SaveAccountRestaGemasDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
+    SaveAccountRestaGemasDatabase = False
+    
 End Function
 
 Public Function GetGemasDatabase(ByVal UserName As String) As Long
@@ -753,7 +768,7 @@ Public Sub SaveAccountLastLoginDatabase(ByVal UserIndex As Integer, ByVal UserNa
         If Account_Database.CheckSQLStatus = False Then Account_Database.Database_Reconnect
     #End If
 
-    query = "UPDATE cuentas SET updatedAt = NOW(), last_ip = (?), macaddress = (?), serialhd = (?) WHERE UPPER(username) = (?)"
+    query = "UPDATE cuentas SET date_last_login = NOW(), last_ip = (?), macaddress = (?), serialhd = (?) WHERE UPPER(username) = (?)"
     Call Account_Database.MakeQuery(query, True, UserList(UserIndex).IP, UserList(UserIndex).AccountInfo.macAddress, UserList(UserIndex).AccountInfo.hdSerial, UCase$(UserName))
 
     #If DBConexionUnica = 0 Then
@@ -765,78 +780,6 @@ ErrorHandler:
     Call LogDatabaseError("Error in SaveAccountLastLoginDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
 
 End Sub
-
-Public Function SaveAccountVIPDatabase(ByVal UserIndex As Integer, ByVal UserName As String) As Boolean
-
-    '***************************************************
-    'Author: Lorwik
-    'Last Modification: 21/05/2022
-    '***************************************************
-    On Error GoTo ErrorHandler
-
-    Dim query As String
-    
-    #If DBConexionUnica = 0 Then
-        Call Account_Database.Database_Connect
-    #Else
-        'Si perdimos la conexion reconectamos
-        If Account_Database.CheckSQLStatus = False Then Account_Database.Database_Reconnect
-    #End If
-
-    query = "UPDATE cuentas SET vip = (?) WHERE UPPER(username) = (?)"
-    Call Account_Database.MakeQuery(query, True, UserList(UserIndex).AccountInfo.VIP, UCase$(UserName))
-
-    SaveAccountVIPDatabase = True
-
-    #If DBConexionUnica = 0 Then
-        Call Account_Database.Database_Close
-    #End If
-
-    Exit Function
-ErrorHandler:
-    Call LogDatabaseError("Error in SaveAccountLastLoginDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
-    SaveAccountVIPDatabase = False
-
-End Function
-
-Public Function GetTiempoVIPDatabase(ByVal UserName As String) As Long
-
-    '***************************************************
-    'Author: Lorwik
-    'Last Modification: 21/05/2022
-    '***************************************************
-    On Error GoTo ErrorHandler
-
-    Dim UserAccId As Long
-    
-    #If DBConexionUnica = 0 Then
-        Call Account_Database.Database_Connect
-    #Else
-        'Si perdimos la conexion reconectamos
-        If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
-    #End If
-
-    UserAccId = GetAccountID(UserName)
-    
-    If Not Account_Database.MakeQuery("SELECT vip FROM cuentas WHERE id = (?)", False, UserAccId) Then
-        GetTiempoVIPDatabase = 0
-        Exit Function
-
-    End If
-
-    GetTiempoVIPDatabase = CLng(Account_Database.Database_RecordSet!VIP)
-    Set Account_Database.Database_RecordSet = Nothing
-    
-    #If DBConexionUnica = 0 Then
-        Call Account_Database.Database_Close
-    #End If
-
-    Exit Function
-
-ErrorHandler:
-    Call LogDatabaseError("Error in GetTiempoVIPDatabase: " & UserName & ". " & Err.Number & " - " & Err.description)
-
-End Function
 
 Public Sub ActualizarPJCuentas(ByVal UserIndex As Integer)
 '****************************************************
@@ -990,77 +933,4 @@ Public Sub ResetPJAccountSlot(ByVal UserIndex As Integer, ByVal Slot As Byte)
             
 End Sub
 
-Public Sub CrearCuenta(ByVal nombre As String, ByVal Email As String, ByVal Password As String, Optional ByVal UserIndex As Integer, Optional ByVal Manual As Boolean = False)
 
-    Dim Salt As String
-    
-    Dim oSHA256 As CSHA256
-
-    Set oSHA256 = New CSHA256
-    
-    If LenB(nombre) > 24 Or LenB(nombre) = 0 Then
-        If Manual Then
-            MsgBox "El nombre de cuenta debe tener un minimo de 4 caracteres y un maximo de 24."
-        Else
-            Call WriteErrorMsg(UserIndex, "El nombre de cuenta debe tener un minimo de 4 caracteres y un maximo de 24.")
-        End If
-        Exit Sub
-
-    End If
-    
-    If LenB(Email) = 0 Then
-        If Manual Then
-            MsgBox "El campo de Email esta vacio."
-        Else
-            Call WriteErrorMsg(UserIndex, "El campo de Email esta vacio.")
-        End If
-        Exit Sub
-    End If
-    
-    If LenB(Password) = 0 Then
-        If Manual Then
-            MsgBox "El campo de contraseña esta vacio."
-        Else
-            Call WriteErrorMsg(UserIndex, "El campo de contraseña esta vacio.")
-        End If
-        
-        Exit Sub
-    End If
-    
-    If CuentaExisteDatabase(nombre) Then
-        If Manual Then
-            MsgBox "El nombre de la cuenta ya existe."
-        Else
-            Call WriteErrorMsg(UserIndex, "El nombre de la cuenta ya existe.")
-        End If
-        Exit Sub
-    End If
-    
-    If EmailExisteDatabase(Email) Then
-        If Manual Then
-            MsgBox "El email ya esta en uso."
-        Else
-            Call WriteErrorMsg(UserIndex, "El email ya esta en uso.")
-        End If
-        Exit Sub
-    End If
-    
-    Salt = RandomString(32)
-    
-    If SaveNewAccount(nombre, Email, oSHA256.SHA256(Password & Salt), Salt) Then
-        If Manual Then
-            MsgBox "Cuenta " & nombre & " creada con exito, revisa tu email para verificar la cuenta."
-        Else
-            Call WriteErrorMsg(UserIndex, "Cuenta " & nombre & " creada con exito, revisa tu email para verificar la cuenta.")
-        End If
-        
-    Else
-        If Manual Then
-            MsgBox "Error al crear la cuenta. Intentelo mas tarde o contacte con el soporte."
-        Else
-            Call WriteErrorMsg(UserIndex, "Error al crear la cuenta. Intentelo mas tarde o contacte con el soporte.")
-        End If
-    
-    End If
-
-End Sub

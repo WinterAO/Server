@@ -1,4 +1,4 @@
-﻿'ATENCIÓN: LOS NPC HOSTILES TIENEN QUE DATEARSE A PARTIR DEL 500
+'ATENCIÓN: LOS NPC HOSTILES TIENEN QUE DATEARSE A PARTIR DEL 500
 TODOS LOS NPC CON RETARDO Y WORLDBOSS TIENEN QUE TENER PosOrig
 
 ##############################################
@@ -29,26 +29,12 @@ TODOS LOS NPC CON RETARDO Y WORLDBOSS TIENEN QUE TENER PosOrig
 ############## EFECTOS DE NPC ################
 ##############################################
 
-TiempoRetardoMin, TiempoRetardoMax ===== El NPC tendra un retardo de Respawn especificado en Minutos
+Retardo ===== El NPC tendra un retardo de Respawn especificado en Minutos
 Explotar ===== El NPC tendra un 50% de explota haciendo el doble de su golpe minimo
 LanzaMensaje ===== El NPC mandara un mensaje cuando le quede un 10% de su vida
 ActivoPotencia ===== El NPC pegar el doble a partir de su 50% de vida
 Invocacion ===== NPC que son de invocacion
 Tepeable ===== Se activa con porcentaje. El porcentaje indicara a partir de que vida empezara hacerse TP por golpes (Del 1% al 100%)
-Veneno ===== El Npc envenenada
-Quema ===== EL Npc incinera
-
-##############################################
-############ VELOCIDAD VARIABLE ##############
-##############################################
-
-En el server hay un intervalo global de la velocidad de los NPC actualmente establecido en 300ms.
-La velocidad estandar que debe tener un NPC es de "Speed=370" o van a correr mucho.
-El rango de valores puede ir desde 0ms a 10000ms, siendo este ultimo EXTREMADAMENTE lento.
-
-Estos valores son muy dificiles de ajustar, por lo que se recomienda ir subiendo de 10 en 10, o de 20 en 20.
-
-A partir de "Speed=480" la lentitud se empieza a notar con respecto a la velocidad standar.
 
 ##############################################
 ################ORDEN EN DAT##################
@@ -141,7 +127,6 @@ Domable=0
 Alineacion=0
 Comercia=0
 BackUp=0
-Speed=370
 
 [NPC2] 'Provisiones Isla Newbie
 Name=Thorkis
@@ -162,7 +147,6 @@ NROITEMS=2
 Obj1=1-10000 'Todas las comidas
 Obj2=43-10000 'Todas las bebidas
 BackUp=1
-Speed=370
 
 [NPC3] 'Vende Pociones
 Name=Alquimista
@@ -187,7 +171,6 @@ Obj5=461-1000 'Pocion verde (Newbie)
 Obj6=855-1000 'Pocion Amarilla (Newbie)
 Obj7=166-1000 'Pocion Violeta
 BackUp=1
-Speed=370
 
 [NPC4]
 Name=Mark
@@ -204,9 +187,7 @@ Domable=0
 Alineacion=0
 Comercia=0
 BackUp=0
-NumQuest=1
 QuestNumber=1
-Speed=370
 
 [NPC5]
 Name=Willdon
@@ -223,9 +204,7 @@ Domable=0
 Alineacion=0
 Comercia=0
 BackUp=0
-NumQuest=1
 QuestNumber=4
-Speed=370
 
 [NPC6]
 Name=Selenna
@@ -242,9 +221,7 @@ Domable=0
 Alineacion=0
 Comercia=0
 BackUp=0
-NumQuest=1
 QuestNumber=2
-Speed=370
 
 [NPC7]
 Name=Wilson
@@ -261,24 +238,7 @@ Domable=0
 Alineacion=0
 Comercia=0
 BackUp=0
-NumQuest=1
 QuestNumber=3
-Speed=370
-
-[NPC8] 
-Name=Entrenador
-NpcType=0
-Desc=Bienvenido a la Isla Newbie. En este lugar protegido podras preparate para salir al mundo exterior en busca de aventuras. Mis amigos te daran misiones que te ayudaran a entrenar, equiparte y conseguir algo de oro. Buena suerte!
-Head=549
-Heading=1
-Body=162
-Movement=1
-Attackable=0
-ReSpawn=0
-Hostile=0
-Domable=0
-Alineacion=0
-Comercia=0
 
 ##############################################################
 ################ NPCS VENDEDORES DE RAMX #####################
@@ -299,7 +259,6 @@ Domable=0
 Alineacion=0
 Comercia=0
 BackUp=0
-Speed=370
 
 [NPC12]
 Name=Banquera
@@ -316,7 +275,6 @@ Domable=0
 Alineacion=0
 Comercia=0
 BackUp=0
-Speed=370
 
 [NPC13]
 Name=Banquero
@@ -333,7 +291,6 @@ Domable=0
 Alineacion=0
 Comercia=0
 BackUp=0
-Speed=370
 
 [NPC14] 'Vende Pociones
 Name=Lilith
@@ -359,7 +316,6 @@ Obj6=36-1000 'Pocion Amarilla
 Obj7=166-1000 'Pocion Violeta
 Obj8=645-1000 'Pocion Negra
 BackUp=1
-Speed=370
 
 [NPC15] 'Herrero
 Name=Herrero
@@ -376,24 +332,30 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=2
-NROITEMS=15
-Obj1=15-1000 'Daga
-Obj2=619-1000 'Daga Envenenada
-Obj3=165-1000 'Daga +1
-Obj4=9-1000 'Horquilla
-Obj5=2-1000 'Espada Larga
-Obj6=125-1000 'Sable
-Obj7=389-1000 'Martillo de Herrero
-Obj8=990-1000 'Mazo del Juicio
-Obj9=562-1000  'Plano de Daga envenenada
-Obj10=563-1000  'Plano de Daga +1
-Obj11=564-1000  'Plano de Daga +2
-Obj12=565-1000  'Plano de Daga 3
-Obj13=123-1000  'Espada Vikinga
-Obj14=124-1000 'Katana
-Obj15=164-1000  'Espada Corta 
+NROITEMS=22
+Obj1=389-1000 	'Martillo de Herrero
+Obj2=1009-10000 'Cuchillas
+Obj3=15-1000 	'Daga
+Obj4=619-1000 	'Daga Envenenada
+Obj5=165-1000 	'Daga +1
+Obj6=19-1000 	'Espada Dos Manos
+Obj7=9-1000 	'Horquilla
+Ob18=164-1000 	'Espada Corta
+Obj9=2-1000 	'Espada Larga
+Obj10=125-1000 	'Sable
+Obj11=123-1000 	'Vikinga
+Obj12=124-1000 	'Katana
+Obj13=126-1000 	'Hacha Larga de Guerra
+Obj14=129-1000 	'Hacha de Guerra Dos Filos
+Obj15=159-1000 	'Hacha de Barbaro
+Obj16=399-1000 	'Cimitarra
+Obj17=990-1000 	'Mazo del Juicio
+Obj18=403-1000 	'Espada de Plata
+Obj19=562-1000  'Plano de Daga envenenada
+Obj20=563-1000  'Plano de Daga +1
+Obj21=564-1000  'Plano de Daga +2
+Obj22=565-1000  'Plano de Daga 3
 BackUp=1
-Speed=370
 
 [NPC16] 'Sastre Ramx
 Name=Sastre
@@ -410,7 +372,7 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=3
-NROITEMS=22
+NROITEMS=13
 Obj1=31-1000 'Vestimentas Comunes
 Obj2=32-1000 'Vestimentas Comunes
 Obj3=35-1000 'Vestimentas Comunes
@@ -424,17 +386,7 @@ obj10=1298-1000 'Kit de Costura
 Obj11=1300-1000 'Hilo Burdo
 Obj12=1299-1000 'Hilo
 Obj13=1301-1000 'Ovillo de lana
-Obj14=170-1000 'Vestimenta de Mujer (H/E/EO-M)
-Obj15=196-1000 'Tunica de Mago
-Obj16=240-1000 'Ropa de Enano (E/G)
-Obj17=381-1000 'Tunica Antigua
-Obj18=382-1000 'Vestido Azul (H/E/EO-M)
-Obj19=488-1000 'White Lady (H/E/EO-M)
-Obj20=502-1000 'Ropa de Campesino (E/G)
-Obj21=507-1000 'Ropa Violeta (E/G)
-Obj22=511-1000 'Vestido de Novia Sensual (H/E/EO-M)
 BackUp=1
-Speed=370
 
 [NPC17] 'Armaduras Ramx
 Name=Armaduras
@@ -450,16 +402,13 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=3
-NROITEMS=7
+NROITEMS=5
 Obj1=30-1000 'Armadura de Cuero
 Obj2=529-1000 'Armadura de Cuero (H/E/EO-M)
 Obj3=668-1000 'Armadura de Cuero (E/G)
 Obj4=1001-1000 'Casco de Aguila
 Obj5=1002-1000 'Casco de Lobo
-Obj6=360-1000 'Armadura de Cazador
-Obj7=648-1000 'Armadura de Cazador (E/G)
 BackUp=1
-Speed=370
 
 [NPC18] 'Provisiones Ramx
 Name=Thorkis
@@ -476,13 +425,27 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=1
-NROITEMS=4
-Obj1=139-1000 'Pescado
-Obj2=26-1000 'Pollo
-Obj3=43-1000 'Botella de Agua
-Obj4=160-1000 'Cerveza
+NROITEMS=19
+Obj1=1-10000 'Todas las comidas
+Obj2=158-10000
+Obj3=22-10000
+Obj4=21-10000
+Obj5=23-10000
+Obj6=24-10000
+Obj7=29-10000
+Obj8=754-10000
+Obj9=28-10000
+Obj10=26-10000
+Obj11=25-10000
+Obj12=27-10000
+Obj13=43-10000 'Todas las bebidas
+Obj14=160-10000
+Obj15=42-10000
+Obj16=557-10000
+Obj17=533-10000
+Obj18=161-10000
+Obj19=622-10000
 BackUp=1
-Speed=370
 
 [NPC19] 'VendeMagia Ramx
 Name=Mago
@@ -508,11 +471,8 @@ Obj5=201-1000 'Curar Heridas Leves
 Obj6=200-1000 'Antidoto Magico
 Obj7=206-1000 'Paralizar
 Obj8=207-1000 'Remover Paralisis
-Obj9=383-1000 'Sombrero Magico
-Obj10=394-1000 'Llamado a la Naturaleza
-Obj11=470-1000 'Fuerza
+
 BackUp=1
-Speed=370
 
 [NPC20] 'Pescador Ramx
 Name=Pescador
@@ -534,7 +494,6 @@ Obj1=138-1000 'Cana de Pescar
 Obj2=139-1000 'Pescado
 Obj3=543-1000 'Red de Pesca
 BackUp=1
-Speed=370
 
 [NPC21] 'Minero
 Name=Minero
@@ -554,7 +513,6 @@ TipoItems=23
 NROITEMS=1
 Obj1=187-1000 'Piquete de Minero
 BackUp=1
-Speed=370
 
 [NPC22] 'Mercader
 Name=Mercader
@@ -573,7 +531,6 @@ Comercia=1
 TipoItems=1000
 NROITEMS=0
 BackUp=1
-Speed=370
 
 [NPC23] 'Carpintera
 Name=Carpintera
@@ -601,7 +558,6 @@ Obj7=663-1000 	'Arco Simple Reforzado
 Obj8=479-1000 	'Arco Compuesto
 Obj9=664-1000 	'Arco Compuesto Reforzado
 BackUp=1
-Speed=370
 
 [NPC24]
 Name=Marinero
@@ -624,7 +580,6 @@ Obj2=830-1000
 Obj3=1008-1000
 Obj4=1058-1000
 BackUp=1
-Speed=370
 
 [NPC25]
 Name=Gobernador
@@ -642,7 +597,6 @@ Alineacion=0
 Comercia=0
 BackUp=0
 Ciudad=1
-Speed=370
 
 [NPC26] 'Instructor de Mineria
 Name=Instructor de Mineria
@@ -659,7 +613,6 @@ Domable=0
 Alineacion=0
 BackUp=1
 Instruye=19
-Speed=370
 
 [NPC27] 'Instructor de Taladores
 Name=Instructor de Taladores
@@ -676,7 +629,6 @@ Domable=0
 Alineacion=0
 BackUp=1
 Instruye=17
-Speed=370
 
 [NPC28] 'Instructor de Carpinteros
 Name=Instructor de Carpinteros
@@ -693,7 +645,6 @@ Domable=0
 Alineacion=0
 BackUp=1
 Instruye=20
-Speed=370
 
 [NPC29] 'Instructor de Herreria
 Name=Instructor de Herreria
@@ -710,7 +661,6 @@ Domable=0
 Alineacion=0
 BackUp=1
 Instruye=21
-Speed=370
 
 [NPC30] 'Instructor de Sastreria
 Name=Instructor de Sastreria
@@ -727,7 +677,6 @@ Domable=0
 Alineacion=0
 BackUp=1
 Instruye=22
-Speed=370
 
 [NPC31] 'Instructor de Alquimia
 Name=Instructor de Alquimia
@@ -743,7 +692,6 @@ Domable=0
 Alineacion=0
 BackUp=1
 Instruye=24
-Speed=370
 
 [NPC32]
 Name=Artesano
@@ -759,7 +707,6 @@ Hostile=0
 Domable=0
 Alineacion=0
 Comercia=0
-Speed=370
 
 ##############################################################
 ############## NPCS VENDEDORES DE SHAKOUD ####################
@@ -781,7 +728,6 @@ Alineacion=0
 Comercia=0
 BackUp=0
 Ciudad=2
-Speed=370
 
 [NPC51]
 Name=Sacerdote
@@ -798,7 +744,6 @@ Domable=0
 Alineacion=0
 Comercia=0
 BackUp=0
-Speed=370
 
 [NPC52]
 Name=Banquero
@@ -815,7 +760,6 @@ Domable=0
 Alineacion=0
 Comercia=0
 BackUp=0
-Speed=370
 
 [NPC53]
 Name=Marinero
@@ -832,13 +776,8 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=20
-NROITEMS=4
-Obj1=1315-1000
-Obj2=1316-1000
-Obj3=1317-1000
-Obj4=1318-1000
+NROITEMS=0
 BackUp=1
-Speed=370
 
 [NPC54] 'Vende Pociones
 Name=Krona
@@ -854,17 +793,8 @@ Hostile=0
 Domable=0
 Comercia=1
 TipoItems=11
-NROITEMS=8
-Obj1=37-1000 'Pocion Azul
-Obj2=38-1000 'Pocion Roja
-Obj3=1202-1000 'Pocion Azul de Principiantes
-Obj4=1203-1000 'Pocion Roja de Principiantes
-Obj5=39-1000 'Pocion Verde
-Obj6=36-1000 'Pocion Amarilla
-Obj7=166-1000 'Pocion Violeta
-Obj8=645-1000 'Pocion Negra
+NROITEMS=0
 BackUp=1
-Speed=370
 
 [NPC55] 'Herrero
 Name=Herrero
@@ -881,24 +811,8 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=2
-NROITEMS=15
-Obj1=15-1000 'Daga
-Obj2=619-1000 'Daga Envenenada
-Obj3=165-1000 'Daga +1
-Obj4=9-1000 'Horquilla
-Obj5=2-1000 'Espada Larga
-Obj6=125-1000 'Sable
-Obj7=389-1000 'Martillo de Herrero
-Obj8=990-1000 'Mazo del Juicio
-Obj9=562-1000  'Plano de Daga envenenada
-Obj10=563-1000  'Plano de Daga +1
-Obj11=564-1000  'Plano de Daga +2
-Obj12=565-1000  'Plano de Daga 3
-Obj13=123-1000  'Espada Vikinga
-Obj14=124-1000 'Katana
-Obj15=164-1000  'Espada Corta 
+NROITEMS=0
 BackUp=1
-Speed=370
 
 [NPC56] 'Sastre Shakoud
 Name=Sastre
@@ -915,31 +829,12 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=3
-NROITEMS=22
-Obj1=31-1000 'Vestimentas Comunes
-Obj2=32-1000 'Vestimentas Comunes
-Obj3=35-1000 'Vestimentas Comunes
-Obj4=641-1000 'Ropa de Pordiosero
-Obj5=501-1000 'Ropa de Campesino
-Obj6=135-1000 'Tunica Roja Burda
-obj7=238-1000 'Tunica Azul
-obj8=239-1000 'Tunica Roja
-obj9=873-1000 'Guantes de hurto
-obj10=1298-1000 'Kit de Costura
-Obj11=1300-1000 'Hilo Burdo
-Obj12=1299-1000 'Hilo
-Obj13=1301-1000 'Ovillo de lana
-Obj14=170-1000 'Vestimenta de Mujer (H/E/EO-M)
-Obj15=196-1000 'Tunica de Mago
-Obj16=240-1000 'Ropa de Enano (E/G)
-Obj17=381-1000 'Tunica Antigua
-Obj18=382-1000 'Vestido Azul (H/E/EO-M)
-Obj19=488-1000 'White Lady (H/E/EO-M)
-Obj20=502-1000 'Ropa de Campesino (E/G)
-Obj21=507-1000 'Ropa Violeta (E/G)
-Obj22=511-1000 'Vestido de Novia Sensual (H/E/EO-M)
+NROITEMS=4
+obj1=1298-1000 'Kit de Costura
+Obj2=1300-1000 'Hilo Burdo
+Obj3=1299-1000 'Hilo
+Obj4=1301-1000 'Ovillo de lana
 BackUp=1
-Speed=370
 
 [NPC57] 'Armaduras Shakoud
 Name=Armaduras
@@ -955,16 +850,8 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=3
-NROITEMS=7
-Obj1=30-1000 'Armadura de Cuero
-Obj2=529-1000 'Armadura de Cuero (H/E/EO-M)
-Obj3=668-1000 'Armadura de Cuero (E/G)
-Obj4=1001-1000 'Casco de Aguila
-Obj5=1002-1000 'Casco de Lobo
-Obj6=360-1000 'Armadura de Cazador
-Obj7=648-1000 'Armadura de Cazador (E/G)
+NROITEMS=0
 BackUp=1
-Speed=370
 
 [NPC58] 'Provisiones Shakoud
 Name=Thorin
@@ -981,15 +868,8 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=1
-NROITEMS=6
-Obj1=1-1000 'Manzana Roja
-Obj2=158-1000 'Banana
-Obj3=22-1000 'Frutas del Bosque
-Obj4=754-1000 'Rábano
-Obj5=29-1000 'Sandía
-Obj6=43-1000 'Botella de Agua
+NROITEMS=0
 BackUp=1
-Speed=370
 
 [NPC59] 'VendeMagia Shakoud
 Name=Mago
@@ -1015,7 +895,6 @@ Obj5=200-1000 'Antidoto Magico
 Obj6=530-1000 'Inmovilizar
 Obj7=207-1000 'Remover Paralisis
 BackUp=1
-Speed=370
 
 [NPC60] 'Pescador Shakoud
 Name=Pescador
@@ -1032,12 +911,8 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=1
-NROITEMS=3
-Obj1=138-1000 'Cana de Pescar
-Obj2=139-1000 'Pescado
-Obj3=543-1000 'Red de Pesca
+NROITEMS=0
 BackUp=1
-Speed=370
 
 [NPC61] 'Minero
 Name=Minero
@@ -1054,10 +929,8 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=23
-NROITEMS=1
-Obj1=187-1000 'Piquete de Minero
+NROITEMS=0
 BackUp=1
-Speed=370
 
 [NPC62] 'Mercader
 Name=Mercader
@@ -1076,7 +949,6 @@ Comercia=1
 TipoItems=1000
 NROITEMS=0
 BackUp=1
-Speed=370
 
 [NPC63] 'Carpintera
 Name=Carpintera
@@ -1093,18 +965,8 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=20
-NROITEMS=9
-Obj1=163-1000 	'Cuchara
-Obj2=167-1000 	'Mueble Rustico
-Obj3=168-1000 	'Silla
-Obj4=198-1000 	'Serrucho
-Obj5=480-10000 	'Flecha
-Obj6=478-1000 	'Arco Simple
-Obj7=663-1000 	'Arco Simple Reforzado
-Obj8=479-1000 	'Arco Compuesto
-Obj9=664-1000 	'Arco Compuesto Reforzado
+NROITEMS=0
 BackUp=1
-Speed=370
 
 [NPC64]
 Name=Subastador
@@ -1121,7 +983,6 @@ Domable=0
 Alineacion=0
 Comercia=0
 BackUp=0
-Speed=370
 
 ##############################################################
 ############## NPCS VENDEDORES DE BELLEUVE ###################
@@ -1143,7 +1004,6 @@ Alineacion=0
 Comercia=0
 BackUp=0
 Ciudad=3
-Speed=370
 
 [NPC101]
 Name=Sacerdote
@@ -1160,7 +1020,6 @@ Domable=0
 Alineacion=0
 Comercia=0
 BackUp=0
-Speed=370
 
 [NPC102]
 Name=Banquero
@@ -1177,7 +1036,6 @@ Domable=0
 Alineacion=0
 Comercia=0
 BackUp=0
-Speed=370
 
 [NPC103]
 Name=Marinero
@@ -1194,12 +1052,12 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=20
-NROITEMS=3
-Obj1=1312-1000
-Obj2=1313-1000
-Obj3=1314-1000
+NROITEMS=4
+Obj1=829-1000
+Obj2=830-1000
+Obj3=1008-1000
+Obj4=1058-1000
 BackUp=1
-Speed=370
 
 [NPC104] 'Guardia Armada (Comun)
 Name=Guardia Imperial
@@ -1227,7 +1085,6 @@ DEF=30
 PoderAtaque=400
 PoderEvasion=190
 BackUp=0
-Speed=370
 
 [NPC105] 'Guardia Armada (Movimiento random)
 Name=Guardia Imperial
@@ -1255,7 +1112,6 @@ DEF=30
 PoderAtaque=400
 PoderEvasion=190
 BackUp=0
-Speed=370
 
 [NPC106] 'Guardia Armada (Arquera)
 Name=Arquera Real
@@ -1286,7 +1142,6 @@ Sp1=35
 NROITEMS=1
 Obj1=551-10 'Flecha +1
 BackUp=0
-Speed=370
 
 [NPC107] 'Guardia Armada (Sacerdote)
 Name=Sacerdote Imperial
@@ -1316,7 +1171,6 @@ LanzaSpells=2
 Sp1=25
 Sp2=9
 BackUp=0
-Speed=370
 
 [NPC108] 'Guardia Armada
 Name=Druida Imperial
@@ -1347,7 +1201,6 @@ LanzaSpells=2
 Sp1=24
 Sp2=23
 BackUp=0
-Speed=370
 
 [NPC109] 'Guardia Armada (Mago)
 Name=Mago Imperial
@@ -1377,7 +1230,6 @@ LanzaSpells=2
 Sp1=24
 Sp2=23
 BackUp=0
-Speed=370
 
 [NPC110] 'Vende Pociones Belleuve
 Name=Furaxin
@@ -1393,17 +1245,8 @@ Hostile=0
 Domable=0
 Comercia=1
 TipoItems=11
-NROITEMS=8
-Obj1=37-1000 'Pocion Azul
-Obj2=38-1000 'Pocion Roja
-Obj3=1202-1000 'Pocion Azul de Principiantes
-Obj4=1203-1000 'Pocion Roja de Principiantes
-Obj5=39-1000 'Pocion Verde
-Obj6=36-1000 'Pocion Amarilla
-Obj7=166-1000 'Pocion Violeta
-Obj8=645-1000 'Pocion Negra
+NROITEMS=0
 BackUp=1
-Speed=370
 
 [NPC111] 'Herrero Belleuve
 Name=Herrero
@@ -1420,18 +1263,8 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=2
-NROITEMS=9
-Obj1=164-1000 'Espada Corta
-Obj2=2-1000 'Espada Larga
-Obj3=19-1000 'Espada Dos Manos
-Obj4=123-1000 'Espada Vikinga
-Obj5=401-1000 'Martillo de Guerra
-Obj6=124-1000 'Katana
-Obj7=478-1000 'Arco Simple
-Obj8=990-1000 'Mazo del Juicio
-Obj9=389-1000 'Martillo de Herrero
+NROITEMS=0
 BackUp=1
-Speed=370
 
 [NPC112] 'Sastre Belleuve
 Name=Sastre
@@ -1448,31 +1281,12 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=3
-NROITEMS=22
-Obj1=31-1000 'Vestimentas Comunes
-Obj2=32-1000 'Vestimentas Comunes
-Obj3=35-1000 'Vestimentas Comunes
-Obj4=641-1000 'Ropa de Pordiosero
-Obj5=501-1000 'Ropa de Campesino
-Obj6=135-1000 'Tunica Roja Burda
-obj7=238-1000 'Tunica Azul
-obj8=239-1000 'Tunica Roja
-obj9=873-1000 'Guantes de hurto
-obj10=1298-1000 'Kit de Costura
-Obj11=1300-1000 'Hilo Burdo
-Obj12=1299-1000 'Hilo
-Obj13=1301-1000 'Ovillo de lana
-Obj14=170-1000 'Vestimenta de Mujer (H/E/EO-M)
-Obj15=196-1000 'Tunica de Mago
-Obj16=240-1000 'Ropa de Enano (E/G)
-Obj17=381-1000 'Tunica Antigua
-Obj18=382-1000 'Vestido Azul (H/E/EO-M)
-Obj19=488-1000 'White Lady (H/E/EO-M)
-Obj20=502-1000 'Ropa de Campesino (E/G)
-Obj21=507-1000 'Ropa Violeta (E/G)
-Obj22=511-1000 'Vestido de Novia Sensual (H/E/EO-M)
+NROITEMS=4
+obj1=1298-1000 'Kit de Costura
+Obj2=1300-1000 'Hilo Burdo
+Obj3=1299-1000 'Hilo
+Obj4=1301-1000 'Ovillo de lana
 BackUp=1
-Speed=370
 
 [NPC113] 'Armaduras Belleuve
 Name=Armaduras
@@ -1488,16 +1302,8 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=3
-NROITEMS=7
-Obj1=30-1000 'Armadura de Cuero
-Obj2=529-1000 'Armadura de Cuero (H/E/EO-M)
-Obj3=668-1000 'Armadura de Cuero (E/G)
-Obj4=1001-1000 'Casco de Aguila
-Obj5=1002-1000 'Casco de Lobo
-Obj6=360-1000 'Armadura de Cazador
-Obj7=648-1000 'Armadura de Cazador (E/G)
+NROITEMS=0
 BackUp=1
-Speed=370
 
 [NPC114] 'Provisiones Belleuve
 Name=Zodux
@@ -1514,19 +1320,8 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=1
-NROITEMS=10
-Obj1=21-1000 'Porción de Tarta
-Obj2=23-1000 'Pan de Trigo
-Obj3=24-1000 'Pan de Maíz
-Obj4=28-1000 'Queso de Cabra
-Obj5=29-1000 'Sandía
-Obj6=26-1000 'Pollo
-Obj7=25-1000 'Pastel
-Obj8=160-1000 'Cerveza
-Obj9=42-1000 'Vino
-Obj10=161-1000 'Jugo de Frutas
+NROITEMS=0
 BackUp=1
-Speed=370
 
 [NPC115] 'VendeMagia Belleuve
 Name=Mago
@@ -1543,11 +1338,8 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=24
-NROITEMS=1
-Obj1=319=1000 'Resucitar
-Obj2=1333=1000 'Resurreccion
+NROITEMS=0
 BackUp=1
-Speed=370
 
 [NPC116] 'Pescador Belleuve
 Name=Pescador
@@ -1564,12 +1356,8 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=1
-NROITEMS=3
-Obj1=138-1000 'Cana de Pescar
-Obj2=139-1000 'Pescado
-Obj3=543-1000 'Red de Pesca
+NROITEMS=0
 BackUp=1
-Speed=370
 
 [NPC117] 'Minero
 Name=Minero
@@ -1586,10 +1374,8 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=23
-NROITEMS=1
-Obj1=187-1000 'Piquete de Minero
+NROITEMS=0
 BackUp=1
-Speed=370
 
 [NPC118] 'Mercader
 Name=Mercader
@@ -1608,7 +1394,6 @@ Comercia=1
 TipoItems=1000
 NROITEMS=0
 BackUp=1
-Speed=370
 
 [NPC119] 'Carpintera
 Name=Carpintera
@@ -1625,18 +1410,8 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=20
-NROITEMS=9
-Obj1=163-1000 	'Cuchara
-Obj2=167-1000 	'Mueble Rustico
-Obj3=168-1000 	'Silla
-Obj4=198-1000 	'Serrucho
-Obj5=480-10000 	'Flecha
-Obj6=478-1000 	'Arco Simple
-Obj7=663-1000 	'Arco Simple Reforzado
-Obj8=479-1000 	'Arco Compuesto
-Obj9=664-1000 	'Arco Compuesto Reforzado
+NROITEMS=0
 BackUp=1
-Speed=370
 
 [NPC120]
 Name=Lord Legislador
@@ -1653,7 +1428,6 @@ Domable=0
 Alineacion=0
 Comercia=0
 BackUp=0
-Speed=370
 
 ##############################################################
 ############## NPCS VENDEDORES DE ISLA ZHARKEL ###############
@@ -1675,7 +1449,6 @@ Alineacion=0
 Comercia=0
 BackUp=0
 Ciudad=3
-Speed=370
 
 [NPC151]
 Name=Sacerdote
@@ -1692,7 +1465,6 @@ Domable=0
 Alineacion=0
 Comercia=0
 BackUp=0
-Speed=370
 
 [NPC152]
 Name=Banquero
@@ -1709,7 +1481,6 @@ Domable=0
 Alineacion=0
 Comercia=0
 BackUp=0
-Speed=370
 
 [NPC153]
 Name=Marinero
@@ -1726,12 +1497,8 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=20
-NROITEMS=3
-Obj1=1319-1000
-Obj2=1320-1000
-Obj3=1321-1000
+NROITEMS=0
 BackUp=1
-Speed=370
 
 [NPC154] 'Vende Pociones
 Name=Asilithas
@@ -1747,17 +1514,8 @@ Hostile=0
 Domable=0
 Comercia=1
 TipoItems=11
-NROITEMS=8
-Obj1=37-1000 'Pocion Azul
-Obj2=38-1000 'Pocion Roja
-Obj3=1202-1000 'Pocion Azul de Principiantes
-Obj4=1203-1000 'Pocion Roja de Principiantes
-Obj5=39-1000 'Pocion Verde
-Obj6=36-1000 'Pocion Amarilla
-Obj7=166-1000 'Pocion Violeta
-Obj8=645-1000 'Pocion Negra
+NROITEMS=0
 BackUp=1
-Speed=370
 
 [NPC155] 'Herrero
 Name=Herrero
@@ -1774,18 +1532,8 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=2
-NROITEMS=9
-Obj1=164-1000 'Espada Corta
-Obj2=2-1000 'Espada Larga
-Obj3=19-1000 'Espada Dos Manos
-Obj4=123-1000 'Espada Vikinga
-Obj5=401-1000 'Martillo de Guerra
-Obj6=124-1000 'Katana
-Obj7=478-1000 'Arco Simple
-Obj8=990-1000 'Mazo del Juicio
-Obj9=389-1000 'Martillo de Herrero
+NROITEMS=0
 BackUp=1
-Speed=370
 
 [NPC156] 'Sastre Isla Zharkel
 Name=Sastre
@@ -1802,31 +1550,12 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=3
-NROITEMS=22
-Obj1=31-1000 'Vestimentas Comunes
-Obj2=32-1000 'Vestimentas Comunes
-Obj3=35-1000 'Vestimentas Comunes
-Obj4=641-1000 'Ropa de Pordiosero
-Obj5=501-1000 'Ropa de Campesino
-Obj6=135-1000 'Tunica Roja Burda
-obj7=238-1000 'Tunica Azul
-obj8=239-1000 'Tunica Roja
-obj9=873-1000 'Guantes de hurto
-obj10=1298-1000 'Kit de Costura
-Obj11=1300-1000 'Hilo Burdo
-Obj12=1299-1000 'Hilo
-Obj13=1301-1000 'Ovillo de lana
-Obj14=170-1000 'Vestimenta de Mujer (H/E/EO-M)
-Obj15=196-1000 'Tunica de Mago
-Obj16=240-1000 'Ropa de Enano (E/G)
-Obj17=381-1000 'Tunica Antigua
-Obj18=382-1000 'Vestido Azul (H/E/EO-M)
-Obj19=488-1000 'White Lady (H/E/EO-M)
-Obj20=502-1000 'Ropa de Campesino (E/G)
-Obj21=507-1000 'Ropa Violeta (E/G)
-Obj22=511-1000 'Vestido de Novia Sensual (H/E/EO-M)
+NROITEMS=4
+obj1=1298-1000 'Kit de Costura
+Obj2=1300-1000 'Hilo Burdo
+Obj3=1299-1000 'Hilo
+Obj4=1301-1000 'Ovillo de lana
 BackUp=1
-Speed=370
 
 [NPC157] 'Armaduras Isla Zharkel
 Name=Armaduras
@@ -1842,16 +1571,8 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=3
-NROITEMS=7
-Obj1=30-1000 'Armadura de Cuero
-Obj2=529-1000 'Armadura de Cuero (H/E/EO-M)
-Obj3=668-1000 'Armadura de Cuero (E/G)
-Obj4=1001-1000 'Casco de Aguila
-Obj5=1002-1000 'Casco de Lobo
-Obj6=360-1000 'Armadura de Cazador
-Obj7=648-1000 'Armadura de Cazador (E/G)
+NROITEMS=0
 BackUp=1
-Speed=370
 
 [NPC158] 'Provisiones Isla Zharkel
 Name=Thorin
@@ -1868,13 +1589,8 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=1
-NROITEMS=4
-Obj1=139-1000 'Pescado
-Obj2=754-1000 'Rábano
-Obj3=43-1000 'Botella de Agua
-Obj4=160-1000 'Cerveza
+NROITEMS=0
 BackUp=1
-Speed=370
 
 [NPC159] 'VendeMagia Isla Zharkel
 Name=Maga
@@ -1893,7 +1609,6 @@ Comercia=1
 TipoItems=24
 NROITEMS=0
 BackUp=1
-Speed=370
 
 [NPC160] 'Isla Zharkel Shakoud
 Name=Pescadora
@@ -1912,7 +1627,6 @@ Comercia=1
 TipoItems=1
 NROITEMS=0
 BackUp=1
-Speed=370
 
 [NPC161] 'Minera
 Name=Minera
@@ -1929,10 +1643,8 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=23
-NROITEMS=1
-Obj1=187-1000 'Piquete de Minero
+NROITEMS=0
 BackUp=1
-Speed=370
 
 [NPC162] 'Mercader
 Name=Mercader
@@ -1951,7 +1663,6 @@ Comercia=1
 TipoItems=1000
 NROITEMS=0
 BackUp=1
-Speed=370
 
 [NPC163]
 Name=Kelsier
@@ -1970,7 +1681,6 @@ Alineacion=0
 Comercia=0
 Faccion=1
 BackUp=0
-Speed=370
 
 [NPC164] 'Propiedades 
 Name=Cullighan
@@ -1990,7 +1700,6 @@ TipoItems=9
 NROITEMS=0
 InvReSpawn=1
 BackUp=1
-Speed=370
 
 ##############################################################
 ############## NPCS VENDEDORES DE HAVERWOOD ##################
@@ -2012,7 +1721,6 @@ Alineacion=0
 Comercia=0
 BackUp=0
 Ciudad=2
-Speed=370
 
 [NPC201]
 Name=Sacerdote
@@ -2029,7 +1737,6 @@ Domable=0
 Alineacion=0
 Comercia=0
 BackUp=0
-Speed=370
 
 [NPC202]
 Name=Banquero
@@ -2046,7 +1753,6 @@ Domable=0
 Alineacion=0
 Comercia=0
 BackUp=0
-Speed=370
 
 [NPC203]
 Name=Marinero
@@ -2063,13 +1769,8 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=20
-NROITEMS=4
-Obj1=1322-1000
-Obj2=1323-1000
-Obj3=1324-1000
-Obj4=1325-1000
+NROITEMS=0
 BackUp=1
-Speed=370
 
 [NPC204] 'Vende Pociones
 Name=Elith
@@ -2085,17 +1786,8 @@ Hostile=0
 Domable=0
 Comercia=1
 TipoItems=11
-NROITEMS=8
-Obj1=37-1000 'Pocion Azul
-Obj2=38-1000 'Pocion Roja
-Obj3=1202-1000 'Pocion Azul de Principiantes
-Obj4=1203-1000 'Pocion Roja de Principiantes
-Obj5=39-1000 'Pocion Verde
-Obj6=36-1000 'Pocion Amarilla
-Obj7=166-1000 'Pocion Violeta
-Obj8=645-1000 'Pocion Negra
+NROITEMS=0
 BackUp=1
-Speed=370
 
 [NPC205] 'Herrero
 Name=Herrero
@@ -2112,17 +1804,8 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=2
-NROITEMS=8
-Obj1=2-1000 'Espada Larga
-Obj2=19-1000 'Espada Dos Manos
-Obj3=123-1000 'Espada Vikinga
-Obj4=401-1000 'Martillo de Guerra
-Obj5=125-1000 'Sable
-Obj6=753-1000 'Mayal Triple
-Obj7=404-1000 'Escudo de Tortuga
-Obj8=990-1000 'Mazo del Juicio
+NROITEMS=0
 BackUp=1
-Speed=370
 
 [NPC206] 'Sastre Haverwood
 Name=Sastre
@@ -2139,24 +1822,12 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=3
-NROITEMS=15
+NROITEMS=4
 obj1=1298-1000 'Kit de Costura
 Obj2=1300-1000 'Hilo Burdo
 Obj3=1299-1000 'Hilo
 Obj4=1301-1000 'Ovillo de lana
-Obj5=671-1000 'Tunica de Monje (E/G)
-Obj6=519-1000 'Tunica Legendaria
-Obj7=873-1000 'Guantesde Hurto
-Obj8=370-1000 'Capucha de Cazador
-Obj9=357-1000 'Tunica de Monje
-Obj10=525-1000 'Tunica Combinada (E/G)
-Obj11=524-1000 'Tunica Roja Especial (E/G)
-Obj12=969-1000 'Tunica Dorada de Gala (E/G)
-Obj13=901-1000 'Coraza Compuesta de Mujer (H/E/EO-M)
-Obj14=887-1000 'Cotas de Manto Marron (H/E/EO)
-Obj15=890-1000 'Armadura de Cuero de Oso Pardo (H/E/EO)
 BackUp=1
-Speed=370
 
 [NPC207] 'Armaduras Haverwood
 Name=Armaduras
@@ -2172,20 +1843,8 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=3
-NROITEMS=12
-Obj1=672-1000 'Armadura de Elite (E/G)
-Obj2=667-1000 'Cota de Mallas (E/G)
-Obj3=499-1000 'Cota de Mallas (H/E/EO-M)
-Obj4=359-1000 'Cota de Mallas
-Obj5=889-1000 'Anillas con Manto Verde (H/E/EO)
-Obj6=1003-1000 'Casco de Oso
-Obj7=132-1000 'Casco de Hierro
-Obj8=128-1000 'Escudo de Hierro
-Obj9=390-1000 'Armadura de Placas Completa +1
-Obj10=243-1000 'Armadura de Placas Completa (E/G)
-Obj11=903-1000 'Armadura de Campeon (H/E/EO)
-Obj12=1004-1000 'Casco de Tigre
-Speed=370
+NROITEMS=0
+BackUp=1
 
 [NPC208] 'Provisiones Haverwood
 Name=Thorin
@@ -2202,19 +1861,8 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=1
-NROITEMS=10
-Obj1=21-1000 'Porción de Tarta
-Obj2=23-1000 'Pan de Trigo
-Obj3=24-1000 'Pan de Maíz
-Obj4=28-1000 'Queso de Cabra
-Obj5=29-1000 'Sandía
-Obj6=26-1000 'Pollo
-Obj7=25-1000 'Pastel
-Obj8=160-1000 'Cerveza
-Obj9=42-1000 'Vino
-Obj10=161-1000 'Jugo de Frutas
+NROITEMS=0
 BackUp=1
-Speed=370
 
 [NPC209] 'VendeMagia Haverwood
 Name=Mago
@@ -2233,7 +1881,6 @@ Comercia=1
 TipoItems=24
 NROITEMS=0
 BackUp=1
-Speed=370
 
 [NPC210] 'Pescador Haverwood
 Name=Pescador
@@ -2250,12 +1897,8 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=1
-NROITEMS=3
-Obj1=138-1000 'Cana de Pescar
-Obj2=139-1000 'Pescado
-Obj3=543-1000 'Red de Pesca
+NROITEMS=0
 BackUp=1
-Speed=370
 
 [NPC211] 'Minero
 Name=Minero
@@ -2272,10 +1915,8 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=23
-NROITEMS=1
-Obj1=187-1000 'Piquete de Minero
+NROITEMS=0
 BackUp=1
-Speed=370
 
 [NPC212] 'Mercader
 Name=Mercader
@@ -2294,7 +1935,6 @@ Comercia=1
 TipoItems=1000
 NROITEMS=0
 BackUp=1
-Speed=370
 
 [NPC213] 'Carpintera
 Name=Carpintera
@@ -2311,18 +1951,8 @@ Domable=0
 Alineacion=0
 Comercia=1
 TipoItems=20
-NROITEMS=9
-Obj1=163-1000 	'Cuchara
-Obj2=167-1000 	'Mueble Rustico
-Obj3=168-1000 	'Silla
-Obj4=198-1000 	'Serrucho
-Obj5=480-10000 	'Flecha
-Obj6=478-1000 	'Arco Simple
-Obj7=663-1000 	'Arco Simple Reforzado
-Obj8=479-1000 	'Arco Compuesto
-Obj9=664-1000 	'Arco Compuesto Reforzado
+NROITEMS=0
 BackUp=1
-Speed=370
 
 [NPC214] 'Propiedades
 Name=Propiedades
@@ -2341,7 +1971,6 @@ Comercia=1
 TipoItems=9
 NROITEMS=0
 BackUp=1
-Speed=370
 
 ##############################################################
 ################## INVOCACIONES HECHIZOS #####################
@@ -2371,7 +2000,6 @@ DEF=0
 PoderAtaque=400
 PoderEvasion=200
 BackUp=0
-Speed=370
 
 [NPC451] 'NO RESPAWN (para el hechizo Invocacion)
 Name=Elemental de Fuego
@@ -2399,7 +2027,6 @@ PoderEvasion=100
 LanzaSpells=1
 Sp1=15
 BackUp=0
-Speed=370
 
 [NPC452] 'NO RESPAWN (para el hechizo Invocacion)
 Name=Elemental de Tierra
@@ -2427,7 +2054,6 @@ PoderEvasion=100
 LanzaSpells=1
 Sp1=9
 BackUp=0
-Speed=370
 
 [NPC453] 'NO RESPAWN (para el hechizo Invocar Zombies)
 Name=Zombie
@@ -2454,7 +2080,6 @@ PoderAtaque=180
 PoderEvasion=20
 SND2=33
 BackUp=0
-Speed=370
 
 [NPC454] 'NO RESPAWN (para el hechizo Invocacion de Ultratumba)
 Name=Esqueleto Guerrero
@@ -2480,7 +2105,6 @@ DEF=25
 PoderAtaque=250
 PoderEvasion=100
 BackUp=0
-Speed=370
 
 [NPC455] 'NO RESPAWN (para el hechizo Invocar Lobos)
 Name=Lobo
@@ -2508,7 +2132,6 @@ PoderEvasion=25
 Snd1=35
 Snd2=9
 BackUp=0
-Speed=370
 
 [NPC456] 'NO RESPAWN
 Name=Dragon Rojo
@@ -2536,7 +2159,6 @@ PoderAtaque=150
 PoderEvasion=70
 Veneno=1
 BackUp=0
-Speed=370
 
 [NPC457] 
 Name=Fuego Fatuo 'NO RESPAWN
@@ -2565,25 +2187,6 @@ LanzaSpells=2
 Sp1=24
 Sp2=23
 BackUp=0
-Speed=370
-
-[NPC458] 'npc centinela
-Name=Centinela
-Desc=Soy el centinela, guardian de los recursos naturales de este mundo.
-NpcType=0
-Head=0
-Heading=3
-Body=540
-Movement=1
-AguaValida=1
-Attackable=0
-ReSpawn=0
-Hostile=0
-Domable=0
-Alineacion=0
-Comercia=0
-BackUp=0
-Speed=370
 
 ##############################################################
 ####################### HOSTILES #############################
@@ -2607,22 +2210,21 @@ Hostile=1
 Domable=400
 Alineacion=2
 Comercia=0
-GiveEXP=25
-GiveGLD=10
-MinHP=25
-MaxHP=25
+GiveEXP=22
+GiveGLD=22
+MinHP=22
+MaxHP=22
 MaxHIT=2
 MinHIT=1
 ELV=5
 DEF=0
-PoderAtaque=5
+PoderAtaque=10
 PoderEvasion=0
 Snd1=296
 Snd2=297
 Snd3=298
 BackUp=0
 NROITEMS=0
-Speed=480
 
 [NPC501]
 Name=Gallo Salvaje
@@ -2638,8 +2240,8 @@ Hostile=1
 Domable=450
 Alineacion=2
 Comercia=0
-GiveEXP=25
-GiveGLD=0
+GiveEXP=15
+GiveGLD=15
 MinHP=15
 MaxHP=15
 MaxHIT=2
@@ -2654,7 +2256,6 @@ Snd3=14
 BackUp=0
 NROITEMS=1
 Obj1=26-1-100 'Pollo
-Speed=480
 
 [NPC502]
 Name=Cuervo Salvaje
@@ -2671,20 +2272,19 @@ Domable=1100
 Alineacion=2
 Comercia=0
 GiveEXP=30
-GiveGLD=0
-MinHP=25
-MaxHP=25
-MaxHIT=2
+GiveGLD=30
+MinHP=30
+MaxHP=30
+MaxHIT=6
 MinHIT=1
 ELV=5
-DEF=0
+DEF=2
 DEFm=3
-PoderAtaque=5
-PoderEvasion=15
+PoderAtaque=20
+PoderEvasion=5
 SND3=63
 BackUp=0
 NROITEMS=0
-Speed=420
 
 [NPC503]
 Name=Conejo
@@ -2700,20 +2300,19 @@ Hostile=1
 Domable=400
 Alineacion=2
 Comercia=0
-GiveEXP=30
+GiveEXP=25
 GiveGLD=25
 MinHP=25
 MaxHP=25
-MaxHIT=2
+MaxHIT=6
 MinHIT=1
 ELV=5
 DEF=0
-PoderAtaque=5
-PoderEvasion=5
+PoderAtaque=10
+PoderEvasion=0
 SND2=103
 BackUp=0
 NROITEMS=0
-Speed=480
 
 [NPC504] 'Dungeon Newbie
 Name=Murcielago Rabioso
@@ -2730,21 +2329,20 @@ Domable=400
 Alineacion=2
 Comercia=0
 GiveEXP=25
-GiveGLD=10
+GiveGLD=25
 MinHP=25
 MaxHP=25
-MaxHIT=2
-MinHIT=1
+MaxHIT=3
+MinHIT=2
 ELV=5
 DEF=0
-PoderAtaque=5
+PoderAtaque=10
 PoderEvasion=0
 Snd1=293
 Snd2=294
 Snd3=295
 BackUp=0
 NROITEMS=0
-Speed=480
 
 [NPC505]
 Name=Pavo
@@ -2764,16 +2362,15 @@ GiveEXP=25
 GiveGLD=25
 MinHP=25
 MaxHP=25
-MaxHIT=3
+MaxHIT=6
 MinHIT=1
 ELV=5
 DEF=0
-PoderAtaque=5
+PoderAtaque=10
 PoderEvasion=0
 SND2=103
 BackUp=0
 NROITEMS=0
-Speed=480
 
 [NPC506]
 Name=Cerdo
@@ -2802,7 +2399,6 @@ PoderEvasion=0
 SND2=103
 BackUp=0
 NROITEMS=0
-Speed=480
 
 [NPC507]
 Name=Vaca
@@ -2831,14 +2427,13 @@ PoderEvasion=0
 SND2=103
 BackUp=0
 NROITEMS=0
-Speed=480
 
 [NPC508]
 Name=Gato
 NpcType=0
 Head=0
 Heading=1
-Body=638	
+Body=638
 Movement=3
 AguaValida=0
 Attackable=1
@@ -2851,7 +2446,7 @@ GiveEXP=30
 GiveGLD=30
 MinHP=30
 MaxHP=30
-MaxHIT=4
+MaxHIT=6
 MinHIT=1
 ELV=5
 DEF=0
@@ -2861,7 +2456,6 @@ SND2=103
 BackUp=0
 NROITEMS=1
 Obj1=666-1-100 'Piel de gato
-Speed=400
 
 [NPC509]
 Name=Aguila
@@ -2890,7 +2484,6 @@ PoderEvasion=0
 SND2=103
 BackUp=0
 NROITEMS=0
-Speed=370
 
 [NPC510]
 Name=Cria de Araña
@@ -2906,8 +2499,8 @@ Hostile=1
 Domable=400
 Alineacion=2
 Comercia=0
-GiveEXP=50
-GiveGLD=25
+GiveEXP=30
+GiveGLD=30
 MinHP=30
 MaxHP=30
 MaxHIT=6
@@ -2921,7 +2514,6 @@ Snd2=34
 Snd3=215
 BackUp=0
 NROITEMS=0
-Speed=480
 
 [NPC511]
 NameHormiga
@@ -2950,7 +2542,6 @@ PoderEvasion=0
 SND2=103
 BackUp=0
 NROITEMS=0
-Speed=370
 
 [NPC512]
 Name=Raton
@@ -2967,21 +2558,20 @@ Domable=400
 Alineacion=2
 Comercia=0
 GiveEXP=25
-GiveGLD=10
+GiveGLD=25
 MinHP=25
 MaxHP=25
 MaxHIT=2
 MinHIT=1
 ELV=5
 DEF=0
-PoderAtaque=5
+PoderAtaque=10
 PoderEvasion=0
 Snd1=308
 Snd2=309
 Snd3=310
 BackUp=0
 NROITEMS=0
-Speed=480
 
 [NPC513]
 Name=Rana
@@ -3001,16 +2591,15 @@ GiveEXP=25
 GiveGLD=25
 MinHP=25
 MaxHP=25
-MaxHIT=4
+MaxHIT=6
 MinHIT=1
 ELV=5
 DEF=0
-PoderAtaque=5
+PoderAtaque=10
 PoderEvasion=0
 SND2=103
 BackUp=0
 NROITEMS=0
-Speed=480
 
 [NPC514]
 Name=Loro
@@ -3039,7 +2628,6 @@ PoderEvasion=0
 SND2=103
 BackUp=0
 NROITEMS=0
-Speed=480
 
 [NPC515]
 Name=Aguila Blanca
@@ -3055,20 +2643,19 @@ Hostile=1
 Domable=400
 Alineacion=2
 Comercia=0
-GiveEXP=50
-GiveGLD=10
+GiveEXP=35
+GiveGLD=35
 MinHP=35
 MaxHP=35
-MaxHIT=4
+MaxHIT=6
 MinHIT=1
 ELV=5
 DEF=0
-PoderAtaque=5
-PoderEvasion=15
+PoderAtaque=10
+PoderEvasion=0
 SND2=103
 BackUp=0
 NROITEMS=0
-Speed=480
 
 [NPC516]
 Name=Pato
@@ -3097,7 +2684,6 @@ PoderEvasion=0
 SND2=103
 BackUp=0
 NROITEMS=0
-Speed=480
 
 [NPC517] 'Isla Newbie
 Name=Gallo Salvaje Envenenado
@@ -3113,13 +2699,13 @@ Hostile=1
 Domable=450
 Alineacion=2
 Comercia=0
-GiveEXP=25
-GiveGLD=0
+GiveEXP=20
+GiveGLD=20
 MinHP=20
 MaxHP=20
-MaxHIT=3
+MaxHIT=4
 MinHIT=2
-Veneno=1
+Envenena=1
 ELV=5
 DEF=0
 PoderAtaque=5
@@ -3131,7 +2717,6 @@ BackUp=0
 NROITEMS=2
 Obj1=26-1-100 'Pollo
 Obj2=1249-1-50 'Veneno de serpiente
-Speed=480
 
 [NPC518]
 Name=Vibora
@@ -3147,8 +2732,8 @@ Hostile=1
 Domable=400
 Alineacion=2
 Comercia=0
-GiveEXP=30
-GiveGLD=10
+GiveEXP=25
+GiveGLD=25
 MinHP=25
 MaxHP=25
 MaxHIT=4
@@ -3161,10 +2746,8 @@ Snd1=296
 Snd2=297
 Snd3=298
 BackUp=0
-Speed=40
 NROITEMS=1
 Obj1=1249-1-50 'Veneno de serpiente
-Speed=480
 
 [NPC519]
 Name=Alacran
@@ -3189,11 +2772,10 @@ MinHIT=1
 ELV=5
 DEF=2
 PoderAtaque=20
-PoderEvasion=15
+PoderEvasion=0
 SND2=103
 BackUp=0
 NROITEMS=0
-Speed=480
 
 ##################
 ####LEVEL 10######
@@ -3213,23 +2795,22 @@ Hostile=1
 Domable=400
 Alineacion=2
 Comercia=0
-GiveEXP=300
-GiveGLD=125
-MinHP=125
-MaxHP=125
+GiveEXP=85
+GiveGLD=85
+MinHP=85
+MaxHP=85
 MaxHIT=30
 MinHIT=15
 ELV=10
 DEF=0
 PoderAtaque=10
-PoderEvasion=10
+PoderEvasion=0
 Snd1=208
 Snd3=207
 BackUp=0
 NROITEMS=0
-Speed=480
 
-[NPC552]
+[NPC552
 Name=Mono
 NpcType=0
 Head=0
@@ -3250,15 +2831,14 @@ MaxHP=200
 MaxHIT=35
 MinHIT=25
 ELV=10
-DEF=0
+DEF=10
 PoderAtaque=30
-PoderEvasion=30
+PoderEvasion=10
 BackUp=0
 NROITEMS=0
-Speed=480
 
 [NPC553]
-Name=NO USAR
+Name=Jefe Mono
 NpcType=0
 Head=0
 Heading=1
@@ -3280,10 +2860,9 @@ MinHIT=40
 ELV=10
 DEF=13
 PoderAtaque=30
-PoderEvasion=30
+PoderEvasion=10
 BackUp=0
 NROITEMS=0
-Speed=480
 
 [NPC554]
 Name=Rata
@@ -3306,15 +2885,14 @@ MaxHP=175
 MaxHIT=25
 MinHIT=15
 ELV=10
-DEF=0
+DEF=13
 PoderAtaque=30
-PoderEvasion=30
+PoderEvasion=0
 Snd1=308
 Snd2=309
 Snd3=310
 BackUp=0
 NROITEMS=0
-Speed=480
 
 [NPC555]
 Name=Sapo
@@ -3337,30 +2915,28 @@ MaxHP=150
 MaxHIT=25
 MinHIT=10
 ELV=10
-DEF=0
+DEF=13
 PoderAtaque=30
-PoderEvasion=30
+PoderEvasion=0
 BackUp=0
 NROITEMS=0
-Speed=480
 
 [NPC556]
 Name=Cisne
 NpcType=0
 Head=0
 Heading=1
-Body=534
+Body=12
 Movement=3
-AguaValida=1
-TierraInvalida=1
+AguaValida=0
 Attackable=1
 Respawn=0
 Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=600
-GiveGLD=100
+GiveEXP=200
+GiveGLD=200
 MinHP=200
 MaxHP=200
 MaxHIT=30
@@ -3368,10 +2944,9 @@ MinHIT=20
 ELV=10
 DEF=13
 PoderAtaque=30
-PoderEvasion=100
+PoderEvasion=30
 BackUp=0
 NROITEMS=0
-Speed=480
 
 [NPC557]
 Name=Tortuga
@@ -3387,20 +2962,19 @@ Hostile=1
 Domable=2010
 Alineacion=2
 Comercia=0
-GiveEXP=700
-GiveGLD=0
-MinHP=350
-MaxHP=350
+GiveEXP=180
+GiveGLD=180
+MinHP=180
+MaxHP=180
 MaxHIT=45
 MinHIT=30
 ELV=10
 DEF=0
 PoderAtaque=100
-PoderEvasion=25
+PoderEvasion=15
 BackUp=0
 NROITEMS=1
-Obj1=404-1-80 'Escudo de Tortuga
-Speed=520
+Obj1=404-1-30 'Escudo de Tortuga
 
 [NPC558]
 Name=Tortuga Gigante
@@ -3428,8 +3002,7 @@ PoderAtaque=100
 PoderEvasion=45
 BackUp=0
 NROITEMS=1
-Obj1=404-1-90 'Escudo de Tortuga
-Speed=520
+Obj1=404-1-30 'Escudo de Tortuga
 
 [NPC559]
 Name=Cria de Lobo
@@ -3445,24 +3018,22 @@ Hostile=1
 Domable=1250
 Alineacion=2
 Comercia=0
-GiveEXP=100
-GiveGLD=0
+GiveEXP=75
+GiveGLD=75
 MinHP=75
 MaxHP=75
-MaxHIT=10
+MaxHIT=15
 MinHIT=5
 ELV=10
-DEF=0
-PoderAtaque=50
+DEF=8
+PoderAtaque=80
 PoderEvasion=10
 Snd1=35
 Snd2=9
 Snd3=107
 BackUp=0
-NROITEMS=2
-Obj1=414-1-100 'Piel de Lobo
+NROITEMS=1
 Obj1=27-3-30 'Chuleta
-Speed=480
 
 [NPC560]
 Name=Gato Negro
@@ -3478,22 +3049,21 @@ Hostile=1
 Domable=1250
 Alineacion=2
 Comercia=0
-GiveEXP=80
-GiveGLD=50
+GiveEXP=40
+GiveGLD=40
 MinHP=40
 MaxHP=40
 MaxHIT=8
 MinHIT=3
 ELV=10
-DEF=0
+DEF=8
 PoderAtaque=80
-PoderEvasion=15
+PoderEvasion=10
 Snd1=35
 Snd2=9
 BackUp=0
 NROITEMS=1
-Obj1=666-1-100 'Piel de gato
-Speed=470
+Obj1=666-1-80 'Piel de gato
 
 ##################
 ####LEVEL 15######
@@ -3514,19 +3084,18 @@ Domable=0
 Alineacion=2
 Comercia=0
 Veneno=1
-GiveEXP=360
-GiveGLD=150
+GiveEXP=180
+GiveGLD=180
 MinHP=180
 MaxHP=180
 MaxHIT=35
 MinHIT=20
 ELV=15
-DEF=0
+DEF=19
 PoderAtaque=60
-PoderEvasion=50
+PoderEvasion=20
 BackUp=0
 NROITEMS=0
-Speed=480
 
 [NPC601]
 Name=Araña gigante
@@ -3542,22 +3111,21 @@ Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=1500
-GiveGLD=450
+GiveEXP=1000
+GiveGLD=1000
 MinHP=1000
 MaxHP=1000
 MaxHIT=60
 MinHIT=40
 ELV=15
-DEF=0
+DEF=19
 PoderAtaque=60
-PoderEvasion=40
+PoderEvasion=20
 BackUp=0
 Snd1=29
 Snd2=34
 Snd3=215
 NROITEMS=0
-Speed=480
 
 [NPC602]
 Name=Hormiga Gigante
@@ -3573,19 +3141,18 @@ Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=450
-GiveGLD=200
+GiveEXP=175
+GiveGLD=175
 MinHP=175
 MaxHP=175
 MaxHIT=20
 MinHIT=15
 ELV=15
-DEF=0
+DEF=19
 PoderAtaque=60
-PoderEvasion=100
+PoderEvasion=20
 BackUp=0
 NROITEMS=0
-Speed=480
 
 [NPC603]
 Name=Contrabandista
@@ -3601,10 +3168,10 @@ Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=1200
-GiveGLD=400
-MinHP=800
-MaxHP=800
+GiveEXP=360
+GiveGLD=360
+MinHP=360
+MaxHP=360
 MaxHIT=38
 MinHIT=28
 ELV=15
@@ -3613,9 +3180,7 @@ PoderAtaque=70
 PoderEvasion=50
 Snd3=157
 BackUp=0
-NROITEMS=1
-Obj1=641-1-100 'Ropa de Pordiosero
-Speed=480
+NROITEMS=0
 
 [NPC604]
 Name=Contrabandista
@@ -3631,10 +3196,10 @@ Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=850
-GiveGLD=0
-MinHP=600
-MaxHP=600
+GiveEXP=360
+GiveGLD=360
+MinHP=360
+MaxHP=360
 MaxHIT=38
 MinHIT=28
 ELV=15
@@ -3643,9 +3208,7 @@ PoderAtaque=70
 PoderEvasion=50
 Snd3=155
 BackUp=0
-NROITEMS=1
-Obj1=641-1-100 'Ropa de Pordiosero
-Speed=480
+NROITEMS=0
 
 [NPC605]
 Name=Osezno
@@ -3661,8 +3224,8 @@ Hostile=1
 Domable=2010
 Alineacion=2
 Comercia=0
-GiveEXP=900
-GiveGLD=0
+GiveEXP=450
+GiveGLD=450
 MinHP=450
 MaxHP=450
 MaxHIT=45
@@ -3670,11 +3233,10 @@ MinHIT=30
 DEF=0
 ELV=15
 PoderAtaque=64
-PoderEvasion=45
+PoderEvasion=60
 BackUp=0
 NROITEMS=1
 Obj1=415-1-100 'Piel Oso Pardo
-Speed=480
 
 [NPC606]
 Name=Cocodrilo Joven
@@ -3683,27 +3245,25 @@ Head=0
 Heading=1
 Body=208
 Movement=3
-AguaValida=1
-TierraInvalida=1
+AguaValida=0
 Attackable=1
 ReSpawn=0
 Hostile=1
 Domable=2010
 Alineacion=2
 Comercia=0
-GiveEXP=1000
-GiveGLD=500
+GiveEXP=450
+GiveGLD=450
 MinHP=450
 MaxHP=450
-MaxHIT=145
-MinHIT=120
+MaxHIT=45
+MinHIT=30
 DEF=0
 ELV=15
 AguaValida=1
-PoderAtaque=150
-PoderEvasion=35
+PoderAtaque=64
+PoderEvasion=60
 BackUp=0
-Speed=480
 
 [NPC607]
 Name=Unicornio
@@ -3720,7 +3280,6 @@ Domable=0
 Alineacion=2
 Comercia=0
 GiveEXP=500
-GiveGLD=5000
 TiempoRetardoMin=10
 TiempoRetardoMax=15
 MinHP=500
@@ -3733,10 +3292,12 @@ PoderEvasion=10
 BackUp=0
 Explota=1
 PosOrig=1
-NROITEMS=2
-Obj1=37-50-70 'Pocion Azul
-Obj2=1113-1-30 'Casco de unicornio
-Speed=460
+NROITEMS=5
+Obj1=12-50-50 'Oro
+Obj2=12-80-50 'Oro
+Obj3=12-150-50 'Oro
+Obj4=37-50-50 'Pocion Azul
+Obj5=12-5000-80 'Oro
 
 [NPC608] 'Dungeon Newbie
 Name=Orco
@@ -3752,23 +3313,22 @@ Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=250
-GiveGLD=100
+GiveEXP=175
+GiveGLD=175
 MinHP=175
 MaxHP=175
 MaxHIT=20
 MinHIT=10
 DEF=30
 ELV=15
-PoderAtaque=80
-PoderEvasion=25
+PoderAtaque=84
+PoderEvasion=70
 Snd1=299
 Snd2=300
 Snd3=301
 BackUp=0
 NROITEMS=1
-Obj1=1250-1-75 'Fragmento de arma
-Speed=480
+Obj1=1250-1-60 'Fragmento de arma
 
 [NPC609]
 Name=Lobo Adulto
@@ -3784,30 +3344,29 @@ Hostile=1
 Domable=1250
 Alineacion=2
 Comercia=0
-GiveEXP=500
-GiveGLD=0
+GiveEXP=250
+GiveGLD=250
 MinHP=250
 MaxHP=250
-MaxHIT=15
-MinHIT=10
+MaxHIT=35
+MinHIT=20
 ELV=15
-DEF=0
-PoderAtaque=25
-PoderEvasion=10
+DEF=8
+PoderAtaque=80
+PoderEvasion=25
 Snd1=35
 Snd2=9
 BackUp=0
 NROITEMS=2
-Obj1=414-1-100 'Piel de Lobo
+Obj1=414-1-30 'Piel de Lobo
 Obj2=27-3-30 'Chuleta
-Speed=480
 
 [NPC610]
 Name=Anfisbena
 NpcType=0
 Head=0
 Heading=1
-Body=207
+Body=208
 Movement=3
 AguaValida=0
 Attackable=1
@@ -3816,25 +3375,24 @@ Hostile=1
 Domable=2010
 Alineacion=2
 Comercia=0
-GiveEXP=350
-GiveGLD=100
+GiveEXP=250
+GiveGLD=250
 MinHP=250
 MaxHP=250
-MaxHIT=15
-MinHIT=10
+MaxHIT=35
+MinHIT=20
 DEF=0
 ELV=15
-PoderAtaque=10
-PoderEvasion=10
+PoderAtaque=80
+PoderEvasion=25
 BackUp=0
-Speed=480
 
 [NPC611]
 Name=Gusano de Arena
 NpcType=0
 Head=0
 Heading=1
-Body=216
+Body=208
 Movement=3
 AguaValida=0
 Attackable=1
@@ -3843,25 +3401,24 @@ Hostile=1
 Domable=2010
 Alineacion=2
 Comercia=0
-GiveEXP=450
-GiveGLD=200
-MinHP=400
-MaxHP=400
-MaxHIT=20
-MinHIT=15
+GiveEXP=750
+GiveGLD=750
+MinHP=750
+MaxHP=750
+MaxHIT=50
+MinHIT=40
 DEF=0
 ELV=15
 PoderAtaque=80
-PoderEvasion=25
+PoderEvasion=100
 BackUp=0
-Speed=480
 
 [NPC612]
 Name=Tarantula Venenosa
 NpcType=0
 Head=0
 Heading=1
-Body=406
+Body=208
 Movement=3
 AguaValida=0
 Attackable=1
@@ -3870,9 +3427,8 @@ Hostile=1
 Domable=2010
 Alineacion=2
 Comercia=0
-Veneno=1
-GiveEXP=1750
-GiveGLD=400
+GiveEXP=1100
+GiveGLD=1100
 MinHP=1100
 MaxHP=1100
 MaxHIT=70
@@ -3880,16 +3436,15 @@ MinHIT=45
 DEF=0
 ELV=15
 PoderAtaque=80
-PoderEvasion=50
+PoderEvasion=100
 BackUp=0
-Speed=480
 
 [NPC613]
 Name=Duende Maligno
 NpcType=0
 Head=0
 Heading=1
-Body=14
+Body=73
 Movement=3
 AguaValida=0
 Attackable=1
@@ -3909,16 +3464,14 @@ ELV=15
 PoderAtaque=84
 PoderEvasion=30
 BackUp=0
-NROITEMS=1
-Obj1=661-1-35 'Sombrero de Aprendiz.
-Speed=480
+NROITEMS=0
 
 [NPC614]
 Name=Escarabajo Gigante
 NpcType=0
 Head=0
 Heading=1
-Body=391
+Body=73
 Movement=3
 AguaValida=0
 Attackable=1
@@ -3927,62 +3480,29 @@ Hostile=1
 Domable=2010
 Alineacion=2
 Comercia=0
-GiveEXP=1000
-GiveGLD=650
+GiveEXP=800
+GiveGLD=800
 MinHP=800
 MaxHP=800
-MaxHIT=65
+MaxHIT=70
 MinHIT=40
-DEF=35
+DEF=0
 ELV=15
-PoderAtaque=80
-PoderEvasion=0
+PoderAtaque=84
+PoderEvasion=30
 BackUp=0
 NROITEMS=0
-Speed=480
+
+##################
+####LEVEL 20######
+##################
 
 [NPC650]
 Name=Cocodrilo
 NpcType=0
 Head=0
 Heading=1
-Body=208
-Movement=3
-AguaValida=1
-TierraInvalida=1
-Attackable=1
-ReSpawn=0
-Hostile=1
-Domable=1250
-Alineacion=2
-Comercia=0
-GiveEXP=2000
-GiveGLD=700
-MinHP=1000
-MaxHP=1000
-MaxHIT=70
-MinHIT=50
-ELV=15
-DEF=0
-PoderAtaque=80
-PoderEvasion=25
-AguaValida=1
-Snd1=35
-Snd2=9
-BackUp=0
-NROITEMS=0
-Speed=480
-
-##################
-####LEVEL 20######
-##################
-
-[NPC651]
-Name=Rata Gigante
-NpcType=0
-Head=0
-Heading=1
-Body=675
+Body=209
 Movement=3
 AguaValida=0
 Attackable=1
@@ -3991,14 +3511,44 @@ Hostile=1
 Domable=1250
 Alineacion=2
 Comercia=0
-GiveEXP=1800
-GiveGLD=500
-MinHP=1250
-MaxHP=1250
-MaxHIT=35
-MinHIT=25
+GiveEXP=700
+GiveGLD=700
+MinHP=700
+MaxHP=700
+MaxHIT=70
+MinHIT=50
 ELV=20
-DEF=0
+DEF=8
+PoderAtaque=80
+PoderEvasion=25
+AguaValida=1
+Snd1=35
+Snd2=9
+BackUp=0
+NROITEMS=0
+
+[NPC651]
+Name=Rata Gigante
+NpcType=0
+Head=0
+Heading=1
+Body=10
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=0
+Hostile=1
+Domable=1250
+Alineacion=2
+Comercia=0
+GiveEXP=450
+GiveGLD=450
+MinHP=450
+MaxHP=450
+MaxHIT=55
+MinHIT=40
+ELV=20
+DEF=8
 PoderAtaque=80
 PoderEvasion=25
 Snd1=308
@@ -4006,14 +3556,13 @@ Snd2=309
 Snd3=310
 BackUp=0
 NROITEMS=0
-Speed=480
 
 [NPC652]
 Name=Zorro
 NpcType=0
 Head=0
 Heading=1
-Body=444
+Body=10
 Movement=3
 AguaValida=0
 Attackable=1
@@ -4022,23 +3571,22 @@ Hostile=1
 Domable=1250
 Alineacion=2
 Comercia=0
-GiveEXP=900
-GiveGLD=250
+GiveEXP=500
+GiveGLD=500
 MinHP=500
 MaxHP=500
 MaxHIT=70
 MinHIT=55
 ELV=20
-DEF=0
+DEF=9
 PoderAtaque=80
 PoderEvasion=25
 Snd1=35
 Snd2=9
 BackUp=0
 NROITEMS=2
-Obj1=414-1-100 'Piel de Lobo
+Obj1=414-1-30 'Piel de Lobo
 Obj2=27-3-30 'Chuleta
-Speed=480
 
 [NPC653]
 Name=Cria de Tigre
@@ -4065,16 +3613,15 @@ PoderAtaque=100
 PoderEvasion=45
 BackUp=0
 NROITEMS=2
-Obj1=414-20-100 'Piel de Tigre (le pongo de lobo mientras, cambiar!!)
-Obj2=27-3-30 'Chuleta
-Speed=480
+Obj1=414-20-30 'Piel de Tigre (le pongo de lobo mientras, cambiar!!)
+Obj2=27-23-30 'Chuleta
 
 [NPC654]
 Name=Tigre
 NpcType=0
 Head=0
 Heading=1
-Body=443
+Body=147
 Movement=3
 AguaValida=0
 Attackable=1
@@ -4095,8 +3642,7 @@ PoderEvasion=45
 BackUp=0
 NROITEMS=2
 Obj1=414-20-30 'Piel de Tigre (le pongo de lobo mientras, cambiar!!)
-Obj2=27-3-30 'Chuleta
-Speed=480
+Obj2=27-23-30 'Chuleta
 
 [NPC655]
 Name=Oso
@@ -4112,21 +3658,19 @@ Hostile=1
 Domable=2010
 Alineacion=2
 Comercia=0
-GiveEXP=1500
-GiveGLD=0
-MinHP=800
-MaxHP=800
+GiveEXP=950
+GiveGLD=950
+MinHP=950
+MaxHP=950
 MaxHIT=100
 MinHIT=65
-DEF=5
+DEF=0
 ELV=20
-PoderAtaque=90
-PoderEvasion=45
+PoderAtaque=84
+PoderEvasion=70
 BackUp=0
-NROITEMS=2
-Obj1=415-1-100 'Piel Oso Pardo
-Obj2=27-3-30 'Chuleta
-Speed=480
+NROITEMS=1
+Obj1=415-1-30 'Piel Oso Pardo
 
 [NPC656]
 Name=Muercielago Negro
@@ -4154,14 +3698,13 @@ PoderAtaque=84
 PoderEvasion=30
 BackUp=0
 NROITEMS=0
-Speed=480
 
 [NPC657]
 Name=Duende
 NpcType=0
 Head=0
 Heading=1
-Body=14
+Body=73
 Movement=3
 AguaValida=0
 Attackable=1
@@ -4170,8 +3713,8 @@ Hostile=1
 Domable=2010
 Alineacion=2
 Comercia=0
-GiveEXP=500
-GiveGLD=250
+GiveEXP=200
+GiveGLD=200
 MinHP=200
 MaxHP=200
 MaxHIT=45
@@ -4181,16 +3724,14 @@ ELV=20
 PoderAtaque=84
 PoderEvasion=30
 BackUp=0
-NROITEMS=1
-Obj1=661-1-100 'Sombrero de Aprendiz
-Speed=470
+NROITEMS=0
 
 [NPC658]
 Name=Orco Guerrero
 NpcType=0
 Head=0
 Heading=1
-Body=148
+Body=73
 Movement=3
 AguaValida=0
 Attackable=1
@@ -4199,12 +3740,12 @@ Hostile=1
 Domable=2010
 Alineacion=2
 Comercia=0
-GiveEXP=1100
-GiveGLD=800
+GiveEXP=550
+GiveGLD=550
 MinHP=550
 MaxHP=550
-MaxHIT=150
-MinHIT=125
+MaxHIT=70
+MinHIT=50
 DEF=0
 ELV=20
 PoderAtaque=84
@@ -4213,27 +3754,24 @@ Snd1=299
 Snd2=300
 Snd3=301
 BackUp=0
-NROITEMS=1
-Obj1=3-1-50 'Hacha
-Speed=480
+NROITEMS=0
 
 [NPC659]
 Name=Ent
 NpcType=0
 Head=0
 Heading=1
-Body=41
+Body=73
 Movement=3
 AguaValida=0
 Attackable=1
-Veneno=1
 ReSpawn=0
 Hostile=1
 Domable=2010
 Alineacion=2
 Comercia=0
-GiveEXP=5500
-GiveGLD=1000
+GiveEXP=1250
+GiveGLD=1250
 MinHP=1250
 MaxHP=1250
 MaxHIT=60
@@ -4244,75 +3782,121 @@ PoderAtaque=84
 PoderEvasion=30
 BackUp=0
 NROITEMS=0
-Obj1=58-30-80 'Madera
-Obj2=58-100-30 'Madera
-Speed=500
 
 [NPC660]
 Name=Llama Viviente
 NpcType=0
 Head=0
 Heading=1
-Body=535
+Body=73
 Movement=3
 AguaValida=0
 Attackable=1
-Quema=1
 ReSpawn=0
 Hostile=1
 Domable=2010
 Alineacion=2
 Comercia=0
-GiveEXP=2200
-GiveGLD=500
-MinHP=800
-MaxHP=800
-MaxHIT=35
-MinHIT=25
+GiveEXP=350
+GiveGLD=350
+MinHP=350
+MaxHP=350
+MaxHIT=20
+MinHIT=10
 DEF=0
 ELV=20
-PoderAtaque=80
-PoderEvasion=145
+PoderAtaque=84
+PoderEvasion=30
 BackUp=0
 NROITEMS=0
-Speed=470
 
 [NPC661]
-Name=Jefe Mono
+Name=Momia
 NpcType=0
 Head=0
 Heading=1
-Body=214
+Body=73
 Movement=3
 AguaValida=0
 Attackable=1
-Respawn=0
+ReSpawn=0
 Hostile=1
-Domable=0
+Domable=2010
 Alineacion=2
 Comercia=0
-GiveEXP=3300
-GiveGLD=1000
-MinHP=1500
-MaxHP=1500
-MaxHIT=85
-MinHIT=60
-ELV=20
+GiveEXP=2000
+GiveGLD=2000
+MinHP=2000
+MaxHP=2000
+MaxHIT=100
+MinHIT=70
 DEF=0
-PoderAtaque=30
+ELV=20
+PoderAtaque=84
 PoderEvasion=30
 BackUp=0
-NROITEMS=2
-Obj1=158-1-100 'Banana
-Obj2=158-10-30 'Banana
-Speed=480
+NROITEMS=0
 
 [NPC662]
+Name=Momia Putrefacta
+NpcType=0
+Head=0
+Heading=1
+Body=73
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=0
+Hostile=1
+Domable=2010
+Alineacion=2
+Comercia=0
+GiveEXP=2000
+GiveGLD=2000
+MinHP=2000
+MaxHP=2000
+MaxHIT=100
+MinHIT=70
+DEF=150
+ELV=20
+PoderAtaque=84
+PoderEvasion=30
+BackUp=0
+NROITEMS=0
+
+[NPC663]
+Name=Akenaton
+NpcType=0
+Head=0
+Heading=1
+Body=73
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=0
+Hostile=1
+Domable=2010
+Alineacion=2
+Comercia=0
+GiveEXP=2800
+GiveGLD=2800
+MinHP=2800
+MaxHP=2800
+MaxHIT=80
+MinHIT=50
+DEF=150
+ELV=20
+PoderAtaque=84
+PoderEvasion=30
+BackUp=0
+NROITEMS=0
+
+[NPC664]
 Name=Hadita
 NpcType=0
 Head=0
 Heading=1
-Body=532
+Body=73
 Movement=3
 AguaValida=0
 Attackable=1
@@ -4327,20 +3911,19 @@ MinHP=500
 MaxHP=500
 MaxHIT=25
 MinHIT=15
-DEF=20
+DEF=150
 ELV=20
 PoderAtaque=84
 PoderEvasion=30
 BackUp=0
 NROITEMS=0
-Speed=480
 
-[NPC663]
+[NPC665]
 Name=Hada Rosa
 NpcType=0
 Head=0
 Heading=1
-Body=442
+Body=73
 Movement=3
 AguaValida=0
 Attackable=1
@@ -4355,20 +3938,19 @@ MinHP=1500
 MaxHP=1500
 MaxHIT=45
 MinHIT=35
-DEF=20
+DEF=150
 ELV=20
 PoderAtaque=84
 PoderEvasion=30
 BackUp=0
 NROITEMS=0
-Speed=480
 
-[NPC664]
+[NPC666]
 Name=Hada Azul
 NpcType=0
 Head=0
 Heading=1
-Body=440
+Body=73
 Movement=3
 AguaValida=0
 Attackable=1
@@ -4383,20 +3965,19 @@ MinHP=1500
 MaxHP=1500
 MaxHIT=45
 MinHIT=35
-DEF=20
+DEF=150
 ELV=20
 PoderAtaque=84
 PoderEvasion=30
 BackUp=0
 NROITEMS=0
-Speed=480
 
-[NPC665]
+[NPC667]
 Name=Mole de Tierra
 NpcType=0
 Head=0
 Heading=1
-Body=543
+Body=73
 Movement=3
 AguaValida=0
 Attackable=1
@@ -4411,20 +3992,19 @@ MinHP=1200
 MaxHP=1200
 MaxHIT=80
 MinHIT=50
-DEF=0
+DEF=150
 ELV=20
 PoderAtaque=84
 PoderEvasion=30
 BackUp=0
 NROITEMS=0
-Speed=500
 
-[NPC666]
+[NPC668]
 Name=Esclavo Contrabandista
 NpcType=0
 Head=0
 Heading=1
-Body=674
+Body=73
 Movement=3
 AguaValida=0
 Attackable=1
@@ -4433,22 +4013,22 @@ Hostile=1
 Domable=2010
 Alineacion=2
 Comercia=0
-GiveEXP=900
-GiveGLD=0
-MinHP=600
-MaxHP=600
-MaxHIT=60
-MinHIT=32
-DEF=0
+GiveEXP=360
+GiveGLD=360
+MinHP=360
+MaxHP=360
+MaxHIT=38
+MinHIT=28
+DEF=150
 ELV=20
-PoderAtaque=84
-PoderEvasion=25
+PoderAtaque=70
+PoderEvasion=50
 BackUp=0
-NROITEMS=2
-Obj1=36-30-30 'Pocion Amarilla
-Obj2=39-50-25 'Pocion Verde
-Speed=480
+NROITEMS=0
 
+##################
+####LEVEL 25######
+##################
 
 [NPC700]
 Name=Oso Pardo
@@ -4464,32 +4044,26 @@ Hostile=1
 Domable=2010
 Alineacion=2
 Comercia=0
-GiveEXP=1850
-GiveGLD=800
-MinHP=1250
-MaxHP=1250
+GiveEXP=1350
+GiveGLD=1350
+MinHP=1350
+MaxHP=1350
 MaxHIT=105
 MinHIT=70
 DEF=0
-ELV=20
-PoderAtaque=100
+ELV=25
+PoderAtaque=200
 PoderEvasion=70
 BackUp=0
 NROITEMS=1
-Obj1=415-1-100 'Piel Oso Pardo
-Speed=480
+Obj1=415-1-30 'Piel Oso Pardo
 
-
-##################
-####LEVEL 25######
-##################
-
-[NPC701] 'Ex arachnida Sicarius
-Name=Abominacion Elfica
+[NPC701]
+Name=Aracnido Gigante
 NpcType=0
 Head=0
 Heading=1
-Body=663
+Body=406
 Movement=3
 AguaValida=0
 Attackable=1
@@ -4498,10 +4072,10 @@ Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=10000
-GiveGLD=2500
-MinHP=3500
-MaxHP=3500
+GiveEXP=1450
+GiveGLD=1450
+MinHP=1450
+MaxHP=1450
 MaxHIT=110
 MinHIT=75
 DEF=0
@@ -4514,14 +4088,13 @@ Snd1=29
 Snd2=34
 Snd3=215
 NROITEMS=0
-Speed=480
 
 [NPC702]
 Name=Basilisco
 NpcType=0
 Head= (AUN NO TIENE GRAFICO)
 Heading=1
-Body=661
+Body=(AUN NO TIENE GRAFICO)
 Movement=3
 AguaValida=0
 Attackable=1
@@ -4541,72 +4114,69 @@ ELV=25
 PoderAtaque=200
 PoderEvasion=65
 BackUp=0
-Speed=460
 
 [NPC703]
 Name=Tiburon
 NpcType=0
 Head=0
 Heading=1
-Body=436
+Body=406
 Movement=3
-AguaValida=1
-TierraInvalida=1
+AguaValida=0
 Attackable=1
 ReSpawn=0
 Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=2500
-GiveGLD=1200
+GiveEXP=1500
+GiveGLD=1500
 MinHP=1500
 MaxHP=1500
-MaxHIT=180
-MinHIT=80
+MaxHIT=80
+MinHIT=50
 DEF=0
 ELV=25
 PoderAtaque=200
 PoderEvasion=65
+Veneno=1
 BackUp=0
 NROITEMS=0
-Speed=480
 
 [NPC704]
 Name=Sirena
 NpcType=0
 Head=0
 Heading=1
-Body=434
+Body=406
 Movement=3
-AguaValida=1
-TierraInvalida=1
+AguaValida=0
 Attackable=1
 ReSpawn=0
 Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=3500
-GiveGLD=600
+GiveEXP=1000
+GiveGLD=1000
 MinHP=1000
 MaxHP=1000
 MaxHIT=50
 MinHIT=30
 DEF=0
 ELV=25
-PoderAtaque=80
-PoderEvasion=250
+PoderAtaque=200
+PoderEvasion=65
+Veneno=1
 BackUp=0
 NROITEMS=0
-Speed=480
 
 [NPC705]
 Name=Caballito de Mar
 NpcType=0
 Head=0
 Heading=1
-Body=537
+Body=406
 Movement=3
 AguaValida=0
 Attackable=1
@@ -4628,14 +4198,13 @@ PoderEvasion=300
 Veneno=1
 BackUp=0
 NROITEMS=0
-Speed=480
 
 [NPC706]
 Name=Dientes del Mar
 NpcType=0
 Head=0
 Heading=1
-Body=435
+Body=406
 Movement=3
 AguaValida=0
 Attackable=1
@@ -4657,40 +4226,9 @@ PoderEvasion=100
 Veneno=1
 BackUp=0
 NROITEMS=0
-Speed=480
 
 [NPC707]
-Name=Momia
-NpcType=0
-Head=0
-Heading=1
-Body=608
-Movement=3
-AguaValida=0
-Attackable=1
-ReSpawn=0
-Hostile=1
-Domable=2010
-Alineacion=2
-Comercia=0
-GiveEXP=7500
-GiveGLD=1800
-MinHP=2000
-MaxHP=2000
-MaxHIT=100
-MinHIT=70
-DEF=0
-ELV=25
-PoderAtaque=84
-PoderEvasion=30
-BackUp=0
-NROITEMS=2
-Obj1=1301-50-40 'Ovillo de Lana
-Obj2=1299-50-80 'Hilo
-Speed=480
-
-[NPC708] 'Ex triada nilo
-Name=Araña Semerjet
+Name=Semerjet
 NpcType=0
 Head=0
 Heading=1
@@ -4703,27 +4241,54 @@ Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=4500
-GiveGLD=1100
-MinHP=1500
-MaxHP=1500
-MaxHIT=110
-MinHIT=70
-DEF=0
+GiveEXP=3500
+GiveGLD=3500
+MinHP=3500
+MaxHP=3500
+MaxHIT=135
+MinHIT=120
+DEF=80
 ELV=25
 PoderAtaque=200
-PoderEvasion=60
+PoderEvasion=100
 Veneno=1
 BackUp=0
 NROITEMS=0
-Speed=480
+
+[NPC708]
+Name=Triada Nilo
+NpcType=0
+Head=0
+Heading=1
+Body=406
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=3000
+GiveGLD=3000
+MinHP=3000
+MaxHP=3000
+MaxHIT=120
+MinHIT=80
+DEF=0
+ELV=25
+PoderAtaque=200
+PoderEvasion=100
+Veneno=1
+BackUp=0
+NROITEMS=0
 
 [NPC709]
 Name=Zombie Decapitado
 NpcType=0
 Head=0
 Heading=1
-Body=197
+Body=406
 Movement=3
 AguaValida=0
 Attackable=1
@@ -4732,27 +4297,26 @@ Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=1600
-GiveGLD=800
+GiveEXP=1300
+GiveGLD=1300
 MinHP=1300
 MaxHP=1300
 MaxHIT=80
-MinHIT=55
-DEF=0
+MinHIT=50
+DEF=50
 ELV=25
-PoderAtaque=40
-PoderEvasion=10
+PoderAtaque=0
+PoderEvasion=0
 Veneno=1
 BackUp=0
 NROITEMS=0
-Speed=500
 
 [NPC710]
 Name=Zombie Decapitado
 NpcType=0
 Head=0
 Heading=1
-Body=198
+Body=406
 Movement=3
 AguaValida=0
 Attackable=1
@@ -4761,27 +4325,26 @@ Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=1600
-GiveGLD=800
+GiveEXP=1300
+GiveGLD=1300
 MinHP=1300
 MaxHP=1300
 MaxHIT=80
-MinHIT=55
-DEF=0
+MinHIT=50
+DEF=50
 ELV=25
-PoderAtaque=40
-PoderEvasion=10
+PoderAtaque=0
+PoderEvasion=0
 Veneno=1
 BackUp=0
 NROITEMS=0
-Speed=500
 
 [NPC711]
 Name=Zombie Descuartizado
 NpcType=0
 Head=0
 Heading=1
-Body=196
+Body=406
 Movement=3
 AguaValida=0
 Attackable=1
@@ -4790,27 +4353,26 @@ Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=1400
-GiveGLD=500
+GiveEXP=1000
+GiveGLD=1000
 MinHP=1000
 MaxHP=1000
 MaxHIT=50
 MinHIT=30
-DEF=0
+DEF=50
 ELV=25
-PoderAtaque=55
-PoderEvasion=10
+PoderAtaque=0
+PoderEvasion=0
 Veneno=1
 BackUp=0
 NROITEMS=0
-Speed=500
 
 [NPC712]
 Name=Esqueleto
 NpcType=0
 Head=0
 Heading=1
-Body=12
+Body=406
 Movement=3
 AguaValida=0
 Attackable=1
@@ -4819,27 +4381,26 @@ Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=1100
-GiveGLD=800
+GiveEXP=900
+GiveGLD=900
 MinHP=900
 MaxHP=900
 MaxHIT=50
 MinHIT=30
 DEF=0
 ELV=25
-PoderAtaque=50
-PoderEvasion=25
+PoderAtaque=0
+PoderEvasion=0
+Veneno=1
 BackUp=0
-NROITEMS=1
-Obj1=126-1-30 'Hacha Larga de Guerra
-Speed=460
+NROITEMS=0
 
 [NPC713]
 Name=Esqueleto Guerrero
 NpcType=0
 Head=0
 Heading=1
-Body=393
+Body=406
 Movement=3
 AguaValida=0
 Attackable=1
@@ -4848,29 +4409,26 @@ Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=1200
-GiveGLD=1000
+GiveEXP=950
+GiveGLD=950
 MinHP=950
 MaxHP=950
-MaxHIT=70
-MinHIT=50
+MaxHIT=50
+MinHIT=30
 DEF=0
 ELV=25
 PoderAtaque=0
-PoderEvasion=35
+PoderEvasion=0
 Veneno=1
 BackUp=0
-NROITEMS=1
-Obj1=126-1-45 'Hacha Larga de Guerra
-Obj2=130-1-30 'Escudo de Plata
-Speed=460
+NROITEMS=0
 
 [NPC714]
 Name=Cuervo Asesino
 NpcType=0
 Head=0
 Heading=1
-Body=392
+Body=406
 Movement=3
 AguaValida=0
 Attackable=1
@@ -4879,26 +4437,26 @@ Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=850
-GiveGLD=500
-MinHP=600
-MaxHP=600
+GiveEXP=250
+GiveGLD=250
+MinHP=250
+MaxHP=250
 MaxHIT=50
 MinHIT=30
 DEF=0
 ELV=25
-PoderAtaque=80
-PoderEvasion=45
+PoderAtaque=0
+PoderEvasion=0
+Veneno=1
 BackUp=0
 NROITEMS=0
-Speed=480
 
 [NPC715]
 Name=Cucaracha
 NpcType=0
 Head=0
 Heading=1
-Body=229
+Body=406
 Movement=3
 AguaValida=0
 Attackable=1
@@ -4907,27 +4465,26 @@ Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=650
-GiveGLD=800
-MinHP=600
-MaxHP=600
+GiveEXP=150
+GiveGLD=150
+MinHP=150
+MaxHP=150
 MaxHIT=50
 MinHIT=30
 DEF=0
 ELV=25
-PoderAtaque=40
-PoderEvasion=35
+PoderAtaque=0
+PoderEvasion=0
 Veneno=1
 BackUp=0
 NROITEMS=0
-Speed=480
 
 [NPC716]
 Name=Lobo del Terror
 NpcType=0
 Head=0
 Heading=1
-Body=552
+Body=406
 Movement=3
 AguaValida=0
 Attackable=1
@@ -4936,27 +4493,26 @@ Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=1500
-GiveGLD=0
+GiveEXP=1000
+GiveGLD=1000
 MinHP=1000
 MaxHP=1000
 MaxHIT=80
 MinHIT=55
-DEF=0
+DEF=50
 ELV=25
-PoderAtaque=160
-PoderEvasion=35
+PoderAtaque=260
+PoderEvasion=150
+Veneno=1
 BackUp=0
-NROITEMS=1
-Obj1=414-1-100 'Piel de Lobo
-Speed=480
+NROITEMS=0
 
 [NPC717]
 Name=Lobo Zombie
 NpcType=0
 Head=0
 Heading=1
-Body=550
+Body=406
 Movement=3
 AguaValida=0
 Attackable=1
@@ -4965,27 +4521,26 @@ Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=1500
-GiveGLD=0
+GiveEXP=900
+GiveGLD=900
 MinHP=900
 MaxHP=900
 MaxHIT=50
 MinHIT=30
 DEF=0
 ELV=25
-PoderAtaque=80
-PoderEvasion=45
+PoderAtaque=0
+PoderEvasion=0
+Veneno=1
 BackUp=0
-NROITEMS=1
-Obj1=414-1-100 'Piel de Lobo
-Speed=480
+NROITEMS=0
 
 [NPC718]
 Name=Fantasma
 NpcType=0
 Head=0
 Heading=1
-Body=219
+Body=406
 Movement=3
 AguaValida=0
 Attackable=1
@@ -4994,26 +4549,26 @@ Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=4600
-GiveGLD=1800
-MinHP=1800
-MaxHP=1800
-MaxHIT=70
-MinHIT=55
+GiveEXP=500
+GiveGLD=500
+MinHP=500
+MaxHP=500
+MaxHIT=50
+MinHIT=30
 DEF=0
 ELV=25
-PoderAtaque=100
-PoderEvasion=250
+PoderAtaque=0
+PoderEvasion=0
+Veneno=1
 BackUp=0
 NROITEMS=0
-Speed=480
 
 [NPC719]
 Name=Angel
 NpcType=0
 Head=0
 Heading=1
-Body=441
+Body=406
 Movement=3
 AguaValida=0
 Attackable=1
@@ -5035,14 +4590,41 @@ PoderEvasion=0
 Veneno=1
 BackUp=0
 NROITEMS=0
-Speed=480
+
+[NPC720]
+Name=Bruja
+NpcType=0
+Head=0
+Heading=1
+Body=406
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=0
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=1400
+GiveGLD=1400
+MinHP=1400
+MaxHP=1400
+MaxHIT=50
+MinHIT=30
+DEF=0
+ELV=25
+PoderAtaque=0
+PoderEvasion=0
+Veneno=1
+BackUp=0
+NROITEMS=0
 
 [NPC721]
 Name=Ent Ancestral
 NpcType=0
 Head=0
 Heading=1
-Body=659
+Body=406
 Movement=3
 AguaValida=0
 Attackable=1
@@ -5064,14 +4646,13 @@ PoderEvasion=0
 Veneno=1
 BackUp=0
 NROITEMS=0
-Speed=500
 
 [NPC722]
 Name=Guerrero del Desierto
 NpcType=0
 Head=0
 Heading=1
-Body=607
+Body=406
 Movement=3
 AguaValida=0
 Attackable=1
@@ -5080,8 +4661,8 @@ Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=2350
-GiveGLD=750
+GiveEXP=1750
+GiveGLD=1750
 MinHP=1750
 MaxHP=1750
 MaxHIT=100
@@ -5089,18 +4670,17 @@ MinHIT=80
 DEF=0
 ELV=25
 PoderAtaque=150
-PoderEvasion=65
+PoderEvasion=200
+Veneno=1
 BackUp=0
-NROITEMS=1
-Obj1=398-1-100 'Garrote
-Speed=460
+NROITEMS=0
 
 [NPC723]
 Name=Coyote
 NpcType=0
 Head=0
 Heading=1
-Body=445
+Body=406
 Movement=3
 AguaValida=0
 Attackable=1
@@ -5122,14 +4702,13 @@ PoderEvasion=0
 Veneno=1
 BackUp=0
 NROITEMS=0
-Speed=480
 
 [NPC724]
 Name=Protector de la Naturaleza
 NpcType=0
 Head=0
 Heading=1
-Body=649
+Body=406
 Movement=3
 AguaValida=0
 Attackable=1
@@ -5151,14 +4730,13 @@ PoderEvasion=0
 Veneno=1
 BackUp=0
 NROITEMS=0
-Speed=480
 
 [NPC725]
 Name=Genio de Arena
 NpcType=0
 Head=0
 Heading=1
-Body=643
+Body=406
 Movement=3
 AguaValida=0
 Attackable=1
@@ -5167,81 +4745,19 @@ Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=20000
-GiveGLD=10000
-MinHP=6000
-MaxHP=6000
-MaxHIT=100
-MinHIT=70
+GiveEXP=1850
+GiveGLD=1850
+MinHP=1850
+MaxHP=1850
+MaxHIT=50
+MinHIT=30
 DEF=0
 ELV=25
-PoderAtaque=120
-PoderEvasion=150
+PoderAtaque=0
+PoderEvasion=0
+Veneno=1
 BackUp=0
 NROITEMS=0
-Speed=480
-
-[NPC756] 
-Name=Liche
-NpcType=0
-Head=0
-Heading=1
-Body=149
-Movement=3
-AguaValida=0
-Attackable=1
-ReSpawn=0
-Hostile=1
-Domable=0
-Alineacion=2
-Comercia=0
-GiveEXP=2200
-GiveGLD=900
-MinHP=1800
-MaxHP=1800
-MaxHIT=170
-MinHIT=100
-DEF=0
-ELV=30
-PoderAtaque=260
-PoderEvasion=150
-Nroitems=1
-BackUp=0
-NROITEMS=1
-Obj1=659-1-75 'Bastón Nudoso
-Speed=480
-
-
-[NPC760] 
-Name=Cria de Pinguino
-NpcType=0
-Head=0
-Heading=1
-Body=455
-Movement=3
-AguaValida=0
-Attackable=1
-ReSpawn=0
-Hostile=1
-Domable=0
-Alineacion=2
-Comercia=0
-GiveEXP=1800
-GiveGLD=2500
-MinHP=750
-MaxHP=750
-MaxHIT=75
-MinHIT=50
-DEF=0
-DEFm=0
-ELV=25
-PoderAtaque=160
-PoderEvasion=120
-Nroitems=1
-BackUp=0
-NROITEMS=0
-Speed=480
-
 
 ##################
 ####LEVEL 30######
@@ -5252,7 +4768,7 @@ Name=Minotauro
 NpcType=12
 Head=0
 Heading=1
-Body=662
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
@@ -5269,21 +4785,19 @@ MaxHIT=145
 MinHIT=110
 DEF=30
 ELV=30
-TiempoRetardoMin=30
-TiempoRetardoMax=40
+Retardo=30
 PoderAtaque=260
 PoderEvasion=175
 Nroitems=1
 BackUp=0
 NROITEMS=0
-Speed=370
 
 [NPC751] 'WORLDBOSS
 Name=Tortuga Milenaria
 NpcType=12
 Head=0
 Heading=1
-Body=672
+Body=206
 Movement=3
 AguaValida=0
 Attackable=1
@@ -5292,29 +4806,25 @@ Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=25000
-MinHP=8000
-MaxHP=8000
+GiveEXP=2800
+MinHP=2800
+MaxHP=2800
 MaxHIT=157
 MinHIT=117
-DEF=80
+DEF=30
 ELV=30
 DEFm=10
 PoderAtaque=260
 PoderEvasion=245
 snd2=78
 BackUp=0
-NROITEMS=2
-Obj1=404-30-14 'Escudo de tortuga
-Obj2=1116-1-1 'Montura Acuatica
-Speed=720
 
 [NPC752]
 Name=Leviathan
 NpcType=0
 Head=0
 Heading=1
-Body=99
+Body=206
 Movement=3
 AguaValida=0
 Attackable=1
@@ -5323,36 +4833,36 @@ Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=22000
+GiveEXP=5000
 GiveGLD=5000
-MinHP=6000
-MaxHP=6000
+MinHP=5000
+MaxHP=5000
 MaxHIT=165
 MinHIT=120
-DEF=0
+DEF=30
 ELV=30
-PoderAtaque=160
-PoderEvasion=130
+DEFm=10
+PoderAtaque=260
+PoderEvasion=150
 snd2=78
 BackUp=0
-Speed=480
 
 [NPC753] 
 Name=Guardian de las Produndidades
 NpcType=0
 Head=0
 Heading=1
-Body=218
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=6600
-GiveGLD=1800
+GiveEXP=2200
+GiveGLD=2200
 MinHP=2200
 MaxHP=2200
 MaxHIT=100
@@ -5364,43 +4874,13 @@ PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
-Speed=480
 
 [NPC754] 
 Name=Piraña
 NpcType=0
 Head=0
 Heading=1
-Body=433
-Movement=3
-AguaValida=0
-Attackable=1
-ReSpawn=0
-Hostile=1
-Domable=0
-Alineacion=2
-Comercia=0
-GiveEXP=1800
-GiveGLD=1800
-MinHP=600
-MaxHP=600
-MaxHIT=180
-MinHIT=150
-DEF=50
-ELV=30
-PoderAtaque=260
-PoderEvasion=55
-Nroitems=1
-BackUp=0
-NROITEMS=0
-Speed=480
-
-[NPC755] 'WORLDBOSS
-Name=Gorila Gigante
-NpcType=12
-Head=0
-Heading=1
-Body=660
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
@@ -5409,35 +4889,86 @@ Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=45000
+GiveEXP=200
+GiveGLD=200
+MinHP=200
+MaxHP=200
+MaxHIT=120
+MinHIT=100
+DEF=30
+ELV=30
+PoderAtaque=260
+PoderEvasion=150
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+[NPC755] 'WORLDBOSS
+Name=Gorila Gigante
+NpcType=12
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=15000
 GiveGLD=15000
 MinHP=1500
 MaxHP=1500
-MaxHIT=320
-MinHIT=180
-DEF=30
+MaxHIT=220
+MinHIT=200
+DEF=200
 ELV=30
-DEFm=20
 PoderAtaque=260
-PoderEvasion=120
+PoderEvasion=200
 Nroitems=1
 BackUp=0
-NROITEMS=2
-Obj1=1115-1-10 'Montura del gran rey mono
-Obj2=158-1000-90 'Banana
-Speed=320
+NROITEMS=0
 
+[NPC756] 
+Name=Liche
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=1800
+GiveGLD=1800
+MinHP=1800
+MaxHP=1800
+MaxHIT=170
+MinHIT=100
+DEF=50
+ELV=30
+PoderAtaque=260
+PoderEvasion=150
+Nroitems=1
+BackUp=0
+NROITEMS=0
 
 [NPC757] 
 Name=Araña del Terror
 NpcType=0
 Head=0
 Heading=1
-Body=554
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
@@ -5458,9 +4989,8 @@ Snd1=29
 Snd2=34
 Snd3=215
 NROITEMS=0
-Speed=480
 
-[NPC758] 'En desuso
+[NPC758] 
 Name=Esqueleto
 NpcType=0
 Head=0
@@ -5469,13 +4999,13 @@ Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=1100
-GiveGLD=800
+GiveEXP=1200
+GiveGLD=1200
 MinHP=1200
 MaxHP=1200
 MaxHIT=75
@@ -5487,18 +5017,17 @@ PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
-Speed=480
 
 [NPC759] 
 Name=Fango
 NpcType=0
 Head=0
 Heading=1
-Body=403
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
@@ -5516,47 +5045,130 @@ PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
-Speed=480
+
+[NPC760] 
+Name=Cria de Pinguino
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=750
+GiveGLD=750
+MinHP=750
+MaxHP=750
+MaxHIT=75
+MinHIT=50
+DEF=0
+DEFm=50
+ELV=30
+PoderAtaque=260
+PoderEvasion=150
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+[NPC761] 
+Name=Lobo Polar
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=3200
+GiveGLD=3200
+MinHP=3200
+MaxHP=3200
+MaxHIT=150
+MinHIT=95
+DEF=50
+ELV=30
+PoderAtaque=260
+PoderEvasion=150
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+[NPC762] 
+Name=Oso Blanco
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=2500
+GiveGLD=2500
+MinHP=2500
+MaxHP=2500
+MaxHIT=75
+MinHIT=50
+DEF=0
+ELV=30
+PoderAtaque=0
+PoderEvasion=0
+Nroitems=1
+BackUp=0
+NROITEMS=0
 
 [NPC763] 
 Name=Djin de Viento
 NpcType=0
 Head=0
 Heading=1
-Body=215
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=5500
-GiveGLD=2800
+GiveEXP=3800
+GiveGLD=3800
 MinHP=3800
 MaxHP=3800
 MaxHIT=75
 MinHIT=50
 DEF=0
 ELV=30
-PoderAtaque=120
-PoderEvasion=180
+PoderAtaque=0
+PoderEvasion=0
 Nroitems=1
 BackUp=0
 NROITEMS=0
-Speed=480
 
 [NPC764] 
 Name=Demogorgon
 NpcType=0
 Head=0
 Heading=1
-Body=658
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
@@ -5574,78 +5186,17 @@ PoderEvasion=0
 Nroitems=1
 BackUp=0
 NROITEMS=0
-Speed=480
 
-[NPC766] 
-Name=Hombre Lobo
+[NPC765] 
+Name=Fango
 NpcType=0
 Head=0
 Heading=1
-Body=558
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
-Hostile=1
-Domable=0
-Alineacion=2
-Comercia=0
-GiveEXP=3250
-GiveGLD=1500
-MinHP=2800
-MaxHP=2800
-MaxHIT=75
-MinHIT=50
-DEF=5
-ELV=30
-PoderAtaque=80
-PoderEvasion=90
-Nroitems=1
-Obj1=30-1-30 'Armadura de Cuero
-BackUp=0
-NROITEMS=1
-
-Speed=480
-
-[NPC767] 
-Name=Javaspi
-NpcType=0
-Head=0
-Heading=1
-Body=387
-Movement=3
-AguaValida=0
-Attackable=1
-ReSpawn=0
-Hostile=1
-Domable=0
-Alineacion=2
-Comercia=0
-GiveEXP=4500
-GiveGLD=2500
-MinHP=2700
-MaxHP=2700
-MaxHIT=75
-MinHIT=50
-DEF=0
-ELV=30
-PoderAtaque=89
-PoderEvasion=75
-Nroitems=1
-BackUp=0
-NROITEMS=0
-Speed=460
-
-[NPC768] 
-Name=La Parca
-NpcType=0
-Head=0
-Heading=1
-Body=217
-Movement=3
-AguaValida=0
-Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
@@ -5663,79 +5214,157 @@ PoderEvasion=0
 Nroitems=1
 BackUp=0
 NROITEMS=0
-Speed=480
+
+[NPC766] 
+Name=Hombre Lobo
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=3250
+GiveGLD=3250
+MinHP=3250
+MaxHP=3250
+MaxHIT=75
+MinHIT=50
+DEF=0
+ELV=30
+PoderAtaque=0
+PoderEvasion=0
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+[NPC767] 
+Name=Javaspi
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=3250
+GiveGLD=3250
+MinHP=3250
+MaxHP=3250
+MaxHIT=75
+MinHIT=50
+DEF=0
+ELV=30
+PoderAtaque=0
+PoderEvasion=0
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+[NPC768] 
+Name=La Parca
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=3500
+GiveGLD=3500
+MinHP=3500
+MaxHP=3500
+MaxHIT=75
+MinHIT=50
+DEF=0
+ELV=30
+PoderAtaque=0
+PoderEvasion=0
+Nroitems=1
+BackUp=0
+NROITEMS=0
 
 [NPC769] 
 Name=Licantropo
 NpcType=0
 Head=0
 Heading=1
-Body=212
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
 GiveEXP=4000
-GiveGLD=1200
-MinHP=2500
-MaxHP=2500
+GiveGLD=4000
+MinHP=4000
+MaxHP=4000
 MaxHIT=75
 MinHIT=50
 DEF=0
 ELV=30
-PoderAtaque=65
-PoderEvasion=55
+PoderAtaque=0
+PoderEvasion=0
 Nroitems=1
 BackUp=0
-NROITEMS=1
-Obj1=30-1-30 'Armadura de Cuero
-Speed=480
+NROITEMS=0
 
 [NPC770] 
 Name=Viuda Negra
 NpcType=0
 Head=0
 Heading=1
-Body=555
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=15000
-GiveGLD=3500
-MinHP=4500
-MaxHP=4500
+GiveEXP=4200
+GiveGLD=4200
+MinHP=4200
+MaxHP=4200
 MaxHIT=75
 MinHIT=50
 DEF=0
 ELV=30
-veneno=1
-PoderAtaque=125
-PoderEvasion=80
+PoderAtaque=0
+PoderEvasion=0
 Nroitems=1
 BackUp=0
-NROITEMS=1
-Obj1=1299-100-30 'Hilo
-Speed=480
+NROITEMS=0
 
 [NPC771] 
 Name=Gran Arbol Milenario
 NpcType=0
 Head=0
 Heading=1
-Body=401
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
@@ -5753,178 +5382,58 @@ PoderEvasion=0
 Nroitems=1
 BackUp=0
 NROITEMS=0
-Speed=520
 
 [NPC772] 
 Name=Adorador de Zharkel
 NpcType=0
 Head=0
 Heading=1
-Body=540
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=20000
-GiveGLD=2000
+GiveEXP=3500
+GiveGLD=3500
 MinHP=3500
 MaxHP=3500
 MaxHIT=95
 MinHIT=80
-DEF=0
+DEF=50
 ELV=30
-DEFm=30
-PoderAtaque=260
-PoderEvasion=130
-Nroitems=1
-Obj1=518-1-30 'Tunica de Mago oscuro
-BackUp=0
-NROITEMS=1
-Speed=480
-
-##################
-####LEVEL 35######
-##################
-
-[NPC761] 
-Name=Lobo Polar
-NpcType=0
-Head=0
-Heading=1
-Body=551
-Movement=3
-AguaValida=0
-Attackable=1
-ReSpawn=0
-Hostile=1
-Domable=0
-Alineacion=2
-Comercia=0
-GiveEXP=3200
-GiveGLD=3200
-MinHP=3200
-MaxHP=3200
-MaxHIT=150
-MinHIT=95
-DEF=0
-ELV=35
 PoderAtaque=260
 PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
-Speed=480
+
+
+##################
+####LEVEL 35######
+##################
 
 [NPC800] 
-Name=Semerjet
+Name=Oso Polar
 NpcType=0
 Head=0
 Heading=1
-Body=679
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=23000
-GiveGLD=12500
-MinHP=9000
-MaxHP=9000
-MaxHIT=150
-MinHIT=120
-DEF=0
-ELV=35
-PoderAtaque=200
-PoderEvasion=100
-BackUp=0
-NROITEMS=0
-Speed=500
-
-[NPC801]
-Name=Momia Putrefacta
-NpcType=0
-Head=0
-Heading=1
-Body=680
-Movement=3
-AguaValida=0
-Attackable=1
-ReSpawn=0
-Hostile=1
-Domable=2010
-Alineacion=2
-Comercia=0
-GiveEXP=12000
-GiveGLD=6000
-MinHP=4000
-MaxHP=4000
-MaxHIT=100
-MinHIT=70
-DEF=0
-ELV=35
-PoderAtaque=84
-PoderEvasion=30
-BackUp=0
-NROITEMS=2
-Obj1=1300-50-30 'Hilo burdo
-Obj2=1299-50-80 'Hilo
-Speed=480
-
-[NPC803]
-Name=Akenaton
-NpcType=0
-Head=0
-Heading=1
-Body=682
-Movement=3
-AguaValida=0
-Attackable=1
-ReSpawn=0
-Hostile=1
-Domable=2010
-Alineacion=2
-Comercia=0
-GiveEXP=18000
-GiveGLD=10000
-MinHP=5800
-MaxHP=5800
-MaxHIT=150
-MinHIT=120
-DEF=0
-ELV=35
-Quema=1
-PoderAtaque=84
-PoderEvasion=30
-BackUp=0
-NROITEMS=0
-Speed=480
-
-[NPC762] [en desuso]
-Name=Oso Blanco 
-NpcType=0
-Head=0
-Heading=1
-Body=184
-Movement=3
-AguaValida=0
-Attackable=1
-ReSpawn=0
-Hostile=1
-Domable=0
-Alineacion=2
-NoShadow=1
-Comercia=0
-GiveEXP=6000
-GiveGLD=12000
-MinHP=9000
-MaxHP=9000
+GiveEXP=4800
+GiveGLD=4800
+MinHP=4800
+MaxHP=4800
 MaxHIT=180
 MinHIT=120
 DEF=50
@@ -5932,228 +5441,187 @@ ELV=35
 PoderAtaque=260
 PoderEvasion=150
 Nroitems=1
-Obj1=416-1-100 'Piel Oso Polar
 BackUp=0
 NROITEMS=0
-Speed=480
 
-[NPC804] 
-Name=Oso Polar
-NpcType=0
-Head=0
-Heading=1
-Body=184
-Movement=3
-AguaValida=0
-Attackable=1
-ReSpawn=0
-Hostile=1
-Domable=0
-Alineacion=2
-NoShadow=1
-Comercia=0
-GiveEXP=6000
-GiveGLD=12000
-MinHP=9000
-MaxHP=9000
-MaxHIT=180
-MinHIT=120
-DEF=0
-ELV=35
-PoderAtaque=260
-PoderEvasion=40
-Nroitems=1
-Obj1=416-1-100 'Piel Oso Polar
-BackUp=0
-NROITEMS=0
-Speed=480
-
-[NPC805] 
+[NPC801] 
 Name=Troglodita
 NpcType=0
 Head=0
 Heading=1
-Body=648
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=13000
-GiveGLD=25000
-MinHP=9000
-MaxHP=9000
+GiveEXP=7500
+GiveGLD=7500
+MinHP=7500
+MaxHP=7500
 MaxHIT=210
 MinHIT=180
-DEF=0
+DEF=50
 ELV=35
 PoderAtaque=260
 PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
-Speed=480
 
-[NPC806] 
+[NPC802] 
 Name=Pinguino
 NpcType=0
 Head=0
 Heading=1
-Body=455
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=3600
-GiveGLD=5000
+GiveEXP=1800
+GiveGLD=1800
 MinHP=1800
 MaxHP=1800
 MaxHIT=90
 MinHIT=70
-DEF=0
-ELV=35
-PoderAtaque=260
-PoderEvasion=50
-Nroitems=1
-BackUp=0
-NROITEMS=0
-Speed=480
-
-[NPC806] 
-Name=Medusa
-NpcType=0
-Head=0
-Heading=1
-Body=151
-Movement=3
-AguaValida=0
-Attackable=1
-ReSpawn=0
-Hostile=1
-Domable=0
-Alineacion=2
-Comercia=0
-GiveEXP=15000
-GiveGLD=4500
-MinHP=6000
-MaxHP=6000
-MaxHIT=110
-MinHIT=80
-DEF=0
+DEF=50
 ELV=35
 PoderAtaque=260
 PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
-Speed=480
 
-[NPC807] 
-Name=Medusa Madre
+[NPC803] 
+Name=Medusa
 NpcType=0
 Head=0
 Heading=1
-Body=676
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=25000
+GiveEXP=6000
+GiveGLD=6000
+MinHP=6000
+MaxHP=6000
+MaxHIT=110
+MinHIT=80
+DEF=50
+ELV=35
+PoderAtaque=260
+PoderEvasion=150
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+[NPC804] 
+Name=Medusa Madre
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=8000
 GiveGLD=8000
 MinHP=8000
 MaxHP=8000
 MaxHIT=150
 MinHIT=100
-DEF=0
+DEF=50
 ELV=35
 PoderAtaque=260
-PoderEvasion=180
+PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
-Speed=480
 
-[NPC808] 
+[NPC805] 
 Name=Esbirro Excavador
 NpcType=0
 Head=0
 Heading=1
-Body=657
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=35000
-GiveGLD=5000
+GiveEXP=4500
+GiveGLD=4500
 MinHP=4500
 MaxHP=4500
 MaxHIT=120
 MinHIT=95
-DEF=0
+DEF=50
 ELV=35
 PoderAtaque=260
-PoderEvasion=130
+PoderEvasion=150
 Nroitems=1
 BackUp=0
-NROITEM=2
-Obj1=187-1-10 'Piquete de minero
-Obj2=194-30-80 'Minerales de oro
-Speed=480
+NROITEMS=0
 
-[NPC809] 
+[NPC806] 
 Name=Observador de las Profundidades
 NpcType=0
 Head=0
 Heading=1
-Body=615
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=24000
+GiveEXP=4000
 GiveGLD=4000
 MinHP=4000
 MaxHP=4000
 MaxHIT=70
 MinHIT=50
-DEF=0
+DEF=50
 ELV=35
 PoderAtaque=260
-PoderEvasion=300
+PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
-Speed=480
 
-[NPC810] 
+[NPC807] 
 Name=Exclavo Helado
 NpcType=0
 Head=0
 Heading=1
-Body=642
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
@@ -6164,54 +5632,52 @@ MinHP=5500
 MaxHP=5500
 MaxHIT=170
 MinHIT=150
-DEF=0
+DEF=50
 ELV=35
 PoderAtaque=260
 PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
-Speed=480
 
-[NPC811] 
+[NPC808] 
 Name=Gigante Terrorifico
 NpcType=0
 Head=0
 Heading=1
-Body=182
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=9000
-GiveGLD=4000
+GiveEXP=3500
+GiveGLD=3500
 MinHP=3500
 MaxHP=3500
 MaxHIT=170
 MinHIT=150
-DEF=0
+DEF=50
 ELV=35
 PoderAtaque=260
 PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
-Speed=480
 
-[NPC812] 
+[NPC809] 
 Name=Señor del Terror
 NpcType=0
 Head=0
 Heading=1
-Body=446
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
@@ -6222,25 +5688,24 @@ MinHP=5000
 MaxHP=5000
 MaxHIT=120
 MinHIT=95
-DEF=0
+DEF=50
 ELV=35
 PoderAtaque=260
 PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
-Speed=480
 
-[NPC813] 
+[NPC810] 
 Name=Ciclope
 NpcType=0
 Head=0
 Heading=1
-Body=667
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
@@ -6258,43 +5723,41 @@ PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
-Speed=480
 
-[NPC814] 
+[NPC811] 
 Name=Reptiliano
 NpcType=0
 Head=0
 Heading=1
-Body=439
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=14000
-GiveGLD=6000
+GiveEXP=5250
+GiveGLD=5250
 MinHP=5250
 MaxHP=5250
-MaxHIT=150
-MinHIT=130
-DEF=0
+MaxHIT=120
+MinHIT=95
+DEF=50
 ELV=35
 PoderAtaque=260
-PoderEvasion=80
+PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
-Speed=480
 
-[NPC815] 'WORLDBOSS
+[NPC812] 'WORLDBOSS
 Name=Crolusco 
 NpcType=12
 Head=0
 Heading=1
-Body=557
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
@@ -6309,14 +5772,13 @@ MinHP=10000
 MaxHP=1000
 MaxHIT=220
 MinHIT=180
-DEF=50
+DEF=100
 ELV=35
 PoderAtaque=260
 PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
-Speed=480
 
 ##################
 ####LEVEL 40######
@@ -6327,11 +5789,11 @@ Name=Beholder Helado
 NpcType=0
 Head=0
 Heading=1
-Body=681
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
@@ -6349,18 +5811,17 @@ PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
-Speed=480
 
 [NPC851] 
 Name=Genio Congelado
 NpcType=0
 Head=0
 Heading=1
-Body=645
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
@@ -6378,227 +5839,213 @@ PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
-Speed=480
 
 [NPC852] 
 Name=Kraken
 NpcType=0
 Head=0
 Heading=1
-Body=408
+Body=43
 Movement=3
-AguaValida=1
-TierraInvalida=1
+AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=65000
-GiveGLD=13000
-MinHP=6000
-MaxHP=6000
+GiveEXP=6200
+GiveGLD=6200
+MinHP=6200
+MaxHP=6200
 MaxHIT=139
 MinHIT=120
-DEF=0
+DEF=50
 ELV=40
 PoderAtaque=260
-PoderEvasion=140
+PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
-Speed=460
 
 [NPC853] 
 Name=Beholder
 NpcType=0
 Head=0
 Heading=1
-Body=681
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
 GiveEXP=6500
-GiveGLD=2500
-MinHP=2200
-MaxHP=2200
+GiveGLD=6500
+MinHP=6500
+MaxHP=6500
 MaxHIT=170
 MinHIT=150
-DEF=0
+DEF=50
 ELV=40
 PoderAtaque=260
-PoderEvasion=180
+PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
-Speed=480
 
 [NPC854] 
 Name=Guerrero Troll
 NpcType=0
 Head=0
 Heading=1
-Body=665
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=14500
-GiveGLD=3200
+GiveEXP=7200
+GiveGLD=7200
 MinHP=7200
 MaxHP=7200
-MaxHIT=200
-MinHIT=180
+MaxHIT=139
+MinHIT=120
 DEF=0
 ELV=40
-PoderAtaque=120
-PoderEvasion=90
+PoderAtaque=0
+PoderEvasion=0
 Nroitems=1
 BackUp=0
-NROITEMS=1
-Obj1=124-1-70 'Katana
-Speed=480
+NROITEMS=0
 
 [NPC855] 
 Name=Jefe Troll
 NpcType=0
 Head=0
 Heading=1
-Body=650
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=27000
-GiveGLD=7000
+GiveEXP=8000
+GiveGLD=8000
 MinHP=8000
 MaxHP=8000
-MaxHIT=250
-MinHIT=180
+MaxHIT=139
+MinHIT=120
 DEF=0
 ELV=40
-PoderAtaque=120
-PoderEvasion=150
+PoderAtaque=0
+PoderEvasion=0
 Nroitems=1
 BackUp=0
-NROITEMS=1
-Obj1=129-1-30 'Hacha de guerra de dos filos
-Speed=480
+NROITEMS=0
 
 [NPC856] 
 Name=Lanzapiedras Troll
 NpcType=0
 Head=0
 Heading=1
-Body=666
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=16000
-GiveGLD=4000
+GiveEXP=7500
+GiveGLD=7500
 MinHP=7500
 MaxHP=7500
-MaxHIT=150
+MaxHIT=139
 MinHIT=120
 DEF=0
 ELV=40
-PoderAtaque=80
-PoderEvasion=130
+PoderAtaque=0
+PoderEvasion=0
 Nroitems=1
 BackUp=0
-NROITEMS=1
-Obj1=124-1-70 'Katana
-Speed=480
+NROITEMS=0
 
 [NPC857] 
 Name=Troll Decapitador
 NpcType=0
 Head=0
 Heading=1
-Body=670
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=15000
-GiveGLD=3600
+GiveEXP=7000
+GiveGLD=7000
 MinHP=7000
 MaxHP=7000
-MaxHIT=330
-MinHIT=280
+MaxHIT=139
+MinHIT=120
 DEF=0
 ELV=40
-PoderAtaque=145
-PoderEvasion=110
+PoderAtaque=0
+PoderEvasion=0
 Nroitems=1
 BackUp=0
-NROITEMS=1
-Obj1=124-1-70 'Katana
-Speed=480
+NROITEMS=0
 
 [NPC858] 
 Name=Troll Guardian
 NpcType=0
 Head=0
 Heading=1
-Body=664
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=15500
-GiveGLD=3000
+GiveEXP=7000
+GiveGLD=7000
 MinHP=7000
 MaxHP=7000
-MaxHIT=130
+MaxHIT=139
 MinHIT=120
 DEF=0
 ELV=40
-PoderAtaque=120
-PoderEvasion=180
+PoderAtaque=0
+PoderEvasion=0
 Nroitems=1
 BackUp=0
-NROITEMS=1
-Obj1=195-1-30 'Armadura de placa completa
-Speed=480
+NROITEMS=0
 
-[NPC859] [En desuso]
+[NPC859] 
 Name=Beeholder
 NpcType=0
 Head=0
 Heading=1
-Body=72
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
@@ -6616,124 +6063,118 @@ PoderEvasion=0
 Nroitems=1
 BackUp=0
 NROITEMS=0
-Speed=480
 
 [NPC860] 
 Name=Demonio
 NpcType=0
 Head=0
 Heading=1
-Body=83
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=20000
-GiveGLD=10000
-MinHP=10000
-MaxHP=10000
-MaxHIT=350
-MinHIT=250
+GiveEXP=8500
+GiveGLD=8500
+MinHP=8500
+MaxHP=8500
+MaxHIT=139
+MinHIT=120
 DEF=0
 ELV=40
-PoderAtaque=200
-PoderEvasion=180
+PoderAtaque=0
+PoderEvasion=0
 Nroitems=1
 BackUp=0
 NROITEMS=0
-Speed=480
 
 [NPC861] 
 Name=Fenrir
 NpcType=0
 Head=0
 Heading=1
-Body=447
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=18000
-GiveGLD=5000
+GiveEXP=6500
+GiveGLD=6500
 MinHP=6500
 MaxHP=6500
-MaxHIT=250
-MinHIT=180
+MaxHIT=139
+MinHIT=120
 DEF=0
 ELV=40
-Quema=1
-PoderAtaque=165
-PoderEvasion=100
+PoderAtaque=0
+PoderEvasion=0
 Nroitems=1
 BackUp=0
 NROITEMS=0
-Speed=480
 
 [NPC862] 
-Name=Tarantula Raider
+Name=Brachy Auratum
 NpcType=0
 Head=0
 Heading=1
-Body=671
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=35000
-GiveGLD=10000
+GiveEXP=8000
+GiveGLD=8000
 MinHP=8000
 MaxHP=8000
-MaxHIT=200
-MinHIT=150
+MaxHIT=139
+MinHIT=120
 DEF=0
 ELV=40
-PoderAtaque=220
-PoderEvasion=120
+PoderAtaque=0
+PoderEvasion=0
 Nroitems=1
 BackUp=0
 NROITEMS=0
-Speed=460
 
 [NPC863] 
 Name=Guardian Raider
 NpcType=0
 Head=0
 Heading=1
-Body=448
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=9000
-GiveGLD=2000
+GiveEXP=3000
+GiveGLD=3000
 MinHP=3000
 MaxHP=3000
 MaxHIT=139
 MinHIT=120
 DEF=0
 ELV=40
-PoderAtaque=120
-PoderEvasion=90
+PoderAtaque=0
+PoderEvasion=0
 Nroitems=1
 BackUp=0
 NROITEMS=0
-Speed=480
 
 [NPC864] 
 Name=Guardian Raider
@@ -6744,96 +6185,91 @@ Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=9000
-GiveGLD=2500
+GiveEXP=3000
+GiveGLD=3000
 MinHP=3000
 MaxHP=3000
 MaxHIT=139
 MinHIT=120
 DEF=0
 ELV=40
-PoderAtaque=120
-PoderEvasion=90
+PoderAtaque=0
+PoderEvasion=0
 Nroitems=1
 BackUp=0
 NROITEMS=0
-Speed=480
 
 [NPC865] 
 Name=Ogro Brujo
 NpcType=0
 Head=0
 Heading=1
-Body=76
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=8500
-GiveGLD=2000
-MinHP=3000
-MaxHP=3000
-MaxHIT=180
+GiveEXP=8100
+GiveGLD=8100
+MinHP=8100
+MaxHP=8100
+MaxHIT=139
 MinHIT=120
 DEF=0
 ELV=40
-PoderAtaque=120
-PoderEvasion=150
+PoderAtaque=0
+PoderEvasion=0
 Nroitems=1
 BackUp=0
-NROITEMS=1
-Obj1=659-1-50 'Bastón Nudoso
-Speed=480
+NROITEMS=0
 
 [NPC866] 
 Name=Ogro Guerrero
 NpcType=0
 Head=0
 Heading=1
-Body=206
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=15000
-GiveGLD=2000
-MinHP=5000
-MaxHP=5000
-MaxHIT=280
-MinHIT=220
+GiveEXP=8100
+GiveGLD=8100
+MinHP=8100
+MaxHP=8100
+MaxHIT=139
+MinHIT=120
 DEF=0
 ELV=40
-PoderAtaque=180
-PoderEvasion=120
+PoderAtaque=0
+PoderEvasion=0
 Nroitems=1
 BackUp=0
-NROITEMS=1
-Obj1=129-1-30 'Hacha de guerra de dos filos
-Speed=460
+NROITEMS=0
 
 [NPC867] 
 Name=Cria de Dragon
 NpcType=0
 Head=0
 Heading=1
-Body=536
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
@@ -6852,36 +6288,34 @@ Nroitems=1
 BackUp=0
 NROITEMS=1
 Obj1=1302-2-80
-Speed=480
 
 [NPC868] 
 Name=Octopus
 NpcType=0
 Head=0
 Heading=1
-Body=450
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=30000
-GiveGLD=7500
-MinHP=7000
-MaxHP=7000
-MaxHIT=130
-MinHIT=110
+GiveEXP=6900
+GiveGLD=6900
+MinHP=6900
+MaxHP=6900
+MaxHIT=139
+MinHIT=120
 DEF=0
 ELV=40
-PoderAtaque=220
-PoderEvasion=180
+PoderAtaque=0
+PoderEvasion=0
 Nroitems=1
 BackUp=0
 NROITEMS=0
-Speed=480
 
 ##################
 ####LEVEL 45######
@@ -6892,294 +6326,252 @@ Name=Yeti
 NpcType=0
 Head=0
 Heading=1
-Body=641
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=235000
-GiveGLD=15000
+GiveEXP=13500
+GiveGLD=13500
 MinHP=13500
 MaxHP=13500
-MaxHIT=280
-MinHIT=250
-DEF=0
+MaxHIT=170
+MinHIT=150
+DEF=50
 ELV=45
 PoderAtaque=260
 PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
-Speed=500
 
 [NPC901] 
 Name=Ettin
 NpcType=0
 Head=0
 Heading=1
-Body=668
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=150000
+GiveEXP=11000
 GiveGLD=11000
-MinHP=10000
-MaxHP=10000
+MinHP=11000
+MaxHP=11000
 MaxHIT=170
 MinHIT=150
-DEF=0
+DEF=50
 ELV=45
 PoderAtaque=260
 PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
-Speed=500
 
 [NPC902] 
-Name=Araña de hielo
+Name=Reina Araña Polar
 NpcType=0
 Head=0
 Heading=1
-Body=677
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=75000
-GiveGLD=10000
+GiveEXP=7500
+GiveGLD=7500
 MinHP=7500
 MaxHP=7500
-MaxHIT=220
-MinHIT=180
-DEF=0
+MaxHIT=170
+MinHIT=150
+DEF=50
 ELV=45
 PoderAtaque=260
 PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
-Speed=480
 
 [NPC903] 
 Name=Golem de Hielo
 NpcType=0
 Head=0
 Heading=1
-Body=571
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=80000
+GiveEXP=10000
 GiveGLD=10000
 MinHP=10000
 MaxHP=10000
-MaxHIT=350
-MinHIT=300
+MaxHIT=170
+MinHIT=150
 DEF=50
 ELV=45
 PoderAtaque=260
-PoderEvasion=20
+PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
-Speed=500
 
 [NPC904] 
 Name=Bomba de Lava
 NpcType=0
 Head=0
 Heading=1
-Body=669
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
-Quema=1
 Alineacion=2
 Comercia=0
-GiveEXP=70000
-GiveGLD=12000
+GiveEXP=10000
+GiveGLD=10000
 MinHP=10000
 MaxHP=10000
 MaxHIT=170
 MinHIT=150
-DEF=45
+DEF=50
 ELV=45
 PoderAtaque=260
-PoderEvasion=220
+PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
-Speed=500
 
 [NPC905] 
 Name=Protector de Titan
 NpcType=0
 Head=0
 Heading=1
-Body=452
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=185000
-GiveGLD=17000
+GiveEXP=15000
+GiveGLD=15000
 MinHP=15000
 MaxHP=15000
-MaxHIT=250
-MinHIT=200
-DEF=0
+MaxHIT=170
+MinHIT=150
+DEF=50
 ELV=45
 PoderAtaque=260
-PoderEvasion=110
+PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
-Speed=500
 
 [NPC906] 
 Name=Protector de Lava de Titan
 NpcType=0
 Head=0
 Heading=1
-Body=451
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
-Quema=1
 Alineacion=2
 Comercia=0
-GiveEXP=185000
-GiveGLD=17000
+GiveEXP=15000
+GiveGLD=15000
 MinHP=15000
 MaxHP=15000
-MaxHIT=150
-MinHIT=130
-DEF=10
+MaxHIT=170
+MinHIT=150
+DEF=50
 ELV=45
 PoderAtaque=260
-PoderEvasion=250
+PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
-Speed=500
 
 [NPC907] 
 Name=Demonio Guerrero
 NpcType=0
 Head=0
 Heading=1
-Body=453
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=135000
-GiveGLD=18000
-MinHP=20000
-MaxHP=20000
-MaxHIT=250
-MinHIT=220
-DEF=0
-ELV=45
-DEFm=10
-PoderAtaque=260
-PoderEvasion=100
-Nroitems=1
-BackUp=0
-NROITEMS=0
-Speed=480
-
-[NPC1002] 
-Name=Demonio Brujo
-NpcType=0
-Head=0
-Heading=1
-Body=454
-Movement=3
-AguaValida=0
-Attackable=1
-ReSpawn=0
-Hostile=1
-Domable=0
-Alineacion=2
-Comercia=0
-GiveEXP=135000
-GiveGLD=20000
+GiveEXP=15000
+GiveGLD=15000
 MinHP=15000
 MaxHP=15000
 MaxHIT=170
 MinHIT=150
-DEF=0
-ELV=50
+DEF=50
+ELV=45
 PoderAtaque=260
-PoderEvasion=300
+PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
-Speed=480
 
 [NPC908] 
 Name=Señor del Hielo
 NpcType=0
 Head=0
 Heading=1
-Body=678
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=350000
-GiveGLD=20000
+GiveEXP=12000
+GiveGLD=12000
 MinHP=12000
 MaxHP=12000
-MaxHIT=300
-MinHIT=200
-DEF=35
+MaxHIT=160
+MinHIT=140
+DEF=50
 ELV=45
-PoderAtaque=120
-PoderEvasion=130
+PoderAtaque=0
+PoderEvasion=150
 Nroitems=1
 BackUp=0
-NROITEMS=1
-Obj1=195-1-30 'Armadura de placas completa
-Speed=480
+NROITEMS=0
 
 ##################
 ####LEVEL 50######
@@ -7190,100 +6582,11 @@ Name=Demonio Helado
 NpcType=0
 Head=0
 Heading=1
-Body=640
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
-Hostile=1
-Domable=0
-Alineacion=2
-Comercia=0
-GiveEXP=500000
-GiveGLD=20000
-MinHP=20000
-MaxHP=20000
-MaxHIT=360
-MinHIT=300
-DEF=0
-ELV=50
-PoderAtaque=260
-PoderEvasion=120
-Nroitems=1
-BackUp=0
-NROITEMS=0
-Speed=480
-
-[NPC1001] 
-Name=Smaug
-NpcType=0
-Head=0
-Heading=1
-Body=647
-Movement=3
-AguaValida=0
-Attackable=1
-ReSpawn=0
-Hostile=1
-Domable=0
-Alineacion=2
-Comercia=0
-GiveEXP=2000000
-GiveGLD=20000
-MinHP=20000
-MaxHP=20000
-MaxHIT=170
-MinHIT=150
-DEF=0
-ELV=50
-PoderAtaque=260
-PoderEvasion=150
-Nroitems=1
-BackUp=0
-NROITEMS=0
-Speed=500
-
-
-[NPC1003] 
-Name=Golem de Lava
-NpcType=0
-Head=0
-Heading=1
-Body=181
-Movement=3
-AguaValida=0
-Attackable=1
-ReSpawn=0
-Hostile=1
-Domable=0
-Alineacion=2
-Comercia=0
-GiveEXP=450000
-GiveGLD=0
-MinHP=17000
-MaxHP=17000
-MaxHIT=400
-MinHIT=350
-DEF=0
-ELV=50
-PoderAtaque=260
-PoderEvasion=150
-Nroitems=1
-BackUp=0
-NROITEMS=1
-Obj1=192-50-30
-Speed=500
-
-[NPC1004] 
-Name=Gran Demonio Behemoth
-NpcType=0
-Head=0
-Heading=1
-Body=405
-Movement=3
-AguaValida=0
-Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
@@ -7301,18 +6604,130 @@ PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
-Speed=480
+
+[NPC1001] 
+Name=Smaug
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=20000
+GiveGLD=20000
+MinHP=20000
+MaxHP=20000
+MaxHIT=170
+MinHIT=150
+DEF=50
+ELV=50
+PoderAtaque=260
+PoderEvasion=150
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+[NPC1002] 
+Name=Demonio Brujo
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=20000
+GiveGLD=20000
+MinHP=20000
+MaxHP=20000
+MaxHIT=170
+MinHIT=150
+DEF=50
+ELV=50
+PoderAtaque=260
+PoderEvasion=150
+Nroitems=1
+BackUp=0
+NROITEMS=0
+
+[NPC1003] 
+Name=Golem de Lava
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=20000
+GiveGLD=20000
+MinHP=20000
+MaxHP=20000
+MaxHIT=170
+MinHIT=150
+DEF=50
+ELV=50
+PoderAtaque=260
+PoderEvasion=150
+Nroitems=1
+BackUp=0
+NROITEMS=1
+Obj1=192-50-30
+
+[NPC1004] 
+Name=Gran Demonio Behemoth
+NpcType=0
+Head=0
+Heading=1
+Body=43
+Movement=3
+AguaValida=0
+Attackable=1
+ReSpawn=1
+Hostile=1
+Domable=0
+Alineacion=2
+Comercia=0
+GiveEXP=20000
+GiveGLD=20000
+MinHP=20000
+MaxHP=20000
+MaxHIT=170
+MinHIT=150
+DEF=50
+ELV=50
+PoderAtaque=260
+PoderEvasion=150
+Nroitems=1
+BackUp=0
+NROITEMS=0
 
 ##################
 ####LEVEL 55######
 ##################
 
-[NPC1050] 
+[NPC1000] 
 Name=Rey Examine Word Boss
 NpcType=0
 Head=0
 Heading=1
-Body=575
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
@@ -7334,9 +6749,8 @@ PoderEvasion=150
 Nroitems=1
 BackUp=0
 NROITEMS=0
-Speed=500
 
-[NPC1051]
+[NPC1001]
 Name=Titan de Fuego
 NpcType=0
 Head=0
@@ -7345,7 +6759,7 @@ Body=606
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=1
+ReSpawn=0
 Hostile=1
 Domable=0
 Alineacion=2
@@ -7365,9 +6779,8 @@ BackUp=0
 Invocacion=1
 NROITEMS=1
 Obj1=1254-1-100
-Speed=520
 
-[NPC1052]
+[NPC1002]
 Name=Titan de Agua
 NpcType=0
 Head=0
@@ -7376,7 +6789,7 @@ Body=610
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=1
+ReSpawn=0
 Hostile=1
 Domable=0
 Alineacion=2
@@ -7396,9 +6809,8 @@ BackUp=0
 Invocacion=1
 NROITEMS=1
 Obj1=1253-1-100
-Speed=520
 
-[NPC1053]
+[NPC1003]
 Name=Titan de Tierra
 NpcType=0
 Head=0
@@ -7407,7 +6819,7 @@ Body=609
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=1
+ReSpawn=0
 Hostile=1
 Domable=0
 Alineacion=2
@@ -7428,32 +6840,27 @@ NoShadow=1
 Invocacion=1
 NROITEMS=1
 Obj1=1252-1-100
-Speed=520
 
-[NPC1054] 
+[NPC1004] 
 Name=Dragon Legendario
-NpcType=6
+NpcType=0
 Head=0
 Heading=1
-Body=82
+Body=43
 Movement=3
 AguaValida=0
 Attackable=1
-ReSpawn=0
+ReSpawn=1
 Hostile=1
 Domable=0
 Alineacion=2
 Comercia=0
-GiveEXP=1000000
+GiveEXP=10000
 GiveGLD=10000
 MinHP=10000
 MaxHP=10000
 MaxHIT=170
 MinHIT=150
-TiempoRetardoMin=240
-TiempoRetardoMax=360
-AfectaParalisis=1
-LanzaSpells=15
 DEF=50
 ELV=55
 PoderAtaque=260
@@ -7462,7 +6869,6 @@ Nroitems=1
 BackUp=0
 NROITEMS=1
 Obj1=1302-100-100
-Speed=520
 
 ##############################################
 ##############NPC PRETORIANOS#################
@@ -7502,7 +6908,6 @@ Obj1=646-1
 Obj2=403-1
 AfectaParalisis=1
 BackUp=0
-Speed=480
 
 ############################################
 
@@ -7540,7 +6945,6 @@ Obj1=907-1
 Obj2=403-1
 AfectaParalisis=1
 BackUp=0
-Speed=480
 
 ############################################
 
@@ -7580,7 +6984,6 @@ Obj4=38-300-100  ' Pocion Roja
 Obj5=361-1-100   ' Tormenta de Fuego
 Obj6=697-1-100   ' Anillo Magico
 BackUp=0
-Speed=370
 
 ############################################
 
@@ -7620,7 +7023,6 @@ Obj4=38-300-100  ' Pocion Roja
 Obj5=361-1-100   ' Tormenta de Fuego
 Obj6=697-1-100   ' Anillo Magico
 BackUp=0
-Speed=370
 
 ############################################
 
@@ -7660,7 +7062,6 @@ Obj4=38-300-100  ' Pocion Roja
 Obj5=132-1-100   ' Casco de Hierro
 Obj6=1049-1-100  ' Laud Elfico
 BackUp=0
-Speed=370
 
 ############################################
 
@@ -7700,7 +7101,6 @@ Obj4=38-300-100  ' Pocion Roja
 Obj5=132-1-100   ' Casco de Hierro
 Obj6=1049-1-100  ' Laud Elfico
 BackUp=0
-Speed=370
 
 ############################################
 
@@ -7736,7 +7136,6 @@ Obj3=37-400-100   ' Pocion Azul
 Obj4=660-1-100    ' Baculo Engarzado
 Obj5=662-1-100    ' Sombrero de Mago
 BackUp=0
-Speed=370
 
 ############################################
 
@@ -7772,7 +7171,6 @@ Obj3=37-400-100   ' Pocion Azul
 Obj4=660-1-100    ' Baculo Engarzado
 Obj5=662-1-100    ' Sombrero de Mago
 BackUp=0
-Speed=370
 
 ############################################
 
@@ -7808,7 +7206,6 @@ Obj3=37-400-100   ' Pocion Azul
 Obj4=1050-1-100   ' Flauta Elfica
 Obj5=1004-1-100   ' Casco de Tigre
 BackUp=0
-Speed=370
 
 ############################################
 
@@ -7844,7 +7241,6 @@ Obj3=37-400-100   ' Pocion Azul
 Obj4=1050-1-100   ' Flauta Elfica
 Obj5=1004-1-100   ' Casco de Tigre
 BackUp=0
-Speed=370
 
 ############################################
 
@@ -7882,7 +7278,6 @@ Obj6=128-1-100    ' Escudo de Hierro
 Obj7=36-20-100    ' Pocion Amarilla
 Obj8=39-20-100    ' Pocion Verde
 BackUp=0
-Speed=370
 
 ############################################
  
@@ -7920,7 +7315,6 @@ Obj6=128-1-100    ' Escudo de Hierro
 Obj7=36-20-100    ' Pocion Amarilla
 Obj8=39-20-100    ' Pocion Verde
 BackUp=0
-Speed=370
 
 ############################################
 
@@ -7956,7 +7350,6 @@ Obj4=1010-1-100   ' Sombrero Pirata
 Obj5=36-20-100    ' Pocion Amarilla
 Obj6=39-20-100    ' Pocion Verde
 BackUp=0
-Speed=370
 
 ############################################
 
@@ -7992,7 +7385,6 @@ Obj4=1010-1-100   ' Sombrero Pirata
 Obj5=36-20-100    ' Pocion Amarilla
 Obj6=39-20-100    ' Pocion Verde
 BackUp=0
-Speed=370
 
 ############################################
 
@@ -8029,7 +7421,6 @@ Obj6=36-30-100   ' Pocion Amarilla
 Obj7=39-30-100   ' Pocion Verde
 Obj8=38-300-100  ' Pocion Roja
 BackUp=0
-Speed=370
 
 ############################################
 
@@ -8066,7 +7457,6 @@ Obj6=36-30-100   ' Pocion Amarilla
 Obj7=39-30-100   ' Pocion Verde
 Obj8=38-300-100  ' Pocion Roja
 BackUp=0
-Speed=370
 
 ############################################
 
@@ -8102,7 +7492,6 @@ Obj5=128-1-100   ' Escudo de Hierro
 Obj6=37-450-100  ' Pocion Azul
 Obj7=38-300-100  ' Pocion Roja
 BackUp=0
-Speed=370
 
 ############################################
 
@@ -8138,7 +7527,6 @@ Obj5=128-1-100   ' Escudo de Hierro
 Obj6=37-450-100  ' Pocion Azul
 Obj7=38-300-100  ' Pocion Roja
 BackUp=0
-Speed=370
 
 ############################################
 
@@ -8175,7 +7563,6 @@ Obj6=697-1-100   ' Anillo magico
 Obj7=37-450-100  ' Pocion Azul
 Obj8=38-300-100  ' Pocion Roja
 BackUp=0
-Speed=370
 
 ############################################
 
@@ -8212,7 +7599,6 @@ Obj6=697-1-100   ' Anillo magico
 Obj7=37-450-100  ' Pocion Azul
 Obj8=38-300-100  ' Pocion Roja
 BackUp=0
-Speed=370
 
 ############################################
 
@@ -8249,7 +7635,6 @@ Obj6=873-1-100   ' Guantes de hurto
 Obj7=37-450-100  ' Pocion Azul
 Obj8=38-300-100  ' Pocion Roja
 BackUp=0
-Speed=370
 
 ############################################
 
@@ -8286,7 +7671,6 @@ Obj6=873-1-100   ' Guantes de hurto
 Obj7=37-450-100  ' Pocion Azul
 Obj8=38-300-100  ' Pocion Roja
 BackUp=0
-Speed=370
 
 ############################################
 
@@ -8321,7 +7705,6 @@ Obj1=12-10000-100 ' Oro
 Obj2=873-1-100    ' Guantes de hurto
 Obj3=132-1-100    ' Casco de Hierro
 BackUp=0
-Speed=370
 
 ############################################
 
@@ -8356,7 +7739,6 @@ Obj1=12-10000-100 ' Oro
 Obj2=873-1-100    ' Guantes de hurto
 Obj3=132-1-100    ' Casco de Hierro
 BackUp=0
-Speed=370
 
 ##############################################
 #############RECURSOS NATURALES###############
@@ -8391,7 +7773,6 @@ BackUp=0
 Recurso=17-1
 NROITEMS=1
 Obj1=58-50-100 'Madera
-Speed=370
 
 [NPC1301]
 Name=Arbol
@@ -8422,7 +7803,6 @@ BackUp=0
 Recurso=17-1
 NROITEMS=1
 Obj1=58-50-100 'Madera
-Speed=370
 
 [NPC1302]
 Name=Arbol
@@ -8453,7 +7833,6 @@ BackUp=0
 Recurso=17-1
 NROITEMS=1
 Obj1=58-50-100 'Madera
-Speed=370
 
 [NPC1303]
 Name=Arbol
@@ -8484,7 +7863,6 @@ BackUp=0
 Recurso=17-1
 NROITEMS=1
 Obj1=58-50-100 'Madera
-Speed=370
 
 [NPC1304]
 Name=Arbol
@@ -8515,7 +7893,6 @@ BackUp=0
 Recurso=17-1
 NROITEMS=1
 Obj1=58-50-100 'Madera
-Speed=370
 
 [NPC1305]
 Name=Arbol
@@ -8546,7 +7923,6 @@ BackUp=0
 Recurso=17-1
 NROITEMS=1
 Obj1=58-50-100 'Madera
-Speed=370
 
 [NPC1306]
 Name=Arbol
@@ -8577,7 +7953,6 @@ BackUp=0
 Recurso=17-1
 NROITEMS=1
 Obj1=58-50-100 'Madera
-Speed=370
 
 [NPC1307]
 Name=Arbol Mágico
@@ -8609,7 +7984,6 @@ Recurso=17-1
 NROITEMS=1
 Obj1=58-30-50 'Madera
 Obj2=1005-30-100
-Speed=370
 
 [NPC1308]
 Name=Hongo
@@ -8640,7 +8014,6 @@ BackUp=0
 Recurso=17-1
 NROITEMS=1
 Obj1=1307-2-100 'Hongo
-Speed=370
 
 [NPC1309]
 Name=Hongo
@@ -8671,7 +8044,6 @@ BackUp=0
 Recurso=17-1
 NROITEMS=1
 Obj1=1307-2-100 'Hongo
-Speed=370
 
 [NPC1310]
 Name=Hongo
@@ -8702,7 +8074,6 @@ BackUp=0
 Recurso=17-1
 NROITEMS=1
 Obj1=1307-2-100 'Hongo
-Speed=370
 
 [NPC1311]
 Name=Yacimiento de Duralumin
@@ -8733,7 +8104,6 @@ BackUp=0
 Recurso=19-2
 NROITEMS=1
 Obj1=1309-1-90 'Cristal de Duralunin
-Speed=370
 
 [NPC1312]
 Name=Yacimiento de Duralumin Grande
@@ -8764,4 +8134,3 @@ BackUp=0
 Recurso=19-2
 NROITEMS=1
 Obj1=1309-6-100 'Cristal de Duralunin
-Speed=370

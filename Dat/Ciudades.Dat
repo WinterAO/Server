@@ -34,11 +34,6 @@ Y=766
 MAPA=1
 
 [IslaNew]
-X=927
-Y=125
-MAPA=1
-
-[Battle]
-X=500
-Y=500
+X=1047
+Y=73
 MAPA=1

@@ -288,7 +288,7 @@ Function Numeric(ByVal cad As String) As Boolean
 
 End Function
 
-Function NombrePermitido(ByVal nombre As String) As Boolean
+Function NombrePermitido(ByVal Nombre As String) As Boolean
     '***************************************************
     'Author: Unknown
     'Last Modification: -
@@ -299,7 +299,7 @@ Function NombrePermitido(ByVal nombre As String) As Boolean
 
     For i = 1 To UBound(ForbidenNames)
 
-        If InStr(nombre, ForbidenNames(i)) Then
+        If InStr(Nombre, ForbidenNames(i)) Then
             NombrePermitido = False
             Exit Function
 
@@ -423,12 +423,7 @@ Sub ConnectNewUser(ByVal UserIndex As Integer, _
         .clase = UserClase
         .Raza = UserRaza
         .Genero = UserSexo
-        
-        If Not Battlegrounds Then
-            .Hogar = eCiudad.cRamx
-        Else
-            .Hogar = eCiudad.cbattle
-        End If
+        .Hogar = eCiudad.cRamx
         
         For i = 0 To 1
             .Profesion(i).Profesion = 0
@@ -447,8 +442,9 @@ Sub ConnectNewUser(ByVal UserIndex As Integer, _
         '???????????????? INVENTARIO
         Call AddItemsToNewUser(UserIndex, UserClase, UserRaza)
 
-        If EstadisticasInicialesUsarConfiguracionPersonalizada Or Battlegrounds Then _
+        If EstadisticasInicialesUsarConfiguracionPersonalizada Then
             Call SetAttributesCustomToNewUser(UserIndex)
+        End If
 
         Call DarCuerpo(UserIndex)
         .Char.Heading = eHeading.SOUTH
@@ -456,11 +452,8 @@ Sub ConnectNewUser(ByVal UserIndex As Integer, _
     
         .OrigChar = .Char
         
-        If Not Battlegrounds Then
-            .Pos = IslaNew
-        Else
-            .Pos = Battleground
-        End If
+        'Comenzara en la isla Newbie
+        .Pos = IslaNew
             
         'De primeras podra hablar por global
         .flags.Global = 1
@@ -591,15 +584,10 @@ Private Sub SetAttributesToNewUser(ByVal UserIndex As Integer, ByVal UserClase A
         .Stats.MinHIT = 1
     
         .Stats.Gld = 0
-        .Stats.ELO = 500
     
         .Stats.Exp = 0
         .Stats.ELV = 1
         .Stats.ELU = 300
-        
-        .Stats.ExpPVP = 0
-        .Stats.ELVPVP = 1
-        .Stats.ELUPVP = 300
     End With
 
 End Sub
@@ -720,7 +708,7 @@ Private Sub AddItemsToNewUser(ByVal UserIndex As Integer, ByVal UserClase As eCl
 
         Dim i As Long
         For i = 1 To MAXAMIGOS
-            .Amigos(i).nombre = vbNullString
+            .Amigos(i).Nombre = vbNullString
             .Amigos(i).Ignorado = 0
             .Amigos(i).index = 0
         Next i
@@ -1193,8 +1181,6 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
             End If
         
         End If
-        
-        Call WriteBattlegrounds(UserIndex, Battlegrounds)
     
         'Tratamos de evitar en lo posible el "Telefrag". Solo 1 intento de loguear en pos adjacentes.
         'Codigo por Pablo (ToxicWaste) y revisado por Nacho (Integer), corregido para que realmetne ande y no tire el server por Juan Martin Sotuyo Dodero (Maraxus)
@@ -1318,7 +1304,7 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
             Call WriteMultiMessage(UserIndex, eMessages.SafeModeOn)
 
         End If
-        
+    
         'Info
         Call WriteUserIndexInServer(UserIndex) 'Enviamos el User index
         Call WriteChangeMap(UserIndex, .Pos.Map, MapZonas(.Pos.Map, UserZonaId(UserIndex)).MapVersion) 'Carga el mapa
@@ -1354,7 +1340,6 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
         Call DoTileEvents(UserIndex, .Pos.Map, .Pos.X, .Pos.Y)
     
         Call CheckUserLevel(UserIndex)
-        Call CheckUserLevelPVP(UserIndex)
         Call WriteUpdateUserStats(UserIndex)
     
         Call WriteUpdateHungerAndThirst(UserIndex)
@@ -1836,10 +1821,6 @@ Sub ResetUserFlags(ByVal UserIndex As Integer)
         .Instruyendo = 0
         .Trabajando = 0
         .Velocidad = 0
-        .ArenaRinkel = False
-        .EstaDueleandoSet = False
-        .EstaDuelosClasicos = False
-        .EsperandoDueloSet = False
 
         Call ResetCasteo(UserIndex)
         
@@ -2240,7 +2221,7 @@ Public Sub ResetUserExtras(ByVal UserIndex As Integer)
   Dim i As Integer
   For i = 1 To MAXAMIGOS
 
-  UserList(UserIndex).Amigos(i).nombre = vbNullString
+  UserList(UserIndex).Amigos(i).Nombre = vbNullString
 
   UserList(UserIndex).Amigos(i).Ignorado = 0
 

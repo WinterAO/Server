@@ -75,8 +75,6 @@ Public Const FXSANGRE = 14
 
 Public Const FX_PASA_NIVEL = 51
 
-Public Const FX_PASA_NIVELPVP = 45
-
 Public Const MAXAMIGOS As Byte = 50   'Cantidad Maxima de Amigos
 
 Public Const MINLVLGLOBAL As Byte = 5 'Nivel minimo para poder usar el chat global.
@@ -204,7 +202,6 @@ Public Enum eCiudad
     cBelleuve
     cIslaZharkel
     cHaverwood
-    cbattle
 
 End Enum
 
@@ -770,7 +767,6 @@ Public Enum eOBJType
     otYacimientoPez = 38
     otPiedraHogar = 39
     otInstruye = 40
-    otPaseVIP = 41
     otCualquiera = 1000
 
 End Enum
@@ -833,7 +829,7 @@ End Type
 
 Public Type tHechizo
 
-    nombre As String
+    Nombre As String
     Desc As String
     PalabrasMagicas As String
     
@@ -984,7 +980,7 @@ End Type
 
 Public Type FXdata
 
-    nombre As String
+    Nombre As String
     GrhIndex As Long
     Delay As Integer
 
@@ -1199,8 +1195,6 @@ Public Type ObjData
     Efecto As tEfectos
     
     Speed As Double
-    
-    TiempoVIP As Integer
 End Type
 
 Public Type obj
@@ -1245,7 +1239,7 @@ End Type
 
 Public Type tQuest
 
-    nombre As String
+    Nombre As String
     Desc As String
     RequiredLevel As Byte
     RequiredQuest As Integer
@@ -1425,11 +1419,6 @@ Public Type UserStats
     Exp As Double
     ELV As Byte
     ELU As Long
-    
-    ExpPVP As Double
-    ELVPVP As Byte
-    ELUPVP As Long
-    
     UserSkills(1 To NUMSKILLS) As Byte
     UserAtributos(1 To NUMATRIBUTOS) As Byte
     UserAtributosBackUP(1 To NUMATRIBUTOS) As Byte
@@ -1579,17 +1568,6 @@ Public Type UserFlags
     
     Velocidad As Double
     
-    EsperandoDueloSet As Boolean
-    EstaDueleandoSet As Boolean
-    OponenteSet As Integer
-    PerdioRondaSet As Byte
-    TimeDueloSet As Byte
-    GanoDueloSet As Boolean
-    DuelosClasicos As Integer
-    EstaDuelosClasicos As Boolean
-    
-    ArenaRinkel As Boolean
-    
 End Type
 
 Public Type UserCounters
@@ -1705,8 +1683,6 @@ Public Type AccountUser
     Gemas As Long
     macAddress As String
     hdSerial As Long
-    VIP As Date
-    esVIP As Boolean
     
     NumPjs As Byte
     AccountPJ(1 To MAXPJACCOUNTS) As AccountCharacters
@@ -1723,9 +1699,9 @@ End Type
 
 'Info de los Amigos
 Public Type Amigos
-    nombre As String
-    Ignorado As Byte
-    index As Integer
+  Nombre As String
+  Ignorado As Byte
+index As Integer
 
 End Type
 
@@ -1913,8 +1889,6 @@ Public Type NPCFlags
     Invocacion As Byte
     
     Recurso As tProfesion
-    
-    ArenasRinkel As Byte 'Identifica si un NPC pertenece al evento de arenas de Rinkel
     
 End Type
 
@@ -2167,8 +2141,6 @@ Public PuedeCrearPersonajes               As Integer
 
 Public ServerSoloGMs                      As Integer
 
-Public Battlegrounds                      As Boolean
-
 Public NumRecords                         As Integer
 
 Public EnPausa                            As Boolean
@@ -2260,8 +2232,6 @@ Public Prision         As WorldPos
 Public Libertad        As WorldPos
 
 Public IslaNew         As WorldPos
-
-Public Battleground    As WorldPos
 
 Public Ayuda           As cCola
 
@@ -2625,6 +2595,8 @@ Public ApiPath As String
 'Esta variable es para poder luego cerrar el programa cuando cerramos el cliente.
 Public ApiNodeJsTaskId As Double
 
+Public NombreServidor As String
+
 Public Security As New clsSecurity
 
 Public User_Database As New clsDataBase
@@ -2647,22 +2619,15 @@ Public BanUsersChatGlobal As Collection
 Public GlobalChatActive As Boolean
 
 'DROP GLOBALES
+
 Public Type GlobalObj
+
     ObjIndex As Integer
     MinAmount As Integer
     MaxAmount As Integer
     Prob As Byte
+        
 End Type
 
 Public GlobalDROPObject() As GlobalObj
 Public NUMGLOBALDROPS As Integer
-
-'ITEMS DE SHOP
-Public Type ShopObj
-    ObjIndex As Integer
-    Amount As Integer
-    Valor As Long
-End Type
-
-Public ShopObject() As ShopObj
-Public NUMSHOPS As Integer

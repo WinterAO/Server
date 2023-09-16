@@ -44,7 +44,7 @@ Option Explicit
 
 Private Const ARCHIVOMAILS = "\logs\votaron.dat"
 
-Private Const ARCHIVOCONFIG = "consultas.dat"
+Private Const ARCHIVOCONFIG = "\dat\consultas.dat"
 
 Private pEncuestaActualNum As Integer
 
@@ -80,24 +80,24 @@ Public Sub LoadData()
 
     Dim i            As Integer
 
-    pEncuestaActualNum = val(GetVar(DatPath & ARCHIVOCONFIG, "INIT", "ConsultaActual"))
-    pEncuestaActualTex = GetVar(DatPath & ARCHIVOCONFIG, "INIT", "ConsultaActualTexto")
-    pNivelRequerido = GetVar(DatPath & ARCHIVOCONFIG, "INIT", "NivelRequerido")
+    pEncuestaActualNum = val(GetVar(App.Path & ARCHIVOCONFIG, "INIT", "ConsultaActual"))
+    pEncuestaActualTex = GetVar(App.Path & ARCHIVOCONFIG, "INIT", "ConsultaActualTexto")
+    pNivelRequerido = GetVar(App.Path & ARCHIVOCONFIG, "INIT", "NivelRequerido")
 
     If pEncuestaActualNum > 0 Then
         'cargo todas las opciones
-        CantOpciones = val(GetVar(DatPath & ARCHIVOCONFIG, "ENCUESTA" & pEncuestaActualNum, "CANTOPCIONES"))
+        CantOpciones = val(GetVar(App.Path & ARCHIVOCONFIG, "ENCUESTA" & pEncuestaActualNum, "CANTOPCIONES"))
         ReDim pOpciones(1 To CantOpciones) As Integer
 
         For i = 1 To CantOpciones
-            pOpciones(i) = val(GetVar(DatPath & ARCHIVOCONFIG, "ENCUESTA" & pEncuestaActualNum, "OPCION" & i))
+            pOpciones(i) = val(GetVar(App.Path & ARCHIVOCONFIG, "ENCUESTA" & pEncuestaActualNum, "OPCION" & i))
         Next i
 
     End If
 
 End Sub
 
-Public Function doVotar(ByVal UserIndex As Integer, ByVal Opcion As Integer) As String
+Public Function doVotar(ByVal Userindex As Integer, ByVal opcion As Integer) As String
 
     On Error GoTo errorh
 
@@ -114,21 +114,21 @@ Public Function doVotar(ByVal UserIndex As Integer, ByVal Opcion As Integer) As 
 
     End If
 
-    If (UserList(UserIndex).Stats.ELV >= pNivelRequerido) Then
-        If (OpcionValida(Opcion)) Then
-            YaVoto = PersonajeCantidadVotos(UserList(UserIndex).Name) >= pEncuestaActualNum
+    If (UserList(Userindex).Stats.ELV >= pNivelRequerido) Then
+        If (OpcionValida(opcion)) Then
+            YaVoto = PersonajeCantidadVotos(UserList(Userindex).Name) >= pEncuestaActualNum
 
             If Not YaVoto Then
-                If Not MailYaVoto(UserList(UserIndex).Email) Then
+                If Not MailYaVoto(UserList(Userindex).Email) Then
                     'pj apto para votar
-                    sufragio = CLng(val(GetVar(DatPath & ARCHIVOCONFIG, "RESULTADOS" & pEncuestaActualNum, "V" & Opcion)))
+                    sufragio = CLng(val(GetVar(App.Path & ARCHIVOCONFIG, "RESULTADOS" & pEncuestaActualNum, "V" & opcion)))
                     sufragio = sufragio + 1
-                    Call WriteVar(DatPath & ARCHIVOCONFIG, "RESULTADOS" & pEncuestaActualNum, "V" & Opcion, Str(sufragio))
-                    doVotar = "Tu voto ha sido computado. Opcion: " & Opcion
-                    Call MarcarPjComoQueYaVoto(UserIndex, pEncuestaActualNum)
-                    Call MarcarMailComoQueYaVoto(UserList(UserIndex).Email)
+                    Call WriteVar(App.Path & ARCHIVOCONFIG, "RESULTADOS" & pEncuestaActualNum, "V" & opcion, str(sufragio))
+                    doVotar = "Tu voto ha sido computado. Opcion: " & opcion
+                    Call MarcarPjComoQueYaVoto(Userindex, pEncuestaActualNum)
+                    Call MarcarMailComoQueYaVoto(UserList(Userindex).Email)
                 Else
-                    Call MarcarPjComoQueYaVoto(UserIndex, pEncuestaActualNum)
+                    Call MarcarPjComoQueYaVoto(Userindex, pEncuestaActualNum)
                     doVotar = "Este email ya voto en la consulta: " & pEncuestaActualTex
 
                 End If
@@ -154,26 +154,26 @@ errorh:
 
 End Function
 
-Public Function SendInfoEncuesta(ByVal UserIndex As Integer) As String
+Public Function SendInfoEncuesta(ByVal Userindex As Integer) As String
 
     Dim i As Integer
 
-    Call WriteConsoleMsg(UserIndex, "CONSULTA POPULAR NUMERO " & pEncuestaActualNum, FontTypeNames.FONTTYPE_GUILD)
-    Call WriteConsoleMsg(UserIndex, pEncuestaActualTex, FontTypeNames.FONTTYPE_GUILD)
-    Call WriteConsoleMsg(UserIndex, " Opciones de voto: ", FontTypeNames.FONTTYPE_GUILDMSG)
+    Call WriteConsoleMsg(Userindex, "CONSULTA POPULAR NUMERO " & pEncuestaActualNum, FontTypeNames.FONTTYPE_GUILD)
+    Call WriteConsoleMsg(Userindex, pEncuestaActualTex, FontTypeNames.FONTTYPE_GUILD)
+    Call WriteConsoleMsg(Userindex, " Opciones de voto: ", FontTypeNames.FONTTYPE_GUILDMSG)
 
     For i = 1 To UBound(pOpciones)
-        Call WriteConsoleMsg(UserIndex, "(Opcion " & i & "): " & GetVar(DatPath & ARCHIVOCONFIG, "ENCUESTA" & pEncuestaActualNum, "OPCION" & i), FontTypeNames.FONTTYPE_GUILDMSG)
+        Call WriteConsoleMsg(Userindex, "(Opcion " & i & "): " & GetVar(App.Path & ARCHIVOCONFIG, "ENCUESTA" & pEncuestaActualNum, "OPCION" & i), FontTypeNames.FONTTYPE_GUILDMSG)
     Next i
 
-    Call WriteConsoleMsg(UserIndex, " Para votar una opcion, escribe /encuesta NUMERODEOPCION, por ejemplo para votar la opcion 1, escribe /encuesta 1. Tu voto no podra ser cambiado.", FontTypeNames.FONTTYPE_VENENO)
+    Call WriteConsoleMsg(Userindex, " Para votar una opcion, escribe /encuesta NUMERODEOPCION, por ejemplo para votar la opcion 1, escribe /encuesta 1. Tu voto no podra ser cambiado.", FontTypeNames.FONTTYPE_VENENO)
 
 End Function
 
-Private Sub MarcarPjComoQueYaVoto(ByVal UserIndex As Integer, _
+Private Sub MarcarPjComoQueYaVoto(ByVal Userindex As Integer, _
                                   ByVal NumeroEncuesta As Integer)
 
-    Call MarcarPjComoQueYaVotoDatabase(UserIndex, NumeroEncuesta)
+    Call MarcarPjComoQueYaVotoDatabase(Userindex, NumeroEncuesta)
 
 End Sub
 
@@ -225,8 +225,8 @@ Private Sub MarcarMailComoQueYaVoto(ByVal Email As String)
 
 End Sub
 
-Private Function OpcionValida(ByVal Opcion As Integer) As Boolean
-    OpcionValida = Opcion > 0 And Opcion <= UBound(pOpciones)
+Private Function OpcionValida(ByVal opcion As Integer) As Boolean
+    OpcionValida = opcion > 0 And opcion <= UBound(pOpciones)
 
 End Function
 

