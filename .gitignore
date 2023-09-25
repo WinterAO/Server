@@ -1,0 +1,17 @@
+Account/*
+Logs/*
+Charfile/*
+Logs/*
+WorldBackup/*
+Guilds/*
+Codigo/*.log
+Logs/Reportes/*
+Logs/Anticheat/*
+R
+.DS_Store
+*.vbw
+*.csi
+*.OBJ
+bkNpcs.dat
+server.exe
+Guilds/guildsinfo.inf

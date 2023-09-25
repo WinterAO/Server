@@ -1,0 +1,83 @@
+[INIT]
+NumObjs=16
+
+[OBJ1] 'Pase VIP 7 dias
+Index=1334
+Cant=1
+Valor=350
+
+[OBJ2] 'Pase VIP 15 dias
+Index=1335
+Cant=1
+Valor=600
+
+[OBJ3] 'Pase VIP 30 dias
+Index=1336
+Cant=1
+Valor=1000
+
+[OBJ4] 'Amuleto de ultratumba
+Index=1330
+Cant=1
+Valor=700
+
+[OBJ5] 'Mascara de Dali
+Index=46
+Cant=1
+Valor=400
+
+[OBJ6] 'Mascara de Guy Fawkes
+Index=47
+Cant=1
+Valor=300
+
+[OBJ7] 'Mascara de Pikachu
+Index=48
+Cant=1
+Valor=300
+
+[OBJ8] 'Mascara de Charmander
+Index=49
+Cant=1
+Valor=300
+
+[OBJ9] 'Mascara de Bulbasur
+Index=50
+Cant=1
+Valor=300
+
+[OBJ10] 'Mascara de Squirtle
+Index=147
+Cant=1
+Valor=300
+
+[OBJ11] 'Mascara de Tenebrosa
+Index=148
+Cant=1
+Valor=300
+
+[OBJ12] 'Mascara de Calabaza
+Index=149
+Cant=1
+Valor=300
+
+[OBJ13] 'Gafas
+Index=150
+Cant=1
+Valor=300
+
+[OBJ14] 'Gafas Amarilla
+Index=151
+Cant=1
+Valor=300
+
+[OBJ15] 'Gafas Verde
+Index=152
+Cant=1
+Valor=300
+
+[OBJ16] 'Gafas Violeta
+Index=153
+Cant=1
+Valor=300
+
