@@ -1122,9 +1122,11 @@ Sub MoveUserChar(ByVal UserIndex As Integer, ByVal nHeading As eHeading)
             Exit Sub
         End If
             
+        Debug.Print UserList(UserIndex).Name & " Se mueve. Mapa: " & UserList(UserIndex).Pos.Map & " ZonaID: " & UserZonaId(UserIndex) & " Nº PJ en la zona: " & MapZonas(UserList(UserIndex).Pos.Map, UserZonaId(UserIndex)).NumUsers
+            
         'si no estoy solo en la zona...
         If MapZonas(UserList(UserIndex).Pos.Map, UserZonaId(UserIndex)).NumUsers > 1 Then
-               
+            
             CasperIndex = MapData(UserList(UserIndex).Pos.Map, nPos.X, nPos.Y).UserIndex
 
             'Si hay un usuario, y paso la validacion, entonces es un casper
@@ -2198,23 +2200,17 @@ Sub WarpUserChar(ByVal UserIndex As Integer, _
     Dim OldMap  As Integer
     
     Dim OldZona As Integer
-
-    Dim OldX    As Integer
-
-    Dim OldY    As Integer
     
     With UserList(UserIndex)
         'Quitar el dialogo
         Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageRemoveCharDialog(.Char.CharIndex))
         
         OldMap = .Pos.Map
-        OldX = .Pos.X
-        OldY = .Pos.Y
         OldZona = UserZonaId(UserIndex)
 
         Call EraseUserChar(UserIndex, .flags.AdminInvisible = 1)
         
-        If OldMap <> Map Or OldZona <> UserZonaId(UserIndex) Then
+        If OldMap <> Map Or OldZona <> MapData(Map, X, Y).ZonaIndex Then
             Call WriteChangeMap(UserIndex, Map, MapZonas(.Pos.Map, UserZonaId(UserIndex)).MapVersion)
             
             If .flags.Privilegios And PlayerType.User Then 'El chequeo de invi/ocultar solo afecta a Usuarios (C4b3z0n)
@@ -2254,15 +2250,14 @@ Sub WarpUserChar(ByVal UserIndex As Integer, _
 
             End If
 
-            'Update new Map Users
-            MapZonas(Map, UserZonaId(UserIndex)).NumUsers = MapZonas(Map, UserZonaId(UserIndex)).NumUsers + 1
-            
             'Update old Map Users
             MapZonas(OldMap, OldZona).NumUsers = MapZonas(OldMap, OldZona).NumUsers - 1
-
-            If MapZonas(OldMap, OldZona).NumUsers < 0 Then
+            
+            'Update new Map Users
+            MapZonas(Map, MapData(Map, X, Y).ZonaIndex).NumUsers = MapZonas(Map, MapData(Map, X, Y).ZonaIndex).NumUsers + 1
+            
+            If MapZonas(OldMap, OldZona).NumUsers < 0 Then _
                 MapZonas(OldMap, OldZona).NumUsers = 0
-            End If
             
             Call WriteRemoveAllDialogs(UserIndex)
 
@@ -2312,6 +2307,8 @@ Sub WarpUserChar(ByVal UserIndex As Integer, _
             End If
 
         End If
+        
+        Debug.Print UserList(UserIndex).Name & " Se mueve. Mapa: " & UserList(UserIndex).Pos.Map & " ZonaID: " & UserZonaId(UserIndex) & " Nº PJ en la zona: " & MapZonas(UserList(UserIndex).Pos.Map, UserZonaId(UserIndex)).NumUsers
       
     End With
 

@@ -19928,14 +19928,6 @@ Public Sub WriteSendSkills(ByVal UserIndex As Integer)
         
         For i = 1 To NUMSKILLS
             Call .outgoingData.WriteByte(UserList(UserIndex).Stats.UserSkills(i))
-
-            If .Stats.UserSkills(i) < MAXSKILLPOINTS Then
-                Call .outgoingData.WriteByte(Int(.Stats.ExpSkills(i) * 100 / .Stats.EluSkills(i)))
-            Else
-                Call .outgoingData.WriteByte(0)
-
-            End If
-
         Next i
 
     End With

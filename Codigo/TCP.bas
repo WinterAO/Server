@@ -1395,6 +1395,7 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
 
         End If
     
+        'Sumamos el usuario al mapa y a la zona donde se encuentra
         MapZonas(.Pos.Map, UserZonaId(UserIndex)).NumUsers = MapZonas(.Pos.Map, UserZonaId(UserIndex)).NumUsers + 1
     
         If NumUsers > RecordUsuariosOnline Then
@@ -2126,6 +2127,7 @@ Sub CloseUser(ByVal UserIndex As Integer)
     
         'Update Map Users
         If Map > 0 Then
+            'Restamos el usuario al mapa y la zona
             MapZonas(Map, UserZonaId(UserIndex)).NumUsers = MapZonas(Map, UserZonaId(UserIndex)).NumUsers - 1
     
             If MapZonas(Map, UserZonaId(UserIndex)).NumUsers < 0 Then
