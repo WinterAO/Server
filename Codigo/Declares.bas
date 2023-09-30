@@ -307,6 +307,7 @@ End Enum
 ' @param ZONASEGURA no se puede robar o pelear desde este trigger
 ' @param ANTIPIQUETE
 ' @param ZONAPELEA al pelear en este trigger no se caen las cosas y no cambia el estado de ciuda o crimi
+' @param INVOCACIONES para invocar una criatura
 '
 Public Enum eTrigger
 
@@ -317,7 +318,7 @@ Public Enum eTrigger
     ZONASEGURA = 4
     ANTIPIQUETE = 5
     ZONAPELEA = 6
-    Invocaciones = 7
+    INVOCACIONES = 7
 
 End Enum
 

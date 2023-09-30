@@ -172,8 +172,6 @@ Private Enum ServerPacketID
     InitCraftman
     EnviarListDeAmigos
     proyectil
-    SeeInProcess
-    ShowProcess
     CharParticle
     IniciarSubastaConsulta
     ConfirmarInstruccion
@@ -327,8 +325,6 @@ Private Enum ClientPacketID
     OnAmigos
     MsgAmigos
     ChatGlobal
-    LookProcess
-    SendProcessList
     AccionInventario
     invocar                     '/INVOCAR
     IniciarSubasta 'Iniciamos una subasta
@@ -916,12 +912,6 @@ Public Function HandleIncomingData(ByVal UserIndex As Integer) As Boolean
             
         Case ClientPacketID.ChatGlobal
             Call HandleChatGlobal(UserIndex)
-            
-       Case ClientPacketID.LookProcess
-            Call HandleLookProcess(UserIndex)
-            
-        Case ClientPacketID.SendProcessList
-            Call HandleSendProcessList(UserIndex)
             
         Case ClientPacketID.AccionInventario
             Call HandleAccionInventario(UserIndex)
@@ -19928,14 +19918,6 @@ Public Sub WriteSendSkills(ByVal UserIndex As Integer)
         
         For i = 1 To NUMSKILLS
             Call .outgoingData.WriteByte(UserList(UserIndex).Stats.UserSkills(i))
-
-            If .Stats.UserSkills(i) < MAXSKILLPOINTS Then
-                Call .outgoingData.WriteByte(Int(.Stats.ExpSkills(i) * 100 / .Stats.EluSkills(i)))
-            Else
-                Call .outgoingData.WriteByte(0)
-
-            End If
-
         Next i
 
     End With
@@ -23691,112 +23673,6 @@ On Error GoTo 0
     Set Buffer = Nothing
   
     If Error <> 0 Then Err.Raise Error
-End Sub
-
-Public Sub WriteSeeInProcess(ByVal UserIndex As Integer)
-'***************************************************
-'Author:Franco Emmanuel Giménez (Franeg95)
-'Last Modification: 18/10/10
-'***************************************************
-On Error GoTo errHandler
-    Call UserList(UserIndex).outgoingData.WriteByte(ServerPacketID.SeeInProcess)
- 
-Exit Sub
- 
-errHandler:
-    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(UserIndex)
-        Resume
-    End If
-End Sub
-     
-Private Sub HandleSendProcessList(ByVal UserIndex As Integer)
-'***************************************************
-'Author: Franco Emmanuel Gimenez(Franeg95)
-'Last Modification: 18/10/10
-'***************************************************
- 
-    If UserList(UserIndex).incomingData.Length < 4 Then
-       Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
-       Exit Sub
-    End If
-
-On Error GoTo errHandler
-    With UserList(UserIndex)
-        
-        Dim Buffer As New clsByteQueue
-        Call Buffer.CopyBuffer(.incomingData)
- 
-        Call Buffer.ReadByte
-        Dim Captions As String, Process As String
-        
-        Captions = Buffer.ReadASCIIString()
-        Process = Buffer.ReadASCIIString()
-        
-        If .flags.GMRequested > 0 Then
-            If UserList(.flags.GMRequested).ConnIDValida Then
-                Call WriteShowProcess(.flags.GMRequested, Captions, Process)
-                .flags.GMRequested = 0
-            End If
-        End If
-        
-        Call .incomingData.CopyBuffer(Buffer)
-    End With
-    
-errHandler:    Dim Error As Long:     Error = Err.Number: On Error GoTo 0:   Set Buffer = Nothing:    If Error <> 0 Then Err.Raise Error
-End Sub
-            
-Private Sub HandleLookProcess(ByVal UserIndex As Integer)
-'***************************************************
-'Author: Franco Emmanuel Gimenez(Franeg95)
-'Last Modification: 18/10/10
-'***************************************************
- 
-On Error GoTo errHandler
-    With UserList(UserIndex)
-        
-        Dim Buffer As New clsByteQueue
-        Call Buffer.CopyBuffer(.incomingData)
- 
-        Call Buffer.ReadByte
-        Dim data As String
-        Dim tIndex As Integer
-        
-        data = Buffer.ReadASCIIString()
-        tIndex = NameIndex(data)
-        
-        'Solo los GMs pueden ver los procesos a los usuarios
-        If EsGm(UserIndex) Then
-            If tIndex > 0 And Not EsAdmin(data) Then
-                UserList(tIndex).flags.GMRequested = UserIndex
-                Call WriteSeeInProcess(tIndex)
-            Else
-                Call WriteConsoleMsg(UserIndex, "Usuario offline.", FontTypeNames.FONTTYPE_INFO)
-            End If
-        End If
-        
-        Call .incomingData.CopyBuffer(Buffer)
-    End With
-    
-    Exit Sub
-    
-errHandler:
-    LogError ("Error en HandleLookProcess. Error: " & Err.Number & " - " & Err.description)
-End Sub
-
-Public Sub WriteShowProcess(ByVal gmIndex As Integer, ByVal strCaptions As String, ByVal strProcess As String)
-
-    On Error GoTo errHandler
-
-    With UserList(gmIndex).outgoingData
-        Call .WriteByte(ServerPacketID.ShowProcess)
-        Call .WriteASCIIString(strCaptions)
-        Call .WriteASCIIString(strProcess)
-    End With
-
-    Exit Sub
-errHandler:
-    If Err.Number = UserList(gmIndex).outgoingData.NotEnoughSpaceErrCode Then Call FlushBuffer(gmIndex): Resume
 End Sub
 
 Private Sub HandleAccionInventario(ByVal UserIndex As Integer)

@@ -183,6 +183,8 @@ Private Sub cmdDesconectar_Click(index As Integer)
 
     Dim UserIndex As Integer
     
+    If List1.ListIndex < 0 Then Exit Sub
+    
     UserIndex = List1.ItemData(List1.ListIndex)
     
     If UserIndex <= 0 Then
