@@ -41,7 +41,7 @@ Begin VB.Form frmMain
          Caption         =   "Stats de Slots"
          Height          =   375
          Index           =   1
-         Left            =   3960
+         Left            =   4050
          Style           =   1  'Graphical
          TabIndex        =   31
          Top             =   840
@@ -52,7 +52,7 @@ Begin VB.Form frmMain
          Caption         =   "Debug UserList"
          Height          =   375
          Index           =   0
-         Left            =   3960
+         Left            =   4050
          Style           =   1  'Graphical
          TabIndex        =   30
          Top             =   360
