@@ -1078,7 +1078,8 @@ Public Function PuedeAtravesarAgua(ByVal UserIndex As Integer) As Boolean
 
 End Function
 
-Sub MoveUserChar(ByVal UserIndex As Integer, ByVal nHeading As eHeading)
+Public Function MoveUserChar(ByVal UserIndex As Integer, _
+                             ByVal nHeading As eHeading) As Boolean
 
     '*************************************************
     'Author: Unknown
@@ -1090,6 +1091,8 @@ Sub MoveUserChar(ByVal UserIndex As Integer, ByVal nHeading As eHeading)
     '13/07/2009: ZaMa - Invisible admins aren't allowed to force dead characater to move
     '06/04/2020: FrankoH298 - Ahora no se puede entrar a las casas montado.
     '*************************************************
+    On Error GoTo MoveUserChar_Err
+    
     Dim nPos          As WorldPos
 
     Dim sailing       As Boolean
@@ -1110,24 +1113,25 @@ Sub MoveUserChar(ByVal UserIndex As Integer, ByVal nHeading As eHeading)
     OldMap = nPos.Map
     Call HeadtoPos(nHeading, nPos)
         
-    isAdminInvi = (UserList(UserIndex).flags.AdminInvisible = 1)
+    With UserList(UserIndex)
+        
+    isAdminInvi = (.flags.AdminInvisible = 1)
     
-    If MoveToLegalPos(UserList(UserIndex).Pos.Map, nPos.X, nPos.Y, sailing, Not sailing) Then
+    If MoveToLegalPos(.Pos.Map, nPos.X, nPos.Y, sailing, Not sailing) Then
 
         '¿Esta equitando e intentando entrar en una casa?
-        If UserList(UserIndex).flags.Equitando And (MapData(UserList(UserIndex).Pos.Map, nPos.X, nPos.Y).Trigger = eTrigger.CASA Or _
-            UserList(UserIndex).flags.Equitando And MapData(UserList(UserIndex).Pos.Map, nPos.X, nPos.Y).Trigger = eTrigger.BAJOTECHO) Then
+        If .flags.Equitando And (MapData(.Pos.Map, nPos.X, nPos.Y).Trigger = eTrigger.CASA Or _
+            .flags.Equitando And MapData(.Pos.Map, nPos.X, nPos.Y).Trigger = eTrigger.BAJOTECHO) Then
             
             Call WritePosUpdate(UserIndex)
-            Exit Sub
+            Exit Function
         End If
             
-        Debug.Print UserList(UserIndex).Name & " Se mueve. Mapa: " & UserList(UserIndex).Pos.Map & " ZonaID: " & UserZonaId(UserIndex) & " Nº PJ en la zona: " & MapZonas(UserList(UserIndex).Pos.Map, UserZonaId(UserIndex)).NumUsers
-            
         'si no estoy solo en la zona...
-        If MapZonas(UserList(UserIndex).Pos.Map, UserZonaId(UserIndex)).NumUsers > 1 Then
+        'If MapZonas(.Pos.Map, UserZonaId(UserIndex)).NumUsers > 1 Then
+        If MapInfo(.Pos.Map).NumUsers >= 1 Then
             
-            CasperIndex = MapData(UserList(UserIndex).Pos.Map, nPos.X, nPos.Y).UserIndex
+            CasperIndex = MapData(.Pos.Map, nPos.X, nPos.Y).UserIndex
 
             'Si hay un usuario, y paso la validacion, entonces es un casper
             If CasperIndex > 0 Then
@@ -1167,7 +1171,7 @@ Sub MoveUserChar(ByVal UserIndex As Integer, ByVal nHeading As eHeading)
             End If
             
             ' Si es un admin invisible, no se avisa a los demas clientes
-            If Not isAdminInvi Then Call SendData(SendTarget.ToPCAreaButIndex, UserIndex, PrepareMessageCharacterMove(UserList(UserIndex).Char.CharIndex, nPos.X, nPos.Y))
+            If Not isAdminInvi Then Call SendData(SendTarget.ToPCAreaButIndex, UserIndex, PrepareMessageCharacterMove(.Char.CharIndex, nPos.X, nPos.Y))
             
         End If
         
@@ -1216,11 +1220,20 @@ Sub MoveUserChar(ByVal UserIndex As Integer, ByVal nHeading As eHeading)
 
     End If
     
-    If UserList(UserIndex).Counters.Trabajando Then UserList(UserIndex).Counters.Trabajando = UserList(UserIndex).Counters.Trabajando - 1
+    If .Counters.Trabajando Then .Counters.Trabajando = .Counters.Trabajando - 1
 
-    If UserList(UserIndex).Counters.Ocultando Then UserList(UserIndex).Counters.Ocultando = UserList(UserIndex).Counters.Ocultando - 1
+    If .Counters.Ocultando Then .Counters.Ocultando = .Counters.Ocultando - 1
 
-End Sub
+    End With
+    
+    MoveUserChar = True
+    
+    Exit Function
+    
+MoveUserChar_Err:
+    'Call TraceError(Err.Number, Err.description + " UI:" + UserIndex, "UsUaRiOs.MoveUserChar", Erl)
+    
+End Function
 
 Public Function InvertHeading(ByVal nHeading As eHeading) As eHeading
 
@@ -2250,11 +2263,19 @@ Sub WarpUserChar(ByVal UserIndex As Integer, _
 
             End If
 
+            'Update new Map Users
+            MapInfo(Map).NumUsers = MapInfo(Map).NumUsers + 1
+            
             'Update old Map Users
+            MapInfo(OldMap).NumUsers = MapInfo(OldMap).NumUsers - 1
+
+            'Update old Zone Users
             MapZonas(OldMap, OldZona).NumUsers = MapZonas(OldMap, OldZona).NumUsers - 1
             
-            'Update new Map Users
+            'Update new Zone Users
             MapZonas(Map, MapData(Map, X, Y).ZonaIndex).NumUsers = MapZonas(Map, MapData(Map, X, Y).ZonaIndex).NumUsers + 1
+            
+            
             
             If MapZonas(OldMap, OldZona).NumUsers < 0 Then _
                 MapZonas(OldMap, OldZona).NumUsers = 0

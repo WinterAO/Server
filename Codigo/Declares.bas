@@ -2046,6 +2046,11 @@ Public Type MapBlock
 End Type
 
 'Info del mapa
+Type MapInfo
+    NumUsers As Integer
+End Type
+
+'Info de la zona
 Type tZonaInfo
 
     NumUsers As Integer
@@ -2194,6 +2199,8 @@ Public UserList()                         As User 'USUARIOS
 Public Npclist(1 To MAXNPCS)              As NPC 'NPCS
 
 Public MapData()                          As MapBlock
+
+Public MapInfo()                          As MapInfo
 
 Public MapZonas()                         As tZonaInfo
 
