@@ -18805,6 +18805,7 @@ Public Sub WriteAreaChanged(ByVal UserIndex As Integer)
         Call .WriteByte(ServerPacketID.AreaChanged)
         Call .WriteInteger(UserList(UserIndex).Pos.X)
         Call .WriteInteger(UserList(UserIndex).Pos.Y)
+        Call .WriteByte(UserList(UserIndex).Char.Heading)
 
     End With
 

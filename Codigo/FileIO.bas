@@ -1349,6 +1349,7 @@ Sub LoadMapData()
     frmCargando.pCargar.Value = 0
         
     ReDim MapData(1 To NumMaps, XMinMapSize To XMaxMapSize, YMinMapSize To YMaxMapSize) As MapBlock
+    ReDim MapInfo(1 To NumMaps) As MapInfo
     ReDim CantZonas(1 To NumMaps) As Integer
           
     For Map = 1 To NumMaps

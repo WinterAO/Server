@@ -1396,6 +1396,7 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
         End If
     
         'Sumamos el usuario al mapa y a la zona donde se encuentra
+        MapInfo(.Pos.Map).NumUsers = MapInfo(.Pos.Map).NumUsers + 1
         MapZonas(.Pos.Map, UserZonaId(UserIndex)).NumUsers = MapZonas(.Pos.Map, UserZonaId(UserIndex)).NumUsers + 1
     
         If NumUsers > RecordUsuariosOnline Then
@@ -2104,7 +2105,7 @@ Sub CloseUser(ByVal UserIndex As Integer)
         'End If
     
         If Map > 0 Then
-            If MapZonas(Map, UserZonaId(UserIndex)).NumUsers > 0 Then _
+            If MapInfo(Map).NumUsers > 0 Then _
                 Call SendData(SendTarget.ToPCAreaButIndex, UserIndex, PrepareMessageRemoveCharDialog(.Char.CharIndex))
 
         End If
@@ -2128,11 +2129,11 @@ Sub CloseUser(ByVal UserIndex As Integer)
         'Update Map Users
         If Map > 0 Then
             'Restamos el usuario al mapa y la zona
+            MapInfo(Map).NumUsers = MapInfo(Map).NumUsers - 1
+            If MapInfo(Map).NumUsers < 0 Then MapInfo(Map).NumUsers = 0
+            
             MapZonas(Map, UserZonaId(UserIndex)).NumUsers = MapZonas(Map, UserZonaId(UserIndex)).NumUsers - 1
-    
-            If MapZonas(Map, UserZonaId(UserIndex)).NumUsers < 0 Then
-                MapZonas(Map, UserZonaId(UserIndex)).NumUsers = 0
-            End If
+            If MapZonas(Map, UserZonaId(UserIndex)).NumUsers < 0 Then MapZonas(Map, UserZonaId(UserIndex)).NumUsers = 0
             
         End If
     

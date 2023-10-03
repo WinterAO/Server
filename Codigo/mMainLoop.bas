@@ -460,7 +460,7 @@ Public Sub PasarSegundo()
                  
                         If .Counters.Pena < 1 Then
                             .Counters.Pena = 0
-                            Call WarpUserChar(i, Libertad.Map, Libertad.x, Libertad.Y, True)
+                            Call WarpUserChar(i, Libertad.Map, Libertad.X, Libertad.Y, True)
                             Call WriteConsoleMsg(i, "Has sido liberado!", FontTypeNames.FONTTYPE_INFO)
 
                         End If
@@ -472,7 +472,7 @@ Public Sub PasarSegundo()
                 If Not .Pos.Map = 0 Then
 
                     'Counter de piquete
-                    If MapData(.Pos.Map, .Pos.x, .Pos.Y).Trigger = eTrigger.ANTIPIQUETE Then
+                    If MapData(.Pos.Map, .Pos.X, .Pos.Y).Trigger = eTrigger.ANTIPIQUETE Then
                             If .flags.Muerto = 0 Then
                                 .Counters.PiqueteC = .Counters.PiqueteC + 1
                                 .Counters.ContadorPiquete = .Counters.ContadorPiquete + 1
