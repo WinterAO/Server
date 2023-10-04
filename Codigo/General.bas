@@ -421,6 +421,9 @@ Sub Main()
     frmCargando.pCargar.CustomText = "Cargando Invocaciones.dat"
     Call InitInvocaciones
     
+    'Eventos de portales en mapas:
+    Call CargarEventosMapa
+    
     ' Connections
     Call ResetUsersConnections
     
@@ -1555,7 +1558,7 @@ Sub GuardarUsuarios()
 
     haciendoBK = True
     
-    Call SendData(SendTarget.ToAll, 0, PrepareMessagePauseToggle())
+    Call SendData(SendTarget.Toall, 0, PrepareMessagePauseToggle())
     Call SendData(SendTarget.ToGM, 0, PrepareMessageConsoleMsg("Servidor> Grabando Personajes", FontTypeNames.FONTTYPE_SERVER))
     
     Dim i As Integer
@@ -1573,7 +1576,7 @@ Sub GuardarUsuarios()
     Call SaveRecords
     
     Call SendData(SendTarget.ToGM, 0, PrepareMessageConsoleMsg("Servidor> Personajes Grabados", FontTypeNames.FONTTYPE_SERVER))
-    Call SendData(SendTarget.ToAll, 0, PrepareMessagePauseToggle())
+    Call SendData(SendTarget.Toall, 0, PrepareMessagePauseToggle())
 
     haciendoBK = False
 
@@ -2062,4 +2065,29 @@ Public Function ObtenerCuadrante(ByVal tX As Long, ByVal tY As Long) As Integer
     
     ObtenerCuadrante = ((cy) * AnchoMap) + cx + 1
     
+End Function
+
+Public Function esMapaPortalEvento(ByVal Mapa As Integer) As Byte
+'**********************************
+'Autor: Lorwik
+'Fecha: 11/06/2023
+'Descripcion: Busca un evento de portales por el numero de mapa
+'**********************************
+    Dim i As Byte
+    
+    If TotalEventosMap > 0 Then
+    
+        For i = 1 To TotalEventosMap
+        
+            If PortalEvento(i).getMapa = Mapa Then
+                esMapaPortalEvento = i
+                Exit Function
+            End If
+        
+        Next i
+    
+    End If
+    
+    esMapaPortalEvento = 0
+
 End Function

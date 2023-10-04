@@ -288,7 +288,7 @@ Function Numeric(ByVal cad As String) As Boolean
 
 End Function
 
-Function NombrePermitido(ByVal nombre As String) As Boolean
+Function NombrePermitido(ByVal Nombre As String) As Boolean
     '***************************************************
     'Author: Unknown
     'Last Modification: -
@@ -299,7 +299,7 @@ Function NombrePermitido(ByVal nombre As String) As Boolean
 
     For i = 1 To UBound(ForbidenNames)
 
-        If InStr(nombre, ForbidenNames(i)) Then
+        If InStr(Nombre, ForbidenNames(i)) Then
             NombrePermitido = False
             Exit Function
 
@@ -720,7 +720,7 @@ Private Sub AddItemsToNewUser(ByVal UserIndex As Integer, ByVal UserClase As eCl
 
         Dim i As Long
         For i = 1 To MAXAMIGOS
-            .Amigos(i).nombre = vbNullString
+            .Amigos(i).Nombre = vbNullString
             .Amigos(i).Ignorado = 0
             .Amigos(i).index = 0
         Next i
@@ -1400,7 +1400,7 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
         MapZonas(.Pos.Map, UserZonaId(UserIndex)).NumUsers = MapZonas(.Pos.Map, UserZonaId(UserIndex)).NumUsers + 1
     
         If NumUsers > RecordUsuariosOnline Then
-            Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Record de usuarios conectados simultaneamente. Hay " & NumUsers & " usuarios.", FontTypeNames.FONTTYPE_INFOBOLD))
+            Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("Record de usuarios conectados simultaneamente. Hay " & NumUsers & " usuarios.", FontTypeNames.FONTTYPE_INFOBOLD))
             RecordUsuariosOnline = NumUsers
             Call WriteVar(ConfigPath & "Server.ini", "INIT", "RECORD", Str(RecordUsuariosOnline))
 
@@ -1466,6 +1466,18 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
         If LenB(tStr) <> 0 Then
             Call WriteShowMessageBox(UserIndex, "Tu solicitud de ingreso al clan ha sido rechazada. El clan te explica que: " & tStr)
 
+        End If
+        
+        '¿Estaba en un evento de portales que ya termino?
+        If MapZonas(.Pos.Map, UserZonaId(UserIndex)).Restringir = eRestrict.restrict_evento Then
+            Dim EvPortal As Byte
+            'Si estaba en un evento de portales que termino lo mandamos a su casa
+            EvPortal = esMapaPortalEvento(.Pos.Map)
+            If EvPortal > 0 Then
+                
+                If Not PortalEvento(EvPortal).getEnCurso Then _
+                    Call MandaraCasa(UserIndex)
+            End If
         End If
     
         'Load the user statistics
@@ -2243,7 +2255,7 @@ Public Sub ResetUserExtras(ByVal UserIndex As Integer)
   Dim i As Integer
   For i = 1 To MAXAMIGOS
 
-  UserList(UserIndex).Amigos(i).nombre = vbNullString
+  UserList(UserIndex).Amigos(i).Nombre = vbNullString
 
   UserList(UserIndex).Amigos(i).Ignorado = 0
 

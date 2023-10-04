@@ -368,7 +368,8 @@ Public Enum eRestrict
     restrict_armada = 2
     restrict_caos = 3
     restrict_faccion = 4
-
+    restrict_evento = 5
+    
 End Enum
 
 ' <<<<<< Targets >>>>>>
@@ -834,7 +835,7 @@ End Type
 
 Public Type tHechizo
 
-    nombre As String
+    Nombre As String
     Desc As String
     PalabrasMagicas As String
     
@@ -985,7 +986,7 @@ End Type
 
 Public Type FXdata
 
-    nombre As String
+    Nombre As String
     GrhIndex As Long
     Delay As Integer
 
@@ -1246,7 +1247,7 @@ End Type
 
 Public Type tQuest
 
-    nombre As String
+    Nombre As String
     Desc As String
     RequiredLevel As Byte
     RequiredQuest As Integer
@@ -1724,7 +1725,7 @@ End Type
 
 'Info de los Amigos
 Public Type Amigos
-    nombre As String
+    Nombre As String
     Ignorado As Byte
     index As Integer
 
@@ -2674,3 +2675,7 @@ End Type
 
 Public ShopObject() As ShopObj
 Public NUMSHOPS As Integer
+
+Public PortalEvento() As New clsEventoMapa
+Public TotalEventosMap As Byte
+Public HorarioEventoPortal(23) As Byte

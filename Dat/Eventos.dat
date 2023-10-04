@@ -1,0 +1,43 @@
+'ACLARACIONEs
+'El tiempo hace referencia una hora del dia
+'La duración se mide en minutos
+
+[INIT]
+Total=0
+
+[EVENTO1]
+Nombre=Mansión Encantada
+Mapa=65
+X=74
+Y=74
+Duracion=60
+PortalMap=24
+PortalX=27
+PortalY=83
+
+[EVENTOS]
+'Hora de evento= Tipo Evento
+0=0
+1=0
+2=0
+3=0
+4=0
+5=0
+6=1
+7=0
+8=0
+9=0
+10=0
+11=0
+12=1
+13=0
+14=0
+15=0
+16=0
+17=0
+18=1
+19=0
+20=0
+21=0
+22=0
+23=0

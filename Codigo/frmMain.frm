@@ -338,7 +338,7 @@ Begin VB.Form frmMain
          Strikethrough   =   0   'False
       EndProperty
       ForeColor       =   &H0000C000&
-      Height          =   975
+      Height          =   1305
       Left            =   5160
       MultiLine       =   -1  'True
       TabIndex        =   12
@@ -350,10 +350,10 @@ Begin VB.Form frmMain
       BackColor       =   &H008080FF&
       Caption         =   "Forzar Cierre del Servidor Sin Backup"
       Height          =   375
-      Left            =   5160
+      Left            =   5190
       Style           =   1  'Graphical
       TabIndex        =   11
-      Top             =   4200
+      Top             =   4350
       Width           =   5655
    End
    Begin VB.CheckBox chkServerHabilitado 
@@ -372,7 +372,7 @@ Begin VB.Form frmMain
       Height          =   255
       Left            =   120
       TabIndex        =   10
-      Top             =   3960
+      Top             =   4140
       Width           =   2775
    End
    Begin VB.CommandButton cmdSystray 
@@ -434,11 +434,17 @@ Begin VB.Form frmMain
          Strikethrough   =   0   'False
       EndProperty
       ForeColor       =   &H00000000&
-      Height          =   3615
+      Height          =   3885
       Left            =   120
       TabIndex        =   0
       Top             =   240
       Width           =   4935
+      Begin VB.Timer TimerEventoPortal 
+         Enabled         =   0   'False
+         Interval        =   60000
+         Left            =   2610
+         Top             =   1440
+      End
       Begin VB.Timer GameTimer 
          Enabled         =   0   'False
          Interval        =   40
@@ -464,13 +470,12 @@ Begin VB.Form frmMain
          Top             =   1440
       End
       Begin VB.TextBox txtChat 
-         BackColor       =   &H00C0FFFF&
-         Height          =   2175
-         Left            =   120
+         Height          =   2565
+         Left            =   60
          MultiLine       =   -1  'True
          TabIndex        =   9
-         Top             =   1320
-         Width           =   4695
+         Top             =   1260
+         Width           =   4755
       End
       Begin VB.CommandButton Command2 
          BackColor       =   &H00E0E0E0&
@@ -511,7 +516,6 @@ Begin VB.Form frmMain
          Width           =   2295
       End
       Begin VB.TextBox BroadMsg 
-         BackColor       =   &H00C0FFFF&
          Height          =   315
          Left            =   120
          TabIndex        =   1
@@ -731,7 +735,7 @@ Private Sub HappyHourManager()
            
             If tmpHappyHour = 1 Then ' Desactiva
                 Message = "Ha concluido la Happy Hour!"
-                Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(Message, FontTypeNames.FONTTYPE_SERVER))
+                Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg(Message, FontTypeNames.FONTTYPE_SERVER))
                 HappyHourActivated = False
 
                 If ConexionAPI Then
@@ -744,7 +748,7 @@ Private Sub HappyHourManager()
                     
                     If HappyHour <> 1 Then
                         Message = "Se ha modificado la Happy Hour, a partir de ahora las criaturas aumentan su experiencia en un " & Round((tmpHappyHour - 1) * 100, 2) & "%"
-                        Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(Message, FontTypeNames.FONTTYPE_SERVER))
+                        Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg(Message, FontTypeNames.FONTTYPE_SERVER))
 
                         If ConexionAPI Then
                             Call ApiEndpointSendHappyHourModifiedMessageDiscord(Message)
@@ -752,7 +756,7 @@ Private Sub HappyHourManager()
                     Else
                         Message = "Ha comenzado la Happy Hour! Las criaturas aumentan su experiencia en un " & Round((tmpHappyHour - 1) * 100, 2) & "%!"
 
-                       Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(Message, FontTypeNames.FONTTYPE_SERVER))
+                       Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg(Message, FontTypeNames.FONTTYPE_SERVER))
                     
                         'Aqui solo vamos a hacer un request a los endpoints de la aplicacion en Node.js
                         'el repositorio para hacer funcionar esto, es este: https://github.com/ao-libre/ao-api-server
@@ -775,7 +779,7 @@ Private Sub HappyHourManager()
         ' Si estaba activado, lo deshabilitamos
         If HappyHour <> 0 Then
             Call UpdateNpcsExp(1 / HappyHour)
-            Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Ha concluido la Happy Hour!", FontTypeNames.FONTTYPE_SERVER))
+            Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("Ha concluido la Happy Hour!", FontTypeNames.FONTTYPE_SERVER))
             HappyHourActivated = False
             HappyHour = 0
         End If
@@ -854,7 +858,7 @@ Private Sub AutoSave_Timer()
     Call Actualizar_Subasta
 
     If Minutos = MinutosWs - 1 Then
-        Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Worldsave en 1 minuto ...", FontTypeNames.FONTTYPE_SERVER))
+        Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("Worldsave en 1 minuto ...", FontTypeNames.FONTTYPE_SERVER))
         KillLog
 
     ElseIf Minutos >= MinutosWs Then
@@ -1044,7 +1048,7 @@ Private Sub cmdSystray_Click()
 End Sub
 
 Private Sub Command1_Click()
-    Call SendData(SendTarget.ToAll, 0, PrepareMessageShowMessageBox(BroadMsg.Text))
+    Call SendData(SendTarget.Toall, 0, PrepareMessageShowMessageBox(BroadMsg.Text))
     ''''''''''''''''SOLO PARA EL TESTEO'''''''
     ''''''''''SE USA PARA COMUNICARSE CON EL SERVER'''''''''''
     txtChat.Text = txtChat.Text & vbNewLine & "Servidor> " & BroadMsg.Text
@@ -1063,7 +1067,7 @@ Public Sub InitMain(ByVal f As Byte)
 End Sub
 
 Private Sub Command2_Click()
-    Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Servidor> " & BroadMsg.Text, FontTypeNames.FONTTYPE_SERVER))
+    Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("Servidor> " & BroadMsg.Text, FontTypeNames.FONTTYPE_SERVER))
     ''''''''''''''''SOLO PARA EL TESTEO'''''''
     ''''''''''SE USA PARA COMUNICARSE CON EL SERVER'''''''''''
     txtChat.Text = txtChat.Text & vbNewLine & "Servidor> " & BroadMsg.Text
@@ -1253,4 +1257,33 @@ End Sub
 
 Private Sub TIMER_AI_Timer()
     Call mMainLoop.TIMER_AI
+End Sub
+
+Private Sub TimerEventoPortal_Timer()
+    Dim i As Byte
+    
+    '¿Hay eventos configurados?
+    If TotalEventosMap > 0 Then
+    
+        '¿En la hora actual hay algun evento?
+        If HorarioEventoPortal(Hour(Now)) > 0 Then
+        
+            i = HorarioEventoPortal(Hour(Now))
+        
+            '¿El evento aun no se inicio?
+            If Not PortalEvento(i).getEnCurso Then
+                PortalEvento(i).IniciarEvento
+                
+            Else
+                '¿El evento llego a su final?
+                If PortalEvento(i).getDuracion = 0 Then
+                    PortalEvento(i).FinalizarEvento
+                    
+                Else 'Si no llego a su final restamos un minuto
+                    PortalEvento(i).restarTiempo
+                    
+                End If
+            End If
+        End If
+    End If
 End Sub

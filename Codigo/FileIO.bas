@@ -510,7 +510,7 @@ Public Sub CargarHechizos()
     For Hechizo = 1 To NumeroHechizos
 
         With Hechizos(Hechizo)
-            .nombre = Leer.GetValue("Hechizo" & Hechizo, "Nombre")
+            .Nombre = Leer.GetValue("Hechizo" & Hechizo, "Nombre")
             .Desc = Leer.GetValue("Hechizo" & Hechizo, "Desc")
             .PalabrasMagicas = Leer.GetValue("Hechizo" & Hechizo, "PalabrasMagicas")
             
@@ -671,12 +671,12 @@ Public Sub DoBackUp()
     'Next i
     '''''''''''/'lo pongo aca x sugernecia del yind
     
-    Call SendData(SendTarget.ToAll, 0, PrepareMessagePauseToggle())
+    Call SendData(SendTarget.Toall, 0, PrepareMessagePauseToggle())
 
     Call WorldSave
     Call modGuilds.v_RutinaElecciones
     
-    Call SendData(SendTarget.ToAll, 0, PrepareMessagePauseToggle())
+    Call SendData(SendTarget.Toall, 0, PrepareMessagePauseToggle())
     
     'Aqui solo vamos a hacer un request a los endpoints de la aplicacion en Node.js
     'el repositorio para hacer funcionar esto, es este: https://github.com/ao-libre/ao-api-server
@@ -2328,7 +2328,7 @@ Public Sub LoadQuests()
     For i = 1 To NumQuests
 
         With QuestList(i)
-            .nombre = Reader.GetValue("QUEST" & i, "Nombre")
+            .Nombre = Reader.GetValue("QUEST" & i, "Nombre")
             .Desc = Reader.GetValue("QUEST" & i, "Desc")
             .RequiredLevel = val(Reader.GetValue("QUEST" & i, "RequiredLevel"))
             .RequiredQuest = val(Reader.GetValue("QUEST" & i, "RequiredQuest"))
@@ -2411,3 +2411,76 @@ ErrorHandler:
     MsgBox "Error cargando el archivo QUESTS.DAT.", vbOKOnly + vbCritical
 
 End Sub
+
+Public Sub CargarEventosMapa()
+
+    On Error GoTo CargarEventosMapa_Err
+    
+    If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando Eventos Mapa."
+    
+    If Not FileExist(DatPath & "Eventos.dat", vbArchive) Then
+        MsgBox "No se ha encontrado el archivo Eventos.dat en la carpeta " & DatPath
+        Exit Sub
+    End If
+    
+    Dim Lector     As clsIniManager
+
+    Dim evNombre   As String
+
+    Dim evMapa     As Byte
+
+    Dim evX        As Integer
+
+    Dim evY        As Integer
+
+    Dim evTime     As Long
+
+    Dim PortalMap  As Byte
+
+    Dim PortalX    As Integer
+
+    Dim PortalY    As Integer
+
+    Dim evDuracion As Long
+
+    Dim i          As Byte
+    
+    Set Lector = New clsIniManager
+    Call Lector.Initialize(DatPath & "Eventos.dat")
+    
+    TotalEventosMap = val(Lector.GetValue("INIT", "Total"))
+    
+    'Si no hay eventos no tenemos nada que cargar
+    If TotalEventosMap < 1 Then
+        Set Lector = Nothing
+        Exit Sub
+
+    End If
+    
+    ReDim PortalEvento(1 To TotalEventosMap) As New clsEventoMapa
+    
+    For i = 1 To TotalEventosMap
+        evNombre = Lector.GetValue("EVENTO" & i, "Nombre")
+        evMapa = val(Lector.GetValue("EVENTO" & i, "Mapa"))
+        evX = val(Lector.GetValue("EVENTO" & i, "X"))
+        evY = val(Lector.GetValue("EVENTO" & i, "Y"))
+        evTime = val(Lector.GetValue("EVENTO" & i, "Tiempo"))
+        PortalMap = val(Lector.GetValue("EVENTO" & i, "PortalMap"))
+        PortalX = val(Lector.GetValue("EVENTO" & i, "PortalX"))
+        PortalY = val(Lector.GetValue("EVENTO" & i, "PortalY"))
+        evDuracion = val(Lector.GetValue("EVENTO" & i, "Duracion"))
+        
+        Call PortalEvento(i).Inicializar(evNombre, evMapa, evX, evY, PortalMap, PortalX, PortalY, evDuracion)
+    Next i
+    
+    For i = 0 To 23
+        HorarioEventoPortal(i) = Lector.GetValue("EVENTOS", i)
+    Next i
+    
+    Exit Sub
+    
+CargarEventosMapa_Err:
+        Set Lector = Nothing
+        'Call TraceError(Err.Number, Err.description, "ES.CargarEventosMapa", Erl)
+
+    End Sub
