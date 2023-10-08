@@ -369,6 +369,7 @@ Public Enum eRestrict
     restrict_caos = 3
     restrict_faccion = 4
     restrict_evento = 5
+    restrict_restringido = 6
     
 End Enum
 

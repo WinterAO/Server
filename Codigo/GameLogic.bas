@@ -121,8 +121,7 @@ Public Sub DoTileEvents(ByVal UserIndex As Integer, _
                 
                 If UserList(UserIndex).flags.Equitando Then
                     
-                    If ObjData(UserList(UserIndex).Invent.MonturaObjIndex).MontTipo = 1 And MapZonas(.TileExit.Map, UserZonaId(UserIndex)).Zona <> "DUNGEON" Or _
-                            ObjData(UserList(UserIndex).Invent.MonturaObjIndex).MontTipo <> 1 And MapZonas(.TileExit.Map, UserZonaId(UserIndex)).Zona = "DUNGEON" Then
+                    If ObjData(UserList(UserIndex).Invent.MonturaObjIndex).MontTipo = 1 And MapZonas(.TileExit.Map, UserZonaId(UserIndex)).Zona <> "DUNGEON" Or ObjData(UserList(UserIndex).Invent.MonturaObjIndex).MontTipo <> 1 And MapZonas(.TileExit.Map, UserZonaId(UserIndex)).Zona = "DUNGEON" Then
                         
                         Call UnmountMontura(UserIndex)
                         Call WriteEquitandoToggle(UserIndex)
@@ -294,6 +293,33 @@ Public Sub DoTileEvents(ByVal UserIndex As Integer, _
 
                         End If
 
+                    End If
+                    
+                ElseIf MapZonas(DestPos.Map, UserZonaId(UserIndex)).Restringir = eRestrict.restrict_restringido Then
+                
+                    If EsGm(UserIndex) Or EsAdmin(UserList(UserIndex).Name) Then
+                        
+                        If LegalPos(DestPos.Map, DestPos.X, DestPos.Y, PuedeAtravesarAgua(UserIndex)) Then
+                            Call WarpUserChar(UserIndex, DestPos.Map, DestPos.X, DestPos.Y, FxFlag)
+                        Else
+                            Call ClosestLegalPos(DestPos, nPos)
+
+                            If nPos.X <> 0 And nPos.Y <> 0 Then
+                                Call WarpUserChar(UserIndex, nPos.Map, nPos.X, nPos.Y, FxFlag)
+
+                            End If
+                        
+                        End If
+                        
+                    Else
+                
+                        Call WriteConsoleMsg(UserIndex, "Zona restringida.", FontTypeNames.FONTTYPE_INFO)
+                        Call ClosestStablePos(UserList(UserIndex).Pos, nPos)
+        
+                        If nPos.X <> 0 And nPos.Y <> 0 Then
+                            Call WarpUserChar(UserIndex, nPos.Map, nPos.X, nPos.Y, False)
+
+                        End If
                     End If
 
                 Else 'No es un mapa de newbies, ni Armadas, ni Caos, ni faccionario.
