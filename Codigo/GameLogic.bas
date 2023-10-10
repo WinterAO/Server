@@ -1400,7 +1400,22 @@ Sub LookatTile(ByVal UserIndex As Integer, _
                             Else
 
                                 If Not .flags.Privilegios And PlayerType.User Then
-                                    Stat = Stat & " <GAME MASTER>"
+                                
+                                    If UserList(TempCharIndex).flags.Privilegios = PlayerType.Consejero Then
+                                        Stat = Stat & " <Consejero>"
+                                    End If
+    
+                                    If UserList(TempCharIndex).flags.Privilegios = PlayerType.SemiDios Then
+                                        Stat = Stat & " <Semi-Dios>"
+                                    End If
+    
+                                    If UserList(TempCharIndex).flags.Privilegios = PlayerType.Dios Then
+                                        Stat = Stat & " <Dios>"
+                                    End If
+                            
+                                    If UserList(TempCharIndex).flags.Privilegios = PlayerType.Admin Then
+                                        Stat = Stat & " <Administrador>"
+                                    End If
                           
                                     ' Elijo el color segun el rango del GM:
                                     ' Dios
@@ -1439,11 +1454,9 @@ Sub LookatTile(ByVal UserIndex As Integer, _
 
                                 End If
                   
-                                If .GuildIndex > 0 Then _
-                                    Stat = Stat & " Clan: '" & modGuilds.GuildName(.GuildIndex) & "'"
+                                If .GuildIndex > 0 Then Stat = Stat & " Clan: '" & modGuilds.GuildName(.GuildIndex) & "'"
                                 
-                                If .AccountInfo.esVIP Then _
-                                    Stat = Stat & " [VIP] "
+                                If .AccountInfo.esVIP Then Stat = Stat & " [VIP] "
 
                             End If
 

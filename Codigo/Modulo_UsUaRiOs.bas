@@ -607,22 +607,6 @@ Public Sub MakeUserChar(ByVal toMap As Boolean, _
                                 UserName = UserName & " " & TAG_USER_INVISIBLE
                             Else
                                 
-                                'Los GM no tienen clanes, tienen rangos
-                                If .flags.Privilegios = PlayerType.Admin Then
-                                        ClanTag = "Administrador"
-                                        
-                                ElseIf .flags.Privilegios = (PlayerType.Dios Or PlayerType.SemiDios) Then
-                                        ClanTag = "Game Master"
-                                    
-                                ElseIf .flags.Privilegios = PlayerType.Consejero Then
-                                        ClanTag = "Winter Staff"
-                                        
-                                ElseIf .flags.Privilegios = PlayerType.RoleMaster Then
-                                        ClanTag = "RoleMaster"
-                                        
-                                End If
-                                    
-                                
                                 If LenB(ClanTag) <> 0 Then UserName = UserName & " <" & ClanTag & ">"
 
                             End If
