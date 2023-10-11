@@ -3844,8 +3844,8 @@ Private Sub HandleCreateNewGuild(ByVal UserIndex As Integer)
             Dim Message As String
             Message = .Name & " fundo el clan " & GuildName & " de alineacion " & modGuilds.GuildAlignment(.GuildIndex)
 
-            Call SendData(SendTarget.ToAll, UserIndex, PrepareMessageConsoleMsg(Message, FontTypeNames.FONTTYPE_GUILD))
-            Call SendData(SendTarget.ToAll, 0, PrepareMessagePlayWave(44, NO_3D_SOUND, NO_3D_SOUND))
+            Call SendData(SendTarget.Toall, UserIndex, PrepareMessageConsoleMsg(Message, FontTypeNames.FONTTYPE_GUILD))
+            Call SendData(SendTarget.Toall, 0, PrepareMessagePlayWave(44, NO_3D_SOUND, NO_3D_SOUND))
             
             'Update tag
             Call RefreshCharStatus(UserIndex)
@@ -3918,7 +3918,7 @@ Private Sub HandleSpellInfo(ByVal UserIndex As Integer)
             With Hechizos(Spell)
                 'Send information
                 Call WriteConsoleMsg(UserIndex, "%%%%%%%%%%%% INFO DEL HECHIZO %%%%%%%%%%%%" & vbCrLf _
-                                               & "Nombre:" & .nombre & vbCrLf _
+                                               & "Nombre:" & .Nombre & vbCrLf _
                                                & "Descripción:" & .Desc & vbCrLf _
                                                & "Skill requerido: " & .MinSkill & " de magia." & vbCrLf _
                                                & "Mana necesario: " & .ManaRequerido & vbCrLf _
@@ -4765,8 +4765,8 @@ Private Sub HandleUserCommerceOffer(ByVal UserIndex As Integer)
 
             End If
             
-            'No se puede comerciar con la piedra de hogar
-            If ObjData(ObjIndex).OBJType = otPiedraHogar Then
+            'No se puede comerciar con la runa de hogar
+            If ObjData(ObjIndex).OBJType = otRunaHogar Then
                 Call WriteCancelOfferItem(UserIndex, OfferSlot)
                 Exit Sub
 
@@ -9350,7 +9350,7 @@ Private Sub HandleServerTime(ByVal UserIndex As Integer)
 
     End With
     
-    Call modSendData.SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Hora: " & time & " " & Date, FontTypeNames.FONTTYPE_INFO))
+    Call modSendData.SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("Hora: " & time & " " & Date, FontTypeNames.FONTTYPE_INFO))
 
 End Sub
 
@@ -11942,7 +11942,7 @@ Private Sub HandleKick(ByVal UserIndex As Integer)
                 If (UserList(tUser).flags.Privilegios And Rank) > (.flags.Privilegios And Rank) Then
                     Call WriteConsoleMsg(UserIndex, "No puedes echar a alguien con jerarquia mayor a la tuya.", FontTypeNames.FONTTYPE_INFO)
                 Else
-                    Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(.Name & " echo a " & UserName & ".", FontTypeNames.FONTTYPE_INFO))
+                    Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg(.Name & " echo a " & UserName & ".", FontTypeNames.FONTTYPE_INFO))
                     Call CloseUser(tUser)
                     Call LogGM(.Name, "Echo a " & UserName)
 
@@ -12017,7 +12017,7 @@ Private Sub HandleExecute(ByVal UserIndex As Integer)
                     Call WriteConsoleMsg(UserIndex, "Estas loco?? Como vas a pinatear un gm?? :@", FontTypeNames.FONTTYPE_INFO)
                 Else
                     Call UserDie(tUser)
-                    Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(.Name & " ha ejecutado a " & UserName & ".", FontTypeNames.FONTTYPE_EJECUCION))
+                    Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg(.Name & " ha ejecutado a " & UserName & ".", FontTypeNames.FONTTYPE_EJECUCION))
                     Call LogGM(.Name, " ejecuto a " & UserName)
 
                 End If
@@ -12453,7 +12453,7 @@ Private Sub HandleServerMessage(ByVal UserIndex As Integer)
         If (.flags.Privilegios And (PlayerType.Admin Or PlayerType.Dios Or PlayerType.SemiDios)) Then
             If LenB(Message) <> 0 Then
                 Call LogGM(.Name, "Mensaje Broadcast:" & Message)
-                Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(Message, FontTypeNames.FONTTYPE_TALK))
+                Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg(Message, FontTypeNames.FONTTYPE_TALK))
 
                 ''''''''''''''''SOLO PARA EL TESTEO'''''''
                 ''''''''''SE USA PARA COMUNICARSE CON EL SERVER'''''''''''
@@ -13671,7 +13671,7 @@ Private Sub HandleAcceptRoyalCouncilMember(ByVal UserIndex As Integer)
             If tUser <= 0 Then
                 Call WriteConsoleMsg(UserIndex, "Usuario offline", FontTypeNames.FONTTYPE_INFO)
             Else
-                Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(UserName & " fue aceptado en el honorable Consejo Real de Belleuve.", FontTypeNames.FONTTYPE_CONSEJO))
+                Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg(UserName & " fue aceptado en el honorable Consejo Real de Belleuve.", FontTypeNames.FONTTYPE_CONSEJO))
 
                 With UserList(tUser)
 
@@ -13751,7 +13751,7 @@ Private Sub HandleAcceptChaosCouncilMember(ByVal UserIndex As Integer)
             If tUser <= 0 Then
                 Call WriteConsoleMsg(UserIndex, "Usuario offline", FontTypeNames.FONTTYPE_INFO)
             Else
-                Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(UserName & " fue aceptado en el Concilio de las Sombras.", FontTypeNames.FONTTYPE_CONSEJO))
+                Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg(UserName & " fue aceptado en el Concilio de las Sombras.", FontTypeNames.FONTTYPE_CONSEJO))
                 
                 With UserList(tUser)
 
@@ -14047,7 +14047,7 @@ Private Sub HandleCouncilKick(ByVal UserIndex As Integer)
                         .flags.Privilegios = .flags.Privilegios - PlayerType.RoyalCouncil
                         
                         Call WarpUserChar(tUser, .Pos.Map, .Pos.X, .Pos.Y, False)
-                        Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(UserName & " fue expulsado del consejo de Belleuve.", FontTypeNames.FONTTYPE_CONSEJO))
+                        Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg(UserName & " fue expulsado del consejo de Belleuve.", FontTypeNames.FONTTYPE_CONSEJO))
 
                     End If
                     
@@ -14056,7 +14056,7 @@ Private Sub HandleCouncilKick(ByVal UserIndex As Integer)
                         .flags.Privilegios = .flags.Privilegios - PlayerType.ChaosCouncil
                         
                         Call WarpUserChar(tUser, .Pos.Map, .Pos.X, .Pos.Y, False)
-                        Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(UserName & " fue expulsado del Concilio de las Sombras.", FontTypeNames.FONTTYPE_CONSEJO))
+                        Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg(UserName & " fue expulsado del Concilio de las Sombras.", FontTypeNames.FONTTYPE_CONSEJO))
 
                     End If
 
@@ -14273,7 +14273,7 @@ Private Sub HandleGuildBan(ByVal UserIndex As Integer)
             If Not FileExist(tFile) Then
                 Call WriteConsoleMsg(UserIndex, "No existe el clan: " & GuildName, FontTypeNames.FONTTYPE_INFO)
             Else
-                Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(.Name & " baneo al clan " & UCase$(GuildName), FontTypeNames.FONTTYPE_GUILD))
+                Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg(.Name & " baneo al clan " & UCase$(GuildName), FontTypeNames.FONTTYPE_GUILD))
                 
                 'baneamos a los miembros
                 Call LogGM(.Name, "BANCLAN a " & UCase$(GuildName))
@@ -14285,7 +14285,7 @@ Private Sub HandleGuildBan(ByVal UserIndex As Integer)
                     'member es la victima
                     Call Ban(member, "Administracion del servidor", "Clan Banned")
                     
-                    Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("   " & member & "<" & GuildName & "> ha sido expulsado del servidor.", FontTypeNames.FONTTYPE_FIGHT))
+                    Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("   " & member & "<" & GuildName & "> ha sido expulsado del servidor.", FontTypeNames.FONTTYPE_FIGHT))
                     
                     tIndex = NameIndex(member)
 
@@ -14812,9 +14812,9 @@ Private Sub HandleForceMUSICAll(ByVal UserIndex As Integer)
         
         If .flags.Privilegios And (PlayerType.User Or PlayerType.Consejero Or PlayerType.SemiDios) Then Exit Sub
         
-        Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(.Name & " broadcast musica MUSIC: " & musicID, FontTypeNames.FONTTYPE_SERVER))
+        Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg(.Name & " broadcast musica MUSIC: " & musicID, FontTypeNames.FONTTYPE_SERVER))
         
-        Call SendData(SendTarget.ToAll, 0, PrepareMessagePlayMusic(musicID))
+        Call SendData(SendTarget.Toall, 0, PrepareMessagePlayMusic(musicID))
 
     End With
 
@@ -14848,7 +14848,7 @@ Private Sub HandleForceWAVEAll(ByVal UserIndex As Integer)
         
         If .flags.Privilegios And (PlayerType.User Or PlayerType.Consejero Or PlayerType.SemiDios) Then Exit Sub
         
-        Call SendData(SendTarget.ToAll, 0, PrepareMessagePlayWave(waveID, NO_3D_SOUND, NO_3D_SOUND))
+        Call SendData(SendTarget.Toall, 0, PrepareMessagePlayWave(waveID, NO_3D_SOUND, NO_3D_SOUND))
 
     End With
 
@@ -16645,7 +16645,7 @@ Public Sub HandleTurnOffServer(ByVal UserIndex As Integer)
         If .flags.Privilegios And (PlayerType.User Or PlayerType.Consejero Or PlayerType.SemiDios Or PlayerType.Dios Or PlayerType.RoleMaster) Then Exit Sub
         
         Call LogGM(.Name, "/APAGAR")
-        Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("" & .Name & " VA A APAGAR EL SERVIDOR!!!", FontTypeNames.FONTTYPE_FIGHT))
+        Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("" & .Name & " VA A APAGAR EL SERVIDOR!!!", FontTypeNames.FONTTYPE_FIGHT))
         
         'Log
         handle = FreeFile
@@ -16983,7 +16983,7 @@ Public Sub HandleSystemMessage(ByVal UserIndex As Integer)
         If (Not .flags.Privilegios And PlayerType.RoleMaster) <> 0 And (.flags.Privilegios And (PlayerType.Admin Or PlayerType.Dios)) Then
             Call LogGM(.Name, "Mensaje de sistema:" & Message)
             
-            Call SendData(SendTarget.ToAll, 0, PrepareMessageShowMessageBox(Message))
+            Call SendData(SendTarget.Toall, 0, PrepareMessageShowMessageBox(Message))
 
         End If
         
@@ -19106,7 +19106,7 @@ On Error GoTo errHandler
         Call .WriteInteger(UserList(UserIndex).Stats.UserHechizos(Slot))
         
         If UserList(UserIndex).Stats.UserHechizos(Slot) > 0 Then
-            Call .WriteASCIIString(Hechizos(UserList(UserIndex).Stats.UserHechizos(Slot)).nombre)
+            Call .WriteASCIIString(Hechizos(UserList(UserIndex).Stats.UserHechizos(Slot)).Nombre)
         Else
             Call .WriteASCIIString("(None)")
         End If
@@ -22782,7 +22782,7 @@ Public Sub WriteQuestDetails(ByVal UserIndex As Integer, _
         Call .WriteByte(IIf(Questslot, 1, 0))
 
         'Enviamos nombre, descripciï¿½n y nivel requerido de la quest
-        Call .WriteASCIIString(QuestList(QuestIndex).nombre)
+        Call .WriteASCIIString(QuestList(QuestIndex).Nombre)
         Call .WriteASCIIString(QuestList(QuestIndex).Desc)
         Call .WriteByte(QuestList(QuestIndex).RequiredLevel)
         
@@ -22887,7 +22887,7 @@ Public Sub WriteQuestListSend(ByVal UserIndex As Integer)
 
             If .QuestStats.QuestEnCurso(i) > 0 Then
                 tmpByte = tmpByte + 1
-                tmpStr = tmpStr & QuestList(.QuestStats.Quests(.QuestStats.QuestEnCurso(i)).QuestIndex).nombre & "-"
+                tmpStr = tmpStr & QuestList(.QuestStats.Quests(.QuestStats.QuestEnCurso(i)).QuestIndex).Nombre & "-"
 
             End If
 
@@ -23100,7 +23100,7 @@ Private Sub HandleCloseGuild(ByVal UserIndex As Integer)
         Call Kill(App.Path & "\Guilds\" & guilds(PreviousGuildIndex).GuildName & "-members.mem")
         Call Kill(App.Path & "\Guilds\" & guilds(PreviousGuildIndex).GuildName & "-solicitudes.sol")
         
-        Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("El Clan " & guilds(.GuildIndex).GuildName & " ha cerrado sus puertas.", FontTypeNames.FONTTYPE_GUILD))
+        Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("El Clan " & guilds(.GuildIndex).GuildName & " ha cerrado sus puertas.", FontTypeNames.FONTTYPE_GUILD))
         
     End With
 
@@ -23433,7 +23433,7 @@ Public Sub WriteCargarListaDeAmigos(ByVal UserIndex As Integer, ByVal Slot As By
         
                 Call .WriteByte(ServerPacketID.EnviarListDeAmigos)
         Call .WriteByte(Slot)
-        Call .WriteASCIIString(UserList(UserIndex).Amigos(Slot).nombre)
+        Call .WriteASCIIString(UserList(UserIndex).Amigos(Slot).Nombre)
 
     End With
 
@@ -23515,7 +23515,7 @@ On Error GoTo errHandler
                 
                 'Si no pasaron 5 segundos desde el último mensaje global enviado por el usuario
                 If IntervaloPermiteChatGlobal(UserIndex) Then
-                    Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(.Name & "> " & Message, FontTypeNames.FONTTYPE_TALK))
+                    Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg(.Name & "> " & Message, FontTypeNames.FONTTYPE_TALK))
                     Call LogGlobal(.Name & "> " & Message)
     
                 Else
@@ -23650,13 +23650,13 @@ With UserList(UserIndex)
         'Si está activo (que por defecto lo está) entonces lo desactivamos y enviamos un mensaje global a todos los usuarios
         If GlobalChatActive = True Then
             GlobalChatActive = False
-            Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Servidor> El chat global ha sido desactivado.", FontTypeNames.FONTTYPE_SERVER))
+            Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("Servidor> El chat global ha sido desactivado.", FontTypeNames.FONTTYPE_SERVER))
             
         Else
         
             'Si estaba deshabilitado, lo habilitamos e informamos a todos los usuarios
             GlobalChatActive = True
-            Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Servidor> El chat global fue activado.", FontTypeNames.FONTTYPE_SERVER))
+            Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("Servidor> El chat global fue activado.", FontTypeNames.FONTTYPE_SERVER))
         End If
   
     End If
@@ -23695,7 +23695,7 @@ Private Sub HandleAccionInventario(ByVal UserIndex As Integer)
         ObjIndex = .Invent.Object(itemSlot).ObjIndex
 
         'Esta el user muerto y no esta usando una piedra de hogar?
-        If .flags.Muerto = 1 And ObjData(ObjIndex).OBJType <> otPiedraHogar Then
+        If .flags.Muerto = 1 And ObjData(ObjIndex).OBJType <> otRunaHogar Then
             Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
             Exit Sub
         End If
@@ -24018,14 +24018,14 @@ Public Sub HandleAddAmigo(ByVal UserIndex As Integer)
 
                         Slot = BuscarSlotAmigoVacio(UserIndex)
 
-                        .Amigos(Slot).nombre = UserList(tUser).Name
+                        .Amigos(Slot).Nombre = UserList(tUser).Name
                         .Amigos(Slot).Ignorado = 0
 
                         Call ActualizarSlotAmigo(UserIndex, Slot)
 
                         Slot = BuscarSlotAmigoVacio(tUser)
 
-                        UserList(tUser).Amigos(Slot).nombre = .Name
+                        UserList(tUser).Amigos(Slot).Nombre = .Name
                         UserList(tUser).Amigos(Slot).Ignorado = 0
 
                         Call ActualizarSlotAmigo(tUser, Slot)
@@ -24099,15 +24099,15 @@ Public Sub HandleDelAmigo(ByVal UserIndex As Integer)
         If Slot <= 0 Or Slot > MAXAMIGOS Then Exit Sub
 
         'Por las duditas :P
-        If LenB(.Amigos(Slot).nombre) = 0 Then Exit Sub
+        If LenB(.Amigos(Slot).Nombre) = 0 Then Exit Sub
 
-        tUser = NameIndex(.Amigos(Slot).nombre)
-        UserName = .Amigos(Slot).nombre
+        tUser = NameIndex(.Amigos(Slot).Nombre)
+        UserName = .Amigos(Slot).Nombre
 
-        Call WriteConsoleMsg(UserIndex, .Amigos(Slot).nombre & " ha sido borrado de la lista de amigos.", FontTypeNames.FONTTYPE_GMMSG)
+        Call WriteConsoleMsg(UserIndex, .Amigos(Slot).Nombre & " ha sido borrado de la lista de amigos.", FontTypeNames.FONTTYPE_GMMSG)
 
         'reseteamos el slot
-        .Amigos(Slot).nombre = vbNullString
+        .Amigos(Slot).Nombre = vbNullString
         .Amigos(Slot).Ignorado = 0
         Call ActualizarSlotAmigo(UserIndex, Slot)
 
@@ -24121,7 +24121,7 @@ Public Sub HandleDelAmigo(ByVal UserIndex As Integer)
                 Slot = BuscarSlotAmigoNameSlot(tUser, .Name)
 
                 UserList(tUser).Amigos(Slot).Ignorado = 0
-                UserList(tUser).Amigos(Slot).nombre = vbNullString
+                UserList(tUser).Amigos(Slot).Nombre = vbNullString
 
                 Call ActualizarSlotAmigo(tUser, Slot)
 

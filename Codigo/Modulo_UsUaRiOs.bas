@@ -3147,52 +3147,53 @@ Public Sub MandaraCasa(ByVal UserIndex As Integer)
     'Descripción: Si cumple los requisitos, lo devolvemos a casa.
     '**************************************************************
     
-    Dim tX   As Integer
+    Dim tX     As Integer
 
-    Dim tY   As Integer
+    Dim tY     As Integer
 
-    Dim tMap As Integer
+    Dim tMap   As Integer
     
     Dim LaCasa As Byte
 
     With UserList(UserIndex)
+
+        If .flags.ArenaRinkel Then Call modArenaRinkel.SalirArenaRinkel(UserIndex)
+
+        'Si por alguna razón ya esta en su hogar, salimos.
+        If Ciudades(.Hogar).Map <> .Pos.Map Or ObtenerCuadrante(Ciudades(.Hogar).X, Ciudades(.Hogar).Y) <> ObtenerCuadranteUser(UserIndex) Then
+
+            'Antes de que el pj llegue a la ciudad, lo hacemos dejar de navegar para que no se buguee.
+            If .flags.Navegando = 1 Then
+                .Char.body = iCuerpoMuerto
+                .Char.Head = iCabezaMuerto
+                .Char.ShieldAnim = NingunEscudo
+                .Char.WeaponAnim = NingunArma
+                .Char.CascoAnim = NingunCasco
+            
+                .flags.Navegando = 0
+            
+                Call WriteNavigateToggle(UserIndex)
+
+                'Le sacamos el navegando, pero no le mostramos a los demas porque va a ser sumoneado hasta ulla.
+            End If
+        
+            '¿El hogar es invalido? Lo mandamos a Ramx
+            If .Hogar <= 0 Then
+                LaCasa = 1
+            Else
+                LaCasa = .Hogar
+            End If
+        
+            tX = Ciudades(LaCasa).X
+            tY = Ciudades(LaCasa).Y
+            tMap = Ciudades(LaCasa).Map
+        
+            Call FindLegalPos(UserIndex, tMap, tX, tY)
+            Call WarpUserChar(UserIndex, tMap, tX, tY, True)
+        
+            Call WriteMultiMessage(UserIndex, eMessages.FinishHome)
     
-        If .flags.Muerto = 0 Then
-            Call WriteConsoleMsg(UserIndex, "Debes estar muerto para teletransportarte a tu hogar.", FontTypeNames.FONTTYPE_FIGHT)
-            Exit Sub
         End If
-
-        'Antes de que el pj llegue a la ciudad, lo hacemos dejar de navegar para que no se buguee.
-        If .flags.Navegando = 1 Then
-            .Char.body = iCuerpoMuerto
-            .Char.Head = iCabezaMuerto
-            .Char.ShieldAnim = NingunEscudo
-            .Char.WeaponAnim = NingunArma
-            .Char.CascoAnim = NingunCasco
-            
-            .flags.Navegando = 0
-            
-            Call WriteNavigateToggle(UserIndex)
-
-            'Le sacamos el navegando, pero no le mostramos a los demas porque va a ser sumoneado hasta ulla.
-        End If
-        
-        '¿El hogar es invalido? Lo mandamos a Ramx
-        If .Hogar <= 0 Then
-            LaCasa = 1
-        Else
-            LaCasa = .Hogar
-        End If
-        
-        tX = Ciudades(LaCasa).X
-        tY = Ciudades(LaCasa).Y
-        tMap = Ciudades(LaCasa).Map
-        
-        Call FindLegalPos(UserIndex, tMap, tX, tY)
-        Call WarpUserChar(UserIndex, tMap, tX, tY, True)
-        
-        Call WriteMultiMessage(UserIndex, eMessages.FinishHome)
-        
     End With
     
 End Sub

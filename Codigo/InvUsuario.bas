@@ -528,8 +528,8 @@ Sub DropObj(ByVal UserIndex As Integer, _
 
             End If
             
-            If ObjData(DropObj.ObjIndex).OBJType = otPiedraHogar Then
-                Call WriteConsoleMsg(UserIndex, "No puedes tirar la piedra de hogar.", FontTypeNames.FONTTYPE_WARNING)
+            If ObjData(DropObj.ObjIndex).OBJType = otRunaHogar Then
+                Call WriteConsoleMsg(UserIndex, "No puedes tirar la runa de hogar.", FontTypeNames.FONTTYPE_WARNING)
                 Exit Sub
 
             End If
@@ -1471,7 +1471,7 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
 
     Dim MiObj    As obj
 
-    Dim sMotivo As String
+    Dim sMotivo  As String
 
     With UserList(UserIndex)
     
@@ -1686,6 +1686,7 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                             End If
                             
                         Case KIT_DE_COSTURA
+
                             If ConoceProfesion(UserIndex, eSkill.Sastreria) < 0 Then
                                 Call WriteConsoleMsg(UserIndex, "No conoces esa profesion.", FontTypeNames.FONTTYPE_INFOBOLD)
                                 Exit Sub
@@ -1701,6 +1702,7 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                             End If
                             
                         Case OLLA_ALQUIMISTA
+
                             If ConoceProfesion(UserIndex, eSkill.Alquimia) < 0 Then
                                 Call WriteConsoleMsg(UserIndex, "No conoces esa profesion.", FontTypeNames.FONTTYPE_INFOBOLD)
                                 Exit Sub
@@ -1848,6 +1850,7 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                         End If
                         
                     Case 6  ' Pocion Negra
+
                         If .flags.SlotReto > 0 Then Exit Sub
                         
                         If .flags.Privilegios And PlayerType.User Then
@@ -2169,8 +2172,9 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
 
                 End If
 
-            '<-------------> MONTURAS <----------->
+                '<-------------> MONTURAS <----------->
             Case eOBJType.otMonturas
+
                 If ClasePuedeUsarItem(UserIndex, ObjIndex) Then
                     If .flags.invisible = 1 Then
                         Call WriteConsoleMsg(UserIndex, "Estas invisible, no puedes montarte ni desmontarte en este estado!!", FontTypeNames.FONTTYPE_INFO)
@@ -2245,6 +2249,7 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                 Call UpdateUserInv(False, UserIndex, Slot)
                     
             Case eOBJType.otManuales
+
                 '¿Esta muerto?
                 If .flags.Muerto = 1 Then
                     Call WriteConsoleMsg(UserIndex, "¡Estás muerto!", FontTypeNames.FONTTYPE_INFO)
@@ -2268,25 +2273,29 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                 Call QuitarUserInvItem(UserIndex, Slot, 1)
                 Call UpdateUserInv(False, UserIndex, Slot)
                 
-            Case eOBJType.otPiedraHogar
-                If .flags.Muerto = 1 Then
+            Case eOBJType.otRunaHogar
     
-                    'Si es un mapa NO carcel y no esta en casa lo mandamos
-                    If (MapZonas(.Pos.Map, UserZonaId(UserIndex)).Restringir = eRestrict.restrict_no) And (.Counters.Pena = 0) Then
-                        If Ciudades(.Hogar).Map <> .Pos.Map Or ObtenerCuadrante(Ciudades(.Hogar).X, Ciudades(.Hogar).Y) <> ObtenerCuadranteUser(UserIndex) Then
-                            Call MandaraCasa(UserIndex)
-                        Else
-                            Call WriteConsoleMsg(UserIndex, "Ya te encuentras en tu hogar.", FontTypeNames.FONTTYPE_INFO)
-    
+                'Si es un mapa NO carcel y no esta en casa lo mandamos
+                If (.Counters.Pena = 0) Then
+                    If Ciudades(.Hogar).Map <> .Pos.Map Or ObtenerCuadrante(Ciudades(.Hogar).X, Ciudades(.Hogar).Y) <> ObtenerCuadranteUser(UserIndex) Then
+                        
+                        If .flags.invisible = 0 Then
+                            Call UsUaRiOs.SetInvisible(UserIndex, UserList(UserIndex).Char.CharIndex, False)
+                            Call WriteConsoleMsg(UserIndex, "Has vuelto a ser visible!", FontTypeNames.FONTTYPE_INFO)
+        
                         End If
-    
+
+                        .flags.CasteoSpell.Casteando = eCasteo.Runa
+                        .flags.CasteoSpell.TimeCast = TIEMPO_CASTEO_RUNA
+                        Call WriteConsoleMsg(UserIndex, "Te concentras en la runa y comienzas a concentrarte.", FontTypeNames.FONTTYPE_INFO)
+                        
                     Else
-                        Call WriteConsoleMsg(UserIndex, "Una fuerza misteriosa interfiere con la piedra, no puedes utilizarla aquí.", FontTypeNames.FONTTYPE_FIGHT)
+                        Call WriteConsoleMsg(UserIndex, "Ya te encuentras en tu hogar.", FontTypeNames.FONTTYPE_INFO)
     
                     End If
     
                 Else
-                    Call WriteConsoleMsg(UserIndex, "La piedra no funciona si estas vivo.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "Una fuerza misteriosa interfiere con la runa que impiede que puedas utilizarla aquí.", FontTypeNames.FONTTYPE_FIGHT)
     
                 End If
                 
@@ -2309,7 +2318,7 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                     Call AgregarReceta(UserIndex, Slot)
                     Call UpdateUserInv(False, UserIndex, Slot)
                 Else
-                        Call WriteConsoleMsg(UserIndex, "Estas demasiado hambriento y sediento.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "Estas demasiado hambriento y sediento.", FontTypeNames.FONTTYPE_INFO)
 
                 End If
                 
@@ -2338,9 +2347,8 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                     .AccountInfo.VIP = oldVIP
                 
                 End If
-
                     
-            End Select
+        End Select
     
     End With
 

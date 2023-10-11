@@ -370,17 +370,17 @@ Public Sub PasarSegundo()
         Select Case tickLimpieza
                                                         
             Case 300
-                Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Servidor> Limpieza del mundo en 5 Minuto. Atentos!!", FontTypeNames.FONTTYPE_SERVER))
+                Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("Servidor> Limpieza del mundo en 5 Minuto. Atentos!!", FontTypeNames.FONTTYPE_SERVER))
 
             Case 60
-                Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Servidor> Limpieza del mundo en 1 Minuto. Atentos!!", FontTypeNames.FONTTYPE_SERVER))
+                Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("Servidor> Limpieza del mundo en 1 Minuto. Atentos!!", FontTypeNames.FONTTYPE_SERVER))
                 
             Case 5 To 1
-                Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Servidor> Limpieza del mundo en " & tickLimpieza & " segundos. Atentos!!", FontTypeNames.FONTTYPE_SERVER))
+                Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("Servidor> Limpieza del mundo en " & tickLimpieza & " segundos. Atentos!!", FontTypeNames.FONTTYPE_SERVER))
             
             Case 0
                 Call BorrarObjetosLimpieza
-                Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Servidor> Limpieza del mundo finalizada.", FontTypeNames.FONTTYPE_SERVER))
+                Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("Servidor> Limpieza del mundo finalizada.", FontTypeNames.FONTTYPE_SERVER))
                 
         End Select
         
@@ -407,11 +407,20 @@ Public Sub PasarSegundo()
                 End If
                 
                 '¿Esta casteando un hechizo?
-                If .flags.CasteoSpell.Casteando = True Then
+                If .flags.CasteoSpell.Casteando = eCasteo.Hechizo Then
                     .flags.CasteoSpell.TimeCast = .flags.CasteoSpell.TimeCast - 1
                     
                     If .flags.CasteoSpell.TimeCast <= 0 Then
                         Call LanzarHechizo(.flags.CasteoSpell.SpellID, i)
+                        Call ResetCasteo(i)
+                    End If
+                    
+                ElseIf .flags.CasteoSpell.Casteando = eCasteo.Runa Then
+                    Call WriteConsoleMsg(i, "Viajando en... " & .flags.CasteoSpell.TimeCast, FontTypeNames.FONTTYPE_INFO)
+                    .flags.CasteoSpell.TimeCast = .flags.CasteoSpell.TimeCast - 1
+                    
+                    If .flags.CasteoSpell.TimeCast <= 0 Then
+                        Call MandaraCasa(i)
                         Call ResetCasteo(i)
                     End If
                 End If

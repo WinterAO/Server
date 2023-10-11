@@ -771,7 +771,7 @@ Public Enum eOBJType
     otPasajes = 36
     otMochilas = 37
     otYacimientoPez = 38
-    otPiedraHogar = 39
+    otRunaHogar = 39
     otInstruye = 40
     otPaseVIP = 41
     otCualquiera = 1000
@@ -1383,8 +1383,15 @@ End Type
 '*********************************************************
 '*********************************************************
 
+Public Const TIEMPO_CASTEO_RUNA As Byte = 7
+
+Enum eCasteo
+    Hechizo = 1
+    Runa
+End Enum
+
 Private Type tCasteoSpell
-    Casteando As Boolean 'Indica si esta casteando
+    Casteando As Byte 'Indica si esta casteando
     SpellID As Integer  'Hechizo que esta casteando
     TimeCast As Long 'Tiempo de casteo
 End Type

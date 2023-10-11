@@ -706,7 +706,7 @@ Private Sub AddItemsToNewUser(ByVal UserIndex As Integer, ByVal UserClase As eCl
         .Invent.Object(Slot).ObjIndex = 468
         .Invent.Object(Slot).Amount = 100
         
-        'Piedra de Hogar
+        'Runa de Hogar
         Slot = Slot + 1
         .Invent.Object(Slot).ObjIndex = 1255
         .Invent.Object(Slot).Amount = 1

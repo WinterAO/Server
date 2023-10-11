@@ -1083,7 +1083,7 @@ Sub LanzarHechizo(ByVal spellIndex As Integer, ByVal UserIndex As Integer)
         If PuedeLanzar(UserIndex, spellIndex) Then
         
             If Hechizos(spellIndex).Casteo > 0 And .flags.CasteoSpell.Casteando = False Then
-                .flags.CasteoSpell.Casteando = True
+                .flags.CasteoSpell.Casteando = eCasteo.Hechizo
                 .flags.CasteoSpell.SpellID = spellIndex
                 .flags.CasteoSpell.TimeCast = Hechizos(spellIndex).Casteo
                 Call WriteConsoleMsg(UserIndex, "Te concentras para lanzar el hechizo...", FontTypeNames.FONTTYPE_INFO)
