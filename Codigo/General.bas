@@ -2058,7 +2058,7 @@ Public Function ObtenerCuadrante(ByVal tX As Long, ByVal tY As Long) As Integer
     Dim cy As Integer
     Dim AnchoMap As Byte
     
-    AnchoMap = 11
+    AnchoMap = 10
     
     cx = Fix((tX / 100))
     cy = Fix((tY / 100))

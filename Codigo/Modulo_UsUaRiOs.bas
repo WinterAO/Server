@@ -2313,8 +2313,6 @@ Sub WarpUserChar(ByVal UserIndex As Integer, _
 
         End If
         
-        Debug.Print UserList(UserIndex).Name & " Se mueve. Mapa: " & UserList(UserIndex).Pos.Map & " ZonaID: " & UserZonaId(UserIndex) & " Nº PJ en la zona: " & MapZonas(UserList(UserIndex).Pos.Map, UserZonaId(UserIndex)).NumUsers
-      
     End With
 
 End Sub
@@ -3158,42 +3156,45 @@ Public Sub MandaraCasa(ByVal UserIndex As Integer)
     With UserList(UserIndex)
 
         If .flags.ArenaRinkel Then Call modArenaRinkel.SalirArenaRinkel(UserIndex)
-
+        
+        Debug.Print "Cuadrante de la ciudad: " & ObtenerCuadrante(Ciudades(.Hogar).X, Ciudades(.Hogar).Y) & " Cuadrante del usuario: "; ObtenerCuadranteUser(UserIndex); ""
+        Debug.Print "Mapa de la ciudad: " & Ciudades(.Hogar).Map & " Mapa del usuario :" & .Pos.Map
         'Si por alguna razón ya esta en su hogar, salimos.
-        If Ciudades(.Hogar).Map <> .Pos.Map Or ObtenerCuadrante(Ciudades(.Hogar).X, Ciudades(.Hogar).Y) <> ObtenerCuadranteUser(UserIndex) Then
-
-            'Antes de que el pj llegue a la ciudad, lo hacemos dejar de navegar para que no se buguee.
-            If .flags.Navegando = 1 Then
-                .Char.body = iCuerpoMuerto
-                .Char.Head = iCabezaMuerto
-                .Char.ShieldAnim = NingunEscudo
-                .Char.WeaponAnim = NingunArma
-                .Char.CascoAnim = NingunCasco
-            
-                .flags.Navegando = 0
-            
-                Call WriteNavigateToggle(UserIndex)
-
-                'Le sacamos el navegando, pero no le mostramos a los demas porque va a ser sumoneado hasta ulla.
-            End If
-        
-            '¿El hogar es invalido? Lo mandamos a Ramx
-            If .Hogar <= 0 Then
-                LaCasa = 1
-            Else
-                LaCasa = .Hogar
-            End If
-        
-            tX = Ciudades(LaCasa).X
-            tY = Ciudades(LaCasa).Y
-            tMap = Ciudades(LaCasa).Map
-        
-            Call FindLegalPos(UserIndex, tMap, tX, tY)
-            Call WarpUserChar(UserIndex, tMap, tX, tY, True)
-        
-            Call WriteMultiMessage(UserIndex, eMessages.FinishHome)
-    
+        If ObtenerCuadrante(Ciudades(.Hogar).X, Ciudades(.Hogar).Y) = ObtenerCuadranteUser(UserIndex) Then
+            If Ciudades(.Hogar).Map = .Pos.Map Then Exit Sub
         End If
+
+        'Antes de que el pj llegue a la ciudad, lo hacemos dejar de navegar para que no se buguee.
+        If .flags.Navegando = 1 Then
+            .Char.body = iCuerpoMuerto
+            .Char.Head = iCabezaMuerto
+            .Char.ShieldAnim = NingunEscudo
+            .Char.WeaponAnim = NingunArma
+            .Char.CascoAnim = NingunCasco
+            
+            .flags.Navegando = 0
+            
+            Call WriteNavigateToggle(UserIndex)
+
+            'Le sacamos el navegando, pero no le mostramos a los demas porque va a ser sumoneado hasta ulla.
+        End If
+        
+        '¿El hogar es invalido? Lo mandamos a Ramx
+        If .Hogar <= 0 Then
+            LaCasa = 1
+        Else
+            LaCasa = .Hogar
+        End If
+        
+        tX = Ciudades(LaCasa).X
+        tY = Ciudades(LaCasa).Y
+        tMap = Ciudades(LaCasa).Map
+        
+        Call FindLegalPos(UserIndex, tMap, tX, tY)
+        Call WarpUserChar(UserIndex, tMap, tX, tY, True)
+        
+        Call WriteMultiMessage(UserIndex, eMessages.FinishHome)
+    
     End With
     
 End Sub
