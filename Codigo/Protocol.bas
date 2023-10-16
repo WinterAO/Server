@@ -178,6 +178,7 @@ Private Enum ServerPacketID
     SetSpeed
     AtaqueNPC
     MostrarPVP
+    eBarFx
 End Enum
 
 Private Enum ClientPacketID
@@ -1007,7 +1008,7 @@ Public Sub WriteMultiMessage(ByVal UserIndex As Integer, _
                 Call .WriteLong(Arg1) 'damage
                 
             Case eMessages.UserAttackedSwing
-                Call .WriteInteger(UserList(Arg1).Char.CharIndex)
+                Call .WriteInteger(UserList(Arg1).Char.charindex)
                 
             Case eMessages.UserHittedByUser
                 Call .WriteInteger(Arg1) 'AttackerIndex
@@ -1023,11 +1024,11 @@ Public Sub WriteMultiMessage(ByVal UserIndex As Integer, _
                 Call .WriteByte(Arg1) 'skill
             
             Case eMessages.HaveKilledUser '"Has matado a " & UserList(VictimIndex).name & "!" "Has ganado " & DaExp & " puntos de experiencia."
-                Call .WriteInteger(UserList(Arg1).Char.CharIndex) 'VictimIndex
+                Call .WriteInteger(UserList(Arg1).Char.charindex) 'VictimIndex
                 Call .WriteLong(Arg2) 'Expe
             
             Case eMessages.UserKill '"" & .name & " te ha matado!"
-                Call .WriteInteger(UserList(Arg1).Char.CharIndex) 'AttackerIndex
+                Call .WriteInteger(UserList(Arg1).Char.charindex) 'AttackerIndex
             
             Case eMessages.EarnExp
             
@@ -1934,7 +1935,7 @@ Private Sub HandleTalk(ByVal UserIndex As Integer)
             Else
 
                 If .flags.invisible = 0 Then
-                    Call UsUaRiOs.SetInvisible(UserIndex, UserList(UserIndex).Char.CharIndex, False)
+                    Call UsUaRiOs.SetInvisible(UserIndex, UserList(UserIndex).Char.charindex, False)
                     Call WriteConsoleMsg(UserIndex, "Has vuelto a ser visible!", FontTypeNames.FONTTYPE_INFO)
 
                 End If
@@ -1949,9 +1950,9 @@ Private Sub HandleTalk(ByVal UserIndex As Integer)
             
             If Not (.flags.AdminInvisible = 1) Then
                 If .flags.Muerto = 1 Then
-                    Call SendData(SendTarget.ToDeadArea, UserIndex, PrepareMessageChatOverHead(Chat, .Char.CharIndex, CHAT_COLOR_DEAD_CHAR))
+                    Call SendData(SendTarget.ToDeadArea, UserIndex, PrepareMessageChatOverHead(Chat, .Char.charindex, CHAT_COLOR_DEAD_CHAR))
                 Else
-                    Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead(Chat, .Char.CharIndex, .flags.ChatColor))
+                    Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead(Chat, .Char.charindex, .flags.ChatColor))
 
                 End If
 
@@ -2045,7 +2046,7 @@ Private Sub HandleYell(ByVal UserIndex As Integer)
             Else
 
                 If .flags.invisible = 0 Then
-                    Call UsUaRiOs.SetInvisible(UserIndex, .Char.CharIndex, False)
+                    Call UsUaRiOs.SetInvisible(UserIndex, .Char.charindex, False)
                     Call WriteConsoleMsg(UserIndex, "Has vuelto a ser visible!", FontTypeNames.FONTTYPE_INFO)
 
                 End If
@@ -2060,16 +2061,16 @@ Private Sub HandleYell(ByVal UserIndex As Integer)
                 
             If .flags.Privilegios And PlayerType.User Then
                 If UserList(UserIndex).flags.Muerto = 1 Then
-                    Call SendData(SendTarget.ToDeadArea, UserIndex, PrepareMessageChatOverHead(Chat, .Char.CharIndex, CHAT_COLOR_DEAD_CHAR))
+                    Call SendData(SendTarget.ToDeadArea, UserIndex, PrepareMessageChatOverHead(Chat, .Char.charindex, CHAT_COLOR_DEAD_CHAR))
                 Else
-                    Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead(Chat, .Char.CharIndex, vbRed))
+                    Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead(Chat, .Char.charindex, vbRed))
 
                 End If
 
             Else
 
                 If Not (.flags.AdminInvisible = 1) Then
-                    Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead(Chat, .Char.CharIndex, CHAT_COLOR_GM_YELL))
+                    Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead(Chat, .Char.charindex, CHAT_COLOR_GM_YELL))
                 Else
                     Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageConsoleMsg("Gm> " & Chat, FontTypeNames.FONTTYPE_GM))
 
@@ -2205,8 +2206,8 @@ Private Sub HandleWhisper(ByVal UserIndex As Integer)
                             Call WriteConsoleMsg(TargetUserIndex, UserList(UserIndex).Name & "> " & Chat, FontTypeNames.FONTTYPE_PRIVADO)
                             
                         ElseIf Not (.flags.AdminInvisible = 1) Then
-                            Call WriteChatOverHead(UserIndex, Chat, .Char.CharIndex, &HC000&, True)
-                            Call WriteChatOverHead(TargetUserIndex, Chat, .Char.CharIndex, &HC000&, True)
+                            Call WriteChatOverHead(UserIndex, Chat, .Char.charindex, &HC000&, True)
+                            Call WriteChatOverHead(TargetUserIndex, Chat, .Char.charindex, &HC000&, True)
                             Call WriteConsoleMsg(UserIndex, UserList(UserIndex).Name & "> " & Chat, FontTypeNames.FONTTYPE_PRIVADO)
                             Call WriteConsoleMsg(TargetUserIndex, UserList(UserIndex).Name & "> " & Chat, FontTypeNames.FONTTYPE_PRIVADO)
 
@@ -2303,7 +2304,7 @@ Private Sub HandleWalk(ByVal UserIndex As Integer)
 
                 Call WriteConsoleMsg(UserIndex, "Dejas de meditar.", FontTypeNames.FONTTYPE_INFO)
                 
-                Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageCreateFX(.Char.CharIndex, 0, 0))
+                Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageCreateFX(.Char.charindex, 0, 0))
                 Call MoveUserChar(UserIndex, Heading)
             Else
                 'Move user
@@ -2353,7 +2354,7 @@ Private Sub HandleWalk(ByVal UserIndex As Integer)
                     'If not under a spell effect, show char
                     If .flags.invisible = 0 Then
                         Call WriteConsoleMsg(UserIndex, "Has vuelto a ser visible.", FontTypeNames.FONTTYPE_INFO)
-                        Call UsUaRiOs.SetInvisible(UserIndex, .Char.CharIndex, False)
+                        Call UsUaRiOs.SetInvisible(UserIndex, .Char.charindex, False)
 
                     End If
 
@@ -2441,7 +2442,7 @@ Private Sub HandleAttack(ByVal UserIndex As Integer)
         Call CancelCast(UserIndex)
         
         'Play AttackAnim on Clients
-        Call SendData(SendTarget.ToPCAreaButIndex, UserIndex, PrepareMessageCharacterAttackAnim(.Char.CharIndex))
+        Call SendData(SendTarget.ToPCAreaButIndex, UserIndex, PrepareMessageCharacterAttackAnim(.Char.charindex))
         
         'Attack!
         Call UsuarioAtaca(UserIndex)
@@ -2466,7 +2467,7 @@ Private Sub HandleAttack(ByVal UserIndex As Integer)
             Else
 
                 If .flags.invisible = 0 Then
-                    Call UsUaRiOs.SetInvisible(UserIndex, .Char.CharIndex, False)
+                    Call UsUaRiOs.SetInvisible(UserIndex, .Char.charindex, False)
                     Call WriteConsoleMsg(UserIndex, "Has vuelto a ser visible!", FontTypeNames.FONTTYPE_INFO)
 
                 End If
@@ -4177,7 +4178,7 @@ Private Sub HandleTrain(ByVal UserIndex As Integer)
             End If
 
         Else
-            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead("No puedo traer mas criaturas, mata las existentes.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite))
+            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead("No puedo traer mas criaturas, mata las existentes.", Npclist(.flags.TargetNPC).Char.charindex, vbWhite))
 
         End If
 
@@ -4227,7 +4228,7 @@ Private Sub HandleCommerceBuy(ByVal UserIndex As Integer)
             
         'El NPC puede comerciar?
         If Npclist(.flags.TargetNPC).Comercia = 0 Then
-            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead("No tengo ningun interes en comerciar.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite))
+            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead("No tengo ningun interes en comerciar.", Npclist(.flags.TargetNPC).Char.charindex, vbWhite))
             Exit Sub
 
         End If
@@ -4341,7 +4342,7 @@ Private Sub HandleCommerceSell(ByVal UserIndex As Integer)
         
         'El NPC puede comerciar?
         If Npclist(.flags.TargetNPC).Comercia = 0 Then
-            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead("No tengo ningun interes en comerciar.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite))
+            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead("No tengo ningun interes en comerciar.", Npclist(.flags.TargetNPC).Char.charindex, vbWhite))
             Exit Sub
 
         End If
@@ -6261,7 +6262,7 @@ Private Sub HandleRequestAccountState(ByVal UserIndex As Integer)
         Select Case Npclist(.flags.TargetNPC).NPCtype
 
             Case eNPCType.Banquero
-                Call WriteChatOverHead(UserIndex, "Tienes " & .Stats.Banco & " monedas de oro en tu cuenta.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "Tienes " & .Stats.Banco & " monedas de oro en tu cuenta.", Npclist(.flags.TargetNPC).Char.charindex, vbWhite)
             
             Case eNPCType.Timbero
 
@@ -6597,13 +6598,13 @@ Private Sub HandleMeditate(ByVal UserIndex As Integer)
 
             End If
             
-            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageCreateFX(.Char.CharIndex, .Char.FX, INFINITE_LOOPS))
+            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageCreateFX(.Char.charindex, .Char.FX, INFINITE_LOOPS))
         Else
             .Counters.bPuedeMeditar = False
             
             .Char.FX = 0
             .Char.loops = 0
-            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageCreateFX(.Char.CharIndex, 0, 0))
+            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageCreateFX(.Char.charindex, 0, 0))
 
         End If
 
@@ -6720,7 +6721,7 @@ Private Sub HandleConsultation(ByVal UserIndex As String)
                     .Counters.Invisibilidad = 0
                     
                     If UserList(UserConsulta).flags.Navegando = 0 Then
-                        Call UsUaRiOs.SetInvisible(UserConsulta, UserList(UserConsulta).Char.CharIndex, False)
+                        Call UsUaRiOs.SetInvisible(UserConsulta, UserList(UserConsulta).Char.charindex, False)
 
                     End If
 
@@ -6848,7 +6849,7 @@ Private Sub HandleCommerceStart(ByVal UserIndex As Integer)
             If Npclist(.flags.TargetNPC).Comercia = 0 Then
 
                 If LenB(Npclist(.flags.TargetNPC).Desc) <> 0 Then
-                    Call WriteChatOverHead(UserIndex, "No tengo ningun interes en comerciar.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+                    Call WriteChatOverHead(UserIndex, "No tengo ningun interes en comerciar.", Npclist(.flags.TargetNPC).Char.charindex, vbWhite)
                 End If
                 
                 Exit Sub
@@ -7063,7 +7064,7 @@ Private Sub HandleInformation(ByVal UserIndex As Integer)
         
         If Npclist(.flags.TargetNPC).flags.Faccion = 0 Then
             If .Faccion.ArmadaReal = 0 Then
-                Call WriteChatOverHead(UserIndex, "No perteneces a las tropas reales!!", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "No perteneces a las tropas reales!!", Npclist(.flags.TargetNPC).Char.charindex, vbWhite)
                 Exit Sub
 
             End If
@@ -7072,16 +7073,16 @@ Private Sub HandleInformation(ByVal UserIndex As Integer)
             Diferencia = NextRecom - Matados
             
             If Diferencia > 0 Then
-                Call WriteChatOverHead(UserIndex, "Tu deber es combatir criminales, mata " & Diferencia & " criminales mas y te dare una recompensa.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "Tu deber es combatir criminales, mata " & Diferencia & " criminales mas y te dare una recompensa.", Npclist(.flags.TargetNPC).Char.charindex, vbWhite)
             Else
-                Call WriteChatOverHead(UserIndex, "Tu deber es combatir criminales, y ya has matado los suficientes como para merecerte una recompensa.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "Tu deber es combatir criminales, y ya has matado los suficientes como para merecerte una recompensa.", Npclist(.flags.TargetNPC).Char.charindex, vbWhite)
 
             End If
 
         Else
 
             If .Faccion.FuerzasCaos = 0 Then
-                Call WriteChatOverHead(UserIndex, "No perteneces a la legion oscura!!", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "No perteneces a la legion oscura!!", Npclist(.flags.TargetNPC).Char.charindex, vbWhite)
                 Exit Sub
 
             End If
@@ -7090,9 +7091,9 @@ Private Sub HandleInformation(ByVal UserIndex As Integer)
             Diferencia = NextRecom - Matados
             
             If Diferencia > 0 Then
-                Call WriteChatOverHead(UserIndex, "Tu deber es sembrar el caos y la desesperanza, mata " & Diferencia & " ciudadanos mas y te dare una recompensa.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "Tu deber es sembrar el caos y la desesperanza, mata " & Diferencia & " ciudadanos mas y te dare una recompensa.", Npclist(.flags.TargetNPC).Char.charindex, vbWhite)
             Else
-                Call WriteChatOverHead(UserIndex, "Tu deber es sembrar el caos y la desesperanza, y creo que estas en condiciones de merecer una recompensa.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "Tu deber es sembrar el caos y la desesperanza, y creo que estas en condiciones de merecer una recompensa.", Npclist(.flags.TargetNPC).Char.charindex, vbWhite)
 
             End If
 
@@ -7135,7 +7136,7 @@ Private Sub HandleReward(ByVal UserIndex As Integer)
         
         If Npclist(.flags.TargetNPC).flags.Faccion = 0 Then
             If .Faccion.ArmadaReal = 0 Then
-                Call WriteChatOverHead(UserIndex, "No perteneces a las tropas reales!!", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "No perteneces a las tropas reales!!", Npclist(.flags.TargetNPC).Char.charindex, vbWhite)
                 Exit Sub
 
             End If
@@ -7144,7 +7145,7 @@ Private Sub HandleReward(ByVal UserIndex As Integer)
         Else
 
             If .Faccion.FuerzasCaos = 0 Then
-                Call WriteChatOverHead(UserIndex, "No perteneces a la legion oscura!!", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "No perteneces a la legion oscura!!", Npclist(.flags.TargetNPC).Char.charindex, vbWhite)
                 Exit Sub
 
             End If
@@ -7391,7 +7392,7 @@ Private Sub HandleGuildMessage(ByVal UserIndex As Integer)
             If .GuildIndex > 0 Then
                 Call SendData(SendTarget.ToDiosesYclan, .GuildIndex, PrepareMessageGuildChat(.Name & "> " & Chat))
                 
-                If Not (.flags.AdminInvisible = 1) Then Call SendData(SendTarget.ToClanArea, UserIndex, PrepareMessageChatOverHead("< " & Chat & " >", .Char.CharIndex, vbYellow))
+                If Not (.flags.AdminInvisible = 1) Then Call SendData(SendTarget.ToClanArea, UserIndex, PrepareMessageChatOverHead("< " & Chat & " >", .Char.charindex, vbYellow))
 
             End If
 
@@ -8087,33 +8088,33 @@ Private Sub HandleGamble(ByVal UserIndex As Integer)
             
             ' Normal npcs don't speak
             If TargetNpcType <> eNPCType.Comun And TargetNpcType <> eNPCType.DRAGON And TargetNpcType <> eNPCType.Pretoriano Then
-                Call WriteChatOverHead(UserIndex, "No tengo ningUn interes en apostar.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "No tengo ningUn interes en apostar.", Npclist(.flags.TargetNPC).Char.charindex, vbWhite)
 
             End If
             
             ' Validate amount
         ElseIf Amount < 1 Then
-            Call WriteChatOverHead(UserIndex, "El minimo de apuesta es 1 moneda.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+            Call WriteChatOverHead(UserIndex, "El minimo de apuesta es 1 moneda.", Npclist(.flags.TargetNPC).Char.charindex, vbWhite)
         
             ' Validate amount
         ElseIf Amount > 5000 Then
-            Call WriteChatOverHead(UserIndex, "El maximo de apuesta es 5000 monedas.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+            Call WriteChatOverHead(UserIndex, "El maximo de apuesta es 5000 monedas.", Npclist(.flags.TargetNPC).Char.charindex, vbWhite)
         
             ' Validate user gold
         ElseIf .Stats.Gld < Amount Then
-            Call WriteChatOverHead(UserIndex, "No tienes esa cantidad.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+            Call WriteChatOverHead(UserIndex, "No tienes esa cantidad.", Npclist(.flags.TargetNPC).Char.charindex, vbWhite)
         
         Else
 
             If RandomNumber(1, 100) <= 47 Then
                 .Stats.Gld = .Stats.Gld + Amount
-                Call WriteChatOverHead(UserIndex, "Felicidades! Has ganado " & CStr(Amount) & " monedas de oro.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "Felicidades! Has ganado " & CStr(Amount) & " monedas de oro.", Npclist(.flags.TargetNPC).Char.charindex, vbWhite)
                 
                 Apuestas.Perdidas = Apuestas.Perdidas + Amount
                 Call WriteVar(DatPath & "apuestas.dat", "Main", "Perdidas", CStr(Apuestas.Perdidas))
             Else
                 .Stats.Gld = .Stats.Gld - Amount
-                Call WriteChatOverHead(UserIndex, "Lo siento, has perdido " & CStr(Amount) & " monedas de oro.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "Lo siento, has perdido " & CStr(Amount) & " monedas de oro.", Npclist(.flags.TargetNPC).Char.charindex, vbWhite)
                 
                 Apuestas.Ganancias = Apuestas.Ganancias + Amount
                 Call WriteVar(DatPath & "apuestas.dat", "Main", "Ganancias", CStr(Apuestas.Ganancias))
@@ -8216,9 +8217,9 @@ Private Sub HandleBankExtractGold(ByVal UserIndex As Integer)
         If Amount > 0 And Amount <= .Stats.Banco Then
             .Stats.Banco = .Stats.Banco - Amount
             .Stats.Gld = .Stats.Gld + Amount
-            Call WriteChatOverHead(UserIndex, "Tenes " & .Stats.Banco & " monedas de oro en tu cuenta.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+            Call WriteChatOverHead(UserIndex, "Tenes " & .Stats.Banco & " monedas de oro en tu cuenta.", Npclist(.flags.TargetNPC).Char.charindex, vbWhite)
         Else
-            Call WriteChatOverHead(UserIndex, "No tienes esa cantidad.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+            Call WriteChatOverHead(UserIndex, "No tienes esa cantidad.", Npclist(.flags.TargetNPC).Char.charindex, vbWhite)
 
         End If
         
@@ -8286,13 +8287,13 @@ Private Sub HandleLeaveFaction(ByVal UserIndex As Integer)
 
             ' Si le pidio al demonio salir de la armada, este le responde.
             If TalkToDemon Then
-                Call WriteChatOverHead(UserIndex, "Sal de aqui bufon!!!", Npclist(NPCIndex).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "Sal de aqui bufon!!!", Npclist(NPCIndex).Char.charindex, vbWhite)
             
             Else
 
                 ' Si le pidio al rey salir de la armada, le responde.
                 If TalkToKing Then
-                    Call WriteChatOverHead(UserIndex, "Seras bienvenido a las fuerzas imperiales si deseas regresar.", Npclist(NPCIndex).Char.CharIndex, vbWhite)
+                    Call WriteChatOverHead(UserIndex, "Seras bienvenido a las fuerzas imperiales si deseas regresar.", Npclist(NPCIndex).Char.charindex, vbWhite)
 
                 End If
                 
@@ -8305,12 +8306,12 @@ Private Sub HandleLeaveFaction(ByVal UserIndex As Integer)
 
             ' Si le pidio al rey salir del caos, le responde.
             If TalkToKing Then
-                Call WriteChatOverHead(UserIndex, "Sal de aqui maldito criminal!!!", Npclist(NPCIndex).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "Sal de aqui maldito criminal!!!", Npclist(NPCIndex).Char.charindex, vbWhite)
             Else
 
                 ' Si le pidio al demonio salir del caos, este le responde.
                 If TalkToDemon Then
-                    Call WriteChatOverHead(UserIndex, "Ya volveras arrastrandote.", Npclist(NPCIndex).Char.CharIndex, vbWhite)
+                    Call WriteChatOverHead(UserIndex, "Ya volveras arrastrandote.", Npclist(NPCIndex).Char.charindex, vbWhite)
 
                 End If
                 
@@ -8324,11 +8325,11 @@ Private Sub HandleLeaveFaction(ByVal UserIndex As Integer)
             ' Si le hablaba al rey o demonio, le repsonden ellos
             'Corregido, solo si son en efecto el rey o el demonio, no cualquier NPC (C4b3z0n)
             If (TalkToDemon And criminal(UserIndex)) Or (TalkToKing And Not criminal(UserIndex)) Then 'Si se pueden unir a la faccion (status), son invitados
-                Call WriteChatOverHead(UserIndex, "No perteneces a nuestra faccion. Si deseas unirte, di /ENLISTAR", Npclist(NPCIndex).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "No perteneces a nuestra faccion. Si deseas unirte, di /ENLISTAR", Npclist(NPCIndex).Char.charindex, vbWhite)
             ElseIf (TalkToDemon And Not criminal(UserIndex)) Then
-                Call WriteChatOverHead(UserIndex, "Sal de aqui bufon!!!", Npclist(NPCIndex).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "Sal de aqui bufon!!!", Npclist(NPCIndex).Char.charindex, vbWhite)
             ElseIf (TalkToKing And criminal(UserIndex)) Then
-                Call WriteChatOverHead(UserIndex, "Sal de aqui maldito criminal!!!", Npclist(NPCIndex).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "Sal de aqui maldito criminal!!!", Npclist(NPCIndex).Char.charindex, vbWhite)
             Else
                 Call WriteConsoleMsg(UserIndex, "No perteneces a ninguna faccion!", FontTypeNames.FONTTYPE_FIGHT)
 
@@ -8394,17 +8395,17 @@ Private Sub HandleBankDepositGold(ByVal UserIndex As Integer)
         RemainingAmountToMaximumGold = 2147483647 - .Stats.Gld
 
         If .Stats.Banco >= 2147483647 And RemainingAmountToMaximumGold <= Amount Then
-            Call WriteChatOverHead(UserIndex, "No puedes depositar el oro por que tendrias mas del maximo permitido (2147483647)", Npclist(.flags.TargetNPC).Char.CharIndex, vbRed)
+            Call WriteChatOverHead(UserIndex, "No puedes depositar el oro por que tendrias mas del maximo permitido (2147483647)", Npclist(.flags.TargetNPC).Char.charindex, vbRed)
 
         ElseIf Amount > 0 And Amount <= .Stats.Gld Then
             .Stats.Banco = .Stats.Banco + Amount
             .Stats.Gld = .Stats.Gld - Amount
-            Call WriteChatOverHead(UserIndex, "Tenes " & .Stats.Banco & " monedas de oro en tu cuenta.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+            Call WriteChatOverHead(UserIndex, "Tenes " & .Stats.Banco & " monedas de oro en tu cuenta.", Npclist(.flags.TargetNPC).Char.charindex, vbWhite)
             
             Call WriteUpdateGold(UserIndex)
             Call WriteUpdateBankGold(UserIndex)
         Else
-            Call WriteChatOverHead(UserIndex, "No tenes esa cantidad.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+            Call WriteChatOverHead(UserIndex, "No tenes esa cantidad.", Npclist(.flags.TargetNPC).Char.charindex, vbWhite)
 
         End If
 
@@ -13550,7 +13551,7 @@ Private Sub HandleTalkAsNPC(ByVal UserIndex As Integer)
 
             'Asegurarse haya un NPC seleccionado
             If .flags.TargetNPC > 0 Then
-                Call SendData(SendTarget.ToNPCArea, .flags.TargetNPC, PrepareMessageChatOverHead(Message, Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite))
+                Call SendData(SendTarget.ToNPCArea, .flags.TargetNPC, PrepareMessageChatOverHead(Message, Npclist(.flags.TargetNPC).Char.charindex, vbWhite))
             Else
                 Call WriteConsoleMsg(UserIndex, "Debes seleccionar el NPC por el que quieres hablar antes de usar este comando.", FontTypeNames.FONTTYPE_INFO)
 
@@ -17440,7 +17441,7 @@ End Sub
 ' @param    CharIndex Character whose dialog will be removed.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteRemoveCharDialog(ByVal UserIndex As Integer, ByVal CharIndex As Integer)
+Public Sub WriteRemoveCharDialog(ByVal UserIndex As Integer, ByVal charindex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -17449,7 +17450,7 @@ Public Sub WriteRemoveCharDialog(ByVal UserIndex As Integer, ByVal CharIndex As 
     '***************************************************
     On Error GoTo errHandler
 
-    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageRemoveCharDialog(CharIndex))
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageRemoveCharDialog(charindex))
     Exit Sub
 
 errHandler:
@@ -18129,7 +18130,7 @@ End Sub
 
 Public Sub WriteChatOverHead(ByVal UserIndex As Integer, _
                              ByVal Chat As String, _
-                             ByVal CharIndex As Integer, _
+                             ByVal charindex As Integer, _
                              ByVal color As Long, _
                              Optional ByVal NoConsole As Boolean = False)
 
@@ -18140,7 +18141,7 @@ Public Sub WriteChatOverHead(ByVal UserIndex As Integer, _
     '***************************************************
     On Error GoTo errHandler
 
-    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageChatOverHead(Chat, CharIndex, color, NoConsole))
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageChatOverHead(Chat, charindex, color, NoConsole))
     Exit Sub
 
 errHandler:
@@ -18353,7 +18354,7 @@ Public Sub WriteUserCharIndexInServer(ByVal UserIndex As Integer)
 
     With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.UserCharIndexInServer)
-        Call .WriteInteger(UserList(UserIndex).Char.CharIndex)
+        Call .WriteInteger(UserList(UserIndex).Char.charindex)
 
     End With
 
@@ -18394,7 +18395,7 @@ Public Sub WriteCharacterCreate(ByVal UserIndex As Integer, _
                                 ByVal body As Integer, _
                                 ByVal Head As Integer, _
                                 ByVal Heading As eHeading, _
-                                ByVal CharIndex As Integer, _
+                                ByVal charindex As Integer, _
                                 ByVal X As Integer, _
                                 ByVal Y As Integer, _
                                 ByVal weapon As Integer, _
@@ -18418,7 +18419,7 @@ Public Sub WriteCharacterCreate(ByVal UserIndex As Integer, _
     '***************************************************
     On Error GoTo errHandler
 
-    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterCreate(body, Head, Heading, CharIndex, X, Y, weapon, shield, FX, FXLoops, helmet, AnimAtaque, Name, NickColor, Privileges, GrhAura, AuraColor, NoShadow, estadoQuest))
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterCreate(body, Head, Heading, charindex, X, Y, weapon, shield, FX, FXLoops, helmet, AnimAtaque, Name, NickColor, Privileges, GrhAura, AuraColor, NoShadow, estadoQuest))
     Exit Sub
 
 errHandler:
@@ -18438,7 +18439,7 @@ End Sub
 ' @param    CharIndex Character to be removed.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteCharacterRemove(ByVal UserIndex As Integer, ByVal CharIndex As Integer)
+Public Sub WriteCharacterRemove(ByVal UserIndex As Integer, ByVal charindex As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -18447,7 +18448,7 @@ Public Sub WriteCharacterRemove(ByVal UserIndex As Integer, ByVal CharIndex As I
     '***************************************************
     On Error GoTo errHandler
 
-    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterRemove(CharIndex))
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterRemove(charindex))
     Exit Sub
 
 errHandler:
@@ -18470,7 +18471,7 @@ End Sub
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
 Public Sub WriteCharacterMove(ByVal UserIndex As Integer, _
-                              ByVal CharIndex As Integer, _
+                              ByVal charindex As Integer, _
                               ByVal X As Integer, _
                               ByVal Y As Integer)
 
@@ -18481,7 +18482,7 @@ Public Sub WriteCharacterMove(ByVal UserIndex As Integer, _
     '***************************************************
     On Error GoTo errHandler
 
-    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterMove(CharIndex, X, Y))
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterMove(charindex, X, Y))
     Exit Sub
 
 errHandler:
@@ -18535,7 +18536,7 @@ Public Sub WriteCharacterChange(ByVal UserIndex As Integer, _
                                 ByVal body As Integer, _
                                 ByVal Head As Integer, _
                                 ByVal Heading As eHeading, _
-                                ByVal CharIndex As Integer, _
+                                ByVal charindex As Integer, _
                                 ByVal weapon As Integer, _
                                 ByVal shield As Integer, _
                                 ByVal FX As Integer, _
@@ -18552,7 +18553,7 @@ Public Sub WriteCharacterChange(ByVal UserIndex As Integer, _
     '***************************************************
     On Error GoTo errHandler
 
-    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterChange(body, Head, Heading, CharIndex, weapon, shield, FX, FXLoops, helmet, AuraAnim, AuraColor, QuestStatus))
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterChange(body, Head, Heading, charindex, weapon, shield, FX, FXLoops, helmet, AuraAnim, AuraColor, QuestStatus))
     Exit Sub
 
 errHandler:
@@ -18887,7 +18888,7 @@ End Sub
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
 Public Sub WriteCreateFX(ByVal UserIndex As Integer, _
-                         ByVal CharIndex As Integer, _
+                         ByVal charindex As Integer, _
                          ByVal FX As Integer, _
                          ByVal FXLoops As Integer)
 
@@ -18898,7 +18899,7 @@ Public Sub WriteCreateFX(ByVal UserIndex As Integer, _
     '***************************************************
     On Error GoTo errHandler
 
-    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCreateFX(CharIndex, FX, FXLoops))
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCreateFX(charindex, FX, FXLoops))
     Exit Sub
 
 errHandler:
@@ -19787,7 +19788,7 @@ End Sub
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
 Public Sub WriteSetInvisible(ByVal UserIndex As Integer, _
-                             ByVal CharIndex As Integer, _
+                             ByVal charindex As Integer, _
                              ByVal invisible As Boolean)
 
     '***************************************************
@@ -19797,7 +19798,7 @@ Public Sub WriteSetInvisible(ByVal UserIndex As Integer, _
     '***************************************************
     On Error GoTo errHandler
 
-    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageSetInvisible(CharIndex, invisible))
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageSetInvisible(charindex, invisible))
     
     Exit Sub
 
@@ -21100,7 +21101,7 @@ End Sub
 ' @return   The formated message ready to be writen as is on outgoing buffers.
 ' @remarks  The message is written to no outgoing buffer, but only prepared in a single string to be easily sent to several clients.
 
-Public Function PrepareMessageSetInvisible(ByVal CharIndex As Integer, _
+Public Function PrepareMessageSetInvisible(ByVal charindex As Integer, _
                                            ByVal invisible As Boolean) As String
 
     '***************************************************
@@ -21111,7 +21112,7 @@ Public Function PrepareMessageSetInvisible(ByVal CharIndex As Integer, _
     With auxiliarBuffer
         Call .WriteByte(ServerPacketID.SetInvisible)
         
-        Call .WriteInteger(CharIndex)
+        Call .WriteInteger(charindex)
         Call .WriteBoolean(invisible)
         
         PrepareMessageSetInvisible = .ReadASCIIStringFixed(.Length)
@@ -21120,7 +21121,7 @@ Public Function PrepareMessageSetInvisible(ByVal CharIndex As Integer, _
 
 End Function
 
-Public Function PrepareMessageCharacterChangeNick(ByVal CharIndex As Integer, _
+Public Function PrepareMessageCharacterChangeNick(ByVal charindex As Integer, _
                                                   ByVal newNick As String) As String
 
     '***************************************************
@@ -21131,7 +21132,7 @@ Public Function PrepareMessageCharacterChangeNick(ByVal CharIndex As Integer, _
     With auxiliarBuffer
         Call .WriteByte(ServerPacketID.CharacterChangeNick)
         
-        Call .WriteInteger(CharIndex)
+        Call .WriteInteger(charindex)
         Call .WriteASCIIString(newNick)
         
         PrepareMessageCharacterChangeNick = .ReadASCIIStringFixed(.Length)
@@ -21150,7 +21151,7 @@ End Function
 ' @remarks  The message is written to no outgoing buffer, but only prepared in a single string to be easily sent to several clients.
 
 Public Function PrepareMessageChatOverHead(ByVal Chat As String, _
-                                           ByVal CharIndex As Integer, _
+                                           ByVal charindex As Integer, _
                                            ByVal color As Long, _
                                            Optional ByVal NoConsole As Boolean = False) As String
 
@@ -21162,7 +21163,7 @@ Public Function PrepareMessageChatOverHead(ByVal Chat As String, _
     With auxiliarBuffer
         Call .WriteByte(ServerPacketID.ChatOverHead)
         Call .WriteASCIIString(Chat)
-        Call .WriteInteger(CharIndex)
+        Call .WriteInteger(charindex)
         Call .WriteBoolean(NoConsole)
         
         ' Write rgb channels and save one byte from long :D
@@ -21251,7 +21252,7 @@ End Function
 ' @return   The formated message ready to be writen as is on outgoing buffers.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Function PrepareMessageCreateFX(ByVal CharIndex As Integer, _
+Public Function PrepareMessageCreateFX(ByVal charindex As Integer, _
                                        ByVal FX As Integer, _
                                        ByVal FXLoops As Integer) As String
 
@@ -21262,7 +21263,7 @@ Public Function PrepareMessageCreateFX(ByVal CharIndex As Integer, _
     '***************************************************
     With auxiliarBuffer
         Call .WriteByte(ServerPacketID.CreateFX)
-        Call .WriteInteger(CharIndex)
+        Call .WriteInteger(charindex)
         Call .WriteInteger(FX)
         Call .WriteInteger(FXLoops)
         
@@ -21519,7 +21520,7 @@ End Function
 ' @return   The formated message ready to be writen as is on outgoing buffers.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Function PrepareMessageCharacterRemove(ByVal CharIndex As Integer) As String
+Public Function PrepareMessageCharacterRemove(ByVal charindex As Integer) As String
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -21528,7 +21529,7 @@ Public Function PrepareMessageCharacterRemove(ByVal CharIndex As Integer) As Str
     '***************************************************
     With auxiliarBuffer
         Call .WriteByte(ServerPacketID.CharacterRemove)
-        Call .WriteInteger(CharIndex)
+        Call .WriteInteger(charindex)
         
         PrepareMessageCharacterRemove = .ReadASCIIStringFixed(.Length)
 
@@ -21543,7 +21544,7 @@ End Function
 ' @return   The formated message ready to be writen as is on outgoing buffers.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Function PrepareMessageRemoveCharDialog(ByVal CharIndex As Integer) As String
+Public Function PrepareMessageRemoveCharDialog(ByVal charindex As Integer) As String
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -21552,7 +21553,7 @@ Public Function PrepareMessageRemoveCharDialog(ByVal CharIndex As Integer) As St
     '***************************************************
     With auxiliarBuffer
         Call .WriteByte(ServerPacketID.RemoveCharDialog)
-        Call .WriteInteger(CharIndex)
+        Call .WriteInteger(charindex)
         
         PrepareMessageRemoveCharDialog = .ReadASCIIStringFixed(.Length)
 
@@ -21583,7 +21584,7 @@ End Function
 Public Function PrepareMessageCharacterCreate(ByVal body As Integer, _
                                               ByVal Head As Integer, _
                                               ByVal Heading As eHeading, _
-                                              ByVal CharIndex As Integer, _
+                                              ByVal charindex As Integer, _
                                               ByVal X As Integer, _
                                               ByVal Y As Integer, _
                                               ByVal weapon As Integer, _
@@ -21608,7 +21609,7 @@ Public Function PrepareMessageCharacterCreate(ByVal body As Integer, _
     With auxiliarBuffer
         Call .WriteByte(ServerPacketID.CharacterCreate)
         
-        Call .WriteInteger(CharIndex)
+        Call .WriteInteger(charindex)
         Call .WriteInteger(body)
         Call .WriteInteger(Head)
         Call .WriteByte(Heading)
@@ -21652,7 +21653,7 @@ End Function
 Public Function PrepareMessageCharacterChange(ByVal body As Integer, _
                                               ByVal Head As Integer, _
                                               ByVal Heading As eHeading, _
-                                              ByVal CharIndex As Integer, _
+                                              ByVal charindex As Integer, _
                                               ByVal weapon As Integer, _
                                               ByVal shield As Integer, _
                                               ByVal FX As Integer, _
@@ -21671,7 +21672,7 @@ Public Function PrepareMessageCharacterChange(ByVal body As Integer, _
     With auxiliarBuffer
         Call .WriteByte(ServerPacketID.CharacterChange)
         
-        Call .WriteInteger(CharIndex)
+        Call .WriteInteger(charindex)
         Call .WriteByte(Heading)
         Call .WriteInteger(body)
         Call .WriteInteger(Head)
@@ -21690,7 +21691,7 @@ Public Function PrepareMessageCharacterChange(ByVal body As Integer, _
 
 End Function
 Public Function PrepareMessageHeadingChange(ByVal Heading As eHeading, _
-                                            ByVal CharIndex As Integer)
+                                            ByVal charindex As Integer)
 
     '***************************************************
     'Author: FrankoH298
@@ -21699,7 +21700,7 @@ Public Function PrepareMessageHeadingChange(ByVal Heading As eHeading, _
     '***************************************************
     With auxiliarBuffer
         Call .WriteByte(ServerPacketID.HeadingChange)
-        Call .WriteInteger(CharIndex)
+        Call .WriteInteger(charindex)
         Call .WriteByte(Heading)
 
         PrepareMessageHeadingChange = .ReadASCIIStringFixed(.Length)
@@ -21717,7 +21718,7 @@ End Function
 ' @return   The formated message ready to be writen as is on outgoing buffers.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Function PrepareMessageCharacterMove(ByVal CharIndex As Integer, _
+Public Function PrepareMessageCharacterMove(ByVal charindex As Integer, _
                                             ByVal X As Integer, _
                                             ByVal Y As Integer) As String
 
@@ -21728,7 +21729,7 @@ Public Function PrepareMessageCharacterMove(ByVal CharIndex As Integer, _
     '***************************************************
     With auxiliarBuffer
         Call .WriteByte(ServerPacketID.CharacterMove)
-        Call .WriteInteger(CharIndex)
+        Call .WriteInteger(charindex)
         Call .WriteInteger(X)
         Call .WriteInteger(Y)
         
@@ -21778,7 +21779,7 @@ Public Function PrepareMessageUpdateTagAndStatus(ByVal UserIndex As Integer, _
     With auxiliarBuffer
         Call .WriteByte(ServerPacketID.UpdateTagAndStatus)
         
-        Call .WriteInteger(UserList(UserIndex).Char.CharIndex)
+        Call .WriteInteger(UserList(UserIndex).Char.charindex)
         Call .WriteByte(NickColor)
         Call .WriteASCIIString(Tag)
         
@@ -22521,7 +22522,7 @@ errHandler:
 
 End Sub
 
-Public Function PrepareMessageCharacterAttackAnim(ByVal CharIndex As Integer) As String
+Public Function PrepareMessageCharacterAttackAnim(ByVal charindex As Integer) As String
 
     '***************************************************
     'Author: Cucsijuan
@@ -22530,7 +22531,7 @@ Public Function PrepareMessageCharacterAttackAnim(ByVal CharIndex As Integer) As
     '***************************************************
     With auxiliarBuffer
         Call .WriteByte(ServerPacketID.PlayAttackAnim)
-        Call .WriteInteger(CharIndex)
+        Call .WriteInteger(charindex)
     
         PrepareMessageCharacterAttackAnim = .ReadASCIIStringFixed(.Length)
 
@@ -22927,7 +22928,7 @@ Public Sub WriteActualizarNPCQuest(ByVal UserIndex As Integer, ByVal NPCIndex As
     With UserList(UserIndex)
         .outgoingData.WriteByte ServerPacketID.ActualizarNPCQuest
         
-        Call .outgoingData.WriteInteger(Npclist(NPCIndex).Char.CharIndex)
+        Call .outgoingData.WriteInteger(Npclist(NPCIndex).Char.charindex)
         Call .outgoingData.WriteByte(Estado)
         
     End With
@@ -23750,7 +23751,7 @@ End Sub
 ''
 ' Prepares the "CreateParticleChar" message and returns it.
 
-Public Function PrepareMessageCreateParticleChar(ByVal CharIndex As Integer, _
+Public Function PrepareMessageCreateParticleChar(ByVal charindex As Integer, _
                                        ByVal ParticulaID As Integer, _
                                        ByVal Create As Boolean, _
                                        ByVal Life As Long) As String
@@ -23765,7 +23766,7 @@ Public Function PrepareMessageCreateParticleChar(ByVal CharIndex As Integer, _
         Call .WriteByte(ServerPacketID.CharParticle)
         Call .WriteInteger(ParticulaID)
         Call .WriteBoolean(Create)
-        Call .WriteInteger(CharIndex)
+        Call .WriteInteger(charindex)
         Call .WriteLong(Life)
         
         PrepareMessageCreateParticleChar = .ReadASCIIStringFixed(.Length)
@@ -24644,3 +24645,20 @@ Public Sub HandleDueloSet(ByVal UserIndex As Integer)
         End Select
     End With
 End Sub
+
+Public Function PrepareMessageBarFx(ByVal charindex As Integer, _
+                                    ByVal BarTime As Integer, _
+                                    ByVal BarAccion As Byte)
+
+    With auxiliarBuffer
+        Call .WriteByte(ServerPacketID.eBarFx)
+        Call .WriteInteger(charindex)
+        Call .WriteInteger(BarTime)
+        Call .WriteInteger(BarAccion)
+        
+        PrepareMessageBarFx = .ReadASCIIStringFixed(.Length)
+        
+    End With
+
+End Function
+

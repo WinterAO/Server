@@ -3039,6 +3039,7 @@ Public Sub CancelCast(ByVal UserIndex As Integer)
     
         If .flags.CasteoSpell.Casteando Then
             Call WriteConsoleMsg(UserIndex, "No logras concentrarte y cancelas el casteo.", FontTypeNames.FONTTYPE_INFO)
+            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageBarFx(.Char.CharIndex, 0, e_AccionBarra.CancelarAccion))
             Call ResetCasteo(UserIndex)
             .flags.Hechizo = 0
         End If

@@ -3157,8 +3157,6 @@ Public Sub MandaraCasa(ByVal UserIndex As Integer)
 
         If .flags.ArenaRinkel Then Call modArenaRinkel.SalirArenaRinkel(UserIndex)
         
-        Debug.Print "Cuadrante de la ciudad: " & ObtenerCuadrante(Ciudades(.Hogar).X, Ciudades(.Hogar).Y) & " Cuadrante del usuario: "; ObtenerCuadranteUser(UserIndex); ""
-        Debug.Print "Mapa de la ciudad: " & Ciudades(.Hogar).Map & " Mapa del usuario :" & .Pos.Map
         'Si por alguna razón ya esta en su hogar, salimos.
         If ObtenerCuadrante(Ciudades(.Hogar).X, Ciudades(.Hogar).Y) = ObtenerCuadranteUser(UserIndex) Then
             If Ciudades(.Hogar).Map = .Pos.Map Then Exit Sub

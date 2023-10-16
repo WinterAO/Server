@@ -996,7 +996,7 @@ End Type
 'Datos de user o npc
 Public Type Char
 
-    CharIndex As Integer
+    charindex As Integer
     Head As Integer
     body As Integer
     AnimAtaque As Long
@@ -2687,3 +2687,11 @@ Public NUMSHOPS As Integer
 Public PortalEvento() As New clsEventoMapa
 Public TotalEventosMap As Byte
 Public HorarioEventoPortal(23) As Byte
+
+
+Public Enum e_AccionBarra
+    Runa = 1
+    Resucitar = 2
+    Intermundia = 3
+    CancelarAccion = 99
+End Enum
