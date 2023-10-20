@@ -117,6 +117,14 @@ Public Sub DoTileEvents(ByVal UserIndex As Integer, _
                     End If
                     Exit Sub
                     
+                ElseIf UserList(UserIndex).Stats.ELV <= MapZonas(.TileExit.Map, UserZonaId(UserIndex)).lvlMaximo Then
+                    Call WriteConsoleMsg(UserIndex, "Eres muy poderoso para acceder a este lugar, los espiritus te expulsan. Solo puedes acceder a este lugar hasta el nivel " & MapZonas(.TileExit.Map, UserZonaId(UserIndex)).lvlMaximo & ".", FontTypeNames.FONTTYPE_INFO)
+                    Call ClosestStablePos(UserList(UserIndex).Pos, nPos)
+            
+                    If nPos.X <> 0 And nPos.Y <> 0 Then
+                        Call WarpUserChar(UserIndex, nPos.Map, nPos.X, nPos.Y, False)
+                    End If
+                    Exit Sub
                 End If
                 
                 If UserList(UserIndex).flags.Equitando Then

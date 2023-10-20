@@ -996,7 +996,7 @@ End Type
 'Datos de user o npc
 Public Type Char
 
-    charindex As Integer
+    CharIndex As Integer
     Head As Integer
     body As Integer
     AnimAtaque As Long
@@ -2086,6 +2086,7 @@ Type tZonaInfo
     BackUp As Byte
     
     lvlMinimo As Byte
+    lvlMaximo As Byte
     
     NoTirarItems As Byte
 

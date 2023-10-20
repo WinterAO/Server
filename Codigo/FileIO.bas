@@ -121,6 +121,7 @@ Private Type tMapDat
     terrain As String
     Ambient As String
     lvlMinimo As String
+    lvlMaximo As String
     RoboNpcsPermitido As Boolean
     InvocarSinEfecto As Boolean
     OcultarSinEfecto As Boolean
@@ -1569,7 +1570,7 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
             .RoboNpcsPermitido = MapDat(i).RoboNpcsPermitido
             .NoTirarItems = MapDat(i).NoTirarItems
             .lvlMinimo = val(MapDat(i).lvlMinimo)
-    
+            .lvlMaximo = val(MapDat(i).lvlMinimo)
             .Pk = MapDat(i).battle_mode
             
             .Terreno = MapDat(i).terrain
