@@ -37,6 +37,9 @@ Option Explicit
 
 Global LeerNPCs As clsIniManager
 
+Public Declare Function QueryPerformanceCounter Lib "kernel32" (lpPerformanceCount As Currency) As Long
+Public Declare Function QueryPerformanceFrequency Lib "kernel32" (lpFrequency As Currency) As Long
+
 Sub DarCuerpoDesnudo(ByVal UserIndex As Integer, _
                      Optional ByVal Mimetizado As Boolean = False)
     '***************************************************
@@ -622,16 +625,18 @@ Private Sub InitMainTimers()
     'Author: ZaMa
     'Last Modify Date: 15/03/2011
     'Initializes Main Timers.
+    '20/10/2023 - Lorwik: Añado timer Segundo y TimerEventoPortal
     '*****************************************************************
     On Error Resume Next
 
     With frmMain
         .AutoSave.Enabled = True
-
+        .Segundo.Enabled = True
         .GameTimer.Enabled = True
         .PacketResend.Enabled = True
         .TIMER_AI.Enabled = True
         .Auditoria.Enabled = True
+        .TimerEventoPortal.Enabled = True
     End With
     
 End Sub
