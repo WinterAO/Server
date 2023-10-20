@@ -1838,7 +1838,7 @@ Private Sub InicializarSonidos()
     
 End Sub
 
-Public Sub LogGlobal(ByVal Str As String)
+Public Sub LogGlobal(ByVal str As String)
 '***************************************************
 'Autor: Lorwik
 'Fecha: 09/06/2020
@@ -1850,7 +1850,7 @@ Public Sub LogGlobal(ByVal Str As String)
     nfile = FreeFile ' obtenemos un canal
     Open App.Path & "\logs\GlobalChat(" & Month(Date) & "-" & Year(Date) & ").log" For Append Shared As #nfile
     
-        Print #nfile, Date & " " & time & " " & Str
+        Print #nfile, Date & " " & time & " " & str
         
     Close #nfile
 
@@ -1881,19 +1881,19 @@ Public Sub BanGlobalChatCargar()
     Close #ArchN
 End Sub
 
-Public Sub BanGlobalChatAgregar(ByVal UserName As String)
+Public Sub BanGlobalChatAgregar(ByVal username As String)
 '***************************************************
 'Autor: Lorwik
 'Fecha: 09/06/2020
 'Descripcion: Agrega un nuevo baneado del chat global
 '***************************************************
 
-    BanUsersChatGlobal.Add UserName
+    BanUsersChatGlobal.Add username
 
     Call BanGlobalChatGuardar
 End Sub
 
-Public Function BanGlobalChatBuscar(ByVal UserName As String) As Long
+Public Function BanGlobalChatBuscar(ByVal username As String) As Long
 '***************************************************
 'Autor: Lorwik
 'Fecha: 09/06/2020
@@ -1906,7 +1906,7 @@ Public Function BanGlobalChatBuscar(ByVal UserName As String) As Long
     Dale = True
     LoopC = 1
     Do While LoopC <= BanUsersChatGlobal.Count And Dale
-        Dale = (BanUsersChatGlobal.Item(LoopC) <> UserName)
+        Dale = (BanUsersChatGlobal.Item(LoopC) <> username)
         LoopC = LoopC + 1
     Loop
 
@@ -1917,7 +1917,7 @@ Public Function BanGlobalChatBuscar(ByVal UserName As String) As Long
     End If
 End Function
 
-Public Function BanGlobalChatQuitar(ByVal UserName As String) As Boolean
+Public Function BanGlobalChatQuitar(ByVal username As String) As Boolean
 '***************************************************
 'Autor: Lorwik
 'Fecha: 09/06/2020
@@ -1927,7 +1927,7 @@ On Error Resume Next
 
     Dim n As Long
 
-    n = BanGlobalChatBuscar(UserName)
+    n = BanGlobalChatBuscar(username)
     If n > 0 Then
         BanUsersChatGlobal.Remove n
         BanGlobalChatGuardar
@@ -2042,14 +2042,11 @@ Public Function ObtenerCuadranteUser(ByVal UserIndex As Integer) As Integer
     '**************************************************************
     Dim cx As Integer
     Dim cy As Integer
-    Dim AnchoMap As Byte
-    
-    AnchoMap = 10
     
     cx = Fix((UserList(UserIndex).Pos.X / 100))
     cy = Fix((UserList(UserIndex).Pos.Y / 100))
     
-    ObtenerCuadranteUser = ((cy) * AnchoMap) + cx + 1
+    ObtenerCuadranteUser = ((cy) * ANCHO_MAP) + cx + 1
     
 End Function
 
@@ -2061,16 +2058,33 @@ Public Function ObtenerCuadrante(ByVal tX As Long, ByVal tY As Long) As Integer
     '**************************************************************
     Dim cx As Integer
     Dim cy As Integer
-    Dim AnchoMap As Byte
-    
-    AnchoMap = 10
     
     cx = Fix((tX / 100))
     cy = Fix((tY / 100))
     
-    ObtenerCuadrante = ((cy) * AnchoMap) + cx + 1
+    ObtenerCuadrante = ((cy) * ANCHO_MAP) + cx + 1
     
 End Function
+
+Public Sub ObtenerCoordenadasDesdeCuadrante(ByVal numeroCuadrante As Integer, ByVal tX As Long, ByVal tY As Long, ByRef X As Integer, ByRef Y As Integer)
+    '**************************************************************
+    'Author: Lorwik
+    'Fecha: 20/10/2023
+    'Descripción: Calcula las coordenadas (tX, tY) a partir del número de cuadrante.
+    '**************************************************************
+    Dim cx As Integer
+    Dim cy As Integer
+
+    numeroCuadrante = numeroCuadrante - 1 ' Restamos 1 para revertir el ajuste
+    
+    ' Aquí, ANCHO_MAP representa el número de cuadrantes en un solo renglón del mapa
+    cx = numeroCuadrante Mod ANCHO_MAP
+    cy = Int(numeroCuadrante / ANCHO_MAP)
+
+    ' Luego, multiplicamos cx y cy por 100 para obtener las coordenadas tX y tY
+    X = cx * 100
+    Y = cy * 100
+End Sub
 
 Public Function esMapaPortalEvento(ByVal Mapa As Integer) As Byte
 '**********************************

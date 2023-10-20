@@ -3,7 +3,7 @@ Option Explicit
 
 Private Const MaxCupo As Byte = 5
 Private Cupo As Byte
-Private Encurso As Boolean
+Private EnCurso As Boolean
 Private Const MinLevel As Byte = 40
 Private Const MaxRondas As Byte = 11 '10 rondas + el BOSS
 Private RondaActual As Byte
@@ -33,7 +33,7 @@ Private Function PuedeParticipar(ByVal UserIndex As Integer) As Boolean
     With UserList(UserIndex)
     
         '¿El evento ya comenzo?
-        If Encurso = True Then
+        If EnCurso = True Then
             Call WriteConsoleMsg(UserIndex, "El evento esta en curso, debes esperar a que termine.", FontTypeNames.FONTTYPE_INFO)
             PuedeParticipar = False
             Exit Function
@@ -164,7 +164,7 @@ Public Sub Preparar(ByVal UserIndex As Integer)
         Exit Sub
     End If
         
-    Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Arenas de Rinkel: " & UserList(UserIndex).Name & " va a comenzar el reto de la Arena de Rinkel ¿Quieres acompañarle y luchar junto a el? ¡Tienes 1 minuto para entrar al evento!", FontTypeNames.FONTTYPE_TALK))
+    Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("Arenas de Rinkel: " & UserList(UserIndex).Name & " va a comenzar el reto de la Arena de Rinkel ¿Quieres acompañarle y luchar junto a el? ¡Tienes 1 minuto para entrar al evento!", FontTypeNames.FONTTYPE_TALK))
         
     TimerEventoRinkel = TiempoEvento
 
@@ -179,10 +179,10 @@ Public Sub RestarTimerEvento()
     TimerEventoRinkel = TimerEventoRinkel - 1
 
     If TimerEventoRinkel = 0 Then
-        Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Arena de Rinkel: ¡El evento ha dado comienzo!", FontTypeNames.FONTTYPE_TALK))
+        Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("Arena de Rinkel: ¡El evento ha dado comienzo!", FontTypeNames.FONTTYPE_TALK))
         Call SiguienteRonda
     
-        Encurso = True
+        EnCurso = True
     End If
 End Sub
 
@@ -190,7 +190,7 @@ Public Sub RestarTimerRonda()
 
     Dim i As Byte
 
-    If Encurso = False Then Exit Sub
+    If EnCurso = False Then Exit Sub
     
     TimerRondaEventoRinkel = TimerRondaEventoRinkel - 1
     
@@ -534,7 +534,7 @@ Dim i As Byte
     'Buscamos y matamos los bichos que puedan haber.
     Call BichosVivos(True)
 
-    Encurso = False
+    EnCurso = False
 End Sub
 
 Public Function BichosVivos(ByVal Matar As Boolean)
@@ -547,7 +547,7 @@ Public Function BichosVivos(ByVal Matar As Boolean)
     Dim NPCCount As Byte
     
     'Comprobamos si esta el evento en curso por si acaso.
-    If Encurso = False Then Exit Function
+    If EnCurso = False Then Exit Function
     
     'Buscamos los bichos
     For i = 1 To LastNPC

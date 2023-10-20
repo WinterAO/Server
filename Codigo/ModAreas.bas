@@ -34,6 +34,10 @@ Public Const XMinMapSize        As Integer = 1
 Public Const YMaxMapSize        As Integer = 1000
 Public Const YMinMapSize        As Integer = 1
 
+' Se usa para calcular los cuadrantes !!!
+'indica a cuantos mapas de 100 x 100 equivalen el mapa general de ancho
+Public Const ANCHO_MAP As Byte = 10
+
 ' Tamanio en tiles de la pantalla.
 'ADVERTENCIA: TIENEN QUE SER IMPAR!
 Public Const XWindow            As Byte = 23
