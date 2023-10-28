@@ -1030,7 +1030,7 @@ Private Function YaExiste(ByVal GuildName As String) As Boolean
 
 End Function
 
-Public Function HasFound(ByRef UserName As String) As Boolean
+Public Function HasFound(ByRef username As String) As Boolean
 
     '***************************************************
     'Autor: ZaMa
@@ -1041,7 +1041,7 @@ Public Function HasFound(ByRef UserName As String) As Boolean
 
     Dim Name As String
 
-    Name = UCase$(UserName)
+    Name = UCase$(username)
 
     For i = 1 To CANTIDADDECLANES
         HasFound = (UCase$(guilds(i).Fundador) = Name)
@@ -1156,13 +1156,13 @@ Public Sub v_RutinaElecciones()
 
     On Error GoTo errh
 
-    Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Servidor> Revisando elecciones", FontTypeNames.FONTTYPE_SERVER))
+    Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("Servidor> Revisando elecciones", FontTypeNames.FONTTYPE_SERVER))
 
     For i = 1 To CANTIDADDECLANES
 
         If Not guilds(i) Is Nothing Then
             If guilds(i).RevisarElecciones Then
-                Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Servidor> " & guilds(i).GetLeader & " es el nuevo lider de " & guilds(i).GuildName & ".", FontTypeNames.FONTTYPE_SERVER))
+                Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("Servidor> " & guilds(i).GetLeader & " es el nuevo lider de " & guilds(i).GuildName & ".", FontTypeNames.FONTTYPE_SERVER))
 
             End If
 
@@ -1171,7 +1171,7 @@ Public Sub v_RutinaElecciones()
 proximo:
     Next i
 
-    Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Servidor> Elecciones revisadas.", FontTypeNames.FONTTYPE_SERVER))
+    Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("Servidor> Elecciones revisadas.", FontTypeNames.FONTTYPE_SERVER))
     Exit Sub
 errh:
     Call LogError("modGuilds.v_RutinaElecciones():" & Err.description)
@@ -1305,7 +1305,7 @@ Public Sub SendGuildDetails(ByVal UserIndex As Integer, ByRef GuildName As Strin
             codex(i - 1) = .GetCodex(i)
         Next i
         
-        Call Protocol.WriteGuildDetails(UserIndex, GuildName, .Fundador, .GetFechaFundacion, .GetLeader, .GetURL, .CantidadDeMiembros, .EleccionesAbiertas, Alineacion2String(.Alineacion), .CantidadEnemys, .CantidadAllies, .PuntosAntifaccion & "/" & CStr(MAXANTIFACCION), codex, .GetDesc)
+        Call Protocol_Write.WriteGuildDetails(UserIndex, GuildName, .Fundador, .GetFechaFundacion, .GetLeader, .GetURL, .CantidadDeMiembros, .EleccionesAbiertas, Alineacion2String(.Alineacion), .CantidadEnemys, .CantidadAllies, .PuntosAntifaccion & "/" & CStr(MAXANTIFACCION), codex, .GetDesc)
 
     End With
 
@@ -2086,13 +2086,13 @@ Public Sub SendDetallesPersonaje(ByVal UserIndex As Integer, ByVal Personaje As 
     Personaje = UCase$(Personaje)
     
     If GI <= 0 Or GI > CANTIDADDECLANES Then
-        Call Protocol.WriteConsoleMsg(UserIndex, "No perteneces a ningun clan.", FontTypeNames.FONTTYPE_INFO)
+        Call Protocol_Write.WriteConsoleMsg(UserIndex, "No perteneces a ningun clan.", FontTypeNames.FONTTYPE_INFO)
         Exit Sub
 
     End If
     
     If Not m_EsGuildLeader(UserList(UserIndex).Name, GI) Then
-        Call Protocol.WriteConsoleMsg(UserIndex, "No eres el lider de tu clan.", FontTypeNames.FONTTYPE_INFO)
+        Call Protocol_Write.WriteConsoleMsg(UserIndex, "No eres el lider de tu clan.", FontTypeNames.FONTTYPE_INFO)
         Exit Sub
 
     End If
@@ -2123,7 +2123,7 @@ Public Sub SendDetallesPersonaje(ByVal UserIndex As Integer, ByVal Personaje As 
         Next i
         
         If i > UBound(list()) Then
-            Call Protocol.WriteConsoleMsg(UserIndex, "El personaje no es ni aspirante ni miembro del clan.", FontTypeNames.FONTTYPE_INFO)
+            Call Protocol_Write.WriteConsoleMsg(UserIndex, "El personaje no es ni aspirante ni miembro del clan.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
 
         End If
@@ -2362,18 +2362,18 @@ Public Function GuildFounder(ByVal GuildIndex As Integer) As String
 
 End Function
 
-Public Function GetUserGuildMember(ByVal UserName As String) As String
+Public Function GetUserGuildMember(ByVal username As String) As String
 
     '***************************************************
     'Author: Juan Andres Dalmasso
     'Returns the guilds the user has been member of
     '***************************************************
 
-    GetUserGuildMember = GetUserGuildMemberDatabase(UserName)
+    GetUserGuildMember = GetUserGuildMemberDatabase(username)
 
 End Function
 
-Public Function GetUserGuildAspirant(ByVal UserName As String) As Integer
+Public Function GetUserGuildAspirant(ByVal username As String) As Integer
 
     '***************************************************
     'Author: Juan Andres Dalmasso (CHOTS)
@@ -2381,11 +2381,11 @@ Public Function GetUserGuildAspirant(ByVal UserName As String) As Integer
     'Returns the guilds the user has been member of
     '***************************************************
 
-    GetUserGuildAspirant = GetUserGuildAspirantDatabase(UserName)
+    GetUserGuildAspirant = GetUserGuildAspirantDatabase(username)
 
 End Function
 
-Public Function GetUserGuildRejectionReason(ByVal UserName As String) As String
+Public Function GetUserGuildRejectionReason(ByVal username As String) As String
 
     '***************************************************
     'Author: Juan Andres Dalmasso (CHOTS)
@@ -2393,11 +2393,11 @@ Public Function GetUserGuildRejectionReason(ByVal UserName As String) As String
     'Returns the reason why the user has not been accepted to the guild
     '***************************************************
 
-    GetUserGuildRejectionReason = GetUserGuildRejectionReasonDatabase(UserName)
+    GetUserGuildRejectionReason = GetUserGuildRejectionReasonDatabase(username)
 
 End Function
 
-Public Function GetUserGuildPedidos(ByVal UserName As String) As String
+Public Function GetUserGuildPedidos(ByVal username As String) As String
 
     '***************************************************
     'Author: Juan Andres Dalmasso (CHOTS)
@@ -2405,11 +2405,11 @@ Public Function GetUserGuildPedidos(ByVal UserName As String) As String
     'Returns the guilds the user asked to be a member of
     '***************************************************
     
-    GetUserGuildPedidos = GetUserGuildPedidosDatabase(UserName)
+    GetUserGuildPedidos = GetUserGuildPedidosDatabase(username)
 
 End Function
 
-Public Sub SaveUserGuildRejectionReason(ByVal UserName As String, ByVal Reason As String)
+Public Sub SaveUserGuildRejectionReason(ByVal username As String, ByVal Reason As String)
 
     '***************************************************
     'Autor: Juan Andres Dalmasso (CHOTS)
@@ -2417,11 +2417,11 @@ Public Sub SaveUserGuildRejectionReason(ByVal UserName As String, ByVal Reason A
     'Updates the rection reason for the user
     '***************************************************
 
-    Call SaveUserGuildRejectionReasonDatabase(UserName, Reason)
+    Call SaveUserGuildRejectionReasonDatabase(username, Reason)
 
 End Sub
 
-Public Sub SaveUserGuildIndex(ByVal UserName As String, ByVal GuildIndex As Integer)
+Public Sub SaveUserGuildIndex(ByVal username As String, ByVal GuildIndex As Integer)
 
     '***************************************************
     'Autor: Juan Andres Dalmasso (CHOTS)
@@ -2429,11 +2429,11 @@ Public Sub SaveUserGuildIndex(ByVal UserName As String, ByVal GuildIndex As Inte
     'Updates the guild index
     '***************************************************
 
-    Call SaveUserGuildIndexDatabase(UserName, GuildIndex)
+    Call SaveUserGuildIndexDatabase(username, GuildIndex)
 
 End Sub
 
-Public Sub SaveUserGuildAspirant(ByVal UserName As String, ByVal AspirantIndex As Integer)
+Public Sub SaveUserGuildAspirant(ByVal username As String, ByVal AspirantIndex As Integer)
 
     '***************************************************
     'Autor: Juan Andres Dalmasso (CHOTS)
@@ -2441,11 +2441,11 @@ Public Sub SaveUserGuildAspirant(ByVal UserName As String, ByVal AspirantIndex A
     'Updates the guild Aspirant index
     '***************************************************
 
-    Call SaveUserGuildAspirantDatabase(UserName, AspirantIndex)
+    Call SaveUserGuildAspirantDatabase(username, AspirantIndex)
 
 End Sub
 
-Public Sub SaveUserGuildMember(ByVal UserName As String, ByVal guilds As String)
+Public Sub SaveUserGuildMember(ByVal username As String, ByVal guilds As String)
 
     '***************************************************
     'Autor: Juan Andres Dalmasso (CHOTS)
@@ -2453,11 +2453,11 @@ Public Sub SaveUserGuildMember(ByVal UserName As String, ByVal guilds As String)
     'Updates the guilds the user has been member of
     '***************************************************
 
-    Call SaveUserGuildMemberDatabase(UserName, guilds)
+    Call SaveUserGuildMemberDatabase(username, guilds)
 
 End Sub
 
-Public Sub SaveUserGuildPedidos(ByVal UserName As String, ByVal Pedidos As String)
+Public Sub SaveUserGuildPedidos(ByVal username As String, ByVal Pedidos As String)
 
     '***************************************************
     'Autor: Juan Andres Dalmasso (CHOTS)
@@ -2465,6 +2465,6 @@ Public Sub SaveUserGuildPedidos(ByVal UserName As String, ByVal Pedidos As Strin
     'Updates the guilds the user has asked to be a member of
     '***************************************************
 
-    Call SaveUserGuildPedidosDatabase(UserName, Pedidos)
+    Call SaveUserGuildPedidosDatabase(username, Pedidos)
 
 End Sub

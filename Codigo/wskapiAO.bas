@@ -257,15 +257,15 @@ End Function
 
 'Retorna 0 cuando se envio o se metio en la cola,
 'retorna <> 0 cuando no se pudo enviar o no se pudo meter en la cola
-Public Function WsApiEnviar(ByVal Slot As Integer, ByRef Str As String) As Long
+Public Function WsApiEnviar(ByVal Slot As Integer, ByRef str As String) As Long
 
     Dim ret     As String
     Dim Retorno As Long
     Dim data()  As Byte
     
-    ReDim Preserve data(Len(Str) - 1) As Byte
+    ReDim Preserve data(Len(str) - 1) As Byte
 
-    data = StrConv(Str, vbFromUnicode)
+    data = StrConv(str, vbFromUnicode)
     
     Retorno = 0
     
@@ -278,7 +278,7 @@ Public Function WsApiEnviar(ByVal Slot As Integer, ByRef Str As String) As Long
 
             If ret = WSAEWOULDBLOCK Then
                 ' WSAEWOULDBLOCK, put the data again in the outgoingData Buffer
-                Call UserList(Slot).outgoingData.WriteASCIIStringFixed(Str)
+                Call UserList(Slot).outgoingData.WriteASCIIStringFixed(str)
             End If
 
         End If
@@ -295,7 +295,7 @@ Public Function WsApiEnviar(ByVal Slot As Integer, ByRef Str As String) As Long
 
 End Function
 
-Public Sub LogApiSock(ByVal Str As String)
+Public Sub LogApiSock(ByVal str As String)
 
     On Error GoTo errHandler
 
@@ -303,7 +303,7 @@ Public Sub LogApiSock(ByVal Str As String)
         nfile = FreeFile ' obtenemos un canal
         
     Open App.Path & "\logs\wsapi.log" For Append Shared As #nfile
-        Print #nfile, Date & " " & time & " " & Str
+        Print #nfile, Date & " " & time & " " & str
     Close #nfile
 
     Exit Sub
@@ -324,7 +324,7 @@ Public Sub EventoSockAccept(ByVal SockID As Long)
     Dim sa        As sockaddr
     Dim NuevoSock As Long
     Dim i         As Long
-    Dim Str       As String
+    Dim str       As String
     Dim data()    As Byte
     
     Tam = sockaddr_size
@@ -358,11 +358,11 @@ Public Sub EventoSockAccept(ByVal SockID As Long)
     
     If SecurityIp.IPSecuritySuperaLimiteConexiones(sa.sin_addr) Then
         
-        Str = Protocol.PrepareMessageErrorMsg("Limite de conexiones para su IP alcanzado.")
+        str = Protocol_Write.PrepareMessageErrorMsg("Limite de conexiones para su IP alcanzado.")
         
-        ReDim Preserve data(Len(Str) - 1) As Byte
+        ReDim Preserve data(Len(str) - 1) As Byte
         
-        data = StrConv(Str, vbFromUnicode)
+        data = StrConv(str, vbFromUnicode)
         
         Call send(ByVal NuevoSock, data(0), ByVal UBound(data()) + 1, ByVal 0)
         
@@ -424,11 +424,11 @@ Public Sub EventoSockAccept(ByVal SockID As Long)
         
     Else
         
-        Str = Protocol.PrepareMessageErrorMsg("El servidor se encuentra lleno en este momento. Disculpe las molestias ocasionadas.")
+        str = Protocol_Write.PrepareMessageErrorMsg("El servidor se encuentra lleno en este momento. Disculpe las molestias ocasionadas.")
         
-        ReDim Preserve data(Len(Str) - 1) As Byte
+        ReDim Preserve data(Len(str) - 1) As Byte
         
-        data = StrConv(Str, vbFromUnicode)
+        data = StrConv(str, vbFromUnicode)
         
         Call send(ByVal NuevoSock, data(0), ByVal UBound(data()) + 1, ByVal 0)
         
