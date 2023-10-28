@@ -207,7 +207,7 @@ Public Sub MuereNpc(ByVal NPCIndex As Integer, ByVal UserIndex As Integer)
             
             '¿Es un worldboss?
             If MiNPC.NPCtype = WorldBoss Then
-                Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(UserList(UserIndex).Name & " ha matado al WorldBoss " & MiNPC.Name, FontTypeNames.FONTTYPE_SERVER))
+                Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg(UserList(UserIndex).Name & " ha matado al WorldBoss " & MiNPC.Name, FontTypeNames.FONTTYPE_SERVER))
 
             End If
             
@@ -1495,7 +1495,7 @@ Public Function OpenNPC(ByVal NpcNumber As Integer, _
 
 End Function
 
-Public Sub DoFollow(ByVal NPCIndex As Integer, ByVal UserName As String)
+Public Sub DoFollow(ByVal NPCIndex As Integer, ByVal username As String)
     '***************************************************
     'Author: Unknown
     'Last Modification: -
@@ -1511,7 +1511,7 @@ Public Sub DoFollow(ByVal NPCIndex As Integer, ByVal UserName As String)
             .Movement = .flags.OldMovement
             .Hostile = .flags.OldHostil
         Else
-            .flags.AttackedBy = UserName
+            .flags.AttackedBy = username
             .flags.Follow = True
             .flags.SiguiendoGm = True
             .Movement = TipoAI.NPCDEFENSA

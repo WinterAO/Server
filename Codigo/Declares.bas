@@ -1707,7 +1707,7 @@ Public Const MAXPJACCOUNTS As Byte = 10
 
 Public Type AccountUser
     ID As Long
-    UserName As String
+    username As String
     Password As String
     Email As String
     Salt As String

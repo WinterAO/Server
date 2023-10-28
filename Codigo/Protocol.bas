@@ -179,6 +179,7 @@ Private Enum ServerPacketID
     AtaqueNPC
     MostrarPVP
     eBarFx
+    ePrivilegios
 End Enum
 
 Private Enum ClientPacketID
@@ -24680,3 +24681,34 @@ Public Function PrepareMessageBarFx(ByVal CharIndex As Integer, _
 
 End Function
 
+Public Sub WritePrivilegios(ByVal UserIndex As Integer)
+    '****************************************************
+    'Autor: Lorwik
+    'Fecha: 28/10/2023
+    'Descripcion: Envia si es usuario o gm
+    '****************************************************
+    On Error GoTo errHandler
+
+    With UserList(UserIndex)
+
+        Call .outgoingData.WriteByte(ServerPacketID.ePrivilegios)
+        
+        If .flags.Privilegios And (PlayerType.Admin Or PlayerType.Dios Or PlayerType.SemiDios Or PlayerType.Consejero) Then
+            Call .outgoingData.WriteBoolean(True)
+        Else
+            Call .outgoingData.WriteBoolean(False)
+        End If
+    
+    End With
+    
+    Exit Sub
+
+errHandler:
+
+    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
+        Call FlushBuffer(UserIndex)
+        Resume
+
+    End If
+    
+End Sub

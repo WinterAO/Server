@@ -755,7 +755,7 @@ Private Sub CargarObjetosIniciales()
 End Sub
 
 Sub ConnectAccount(ByVal UserIndex As Integer, _
-                   ByRef UserName As String, _
+                   ByRef username As String, _
                    ByRef Password As String, _
                    ByVal macAddress As String, _
                    ByVal hdSerial As Long)
@@ -772,7 +772,7 @@ Sub ConnectAccount(ByVal UserIndex As Integer, _
 
     Set oSHA256 = New CSHA256
 
-    If LenB(UserName) > 24 Or LenB(UserName) = 0 Then
+    If LenB(username) > 24 Or LenB(username) = 0 Then
         Call WriteErrorMsg(UserIndex, "Nombre invalido.")
         Exit Sub
 
@@ -787,7 +787,7 @@ Sub ConnectAccount(ByVal UserIndex As Integer, _
     End If
 
     '¿Existe la cuenta?
-    If Not CuentaExiste(UserName) Then
+    If Not CuentaExiste(username) Then
         Call WriteErrorMsg(UserIndex, "La cuenta no existe.")
         Call CloseSocket(UserIndex)
         Exit Sub
@@ -795,7 +795,7 @@ Sub ConnectAccount(ByVal UserIndex As Integer, _
     End If
     
     'Ya esta conectado el personaje?
-    If CheckForSameNameAccount(UserName) Then
+    If CheckForSameNameAccount(username) Then
         Call WriteErrorMsg(UserIndex, "La cuenta ya esta conectada.")
         Call CloseSocket(UserIndex)
         Exit Sub
@@ -803,16 +803,16 @@ Sub ConnectAccount(ByVal UserIndex As Integer, _
         
     'Aca Guardamos y Hasheamos el password + Salt
     'Es el passwd valido?
-    Salt = GetAccountSalt(UserName) ' Obtenemos la Salt
+    Salt = GetAccountSalt(username) ' Obtenemos la Salt
 
-    If oSHA256.SHA256(Password & Salt) <> GetAccountPassword(UserName) Then
+    If oSHA256.SHA256(Password & Salt) <> GetAccountPassword(username) Then
         Call WriteErrorMsg(UserIndex, "Password incorrecto.")
         Call CloseSocket(UserIndex)
         Exit Sub
     End If
 
     '¿La cuenta esta verificada?
-    If Not CuentaVerificada(UserName) Then
+    If Not CuentaVerificada(username) Then
         Call WriteErrorMsg(UserIndex, "La cuenta aun no ha sido verificada, por favor revise su email.")
         Call CloseSocket(UserIndex)
         Exit Sub
@@ -837,17 +837,17 @@ Sub ConnectAccount(ByVal UserIndex As Integer, _
     'Si no tienen interes en usarlo pueden desactivarlo en el Server.ini
     If ConexionAPI Then
         'Pasamos UserName tambien como email, ya que son lo mismo.... :(
-        Call ApiEndpointSendLoginAccountEmail(UserName)
+        Call ApiEndpointSendLoginAccountEmail(username)
     End If
 
     'Guardamos la data de seguridad
     UserList(UserIndex).AccountInfo.macAddress = macAddress
     UserList(UserIndex).AccountInfo.hdSerial = hdSerial
 
-    Call LoginAccountDatabase(UserIndex, UserName)
+    Call LoginAccountDatabase(UserIndex, username)
     
     'Una vez logeados registramos el acceso:
-    Call SaveAccountLastLoginDatabase(UserIndex, UserName)
+    Call SaveAccountLastLoginDatabase(UserIndex, username)
 
 End Sub
 
@@ -1394,6 +1394,9 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
             Call WriteLevelUp(UserIndex, .Stats.SkillPts)
 
         End If
+        
+        'Le enviamos sus privilegios
+        Call WritePrivilegios(UserIndex)
     
         'Sumamos el usuario al mapa y a la zona donde se encuentra
         MapInfo(.Pos.Map).NumUsers = MapInfo(.Pos.Map).NumUsers + 1
@@ -1402,7 +1405,7 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
         If NumUsers > RecordUsuariosOnline Then
             Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("Record de usuarios conectados simultaneamente. Hay " & NumUsers & " usuarios.", FontTypeNames.FONTTYPE_INFOBOLD))
             RecordUsuariosOnline = NumUsers
-            Call WriteVar(ConfigPath & "Server.ini", "INIT", "RECORD", Str(RecordUsuariosOnline))
+            Call WriteVar(ConfigPath & "Server.ini", "INIT", "RECORD", str(RecordUsuariosOnline))
 
             'Este ultimo es para saber siempre los records en el frmMain
             frmMain.txtRecordOnline.Text = RecordUsuariosOnline
@@ -1656,7 +1659,7 @@ Sub ResetUseRaccount(ByVal UserIndex As Integer)
     
         'Borro la información de la cuenta
         .AccountInfo.ID = 0
-        .AccountInfo.UserName = vbNullString
+        .AccountInfo.username = vbNullString
         .AccountInfo.Password = vbNullString
         .AccountInfo.Salt = vbNullString
         .AccountInfo.Gemas = 0

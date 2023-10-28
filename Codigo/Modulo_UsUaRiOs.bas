@@ -431,17 +431,17 @@ Public Sub EraseUserChar(ByVal UserIndex As Integer, ByVal IsAdminInvisible As B
     
 ErrorHandler:
     
-    Dim UserName  As String
+    Dim username  As String
 
     Dim CharIndex As Integer
     
     If UserIndex > 0 Then
-        UserName = UserList(UserIndex).Name
+        username = UserList(UserIndex).Name
         CharIndex = UserList(UserIndex).Char.CharIndex
 
     End If
 
-    Call LogError("Error en EraseUserchar " & Err.Number & ": " & Err.description & ". User: " & UserName & "(UI: " & UserIndex & " - CI: " & CharIndex & ")")
+    Call LogError("Error en EraseUserchar " & Err.Number & ": " & Err.description & ". User: " & username & "(UI: " & UserIndex & " - CI: " & CharIndex & ")")
 
 End Sub
 
@@ -561,7 +561,7 @@ Public Sub MakeUserChar(ByVal toMap As Boolean, _
 
     Dim NickColor  As Byte
 
-    Dim UserName   As String
+    Dim username   As String
 
     Dim Privileges As Byte
     
@@ -592,22 +592,22 @@ Public Sub MakeUserChar(ByVal toMap As Boolean, _
                 
                 'Preparo el nick
                 If .showName Then
-                    UserName = .Name
+                    username = .Name
                     
                     If .flags.EnConsulta Then
-                        UserName = UserName & " " & TAG_CONSULT_MODE
+                        username = username & " " & TAG_CONSULT_MODE
                     Else
 
                         If UserList(sndIndex).flags.Privilegios And PlayerType.User Then
-                            If LenB(ClanTag) <> 0 Then UserName = UserName & " <" & ClanTag & ">"
+                            If LenB(ClanTag) <> 0 Then username = username & " <" & ClanTag & ">"
                             
                         Else
 
                             If (.flags.invisible Or .flags.Oculto) And (Not .flags.AdminInvisible = 1) And .flags.Navegando = 0 Then
-                                UserName = UserName & " " & TAG_USER_INVISIBLE
+                                username = username & " " & TAG_USER_INVISIBLE
                             Else
                                 
-                                If LenB(ClanTag) <> 0 Then UserName = UserName & " <" & ClanTag & ">"
+                                If LenB(ClanTag) <> 0 Then username = username & " <" & ClanTag & ">"
 
                             End If
 
@@ -617,7 +617,7 @@ Public Sub MakeUserChar(ByVal toMap As Boolean, _
 
                 End If
             
-                Call WriteCharacterCreate(sndIndex, .Char.body, .Char.Head, .Char.Heading, .Char.CharIndex, X, Y, .Char.WeaponAnim, .Char.ShieldAnim, .Char.FX, 999, .Char.CascoAnim, 0, UserName, NickColor, Privileges, .Char.AuraAnim, .Char.AuraColor)
+                Call WriteCharacterCreate(sndIndex, .Char.body, .Char.Head, .Char.Heading, .Char.CharIndex, X, Y, .Char.WeaponAnim, .Char.ShieldAnim, .Char.FX, 999, .Char.CascoAnim, 0, username, NickColor, Privileges, .Char.AuraAnim, .Char.AuraColor)
             Else
                 'Hide the name and clan - set privs as normal user
                 Call AgregarUser(UserIndex, .Pos.Map, ButIndex)
