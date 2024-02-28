@@ -680,6 +680,8 @@ Public SND_QUESTTARGET                  As Integer
 
 Public SND_PUERTA                       As Byte
 
+Public SND_DROP                         As Integer
+
 Public SND_NIVEL                        As Byte
 
 Public SND_USERMUERTE                   As Byte

@@ -2730,6 +2730,7 @@ Private Sub HandleDrop(ByVal UserIndex As Integer)
                 End If
                 
                 Call DropObj(UserIndex, Slot, Amount, .Pos.Map, .Pos.X, .Pos.Y)
+                Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_DROP, .Pos.X, .Pos.Y))
 
             End If
 

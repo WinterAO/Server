@@ -28,6 +28,11 @@ Begin VB.Form frmMain
    ScaleWidth      =   10875
    StartUpPosition =   2  'CenterScreen
    WindowState     =   1  'Minimized
+   Begin VB.Timer Estadisticas 
+      Interval        =   10000
+      Left            =   3630
+      Top             =   1680
+   End
    Begin VB.Frame Frame2 
       BackColor       =   &H00E0E0E0&
       Caption         =   "Información general"
@@ -446,13 +451,13 @@ Begin VB.Form frmMain
       Begin VB.Timer PacketResend 
          Enabled         =   0   'False
          Interval        =   10
-         Left            =   1200
+         Left            =   1170
          Top             =   1440
       End
       Begin VB.Timer Auditoria 
          Enabled         =   0   'False
          Interval        =   1000
-         Left            =   720
+         Left            =   690
          Top             =   1440
       End
       Begin VB.TextBox txtChat 
@@ -582,6 +587,8 @@ Attribute VB_Exposed = False
 Option Explicit
 
 Public ESCUCHADAS As Long
+
+Private lastStatDate As Byte
 
 Private Type NOTIFYICONDATA
 
@@ -917,6 +924,25 @@ End Sub
 Private Sub chkServerHabilitado_Click()
     ServerSoloGMs = chkServerHabilitado.Value
 
+End Sub
+
+Private Sub Estadisticas_Timer()
+
+    If lastStatDate <> Day(Date) Then
+        Dim LoopC As Integer
+
+        For LoopC = 1 To MaxUsers
+
+            With UserList(LoopC)
+
+                If .ConnIDValida And .flags.UserLogged Then
+                    Call modStats.RecordStat(modStats.EVENT_CONTINUE, .Name)
+                End If
+            End With
+        Next
+    Else
+        lastStatDate = Day(Date)
+    End If
 End Sub
 
 Private Sub mnuCerrarBackup_Click()
@@ -1260,6 +1286,7 @@ Private Sub Segundo_Timer()
 
     LastTime = CurTime
     ' -----------------------------------
+    
 End Sub
 
 Private Sub TIMER_AI_Timer()

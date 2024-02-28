@@ -313,6 +313,8 @@ Sub Main()
     
     If Not setRutas Then Exit Sub
     
+    Call modStats.RecordStat(modStats.EVENT_INITIALIZED, "")
+    
     'Inicializamos la cabecera
     Call IniciarCabecera
     
@@ -671,13 +673,13 @@ Private Sub SocketConfig()
     
 End Sub
 
-Function FileExist(ByVal File As String, _
+Function FileExist(ByVal file As String, _
                    Optional FileType As VbFileAttribute = vbNormal) As Boolean
     '*****************************************************************
     'Se fija si existe el archivo
     '*****************************************************************
 
-    FileExist = LenB(Dir$(File, FileType)) <> 0
+    FileExist = LenB(Dir$(file, FileType)) <> 0
 
 End Function
 
@@ -1835,6 +1837,7 @@ Private Sub InicializarSonidos()
     SND_BEBER = 135
     SND_RESUCITAR_SACERDOTE = 103
     SND_CURAR_SACERDOTE = 104
+    SND_DROP = 484
     
 End Sub
 

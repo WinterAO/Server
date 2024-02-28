@@ -1385,6 +1385,8 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
         'DE ACA EN ADELANTE GRABA EL CHARFILE, OJO!
         NumUsers = NumUsers + 1
         .flags.UserLogged = True
+        
+        Call modStats.RecordStat(modStats.EVENT_LOGIN, .Name)
     
         'usado para borrar Pjs
         Call UpdateUserLogged(.Name, 1)
@@ -2087,6 +2089,8 @@ Sub CloseUser(ByVal UserIndex As Integer)
         If NumUsers > 0 Then NumUsers = NumUsers - 1
         .flags.UserLogged = False
         .Counters.Saliendo = False
+        
+        Call modStats.RecordStat(modStats.EVENT_LOGOUT, .Name)
     
         'Le devolvemos el body y head originales
         If .flags.AdminInvisible = 1 Then
