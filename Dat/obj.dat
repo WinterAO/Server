@@ -154,7 +154,7 @@ Madera Magica: 1006
 [INIT]
 'aca va el numero de OBJ mas alto, NO la cantidad de OBJs.
 'esto sirve para que los GMS puedan ver la lista completa de items para crear en una ventanita.
-NumOBJs=1338
+NumOBJs=1354
 
 
 [OBJ1]
@@ -16661,3 +16661,163 @@ GrhIndex=3556
 ObjType=41
 Agarrable=1
 TiempoVIP=1
+
+[OBJ1339] 'Puerta para negocio porque no tiene clave
+Name=Puerta doble de madera abierta
+GrhIndex=1973
+ObjType=6
+Agarrable=1
+Abierta=0
+Llave=0
+IndexAbierta=1339
+IndexCerrada=1340
+
+[OBJ1340] 'Puerta para negocio porque no tiene clave
+Name=Puerta doble de madera cerrada
+GrhIndex=1975
+ObjType=6
+Abierta=1
+Agarrable=1
+Llave=0
+IndexAbierta=1339
+IndexCerrada=1340
+
+[OBJ1341] 'Puerta para negocio porque no tiene clave
+Name=Puerta doble de madera abierta
+GrhIndex=1974
+ObjType=6
+Agarrable=1
+Abierta=0
+Llave=0
+IndexAbierta=1341
+IndexCerrada=1342
+
+[OBJ1342] 'Puerta para negocio porque no tiene clave
+Name=Puerta doble de madera cerrada
+GrhIndex=1976
+ObjType=6
+Abierta=1
+Agarrable=1
+Llave=0
+IndexAbierta=1341
+IndexCerrada=1342
+
+[OBJ1343] 'Puerta para negocio porque no tiene clave
+Name=Puerta doble de madera abierta
+GrhIndex=1979
+ObjType=6
+Agarrable=1
+Abierta=0
+Llave=0
+IndexAbierta=1343
+IndexCerrada=1344
+
+[OBJ1344] 'Puerta para negocio porque no tiene clave
+Name=Puerta doble de madera cerrada
+GrhIndex=1977
+ObjType=6
+Abierta=1
+Agarrable=1
+Llave=0
+IndexAbierta=1343
+IndexCerrada=1344
+
+[OBJ1345] 'Puerta para negocio porque no tiene clave
+Name=Puerta doble de madera abierta
+GrhIndex=1980
+ObjType=6
+Agarrable=1
+Abierta=0
+Llave=0
+IndexAbierta=1345
+IndexCerrada=1346
+
+[OBJ1346] 'Puerta para negocio porque no tiene clave
+Name=Puerta doble de madera cerrada
+GrhIndex=1978
+ObjType=6
+Abierta=1
+Agarrable=1
+Llave=0
+IndexAbierta=1345
+IndexCerrada=1346
+
+[OBJ1347] 'Puerta para negocio porque no tiene clave
+Name=Puerta doble de madera abierta
+GrhIndex=1983
+ObjType=6
+Agarrable=1
+Abierta=0
+Llave=0
+IndexAbierta=1347
+IndexCerrada=1348
+
+[OBJ1348] 'Puerta para negocio porque no tiene clave
+Name=Puerta doble de madera cerrada
+GrhIndex=1981
+ObjType=6
+Abierta=1
+Agarrable=1
+Llave=0
+IndexAbierta=1347
+IndexCerrada=1348
+
+[OBJ1349] 'Puerta para negocio porque no tiene clave
+Name=Puerta doble de madera abierta
+GrhIndex=1984
+ObjType=6
+Agarrable=1
+Abierta=0
+Llave=0
+IndexAbierta=1349
+IndexCerrada=1350
+
+[OBJ1350] 'Puerta para negocio porque no tiene clave
+Name=Puerta doble de madera cerrada
+GrhIndex=1982
+ObjType=6
+Abierta=1
+Agarrable=1
+Llave=0
+IndexAbierta=1349
+IndexCerrada=1350
+
+[OBJ1351] 'Puerta para negocio porque no tiene clave
+Name=Puerta doble de madera cerrada
+GrhIndex=6558
+ObjType=6
+Abierta=1
+Agarrable=1
+Llave=0
+IndexAbierta=1352
+IndexCerrada=1351
+
+[OBJ1352] 'Puerta para negocio porque no tiene clave
+Name=Puerta doble de madera abierta
+GrhIndex=399
+ObjType=6
+Agarrable=1
+Abierta=0
+Llave=0
+IndexAbierta=1352
+IndexCerrada=1351
+
+[OBJ1353] 'Puerta para negocio porque no tiene clave
+Name=Puerta doble de madera cerrada
+GrhIndex=6559
+ObjType=6
+Abierta=1
+Agarrable=1
+Llave=0
+IndexAbierta=1354
+IndexCerrada=1353
+
+[OBJ1354] 'Puerta para negocio porque no tiene clave
+Name=Puerta doble de madera abierta
+GrhIndex=400
+ObjType=6
+Agarrable=1
+Abierta=0
+Llave=0
+IndexAbierta=1344
+IndexCerrada=1353
