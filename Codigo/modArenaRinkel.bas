@@ -240,7 +240,7 @@ Private Sub SiguienteRonda()
                 BichoPos.X = RandomNumber(880, 890)
                 BichoPos.Y = RandomNumber(870, 880)
                 
-                Call SpawnNpc(1224, BichoPos, True, False, True, 0.2 * Cupo)
+                Call SpawnNpc(2024, BichoPos, True, False, True, 0.2 * Cupo)
                 LoopC = LoopC + 1
             Loop
             '****************************************************************
@@ -255,7 +255,7 @@ Private Sub SiguienteRonda()
                 BichoPos.X = RandomNumber(880, 890)
                 BichoPos.Y = RandomNumber(870, 880)
                 
-                Call SpawnNpc(1225, BichoPos, True, False, True, 0.2 * Cupo)
+                Call SpawnNpc(2025, BichoPos, True, False, True, 0.2 * Cupo)
                 LoopC = LoopC + 1
             Loop
             
@@ -270,7 +270,7 @@ Private Sub SiguienteRonda()
                 BichoPos.X = RandomNumber(880, 890)
                 BichoPos.Y = RandomNumber(870, 880)
                 
-                Call SpawnNpc(1226, BichoPos, True, False, True, 0.2 * Cupo)
+                Call SpawnNpc(2026, BichoPos, True, False, True, 0.2 * Cupo)
                 LoopC = LoopC + 1
             Loop
             
@@ -282,7 +282,7 @@ Private Sub SiguienteRonda()
                 BichoPos.X = RandomNumber(880, 890)
                 BichoPos.Y = RandomNumber(870, 880)
                 
-                Call SpawnNpc(1227, BichoPos, True, False, True, 0.2 * Cupo)
+                Call SpawnNpc(2027, BichoPos, True, False, True, 0.2 * Cupo)
                 LoopC = LoopC + 1
             Loop
             
@@ -297,7 +297,7 @@ Private Sub SiguienteRonda()
                 BichoPos.X = RandomNumber(880, 890)
                 BichoPos.Y = RandomNumber(870, 880)
                 
-                Call SpawnNpc(1228, BichoPos, True, False, True, 0.2 * Cupo)
+                Call SpawnNpc(2028, BichoPos, True, False, True, 0.2 * Cupo)
                 LoopC = LoopC + 1
             Loop
                 
@@ -309,7 +309,7 @@ Private Sub SiguienteRonda()
                 BichoPos.X = RandomNumber(880, 890)
                 BichoPos.Y = RandomNumber(870, 880)
                 
-                Call SpawnNpc(1229, BichoPos, True, False, True, 0.2 * Cupo)
+                Call SpawnNpc(2029, BichoPos, True, False, True, 0.2 * Cupo)
                 LoopC = LoopC + 1
             Loop
             
@@ -324,7 +324,7 @@ Private Sub SiguienteRonda()
                 BichoPos.X = RandomNumber(880, 890)
                 BichoPos.Y = RandomNumber(870, 880)
                 
-                Call SpawnNpc(1230, BichoPos, True, False, True, 0.2 * Cupo)
+                Call SpawnNpc(2030, BichoPos, True, False, True, 0.2 * Cupo)
                 LoopC = LoopC + 1
             Loop
                
@@ -336,7 +336,7 @@ Private Sub SiguienteRonda()
                 BichoPos.X = RandomNumber(880, 890)
                 BichoPos.Y = RandomNumber(870, 880)
                 
-                Call SpawnNpc(1229, BichoPos, True, False, True, 0.2 * Cupo)
+                Call SpawnNpc(2029, BichoPos, True, False, True, 0.2 * Cupo)
                 LoopC = LoopC + 1
             Loop
             
@@ -348,7 +348,7 @@ Private Sub SiguienteRonda()
                 BichoPos.X = RandomNumber(880, 890)
                 BichoPos.Y = RandomNumber(870, 880)
                 
-                Call SpawnNpc(1228, BichoPos, True, False, True, 0.2 * Cupo)
+                Call SpawnNpc(2028, BichoPos, True, False, True, 0.2 * Cupo)
                 LoopC = LoopC + 1
             Loop
             
@@ -363,7 +363,7 @@ Private Sub SiguienteRonda()
                 BichoPos.X = RandomNumber(880, 890)
                 BichoPos.Y = RandomNumber(870, 880)
                 
-                Call SpawnNpc(1227, BichoPos, True, False, True, 0.2 * Cupo)
+                Call SpawnNpc(2027, BichoPos, True, False, True, 0.2 * Cupo)
                 LoopC = LoopC + 1
             Loop
                 
@@ -375,7 +375,7 @@ Private Sub SiguienteRonda()
                 BichoPos.X = RandomNumber(880, 890)
                 BichoPos.Y = RandomNumber(870, 880)
                 
-                Call SpawnNpc(1230, BichoPos, True, False, True, 0.2 * Cupo)
+                Call SpawnNpc(2030, BichoPos, True, False, True, 0.2 * Cupo)
                 LoopC = LoopC + 1
             Loop
             
@@ -387,7 +387,7 @@ Private Sub SiguienteRonda()
                 BichoPos.X = RandomNumber(880, 890)
                 BichoPos.Y = RandomNumber(870, 880)
                 
-                Call SpawnNpc(1226, BichoPos, True, False, True, 0.2 * Cupo)
+                Call SpawnNpc(2026, BichoPos, True, False, True, 0.2 * Cupo)
                 LoopC = LoopC + 1
             Loop
             
@@ -402,7 +402,7 @@ Private Sub SiguienteRonda()
                 BichoPos.X = RandomNumber(880, 890)
                 BichoPos.Y = RandomNumber(870, 880)
                 
-                Call SpawnNpc(1230, BichoPos, True, False, True, 0.2 * Cupo)
+                Call SpawnNpc(2030, BichoPos, True, False, True, 0.2 * Cupo)
                 LoopC = LoopC + 1
             Loop
             
@@ -414,7 +414,7 @@ Private Sub SiguienteRonda()
                 BichoPos.X = RandomNumber(880, 890)
                 BichoPos.Y = RandomNumber(870, 880)
                 
-                Call SpawnNpc(1229, BichoPos, True, False, True, 0.2 * Cupo)
+                Call SpawnNpc(2029, BichoPos, True, False, True, 0.2 * Cupo)
                 LoopC = LoopC + 1
             Loop
             
@@ -429,7 +429,7 @@ Private Sub SiguienteRonda()
                 BichoPos.X = RandomNumber(880, 890)
                 BichoPos.Y = RandomNumber(870, 880)
                 
-                Call SpawnNpc(1229, BichoPos, True, False, True, 0.2 * Cupo)
+                Call SpawnNpc(2029, BichoPos, True, False, True, 0.2 * Cupo)
                 LoopC = LoopC + 1
             Loop
             
@@ -441,7 +441,7 @@ Private Sub SiguienteRonda()
                 BichoPos.X = RandomNumber(880, 890)
                 BichoPos.Y = RandomNumber(870, 880)
                 
-                Call SpawnNpc(1230, BichoPos, True, False, True, 0.2 * Cupo)
+                Call SpawnNpc(2030, BichoPos, True, False, True, 0.2 * Cupo)
                 LoopC = LoopC + 1
             Loop
             
@@ -456,7 +456,7 @@ Private Sub SiguienteRonda()
                 BichoPos.X = RandomNumber(880, 890)
                 BichoPos.Y = RandomNumber(870, 880)
                 
-                Call SpawnNpc(1230, BichoPos, True, False, True, 0.2 * Cupo)
+                Call SpawnNpc(2030, BichoPos, True, False, True, 0.2 * Cupo)
                 LoopC = LoopC + 1
             Loop
             
@@ -468,7 +468,7 @@ Private Sub SiguienteRonda()
                 BichoPos.X = RandomNumber(880, 890)
                 BichoPos.Y = RandomNumber(870, 880)
                 
-                Call SpawnNpc(1231, BichoPos, True, False, True, 0.2 * Cupo)
+                Call SpawnNpc(2031, BichoPos, True, False, True, 0.2 * Cupo)
                 LoopC = LoopC + 1
             Loop
             
@@ -483,7 +483,7 @@ Private Sub SiguienteRonda()
                 BichoPos.X = RandomNumber(880, 890)
                 BichoPos.Y = RandomNumber(870, 880)
                 
-                Call SpawnNpc(1232, BichoPos, True, False, True, 0.2 * Cupo)
+                Call SpawnNpc(2032, BichoPos, True, False, True, 0.2 * Cupo)
                 LoopC = LoopC + 1
             Loop
             
@@ -496,7 +496,7 @@ Private Sub SiguienteRonda()
             BichoPos.X = RandomNumber(880, 890)
             BichoPos.Y = RandomNumber(870, 880)
                                             
-            Call SpawnNpc(1233, BichoPos, True, False, True, 0.2 * Cupo)
+            Call SpawnNpc(2033, BichoPos, True, False, True, 0.2 * Cupo)
             '****************************************************************
     End Select
     

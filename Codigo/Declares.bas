@@ -203,7 +203,7 @@ Public Enum eCiudad
     cShakoud
     cBelleuve
     cIslaZharkel
-    cHaverwood
+    cWinterhold
     cbattle
 
 End Enum
@@ -506,8 +506,7 @@ Public Enum eNPCType
     Quest = 14
     Marinero = 15
     Subastador = 16
-    Recurso = 17
-    Instructor = 18
+    Instructor = 17
     
 End Enum
 
@@ -2271,7 +2270,7 @@ Public Shakoud         As WorldPos
 
 Public Belleuve        As WorldPos
 
-Public Haverwood       As WorldPos
+Public Winterhold      As WorldPos
 
 Public IslaZharkel     As WorldPos
 

@@ -45,7 +45,7 @@ Public Const YWindow            As Byte = 19
 
 ' Cantidad de tiles buffer
 ' (para que graficos grandes se vean desde fuera de la pantalla)
-Private Const TileBufferSize    As Byte = 5
+Private Const TileBufferSize    As Byte = 8
 
 '************************************************
 '*      Valores calculados automaticamente      *

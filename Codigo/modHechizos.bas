@@ -989,9 +989,6 @@ Sub HandleHechizoNPC(ByVal UserIndex As Integer, ByVal HechizoIndex As Integer)
 
         End If
         
-        'A los NPC de tipo recursos no se le pueden tirar hechizos
-        If Npclist(.flags.TargetNPC).NPCtype = Recurso Then Exit Sub
-        
         Select Case Hechizos(HechizoIndex).Tipo
 
             Case TipoHechizo.uEstado

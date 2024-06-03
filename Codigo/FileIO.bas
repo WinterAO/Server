@@ -387,7 +387,7 @@ Public Sub loadAdministrativeUsers()
 
 End Sub
 
-Public Function GetCharPrivs(ByRef UserName As String) As PlayerType
+Public Function GetCharPrivs(ByRef username As String) As PlayerType
     '****************************************************
     'Author: ZaMa
     'Last Modification: 18/11/2010
@@ -396,16 +396,16 @@ Public Function GetCharPrivs(ByRef UserName As String) As PlayerType
 
     Dim Privs As PlayerType
 
-    If EsAdmin(UserName) Then
+    If EsAdmin(username) Then
         Privs = PlayerType.Admin
         
-    ElseIf EsDios(UserName) Then
+    ElseIf EsDios(username) Then
         Privs = PlayerType.Dios
 
-    ElseIf EsSemiDios(UserName) Then
+    ElseIf EsSemiDios(username) Then
         Privs = PlayerType.SemiDios
         
-    ElseIf EsConsejero(UserName) Then
+    ElseIf EsConsejero(username) Then
         Privs = PlayerType.Consejero
     
     Else
@@ -490,7 +490,7 @@ Public Sub CargarHechizos()
     If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando Hechizos."
     
     Dim Hechizo As Integer
-    Dim Str     As String
+    Dim str     As String
     
     Dim Leer    As clsIniManager
 
@@ -602,11 +602,11 @@ Public Sub CargarHechizos()
             
             'Portales
             .Portal = val(Leer.GetValue("Hechizo" & Hechizo, "Portal"))
-            Str = Leer.GetValue("Hechizo" & Hechizo, "PortalMap")
+            str = Leer.GetValue("Hechizo" & Hechizo, "PortalMap")
             
-            .PortalPos.Map = val(ReadField(1, Str, 45))
-            .PortalPos.X = val(ReadField(2, Str, 45))
-            .PortalPos.Y = val(ReadField(3, Str, 45))
+            .PortalPos.Map = val(ReadField(1, str, 45))
+            .PortalPos.X = val(ReadField(2, str, 45))
+            .PortalPos.Y = val(ReadField(3, str, 45))
             
             .Casteo = val(Leer.GetValue("Hechizo" & Hechizo, "Casteo"))
             .CastFX = val(Leer.GetValue("Hechizo" & Hechizo, "CastFX"))
@@ -1242,7 +1242,7 @@ errHandler:
     
 End Sub
 
-Function GetVar(ByVal File As String, _
+Function GetVar(ByVal file As String, _
                 ByVal Main As String, _
                 ByVal Var As String, _
                 Optional EmptySpaces As Long = 1024) As String
@@ -1260,7 +1260,7 @@ Function GetVar(ByVal File As String, _
       
     sSpaces = Space$(EmptySpaces) ' This tells the computer how long the longest string can be
       
-    GetPrivateProfileString Main, Var, szReturn, sSpaces, EmptySpaces, File
+    GetPrivateProfileString Main, Var, szReturn, sSpaces, EmptySpaces, file
       
     GetVar = RTrim$(sSpaces)
     GetVar = Left$(GetVar, Len(GetVar) - 1)
@@ -1872,10 +1872,10 @@ Sub CargarCiudades()
             .Y = Lector.GetValue("IslaZharkel", "Y")
         End With
         
-        With Haverwood
-            .Map = Lector.GetValue("Haverwood", "Mapa")
-            .X = Lector.GetValue("Haverwood", "X")
-            .Y = Lector.GetValue("Haverwood", "Y")
+        With Winterhold
+            .Map = Lector.GetValue("Winterhold", "Mapa")
+            .X = Lector.GetValue("Winterhold", "X")
+            .Y = Lector.GetValue("Winterhold", "Y")
         End With
         
         With Prision
@@ -1908,14 +1908,14 @@ Sub CargarCiudades()
     Ciudades(eCiudad.cShakoud) = Shakoud
     Ciudades(eCiudad.cBelleuve) = Belleuve
     Ciudades(eCiudad.cIslaZharkel) = IslaZharkel
-    Ciudades(eCiudad.cHaverwood) = Haverwood
+    Ciudades(eCiudad.cWinterhold) = Winterhold
     Ciudades(eCiudad.cbattle) = Battleground
 
     If frmMain.Visible Then frmMain.txtStatus.Text = Date & " " & time & " - Se cargaron las ciudades.dat"
 
 End Sub
 
-Sub WriteVar(ByVal File As String, _
+Sub WriteVar(ByVal file As String, _
              ByVal Main As String, _
              ByVal Var As String, _
              ByVal Value As String)
@@ -1925,7 +1925,7 @@ Sub WriteVar(ByVal File As String, _
     'Escribe VAR en un archivo
     '***************************************************
 
-    writeprivateprofilestring Main, Var, Value, File
+    writeprivateprofilestring Main, Var, Value, file
     
 End Sub
 

@@ -291,7 +291,7 @@ Private Function setRutas() As Boolean
         Exit Function
     End If
     
-    DatPath = App.Path & GetVar(ConfigPath & "Directorios.ini", "DIRECTORIOS", "DatPath")
+    DatPath = GetVar(ConfigPath & "Directorios.ini", "DIRECTORIOS", "DatPath")
     MapPath = GetVar(ConfigPath & "Directorios.ini", "DIRECTORIOS", "MapPath")
     
     setRutas = True
