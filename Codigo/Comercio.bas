@@ -73,7 +73,7 @@ Public Sub Comercio(ByVal Modo As eModoComercio, _
         If Slot > MAX_INVENTORY_SLOTS Then
             Exit Sub
         ElseIf Cantidad > MAX_INVENTORY_OBJS Then
-            Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(UserList(UserIndex).Name & " ha sido baneado por el sistema anti-cheats.", FontTypeNames.FONTTYPE_FIGHT))
+            Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg(UserList(UserIndex).Name & " ha sido baneado por el sistema anti-cheats.", FontTypeNames.FONTTYPE_FIGHT))
             Call Ban(UserList(UserIndex).Name, "Sistema Anti Cheats", "Intentar hackear el sistema de comercio. Quiso comprar demasiados items:" & Cantidad)
             UserList(UserIndex).flags.Ban = 1
             Call WriteErrorMsg(UserIndex, "Has sido baneado por el Sistema AntiCheat.")
@@ -344,7 +344,7 @@ Public Function SalePrice(ByVal ObjIndex As Integer) As Single
     '*************************************************
     If ObjIndex < 1 Or ObjIndex > UBound(ObjData) Then Exit Function
     If ItemNewbie(ObjIndex) Then Exit Function
-    If ObjData(ObjIndex).OBJType = otPiedraHogar Then Exit Function
+    If ObjData(ObjIndex).OBJType = otRunaHogar Then Exit Function
     
     SalePrice = ObjData(ObjIndex).Valor / REDUCTOR_PRECIOVENTA
 

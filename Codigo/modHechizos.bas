@@ -989,9 +989,6 @@ Sub HandleHechizoNPC(ByVal UserIndex As Integer, ByVal HechizoIndex As Integer)
 
         End If
         
-        'A los NPC de tipo recursos no se le pueden tirar hechizos
-        If Npclist(.flags.TargetNPC).NPCtype = Recurso Then Exit Sub
-        
         Select Case Hechizos(HechizoIndex).Tipo
 
             Case TipoHechizo.uEstado
@@ -1083,7 +1080,7 @@ Sub LanzarHechizo(ByVal spellIndex As Integer, ByVal UserIndex As Integer)
         If PuedeLanzar(UserIndex, spellIndex) Then
         
             If Hechizos(spellIndex).Casteo > 0 And .flags.CasteoSpell.Casteando = False Then
-                .flags.CasteoSpell.Casteando = True
+                .flags.CasteoSpell.Casteando = eCasteo.Hechizo
                 .flags.CasteoSpell.SpellID = spellIndex
                 .flags.CasteoSpell.TimeCast = Hechizos(spellIndex).Casteo
                 Call WriteConsoleMsg(UserIndex, "Te concentras para lanzar el hechizo...", FontTypeNames.FONTTYPE_INFO)
@@ -3039,6 +3036,7 @@ Public Sub CancelCast(ByVal UserIndex As Integer)
     
         If .flags.CasteoSpell.Casteando Then
             Call WriteConsoleMsg(UserIndex, "No logras concentrarte y cancelas el casteo.", FontTypeNames.FONTTYPE_INFO)
+            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageBarFx(.Char.CharIndex, 0, e_AccionBarra.CancelarAccion))
             Call ResetCasteo(UserIndex)
             .flags.Hechizo = 0
         End If

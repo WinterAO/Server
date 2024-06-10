@@ -37,6 +37,9 @@ Option Explicit
 
 Global LeerNPCs As clsIniManager
 
+Public Declare Function QueryPerformanceCounter Lib "kernel32" (lpPerformanceCount As Currency) As Long
+Public Declare Function QueryPerformanceFrequency Lib "kernel32" (lpFrequency As Currency) As Long
+
 Sub DarCuerpoDesnudo(ByVal UserIndex As Integer, _
                      Optional ByVal Mimetizado As Boolean = False)
     '***************************************************
@@ -288,7 +291,7 @@ Private Function setRutas() As Boolean
         Exit Function
     End If
     
-    DatPath = App.Path & GetVar(ConfigPath & "Directorios.ini", "DIRECTORIOS", "DatPath")
+    DatPath = GetVar(ConfigPath & "Directorios.ini", "DIRECTORIOS", "DatPath")
     MapPath = GetVar(ConfigPath & "Directorios.ini", "DIRECTORIOS", "MapPath")
     
     setRutas = True
@@ -309,6 +312,8 @@ Sub Main()
     ChDrive App.Path
     
     If Not setRutas Then Exit Sub
+    
+    Call modStats.RecordStat(modStats.EVENT_INITIALIZED, "")
     
     'Inicializamos la cabecera
     Call IniciarCabecera
@@ -420,6 +425,9 @@ Sub Main()
     'Invocaciones.dat
     frmCargando.pCargar.CustomText = "Cargando Invocaciones.dat"
     Call InitInvocaciones
+    
+    'Eventos de portales en mapas:
+    Call CargarEventosMapa
     
     ' Connections
     Call ResetUsersConnections
@@ -563,7 +571,7 @@ Private Sub LoadConstants()
 
     ' Initialize classes
     Set WSAPISock2Usr = New Collection
-    Protocol.InitAuxiliarBuffer
+    Protocol_Write.InitAuxiliarBuffer
 
     Set aClon = New clsAntiMassClon
     Set TrashCollector = New Collection
@@ -619,16 +627,18 @@ Private Sub InitMainTimers()
     'Author: ZaMa
     'Last Modify Date: 15/03/2011
     'Initializes Main Timers.
+    '20/10/2023 - Lorwik: Añado timer Segundo y TimerEventoPortal
     '*****************************************************************
     On Error Resume Next
 
     With frmMain
         .AutoSave.Enabled = True
-
+        .Segundo.Enabled = True
         .GameTimer.Enabled = True
         .PacketResend.Enabled = True
         .TIMER_AI.Enabled = True
         .Auditoria.Enabled = True
+        .TimerEventoPortal.Enabled = True
     End With
     
 End Sub
@@ -663,13 +673,13 @@ Private Sub SocketConfig()
     
 End Sub
 
-Function FileExist(ByVal File As String, _
+Function FileExist(ByVal file As String, _
                    Optional FileType As VbFileAttribute = vbNormal) As Boolean
     '*****************************************************************
     'Se fija si existe el archivo
     '*****************************************************************
 
-    FileExist = LenB(Dir$(File, FileType)) <> 0
+    FileExist = LenB(Dir$(file, FileType)) <> 0
 
 End Function
 
@@ -1555,7 +1565,7 @@ Sub GuardarUsuarios()
 
     haciendoBK = True
     
-    Call SendData(SendTarget.ToAll, 0, PrepareMessagePauseToggle())
+    Call SendData(SendTarget.Toall, 0, PrepareMessagePauseToggle())
     Call SendData(SendTarget.ToGM, 0, PrepareMessageConsoleMsg("Servidor> Grabando Personajes", FontTypeNames.FONTTYPE_SERVER))
     
     Dim i As Integer
@@ -1573,7 +1583,7 @@ Sub GuardarUsuarios()
     Call SaveRecords
     
     Call SendData(SendTarget.ToGM, 0, PrepareMessageConsoleMsg("Servidor> Personajes Grabados", FontTypeNames.FONTTYPE_SERVER))
-    Call SendData(SendTarget.ToAll, 0, PrepareMessagePauseToggle())
+    Call SendData(SendTarget.Toall, 0, PrepareMessagePauseToggle())
 
     haciendoBK = False
 
@@ -1827,10 +1837,11 @@ Private Sub InicializarSonidos()
     SND_BEBER = 135
     SND_RESUCITAR_SACERDOTE = 103
     SND_CURAR_SACERDOTE = 104
+    SND_DROP = 484
     
 End Sub
 
-Public Sub LogGlobal(ByVal Str As String)
+Public Sub LogGlobal(ByVal str As String)
 '***************************************************
 'Autor: Lorwik
 'Fecha: 09/06/2020
@@ -1842,7 +1853,7 @@ Public Sub LogGlobal(ByVal Str As String)
     nfile = FreeFile ' obtenemos un canal
     Open App.Path & "\logs\GlobalChat(" & Month(Date) & "-" & Year(Date) & ").log" For Append Shared As #nfile
     
-        Print #nfile, Date & " " & time & " " & Str
+        Print #nfile, Date & " " & time & " " & str
         
     Close #nfile
 
@@ -1873,19 +1884,19 @@ Public Sub BanGlobalChatCargar()
     Close #ArchN
 End Sub
 
-Public Sub BanGlobalChatAgregar(ByVal UserName As String)
+Public Sub BanGlobalChatAgregar(ByVal username As String)
 '***************************************************
 'Autor: Lorwik
 'Fecha: 09/06/2020
 'Descripcion: Agrega un nuevo baneado del chat global
 '***************************************************
 
-    BanUsersChatGlobal.Add UserName
+    BanUsersChatGlobal.Add username
 
     Call BanGlobalChatGuardar
 End Sub
 
-Public Function BanGlobalChatBuscar(ByVal UserName As String) As Long
+Public Function BanGlobalChatBuscar(ByVal username As String) As Long
 '***************************************************
 'Autor: Lorwik
 'Fecha: 09/06/2020
@@ -1898,7 +1909,7 @@ Public Function BanGlobalChatBuscar(ByVal UserName As String) As Long
     Dale = True
     LoopC = 1
     Do While LoopC <= BanUsersChatGlobal.Count And Dale
-        Dale = (BanUsersChatGlobal.Item(LoopC) <> UserName)
+        Dale = (BanUsersChatGlobal.Item(LoopC) <> username)
         LoopC = LoopC + 1
     Loop
 
@@ -1909,7 +1920,7 @@ Public Function BanGlobalChatBuscar(ByVal UserName As String) As Long
     End If
 End Function
 
-Public Function BanGlobalChatQuitar(ByVal UserName As String) As Boolean
+Public Function BanGlobalChatQuitar(ByVal username As String) As Boolean
 '***************************************************
 'Autor: Lorwik
 'Fecha: 09/06/2020
@@ -1919,7 +1930,7 @@ On Error Resume Next
 
     Dim n As Long
 
-    n = BanGlobalChatBuscar(UserName)
+    n = BanGlobalChatBuscar(username)
     If n > 0 Then
         BanUsersChatGlobal.Remove n
         BanGlobalChatGuardar
@@ -2034,14 +2045,11 @@ Public Function ObtenerCuadranteUser(ByVal UserIndex As Integer) As Integer
     '**************************************************************
     Dim cx As Integer
     Dim cy As Integer
-    Dim AnchoMap As Byte
-    
-    AnchoMap = 10
     
     cx = Fix((UserList(UserIndex).Pos.X / 100))
     cy = Fix((UserList(UserIndex).Pos.Y / 100))
     
-    ObtenerCuadranteUser = ((cy) * AnchoMap) + cx + 1
+    ObtenerCuadranteUser = ((cy) * ANCHO_MAP) + cx + 1
     
 End Function
 
@@ -2053,13 +2061,55 @@ Public Function ObtenerCuadrante(ByVal tX As Long, ByVal tY As Long) As Integer
     '**************************************************************
     Dim cx As Integer
     Dim cy As Integer
-    Dim AnchoMap As Byte
-    
-    AnchoMap = 11
     
     cx = Fix((tX / 100))
     cy = Fix((tY / 100))
     
-    ObtenerCuadrante = ((cy) * AnchoMap) + cx + 1
+    ObtenerCuadrante = ((cy) * ANCHO_MAP) + cx + 1
     
+End Function
+
+Public Sub ObtenerCoordenadasDesdeCuadrante(ByVal numeroCuadrante As Integer, ByVal tX As Long, ByVal tY As Long, ByRef X As Integer, ByRef Y As Integer)
+    '**************************************************************
+    'Author: Lorwik
+    'Fecha: 20/10/2023
+    'Descripción: Calcula las coordenadas (tX, tY) a partir del número de cuadrante.
+    '**************************************************************
+    Dim cx As Integer
+    Dim cy As Integer
+
+    numeroCuadrante = numeroCuadrante - 1 ' Restamos 1 para revertir el ajuste
+    
+    ' Aquí, ANCHO_MAP representa el número de cuadrantes en un solo renglón del mapa
+    cx = numeroCuadrante Mod ANCHO_MAP
+    cy = Int(numeroCuadrante / ANCHO_MAP)
+
+    ' Luego, multiplicamos cx y cy por 100 para obtener las coordenadas tX y tY
+    X = cx * 100
+    Y = cy * 100
+End Sub
+
+Public Function esMapaPortalEvento(ByVal Mapa As Integer) As Byte
+'**********************************
+'Autor: Lorwik
+'Fecha: 11/06/2023
+'Descripcion: Busca un evento de portales por el numero de mapa
+'**********************************
+    Dim i As Byte
+    
+    If TotalEventosMap > 0 Then
+    
+        For i = 1 To TotalEventosMap
+        
+            If PortalEvento(i).getMapa = Mapa Then
+                esMapaPortalEvento = i
+                Exit Function
+            End If
+        
+        Next i
+    
+    End If
+    
+    esMapaPortalEvento = 0
+
 End Function

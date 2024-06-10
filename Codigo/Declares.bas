@@ -203,7 +203,7 @@ Public Enum eCiudad
     cShakoud
     cBelleuve
     cIslaZharkel
-    cHaverwood
+    cWinterhold
     cbattle
 
 End Enum
@@ -368,7 +368,9 @@ Public Enum eRestrict
     restrict_armada = 2
     restrict_caos = 3
     restrict_faccion = 4
-
+    restrict_evento = 5
+    restrict_restringido = 6
+    
 End Enum
 
 ' <<<<<< Targets >>>>>>
@@ -504,8 +506,7 @@ Public Enum eNPCType
     Quest = 14
     Marinero = 15
     Subastador = 16
-    Recurso = 17
-    Instructor = 18
+    Instructor = 17
     
 End Enum
 
@@ -678,6 +679,8 @@ Public SND_QUESTTARGET                  As Integer
 
 Public SND_PUERTA                       As Byte
 
+Public SND_DROP                         As Integer
+
 Public SND_NIVEL                        As Byte
 
 Public SND_USERMUERTE                   As Byte
@@ -769,7 +772,7 @@ Public Enum eOBJType
     otPasajes = 36
     otMochilas = 37
     otYacimientoPez = 38
-    otPiedraHogar = 39
+    otRunaHogar = 39
     otInstruye = 40
     otPaseVIP = 41
     otCualquiera = 1000
@@ -834,7 +837,7 @@ End Type
 
 Public Type tHechizo
 
-    nombre As String
+    Nombre As String
     Desc As String
     PalabrasMagicas As String
     
@@ -985,7 +988,7 @@ End Type
 
 Public Type FXdata
 
-    nombre As String
+    Nombre As String
     GrhIndex As Long
     Delay As Integer
 
@@ -1246,7 +1249,7 @@ End Type
 
 Public Type tQuest
 
-    nombre As String
+    Nombre As String
     Desc As String
     RequiredLevel As Byte
     RequiredQuest As Integer
@@ -1381,8 +1384,15 @@ End Type
 '*********************************************************
 '*********************************************************
 
+Public Const TIEMPO_CASTEO_RUNA As Byte = 7
+
+Enum eCasteo
+    Hechizo = 1
+    Runa
+End Enum
+
 Private Type tCasteoSpell
-    Casteando As Boolean 'Indica si esta casteando
+    Casteando As Byte 'Indica si esta casteando
     SpellID As Integer  'Hechizo que esta casteando
     TimeCast As Long 'Tiempo de casteo
 End Type
@@ -1698,7 +1708,7 @@ Public Const MAXPJACCOUNTS As Byte = 10
 
 Public Type AccountUser
     ID As Long
-    UserName As String
+    username As String
     Password As String
     Email As String
     Salt As String
@@ -1724,7 +1734,7 @@ End Type
 
 'Info de los Amigos
 Public Type Amigos
-    nombre As String
+    Nombre As String
     Ignorado As Byte
     index As Integer
 
@@ -2077,6 +2087,7 @@ Type tZonaInfo
     BackUp As Byte
     
     lvlMinimo As Byte
+    lvlMaximo As Byte
     
     NoTirarItems As Byte
 
@@ -2259,7 +2270,7 @@ Public Shakoud         As WorldPos
 
 Public Belleuve        As WorldPos
 
-Public Haverwood       As WorldPos
+Public Winterhold      As WorldPos
 
 Public IslaZharkel     As WorldPos
 
@@ -2674,3 +2685,15 @@ End Type
 
 Public ShopObject() As ShopObj
 Public NUMSHOPS As Integer
+
+Public PortalEvento() As New clsEventoMapa
+Public TotalEventosMap As Byte
+Public HorarioEventoPortal(23) As Byte
+
+
+Public Enum e_AccionBarra
+    Runa = 1
+    Resucitar = 2
+    Intermundia = 3
+    CancelarAccion = 99
+End Enum

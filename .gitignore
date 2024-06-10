@@ -1,5 +1,6 @@
 Account/*
 Logs/*
+Stats/*.txt
 Charfile/*
 Logs/*
 WorldBackup/*

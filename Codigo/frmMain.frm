@@ -5,7 +5,7 @@ Begin VB.Form frmMain
    Caption         =   "WinterAO Resurrection Server"
    ClientHeight    =   5880
    ClientLeft      =   1950
-   ClientTop       =   1515
+   ClientTop       =   1815
    ClientWidth     =   10875
    ControlBox      =   0   'False
    FillColor       =   &H00C0C0C0&
@@ -28,33 +28,38 @@ Begin VB.Form frmMain
    ScaleWidth      =   10875
    StartUpPosition =   2  'CenterScreen
    WindowState     =   1  'Minimized
+   Begin VB.Timer Estadisticas 
+      Interval        =   10000
+      Left            =   3630
+      Top             =   1680
+   End
    Begin VB.Frame Frame2 
       BackColor       =   &H00E0E0E0&
       Caption         =   "Información general"
-      Height          =   2655
-      Left            =   5160
-      TabIndex        =   19
-      Top             =   240
+      Height          =   3075
+      Left            =   5190
+      TabIndex        =   1
+      Top             =   210
       Width           =   5655
       Begin VB.CommandButton cmdDebugRapido 
-         BackColor       =   &H00E0E0E0&
+         BackColor       =   &H80000005&
          Caption         =   "Stats de Slots"
          Height          =   375
          Index           =   1
          Left            =   4050
          Style           =   1  'Graphical
-         TabIndex        =   31
+         TabIndex        =   7
          Top             =   840
          Width           =   1455
       End
       Begin VB.CommandButton cmdDebugRapido 
-         BackColor       =   &H00E0E0E0&
+         BackColor       =   &H80000005&
          Caption         =   "Debug UserList"
          Height          =   375
          Index           =   0
          Left            =   4050
          Style           =   1  'Graphical
-         TabIndex        =   30
+         TabIndex        =   4
          Top             =   360
          Width           =   1455
       End
@@ -65,7 +70,7 @@ Begin VB.Form frmMain
          Height          =   255
          Left            =   2640
          Locked          =   -1  'True
-         TabIndex        =   25
+         TabIndex        =   6
          Text            =   "0"
          Top             =   720
          Width           =   975
@@ -77,7 +82,7 @@ Begin VB.Form frmMain
          Height          =   255
          Left            =   2160
          Locked          =   -1  'True
-         TabIndex        =   21
+         TabIndex        =   9
          Text            =   "0"
          Top             =   1080
          Width           =   975
@@ -89,10 +94,33 @@ Begin VB.Form frmMain
          Height          =   255
          Left            =   2880
          Locked          =   -1  'True
-         TabIndex        =   20
+         TabIndex        =   3
          Text            =   "0"
          Top             =   360
          Width           =   975
+      End
+      Begin VB.Label lblEstabilidad 
+         AutoSize        =   -1  'True
+         BackStyle       =   0  'Transparent
+         Caption         =   "Estabilidad 0%"
+         Height          =   210
+         Left            =   150
+         TabIndex        =   14
+         Top             =   2550
+         Width           =   1155
+      End
+      Begin VB.Label lblTiempoPara 
+         Appearance      =   0  'Flat
+         AutoSize        =   -1  'True
+         BackColor       =   &H00000000&
+         BackStyle       =   0  'Transparent
+         Caption         =   "Tiempo para la reconexion de la DB: Cargando..."
+         ForeColor       =   &H00000000&
+         Height          =   210
+         Left            =   120
+         TabIndex        =   15
+         Top             =   2790
+         Width           =   3900
       End
       Begin VB.Label lblWorldSave 
          Appearance      =   0  'Flat
@@ -112,7 +140,7 @@ Begin VB.Form frmMain
          ForeColor       =   &H00000000&
          Height          =   195
          Left            =   120
-         TabIndex        =   29
+         TabIndex        =   12
          Top             =   1995
          Width           =   3450
       End
@@ -134,7 +162,7 @@ Begin VB.Form frmMain
          ForeColor       =   &H00000000&
          Height          =   195
          Left            =   120
-         TabIndex        =   28
+         TabIndex        =   10
          Top             =   1440
          Width           =   3375
       End
@@ -156,7 +184,7 @@ Begin VB.Form frmMain
          ForeColor       =   &H00000000&
          Height          =   195
          Left            =   120
-         TabIndex        =   27
+         TabIndex        =   11
          Top             =   1720
          Width           =   3600
       End
@@ -177,8 +205,8 @@ Begin VB.Form frmMain
          EndProperty
          ForeColor       =   &H00000000&
          Height          =   195
-         Left            =   120
-         TabIndex        =   26
+         Left            =   150
+         TabIndex        =   13
          Top             =   2280
          Width           =   2265
       End
@@ -200,7 +228,7 @@ Begin VB.Form frmMain
          ForeColor       =   &H00000000&
          Height          =   195
          Left            =   120
-         TabIndex        =   24
+         TabIndex        =   5
          Top             =   720
          Width           =   2460
       End
@@ -222,7 +250,7 @@ Begin VB.Form frmMain
          ForeColor       =   &H00000000&
          Height          =   195
          Left            =   120
-         TabIndex        =   23
+         TabIndex        =   8
          Top             =   1080
          Width           =   1965
       End
@@ -244,21 +272,10 @@ Begin VB.Form frmMain
          ForeColor       =   &H00000000&
          Height          =   195
          Left            =   120
-         TabIndex        =   22
+         TabIndex        =   2
          Top             =   360
          Width           =   2820
       End
-   End
-   Begin VB.CommandButton cmdDB 
-      BackColor       =   &H00E0E0E0&
-      Caption         =   "Reconectar"
-      Height          =   375
-      Index           =   3
-      Left            =   7800
-      Style           =   1  'Graphical
-      TabIndex        =   17
-      Top             =   5040
-      Width           =   1335
    End
    Begin VB.Frame FraBaseDe 
       BackColor       =   &H00E0E0E0&
@@ -273,56 +290,54 @@ Begin VB.Form frmMain
          Strikethrough   =   0   'False
       EndProperty
       ForeColor       =   &H00000000&
-      Height          =   975
+      Height          =   735
       Left            =   5160
-      TabIndex        =   13
-      Top             =   4800
+      TabIndex        =   25
+      Top             =   5130
       Width           =   5535
       Begin VB.CommandButton cmdDB 
-         BackColor       =   &H00E0E0E0&
-         Caption         =   "Estado"
+         BackColor       =   &H80000005&
+         Caption         =   "Reconectar"
          Height          =   375
-         Index           =   2
-         Left            =   4080
+         Index           =   3
+         Left            =   2670
          Style           =   1  'Graphical
-         TabIndex        =   16
+         TabIndex        =   29
          Top             =   240
          Width           =   1335
       End
       Begin VB.CommandButton cmdDB 
-         BackColor       =   &H00E0E0E0&
+         BackColor       =   &H80000005&
+         Caption         =   "Estado"
+         Height          =   375
+         Index           =   2
+         Left            =   4140
+         Style           =   1  'Graphical
+         TabIndex        =   28
+         Top             =   240
+         Width           =   1335
+      End
+      Begin VB.CommandButton cmdDB 
+         BackColor       =   &H80000005&
          Caption         =   "Desconectar"
          Height          =   375
          Index           =   1
          Left            =   1320
          Style           =   1  'Graphical
-         TabIndex        =   15
+         TabIndex        =   27
          Top             =   240
          Width           =   1215
       End
       Begin VB.CommandButton cmdDB 
-         BackColor       =   &H00E0E0E0&
+         BackColor       =   &H80000005&
          Caption         =   "Conectar"
          Height          =   375
          Index           =   0
          Left            =   120
          Style           =   1  'Graphical
-         TabIndex        =   14
+         TabIndex        =   26
          Top             =   240
          Width           =   1095
-      End
-      Begin VB.Label lblTiempoPara 
-         Appearance      =   0  'Flat
-         AutoSize        =   -1  'True
-         BackColor       =   &H00000000&
-         BackStyle       =   0  'Transparent
-         Caption         =   "Tiempo para la reconexion de la DB: Cargando..."
-         ForeColor       =   &H00000000&
-         Height          =   210
-         Left            =   120
-         TabIndex        =   18
-         Top             =   720
-         Width           =   3900
       End
    End
    Begin VB.TextBox txtStatus 
@@ -338,22 +353,12 @@ Begin VB.Form frmMain
          Strikethrough   =   0   'False
       EndProperty
       ForeColor       =   &H0000C000&
-      Height          =   975
-      Left            =   5160
+      Height          =   1695
+      Left            =   5190
       MultiLine       =   -1  'True
-      TabIndex        =   12
+      TabIndex        =   22
       Text            =   "frmMain.frx":1042
-      Top             =   3000
-      Width           =   5655
-   End
-   Begin VB.CommandButton cmdForzarCierre 
-      BackColor       =   &H008080FF&
-      Caption         =   "Forzar Cierre del Servidor Sin Backup"
-      Height          =   375
-      Left            =   5160
-      Style           =   1  'Graphical
-      TabIndex        =   11
-      Top             =   4200
+      Top             =   3360
       Width           =   5655
    End
    Begin VB.CheckBox chkServerHabilitado 
@@ -370,49 +375,29 @@ Begin VB.Form frmMain
       EndProperty
       ForeColor       =   &H00000000&
       Height          =   255
-      Left            =   120
-      TabIndex        =   10
-      Top             =   3960
+      Left            =   90
+      TabIndex        =   21
+      Top             =   4620
       Width           =   2775
    End
-   Begin VB.CommandButton cmdSystray 
-      BackColor       =   &H00E0E0E0&
-      Caption         =   "Systray"
-      Height          =   375
-      Left            =   120
-      Style           =   1  'Graphical
-      TabIndex        =   8
-      Top             =   5400
-      Width           =   1335
-   End
-   Begin VB.CommandButton cmdApagarServidor 
-      BackColor       =   &H00C0C0FF&
-      Caption         =   "Apagar Servidor Con Backup"
-      Height          =   375
-      Left            =   1560
-      Style           =   1  'Graphical
-      TabIndex        =   7
-      Top             =   5400
-      Width           =   3495
-   End
    Begin VB.CommandButton cmdConfiguracion 
-      BackColor       =   &H00E0E0E0&
+      BackColor       =   &H80000005&
       Caption         =   "Configuracion General"
       Height          =   375
-      Left            =   120
+      Left            =   90
       Style           =   1  'Graphical
-      TabIndex        =   6
-      Top             =   4920
+      TabIndex        =   24
+      Top             =   5400
       Width           =   4935
    End
    Begin VB.CommandButton cmdDump 
-      BackColor       =   &H00E0E0E0&
+      BackColor       =   &H80000005&
       Caption         =   "Crear Log Critico de Usuarios"
       Height          =   375
-      Left            =   120
+      Left            =   90
       Style           =   1  'Graphical
-      TabIndex        =   5
-      Top             =   4440
+      TabIndex        =   23
+      Top             =   4920
       Width           =   4935
    End
    Begin VB.Timer AutoSave 
@@ -434,11 +419,23 @@ Begin VB.Form frmMain
          Strikethrough   =   0   'False
       EndProperty
       ForeColor       =   &H00000000&
-      Height          =   3615
+      Height          =   4335
       Left            =   120
-      TabIndex        =   0
+      TabIndex        =   16
       Top             =   240
       Width           =   4935
+      Begin VB.Timer Segundo 
+         Enabled         =   0   'False
+         Interval        =   1000
+         Left            =   3060
+         Top             =   1440
+      End
+      Begin VB.Timer TimerEventoPortal 
+         Enabled         =   0   'False
+         Interval        =   60000
+         Left            =   2610
+         Top             =   1440
+      End
       Begin VB.Timer GameTimer 
          Enabled         =   0   'False
          Interval        =   40
@@ -454,23 +451,22 @@ Begin VB.Form frmMain
       Begin VB.Timer PacketResend 
          Enabled         =   0   'False
          Interval        =   10
-         Left            =   1200
+         Left            =   1170
          Top             =   1440
       End
       Begin VB.Timer Auditoria 
          Enabled         =   0   'False
          Interval        =   1000
-         Left            =   720
+         Left            =   690
          Top             =   1440
       End
       Begin VB.TextBox txtChat 
-         BackColor       =   &H00C0FFFF&
-         Height          =   2175
-         Left            =   120
+         Height          =   3045
+         Left            =   60
          MultiLine       =   -1  'True
-         TabIndex        =   9
-         Top             =   1320
-         Width           =   4695
+         TabIndex        =   20
+         Top             =   1260
+         Width           =   4755
       End
       Begin VB.CommandButton Command2 
          BackColor       =   &H00E0E0E0&
@@ -487,7 +483,7 @@ Begin VB.Form frmMain
          Height          =   375
          Left            =   2520
          Style           =   1  'Graphical
-         TabIndex        =   3
+         TabIndex        =   19
          Top             =   720
          Width           =   2295
       End
@@ -506,15 +502,14 @@ Begin VB.Form frmMain
          Height          =   375
          Left            =   120
          Style           =   1  'Graphical
-         TabIndex        =   2
+         TabIndex        =   18
          Top             =   720
          Width           =   2295
       End
       Begin VB.TextBox BroadMsg 
-         BackColor       =   &H00C0FFFF&
          Height          =   315
          Left            =   120
-         TabIndex        =   1
+         TabIndex        =   17
          Top             =   240
          Width           =   4695
       End
@@ -535,19 +530,24 @@ Begin VB.Form frmMain
       ForeColor       =   &H000040C0&
       Height          =   375
       Left            =   4200
-      TabIndex        =   4
+      TabIndex        =   0
       Top             =   0
       Visible         =   0   'False
       Width           =   1695
    End
    Begin VB.Menu mnuPopUp 
-      Caption         =   "PopUpMenu"
-      Visible         =   0   'False
+      Caption         =   "Opciones"
       Begin VB.Menu mnuMostrar 
          Caption         =   "&Mostrar"
       End
-      Begin VB.Menu mnuSalir 
-         Caption         =   "&Salir"
+      Begin VB.Menu mnuSystray 
+         Caption         =   "Systray"
+      End
+      Begin VB.Menu mnuCerrarBackup 
+         Caption         =   "Cerrar Servidor con Backup"
+      End
+      Begin VB.Menu cmdForzarCierre 
+         Caption         =   "Forzar Cierre"
       End
    End
 End
@@ -587,6 +587,8 @@ Attribute VB_Exposed = False
 Option Explicit
 
 Public ESCUCHADAS As Long
+
+Private lastStatDate As Byte
 
 Private Type NOTIFYICONDATA
 
@@ -731,7 +733,7 @@ Private Sub HappyHourManager()
            
             If tmpHappyHour = 1 Then ' Desactiva
                 Message = "Ha concluido la Happy Hour!"
-                Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(Message, FontTypeNames.FONTTYPE_SERVER))
+                Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg(Message, FontTypeNames.FONTTYPE_SERVER))
                 HappyHourActivated = False
 
                 If ConexionAPI Then
@@ -744,7 +746,7 @@ Private Sub HappyHourManager()
                     
                     If HappyHour <> 1 Then
                         Message = "Se ha modificado la Happy Hour, a partir de ahora las criaturas aumentan su experiencia en un " & Round((tmpHappyHour - 1) * 100, 2) & "%"
-                        Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(Message, FontTypeNames.FONTTYPE_SERVER))
+                        Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg(Message, FontTypeNames.FONTTYPE_SERVER))
 
                         If ConexionAPI Then
                             Call ApiEndpointSendHappyHourModifiedMessageDiscord(Message)
@@ -752,7 +754,7 @@ Private Sub HappyHourManager()
                     Else
                         Message = "Ha comenzado la Happy Hour! Las criaturas aumentan su experiencia en un " & Round((tmpHappyHour - 1) * 100, 2) & "%!"
 
-                       Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(Message, FontTypeNames.FONTTYPE_SERVER))
+                       Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg(Message, FontTypeNames.FONTTYPE_SERVER))
                     
                         'Aqui solo vamos a hacer un request a los endpoints de la aplicacion en Node.js
                         'el repositorio para hacer funcionar esto, es este: https://github.com/ao-libre/ao-api-server
@@ -775,7 +777,7 @@ Private Sub HappyHourManager()
         ' Si estaba activado, lo deshabilitamos
         If HappyHour <> 0 Then
             Call UpdateNpcsExp(1 / HappyHour)
-            Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Ha concluido la Happy Hour!", FontTypeNames.FONTTYPE_SERVER))
+            Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("Ha concluido la Happy Hour!", FontTypeNames.FONTTYPE_SERVER))
             HappyHourActivated = False
             HappyHour = 0
         End If
@@ -854,7 +856,7 @@ Private Sub AutoSave_Timer()
     Call Actualizar_Subasta
 
     If Minutos = MinutosWs - 1 Then
-        Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Worldsave en 1 minuto ...", FontTypeNames.FONTTYPE_SERVER))
+        Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("Worldsave en 1 minuto ...", FontTypeNames.FONTTYPE_SERVER))
         KillLog
 
     ElseIf Minutos >= MinutosWs Then
@@ -924,7 +926,26 @@ Private Sub chkServerHabilitado_Click()
 
 End Sub
 
-Private Sub cmdApagarServidor_Click()
+Private Sub Estadisticas_Timer()
+
+    If lastStatDate <> Day(Date) Then
+        Dim LoopC As Integer
+
+        For LoopC = 1 To MaxUsers
+
+            With UserList(LoopC)
+
+                If .ConnIDValida And .flags.UserLogged Then
+                    Call modStats.RecordStat(modStats.EVENT_CONTINUE, .Name)
+                End If
+            End With
+        Next
+    Else
+        lastStatDate = Day(Date)
+    End If
+End Sub
+
+Private Sub mnuCerrarBackup_Click()
 
     If MsgBox("Realmente desea cerrar el servidor?", vbYesNo, "CIERRE DEL SERVIDOR!!!") = vbNo Then Exit Sub
     
@@ -1038,13 +1059,13 @@ Private Sub cmdForzarCierre_Click()
 
 End Sub
 
-Private Sub cmdSystray_Click()
+Private Sub mnuSystray_Click()
     SetSystray
 
 End Sub
 
 Private Sub Command1_Click()
-    Call SendData(SendTarget.ToAll, 0, PrepareMessageShowMessageBox(BroadMsg.Text))
+    Call SendData(SendTarget.Toall, 0, PrepareMessageShowMessageBox(BroadMsg.Text))
     ''''''''''''''''SOLO PARA EL TESTEO'''''''
     ''''''''''SE USA PARA COMUNICARSE CON EL SERVER'''''''''''
     txtChat.Text = txtChat.Text & vbNewLine & "Servidor> " & BroadMsg.Text
@@ -1063,7 +1084,7 @@ Public Sub InitMain(ByVal f As Byte)
 End Sub
 
 Private Sub Command2_Click()
-    Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Servidor> " & BroadMsg.Text, FontTypeNames.FONTTYPE_SERVER))
+    Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("Servidor> " & BroadMsg.Text, FontTypeNames.FONTTYPE_SERVER))
     ''''''''''''''''SOLO PARA EL TESTEO'''''''
     ''''''''''SE USA PARA COMUNICARSE CON EL SERVER'''''''''''
     txtChat.Text = txtChat.Text & vbNewLine & "Servidor> " & BroadMsg.Text
@@ -1146,11 +1167,6 @@ End Sub
 
 Private Sub GameTimer_Timer()
     Call mMainLoop.GameTimer
-End Sub
-
-Private Sub mnusalir_Click()
-    Call cmdApagarServidor_Click
-
 End Sub
 
 Public Sub mnuMostrar_Click()
@@ -1251,6 +1267,70 @@ Private Sub PacketResend_Timer()
     Call mMainLoop.PacketResend
 End Sub
 
+Private Sub Segundo_Timer()
+    ' WyroX - Control de estabilidad del servidor
+    Static LastTime As Currency
+    Static Frequency As Currency
+    Dim CurTime As Currency
+    
+    'Get the timer frequency
+    If Frequency = 0 Then
+        Call QueryPerformanceFrequency(Frequency)
+    End If
+
+    Call QueryPerformanceCounter(CurTime)
+
+    If LastTime <> 0 Then
+        lblEstabilidad.Caption = "Estabilidad: " & Round(Clamp(200 + (LastTime - CurTime) * 100 / Frequency, 0, 100), 1) & "%"
+    End If
+
+    LastTime = CurTime
+    ' -----------------------------------
+    
+End Sub
+
 Private Sub TIMER_AI_Timer()
     Call mMainLoop.TIMER_AI
+End Sub
+
+Function Clamp(X As Variant, a As Variant, b As Variant) As Variant
+        
+    On Error GoTo Clamp_Err
+        
+    Clamp = IIf(X < a, a, IIf(X > b, b, X))
+        
+    Exit Function
+
+Clamp_Err:
+    Call TraceError(Err.Number, Err.description & "Clamp_Err", Erl)
+        
+End Function
+
+Private Sub TimerEventoPortal_Timer()
+    Dim i As Byte
+    
+    '¿Hay eventos configurados?
+    If TotalEventosMap > 0 Then
+    
+        '¿En la hora actual hay algun evento?
+        If HorarioEventoPortal(Hour(Now)) > 0 Then
+        
+            i = HorarioEventoPortal(Hour(Now))
+        
+            '¿El evento aun no se inicio?
+            If Not PortalEvento(i).getEnCurso Then
+                PortalEvento(i).IniciarEvento
+                
+            Else
+                '¿El evento llego a su final?
+                If PortalEvento(i).getDuracion = 0 Then
+                    PortalEvento(i).FinalizarEvento
+                    
+                Else 'Si no llego a su final restamos un minuto
+                    PortalEvento(i).restarTiempo
+                    
+                End If
+            End If
+        End If
+    End If
 End Sub

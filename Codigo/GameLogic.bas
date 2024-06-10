@@ -117,12 +117,19 @@ Public Sub DoTileEvents(ByVal UserIndex As Integer, _
                     End If
                     Exit Sub
                     
+                ElseIf UserList(UserIndex).Stats.ELV <= MapZonas(.TileExit.Map, UserZonaId(UserIndex)).lvlMaximo Then
+                    Call WriteConsoleMsg(UserIndex, "Eres muy poderoso para acceder a este lugar, los espiritus te expulsan. Solo puedes acceder a este lugar hasta el nivel " & MapZonas(.TileExit.Map, UserZonaId(UserIndex)).lvlMaximo & ".", FontTypeNames.FONTTYPE_INFO)
+                    Call ClosestStablePos(UserList(UserIndex).Pos, nPos)
+            
+                    If nPos.X <> 0 And nPos.Y <> 0 Then
+                        Call WarpUserChar(UserIndex, nPos.Map, nPos.X, nPos.Y, False)
+                    End If
+                    Exit Sub
                 End If
                 
                 If UserList(UserIndex).flags.Equitando Then
                     
-                    If ObjData(UserList(UserIndex).Invent.MonturaObjIndex).MontTipo = 1 And MapZonas(.TileExit.Map, UserZonaId(UserIndex)).Zona <> "DUNGEON" Or _
-                            ObjData(UserList(UserIndex).Invent.MonturaObjIndex).MontTipo <> 1 And MapZonas(.TileExit.Map, UserZonaId(UserIndex)).Zona = "DUNGEON" Then
+                    If ObjData(UserList(UserIndex).Invent.MonturaObjIndex).MontTipo = 1 And MapZonas(.TileExit.Map, UserZonaId(UserIndex)).Zona <> "DUNGEON" Or ObjData(UserList(UserIndex).Invent.MonturaObjIndex).MontTipo <> 1 And MapZonas(.TileExit.Map, UserZonaId(UserIndex)).Zona = "DUNGEON" Then
                         
                         Call UnmountMontura(UserIndex)
                         Call WriteEquitandoToggle(UserIndex)
@@ -294,6 +301,33 @@ Public Sub DoTileEvents(ByVal UserIndex As Integer, _
 
                         End If
 
+                    End If
+                    
+                ElseIf MapZonas(DestPos.Map, UserZonaId(UserIndex)).Restringir = eRestrict.restrict_restringido Then
+                
+                    If EsGm(UserIndex) Or EsAdmin(UserList(UserIndex).Name) Then
+                        
+                        If LegalPos(DestPos.Map, DestPos.X, DestPos.Y, PuedeAtravesarAgua(UserIndex)) Then
+                            Call WarpUserChar(UserIndex, DestPos.Map, DestPos.X, DestPos.Y, FxFlag)
+                        Else
+                            Call ClosestLegalPos(DestPos, nPos)
+
+                            If nPos.X <> 0 And nPos.Y <> 0 Then
+                                Call WarpUserChar(UserIndex, nPos.Map, nPos.X, nPos.Y, FxFlag)
+
+                            End If
+                        
+                        End If
+                        
+                    Else
+                
+                        Call WriteConsoleMsg(UserIndex, "Zona restringida.", FontTypeNames.FONTTYPE_INFO)
+                        Call ClosestStablePos(UserList(UserIndex).Pos, nPos)
+        
+                        If nPos.X <> 0 And nPos.Y <> 0 Then
+                            Call WarpUserChar(UserIndex, nPos.Map, nPos.X, nPos.Y, False)
+
+                        End If
                     End If
 
                 Else 'No es un mapa de newbies, ni Armadas, ni Caos, ni faccionario.
@@ -1374,7 +1408,22 @@ Sub LookatTile(ByVal UserIndex As Integer, _
                             Else
 
                                 If Not .flags.Privilegios And PlayerType.User Then
-                                    Stat = Stat & " <GAME MASTER>"
+                                
+                                    If UserList(TempCharIndex).flags.Privilegios = PlayerType.Consejero Then
+                                        Stat = Stat & " <Consejero>"
+                                    End If
+    
+                                    If UserList(TempCharIndex).flags.Privilegios = PlayerType.SemiDios Then
+                                        Stat = Stat & " <Semi-Dios>"
+                                    End If
+    
+                                    If UserList(TempCharIndex).flags.Privilegios = PlayerType.Dios Then
+                                        Stat = Stat & " <Dios>"
+                                    End If
+                            
+                                    If UserList(TempCharIndex).flags.Privilegios = PlayerType.Admin Then
+                                        Stat = Stat & " <Administrador>"
+                                    End If
                           
                                     ' Elijo el color segun el rango del GM:
                                     ' Dios
@@ -1413,11 +1462,9 @@ Sub LookatTile(ByVal UserIndex As Integer, _
 
                                 End If
                   
-                                If .GuildIndex > 0 Then _
-                                    Stat = Stat & " Clan: '" & modGuilds.GuildName(.GuildIndex) & "'"
+                                If .GuildIndex > 0 Then Stat = Stat & " Clan: '" & modGuilds.GuildName(.GuildIndex) & "'"
                                 
-                                If .AccountInfo.esVIP Then _
-                                    Stat = Stat & " [VIP] "
+                                If .AccountInfo.esVIP Then Stat = Stat & " [VIP] "
 
                             End If
 

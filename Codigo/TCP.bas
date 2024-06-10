@@ -288,7 +288,7 @@ Function Numeric(ByVal cad As String) As Boolean
 
 End Function
 
-Function NombrePermitido(ByVal nombre As String) As Boolean
+Function NombrePermitido(ByVal Nombre As String) As Boolean
     '***************************************************
     'Author: Unknown
     'Last Modification: -
@@ -299,7 +299,7 @@ Function NombrePermitido(ByVal nombre As String) As Boolean
 
     For i = 1 To UBound(ForbidenNames)
 
-        If InStr(nombre, ForbidenNames(i)) Then
+        If InStr(Nombre, ForbidenNames(i)) Then
             NombrePermitido = False
             Exit Function
 
@@ -706,7 +706,7 @@ Private Sub AddItemsToNewUser(ByVal UserIndex As Integer, ByVal UserClase As eCl
         .Invent.Object(Slot).ObjIndex = 468
         .Invent.Object(Slot).Amount = 100
         
-        'Piedra de Hogar
+        'Runa de Hogar
         Slot = Slot + 1
         .Invent.Object(Slot).ObjIndex = 1255
         .Invent.Object(Slot).Amount = 1
@@ -720,7 +720,7 @@ Private Sub AddItemsToNewUser(ByVal UserIndex As Integer, ByVal UserClase As eCl
 
         Dim i As Long
         For i = 1 To MAXAMIGOS
-            .Amigos(i).nombre = vbNullString
+            .Amigos(i).Nombre = vbNullString
             .Amigos(i).Ignorado = 0
             .Amigos(i).index = 0
         Next i
@@ -755,7 +755,7 @@ Private Sub CargarObjetosIniciales()
 End Sub
 
 Sub ConnectAccount(ByVal UserIndex As Integer, _
-                   ByRef UserName As String, _
+                   ByRef username As String, _
                    ByRef Password As String, _
                    ByVal macAddress As String, _
                    ByVal hdSerial As Long)
@@ -772,7 +772,7 @@ Sub ConnectAccount(ByVal UserIndex As Integer, _
 
     Set oSHA256 = New CSHA256
 
-    If LenB(UserName) > 24 Or LenB(UserName) = 0 Then
+    If LenB(username) > 24 Or LenB(username) = 0 Then
         Call WriteErrorMsg(UserIndex, "Nombre invalido.")
         Exit Sub
 
@@ -787,7 +787,7 @@ Sub ConnectAccount(ByVal UserIndex As Integer, _
     End If
 
     '¿Existe la cuenta?
-    If Not CuentaExiste(UserName) Then
+    If Not CuentaExiste(username) Then
         Call WriteErrorMsg(UserIndex, "La cuenta no existe.")
         Call CloseSocket(UserIndex)
         Exit Sub
@@ -795,7 +795,7 @@ Sub ConnectAccount(ByVal UserIndex As Integer, _
     End If
     
     'Ya esta conectado el personaje?
-    If CheckForSameNameAccount(UserName) Then
+    If CheckForSameNameAccount(username) Then
         Call WriteErrorMsg(UserIndex, "La cuenta ya esta conectada.")
         Call CloseSocket(UserIndex)
         Exit Sub
@@ -803,16 +803,16 @@ Sub ConnectAccount(ByVal UserIndex As Integer, _
         
     'Aca Guardamos y Hasheamos el password + Salt
     'Es el passwd valido?
-    Salt = GetAccountSalt(UserName) ' Obtenemos la Salt
+    Salt = GetAccountSalt(username) ' Obtenemos la Salt
 
-    If oSHA256.SHA256(Password & Salt) <> GetAccountPassword(UserName) Then
+    If oSHA256.SHA256(Password & Salt) <> GetAccountPassword(username) Then
         Call WriteErrorMsg(UserIndex, "Password incorrecto.")
         Call CloseSocket(UserIndex)
         Exit Sub
     End If
 
     '¿La cuenta esta verificada?
-    If Not CuentaVerificada(UserName) Then
+    If Not CuentaVerificada(username) Then
         Call WriteErrorMsg(UserIndex, "La cuenta aun no ha sido verificada, por favor revise su email.")
         Call CloseSocket(UserIndex)
         Exit Sub
@@ -837,17 +837,17 @@ Sub ConnectAccount(ByVal UserIndex As Integer, _
     'Si no tienen interes en usarlo pueden desactivarlo en el Server.ini
     If ConexionAPI Then
         'Pasamos UserName tambien como email, ya que son lo mismo.... :(
-        Call ApiEndpointSendLoginAccountEmail(UserName)
+        Call ApiEndpointSendLoginAccountEmail(username)
     End If
 
     'Guardamos la data de seguridad
     UserList(UserIndex).AccountInfo.macAddress = macAddress
     UserList(UserIndex).AccountInfo.hdSerial = hdSerial
 
-    Call LoginAccountDatabase(UserIndex, UserName)
+    Call LoginAccountDatabase(UserIndex, username)
     
     'Una vez logeados registramos el acceso:
-    Call SaveAccountLastLoginDatabase(UserIndex, UserName)
+    Call SaveAccountLastLoginDatabase(UserIndex, username)
 
 End Sub
 
@@ -1385,6 +1385,8 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
         'DE ACA EN ADELANTE GRABA EL CHARFILE, OJO!
         NumUsers = NumUsers + 1
         .flags.UserLogged = True
+        
+        Call modStats.RecordStat(modStats.EVENT_LOGIN, .Name)
     
         'usado para borrar Pjs
         Call UpdateUserLogged(.Name, 1)
@@ -1394,15 +1396,18 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
             Call WriteLevelUp(UserIndex, .Stats.SkillPts)
 
         End If
+        
+        'Le enviamos sus privilegios
+        Call WritePrivilegios(UserIndex)
     
         'Sumamos el usuario al mapa y a la zona donde se encuentra
         MapInfo(.Pos.Map).NumUsers = MapInfo(.Pos.Map).NumUsers + 1
         MapZonas(.Pos.Map, UserZonaId(UserIndex)).NumUsers = MapZonas(.Pos.Map, UserZonaId(UserIndex)).NumUsers + 1
     
         If NumUsers > RecordUsuariosOnline Then
-            Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Record de usuarios conectados simultaneamente. Hay " & NumUsers & " usuarios.", FontTypeNames.FONTTYPE_INFOBOLD))
+            Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("Record de usuarios conectados simultaneamente. Hay " & NumUsers & " usuarios.", FontTypeNames.FONTTYPE_INFOBOLD))
             RecordUsuariosOnline = NumUsers
-            Call WriteVar(ConfigPath & "Server.ini", "INIT", "RECORD", Str(RecordUsuariosOnline))
+            Call WriteVar(ConfigPath & "Server.ini", "INIT", "RECORD", str(RecordUsuariosOnline))
 
             'Este ultimo es para saber siempre los records en el frmMain
             frmMain.txtRecordOnline.Text = RecordUsuariosOnline
@@ -1466,6 +1471,18 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
         If LenB(tStr) <> 0 Then
             Call WriteShowMessageBox(UserIndex, "Tu solicitud de ingreso al clan ha sido rechazada. El clan te explica que: " & tStr)
 
+        End If
+        
+        '¿Estaba en un evento de portales que ya termino?
+        If MapZonas(.Pos.Map, UserZonaId(UserIndex)).Restringir = eRestrict.restrict_evento Then
+            Dim EvPortal As Byte
+            'Si estaba en un evento de portales que termino lo mandamos a su casa
+            EvPortal = esMapaPortalEvento(.Pos.Map)
+            If EvPortal > 0 Then
+                
+                If Not PortalEvento(EvPortal).getEnCurso Then _
+                    Call MandaraCasa(UserIndex)
+            End If
         End If
     
         'Load the user statistics
@@ -1644,7 +1661,7 @@ Sub ResetUseRaccount(ByVal UserIndex As Integer)
     
         'Borro la información de la cuenta
         .AccountInfo.ID = 0
-        .AccountInfo.UserName = vbNullString
+        .AccountInfo.username = vbNullString
         .AccountInfo.Password = vbNullString
         .AccountInfo.Salt = vbNullString
         .AccountInfo.Gemas = 0
@@ -2072,6 +2089,8 @@ Sub CloseUser(ByVal UserIndex As Integer)
         If NumUsers > 0 Then NumUsers = NumUsers - 1
         .flags.UserLogged = False
         .Counters.Saliendo = False
+        
+        Call modStats.RecordStat(modStats.EVENT_LOGOUT, .Name)
     
         'Le devolvemos el body y head originales
         If .flags.AdminInvisible = 1 Then
@@ -2243,7 +2262,7 @@ Public Sub ResetUserExtras(ByVal UserIndex As Integer)
   Dim i As Integer
   For i = 1 To MAXAMIGOS
 
-  UserList(UserIndex).Amigos(i).nombre = vbNullString
+  UserList(UserIndex).Amigos(i).Nombre = vbNullString
 
   UserList(UserIndex).Amigos(i).Ignorado = 0
 

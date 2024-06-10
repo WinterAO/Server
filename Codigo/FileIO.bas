@@ -121,6 +121,7 @@ Private Type tMapDat
     terrain As String
     Ambient As String
     lvlMinimo As String
+    lvlMaximo As String
     RoboNpcsPermitido As Boolean
     InvocarSinEfecto As Boolean
     OcultarSinEfecto As Boolean
@@ -386,7 +387,7 @@ Public Sub loadAdministrativeUsers()
 
 End Sub
 
-Public Function GetCharPrivs(ByRef UserName As String) As PlayerType
+Public Function GetCharPrivs(ByRef username As String) As PlayerType
     '****************************************************
     'Author: ZaMa
     'Last Modification: 18/11/2010
@@ -395,16 +396,16 @@ Public Function GetCharPrivs(ByRef UserName As String) As PlayerType
 
     Dim Privs As PlayerType
 
-    If EsAdmin(UserName) Then
+    If EsAdmin(username) Then
         Privs = PlayerType.Admin
         
-    ElseIf EsDios(UserName) Then
+    ElseIf EsDios(username) Then
         Privs = PlayerType.Dios
 
-    ElseIf EsSemiDios(UserName) Then
+    ElseIf EsSemiDios(username) Then
         Privs = PlayerType.SemiDios
         
-    ElseIf EsConsejero(UserName) Then
+    ElseIf EsConsejero(username) Then
         Privs = PlayerType.Consejero
     
     Else
@@ -489,7 +490,7 @@ Public Sub CargarHechizos()
     If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando Hechizos."
     
     Dim Hechizo As Integer
-    Dim Str     As String
+    Dim str     As String
     
     Dim Leer    As clsIniManager
 
@@ -510,7 +511,7 @@ Public Sub CargarHechizos()
     For Hechizo = 1 To NumeroHechizos
 
         With Hechizos(Hechizo)
-            .nombre = Leer.GetValue("Hechizo" & Hechizo, "Nombre")
+            .Nombre = Leer.GetValue("Hechizo" & Hechizo, "Nombre")
             .Desc = Leer.GetValue("Hechizo" & Hechizo, "Desc")
             .PalabrasMagicas = Leer.GetValue("Hechizo" & Hechizo, "PalabrasMagicas")
             
@@ -601,11 +602,11 @@ Public Sub CargarHechizos()
             
             'Portales
             .Portal = val(Leer.GetValue("Hechizo" & Hechizo, "Portal"))
-            Str = Leer.GetValue("Hechizo" & Hechizo, "PortalMap")
+            str = Leer.GetValue("Hechizo" & Hechizo, "PortalMap")
             
-            .PortalPos.Map = val(ReadField(1, Str, 45))
-            .PortalPos.X = val(ReadField(2, Str, 45))
-            .PortalPos.Y = val(ReadField(3, Str, 45))
+            .PortalPos.Map = val(ReadField(1, str, 45))
+            .PortalPos.X = val(ReadField(2, str, 45))
+            .PortalPos.Y = val(ReadField(3, str, 45))
             
             .Casteo = val(Leer.GetValue("Hechizo" & Hechizo, "Casteo"))
             .CastFX = val(Leer.GetValue("Hechizo" & Hechizo, "CastFX"))
@@ -671,12 +672,12 @@ Public Sub DoBackUp()
     'Next i
     '''''''''''/'lo pongo aca x sugernecia del yind
     
-    Call SendData(SendTarget.ToAll, 0, PrepareMessagePauseToggle())
+    Call SendData(SendTarget.Toall, 0, PrepareMessagePauseToggle())
 
     Call WorldSave
     Call modGuilds.v_RutinaElecciones
     
-    Call SendData(SendTarget.ToAll, 0, PrepareMessagePauseToggle())
+    Call SendData(SendTarget.Toall, 0, PrepareMessagePauseToggle())
     
     'Aqui solo vamos a hacer un request a los endpoints de la aplicacion en Node.js
     'el repositorio para hacer funcionar esto, es este: https://github.com/ao-libre/ao-api-server
@@ -1241,7 +1242,7 @@ errHandler:
     
 End Sub
 
-Function GetVar(ByVal File As String, _
+Function GetVar(ByVal file As String, _
                 ByVal Main As String, _
                 ByVal Var As String, _
                 Optional EmptySpaces As Long = 1024) As String
@@ -1259,7 +1260,7 @@ Function GetVar(ByVal File As String, _
       
     sSpaces = Space$(EmptySpaces) ' This tells the computer how long the longest string can be
       
-    GetPrivateProfileString Main, Var, szReturn, sSpaces, EmptySpaces, File
+    GetPrivateProfileString Main, Var, szReturn, sSpaces, EmptySpaces, file
       
     GetVar = RTrim$(sSpaces)
     GetVar = Left$(GetVar, Len(GetVar) - 1)
@@ -1569,7 +1570,7 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
             .RoboNpcsPermitido = MapDat(i).RoboNpcsPermitido
             .NoTirarItems = MapDat(i).NoTirarItems
             .lvlMinimo = val(MapDat(i).lvlMinimo)
-    
+            .lvlMaximo = val(MapDat(i).lvlMinimo)
             .Pk = MapDat(i).battle_mode
             
             .Terreno = MapDat(i).terrain
@@ -1871,10 +1872,10 @@ Sub CargarCiudades()
             .Y = Lector.GetValue("IslaZharkel", "Y")
         End With
         
-        With Haverwood
-            .Map = Lector.GetValue("Haverwood", "Mapa")
-            .X = Lector.GetValue("Haverwood", "X")
-            .Y = Lector.GetValue("Haverwood", "Y")
+        With Winterhold
+            .Map = Lector.GetValue("Winterhold", "Mapa")
+            .X = Lector.GetValue("Winterhold", "X")
+            .Y = Lector.GetValue("Winterhold", "Y")
         End With
         
         With Prision
@@ -1907,14 +1908,14 @@ Sub CargarCiudades()
     Ciudades(eCiudad.cShakoud) = Shakoud
     Ciudades(eCiudad.cBelleuve) = Belleuve
     Ciudades(eCiudad.cIslaZharkel) = IslaZharkel
-    Ciudades(eCiudad.cHaverwood) = Haverwood
+    Ciudades(eCiudad.cWinterhold) = Winterhold
     Ciudades(eCiudad.cbattle) = Battleground
 
     If frmMain.Visible Then frmMain.txtStatus.Text = Date & " " & time & " - Se cargaron las ciudades.dat"
 
 End Sub
 
-Sub WriteVar(ByVal File As String, _
+Sub WriteVar(ByVal file As String, _
              ByVal Main As String, _
              ByVal Var As String, _
              ByVal Value As String)
@@ -1924,7 +1925,7 @@ Sub WriteVar(ByVal File As String, _
     'Escribe VAR en un archivo
     '***************************************************
 
-    writeprivateprofilestring Main, Var, Value, File
+    writeprivateprofilestring Main, Var, Value, file
     
 End Sub
 
@@ -2328,7 +2329,7 @@ Public Sub LoadQuests()
     For i = 1 To NumQuests
 
         With QuestList(i)
-            .nombre = Reader.GetValue("QUEST" & i, "Nombre")
+            .Nombre = Reader.GetValue("QUEST" & i, "Nombre")
             .Desc = Reader.GetValue("QUEST" & i, "Desc")
             .RequiredLevel = val(Reader.GetValue("QUEST" & i, "RequiredLevel"))
             .RequiredQuest = val(Reader.GetValue("QUEST" & i, "RequiredQuest"))
@@ -2411,3 +2412,76 @@ ErrorHandler:
     MsgBox "Error cargando el archivo QUESTS.DAT.", vbOKOnly + vbCritical
 
 End Sub
+
+Public Sub CargarEventosMapa()
+
+    On Error GoTo CargarEventosMapa_Err
+    
+    If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando Eventos Mapa."
+    
+    If Not FileExist(DatPath & "Eventos.dat", vbArchive) Then
+        MsgBox "No se ha encontrado el archivo Eventos.dat en la carpeta " & DatPath
+        Exit Sub
+    End If
+    
+    Dim Lector     As clsIniManager
+
+    Dim evNombre   As String
+
+    Dim evMapa     As Byte
+
+    Dim evX        As Integer
+
+    Dim evY        As Integer
+
+    Dim evTime     As Long
+
+    Dim PortalMap  As Byte
+
+    Dim PortalX    As Integer
+
+    Dim PortalY    As Integer
+
+    Dim evDuracion As Long
+
+    Dim i          As Byte
+    
+    Set Lector = New clsIniManager
+    Call Lector.Initialize(DatPath & "Eventos.dat")
+    
+    TotalEventosMap = val(Lector.GetValue("INIT", "Total"))
+    
+    'Si no hay eventos no tenemos nada que cargar
+    If TotalEventosMap < 1 Then
+        Set Lector = Nothing
+        Exit Sub
+
+    End If
+    
+    ReDim PortalEvento(1 To TotalEventosMap) As New clsEventoMapa
+    
+    For i = 1 To TotalEventosMap
+        evNombre = Lector.GetValue("EVENTO" & i, "Nombre")
+        evMapa = val(Lector.GetValue("EVENTO" & i, "Mapa"))
+        evX = val(Lector.GetValue("EVENTO" & i, "X"))
+        evY = val(Lector.GetValue("EVENTO" & i, "Y"))
+        evTime = val(Lector.GetValue("EVENTO" & i, "Tiempo"))
+        PortalMap = val(Lector.GetValue("EVENTO" & i, "PortalMap"))
+        PortalX = val(Lector.GetValue("EVENTO" & i, "PortalX"))
+        PortalY = val(Lector.GetValue("EVENTO" & i, "PortalY"))
+        evDuracion = val(Lector.GetValue("EVENTO" & i, "Duracion"))
+        
+        Call PortalEvento(i).Inicializar(evNombre, evMapa, evX, evY, PortalMap, PortalX, PortalY, evDuracion)
+    Next i
+    
+    For i = 0 To 23
+        HorarioEventoPortal(i) = Lector.GetValue("EVENTOS", i)
+    Next i
+    
+    Exit Sub
+    
+CargarEventosMapa_Err:
+        Set Lector = Nothing
+        'Call TraceError(Err.Number, Err.description, "ES.CargarEventosMapa", Erl)
+
+    End Sub

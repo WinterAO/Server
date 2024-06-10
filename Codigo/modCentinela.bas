@@ -55,7 +55,7 @@ Sub CambiarEstado(ByVal gmIndex As Integer)
     Message = UserList(gmIndex).Name & " cambio el estado del Centinela a " & IIf(isCentinelaActivated, " ACTIVADO.", " DESACTIVADO.")
     
     'Mandamos el aviso por consola.
-    Call modSendData.SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg(Message, FontTypeNames.FONTTYPE_CENTINELA))
+    Call modSendData.SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg(Message, FontTypeNames.FONTTYPE_CENTINELA))
     
     'Lo registramos en los logs.
     Call LogGM(UserList(gmIndex).Name, Message)
@@ -256,7 +256,7 @@ Sub AprobarUsuario(ByVal UserIndex As Integer, ByVal CIndex As Byte)
             .UltimaRevision = GetTickCount()
         End With
  
-        Call Protocol.WriteConsoleMsg(UserIndex, "Gracias, sigue trabajando, pero no bajes la guardia por que volvere!", FontTypeNames.FONTTYPE_DIOS)
+        Call Protocol_Write.WriteConsoleMsg(UserIndex, "Gracias, sigue trabajando, pero no bajes la guardia por que volvere!", FontTypeNames.FONTTYPE_DIOS)
      
     End With
  
@@ -323,7 +323,7 @@ Sub UsuarioInActivo(ByVal UserIndex As Integer)
     End If
  
     'Deja un mensaje.
-    Call Protocol.WriteConsoleMsg(UserIndex, "El centinela te ha sancionado por macro inasistido.", FontTypeNames.FONTTYPE_DIOS)
+    Call Protocol_Write.WriteConsoleMsg(UserIndex, "El centinela te ha sancionado por macro inasistido.", FontTypeNames.FONTTYPE_DIOS)
  
     'Limpia el tipo del usuario.
     Dim ClearType As CentinelaUser

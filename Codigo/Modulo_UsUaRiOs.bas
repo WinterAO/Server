@@ -431,17 +431,17 @@ Public Sub EraseUserChar(ByVal UserIndex As Integer, ByVal IsAdminInvisible As B
     
 ErrorHandler:
     
-    Dim UserName  As String
+    Dim username  As String
 
     Dim CharIndex As Integer
     
     If UserIndex > 0 Then
-        UserName = UserList(UserIndex).Name
+        username = UserList(UserIndex).Name
         CharIndex = UserList(UserIndex).Char.CharIndex
 
     End If
 
-    Call LogError("Error en EraseUserchar " & Err.Number & ": " & Err.description & ". User: " & UserName & "(UI: " & UserIndex & " - CI: " & CharIndex & ")")
+    Call LogError("Error en EraseUserchar " & Err.Number & ": " & Err.description & ". User: " & username & "(UI: " & UserIndex & " - CI: " & CharIndex & ")")
 
 End Sub
 
@@ -561,7 +561,7 @@ Public Sub MakeUserChar(ByVal toMap As Boolean, _
 
     Dim NickColor  As Byte
 
-    Dim UserName   As String
+    Dim username   As String
 
     Dim Privileges As Byte
     
@@ -592,38 +592,22 @@ Public Sub MakeUserChar(ByVal toMap As Boolean, _
                 
                 'Preparo el nick
                 If .showName Then
-                    UserName = .Name
+                    username = .Name
                     
                     If .flags.EnConsulta Then
-                        UserName = UserName & " " & TAG_CONSULT_MODE
+                        username = username & " " & TAG_CONSULT_MODE
                     Else
 
                         If UserList(sndIndex).flags.Privilegios And PlayerType.User Then
-                            If LenB(ClanTag) <> 0 Then UserName = UserName & " <" & ClanTag & ">"
+                            If LenB(ClanTag) <> 0 Then username = username & " <" & ClanTag & ">"
                             
                         Else
 
                             If (.flags.invisible Or .flags.Oculto) And (Not .flags.AdminInvisible = 1) And .flags.Navegando = 0 Then
-                                UserName = UserName & " " & TAG_USER_INVISIBLE
+                                username = username & " " & TAG_USER_INVISIBLE
                             Else
                                 
-                                'Los GM no tienen clanes, tienen rangos
-                                If .flags.Privilegios = PlayerType.Admin Then
-                                        ClanTag = "Administrador"
-                                        
-                                ElseIf .flags.Privilegios = (PlayerType.Dios Or PlayerType.SemiDios) Then
-                                        ClanTag = "Game Master"
-                                    
-                                ElseIf .flags.Privilegios = PlayerType.Consejero Then
-                                        ClanTag = "Winter Staff"
-                                        
-                                ElseIf .flags.Privilegios = PlayerType.RoleMaster Then
-                                        ClanTag = "RoleMaster"
-                                        
-                                End If
-                                    
-                                
-                                If LenB(ClanTag) <> 0 Then UserName = UserName & " <" & ClanTag & ">"
+                                If LenB(ClanTag) <> 0 Then username = username & " <" & ClanTag & ">"
 
                             End If
 
@@ -633,7 +617,7 @@ Public Sub MakeUserChar(ByVal toMap As Boolean, _
 
                 End If
             
-                Call WriteCharacterCreate(sndIndex, .Char.body, .Char.Head, .Char.Heading, .Char.CharIndex, X, Y, .Char.WeaponAnim, .Char.ShieldAnim, .Char.FX, 999, .Char.CascoAnim, 0, UserName, NickColor, Privileges, .Char.AuraAnim, .Char.AuraColor)
+                Call WriteCharacterCreate(sndIndex, .Char.body, .Char.Head, .Char.Heading, .Char.CharIndex, X, Y, .Char.WeaponAnim, .Char.ShieldAnim, .Char.FX, 999, .Char.CascoAnim, 0, username, NickColor, Privileges, .Char.AuraAnim, .Char.AuraColor)
             Else
                 'Hide the name and clan - set privs as normal user
                 Call AgregarUser(UserIndex, .Pos.Map, ButIndex)
@@ -2329,8 +2313,6 @@ Sub WarpUserChar(ByVal UserIndex As Integer, _
 
         End If
         
-        Debug.Print UserList(UserIndex).Name & " Se mueve. Mapa: " & UserList(UserIndex).Pos.Map & " ZonaID: " & UserZonaId(UserIndex) & " Nº PJ en la zona: " & MapZonas(UserList(UserIndex).Pos.Map, UserZonaId(UserIndex)).NumUsers
-      
     End With
 
 End Sub
@@ -3163,19 +3145,21 @@ Public Sub MandaraCasa(ByVal UserIndex As Integer)
     'Descripción: Si cumple los requisitos, lo devolvemos a casa.
     '**************************************************************
     
-    Dim tX   As Integer
+    Dim tX     As Integer
 
-    Dim tY   As Integer
+    Dim tY     As Integer
 
-    Dim tMap As Integer
+    Dim tMap   As Integer
     
     Dim LaCasa As Byte
 
     With UserList(UserIndex)
-    
-        If .flags.Muerto = 0 Then
-            Call WriteConsoleMsg(UserIndex, "Debes estar muerto para teletransportarte a tu hogar.", FontTypeNames.FONTTYPE_FIGHT)
-            Exit Sub
+
+        If .flags.ArenaRinkel Then Call modArenaRinkel.SalirArenaRinkel(UserIndex)
+        
+        'Si por alguna razón ya esta en su hogar, salimos.
+        If ObtenerCuadrante(Ciudades(.Hogar).X, Ciudades(.Hogar).Y) = ObtenerCuadranteUser(UserIndex) Then
+            If Ciudades(.Hogar).Map = .Pos.Map Then Exit Sub
         End If
 
         'Antes de que el pj llegue a la ciudad, lo hacemos dejar de navegar para que no se buguee.
@@ -3208,7 +3192,7 @@ Public Sub MandaraCasa(ByVal UserIndex As Integer)
         Call WarpUserChar(UserIndex, tMap, tX, tY, True)
         
         Call WriteMultiMessage(UserIndex, eMessages.FinishHome)
-        
+    
     End With
     
 End Sub
