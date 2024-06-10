@@ -1,16 +1,16 @@
 VERSION 5.00
 Begin VB.Form frmConID 
-   BackColor       =   &H00E0E0E0&
+   BackColor       =   &H00424242&
    BorderStyle     =   1  'Fixed Single
    Caption         =   "ConID"
    ClientHeight    =   4440
    ClientLeft      =   45
    ClientTop       =   330
-   ClientWidth     =   4680
+   ClientWidth     =   4560
    LinkTopic       =   "Form1"
    MaxButton       =   0   'False
    ScaleHeight     =   4440
-   ScaleWidth      =   4680
+   ScaleWidth      =   4560
    StartUpPosition =   2  'CenterScreen
    Begin VB.CommandButton Command3 
       BackColor       =   &H00E0E0E0&
@@ -51,7 +51,8 @@ Begin VB.Form frmConID
       Width           =   4290
    End
    Begin VB.ListBox List1 
-      BackColor       =   &H00C0FFFF&
+      Appearance      =   0  'Flat
+      BackColor       =   &H80000008&
       BeginProperty Font 
          Name            =   "MS Sans Serif"
          Size            =   8.25
@@ -61,7 +62,8 @@ Begin VB.Form frmConID
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      Height          =   2205
+      ForeColor       =   &H00FFFFFF&
+      Height          =   2175
       Left            =   180
       TabIndex        =   1
       Top             =   150

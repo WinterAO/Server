@@ -1,18 +1,19 @@
 VERSION 5.00
 Begin VB.Form frmTrafic 
-   BackColor       =   &H00E0E0E0&
-   BorderStyle     =   1  'Fixed Single
+   BackColor       =   &H00424242&
+   BorderStyle     =   4  'Fixed ToolWindow
    Caption         =   "Trafico"
    ClientHeight    =   2850
    ClientLeft      =   45
    ClientTop       =   330
-   ClientWidth     =   4680
+   ClientWidth     =   4560
    ControlBox      =   0   'False
    LinkTopic       =   "Form1"
    MaxButton       =   0   'False
    MinButton       =   0   'False
    ScaleHeight     =   2850
-   ScaleWidth      =   4680
+   ScaleWidth      =   4560
+   ShowInTaskbar   =   0   'False
    StartUpPosition =   2  'CenterScreen
    Begin VB.CommandButton Command1 
       BackColor       =   &H00E0E0E0&

@@ -1,16 +1,16 @@
 VERSION 5.00
 Begin VB.Form frmDebugNpc 
-   BackColor       =   &H00E0E0E0&
+   BackColor       =   &H00424242&
    BorderStyle     =   1  'Fixed Single
    Caption         =   "Debug Npcs"
    ClientHeight    =   2460
    ClientLeft      =   45
    ClientTop       =   330
-   ClientWidth     =   4680
+   ClientWidth     =   4650
    LinkTopic       =   "Form1"
    MaxButton       =   0   'False
    ScaleHeight     =   2460
-   ScaleWidth      =   4680
+   ScaleWidth      =   4650
    StartUpPosition =   2  'CenterScreen
    Begin VB.CommandButton Command2 
       BackColor       =   &H00E0E0E0&
@@ -63,6 +63,7 @@ Begin VB.Form frmDebugNpc
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
+      ForeColor       =   &H00FFFFFF&
       Height          =   285
       Left            =   90
       TabIndex        =   4
@@ -81,6 +82,7 @@ Begin VB.Form frmDebugNpc
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
+      ForeColor       =   &H00FFFFFF&
       Height          =   285
       Left            =   90
       TabIndex        =   3
@@ -99,6 +101,7 @@ Begin VB.Form frmDebugNpc
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
+      ForeColor       =   &H00FFFFFF&
       Height          =   285
       Left            =   105
       TabIndex        =   1
@@ -117,6 +120,7 @@ Begin VB.Form frmDebugNpc
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
+      ForeColor       =   &H00FFFFFF&
       Height          =   285
       Left            =   90
       TabIndex        =   0

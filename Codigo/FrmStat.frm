@@ -1,7 +1,7 @@
 VERSION 5.00
 Object = "{1A9E0E29-581D-4BEC-8CB2-12B3FFE9C437}#1.0#0"; "AOProgress.ocx"
 Begin VB.Form FrmStat 
-   BackColor       =   &H00C0C0C0&
+   BackColor       =   &H00424242&
    BorderStyle     =   3  'Fixed Dialog
    ClientHeight    =   1365
    ClientLeft      =   45
@@ -58,7 +58,7 @@ Begin VB.Form FrmStat
       BackStyle       =   0  'Transparent
       Caption         =   "Procesando mapas..."
       BeginProperty Font 
-         Name            =   "MS Sans Serif"
+         Name            =   "Tahoma"
          Size            =   8.25
          Charset         =   0
          Weight          =   700
@@ -66,12 +66,12 @@ Begin VB.Form FrmStat
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      ForeColor       =   &H00000000&
+      ForeColor       =   &H00FFFFFF&
       Height          =   195
       Left            =   2040
       TabIndex        =   0
       Top             =   240
-      Width           =   1800
+      Width           =   1740
    End
 End
 Attribute VB_Name = "FrmStat"

@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin VB.Form FrmInterv 
-   BackColor       =   &H00E0E0E0&
+   BackColor       =   &H00424242&
    BorderStyle     =   1  'Fixed Single
    Caption         =   "Intervalos"
    ClientHeight    =   5610
@@ -13,7 +13,7 @@ Begin VB.Form FrmInterv
    ScaleWidth      =   7650
    StartUpPosition =   2  'CenterScreen
    Begin VB.Frame Suerte 
-      BackColor       =   &H00E0E0E0&
+      BackColor       =   &H00535353&
       Caption         =   "Suerte"
       BeginProperty Font 
          Name            =   "MS Sans Serif"
@@ -60,6 +60,7 @@ Begin VB.Form FrmInterv
             Italic          =   0   'False
             Strikethrough   =   0   'False
          EndProperty
+         ForeColor       =   &H00FFFFFF&
          Height          =   255
          Left            =   120
          TabIndex        =   57
@@ -106,7 +107,7 @@ Begin VB.Form FrmInterv
       Width           =   2175
    End
    Begin VB.Frame Frame11 
-      BackColor       =   &H00E0E0E0&
+      BackColor       =   &H00535353&
       Caption         =   "NPCs"
       BeginProperty Font 
          Name            =   "MS Sans Serif"
@@ -123,7 +124,7 @@ Begin VB.Form FrmInterv
       Top             =   2160
       Width           =   1695
       Begin VB.Frame Frame4 
-         BackColor       =   &H00E0E0E0&
+         BackColor       =   &H00535353&
          Caption         =   "A.I"
          BeginProperty Font 
             Name            =   "MS Sans Serif"
@@ -188,6 +189,7 @@ Begin VB.Form FrmInterv
                Italic          =   0   'False
                Strikethrough   =   0   'False
             EndProperty
+            ForeColor       =   &H00FFFFFF&
             Height          =   195
             Left            =   165
             TabIndex        =   54
@@ -207,6 +209,7 @@ Begin VB.Form FrmInterv
                Italic          =   0   'False
                Strikethrough   =   0   'False
             EndProperty
+            ForeColor       =   &H00FFFFFF&
             Height          =   195
             Left            =   150
             TabIndex        =   53
@@ -216,7 +219,7 @@ Begin VB.Form FrmInterv
       End
    End
    Begin VB.Frame Frame12 
-      BackColor       =   &H00E0E0E0&
+      BackColor       =   &H00535353&
       Caption         =   "Clima && Ambiente"
       BeginProperty Font 
          Name            =   "MS Sans Serif"
@@ -233,7 +236,7 @@ Begin VB.Form FrmInterv
       Top             =   2160
       Width           =   2865
       Begin VB.Frame Frame7 
-         BackColor       =   &H00E0E0E0&
+         BackColor       =   &H00535353&
          Caption         =   "Frio y Fx Ambientales"
          BeginProperty Font 
             Name            =   "MS Sans Serif"
@@ -334,6 +337,7 @@ Begin VB.Form FrmInterv
                Italic          =   0   'False
                Strikethrough   =   0   'False
             EndProperty
+            ForeColor       =   &H00FFFFFF&
             Height          =   195
             Left            =   1320
             TabIndex        =   48
@@ -353,6 +357,7 @@ Begin VB.Form FrmInterv
                Italic          =   0   'False
                Strikethrough   =   0   'False
             EndProperty
+            ForeColor       =   &H00FFFFFF&
             Height          =   195
             Left            =   1320
             TabIndex        =   47
@@ -372,6 +377,7 @@ Begin VB.Form FrmInterv
                Italic          =   0   'False
                Strikethrough   =   0   'False
             EndProperty
+            ForeColor       =   &H00FFFFFF&
             Height          =   195
             Left            =   180
             TabIndex        =   46
@@ -391,6 +397,7 @@ Begin VB.Form FrmInterv
                Italic          =   0   'False
                Strikethrough   =   0   'False
             EndProperty
+            ForeColor       =   &H00FFFFFF&
             Height          =   195
             Left            =   195
             TabIndex        =   45
@@ -400,7 +407,7 @@ Begin VB.Form FrmInterv
       End
    End
    Begin VB.Frame Frame6 
-      BackColor       =   &H00E0E0E0&
+      BackColor       =   &H00535353&
       Caption         =   "Usuarios"
       BeginProperty Font 
          Name            =   "MS Sans Serif"
@@ -412,12 +419,12 @@ Begin VB.Form FrmInterv
          Strikethrough   =   0   'False
       EndProperty
       Height          =   2055
-      Left            =   120
+      Left            =   210
       TabIndex        =   3
-      Top             =   0
+      Top             =   30
       Width           =   7455
       Begin VB.Frame Frame9 
-         BackColor       =   &H00E0E0E0&
+         BackColor       =   &H00535353&
          Caption         =   "Otros"
          BeginProperty Font 
             Name            =   "MS Sans Serif"
@@ -482,6 +489,7 @@ Begin VB.Form FrmInterv
                Italic          =   0   'False
                Strikethrough   =   0   'False
             EndProperty
+            ForeColor       =   &H00FFFFFF&
             Height          =   195
             Left            =   240
             TabIndex        =   28
@@ -501,6 +509,7 @@ Begin VB.Form FrmInterv
                Italic          =   0   'False
                Strikethrough   =   0   'False
             EndProperty
+            ForeColor       =   &H00FFFFFF&
             Height          =   195
             Left            =   240
             TabIndex        =   27
@@ -509,7 +518,7 @@ Begin VB.Form FrmInterv
          End
       End
       Begin VB.Frame Frame8 
-         BackColor       =   &H00E0E0E0&
+         BackColor       =   &H00535353&
          Caption         =   "Combate"
          BeginProperty Font 
             Name            =   "MS Sans Serif"
@@ -574,6 +583,7 @@ Begin VB.Form FrmInterv
                Italic          =   0   'False
                Strikethrough   =   0   'False
             EndProperty
+            ForeColor       =   &H00FFFFFF&
             Height          =   195
             Left            =   135
             TabIndex        =   23
@@ -593,6 +603,7 @@ Begin VB.Form FrmInterv
                Italic          =   0   'False
                Strikethrough   =   0   'False
             EndProperty
+            ForeColor       =   &H00FFFFFF&
             Height          =   195
             Left            =   150
             TabIndex        =   21
@@ -601,7 +612,7 @@ Begin VB.Form FrmInterv
          End
       End
       Begin VB.Frame Frame3 
-         BackColor       =   &H00E0E0E0&
+         BackColor       =   &H00535353&
          Caption         =   "Hambre y sed"
          BeginProperty Font 
             Name            =   "MS Sans Serif"
@@ -666,6 +677,7 @@ Begin VB.Form FrmInterv
                Italic          =   0   'False
                Strikethrough   =   0   'False
             EndProperty
+            ForeColor       =   &H00FFFFFF&
             Height          =   195
             Left            =   180
             TabIndex        =   18
@@ -685,6 +697,7 @@ Begin VB.Form FrmInterv
                Italic          =   0   'False
                Strikethrough   =   0   'False
             EndProperty
+            ForeColor       =   &H00FFFFFF&
             Height          =   195
             Left            =   165
             TabIndex        =   17
@@ -693,7 +706,7 @@ Begin VB.Form FrmInterv
          End
       End
       Begin VB.Frame Frame1 
-         BackColor       =   &H00E0E0E0&
+         BackColor       =   &H00535353&
          Caption         =   "Sanar"
          BeginProperty Font 
             Name            =   "MS Sans Serif"
@@ -758,6 +771,7 @@ Begin VB.Form FrmInterv
                Italic          =   0   'False
                Strikethrough   =   0   'False
             EndProperty
+            ForeColor       =   &H00FFFFFF&
             Height          =   195
             Left            =   180
             TabIndex        =   13
@@ -777,6 +791,7 @@ Begin VB.Form FrmInterv
                Italic          =   0   'False
                Strikethrough   =   0   'False
             EndProperty
+            ForeColor       =   &H00FFFFFF&
             Height          =   195
             Left            =   165
             TabIndex        =   12
@@ -785,7 +800,7 @@ Begin VB.Form FrmInterv
          End
       End
       Begin VB.Frame Frame2 
-         BackColor       =   &H00E0E0E0&
+         BackColor       =   &H00535353&
          Caption         =   "Stamina"
          BeginProperty Font 
             Name            =   "MS Sans Serif"
@@ -850,6 +865,7 @@ Begin VB.Form FrmInterv
                Italic          =   0   'False
                Strikethrough   =   0   'False
             EndProperty
+            ForeColor       =   &H00FFFFFF&
             Height          =   195
             Left            =   165
             TabIndex        =   8
@@ -869,6 +885,7 @@ Begin VB.Form FrmInterv
                Italic          =   0   'False
                Strikethrough   =   0   'False
             EndProperty
+            ForeColor       =   &H00FFFFFF&
             Height          =   195
             Left            =   180
             TabIndex        =   7
@@ -878,7 +895,7 @@ Begin VB.Form FrmInterv
       End
    End
    Begin VB.Frame Frame5 
-      BackColor       =   &H00E0E0E0&
+      BackColor       =   &H00535353&
       Caption         =   "Magia"
       BeginProperty Font 
          Name            =   "MS Sans Serif"
@@ -895,7 +912,7 @@ Begin VB.Form FrmInterv
       Top             =   2160
       Width           =   2655
       Begin VB.Frame Frame10 
-         BackColor       =   &H00E0E0E0&
+         BackColor       =   &H00535353&
          Caption         =   "Duracion Spells"
          BeginProperty Font 
             Name            =   "MS Sans Serif"
@@ -996,6 +1013,7 @@ Begin VB.Form FrmInterv
                Italic          =   0   'False
                Strikethrough   =   0   'False
             EndProperty
+            ForeColor       =   &H00FFFFFF&
             Height          =   195
             Left            =   1170
             TabIndex        =   38
@@ -1015,6 +1033,7 @@ Begin VB.Form FrmInterv
                Italic          =   0   'False
                Strikethrough   =   0   'False
             EndProperty
+            ForeColor       =   &H00FFFFFF&
             Height          =   195
             Left            =   1170
             TabIndex        =   35
@@ -1034,6 +1053,7 @@ Begin VB.Form FrmInterv
                Italic          =   0   'False
                Strikethrough   =   0   'False
             EndProperty
+            ForeColor       =   &H00FFFFFF&
             Height          =   195
             Left            =   225
             TabIndex        =   33
@@ -1053,6 +1073,7 @@ Begin VB.Form FrmInterv
                Italic          =   0   'False
                Strikethrough   =   0   'False
             EndProperty
+            ForeColor       =   &H00FFFFFF&
             Height          =   195
             Left            =   225
             TabIndex        =   32
@@ -1159,29 +1180,29 @@ Private Sub Command2_Click()
     On Error GoTo Err
 
     'Intervalos
-    Call WriteVar(ConfigPath & "Server.ini", "INTERVALOS", "SanaIntervaloSinDescansar", Str(SanaIntervaloSinDescansar))
-    Call WriteVar(ConfigPath & "Server.ini", "INTERVALOS", "StaminaIntervaloSinDescansar", Str(StaminaIntervaloSinDescansar))
-    Call WriteVar(ConfigPath & "Server.ini", "INTERVALOS", "SanaIntervaloDescansar", Str(SanaIntervaloDescansar))
-    Call WriteVar(ConfigPath & "Server.ini", "INTERVALOS", "StaminaIntervaloDescansar", Str(StaminaIntervaloDescansar))
-    Call WriteVar(ConfigPath & "Server.ini", "INTERVALOS", "IntervaloSed", Str(IntervaloSed))
-    Call WriteVar(ConfigPath & "Server.ini", "INTERVALOS", "IntervaloHambre", Str(IntervaloHambre))
-    Call WriteVar(ConfigPath & "Server.ini", "INTERVALOS", "IntervaloVeneno", Str(IntervaloVeneno))
-    Call WriteVar(ConfigPath & "Server.ini", "INTERVALOS", "IntervaloParalizado", Str(IntervaloParalizado))
-    Call WriteVar(ConfigPath & "Server.ini", "INTERVALOS", "IntervaloInvisible", Str(IntervaloInvisible))
-    Call WriteVar(ConfigPath & "Server.ini", "INTERVALOS", "IntervaloFrio", Str(IntervaloFrio))
-    Call WriteVar(ConfigPath & "Server.ini", "INTERVALOS", "IntervaloWAVFX", Str(IntervaloWavFx))
-    Call WriteVar(ConfigPath & "Server.ini", "INTERVALOS", "IntervaloInvocacion", Str(IntervaloInvocacion))
-    Call WriteVar(ConfigPath & "Server.ini", "INTERVALOS", "IntervaloParaConexion", Str(IntervaloParaConexion))
+    Call WriteVar(ConfigPath & "Server.ini", "INTERVALOS", "SanaIntervaloSinDescansar", str(SanaIntervaloSinDescansar))
+    Call WriteVar(ConfigPath & "Server.ini", "INTERVALOS", "StaminaIntervaloSinDescansar", str(StaminaIntervaloSinDescansar))
+    Call WriteVar(ConfigPath & "Server.ini", "INTERVALOS", "SanaIntervaloDescansar", str(SanaIntervaloDescansar))
+    Call WriteVar(ConfigPath & "Server.ini", "INTERVALOS", "StaminaIntervaloDescansar", str(StaminaIntervaloDescansar))
+    Call WriteVar(ConfigPath & "Server.ini", "INTERVALOS", "IntervaloSed", str(IntervaloSed))
+    Call WriteVar(ConfigPath & "Server.ini", "INTERVALOS", "IntervaloHambre", str(IntervaloHambre))
+    Call WriteVar(ConfigPath & "Server.ini", "INTERVALOS", "IntervaloVeneno", str(IntervaloVeneno))
+    Call WriteVar(ConfigPath & "Server.ini", "INTERVALOS", "IntervaloParalizado", str(IntervaloParalizado))
+    Call WriteVar(ConfigPath & "Server.ini", "INTERVALOS", "IntervaloInvisible", str(IntervaloInvisible))
+    Call WriteVar(ConfigPath & "Server.ini", "INTERVALOS", "IntervaloFrio", str(IntervaloFrio))
+    Call WriteVar(ConfigPath & "Server.ini", "INTERVALOS", "IntervaloWAVFX", str(IntervaloWavFx))
+    Call WriteVar(ConfigPath & "Server.ini", "INTERVALOS", "IntervaloInvocacion", str(IntervaloInvocacion))
+    Call WriteVar(ConfigPath & "Server.ini", "INTERVALOS", "IntervaloParaConexion", str(IntervaloParaConexion))
 
     '&&&&&&&&&&&&&&&&&&&&& TIMERS &&&&&&&&&&&&&&&&&&&&&&&
 
-    Call WriteVar(ConfigPath & "Server.ini", "INTERVALOS", "IntervaloLanzaHechizo", Str(IntervaloUserPuedeCastear))
-    Call WriteVar(ConfigPath & "Server.ini", "INTERVALOS", "IntervaloTrabajo", Str(IntervaloUserPuedeTrabajar))
-    Call WriteVar(ConfigPath & "Server.ini", "INTERVALOS", "IntervaloUserPuedeAtacar", Str(IntervaloUserPuedeAtacar))
+    Call WriteVar(ConfigPath & "Server.ini", "INTERVALOS", "IntervaloLanzaHechizo", str(IntervaloUserPuedeCastear))
+    Call WriteVar(ConfigPath & "Server.ini", "INTERVALOS", "IntervaloTrabajo", str(IntervaloUserPuedeTrabajar))
+    Call WriteVar(ConfigPath & "Server.ini", "INTERVALOS", "IntervaloUserPuedeAtacar", str(IntervaloUserPuedeAtacar))
     
     '&&&&&&&&&&&&&&&&&&&& Suerte desde INIT &&&&&&&&&&&&&&&&&&&&&&&&&
     
-    Call WriteVar(ConfigPath & "Rates.ini", "DIFICULTAD", "DificultadExtraer", Str(DificultadExtraer))
+    Call WriteVar(ConfigPath & "Rates.ini", "DIFICULTAD", "DificultadExtraer", str(DificultadExtraer))
     
     
     MsgBox "Los intervalos se han guardado sin problemas."

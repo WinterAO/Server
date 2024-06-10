@@ -40,7 +40,7 @@ Public Const ANCHO_MAP As Byte = 10
 
 ' Tamanio en tiles de la pantalla.
 'ADVERTENCIA: TIENEN QUE SER IMPAR!
-Public Const XWindow            As Byte = 23
+Public Const XWindow            As Byte = 30
 Public Const YWindow            As Byte = 19
 
 ' Cantidad de tiles buffer

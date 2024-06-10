@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin VB.Form frmServidor 
-   BackColor       =   &H00E0E0E0&
+   BackColor       =   &H00424242&
    Caption         =   "Configuracion del Servidor"
    ClientHeight    =   5940
    ClientLeft      =   60
@@ -40,7 +40,7 @@ Begin VB.Form frmServidor
       Width           =   1695
    End
    Begin VB.Frame Frame3 
-      BackColor       =   &H00E0E0E0&
+      BackColor       =   &H00535353&
       Caption         =   "Administracion"
       Height          =   2535
       Left            =   120
@@ -180,7 +180,7 @@ Begin VB.Form frmServidor
       Width           =   2775
    End
    Begin VB.Frame Frame2 
-      BackColor       =   &H00E0E0E0&
+      BackColor       =   &H00535353&
       Caption         =   "Backup"
       Height          =   735
       Left            =   120
@@ -219,7 +219,7 @@ Begin VB.Form frmServidor
       End
    End
    Begin VB.Frame Frame1 
-      BackColor       =   &H00E0E0E0&
+      BackColor       =   &H00535353&
       Caption         =   "Recargar"
       Height          =   1815
       Left            =   120
@@ -390,7 +390,7 @@ Private Sub cmdLoadWorldBackup_Click()
     Call CargarBackUp
     Call LoadOBJData
     Call LoadGlobalDrop
-    Call loadShop
+    Call LoadShop
 
     SockListen = ListenForConnect(Puerto, hWndMsg, vbNullString)
 
@@ -401,11 +401,11 @@ Private Sub cmdPausarServidor_Click()
 
     If EnPausa = False Then
         EnPausa = True
-        Call SendData(SendTarget.ToAll, 0, PrepareMessagePauseToggle())
+        Call SendData(SendTarget.Toall, 0, PrepareMessagePauseToggle())
         cmdPausarServidor.Caption = "Reanudar el servidor"
     Else
         EnPausa = False
-        Call SendData(SendTarget.ToAll, 0, PrepareMessagePauseToggle())
+        Call SendData(SendTarget.Toall, 0, PrepareMessagePauseToggle())
         cmdPausarServidor.Caption = "Pausar el servidor"
 
     End If
@@ -597,7 +597,7 @@ Private Sub listDats_Click()
             Call LoadGlobalDrop
             
         Case "SHOP.dat"
-            Call loadShop
+            Call LoadShop
             
         Case "OBJARTESANO.DAT"
             Call LoadObjArtesano
