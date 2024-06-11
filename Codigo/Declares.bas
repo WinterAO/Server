@@ -774,6 +774,8 @@ End Enum
 'Estadisticas
 Public STAT_MAXELV                    As Byte
 
+Public TablaExperiencia()             As Long
+
 Public Const STAT_MAXHP               As Integer = 999
 
 Public Const STAT_MAXSTA              As Integer = 999
@@ -2689,7 +2691,6 @@ Public NUMSHOPS As Integer
 Public PortalEvento() As New clsEventoMapa
 Public TotalEventosMap As Byte
 Public HorarioEventoPortal(23) As Byte
-
 
 Public Enum e_AccionBarra
     Runa = 1

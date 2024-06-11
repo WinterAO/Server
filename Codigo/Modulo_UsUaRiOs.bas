@@ -642,7 +642,8 @@ End Sub
 '
 ' @param UserIndex Specifies reference to user
 
-Public Sub CheckUserLevel(ByVal UserIndex As Integer, Optional ByVal PrintInConsole As Boolean = True)
+Public Sub CheckUserLevel(ByVal UserIndex As Integer, _
+                          Optional ByVal PrintInConsole As Boolean = True)
 
     '*************************************************
     'Author: Unknown
@@ -663,15 +664,25 @@ Public Sub CheckUserLevel(ByVal UserIndex As Integer, Optional ByVal PrintInCons
     '06/09/2019: Jopi - Guardado de usuario al pasar de nivel.
     '*************************************************
     Dim Pts              As Integer
+
     Dim AumentoHIT       As Integer
+
     Dim AumentoMANA      As Integer
+
     Dim AumentoSTA       As Integer
+
     Dim AumentoHP        As Integer
+
     Dim WasNewbie        As Boolean
+
     Dim Promedio         As Double
+
     Dim aux              As Integer
+
     Dim DistVida(1 To 5) As Integer
+
     Dim GI               As Integer 'Guild Index
+
     Dim SubiodeLvL       As Boolean
     
     On Error GoTo errHandler
@@ -698,6 +709,7 @@ Public Sub CheckUserLevel(ByVal UserIndex As Integer, Optional ByVal PrintInCons
                 Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_NIVEL, .Pos.X, .Pos.Y))
                 Call WriteConsoleMsg(UserIndex, "Has subido de nivel!", FontTypeNames.FONTTYPE_INFO)
                 Call WriteScreenMsg(UserIndex, "Nivel " & .Stats.ELV + 1, "Has alcanzado el")
+
             End If
             
             If .Stats.ELV = 1 Then
@@ -712,21 +724,23 @@ Public Sub CheckUserLevel(ByVal UserIndex As Integer, Optional ByVal PrintInCons
             
             .Stats.Exp = .Stats.Exp - .Stats.ELU
                   
+            .Stats.ELU = TablaExperiencia(.Stats.ELV)
+                  
             'Nueva subida de exp x lvl. Pablo (ToxicWaste)
-            If .Stats.ELV < 15 Then
-                .Stats.ELU = .Stats.ELU * 1.4
-            ElseIf .Stats.ELV < 21 Then
-                .Stats.ELU = .Stats.ELU * 1.35
-            ElseIf .Stats.ELV < 26 Then
-                .Stats.ELU = .Stats.ELU * 1.3
-            ElseIf .Stats.ELV < 35 Then
-                .Stats.ELU = .Stats.ELU * 1.2
-            ElseIf .Stats.ELV < 40 Then
-                .Stats.ELU = .Stats.ELU * 1.3
-            Else
-                .Stats.ELU = .Stats.ELU * 1.375
-
-            End If
+            '            If .Stats.ELV < 15 Then
+            '                .Stats.ELU = .Stats.ELU * 1.4
+            '            ElseIf .Stats.ELV < 21 Then
+            '                .Stats.ELU = .Stats.ELU * 1.35
+            '            ElseIf .Stats.ELV < 26 Then
+            '                .Stats.ELU = .Stats.ELU * 1.3
+            '            ElseIf .Stats.ELV < 35 Then
+            '                .Stats.ELU = .Stats.ELU * 1.2
+            '            ElseIf .Stats.ELV < 40 Then
+            '                .Stats.ELU = .Stats.ELU * 1.3
+            '            Else
+            '                .Stats.ELU = .Stats.ELU * 1.375
+            '
+            '            End If
             
             'Calculo subida de vida
             Promedio = ModVida(.clase) - (21 - .Stats.UserAtributos(eAtributos.Constitucion)) * 0.5
@@ -896,6 +910,7 @@ Public Sub CheckUserLevel(ByVal UserIndex As Integer, Optional ByVal PrintInCons
                     Call WriteConsoleMsg(UserIndex, "Tu golpe minimo aumento en " & AumentoHIT & " puntos.", FontTypeNames.FONTTYPE_INFO)
 
                 End If
+
             End If
             
             'Marcamos que subio del lvl
@@ -922,6 +937,7 @@ Public Sub CheckUserLevel(ByVal UserIndex As Integer, Optional ByVal PrintInCons
                         If PrintInConsole Then
                             Call SendData(SendTarget.ToGuildMembers, GI, PrepareMessageConsoleMsg(.Name & " deja el clan.", FontTypeNames.FONTTYPE_GUILD))
                             Call WriteConsoleMsg(UserIndex, "Ya tienes la madurez suficiente como para decidir bajo que estandarte pelearas! Por esta razon, hasta tanto no te enlistes en la faccion bajo la cual tu clan esta alineado, estaras excluido del mismo.", FontTypeNames.FONTTYPE_GUILD)
+
                         End If
 
                     End If
@@ -941,6 +957,7 @@ Public Sub CheckUserLevel(ByVal UserIndex As Integer, Optional ByVal PrintInCons
 
                 If PrintInConsole Then
                     Call WriteConsoleMsg(UserIndex, "Debes abandonar el Dungeon Newbie.", FontTypeNames.FONTTYPE_INFO)
+
                 End If
 
             End If
@@ -952,8 +969,10 @@ Public Sub CheckUserLevel(ByVal UserIndex As Integer, Optional ByVal PrintInCons
             Call WriteLevelUp(UserIndex, Pts)
             
             .Stats.SkillPts = .Stats.SkillPts + Pts
+
             If PrintInConsole Then
                 Call WriteConsoleMsg(UserIndex, "Has ganado un total de " & Pts & " skillpoints.", FontTypeNames.FONTTYPE_INFO)
+
             End If
 
         End If
@@ -964,7 +983,7 @@ Public Sub CheckUserLevel(ByVal UserIndex As Integer, Optional ByVal PrintInCons
     
     'Si subio de nivel guardamos los datos del usuario.
     'If SubiodeLvL Then _
-        Call SaveUser(UserIndex, True)
+     Call SaveUser(UserIndex, True)
     
     Exit Sub
 
@@ -972,6 +991,7 @@ errHandler:
     Call LogError("Error en la subrutina CheckUserLevel - Error : " & Err.Number & " - Description : " & Err.description)
 
 End Sub
+
 
 ''
 ' Checks if the user gets the next level PVP.

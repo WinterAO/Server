@@ -138,7 +138,7 @@ Sub Bloquear(ByVal toMap As Boolean, _
              ByVal sndIndex As Integer, _
              ByVal X As Integer, _
              ByVal Y As Integer, _
-             ByVal b As Boolean)
+             ByVal B As Boolean)
     '***************************************************
     'Author: Unknown
     'Last Modification: -
@@ -152,9 +152,9 @@ Sub Bloquear(ByVal toMap As Boolean, _
     '***************************************************
 
     If toMap Then
-        Call SendData(SendTarget.toMap, sndIndex, PrepareMessageBlockPosition(X, Y, b))
+        Call SendData(SendTarget.toMap, sndIndex, PrepareMessageBlockPosition(X, Y, B))
     Else
-        Call WriteBlockPosition(sndIndex, X, Y, b)
+        Call WriteBlockPosition(sndIndex, X, Y, B)
 
     End If
 
@@ -306,7 +306,7 @@ Sub Main()
     '***************************************************
 
     On Error Resume Next
-    
+
     ' Paths
     ChDir App.Path
     ChDrive App.Path
@@ -345,6 +345,7 @@ Sub Main()
     frmCargando.pCargar.CustomText = "Cargando Server.ini"
     Call LoadSini 'Configuración general (Server.ini)
     Call Load_Rates 'Rates (Rates.ini)
+    Call CargarExperiencias
     Call loadAdministrativeUsers 'Gms (GameMasters.ini)
     Call CargarCiudades
     Call CargaApuestas

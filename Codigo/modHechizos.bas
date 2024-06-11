@@ -270,7 +270,7 @@ Private Sub SendSpellEffects(ByVal UserIndex As Integer, _
         ' Spell Words
         If DecirPalabras Then
             Call SendData(SendTarget.ToNPCArea, NPCIndex, _
-                PrepareMessageChatOverHead(Hechizos(Spell).PalabrasMagicas, Npclist(NPCIndex).Char.CharIndex, 129, 22, 194, True))
+                PrepareMessageChatOverHead(Hechizos(Spell).PalabrasMagicas, Npclist(NPCIndex).Char.CharIndex, 135, 117, 32, True))
         End If
 
     End With
@@ -301,7 +301,7 @@ Public Sub NpcLanzaSpellSobreNpc(ByVal NPCIndex As Integer, _
         ' Decir las palabras magicas?
         If DecirPalabras Then
             Call SendData(SendTarget.ToNPCArea, NPCIndex, _
-                PrepareMessageChatOverHead(Hechizos(spellIndex).PalabrasMagicas, Npclist(NPCIndex).Char.CharIndex, 129, 22, 194, True))
+                PrepareMessageChatOverHead(Hechizos(spellIndex).PalabrasMagicas, Npclist(NPCIndex).Char.CharIndex, 135, 117, 32, True))
         End If
     
         ' Spell deals damage??
@@ -460,7 +460,7 @@ On Error GoTo errHandler
 
     With UserList(UserIndex)
         If .flags.AdminInvisible <> 1 Then
-            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead(SpellWords, .Char.CharIndex, 129, 22, 194, True))
+            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead(SpellWords, .Char.CharIndex, 135, 117, 32, True))
             
             ' Si estaba oculto, se vuelve visible
             If .flags.Oculto = 1 Then
@@ -595,7 +595,7 @@ Function PuedeLanzar(ByVal UserIndex As Integer, ByVal HechizoIndex As Integer) 
 
 End Function
 
-Sub HechizoTerrenoEstado(ByVal UserIndex As Integer, ByRef b As Boolean)
+Sub HechizoTerrenoEstado(ByVal UserIndex As Integer, ByRef B As Boolean)
     '***************************************************
     'Author: Unknown
     'Last Modification: -
@@ -624,7 +624,7 @@ Sub HechizoTerrenoEstado(ByVal UserIndex As Integer, ByRef b As Boolean)
         h = .flags.Hechizo
         
         If Hechizos(h).RemueveInvisibilidadParcial = 1 Then
-            b = True
+            B = True
 
             For TempX = PosCasteadaX - Hechizos(h).RadioArea To PosCasteadaX + Hechizos(h).RadioArea
                 For TempY = PosCasteadaY - Hechizos(h).RadioArea To PosCasteadaY + Hechizos(h).RadioArea
@@ -649,7 +649,7 @@ Sub HechizoTerrenoEstado(ByVal UserIndex As Integer, ByRef b As Boolean)
 
         ElseIf Hechizos(h).SubeHP = 1 Then '¿Hechizo cura?
         
-            b = True 'Hechizo casteado
+            B = True 'Hechizo casteado
             
             'Buscamos jugadores
             For TempX = PosCasteadaX - Hechizos(h).RadioArea To PosCasteadaX + Hechizos(h).RadioArea
@@ -672,7 +672,7 @@ Sub HechizoTerrenoEstado(ByVal UserIndex As Integer, ByRef b As Boolean)
 
         ElseIf Hechizos(h).SubeHP = 2 Then '¿Hechizo provoca daño?
         
-             b = True 'Hechizo casteado
+             B = True 'Hechizo casteado
              
             'Buscamos jugadores y NPCs
             For TempX = PosCasteadaX - Hechizos(h).RadioArea To PosCasteadaX + Hechizos(h).RadioArea

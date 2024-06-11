@@ -595,7 +595,7 @@ Private Sub SetAttributesToNewUser(ByVal UserIndex As Integer, ByVal UserClase A
     
         .Stats.Exp = 0
         .Stats.ELV = 1
-        .Stats.ELU = 300
+        .Stats.ELU = TablaExperiencia(.Stats.ELV)
         
         .Stats.ExpPVP = 0
         .Stats.ELVPVP = 1

@@ -70,8 +70,8 @@ End Type
 
 Public Type tDatosLuces
     R As Integer
-    g As Integer
-    b As Integer
+    G As Integer
+    B As Integer
     range As Byte
     X As Integer
     Y As Integer
@@ -2485,3 +2485,34 @@ CargarEventosMapa_Err:
         'Call TraceError(Err.Number, Err.description, "ES.CargarEventosMapa", Erl)
 
     End Sub
+
+Public Sub CargarExperiencias()
+    On Error GoTo CargarExperiencias_Err
+    
+    If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando Experiencias."
+    
+    If Not FileExist(DatPath & "Experiencias.dat", vbArchive) Then
+        MsgBox "No se ha encontrado el archivo Experiencias.dat en la carpeta " & DatPath
+        Exit Sub
+    End If
+    
+    Dim Lector     As clsIniManager
+    Dim i As Byte
+    Set Lector = New clsIniManager
+    Call Lector.Initialize(DatPath & "Experiencias.dat")
+    
+    ReDim TablaExperiencia(STAT_MAXELV) As Long
+    
+    For i = 1 To STAT_MAXELV
+    
+        TablaExperiencia(i) = Lector.GetValue("EXPERIENCIAS", "LVL" & i)
+    
+    Next i
+
+    Exit Sub
+
+CargarExperiencias_Err:
+
+    'Call RegistrarError(Err.Number, Err.description, "ES.CargarExperiencias", Erl)
+    Resume Next
+End Sub
