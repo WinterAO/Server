@@ -913,7 +913,9 @@ End Sub
 Public Sub WriteChatOverHead(ByVal UserIndex As Integer, _
                              ByVal Chat As String, _
                              ByVal CharIndex As Integer, _
-                             ByVal color As Long, _
+                             ByVal r As Byte, _
+                             ByVal g As Byte, _
+                             ByVal b As Byte, _
                              Optional ByVal NoConsole As Boolean = False)
 
     '***************************************************
@@ -923,7 +925,7 @@ Public Sub WriteChatOverHead(ByVal UserIndex As Integer, _
     '***************************************************
     On Error GoTo errHandler
 
-    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageChatOverHead(Chat, CharIndex, color, NoConsole))
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageChatOverHead(Chat, CharIndex, r, g, b, NoConsole))
     Exit Sub
 
 errHandler:
@@ -2978,7 +2980,7 @@ End Sub
 ' @param    criminalsKilled The number of criminals killed by the requested char.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteCharacterInfo(ByVal UserIndex As Integer, ByVal charName As String, ByVal race As eRaza, ByVal Class As eClass, ByVal gender As eGenero, ByVal level As Byte, ByVal Gold As Long, ByVal bank As Long, ByVal reputation As Long, ByVal previousPetitions As String, ByVal currentGuild As String, ByVal previousGuilds As String, ByVal RoyalArmy As Boolean, ByVal CaosLegion As Boolean, ByVal citicensKilled As Long, ByVal criminalsKilled As Long)
+Public Sub WriteCharacterInfo(ByVal UserIndex As Integer, ByVal CharName As String, ByVal race As eRaza, ByVal Class As eClass, ByVal gender As eGenero, ByVal level As Byte, ByVal Gold As Long, ByVal bank As Long, ByVal reputation As Long, ByVal previousPetitions As String, ByVal currentGuild As String, ByVal previousGuilds As String, ByVal RoyalArmy As Boolean, ByVal CaosLegion As Boolean, ByVal citicensKilled As Long, ByVal criminalsKilled As Long)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -2990,7 +2992,7 @@ Public Sub WriteCharacterInfo(ByVal UserIndex As Integer, ByVal charName As Stri
     With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.CharacterInfo)
         
-        Call .WriteASCIIString(charName)
+        Call .WriteASCIIString(CharName)
         Call .WriteByte(race)
         Call .WriteByte(Class)
         Call .WriteByte(gender)
@@ -3936,7 +3938,9 @@ End Function
 
 Public Function PrepareMessageChatOverHead(ByVal Chat As String, _
                                            ByVal CharIndex As Integer, _
-                                           ByVal color As Long, _
+                                           ByVal r As Byte, _
+                                           ByVal g As Byte, _
+                                           ByVal b As Byte, _
                                            Optional ByVal NoConsole As Boolean = False) As String
 
     '***************************************************
@@ -3950,10 +3954,9 @@ Public Function PrepareMessageChatOverHead(ByVal Chat As String, _
         Call .WriteInteger(CharIndex)
         Call .WriteBoolean(NoConsole)
         
-        ' Write rgb channels and save one byte from long :D
-        Call .WriteByte(color And &HFF)
-        Call .WriteByte((color And &HFF00&) \ &H100&)
-        Call .WriteByte((color And &HFF0000) \ &H10000)
+        Call .WriteByte(r)
+        Call .WriteByte(g)
+        Call .WriteByte(b)
         
         PrepareMessageChatOverHead = .ReadASCIIStringFixed(.Length)
 

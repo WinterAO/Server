@@ -3120,17 +3120,17 @@ Public Sub setHome(ByVal UserIndex As Integer, _
     With UserList(UserIndex)
         '¿La ciudad que tiene el NPC es invalida?
         If newHome <= 0 Then
-            Call WriteChatOverHead(UserIndex, "Lo siento, en estos momentos no puedo aceptarte en mi ciudad.", Npclist(NPCIndex).Char.CharIndex, vbWhite)
+            Call WriteChatOverHead(UserIndex, "Lo siento, en estos momentos no puedo aceptarte en mi ciudad.", Npclist(NPCIndex).Char.CharIndex, 255, 255, 255)
             Call LogError("Error en SetHome: La ciudad a la que " & .Name & " quiere establecer como hogar, es invalida. NewHome: " & newHome)
             
         Else
             If .Hogar <> newHome Then
                 .Hogar = newHome
             
-                Call WriteChatOverHead(UserIndex, "Bienvenido a nuestra humilde comunidad, este es ahora tu nuevo hogar!!!", Npclist(NPCIndex).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "Bienvenido a nuestra humilde comunidad, este es ahora tu nuevo hogar!!!", Npclist(NPCIndex).Char.CharIndex, 255, 255, 255)
                 Call WriteConsoleMsg(UserIndex, "Ahora eres ciudadano de " & MapZonas(Ciudades(.Hogar).Map, UserZonaId(UserIndex)).Name, FontTypeNames.FONTTYPE_INFO)
             Else
-                Call WriteChatOverHead(UserIndex, "Ya eres miembro de nuestra humilde comunidad!!!", Npclist(NPCIndex).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "Ya eres miembro de nuestra humilde comunidad!!!", Npclist(NPCIndex).Char.CharIndex, 255, 255, 255)
         
             End If
         End If

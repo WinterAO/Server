@@ -945,7 +945,7 @@ Public Sub ArtesanoConstruirItem(ByVal UserIndex As Integer, ByVal Item As Integ
 
     ' Revisamos si tiene las monedas para la comision
     If UserList(UserIndex).Stats.Gld < ArtesaniaCosto Then
-        Call WriteChatOverHead(UserIndex, "No tienes suficientes monedas de oro para pagarme!", Npclist(NPCIndex).Char.CharIndex, vbWhite)
+        Call WriteChatOverHead(UserIndex, "No tienes suficientes monedas de oro para pagarme!", Npclist(NPCIndex).Char.CharIndex, 255, 255, 255)
         Exit Sub
     End If
 
@@ -956,7 +956,7 @@ Public Sub ArtesanoConstruirItem(ByVal UserIndex As Integer, ByVal Item As Integ
         With ArtesanoObj.ItemCrafteo(i)
 
             If Not TieneObjetos(.ObjIndex, .Amount, UserIndex) Then
-                Call WriteChatOverHead(UserIndex, "No tienes los materiales necesarios!", Npclist(NPCIndex).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "No tienes los materiales necesarios!", Npclist(NPCIndex).Char.CharIndex, 255, 255, 255)
                 Exit Sub
             End If
 
@@ -990,7 +990,7 @@ Public Sub ArtesanoConstruirItem(ByVal UserIndex As Integer, ByVal Item As Integ
         Call TirarItemAlPiso(UserList(UserIndex).Pos, ObjetoCreado)
     End If
 
-    Call WriteChatOverHead(UserIndex, "Aqui tienes tu " & ArtesanoObj.Name & ". Vuelve pronto!", Npclist(NPCIndex).Char.CharIndex, vbWhite)
+    Call WriteChatOverHead(UserIndex, "Aqui tienes tu " & ArtesanoObj.Name & ". Vuelve pronto!", Npclist(NPCIndex).Char.CharIndex, 255, 255, 255)
 
 End Sub
 

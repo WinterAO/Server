@@ -1111,7 +1111,7 @@ Private Sub HealerPerformAction(ByVal NPCIndex As Integer, ByVal BestTarget As I
                 
             Case eHealerAction.ParalizeUser
                 Call SendData(SendTarget.ToNPCArea, NPCIndex, _
-                    PrepareMessageChatOverHead(Hechizos(.Spells(eHealerSpells.ParalizeUser)).PalabrasMagicas, .Char.CharIndex, vbCyan))
+                    PrepareMessageChatOverHead(Hechizos(.Spells(eHealerSpells.ParalizeUser)).PalabrasMagicas, .Char.CharIndex, 0, 255, 255))
                 Call NpcLanzaSpellSobreUser(NPCIndex, BestTarget, .Spells(eHealerSpells.ParalizeUser), True)
                 CanMove = False
                 
@@ -1418,27 +1418,27 @@ Private Sub SpellCasterDestroyWand(ByVal NPCIndex As Integer, ByVal spellIndex A
         Select Case WandBreakCounter
 
             Case 5
-                Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessageChatOverHead("Rahma", .Char.CharIndex, vbGreen))
+                Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessageChatOverHead("Rahma", .Char.CharIndex, 0, 255, 0))
                 Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessagePlayWave(SONIDO_DRAGON_VIVO, .Pos.X, .Pos.Y))
 
             Case 4
-                Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessageChatOverHead("vortax", .Char.CharIndex, vbGreen))
+                Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessageChatOverHead("vortax", .Char.CharIndex, 0, 255, 0))
                 Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessagePlayWave(SONIDO_DRAGON_VIVO, .Pos.X, .Pos.Y))
 
             Case 3
-                Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessageChatOverHead("Zill", .Char.CharIndex, vbGreen))
+                Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessageChatOverHead("Zill", .Char.CharIndex, 0, 255, 0))
                 Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessagePlayWave(SONIDO_DRAGON_VIVO, .Pos.X, .Pos.Y))
 
             Case 2
-                Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessageChatOverHead("yaka E'nta", .Char.CharIndex, vbGreen))
+                Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessageChatOverHead("yaka E'nta", .Char.CharIndex, 0, 255, 0))
                 Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessagePlayWave(SONIDO_DRAGON_VIVO, .Pos.X, .Pos.Y))
 
             Case 1
-                Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessageChatOverHead("Korata!!", .Char.CharIndex, vbGreen))
+                Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessageChatOverHead("Korata!!", .Char.CharIndex, 0, 255, 0))
                 Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessagePlayWave(SONIDO_DRAGON_VIVO, .Pos.X, .Pos.Y))
 
             Case 0
-                Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessageChatOverHead(vbNullString, .Char.CharIndex, vbGreen))
+                Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessageChatOverHead(vbNullString, .Char.CharIndex, 0, 255, 0))
                 Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessagePlayWave(SONIDO_DRAGON_VIVO, .Pos.X, .Pos.Y))
                 
                 Call DealWandDamage(NPCIndex, .Spells(spellIndex))
@@ -2764,7 +2764,7 @@ Private Sub MoveFailed(ByVal NPCIndex As Integer)
 
         If IntervaloPermiteAtacarNpc(NPCIndex) Then
             If (RandomNumber(1, 100) > 95) Then
-                Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessageChatOverHead("Maldito bastardo, Ven aqui!", .Char.CharIndex, vbYellow))
+                Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessageChatOverHead("Maldito bastardo, Ven aqui!", .Char.CharIndex, 255, 255, 0))
 
             End If
 

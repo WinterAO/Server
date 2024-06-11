@@ -184,7 +184,7 @@ Begin VB.Form frmMain
          EndProperty
          ForeColor       =   &H00FFFFFF&
          Height          =   195
-         Left            =   150
+         Left            =   180
          TabIndex        =   11
          Top             =   1725
          Width           =   3600

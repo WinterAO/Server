@@ -39,7 +39,7 @@ Public Sub accionUseraNPCQuest(ByVal UserIndex As Integer, ByVal NPCIndex As Int
     
         '¿El NPC tiene quest para dar?
         If Npclist(NPCIndex).NumQuest = 0 Then
-            Call WriteChatOverHead(UserIndex, "No tengo ningun encargo para ti.", .Char.CharIndex, vbWhite)
+            Call WriteChatOverHead(UserIndex, "No tengo ningun encargo para ti.", .Char.CharIndex, 255, 255, 255)
             Exit Sub
     
         End If
@@ -58,13 +58,13 @@ Public Sub accionUseraNPCQuest(ByVal UserIndex As Integer, ByVal NPCIndex As Int
 
                 '¿Llego el dia en el que la puede repetir?
                 If UserList(UserIndex).QuestStats.Quests(Questslot).fechaFin + QuestList(QuestIndex).Tiempo > Now() Then
-                    Call WriteChatOverHead(UserIndex, "En estos momentos no tengo ningun encargo para ti. Vuelve dentro de " & DateDiff("d", Now(), UserList(UserIndex).QuestStats.Quests(Questslot).fechaFin + QuestList(QuestIndex).Tiempo) & " dias.", .Char.CharIndex, vbWhite)
+                    Call WriteChatOverHead(UserIndex, "En estos momentos no tengo ningun encargo para ti. Vuelve dentro de " & DateDiff("d", Now(), UserList(UserIndex).QuestStats.Quests(Questslot).fechaFin + QuestList(QuestIndex).Tiempo) & " dias.", .Char.CharIndex, 255, 255, 255)
                     Exit Sub
                     
                 End If
                 
             Else
-                Call WriteChatOverHead(UserIndex, "Ya no tengo ningun encargo para ti.", .Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "Ya no tengo ningun encargo para ti.", .Char.CharIndex, 255, 255, 255)
                 Exit Sub
                 
             End If
@@ -86,7 +86,7 @@ Public Sub accionUseraNPCQuest(ByVal UserIndex As Integer, ByVal NPCIndex As Int
         
         '¿Cumple el requisito en nivel para poder hacerla?
         If UserList(UserIndex).Stats.ELV < QuestList(QuestIndex).RequiredLevel Then
-            Call WriteChatOverHead(UserIndex, "Debes ser por lo menos nivel " & QuestList(QuestIndex).RequiredLevel & " para emprender esta mision.", .Char.CharIndex, vbWhite)
+            Call WriteChatOverHead(UserIndex, "Debes ser por lo menos nivel " & QuestList(QuestIndex).RequiredLevel & " para emprender esta mision.", .Char.CharIndex, 255, 255, 255)
             Exit Sub
     
         End If
@@ -94,7 +94,7 @@ Public Sub accionUseraNPCQuest(ByVal UserIndex As Integer, ByVal NPCIndex As Int
         If QuestList(QuestIndex).RequiredQuest Then
             
             If Not userYaHizoQuest(UserIndex, QuestList(QuestIndex).RequiredQuest) Then
-                Call WriteChatOverHead(UserIndex, "Antes debes haber completado la mision " & Chr(34) & QuestList(QuestList(QuestIndex).RequiredQuest).Nombre & Chr(34), .Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "Antes debes haber completado la mision " & Chr(34) & QuestList(QuestList(QuestIndex).RequiredQuest).Nombre & Chr(34), .Char.CharIndex, 255, 255, 255)
                 Exit Sub
             End If
         
@@ -258,7 +258,7 @@ Public Sub userFinalizaQuest(ByVal UserIndex As Integer, ByVal Questslot As Byte
             For i = 1 To .RequiredOBJs
 
                 If TieneObjetos(.RequiredOBJ(i).ObjIndex, .RequiredOBJ(i).Amount, UserIndex) = False Then
-                    Call WriteChatOverHead(UserIndex, "No has conseguido todos los objetos que te he pedido.", Npclist(NPCIndex).Char.CharIndex, vbWhite)
+                    Call WriteChatOverHead(UserIndex, "No has conseguido todos los objetos que te he pedido.", Npclist(NPCIndex).Char.CharIndex, 255, 255, 255)
                     Exit Sub
 
                 End If
@@ -273,7 +273,7 @@ Public Sub userFinalizaQuest(ByVal UserIndex As Integer, ByVal Questslot As Byte
             For i = 1 To .RequiredNPCs
 
                 If .RequiredNPC(i).Amount > UserList(UserIndex).QuestStats.Quests(Questslot).NPCsKilled(i) Then
-                    Call WriteChatOverHead(UserIndex, "No has matado todas las criaturas que te he pedido.", Npclist(NPCIndex).Char.CharIndex, vbWhite)
+                    Call WriteChatOverHead(UserIndex, "No has matado todas las criaturas que te he pedido.", Npclist(NPCIndex).Char.CharIndex, 255, 255, 255)
                     Exit Sub
 
                 End If
@@ -288,7 +288,7 @@ Public Sub userFinalizaQuest(ByVal UserIndex As Integer, ByVal Questslot As Byte
             For i = 1 To .RequiredTargetNPCs
     
                 If .RequiredTargetNPC(i).Amount > UserList(UserIndex).QuestStats.Quests(Questslot).NPCsTarget(i) Then
-                    Call WriteChatOverHead(UserIndex, "No has visitado a las personas que te pedi.", Npclist(NPCIndex).Char.CharIndex, vbYellow)
+                    Call WriteChatOverHead(UserIndex, "No has visitado a las personas que te pedi.", Npclist(NPCIndex).Char.CharIndex, 255, 255, 0)
                     Exit Sub
     
                 End If
@@ -308,7 +308,7 @@ Public Sub userFinalizaQuest(ByVal UserIndex As Integer, ByVal Questslot As Byte
       
             'Nos fijamos si entra
             If InvSlotsLibres < .RewardOBJs Then
-                Call WriteChatOverHead(UserIndex, "No tienes suficiente espacio en el inventario para recibir la recompensa. Vuelve cuando tengas espacio.", Npclist(NPCIndex).Char.CharIndex, vbYellow)
+                Call WriteChatOverHead(UserIndex, "No tienes suficiente espacio en el inventario para recibir la recompensa. Vuelve cuando tengas espacio.", Npclist(NPCIndex).Char.CharIndex, 255, 255, 0)
                 Exit Sub
 
             End If

@@ -904,7 +904,7 @@ Function CheckForSameNameAccount(ByVal Name As String) As Boolean
             'ESE EVENTO NO DISPARA UN SAVE USER, LO QUE PUEDE SER UTILIZADO PARA DUPLICAR ITEMS
             'ESTE BUG EN ALKON PRODUJO QUE EL SERVIDOR ESTE CAIDO DURANTE 3 DIAS. ATENTOS.
             
-            If UCase$(UserList(LoopC).AccountInfo.UserName) = UCase$(Name) Then
+            If UCase$(UserList(LoopC).AccountInfo.username) = UCase$(Name) Then
             
                 CheckForSameNameAccount = True
                 Exit Function
@@ -1202,7 +1202,7 @@ Public Sub Expresar(ByVal NPCIndex As Integer, ByVal UserIndex As Integer)
         Dim randomi
 
         randomi = RandomNumber(1, Npclist(NPCIndex).NroExpresiones)
-        Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead(Npclist(NPCIndex).Expresiones(randomi), Npclist(NPCIndex).Char.CharIndex, vbWhite))
+        Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead(Npclist(NPCIndex).Expresiones(randomi), Npclist(NPCIndex).Char.CharIndex, 255, 255, 255))
 
     End If
 
@@ -1667,11 +1667,11 @@ Sub LookatTile(ByVal UserIndex As Integer, _
                             End If
                       
                             'Enviamos el mensaje propiamente dicho:
-                            Call WriteChatOverHead(UserIndex, Stat, Npclist(TempCharIndex).Char.CharIndex, vbYellow)
+                            Call WriteChatOverHead(UserIndex, Stat, Npclist(TempCharIndex).Char.CharIndex, 255, 255, 0)
                       
                         Else
                             'Enviamos el mensaje propiamente dicho:
-                            Call WriteChatOverHead(UserIndex, Stat, Npclist(TempCharIndex).Char.CharIndex, vbWhite)
+                            Call WriteChatOverHead(UserIndex, Stat, Npclist(TempCharIndex).Char.CharIndex, 255, 255, 255)
 
                         End If
               

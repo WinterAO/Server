@@ -1324,15 +1324,29 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
         Call WriteChangeMap(UserIndex, .Pos.Map, MapZonas(.Pos.Map, UserZonaId(UserIndex)).MapVersion) 'Carga el mapa
         
         If .flags.Privilegios = PlayerType.Dios Then
-            .flags.ChatColor = RGB(250, 250, 150)
+            .flags.ChatColor.R = 250
+            .flags.ChatColor.G = 250
+            .flags.ChatColor.B = 150
+            
         ElseIf .flags.Privilegios <> PlayerType.User And .flags.Privilegios <> (PlayerType.User Or PlayerType.ChaosCouncil) And .flags.Privilegios <> (PlayerType.User Or PlayerType.RoyalCouncil) Then
-            .flags.ChatColor = RGB(0, 255, 0)
+            .flags.ChatColor.R = 0
+            .flags.ChatColor.G = 255
+            .flags.ChatColor.B = 0
+            
         ElseIf .flags.Privilegios = (PlayerType.User Or PlayerType.RoyalCouncil) Then
-            .flags.ChatColor = RGB(0, 255, 255)
+            .flags.ChatColor.R = 0
+            .flags.ChatColor.G = 255
+            .flags.ChatColor.B = 255
+            
         ElseIf .flags.Privilegios = (PlayerType.User Or PlayerType.ChaosCouncil) Then
-            .flags.ChatColor = RGB(255, 128, 64)
+            .flags.ChatColor.R = 255
+            .flags.ChatColor.G = 128
+            .flags.ChatColor.B = 64
+            
         Else
-            .flags.ChatColor = vbWhite
+            .flags.ChatColor.R = 255
+            .flags.ChatColor.G = 255
+            .flags.ChatColor.B = 255
 
         End If
     

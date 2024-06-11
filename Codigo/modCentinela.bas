@@ -144,13 +144,13 @@ Sub AvisarUsuario(ByVal userSlot As Integer, _
             'Paso la mitad de tiempo?
             If (GetTickCount() - .TiempoInicio) > (LIMITE_TIEMPO / 2) Then
                 'Prepara el paquete a enviar.
-                DataSend = PrepareMessageChatOverHead("Hola, soy el centinela, guardian de los recursos naturales de estas tierras. Debes escribir /CENTINELA " & .CodigoCheck & " En menos de 2 minuto o seras sancionado.", Npclist(.MiNpcIndex).Char.CharIndex, vbYellow)
+                DataSend = PrepareMessageChatOverHead("Hola, soy el centinela, guardian de los recursos naturales de estas tierras. Debes escribir /CENTINELA " & .CodigoCheck & " En menos de 2 minuto o seras sancionado.", Npclist(.MiNpcIndex).Char.CharIndex, 255, 255, 0)
             Else
-                DataSend = PrepareMessageChatOverHead("Sigo esperando, tienes menos de un minuto para escribir /CENTINELA " & .CodigoCheck & ".", Npclist(.MiNpcIndex).Char.CharIndex, vbYellow)
+                DataSend = PrepareMessageChatOverHead("Sigo esperando, tienes menos de un minuto para escribir /CENTINELA " & .CodigoCheck & ".", Npclist(.MiNpcIndex).Char.CharIndex, 255, 255, 0)
             End If
 
         Else
-            DataSend = PrepareMessageChatOverHead("El codigo ingresado NO es correcto, debes escribir : /CENTINELA " & .CodigoCheck & ".", Npclist(.MiNpcIndex).Char.CharIndex, vbYellow)
+            DataSend = PrepareMessageChatOverHead("El codigo ingresado NO es correcto, debes escribir : /CENTINELA " & .CodigoCheck & ".", Npclist(.MiNpcIndex).Char.CharIndex, 255, 255, 0)
 
         End If
      

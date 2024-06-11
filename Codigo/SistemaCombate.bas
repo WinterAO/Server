@@ -615,7 +615,7 @@ Public Sub EventosDano(ByVal UserIndex As Integer, ByVal NPCIndex As Integer, By
         If (.Stats.MinHp / .Stats.MaxHp) * 100 <= 10 Then
             If Not .flags.LanzaMensaje = "" Then
                 If .flags.DijoMensaje = False Then
-                    Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead(.flags.LanzaMensaje, .Char.CharIndex, vbBlue))
+                    Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead(.flags.LanzaMensaje, .Char.CharIndex, 0, 0, 255))
                     .flags.DijoMensaje = True
                 End If
             End If

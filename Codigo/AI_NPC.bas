@@ -1524,7 +1524,7 @@ Public Sub SacerdoteHealUser(ByVal UserIndex As Integer)
 
         'Si ya esta a full, no hacemos nada
         If .Stats.MinHp = .Stats.MaxHp And .Stats.MinMAN = .Stats.MaxMAN And .flags.Maldicion = 0 And .flags.Ceguera = 0 And .flags.Envenenado = 0 And .flags.Incinerado = 0 Then
-            Call WriteChatOverHead(UserIndex, "Hijo mio, los dioses ya han sanado todas tus heridas.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+            Call WriteChatOverHead(UserIndex, "Hijo mio, los dioses ya han sanado todas tus heridas.", Npclist(.flags.TargetNPC).Char.CharIndex, 255, 255, 255)
             Exit Sub
         End If
 

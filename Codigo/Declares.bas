@@ -82,14 +82,6 @@ Public Const MAXAMIGOS As Byte = 50   'Cantidad Maxima de Amigos
 Public Const MINLVLGLOBAL As Byte = 5 'Nivel minimo para poder usar el chat global.
 
 ''
-' The color of chats over head of dead characters.
-Public Const CHAT_COLOR_DEAD_CHAR As Long = &HC0C0C0
-
-''
-' The color of yells made by any kind of game administrator.
-Public Const CHAT_COLOR_GM_YELL   As Long = &HF82FF
-
-''
 ' Coordinates for normal sounds (not 3D, like rain)
 Public Const NO_3D_SOUND          As Byte = 0
 
@@ -1456,6 +1448,14 @@ Public Type UserStats
     
 End Type
 
+Public Type RGB
+
+    R As Byte
+    G As Byte
+    B As Byte
+        
+End Type
+
 'Flags
 Public Type UserFlags
     GMRequested As Integer
@@ -1551,7 +1551,7 @@ Public Type UserFlags
     AdminInvisible As Byte
     AdminPerseguible As Boolean
     
-    ChatColor As Long
+    ChatColor As RGB
     
     '[Barrin 30-11-03]
     TimesWalk As Long
