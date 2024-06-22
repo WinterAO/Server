@@ -511,7 +511,6 @@ Private Sub SetAttributesCustomToNewUser(ByVal UserIndex As Integer)
             End If
         Next i
         
-        .Stats.SkillPts = 0
     End With
 
 End Sub
@@ -532,8 +531,6 @@ Private Sub SetAttributesToNewUser(ByVal UserIndex As Integer, ByVal UserClase A
             .Stats.UserSkills(i) = 0
             Call CheckEluSkill(UserIndex, i, True)
         Next i
-    
-        .Stats.SkillPts = 10
     
         Dim MiInt As Long
 
@@ -1324,29 +1321,29 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
         Call WriteChangeMap(UserIndex, .Pos.Map, MapZonas(.Pos.Map, UserZonaId(UserIndex)).MapVersion) 'Carga el mapa
         
         If .flags.Privilegios = PlayerType.Dios Then
-            .flags.ChatColor.R = 250
-            .flags.ChatColor.G = 250
-            .flags.ChatColor.B = 150
+            .flags.ChatColor.r = 250
+            .flags.ChatColor.g = 250
+            .flags.ChatColor.b = 150
             
         ElseIf .flags.Privilegios <> PlayerType.User And .flags.Privilegios <> (PlayerType.User Or PlayerType.ChaosCouncil) And .flags.Privilegios <> (PlayerType.User Or PlayerType.RoyalCouncil) Then
-            .flags.ChatColor.R = 0
-            .flags.ChatColor.G = 255
-            .flags.ChatColor.B = 0
+            .flags.ChatColor.r = 0
+            .flags.ChatColor.g = 255
+            .flags.ChatColor.b = 0
             
         ElseIf .flags.Privilegios = (PlayerType.User Or PlayerType.RoyalCouncil) Then
-            .flags.ChatColor.R = 0
-            .flags.ChatColor.G = 255
-            .flags.ChatColor.B = 255
+            .flags.ChatColor.r = 0
+            .flags.ChatColor.g = 255
+            .flags.ChatColor.b = 255
             
         ElseIf .flags.Privilegios = (PlayerType.User Or PlayerType.ChaosCouncil) Then
-            .flags.ChatColor.R = 255
-            .flags.ChatColor.G = 128
-            .flags.ChatColor.B = 64
+            .flags.ChatColor.r = 255
+            .flags.ChatColor.g = 128
+            .flags.ChatColor.b = 64
             
         Else
-            .flags.ChatColor.R = 255
-            .flags.ChatColor.G = 255
-            .flags.ChatColor.B = 255
+            .flags.ChatColor.r = 255
+            .flags.ChatColor.g = 255
+            .flags.ChatColor.b = 255
 
         End If
     
@@ -1404,12 +1401,6 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
     
         'usado para borrar Pjs
         Call UpdateUserLogged(.Name, 1)
-    
-        If .Stats.SkillPts > 0 Then
-            Call WriteSendSkills(UserIndex)
-            Call WriteLevelUp(UserIndex, .Stats.SkillPts)
-
-        End If
         
         'Le enviamos sus privilegios
         Call WritePrivilegios(UserIndex)
@@ -1595,7 +1586,6 @@ Sub ResetContadores(ByVal UserIndex As Integer)
     With UserList(UserIndex).Counters
         .TimeFight = 0
         .AGUACounter = 0
-        .AsignedSkills = 0
         .AttackCounter = 0
         .bPuedeMeditar = True
         .Ceguera = 0
@@ -1730,7 +1720,6 @@ Sub ResetBasicUserInfo(ByVal UserIndex As Integer)
             .def = 0
             .NPCsMuertos = 0
             .UsuariosMatados = 0
-            .SkillPts = 0
             .Gld = 0
             .UserAtributos(1) = 0
             .UserAtributos(2) = 0

@@ -1452,9 +1452,9 @@ End Type
 
 Public Type RGB
 
-    R As Byte
-    G As Byte
-    B As Byte
+    r As Byte
+    g As Byte
+    b As Byte
         
 End Type
 
@@ -1660,8 +1660,6 @@ Public Type UserCounters
     Cheat As modAntiCheat.TimeIntervalos
     
     failedUsageAttempts As Long
-    
-    AsignedSkills As Byte
     
     PacketsTick As Byte
 

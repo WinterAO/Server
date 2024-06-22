@@ -72,7 +72,6 @@ Private Enum ServerPacketID
     UpdateHungerAndThirst        ' EHYS
     Fame                         ' FAMA
     MiniStats                    ' MEST
-    LevelUp                      ' SUNI
     AddForumMsg                  ' FMSG
     ShowForumForm                ' MFOR
     SetInvisible                 ' NOVER
@@ -2413,39 +2412,6 @@ Public Sub WriteMiniStats(ByVal UserIndex As Integer)
         
         Call .WriteByte(UserList(UserIndex).clase)
         Call .WriteLong(UserList(UserIndex).Counters.Pena)
-
-    End With
-
-    Exit Sub
-
-errHandler:
-
-    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(UserIndex)
-        Resume
-
-    End If
-
-End Sub
-
-''
-' Writes the "LevelUp" message to the given user's outgoing data buffer.
-'
-' @param    skillPoints The number of free skill points the player has.
-' @remarks  The data is not actually sent until the buffer is properly flushed.
-
-Public Sub WriteLevelUp(ByVal UserIndex As Integer, ByVal skillPoints As Integer)
-
-    '***************************************************
-    'Author: Juan Martin Sotuyo Dodero (Maraxus)
-    'Last Modification: 05/17/06
-    'Writes the "LevelUp" message to the given user's outgoing data buffer
-    '***************************************************
-    On Error GoTo errHandler
-
-    With UserList(UserIndex).outgoingData
-        Call .WriteByte(ServerPacketID.LevelUp)
-        Call .WriteInteger(skillPoints)
 
     End With
 

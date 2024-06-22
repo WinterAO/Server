@@ -83,7 +83,6 @@ Private Enum ClientPacketID
     SpellInfo                      'INFS
     EquipItem                      'EQUI
     ChangeHeading                  'CHEA
-    ModifySkills                   'SKSE
     Train                          'ENTR
     CommerceBuy                    'COMP
     BankExtractItem                'RETI
@@ -247,7 +246,6 @@ Public Enum eEditOptions
     eo_Level
     eo_Class
     eo_Skills
-    eo_SkillPointsLeft
     eo_Nobleza
     eo_Asesino
     eo_Sex
@@ -451,9 +449,6 @@ Public Function HandleIncomingData(ByVal UserIndex As Integer) As Boolean
         
         Case ClientPacketID.ChangeHeading           'CHEA
             Call HandleChangeHeading(UserIndex)
-            
-        Case ClientPacketID.ModifySkills            'SKSE
-            Call HandleModifySkills(UserIndex)
         
         Case ClientPacketID.Train                   'ENTR
             Call HandleTrain(UserIndex)
@@ -1734,7 +1729,7 @@ Private Sub HandleTalk(ByVal UserIndex As Integer)
                 If .flags.Muerto = 1 Then
                     Call SendData(SendTarget.ToDeadArea, UserIndex, PrepareMessageChatOverHead(Chat, .Char.CharIndex, 129, 129, 129))
                 Else
-                    Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead(Chat, .Char.CharIndex, .flags.ChatColor.R, .flags.ChatColor.G, .flags.ChatColor.B))
+                    Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead(Chat, .Char.CharIndex, .flags.ChatColor.r, .flags.ChatColor.g, .flags.ChatColor.b))
 
                 End If
 
@@ -3816,100 +3811,6 @@ Private Sub HandleChangeHeading(ByVal UserIndex As Integer)
             Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.Heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
 
         End If
-
-    End With
-
-End Sub
-
-''
-' Handles the "ModifySkills" message.
-'
-' @param    userIndex The index of the user sending the message.
-
-Private Sub HandleModifySkills(ByVal UserIndex As Integer)
-
-    '***************************************************
-    'Author: Juan Martin Sotuyo Dodero (Maraxus)
-    'Last Modification: 11/19/09
-    '11/19/09: Pato - Adapting to new skills system.
-    '***************************************************
-    If UserList(UserIndex).incomingData.Length < 1 + NUMSKILLS Then
-        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
-        Exit Sub
-
-    End If
-    
-    With UserList(UserIndex)
-        'Remove packet ID
-        Call .incomingData.ReadByte
-        
-        Dim i                      As Long
-
-        Dim Count                  As Integer
-
-        Dim points(1 To NUMSKILLS) As Byte
-        
-        'Codigo para prevenir el hackeo de los skills
-        
-        For i = 1 To NUMSKILLS
-            points(i) = .incomingData.ReadByte()
-            
-            If points(i) < 0 Then
-                Call LogHackAttemp(.Name & " IP:" & .IP & " trato de hackear los skills.")
-                .Stats.SkillPts = 0
-                Call CloseSocket(UserIndex)
-                Exit Sub
-
-            End If
-            
-            Count = Count + points(i)
-        Next i
-        
-        If Count > .Stats.SkillPts Then
-            Call LogHackAttemp(.Name & " IP:" & .IP & " trato de hackear los skills.")
-            Call CloseSocket(UserIndex)
-            Exit Sub
-
-        End If
-        
-        'Comprobamos que no intente hackear y asignar en uno de los skills fijos
-        For i = 1 To NUMSKILLS
-            If points(i) > 0 Then
-                '¿El skill asignado es uno de los fijos?
-                If i = eSkill.Talar Or i = eSkill.Mineria Or i = eSkill.Carpinteria Or i = eSkill.herreria Or _
-                    i = eSkill.Liderazgo Or i = eSkill.Navegacion Or i = eSkill.Equitacion Or i = eSkill.pesca Then
-                    
-                    Call LogHackAttemp(.Name & " IP:" & .IP & " trato de hackear los skills.")
-                    Call CloseSocket(UserIndex)
-                    Exit Sub
-                End If
-            End If
-        Next i
-        
-        .Counters.AsignedSkills = MinimoInt(10, .Counters.AsignedSkills + Count)
-        
-        With .Stats
-
-            For i = 1 To NUMSKILLS
-
-                If points(i) > 0 Then
-                    .SkillPts = .SkillPts - points(i)
-                    .UserSkills(i) = .UserSkills(i) + points(i)
-                    
-                    'Client should prevent this, but just in case...
-                    If .UserSkills(i) > 100 Then
-                        .SkillPts = .SkillPts + .UserSkills(i) - 100
-                        .UserSkills(i) = 100
-
-                    End If
-                    
-                    Call CheckEluSkill(UserIndex, i, True)
-
-                End If
-
-            Next i
-
-        End With
 
     End With
 
@@ -10901,19 +10802,6 @@ Private Sub HandleEditChar(ByVal UserIndex As Integer)
                         
                         ' Log it
                         CommandString = CommandString & "SKILLS "
-                        
-                Case eEditOptions.eo_SkillPointsLeft
-
-                        If tUser <= 0 Then ' Offline
-                            Call WriteConsoleMsg(UserIndex, "El usuario esta offline o no existe.", FontTypeNames.FONTTYPE_INFO)
-                            Call LogGM(.Name, "Intento editar un usuario inexistente u offline.")
-                        Else ' Online
-                            UserList(tUser).Stats.SkillPts = val(Arg1)
-
-                        End If
-                        
-                        ' Log it
-                        CommandString = CommandString & "SKILLSLIBRES "
                     
                 Case eEditOptions.eo_Nobleza
                         Var = IIf(val(Arg1) > MAXREP, MAXREP, val(Arg1))
@@ -15597,18 +15485,18 @@ Public Sub HandleChatColor(ByVal UserIndex As Integer)
         'Remove packet ID
         Call .incomingData.ReadByte
         
-        Dim R As Byte
-        Dim G As Byte
-        Dim B As Byte
+        Dim r As Byte
+        Dim g As Byte
+        Dim b As Byte
         
-        R = .incomingData.ReadByte()
-        G = .incomingData.ReadByte()
-        B = .incomingData.ReadByte()
+        r = .incomingData.ReadByte()
+        g = .incomingData.ReadByte()
+        b = .incomingData.ReadByte()
         
         If (.flags.Privilegios And (PlayerType.Admin Or PlayerType.Dios Or PlayerType.RoleMaster)) Then
-            .flags.ChatColor.R = R
-            .flags.ChatColor.G = G
-            .flags.ChatColor.B = B
+            .flags.ChatColor.r = r
+            .flags.ChatColor.g = g
+            .flags.ChatColor.b = b
         End If
 
     End With

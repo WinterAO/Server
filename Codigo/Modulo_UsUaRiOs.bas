@@ -663,7 +663,6 @@ Public Sub CheckUserLevel(ByVal UserIndex As Integer, _
     '08/04/2011: Amraphen - Arreglada la distribucion de probabilidades para la vida en el caso de promedio entero.
     '06/09/2019: Jopi - Guardado de usuario al pasar de nivel.
     '*************************************************
-    Dim Pts              As Integer
 
     Dim AumentoHIT       As Integer
 
@@ -709,14 +708,6 @@ Public Sub CheckUserLevel(ByVal UserIndex As Integer, _
                 Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_NIVEL, .Pos.X, .Pos.Y))
                 Call WriteConsoleMsg(UserIndex, "Has subido de nivel!", FontTypeNames.FONTTYPE_INFO)
                 Call WriteScreenMsg(UserIndex, "Nivel " & .Stats.ELV + 1, "Has alcanzado el")
-
-            End If
-            
-            If .Stats.ELV = 1 Then
-                Pts = 10
-            Else
-                'For multiple levels being rised at once
-                Pts = Pts + 5
 
             End If
             
@@ -959,19 +950,6 @@ Public Sub CheckUserLevel(ByVal UserIndex As Integer, _
                     Call WriteConsoleMsg(UserIndex, "Debes abandonar el Dungeon Newbie.", FontTypeNames.FONTTYPE_INFO)
 
                 End If
-
-            End If
-
-        End If
-        
-        'Send all gained skill points at once (if any)
-        If Pts > 0 Then
-            Call WriteLevelUp(UserIndex, Pts)
-            
-            .Stats.SkillPts = .Stats.SkillPts + Pts
-
-            If PrintInConsole Then
-                Call WriteConsoleMsg(UserIndex, "Has ganado un total de " & Pts & " skillpoints.", FontTypeNames.FONTTYPE_INFO)
 
             End If
 
@@ -1698,16 +1676,6 @@ Sub SubirSkill(ByVal UserIndex As Integer, _
     With UserList(UserIndex)
 
         If .flags.Hambre = 0 And .flags.Sed = 0 Then
-            If .Counters.AsignedSkills < 10 Then
-                If Not .flags.UltimoMensaje = 7 Then
-                    Call WriteConsoleMsg(UserIndex, "Para poder entrenar un skill debes asignar los 10 skills iniciales.", FontTypeNames.FONTTYPE_INFO)
-                    .flags.UltimoMensaje = 7
-
-                End If
-                
-                Exit Sub
-
-            End If
             
             With .Stats
 

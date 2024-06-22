@@ -57,7 +57,7 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
     'Basic user data
 
     query = "INSERT INTO personaje SET name = (?), cuenta_id = (?), level = (?), exp = (?), elu = (?), genre_id = (?), race_id = (?), class_id = (?), "
-    query = query & "home_id = (?), description = (?), gold = (?), free_skillpoints = (?), assigned_skillpoints = (?), elo = (?), "
+    query = query & "home_id = (?), description = (?), gold = (?), elo = (?), "
     query = query & "pos_map = (?), pos_x = (?), pos_y = (?), body_id = (?), head_id = (?), weapon_id = (?), helmet_id = (?), shield_id = (?), "
     query = query & "items_amount = (?), slot_armour = (?), slot_weapon = (?), min_hp = (?), max_hp = (?), min_man = (?), max_man = (?), "
     query = query & "min_sta = (?), max_sta = (?), min_ham = (?), max_ham = (?), min_sed = (?), max_sed = (?), min_hit = (?), max_hit = (?), "
@@ -65,7 +65,7 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
 
     With UserList(UserIndex)
 
-        Call User_Database.MakeQuery(query, True, .Name, .AccountInfo.ID, .Stats.ELV, .Stats.Exp, .Stats.ELU, .Genero, .Raza, .clase, .Hogar, .Desc, .Stats.Gld, .Stats.SkillPts, .Counters.AsignedSkills, _
+        Call User_Database.MakeQuery(query, True, .Name, .AccountInfo.ID, .Stats.ELV, .Stats.Exp, .Stats.ELU, .Genero, .Raza, .clase, .Hogar, .Desc, .Stats.Gld, _
                                     .Stats.ELO, .Pos.Map, .Pos.X, .Pos.Y, .Char.body, .Char.Head, .Char.WeaponAnim, .Char.CascoAnim, .Char.ShieldAnim, .Invent.NroItems, .Invent.ArmourEqpSlot, _
                                     .Invent.WeaponEqpSlot, .Stats.MinHp, .Stats.MaxHp, .Stats.MinMAN, .Stats.MaxMAN, .Stats.MinSta, .Stats.MaxSta, .Stats.MinHam, .Stats.MaxHam, _
                                     .Stats.MinAGU, .Stats.MaxAGU, .Stats.MinHIT, .Stats.MaxHIT, .Reputacion.NobleRep, .Reputacion.PlebeRep, .Reputacion.Promedio, _
@@ -187,7 +187,7 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
 
     'Basic user data
         query = "UPDATE personaje SET name = (?), level = (?), exp = (?), elu = (?), genre_id = (?), race_id = (?), class_id = (?), home_id = (?), description = (?), "
-        query = query & "gold = (?), bank_gold = (?), free_skillpoints = (?), assigned_skillpoints = (?), elo = (?), pet_amount = (?), pos_map = (?), pos_x = (?), pos_y = (?), last_map = (?), "
+        query = query & "gold = (?), bank_gold = (?), elo = (?), pet_amount = (?), pos_map = (?), pos_x = (?), pos_y = (?), last_map = (?), "
         query = query & "body_id = (?), head_id = (?), weapon_id = (?), helmet_id = (?), shield_id = (?), aura_id = (?), aura_color = (?), heading = (?), items_amount = (?), "
         query = query & "slot_armour = (?), slot_weapon = (?), slot_helmet = (?), slot_shield = (?), slot_ammo = (?), slot_ship = (?), slot_ring = (?), slot_bag = (?), "
         query = query & "min_hp = (?), max_hp = (?), min_man = (?), max_man = (?), min_sta = (?), max_sta = (?), min_ham = (?), max_ham = (?), min_sed = (?), max_sed = (?), min_hit = (?), max_hit = (?), "
@@ -199,7 +199,7 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
         query = query & "modocombate = (?), seguro = (?), levelPVP = (?), expPVP = (?), eluPVP = (?) WHERE id = (?)"
 
     With UserList(UserIndex)
-            Call User_Database.MakeQuery(query, True, .Name, .Stats.ELV, .Stats.Exp, .Stats.ELU, .Genero, .Raza, .clase, .Hogar, .Desc, .Stats.Gld, .Stats.Banco, .Stats.SkillPts, .Counters.AsignedSkills, .Stats.ELO, .NroMascotas, _
+            Call User_Database.MakeQuery(query, True, .Name, .Stats.ELV, .Stats.Exp, .Stats.ELU, .Genero, .Raza, .clase, .Hogar, .Desc, .Stats.Gld, .Stats.Banco, .Stats.ELO, .NroMascotas, _
                                         .Pos.Map, .Pos.X, .Pos.Y, .flags.lastMap, .Char.body, .Char.Head, .Char.WeaponAnim, .Char.CascoAnim, .Char.ShieldAnim, .Char.AuraAnim, .Char.AuraColor, .Char.Heading, .Invent.NroItems, _
                                         .Invent.ArmourEqpSlot, .Invent.WeaponEqpSlot, .Invent.CascoEqpSlot, .Invent.EscudoEqpSlot, .Invent.MunicionEqpSlot, .Invent.BarcoSlot, .Invent.AnilloEqpSlot, .Invent.MochilaEqpSlot, _
                                         .Stats.MinHp, .Stats.MaxHp, .Stats.MinMAN, .Stats.MaxMAN, .Stats.MinSta, .Stats.MaxSta, .Stats.MinHam, .Stats.MaxHam, .Stats.MinAGU, .Stats.MaxAGU, .Stats.MinHIT, .Stats.MaxHIT, _
@@ -528,8 +528,6 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
         .Desc = User_Database.Database_RecordSet!description
         .Stats.Gld = User_Database.Database_RecordSet!Gold
         .Stats.Banco = User_Database.Database_RecordSet!bank_gold
-        .Stats.SkillPts = User_Database.Database_RecordSet!free_skillpoints
-        .Counters.AsignedSkills = User_Database.Database_RecordSet!assigned_skillpoints
         .Stats.ELO = User_Database.Database_RecordSet!ELO
         .NroMascotas = User_Database.Database_RecordSet!pet_amount
         .Pos.Map = User_Database.Database_RecordSet!pos_map
