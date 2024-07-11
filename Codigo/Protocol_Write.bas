@@ -2411,6 +2411,8 @@ Public Sub WriteMiniStats(ByVal UserIndex As Integer)
         Call .WriteInteger(UserList(UserIndex).Stats.NPCsMuertos)
         
         Call .WriteByte(UserList(UserIndex).clase)
+        Call .WriteByte(UserList(UserIndex).Raza)
+        
         Call .WriteLong(UserList(UserIndex).Counters.Pena)
 
     End With

@@ -195,7 +195,7 @@ Public Enum eCiudad
     cShakoud
     cBelleuve
     cIslaZharkel
-    cWinterhold
+    cFrostdale
     cbattle
 
 End Enum
@@ -2270,7 +2270,7 @@ Public Shakoud         As WorldPos
 
 Public Belleuve        As WorldPos
 
-Public Winterhold      As WorldPos
+Public Frostdale       As WorldPos
 
 Public IslaZharkel     As WorldPos
 

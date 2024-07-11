@@ -1344,9 +1344,9 @@ Public Function OpenNPC(ByVal NpcNumber As Integer, _
         .Char.body = val(Leer.GetValue("NPC" & NpcNumber, "Body"))
         .Char.Head = val(Leer.GetValue("NPC" & NpcNumber, "Head"))
         .Char.Heading = val(Leer.GetValue("NPC" & NpcNumber, "Heading"))
-        .Char.ShieldAnim = val(Leer.GetValue("NPC" & NpcNumber, "ShieldAnim"))
-        .Char.WeaponAnim = val(Leer.GetValue("NPC" & NpcNumber, "WeaponAnim"))
-        .Char.CascoAnim = val(Leer.GetValue("NPC" & NpcNumber, "CascoAnim"))
+        .Char.ShieldAnim = val(Leer.GetValue("NPC" & NpcNumber, "Shield"))
+        .Char.WeaponAnim = val(Leer.GetValue("NPC" & NpcNumber, "Weapon"))
+        .Char.CascoAnim = val(Leer.GetValue("NPC" & NpcNumber, "Helmet"))
         
         .Attackable = val(Leer.GetValue("NPC" & NpcNumber, "Attackable"))
         .Comercia = val(Leer.GetValue("NPC" & NpcNumber, "Comercia"))

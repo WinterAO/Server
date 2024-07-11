@@ -69,9 +69,9 @@ Private Type tDatosZonas
 End Type
 
 Public Type tDatosLuces
-    R As Integer
-    G As Integer
-    B As Integer
+    r As Integer
+    g As Integer
+    b As Integer
     range As Byte
     X As Integer
     Y As Integer
@@ -1872,10 +1872,10 @@ Sub CargarCiudades()
             .Y = Lector.GetValue("IslaZharkel", "Y")
         End With
         
-        With Winterhold
-            .Map = Lector.GetValue("Winterhold", "Mapa")
-            .X = Lector.GetValue("Winterhold", "X")
-            .Y = Lector.GetValue("Winterhold", "Y")
+        With Frostdale
+            .Map = Lector.GetValue("Frostdale", "Mapa")
+            .X = Lector.GetValue("Frostdale", "X")
+            .Y = Lector.GetValue("Frostdale", "Y")
         End With
         
         With Prision
@@ -1908,7 +1908,7 @@ Sub CargarCiudades()
     Ciudades(eCiudad.cShakoud) = Shakoud
     Ciudades(eCiudad.cBelleuve) = Belleuve
     Ciudades(eCiudad.cIslaZharkel) = IslaZharkel
-    Ciudades(eCiudad.cWinterhold) = Winterhold
+    Ciudades(eCiudad.cFrostdale) = Frostdale
     Ciudades(eCiudad.cbattle) = Battleground
 
     If frmMain.Visible Then frmMain.txtStatus.Text = Date & " " & time & " - Se cargaron las ciudades.dat"
@@ -2048,9 +2048,9 @@ Sub CargarNpcBackUp(ByVal NPCIndex As Integer, ByVal NpcNumber As Integer)
         
         .Char.body = val(GetVar(npcfile, "NPC" & NpcNumber, "Body"))
         .Char.Head = val(GetVar(npcfile, "NPC" & NpcNumber, "Head"))
-        .Char.WeaponAnim = val(GetVar(npcfile, "NPC" & NpcNumber, "WeaponAnim"))
-        .Char.CascoAnim = val(GetVar(npcfile, "NPC" & NpcNumber, "CascoAnim"))
-        .Char.ShieldAnim = val(GetVar(npcfile, "NPC" & NpcNumber, "ShieldAnim"))
+        .Char.WeaponAnim = val(GetVar(npcfile, "NPC" & NpcNumber, "Weapon"))
+        .Char.CascoAnim = val(GetVar(npcfile, "NPC" & NpcNumber, "Helmet"))
+        .Char.ShieldAnim = val(GetVar(npcfile, "NPC" & NpcNumber, "Shield"))
         .Char.Heading = val(GetVar(npcfile, "NPC" & NpcNumber, "Heading"))
         
         .Attackable = val(GetVar(npcfile, "NPC" & NpcNumber, "Attackable"))
