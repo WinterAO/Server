@@ -944,7 +944,7 @@ Public Sub CheckUserLevel(ByVal UserIndex As Integer, _
             Call QuitarNewbieObj(UserIndex)
 
             If MapZonas(.Pos.Map, UserZonaId(UserIndex)).Restringir = eRestrict.restrict_newbie Then
-                Call WarpUserChar(UserIndex, 1, 50, 50, True)
+                Call MandaraCasa(UserIndex)
 
                 If PrintInConsole Then
                     Call WriteConsoleMsg(UserIndex, "Debes abandonar el Dungeon Newbie.", FontTypeNames.FONTTYPE_INFO)
