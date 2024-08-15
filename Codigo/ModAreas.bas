@@ -22,8 +22,6 @@ Attribute VB_Name = "Areas"
  
 Option Explicit
 
-
-
 '************************************************
 '*            Valores modificables              *
 '************************************************
@@ -40,13 +38,12 @@ Public Const ANCHO_MAP As Byte = 10
 
 ' Tamanio en tiles de la pantalla.
 'ADVERTENCIA: TIENEN QUE SER IMPAR!
-Public Const XWindow            As Byte = 14
-Public Const YWindow            As Byte = 18
+Public Const XWindow            As Byte = 31
+Public Const YWindow            As Byte = 19
 
 ' Cantidad de tiles buffer
 ' (para que graficos grandes se vean desde fuera de la pantalla)
-Private Const TileBufferSizeX    As Integer = 8
-Private Const TileBufferSizeY    As Integer = 8
+Private Const TileBufferSize    As Integer = 8
 
 '************************************************
 '*      Valores calculados automaticamente      *
@@ -57,8 +54,8 @@ Public Const RANGO_VISION_X     As Byte = XWindow \ 2
 Public Const RANGO_VISION_Y     As Byte = YWindow \ 2
 
 ' Tamanio de las areas
-Public Const AREAS_X            As Byte = RANGO_VISION_X + TileBufferSizeX
-Public Const AREAS_Y            As Byte = RANGO_VISION_Y + TileBufferSizeY
+Public Const AREAS_X            As Byte = RANGO_VISION_X + TileBufferSize
+Public Const AREAS_Y            As Byte = RANGO_VISION_Y + TileBufferSize
 
 
 
