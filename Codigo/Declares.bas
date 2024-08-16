@@ -232,16 +232,6 @@ End Enum
 
 Public Const LimiteNewbie As Byte = 12
 
-Public Type tCabecera 'Cabecera de los con
-
-    Desc As String * 255
-    crc As Long
-    MagicWord As Long
-
-End Type
-
-Public MiCabecera                    As tCabecera
-
 'Barrin 3/10/03
 'Cambiado a 2 segundos el 30/11/07
 Public Const TIEMPO_INICIOMEDITAR    As Integer = 2000

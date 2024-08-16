@@ -138,7 +138,7 @@ Sub Bloquear(ByVal toMap As Boolean, _
              ByVal sndIndex As Integer, _
              ByVal X As Integer, _
              ByVal Y As Integer, _
-             ByVal B As Boolean)
+             ByVal b As Boolean)
     '***************************************************
     'Author: Unknown
     'Last Modification: -
@@ -152,9 +152,9 @@ Sub Bloquear(ByVal toMap As Boolean, _
     '***************************************************
 
     If toMap Then
-        Call SendData(SendTarget.toMap, sndIndex, PrepareMessageBlockPosition(X, Y, B))
+        Call SendData(SendTarget.toMap, sndIndex, PrepareMessageBlockPosition(X, Y, b))
     Else
-        Call WriteBlockPosition(sndIndex, X, Y, B)
+        Call WriteBlockPosition(sndIndex, X, Y, b)
 
     End If
 
@@ -314,9 +314,6 @@ Sub Main()
     If Not setRutas Then Exit Sub
     
     Call modStats.RecordStat(modStats.EVENT_INITIALIZED, "")
-    
-    'Inicializamos la cabecera
-    Call IniciarCabecera
     
     Call BanIpCargar
     

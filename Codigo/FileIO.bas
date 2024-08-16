@@ -116,12 +116,12 @@ Private Type tMapDat
     battle_mode As Boolean
     backup_mode As Boolean
     restrict_mode As String
-    music_number As String
+    music_number As Integer
     zone As String
     terrain As String
-    Ambient As String
-    lvlMinimo As String
-    lvlMaximo As String
+    Ambient As Integer
+    lvlMinimo As Integer
+    lvlMaximo As Integer
     RoboNpcsPermitido As Boolean
     InvocarSinEfecto As Boolean
     OcultarSinEfecto As Boolean
@@ -145,16 +145,6 @@ Public CantZonas() As Integer
     Dim X, Y, n, Map, Mapa, Email, max, Value As Variant
 
 #End If
-
-Public Sub IniciarCabecera()
-
-    With MiCabecera
-        .Desc = "WinterAO Resurrection mod Argentum Online by Noland Studios. http://winterao.com.ar"
-        .crc = Rnd * 245
-        .MagicWord = Rnd * 92
-    End With
-    
-End Sub
 
 Public Sub CargarSpawnList()
     '****************************************************************************************
@@ -1406,7 +1396,6 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
     Dim Zonas()         As tDatosZonas
     
     Dim npcfile         As String
-    Dim LaCabecera      As tCabecera
     
     Dim i               As Long
     Dim j               As Long
@@ -1416,8 +1405,6 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
     fh = FreeFile
     
     Open MAPFl & ".csm" For Binary Access Read As fh
-    
-        Get #fh, , LaCabecera
     
         Get #fh, , MH
         Get #fh, , MapSize
