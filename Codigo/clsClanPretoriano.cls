@@ -188,7 +188,7 @@ Public Function SpawnClan(ByVal Mapa As Integer, _
     '22/06/2006: (Nacho) - Seteamos cuantos NPCs creamos
     '21/09/2010: ZaMa - Reescribi la funcion, ahora se le pasa las coordenadas de respawn
     '********************************************************
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
 
     Dim nPos       As WorldPos
 
@@ -282,7 +282,7 @@ Public Function SpawnClan(ByVal Mapa As Integer, _
 
     Exit Function
 
-errHandler:
+ErrHandler:
     Call LogError("Error en CrearClanPretoriano. Error: " & Err.Number & " - " & Err.description)
 
 End Function
@@ -560,7 +560,7 @@ Public Sub AI_King(ByVal NPCIndex As Integer)
     'Author: ZaMa
     'Last Modification: 19/09/2010
     '***************************************************
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
 
     Dim BestTarget As Integer
 
@@ -572,7 +572,7 @@ Public Sub AI_King(ByVal NPCIndex As Integer)
     
     Exit Sub
 
-errHandler:
+ErrHandler:
     LogError ("Error en AI_King. Error: " & Err.Number & " - " & Err.description)
 
 End Sub
@@ -589,7 +589,7 @@ Private Function KingBestTarget(ByVal NPCIndex As Integer, _
     '3) If a user tries to run, then blind and make him stupid
     '4) if no one is near, then heal himself.
     '***************************************************
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
     
     Dim BestTarget As Integer
 
@@ -667,14 +667,18 @@ Private Function KingBestTarget(ByVal NPCIndex As Integer, _
 
         Dim CounterStep  As Long
         
+        Dim query()      As Collision.UUID
+        
+        Call ModAreas.QueryEntities(NPCIndex, ENTITY_TYPE_NPC, query, ENTITY_TYPE_PLAYER)
+
         ' To avoid that all attack the same target
         CounterStep = RandomNumber(0, 1)
 
         If CounterStep = 1 Then
             CounterStart = 1
-            CounterEnd = Areas.ConnGroups(Mapa).Count()
+            CounterEnd = UBound(query)
         Else
-            CounterStart = Areas.ConnGroups(Mapa).Count()
+            CounterStart = UBound(query)
             CounterEnd = 1
             CounterStep = -1
 
@@ -683,7 +687,7 @@ Private Function KingBestTarget(ByVal NPCIndex As Integer, _
         ' Search for the best user target
         For Counter = CounterStart To CounterEnd Step CounterStep
         
-            UserIndex = Areas.ConnGroups(Mapa).Item(Counter)
+            UserIndex = query(Counter).Name
             
             'Is it in it's range of vision??
             If InVisionRange(UserIndex, NPCPosX, NPCPosY) Then
@@ -740,7 +744,7 @@ Private Function KingBestTarget(ByVal NPCIndex As Integer, _
 
     Exit Function
 
-errHandler:
+ErrHandler:
     LogError ("Error en KingBestTarget. Error: " & Err.Number & " - " & Err.description)
 
 End Function
@@ -754,7 +758,7 @@ Private Sub KingPerformAction(ByVal NPCIndex As Integer, _
     'Last Modification: 05/07/2010
     'Performs the required action.
     '***************************************************
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
 
     Dim IdleTime As Long
 
@@ -815,7 +819,7 @@ Private Sub KingPerformAction(ByVal NPCIndex As Integer, _
     KingIdleTime = IdleTime
     Exit Sub
 
-errHandler:
+ErrHandler:
     LogError ("Error en KingPerformAction. Error: " & Err.Number & " - " & Err.description)
 
 End Sub
@@ -827,7 +831,7 @@ Private Sub KingMeleeAttack(NPCIndex)
     'Last Modification: 19/09/2010
     'King performes a melee attack ignoring attack intervals
     '***************************************************
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
 
     Dim headingloop As Byte
 
@@ -868,7 +872,7 @@ Private Sub KingMeleeAttack(NPCIndex)
     
     Exit Sub
 
-errHandler:
+ErrHandler:
     LogError ("Error en KingMeleeAttack. Error: " & Err.Number & " - " & Err.description)
 
 End Sub
@@ -918,7 +922,7 @@ Public Sub AI_Healer(ByVal NPCIndex As Integer)
     'Author: Unkown
     'Last Modification: -
     '***************************************************
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
     
     Dim BestTarget As Integer
 
@@ -978,7 +982,7 @@ Public Sub AI_Healer(ByVal NPCIndex As Integer)
     
     Exit Sub
     
-errHandler:
+ErrHandler:
     LogError ("Error en AI_Healer. Error: " & Err.Number & " - " & Err.description)
 
 End Sub
@@ -994,7 +998,7 @@ Private Function HealerBestTarget(ByVal NPCIndex As Integer, _
     '3) party healing if no threats
     '***************************************************
 
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
 
     Dim UserIndex           As Integer
 
@@ -1019,14 +1023,18 @@ Private Function HealerBestTarget(ByVal NPCIndex As Integer, _
 
     Dim CounterStep  As Long
     
+    Dim query()      As Collision.UUID
+
+    Call ModAreas.QueryEntities(NPCIndex, ENTITY_TYPE_NPC, query, ENTITY_TYPE_PLAYER)
+
     ' To avoid that all attack the same target
     CounterStep = RandomNumber(0, 1)
 
     If CounterStep = 1 Then
         CounterStart = 1
-        CounterEnd = Areas.ConnGroups(CenterPos.Map).Count()
+        CounterEnd = UBound(query)
     Else
-        CounterStart = Areas.ConnGroups(CenterPos.Map).Count()
+        CounterStart = UBound(query)
         CounterEnd = 1
         CounterStep = -1
 
@@ -1034,7 +1042,7 @@ Private Function HealerBestTarget(ByVal NPCIndex As Integer, _
     
     For Counter = CounterStart To CounterEnd Step CounterStep
     
-        UserIndex = Areas.ConnGroups(CenterPos.Map).Item(Counter)
+        UserIndex = query(Counter).Name
         
         ' Can be atacked (doesn't matter if invisible or hidden)?
         If UserAtacable(UserIndex, False) Then
@@ -1085,7 +1093,7 @@ Private Function HealerBestTarget(ByVal NPCIndex As Integer, _
         
     Exit Function
 
-errHandler:
+ErrHandler:
     LogError ("Error en HealerBestTarget. Error: " & Err.Number & " - " & Err.description)
 
 End Function
@@ -1169,7 +1177,7 @@ Public Sub AI_SpellCaster(ByVal NPCIndex As Integer)
     'Author: ZaMa
     'Last Modification: -
     '***************************************************
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
     
     Dim BestTarget As Integer
 
@@ -1192,7 +1200,7 @@ Public Sub AI_SpellCaster(ByVal NPCIndex As Integer)
     
     Exit Sub
     
-errHandler:
+ErrHandler:
     LogError ("Error en AI_SpellCaster. Error: " & Err.Number & " - " & Err.description)
 
 End Sub
@@ -1247,7 +1255,7 @@ Private Function SpellCasterBestTarget(ByVal NPCIndex As Integer, _
     '2) A wizard's mission is background spellcasting attack
     '***************************************************
 
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
 
     Dim UserIndex           As Integer
 
@@ -1270,22 +1278,13 @@ Private Function SpellCasterBestTarget(ByVal NPCIndex As Integer, _
 
     Dim CounterStep  As Long
     
-    ' To avoid that all attack the same target
-    CounterStep = RandomNumber(0, 1)
+    Dim query()      As Collision.UUID
 
-    If CounterStep = 1 Then
-        CounterStart = 1
-        CounterEnd = Areas.ConnGroups(CenterPos.Map).Count()
-    Else
-        CounterStart = Areas.ConnGroups(CenterPos.Map).Count()
-        CounterEnd = 1
-        CounterStep = -1
-
-    End If
+    Call ModAreas.QueryEntities(NPCIndex, ENTITY_TYPE_NPC, query, ENTITY_TYPE_PLAYER)
     
-    For Counter = CounterStart To CounterEnd Step CounterStep
+    For Counter = 0 To UBound(query)
     
-        UserIndex = Areas.ConnGroups(CenterPos.Map).Item(Counter)
+        UserIndex = query(Counter).Name
         
         'Is it in it's range of vision??
         If InVisionRange(UserIndex, NpcX, NpcY) Then
@@ -1344,7 +1343,7 @@ Private Function SpellCasterBestTarget(ByVal NPCIndex As Integer, _
     
     Exit Function
 
-errHandler:
+ErrHandler:
     LogError ("Error en SpellCasterBestTarget. Error: " & Err.Number & " - " & Err.description)
 
 End Function
@@ -1408,7 +1407,7 @@ Private Sub SpellCasterDestroyWand(ByVal NPCIndex As Integer, ByVal spellIndex A
     'Author: Unkown
     'Last Modification: -
     '***************************************************
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
 
     ''sonidos: 30 y 32, y no los cambien sino termina siendo muy chistoso...
     ''Para el FX utiliza el del hechizos(SpellIndex)
@@ -1449,7 +1448,7 @@ Private Sub SpellCasterDestroyWand(ByVal NPCIndex As Integer, ByVal spellIndex A
     
     Exit Sub
 
-errHandler:
+ErrHandler:
     LogError ("Error en SpellCasterDestroyWand. Error: " & Err.Number & " - " & Err.description)
 
 End Sub
@@ -1462,7 +1461,7 @@ Private Sub DealWandDamage(ByVal NPCIndex As Integer, ByVal spellIndex As Intege
     'Description: Deals massive wand damage.
     '17/06/2011: Amraphen - User's hp is updated once he gets hit by wand damage.
     '***************************************************
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
 
     Dim UserIndex As Integer
 
@@ -1481,9 +1480,11 @@ Private Sub DealWandDamage(ByVal NPCIndex As Integer, ByVal spellIndex As Intege
         X = .Pos.X
         Y = .Pos.Y
         
-        For Counter = 1 To Areas.ConnGroups(CenterPos.Map).Count()
-            
-            UserIndex = Areas.ConnGroups(CenterPos.Map).Item(Counter)
+        Dim query() As Collision.UUID
+
+        Call ModAreas.QueryEntities(NPCIndex, ENTITY_TYPE_NPC, query, ENTITY_TYPE_PLAYER)
+
+        For Counter = 1 To UBound(query)
             
             If UserIndex <> 0 Then
             
@@ -1524,7 +1525,7 @@ Private Sub DealWandDamage(ByVal NPCIndex As Integer, ByVal spellIndex As Intege
     
     Exit Sub
     
-errHandler:
+ErrHandler:
     LogError ("Error en DealWandDamage. Error: " & Err.Number & " - " & Err.description)
 
 End Sub
@@ -1538,7 +1539,7 @@ Private Sub DealWandDamageToPets(ByVal NPCIndex As Integer, _
     'Last Modification: 26/09/2010
     'Deals massive wand damage to user pets.
     '***************************************************
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
 
     Dim PetIndex   As Integer
 
@@ -1585,7 +1586,7 @@ Private Sub DealWandDamageToPets(ByVal NPCIndex As Integer, _
     
     Exit Sub
     
-errHandler:
+ErrHandler:
     LogError ("Error en DealWandDamageToPets. Error: " & Err.Number & " - " & Err.description)
 
 End Sub
@@ -1596,7 +1597,7 @@ Public Sub AI_SwordMaster(ByVal NPCIndex As Integer)
     'Author: ZaMa
     'Last Modification: -
     '***************************************************
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
 
     Dim BestTarget As Integer
     
@@ -1611,7 +1612,7 @@ Public Sub AI_SwordMaster(ByVal NPCIndex As Integer)
     
     Exit Sub
 
-errHandler:
+ErrHandler:
     LogError ("Error en AI_SwordMaster. Error: " & Err.Number & " - " & Err.description)
 
 End Sub
@@ -1624,7 +1625,7 @@ Private Function SwordMasterBestTarget(ByVal NPCIndex As Integer) As Integer
     '1) The nearest enemy will be attacked.
     '***************************************************
 
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
 
     Dim UserIndex          As Integer
 
@@ -1649,14 +1650,18 @@ Private Function SwordMasterBestTarget(ByVal NPCIndex As Integer) As Integer
 
     Dim CounterStep  As Long
     
+    Dim query()      As Collision.UUID
+
+    Call ModAreas.QueryEntities(NPCIndex, ENTITY_TYPE_NPC, query, ENTITY_TYPE_PLAYER)
+
     ' To avoid that all attack the same target
     CounterStep = RandomNumber(0, 1)
 
     If CounterStep = 1 Then
         CounterStart = 1
-        CounterEnd = Areas.ConnGroups(CenterPos.Map).Count()
+        CounterEnd = UBound(query)
     Else
-        CounterStart = Areas.ConnGroups(CenterPos.Map).Count()
+        CounterStart = UBound(query)
         CounterEnd = 1
         CounterStep = -1
 
@@ -1664,7 +1669,7 @@ Private Function SwordMasterBestTarget(ByVal NPCIndex As Integer) As Integer
     
     For Counter = CounterStart To CounterEnd Step CounterStep
     
-        UserIndex = Areas.ConnGroups(CenterPos.Map).Item(Counter)
+        UserIndex = query(Counter).Name
         
         'Is it in it's range of vision??
         If InVisionRange(UserIndex, NpcX, NpcY) Then
@@ -1704,7 +1709,7 @@ Private Function SwordMasterBestTarget(ByVal NPCIndex As Integer) As Integer
     
     Exit Function
 
-errHandler:
+ErrHandler:
     LogError ("Error en SwordMasterBestTarget. Error: " & Err.Number & " - " & Err.description)
 
 End Function
@@ -1718,7 +1723,7 @@ Private Sub SwordMasterMove(ByVal NPCIndex As Integer, ByVal BestTarget As Integ
     'sale del area de combate (tipica forma de separar un clan)
     '***************************************************
 
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
 
     With Npclist(NPCIndex)
     
@@ -1753,7 +1758,7 @@ Private Sub SwordMasterMove(ByVal NPCIndex As Integer, ByVal BestTarget As Integ
     
     Exit Sub
     
-errHandler:
+ErrHandler:
     LogError ("Error en SwordMasterMove. Error: " & Err.Number & " - " & Err.description)
 
 End Sub
@@ -1765,7 +1770,7 @@ Private Sub SwordMasterAttack(ByVal NPCIndex As Integer)
     'Searchs and Attacks the sorrounding target
     '***************************************************
 
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
 
     Dim headingloop As Byte
 
@@ -1801,7 +1806,7 @@ Private Sub SwordMasterAttack(ByVal NPCIndex As Integer)
 
     Exit Sub
     
-errHandler:
+ErrHandler:
     LogError ("Error en SwordMasterAttack. Error: " & Err.Number & " - " & Err.description)
 
 End Sub
@@ -1829,7 +1834,7 @@ Public Sub AI_Shooter(ByVal NPCIndex As Integer)
     
     Exit Sub
     
-errHandler:
+ErrHandler:
     LogError ("Error en AI_Shooter. Error: " & Err.Number & " - " & Err.description)
 
 End Sub
@@ -1844,7 +1849,7 @@ Private Function ShooterBestTarget(ByVal NPCIndex As Integer) As Integer
     '2) in any other case, our nearest enemy will be attacked
     '***************************************************
 
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
 
     Dim UserIndex          As Integer
 
@@ -1869,14 +1874,18 @@ Private Function ShooterBestTarget(ByVal NPCIndex As Integer) As Integer
 
     Dim CounterStep  As Long
     
+    Dim query()      As Collision.UUID
+
+    Call ModAreas.QueryEntities(NPCIndex, ENTITY_TYPE_NPC, query, ENTITY_TYPE_PLAYER)
+
     ' To avoid that all attack the same target
     CounterStep = RandomNumber(0, 1)
 
     If CounterStep = 1 Then
         CounterStart = 1
-        CounterEnd = Areas.ConnGroups(CenterPos.Map).Count()
+        CounterEnd = UBound(query)
     Else
-        CounterStart = Areas.ConnGroups(CenterPos.Map).Count()
+        CounterStart = UBound(query)
         CounterEnd = 1
         CounterStep = -1
 
@@ -1884,7 +1893,7 @@ Private Function ShooterBestTarget(ByVal NPCIndex As Integer) As Integer
     
     For Counter = CounterStart To CounterEnd Step CounterStep
     
-        UserIndex = Areas.ConnGroups(CenterPos.Map).Item(Counter)
+        UserIndex = query(Counter).Name
         
         'Is it in it's range of vision??
         If InVisionRange(UserIndex, NpcX, NpcY) Then
@@ -1927,7 +1936,7 @@ Private Function ShooterBestTarget(ByVal NPCIndex As Integer) As Integer
         
     Exit Function
 
-errHandler:
+ErrHandler:
     LogError ("Error en ShooterBestTarget. Error: " & Err.Number & " - " & Err.description)
 
 End Function
@@ -1942,7 +1951,7 @@ Private Sub ShooterMove(ByVal NPCIndex As Integer, ByVal BestTarget As Integer)
     'clerigos o rey. A menos q este paralizado, claro
     '***************************************************
 
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
 
     With Npclist(NPCIndex)
     
@@ -1978,9 +1987,13 @@ Private Sub ShooterMove(ByVal NPCIndex As Integer, ByVal BestTarget As Integer)
 
             Dim UserIndex As Integer
             
-            For Counter = 1 To Areas.ConnGroups(CenterPos.Map).Count()
+            Dim query()   As Collision.UUID
+
+            Call ModAreas.QueryEntities(NPCIndex, ENTITY_TYPE_NPC, query, ENTITY_TYPE_PLAYER)
+
+            For Counter = 1 To UBound(query)
             
-                UserIndex = Areas.ConnGroups(CenterPos.Map).Item(Counter)
+                UserIndex = query(Counter).Name
                 
                 'Is it in extended range of vision from center position??
                 If InVisionRange(UserIndex, CenterPos.X, CenterPos.Y, True) Then
@@ -2010,7 +2023,7 @@ Private Sub ShooterMove(ByVal NPCIndex As Integer, ByVal BestTarget As Integer)
     
     Exit Sub
     
-errHandler:
+ErrHandler:
     LogError ("Error en ShooterMove. Error: " & Err.Number & " - " & Err.description)
 
 End Sub
@@ -2021,7 +2034,7 @@ Private Sub AI_Thief(ByVal NPCIndex As Integer)
     'Author: ZaMa
     'Last Modification: -
     '***************************************************
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
 
     Dim BestTarget As Integer
 
@@ -2035,7 +2048,7 @@ Private Sub AI_Thief(ByVal NPCIndex As Integer)
     
     Exit Sub
 
-errHandler:
+ErrHandler:
     LogError ("Error en AI_Thief. Error: " & Err.Number & " - " & Err.description)
 
 End Sub
@@ -2050,7 +2063,7 @@ Private Function ThiefBestTarget(ByVal NPCIndex As Integer, _
     '2) Targets the nearer user.
     '***************************************************
 
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
 
     Dim UserIndex          As Integer
 
@@ -2075,14 +2088,18 @@ Private Function ThiefBestTarget(ByVal NPCIndex As Integer, _
 
     Dim CounterStep  As Long
     
+    Dim query()      As Collision.UUID
+
+    Call ModAreas.QueryEntities(NPCIndex, ENTITY_TYPE_NPC, query, ENTITY_TYPE_PLAYER)
+
     ' To avoid that all attack the same target
     CounterStep = RandomNumber(0, 1)
 
     If CounterStep = 1 Then
         CounterStart = 1
-        CounterEnd = Areas.ConnGroups(CenterPos.Map).Count()
+        CounterEnd = UBound(query)
     Else
-        CounterStart = Areas.ConnGroups(CenterPos.Map).Count()
+        CounterStart = UBound(query)
         CounterEnd = 1
         CounterStep = -1
 
@@ -2090,7 +2107,7 @@ Private Function ThiefBestTarget(ByVal NPCIndex As Integer, _
     
     For Counter = CounterStart To CounterEnd Step CounterStep
     
-        UserIndex = Areas.ConnGroups(CenterPos.Map).Item(Counter)
+        UserIndex = query(Counter).Name
         
         'Is it in it's range of vision??
         If InVisionRange(UserIndex, NpcX, NpcY) Then
@@ -2155,7 +2172,7 @@ Private Function ThiefBestTarget(ByVal NPCIndex As Integer, _
     
     Exit Function
 
-errHandler:
+ErrHandler:
     LogError ("Error en ThiefBestTarget. Error: " & Err.Number & " - " & Err.description)
 
 End Function
@@ -2169,7 +2186,7 @@ Private Sub ThiefPerfomAction(ByVal NPCIndex As Integer, _
     'Last Modification: 28/10/2010
     '28/10/2010: ZaMa - Now thief doesn't steal/snatch admins.
     '***************************************************
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
     
     Dim WeaponEqpSlot   As Byte
 
@@ -2277,7 +2294,7 @@ Private Sub ThiefPerfomAction(ByVal NPCIndex As Integer, _
 
     Exit Sub
 
-errHandler:
+ErrHandler:
     LogError ("Error en ThiefPerfomAction. Error: " & Err.Number & " - " & Err.description)
 
 End Sub
@@ -2291,7 +2308,7 @@ Private Function SnatchItem(ByVal NPCIndex As Integer, _
     'Last Modification: 25/09/2010
     'Snatchs slot items from user. No validations are made bacause it's either weapon or munition.
     '***************************************************
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
 
     Dim DropObj As obj
 
@@ -2320,7 +2337,7 @@ Private Function SnatchItem(ByVal NPCIndex As Integer, _
     
     Exit Function
     
-errHandler:
+ErrHandler:
     LogError ("Error en SnatchItem. Error: " & Err.Number & " - " & Err.description)
 
 End Function
@@ -2484,7 +2501,7 @@ Private Function EsClaseMagica(ByVal UserIndex As Integer) As Boolean
     'Author: Unkown
     'Last Modification: -
     '***************************************************
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
 
     With UserList(UserIndex)
         EsClaseMagica = .clase = eClass.Mage Or .clase = eClass.Cleric Or .clase = eClass.Druid Or .clase = eClass.Bard
@@ -2493,7 +2510,7 @@ Private Function EsClaseMagica(ByVal UserIndex As Integer) As Boolean
     
     Exit Function
 
-errHandler:
+ErrHandler:
     LogError ("Error en EsClaseMagica. Error: " & Err.Number & " - " & Err.description)
 
 End Function
@@ -2516,7 +2533,7 @@ Private Sub GreedyWalkTo(ByVal NPCIndex As Integer, _
     'Rapsodius - Changed Mod by And for speed
     '26/09/2010: ZaMa - Now make movements as normal npcs, which allows to kick caspers and invisible admins.
     '***************************************************
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
 
     Dim NpcX      As Integer
 
@@ -2748,7 +2765,7 @@ Private Sub GreedyWalkTo(ByVal NPCIndex As Integer, _
     
     Exit Sub
 
-errHandler:
+ErrHandler:
     LogError ("Error en GreedyWalkTo. Error: " & Err.Number & " - " & Err.description)
 
 End Sub
@@ -2798,7 +2815,7 @@ Private Function FarFromTeam(ByVal NPCIndex) As Boolean
     
     Exit Function
 
-errHandler:
+ErrHandler:
     LogError ("Error en FarFromTeam. Error: " & Err.Number & " - " & Err.description)
 
 End Function
@@ -2811,7 +2828,7 @@ Private Function UserReachable(ByVal NPCIndex As Integer, _
     'Last Modification: 19/09/2010
     'Ignores users who are too far in order to avoid being separated from the rest of the team.
     '***************************************************
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
         
     If Npclist(NPCIndex).Pos.Map <> CenterPos.Map Then Exit Function
 
@@ -2819,7 +2836,7 @@ Private Function UserReachable(ByVal NPCIndex As Integer, _
     
     Exit Function
     
-errHandler:
+ErrHandler:
     LogError ("Error en UserReachable. Error: " & Err.Number & " - " & Err.description)
 
 End Function

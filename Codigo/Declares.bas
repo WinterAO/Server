@@ -268,6 +268,36 @@ Public Const DANO_ACUCHILLAR         As Single = 0.2
 
 Public Const MAXMASCOTASENTRENADOR   As Byte = 7
 
+' Tamanio del mapa
+Public Const XMaxMapSize        As Integer = 1000
+Public Const XMinMapSize        As Integer = 1
+Public Const YMaxMapSize        As Integer = 1000
+Public Const YMinMapSize        As Integer = 1
+
+' Se usa para calcular los cuadrantes !!!
+'indica a cuantos mapas de 100 x 100 equivalen el mapa general de ancho
+Public Const ANCHO_MAP As Byte = 10
+
+' Tamanio en tiles de la pantalla.
+'ADVERTENCIA: TIENEN QUE SER IMPAR!
+Public Const XWindow            As Byte = 31
+Public Const YWindow            As Byte = 19
+
+' Cantidad de tiles buffer
+' (para que graficos grandes se vean desde fuera de la pantalla)
+Private Const TileBufferSize    As Integer = 8
+
+' Rangos de vision
+Public Const RANGO_VISION_X     As Byte = XWindow \ 2
+Public Const RANGO_VISION_Y     As Byte = YWindow \ 2
+
+' WyroX: Tiles extra que ve el NPC mayor que los usuarios.
+' Para que no queden tontos en un borde de la pantalla y puedas atacarlos.
+Public Const VISION_EXTRA         As Byte = 2
+
+Public Const RANGO_VISION_NPC_X    As Byte = RANGO_VISION_X + VISION_EXTRA
+Public Const RANGO_VISION_NPC_Y    As Byte = RANGO_VISION_Y + VISION_EXTRA
+
 Public Enum FXIDs
 
     FXMEDITARCHICO = 4
@@ -1037,6 +1067,9 @@ Public Type ObjData
     Apunala As Byte
     Acuchilla As Byte
     
+    SizeWidth As Long ' Graphical entity's width
+    SizeHeight As Long ' Graphical entity's height
+    
     HechizoIndex As Integer
     
     ForoID As String
@@ -1805,9 +1838,7 @@ Public Type User
     FormandoGrupo As Integer
     
     KeyCrypt As Integer
-    
-    AreasInfo As AreaInfo
-    
+
     'Outgoing and incoming messages
     outgoingData As clsByteQueue
     incomingData As clsByteQueue
@@ -2008,7 +2039,6 @@ Public Type NPC
     
     ' New!! Needed for pathfindig
     PFINFO As NpcPathFindingInfo
-    AreasInfo As AreaInfo
     
     'Hogar
     Ciudad As Byte
@@ -2022,6 +2052,9 @@ Public Type NPC
     SpeedVar As Long
     
     EsdeFortaleza As Boolean
+    
+    SizeWidth As Long ' Graphical entity's width
+    SizeHeight As Long ' Graphical entity's height
 
 End Type
 

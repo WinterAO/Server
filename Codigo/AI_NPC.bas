@@ -54,12 +54,6 @@ Public Const ELEMENTALFUEGO  As Integer = 93
 Public Const ELEMENTALTIERRA As Integer = 94
 Public Const ELEMENTALAGUA   As Integer = 92
 
-' WyroX: Tiles extra que ve el NPC mayor que los usuarios.
-' Para que no queden tontos en un borde de la pantalla y puedas atacarlos.
-Private Const VISION_EXTRA         As Byte = 2
-Public Const RANGO_VISION_NPC_X    As Byte = RANGO_VISION_X + VISION_EXTRA
-Public Const RANGO_VISION_NPC_Y    As Byte = RANGO_VISION_Y + VISION_EXTRA
-
 Private Const MINI_RANGO_X         As Byte = 3
 Private Const MINI_RANGO_Y         As Byte = 3
 
@@ -381,30 +375,30 @@ Private Sub IrUsuarioCercano(ByVal NPCIndex As Integer)
 
             End Select
             
-            For i = 1 To Areas.ConnGroups(.Pos.Map).Count()
-                UserIndex = Areas.ConnGroups(.Pos.Map).Item(i)
-                
-                '¿Esta en el rango de vision?
-                If Abs(UserList(UserIndex).Pos.X - .Pos.X) <= RANGO_VISION_NPC_X And Sgn(UserList(UserIndex).Pos.X - .Pos.X) = SignoEO Then
-                    If Abs(UserList(UserIndex).Pos.Y - .Pos.Y) <= RANGO_VISION_NPC_Y And Sgn(UserList(UserIndex).Pos.Y - .Pos.Y) = SignoNS Then
-                        
-                        UserProtected = Not IntervaloPermiteSerAtacado(UserIndex) And UserList(UserIndex).flags.NoPuedeSerAtacado
-                        UserProtected = UserProtected Or UserList(UserIndex).flags.Ignorado Or UserList(UserIndex).flags.EnConsulta
-                        
-                        If UserList(UserIndex).flags.Muerto = 0 Then
-                            If Not UserProtected Then
-                                If .flags.LanzaSpells <> 0 Then Call NpcLanzaUnSpell(NPCIndex, UserIndex)
-                                Exit Sub
-
-                            End If
-
-                        End If
-                        
-                    End If
-
-                End If
-
-            Next i
+'            For i = 1 To Areas.ConnGroups(.Pos.Map).Count()
+'                UserIndex = Areas.ConnGroups(.Pos.Map).Item(i)
+'
+'                '¿Esta en el rango de vision?
+'                If Abs(UserList(UserIndex).Pos.X - .Pos.X) <= RANGO_VISION_NPC_X And Sgn(UserList(UserIndex).Pos.X - .Pos.X) = SignoEO Then
+'                    If Abs(UserList(UserIndex).Pos.Y - .Pos.Y) <= RANGO_VISION_NPC_Y And Sgn(UserList(UserIndex).Pos.Y - .Pos.Y) = SignoNS Then
+'
+'                        UserProtected = Not IntervaloPermiteSerAtacado(UserIndex) And UserList(UserIndex).flags.NoPuedeSerAtacado
+'                        UserProtected = UserProtected Or UserList(UserIndex).flags.Ignorado Or UserList(UserIndex).flags.EnConsulta
+'
+'                        If UserList(UserIndex).flags.Muerto = 0 Then
+'                            If Not UserProtected Then
+'                                If .flags.LanzaSpells <> 0 Then Call NpcLanzaUnSpell(NPCIndex, UserIndex)
+'                                Exit Sub
+'
+'                            End If
+'
+'                        End If
+'
+'                    End If
+'
+'                End If
+'
+'            Next i
             
             ' No esta inmobilizado
         Else
@@ -487,56 +481,56 @@ Private Sub IrUsuarioCercano(ByVal NPCIndex As Integer)
             End If
             
             '¿No tiene propietario? Buscamos al usuario mas cercano
-            For i = 1 To Areas.ConnGroups(.Pos.Map).Count()
-                UserIndex = Areas.ConnGroups(.Pos.Map).Item(i)
-                
-                '¿Esta en el rango de vision?
-                If Abs(UserList(UserIndex).Pos.X - .Pos.X) <= RANGO_VISION_NPC_X Then
-                    If Abs(UserList(UserIndex).Pos.Y - .Pos.Y) <= RANGO_VISION_NPC_Y Then
-                      
-                        With UserList(UserIndex)
-                                
-                            UserProtected = Not IntervaloPermiteSerAtacado(UserIndex) And .flags.NoPuedeSerAtacado
-                            UserProtected = UserProtected Or .flags.Ignorado Or .flags.EnConsulta
-                                
-                            'Si el user no esta muerto, invisible, protegido, etc...
-                            If .flags.Muerto = 0 And .flags.invisible = 0 And .flags.Oculto = 0 And .flags.AdminPerseguible And Not UserProtected Then
-                                    
-                                If Npclist(NPCIndex).flags.LanzaSpells <> 0 Then Call NpcLanzaUnSpell(NPCIndex, UserIndex)
-                                    
-                                If Not Npclist(NPCIndex).PFINFO.PathLenght > 0 Then tHeading = FindDirection(Npclist(NPCIndex).Pos, .Pos)
-                                    
-                                If tHeading = 0 Then
-                                    Call PathFindingAI(NPCIndex)
-    
-                                    If Not ReCalculatePath(NPCIndex) Then
-                                        If Not PathEnd(NPCIndex) Then
-                                            Call FollowPath(NPCIndex)
-                                        Else
-                                            Npclist(NPCIndex).PFINFO.PathLenght = 0
-    
-                                        End If
-    
-                                    End If
-    
-                                Else
-    
-                                    If Not Npclist(NPCIndex).PFINFO.PathLenght > 0 Then Call MoveNPCChar(NPCIndex, tHeading)
-                                    Exit Sub
-    
-                                End If
-    
-                                Exit Sub
-    
-                            End If
-                                
-                        End With
-                            
-                    End If
-
-                End If
-
-            Next i
+'            For i = 1 To Areas.ConnGroups(.Pos.Map).Count()
+'                UserIndex = Areas.ConnGroups(.Pos.Map).Item(i)
+'
+'                '¿Esta en el rango de vision?
+'                If Abs(UserList(UserIndex).Pos.X - .Pos.X) <= RANGO_VISION_NPC_X Then
+'                    If Abs(UserList(UserIndex).Pos.Y - .Pos.Y) <= RANGO_VISION_NPC_Y Then
+'
+'                        With UserList(UserIndex)
+'
+'                            UserProtected = Not IntervaloPermiteSerAtacado(UserIndex) And .flags.NoPuedeSerAtacado
+'                            UserProtected = UserProtected Or .flags.Ignorado Or .flags.EnConsulta
+'
+'                            'Si el user no esta muerto, invisible, protegido, etc...
+'                            If .flags.Muerto = 0 And .flags.invisible = 0 And .flags.Oculto = 0 And .flags.AdminPerseguible And Not UserProtected Then
+'
+'                                If Npclist(NPCIndex).flags.LanzaSpells <> 0 Then Call NpcLanzaUnSpell(NPCIndex, UserIndex)
+'
+'                                If Not Npclist(NPCIndex).PFINFO.PathLenght > 0 Then tHeading = FindDirection(Npclist(NPCIndex).Pos, .Pos)
+'
+'                                If tHeading = 0 Then
+'                                    Call PathFindingAI(NPCIndex)
+'
+'                                    If Not ReCalculatePath(NPCIndex) Then
+'                                        If Not PathEnd(NPCIndex) Then
+'                                            Call FollowPath(NPCIndex)
+'                                        Else
+'                                            Npclist(NPCIndex).PFINFO.PathLenght = 0
+'
+'                                        End If
+'
+'                                    End If
+'
+'                                Else
+'
+'                                    If Not Npclist(NPCIndex).PFINFO.PathLenght > 0 Then Call MoveNPCChar(NPCIndex, tHeading)
+'                                    Exit Sub
+'
+'                                End If
+'
+'                                Exit Sub
+'
+'                            End If
+'
+'                        End With
+'
+'                    End If
+'
+'                End If
+'
+'            Next i
             
             'Si no hay usuarios y no esta en su pos de respawn, hacemos que vuelva
             If .Pos.X <> .Orig.X Or .Pos.Y <> .Orig.Y Or Npclist(NPCIndex).ZonaOrig <> MapData(.Pos.Map, .Pos.X, .Pos.Y).ZonaIndex Then Call NPCVuelveOrigin(NPCIndex)
@@ -602,52 +596,52 @@ Private Sub SeguirAgresor(ByVal NPCIndex As Integer)
 
             End Select
 
-            For i = 1 To Areas.ConnGroups(.Pos.Map).Count()
-                UI = Areas.ConnGroups(.Pos.Map).Item(i)
-
-                'Is it in it's range of vision??
-                If Abs(UserList(UI).Pos.X - .Pos.X) <= RANGO_VISION_NPC_X And Sgn(UserList(UI).Pos.X - .Pos.X) = SignoEO Then
-                    If Abs(UserList(UI).Pos.Y - .Pos.Y) <= RANGO_VISION_NPC_Y And Sgn(UserList(UI).Pos.Y - .Pos.Y) = SignoNS Then
-
-                        If UserList(UI).Name = .flags.AttackedBy Then
-                            If .MaestroUser > 0 Then
-                                If Not criminal(.MaestroUser) And Not criminal(UI) And (UserList(.MaestroUser).flags.Seguro Or UserList(.MaestroUser).Faccion.ArmadaReal = 1) Then
-                                    Call WriteConsoleMsg(.MaestroUser, "La mascota no atacara a ciudadanos si eres miembro del ejercito real o tienes el seguro activado.", FontTypeNames.FONTTYPE_INFO)
-                                    .flags.AttackedBy = vbNullString
-                                    Exit Sub
-    
-                                End If
-    
-                            End If
-    
-                            If (UserList(UI).flags.Muerto = 0 And UserList(UI).flags.invisible = 0 And UserList(UI).flags.Oculto = 0) Or (.flags.SiguiendoGm = True) Then
-                                If .flags.LanzaSpells > 0 Then
-                                    Call NpcLanzaUnSpell(NPCIndex, UI)
-                                Else
-    
-                                    If Distancia(UserList(UI).Pos, Npclist(NPCIndex).Pos) <= 1 Then
-    
-                                        ' TODO : Set this a separate AI for Elementals and Druid's pets
-                                        If Npclist(NPCIndex).Numero <> 92 Then
-                                            Call NpcAtacaUser(NPCIndex, UI)
-    
-                                        End If
-    
-                                    End If
-    
-                                End If
-    
-                                Exit Sub
-    
-                            End If
-    
-                        End If
-                            
-                    End If
-
-                End If
-                
-            Next i
+'            For i = 1 To Areas.ConnGroups(.Pos.Map).Count()
+'                UI = Areas.ConnGroups(.Pos.Map).Item(i)
+'
+'                'Is it in it's range of vision??
+'                If Abs(UserList(UI).Pos.X - .Pos.X) <= RANGO_VISION_NPC_X And Sgn(UserList(UI).Pos.X - .Pos.X) = SignoEO Then
+'                    If Abs(UserList(UI).Pos.Y - .Pos.Y) <= RANGO_VISION_NPC_Y And Sgn(UserList(UI).Pos.Y - .Pos.Y) = SignoNS Then
+'
+'                        If UserList(UI).Name = .flags.AttackedBy Then
+'                            If .MaestroUser > 0 Then
+'                                If Not criminal(.MaestroUser) And Not criminal(UI) And (UserList(.MaestroUser).flags.Seguro Or UserList(.MaestroUser).Faccion.ArmadaReal = 1) Then
+'                                    Call WriteConsoleMsg(.MaestroUser, "La mascota no atacara a ciudadanos si eres miembro del ejercito real o tienes el seguro activado.", FontTypeNames.FONTTYPE_INFO)
+'                                    .flags.AttackedBy = vbNullString
+'                                    Exit Sub
+'
+'                                End If
+'
+'                            End If
+'
+'                            If (UserList(UI).flags.Muerto = 0 And UserList(UI).flags.invisible = 0 And UserList(UI).flags.Oculto = 0) Or (.flags.SiguiendoGm = True) Then
+'                                If .flags.LanzaSpells > 0 Then
+'                                    Call NpcLanzaUnSpell(NPCIndex, UI)
+'                                Else
+'
+'                                    If Distancia(UserList(UI).Pos, Npclist(NPCIndex).Pos) <= 1 Then
+'
+'                                        ' TODO : Set this a separate AI for Elementals and Druid's pets
+'                                        If Npclist(NPCIndex).Numero <> 92 Then
+'                                            Call NpcAtacaUser(NPCIndex, UI)
+'
+'                                        End If
+'
+'                                    End If
+'
+'                                End If
+'
+'                                Exit Sub
+'
+'                            End If
+'
+'                        End If
+'
+'                    End If
+'
+'                End If
+'
+'            Next i
 
         Else
 
@@ -659,56 +653,56 @@ Private Sub SeguirAgresor(ByVal NPCIndex As Integer)
 
             End If
 
-            For i = 1 To Areas.ConnGroups(.Pos.Map).Count()
-                UI = Areas.ConnGroups(.Pos.Map).Item(i)
-                
-                'Is it in it's range of vision??
-                If Abs(UserList(UI).Pos.X - .Pos.X) <= RANGO_VISION_NPC_X Then
-                    If Abs(UserList(UI).Pos.Y - .Pos.Y) <= RANGO_VISION_NPC_Y Then
-                            
-                        If UserList(UI).Name = .flags.AttackedBy Then
-                            If .MaestroUser > 0 Then
-                                If Not criminal(.MaestroUser) And Not criminal(UI) And (UserList(.MaestroUser).flags.Seguro Or UserList(.MaestroUser).Faccion.ArmadaReal = 1) Then
-                                    Call WriteConsoleMsg(.MaestroUser, "La mascota no atacara a ciudadanos si eres miembro del ejercito real o tienes el seguro activado.", FontTypeNames.FONTTYPE_INFO)
-                                    .flags.AttackedBy = vbNullString
-                                    Call FollowAmo(NPCIndex)
-                                    Exit Sub
-    
-                                End If
-    
-                            End If
-                                
-                            If UserList(UI).flags.Muerto = 0 And UserList(UI).flags.invisible = 0 And UserList(UI).flags.Oculto = 0 Then
-                                If .flags.LanzaSpells > 0 Then
-                                    Call NpcLanzaUnSpell(NPCIndex, UI)
-                                Else
-    
-                                    If Distancia(UserList(UI).Pos, Npclist(NPCIndex).Pos) <= 1 Then
-    
-                                        ' TODO : Set this a separate AI for Elementals and Druid's pets
-                                        If Npclist(NPCIndex).Numero <> 92 Then
-                                            Call NpcAtacaUser(NPCIndex, UI)
-    
-                                        End If
-    
-                                    End If
-    
-                                End If
-                                     
-                                tHeading = FindDirection(.Pos, UserList(UI).Pos)
-                                Call MoveNPCChar(NPCIndex, tHeading)
-                                     
-                                Exit Sub
-    
-                            End If
-    
-                        End If
-                        
-                    End If
-
-                End If
-                
-            Next i
+'            For i = 1 To Areas.ConnGroups(.Pos.Map).Count()
+'                UI = Areas.ConnGroups(.Pos.Map).Item(i)
+'
+'                'Is it in it's range of vision??
+'                If Abs(UserList(UI).Pos.X - .Pos.X) <= RANGO_VISION_NPC_X Then
+'                    If Abs(UserList(UI).Pos.Y - .Pos.Y) <= RANGO_VISION_NPC_Y Then
+'
+'                        If UserList(UI).Name = .flags.AttackedBy Then
+'                            If .MaestroUser > 0 Then
+'                                If Not criminal(.MaestroUser) And Not criminal(UI) And (UserList(.MaestroUser).flags.Seguro Or UserList(.MaestroUser).Faccion.ArmadaReal = 1) Then
+'                                    Call WriteConsoleMsg(.MaestroUser, "La mascota no atacara a ciudadanos si eres miembro del ejercito real o tienes el seguro activado.", FontTypeNames.FONTTYPE_INFO)
+'                                    .flags.AttackedBy = vbNullString
+'                                    Call FollowAmo(NPCIndex)
+'                                    Exit Sub
+'
+'                                End If
+'
+'                            End If
+'
+'                            If UserList(UI).flags.Muerto = 0 And UserList(UI).flags.invisible = 0 And UserList(UI).flags.Oculto = 0 Then
+'                                If .flags.LanzaSpells > 0 Then
+'                                    Call NpcLanzaUnSpell(NPCIndex, UI)
+'                                Else
+'
+'                                    If Distancia(UserList(UI).Pos, Npclist(NPCIndex).Pos) <= 1 Then
+'
+'                                        ' TODO : Set this a separate AI for Elementals and Druid's pets
+'                                        If Npclist(NPCIndex).Numero <> 92 Then
+'                                            Call NpcAtacaUser(NPCIndex, UI)
+'
+'                                        End If
+'
+'                                    End If
+'
+'                                End If
+'
+'                                tHeading = FindDirection(.Pos, UserList(UI).Pos)
+'                                Call MoveNPCChar(NPCIndex, tHeading)
+'
+'                                Exit Sub
+'
+'                            End If
+'
+'                        End If
+'
+'                    End If
+'
+'                End If
+'
+'            Next i
 
         End If
 
@@ -754,38 +748,38 @@ Private Sub PersigueCiudadano(ByVal NPCIndex As Integer)
     
     With Npclist(NPCIndex)
 
-        For i = 1 To Areas.ConnGroups(.Pos.Map).Count()
-            UserIndex = Areas.ConnGroups(.Pos.Map).Item(i)
-                
-            'Is it in it's range of vision??
-            If Abs(UserList(UserIndex).Pos.X - .Pos.X) <= RANGO_VISION_NPC_X Then
-                If Abs(UserList(UserIndex).Pos.Y - .Pos.Y) <= RANGO_VISION_NPC_Y Then
-                    
-                    If Not criminal(UserIndex) Then
-                    
-                        UserProtected = Not IntervaloPermiteSerAtacado(UserIndex) And UserList(UserIndex).flags.NoPuedeSerAtacado
-                        UserProtected = UserProtected Or UserList(UserIndex).flags.Ignorado Or UserList(UserIndex).flags.EnConsulta
-                        
-                        If UserList(UserIndex).flags.Muerto = 0 And UserList(UserIndex).flags.invisible = 0 And UserList(UserIndex).flags.Oculto = 0 And UserList(UserIndex).flags.AdminPerseguible And Not UserProtected Then
-                            
-                            If .flags.LanzaSpells > 0 Then
-                                Call NpcLanzaUnSpell(NPCIndex, UserIndex)
-
-                            End If
-
-                            tHeading = FindDirection(.Pos, UserList(UserIndex).Pos)
-                            Call MoveNPCChar(NPCIndex, tHeading)
-                            Exit Sub
-
-                        End If
-
-                    End If
-                    
-                End If
-
-            End If
-            
-        Next i
+'        For i = 1 To Areas.ConnGroups(.Pos.Map).Count()
+'            UserIndex = Areas.ConnGroups(.Pos.Map).Item(i)
+'
+'            'Is it in it's range of vision??
+'            If Abs(UserList(UserIndex).Pos.X - .Pos.X) <= RANGO_VISION_NPC_X Then
+'                If Abs(UserList(UserIndex).Pos.Y - .Pos.Y) <= RANGO_VISION_NPC_Y Then
+'
+'                    If Not criminal(UserIndex) Then
+'
+'                        UserProtected = Not IntervaloPermiteSerAtacado(UserIndex) And UserList(UserIndex).flags.NoPuedeSerAtacado
+'                        UserProtected = UserProtected Or UserList(UserIndex).flags.Ignorado Or UserList(UserIndex).flags.EnConsulta
+'
+'                        If UserList(UserIndex).flags.Muerto = 0 And UserList(UserIndex).flags.invisible = 0 And UserList(UserIndex).flags.Oculto = 0 And UserList(UserIndex).flags.AdminPerseguible And Not UserProtected Then
+'
+'                            If .flags.LanzaSpells > 0 Then
+'                                Call NpcLanzaUnSpell(NPCIndex, UserIndex)
+'
+'                            End If
+'
+'                            tHeading = FindDirection(.Pos, UserList(UserIndex).Pos)
+'                            Call MoveNPCChar(NPCIndex, tHeading)
+'                            Exit Sub
+'
+'                        End If
+'
+'                    End If
+'
+'                End If
+'
+'            End If
+'
+'        Next i
 
     End With
     
@@ -837,76 +831,76 @@ Private Sub PersigueCriminal(ByVal NPCIndex As Integer)
 
             End Select
             
-            For i = 1 To Areas.ConnGroups(.Pos.Map).Count()
-                UserIndex = Areas.ConnGroups(.Pos.Map).Item(i)
-                
-                'Is it in it's range of vision??
-                If Abs(UserList(UserIndex).Pos.X - .Pos.X) <= RANGO_VISION_NPC_X And Sgn(UserList(UserIndex).Pos.X - .Pos.X) = SignoEO Then
-                    If Abs(UserList(UserIndex).Pos.Y - .Pos.Y) <= RANGO_VISION_NPC_Y And Sgn(UserList(UserIndex).Pos.Y - .Pos.Y) = SignoNS Then
-                        
-                        If criminal(UserIndex) Then
-
-                            With UserList(UserIndex)
-                                 
-                                UserProtected = Not IntervaloPermiteSerAtacado(UserIndex) And .flags.NoPuedeSerAtacado
-                                UserProtected = UserProtected Or UserList(UserIndex).flags.Ignorado Or UserList(UserIndex).flags.EnConsulta
-                                 
-                                If .flags.Muerto = 0 And .flags.invisible = 0 And .flags.Oculto = 0 And .flags.AdminPerseguible And Not UserProtected Then
-                                     
-                                    If Npclist(NPCIndex).flags.LanzaSpells > 0 Then
-                                        Call NpcLanzaUnSpell(NPCIndex, UserIndex)
-
-                                    End If
-
-                                    Exit Sub
-
-                                End If
-
-                            End With
-
-                        End If
-                        
-                    End If
-
-                End If
-
-            Next i
+'            For i = 1 To Areas.ConnGroups(.Pos.Map).Count()
+'                UserIndex = Areas.ConnGroups(.Pos.Map).Item(i)
+'
+'                'Is it in it's range of vision??
+'                If Abs(UserList(UserIndex).Pos.X - .Pos.X) <= RANGO_VISION_NPC_X And Sgn(UserList(UserIndex).Pos.X - .Pos.X) = SignoEO Then
+'                    If Abs(UserList(UserIndex).Pos.Y - .Pos.Y) <= RANGO_VISION_NPC_Y And Sgn(UserList(UserIndex).Pos.Y - .Pos.Y) = SignoNS Then
+'
+'                        If criminal(UserIndex) Then
+'
+'                            With UserList(UserIndex)
+'
+'                                UserProtected = Not IntervaloPermiteSerAtacado(UserIndex) And .flags.NoPuedeSerAtacado
+'                                UserProtected = UserProtected Or UserList(UserIndex).flags.Ignorado Or UserList(UserIndex).flags.EnConsulta
+'
+'                                If .flags.Muerto = 0 And .flags.invisible = 0 And .flags.Oculto = 0 And .flags.AdminPerseguible And Not UserProtected Then
+'
+'                                    If Npclist(NPCIndex).flags.LanzaSpells > 0 Then
+'                                        Call NpcLanzaUnSpell(NPCIndex, UserIndex)
+'
+'                                    End If
+'
+'                                    Exit Sub
+'
+'                                End If
+'
+'                            End With
+'
+'                        End If
+'
+'                    End If
+'
+'                End If
+'
+'            Next i
 
         Else
 
-            For i = 1 To Areas.ConnGroups(.Pos.Map).Count()
-                UserIndex = Areas.ConnGroups(.Pos.Map).Item(i)
-                
-                'Is it in it's range of vision??
-                If Abs(UserList(UserIndex).Pos.X - .Pos.X) <= RANGO_VISION_NPC_X Then
-                    If Abs(UserList(UserIndex).Pos.Y - .Pos.Y) <= RANGO_VISION_NPC_Y Then
-                        
-                        If criminal(UserIndex) Then
-                            
-                            UserProtected = Not IntervaloPermiteSerAtacado(UserIndex) And UserList(UserIndex).flags.NoPuedeSerAtacado
-                            UserProtected = UserProtected Or UserList(UserIndex).flags.Ignorado
-                            
-                            If UserList(UserIndex).flags.Muerto = 0 And UserList(UserIndex).flags.invisible = 0 And UserList(UserIndex).flags.Oculto = 0 And UserList(UserIndex).flags.AdminPerseguible And Not UserProtected Then
-
-                                If .flags.LanzaSpells > 0 Then
-                                    Call NpcLanzaUnSpell(NPCIndex, UserIndex)
-
-                                End If
-
-                                If .flags.Inmovilizado = 1 Then Exit Sub
-                                tHeading = FindDirection(.Pos, UserList(UserIndex).Pos)
-                                Call MoveNPCChar(NPCIndex, tHeading)
-                                Exit Sub
-
-                            End If
-
-                        End If
-                        
-                    End If
-
-                End If
-                
-            Next i
+'            For i = 1 To Areas.ConnGroups(.Pos.Map).Count()
+'                UserIndex = Areas.ConnGroups(.Pos.Map).Item(i)
+'
+'                'Is it in it's range of vision??
+'                If Abs(UserList(UserIndex).Pos.X - .Pos.X) <= RANGO_VISION_NPC_X Then
+'                    If Abs(UserList(UserIndex).Pos.Y - .Pos.Y) <= RANGO_VISION_NPC_Y Then
+'
+'                        If criminal(UserIndex) Then
+'
+'                            UserProtected = Not IntervaloPermiteSerAtacado(UserIndex) And UserList(UserIndex).flags.NoPuedeSerAtacado
+'                            UserProtected = UserProtected Or UserList(UserIndex).flags.Ignorado
+'
+'                            If UserList(UserIndex).flags.Muerto = 0 And UserList(UserIndex).flags.invisible = 0 And UserList(UserIndex).flags.Oculto = 0 And UserList(UserIndex).flags.AdminPerseguible And Not UserProtected Then
+'
+'                                If .flags.LanzaSpells > 0 Then
+'                                    Call NpcLanzaUnSpell(NPCIndex, UserIndex)
+'
+'                                End If
+'
+'                                If .flags.Inmovilizado = 1 Then Exit Sub
+'                                tHeading = FindDirection(.Pos, UserList(UserIndex).Pos)
+'                                Call MoveNPCChar(NPCIndex, tHeading)
+'                                Exit Sub
+'
+'                            End If
+'
+'                        End If
+'
+'                    End If
+'
+'                End If
+'
+'            Next i
 
         End If
 
@@ -1044,48 +1038,48 @@ Private Sub AiNpcAtacaNpc(ByVal NPCIndex As Integer)
 
         Else
 
-            For Y = .Pos.Y - RANGO_VISION_NPC_Y To .Pos.Y + RANGO_VISION_NPC_Y
-                For X = .Pos.X - RANGO_VISION_NPC_Y To .Pos.X + RANGO_VISION_NPC_Y
-
-                    If X >= MinXBorder And X <= MaxXBorder And Y >= MinYBorder And Y <= MaxYBorder Then
-                        NI = MapData(.Pos.Map, X, Y).NPCIndex
-
-                        If NI > 0 Then
-                            If .TargetNPC = NI Then
-                                bNoEsta = True
-
-                                If .Numero = ELEMENTALFUEGO Then
-                                    Call NpcLanzaUnSpellSobreNpc(NPCIndex, NI)
-
-                                    If Npclist(NI).NPCtype = DRAGON Then
-                                        Call NpcLanzaUnSpellSobreNpc(NI, NPCIndex)
-
-                                    End If
-
-                                Else
-
-                                    'aca verificamosss la distancia de ataque
-                                    If Distancia(.Pos, Npclist(NI).Pos) <= 1 Then
-                                        Call SistemaCombate.NpcAtacaNpc(NPCIndex, NI)
-
-                                    End If
-
-                                End If
-
-                                If .flags.Inmovilizado = 1 Then Exit Sub
-                                If .TargetNPC = 0 Then Exit Sub
-                                tHeading = FindDirection(.Pos, Npclist(MapData(.Pos.Map, X, Y).NPCIndex).Pos)
-                                Call MoveNPCChar(NPCIndex, tHeading)
-                                Exit Sub
-
-                            End If
-
-                        End If
-
-                    End If
-
-                Next X
-            Next Y
+'            For Y = .Pos.Y - RANGO_VISION_NPC_Y To .Pos.Y + RANGO_VISION_NPC_Y
+'                For X = .Pos.X - RANGO_VISION_NPC_Y To .Pos.X + RANGO_VISION_NPC_Y
+'
+'                    If X >= MinXBorder And X <= MaxXBorder And Y >= MinYBorder And Y <= MaxYBorder Then
+'                        NI = MapData(.Pos.Map, X, Y).NPCIndex
+'
+'                        If NI > 0 Then
+'                            If .TargetNPC = NI Then
+'                                bNoEsta = True
+'
+'                                If .Numero = ELEMENTALFUEGO Then
+'                                    Call NpcLanzaUnSpellSobreNpc(NPCIndex, NI)
+'
+'                                    If Npclist(NI).NPCtype = DRAGON Then
+'                                        Call NpcLanzaUnSpellSobreNpc(NI, NPCIndex)
+'
+'                                    End If
+'
+'                                Else
+'
+'                                    'aca verificamosss la distancia de ataque
+'                                    If Distancia(.Pos, Npclist(NI).Pos) <= 1 Then
+'                                        Call SistemaCombate.NpcAtacaNpc(NPCIndex, NI)
+'
+'                                    End If
+'
+'                                End If
+'
+'                                If .flags.Inmovilizado = 1 Then Exit Sub
+'                                If .TargetNPC = 0 Then Exit Sub
+'                                tHeading = FindDirection(.Pos, Npclist(MapData(.Pos.Map, X, Y).NPCIndex).Pos)
+'                                Call MoveNPCChar(NPCIndex, tHeading)
+'                                Exit Sub
+'
+'                            End If
+'
+'                        End If
+'
+'                    End If
+'
+'                Next X
+'            Next Y
 
         End If
         
@@ -1119,38 +1113,38 @@ Public Sub AiNpcObjeto(ByVal NPCIndex As Integer)
     
     With Npclist(NPCIndex)
 
-        For i = 1 To Areas.ConnGroups(.Pos.Map).Count()
-            UserIndex = Areas.ConnGroups(.Pos.Map).Item(i)
-            
-            'Is it in it's range of vision??
-            If Abs(UserList(UserIndex).Pos.X - .Pos.X) <= RANGO_VISION_NPC_X Then
-                If Abs(UserList(UserIndex).Pos.Y - .Pos.Y) <= RANGO_VISION_NPC_Y Then
-                    
-                    With UserList(UserIndex)
-                        UserProtected = Not IntervaloPermiteSerAtacado(UserIndex) And .flags.NoPuedeSerAtacado
-                        
-                        If .flags.Muerto = 0 And .flags.invisible = 0 And .flags.Oculto = 0 And .flags.AdminPerseguible And Not UserProtected Then
-                            
-                            ' No quiero que ataque siempre al primero
-                            If RandomNumber(1, 3) < 3 Then
-                                If Npclist(NPCIndex).flags.LanzaSpells > 0 Then
-                                    Call NpcLanzaUnSpell(NPCIndex, UserIndex)
-
-                                End If
-                            
-                                Exit Sub
-
-                            End If
-
-                        End If
-
-                    End With
-
-                End If
-
-            End If
-            
-        Next i
+'        For i = 1 To Areas.ConnGroups(.Pos.Map).Count()
+'            UserIndex = Areas.ConnGroups(.Pos.Map).Item(i)
+'
+'            'Is it in it's range of vision??
+'            If Abs(UserList(UserIndex).Pos.X - .Pos.X) <= RANGO_VISION_NPC_X Then
+'                If Abs(UserList(UserIndex).Pos.Y - .Pos.Y) <= RANGO_VISION_NPC_Y Then
+'
+'                    With UserList(UserIndex)
+'                        UserProtected = Not IntervaloPermiteSerAtacado(UserIndex) And .flags.NoPuedeSerAtacado
+'
+'                        If .flags.Muerto = 0 And .flags.invisible = 0 And .flags.Oculto = 0 And .flags.AdminPerseguible And Not UserProtected Then
+'
+'                            ' No quiero que ataque siempre al primero
+'                            If RandomNumber(1, 3) < 3 Then
+'                                If Npclist(NPCIndex).flags.LanzaSpells > 0 Then
+'                                    Call NpcLanzaUnSpell(NPCIndex, UserIndex)
+'
+'                                End If
+'
+'                                Exit Sub
+'
+'                            End If
+'
+'                        End If
+'
+'                    End With
+'
+'                End If
+'
+'            End If
+'
+'        Next i
 
     End With
 

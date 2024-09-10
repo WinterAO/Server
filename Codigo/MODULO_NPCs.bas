@@ -799,8 +799,8 @@ Public Function CrearNPC(NroNPC As Integer, _
 End Function
 
 Public Sub MakeNPCChar(ByVal toMap As Boolean, _
-                       sndIndex As Integer, _
-                       NPCIndex As Integer, _
+                       ByVal sndIndex As Integer, _
+                       ByVal NPCIndex As Integer, _
                        ByVal Map As Integer, _
                        ByVal X As Integer, _
                        ByVal Y As Integer)
@@ -845,9 +845,9 @@ Public Sub MakeNPCChar(ByVal toMap As Boolean, _
         If Not toMap Then
             Call WriteCharacterCreate(sndIndex, .Char.body, .Char.Head, .Char.Heading, .Char.CharIndex, _
                 X, Y, .Char.WeaponAnim, .Char.ShieldAnim, 0, 0, .Char.CascoAnim, .Char.AnimAtaque, NombreNPC, color, 0, NingunAura, NingunAura, .NoShadow, estadoQuest)
-    '
+    
         Else
-            Call AgregarNpc(NPCIndex)
+            Call ModAreas.CreateEntity(NPCIndex, ENTITY_TYPE_NPC, .Pos, .SizeWidth, .SizeWidth)
     
         End If
     
@@ -898,12 +898,12 @@ Private Sub EraseNPCChar(ByVal NPCIndex As Integer)
         Loop
 
     End If
+    
+    'Actualizamos el area
+    Call ModAreas.DeleteEntity(NPCIndex, ENTITY_TYPE_NPC)
 
     'Quitamos del mapa
     MapData(Npclist(NPCIndex).Pos.Map, Npclist(NPCIndex).Pos.X, Npclist(NPCIndex).Pos.Y).NPCIndex = 0
-
-    'Actualizamos los clientes
-    Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessageCharacterRemove(Npclist(NPCIndex).Char.CharIndex))
 
     'Update la lista npc
     Npclist(NPCIndex).Char.CharIndex = 0
@@ -960,8 +960,11 @@ Public Function MoveNPCChar(ByVal NPCIndex As Integer, ByVal nHeading As Byte) A
                     MapData(.Pos.Map, .Pos.X, .Pos.Y).UserIndex = UserIndex
                         
                     ' Avisamos a los usuarios del area, y al propio usuario lo forzamos a moverse
-                    Call SendData(SendTarget.ToPCAreaButIndex, UserIndex, PrepareMessageCharacterMove(UserList(UserIndex).Char.CharIndex, .Pos.X, .Pos.Y))
+                    'Call SendData(SendTarget.ToPCAreaButIndex, UserIndex, PrepareMessageCharacterMove(UserList(UserIndex).Char.CharIndex, .Pos.X, .Pos.Y))
                     Call WriteForceCharMove(UserIndex, InvertHeading(nHeading))
+                    
+                    'Actualizamos las áreas de ser necesario
+                    Call ModAreas.UpdateEntity(UserIndex, ENTITY_TYPE_PLAYER, .Pos)
 
                 End With
 
@@ -974,7 +977,6 @@ Public Function MoveNPCChar(ByVal NPCIndex As Integer, ByVal nHeading As Byte) A
             .Pos = nPos
             .Char.Heading = nHeading
             MapData(.Pos.Map, nPos.X, nPos.Y).NPCIndex = NPCIndex
-            Call CheckUpdateNeededNpc(NPCIndex, nHeading)
             
             'Si es un WorldBoss y se aleja 10 tiles de su OrigPos se le devuelve.
             If Npclist(NPCIndex).NPCtype = eNPCType.WorldBoss And Npclist(NPCIndex).Pos.X <= (Npclist(NPCIndex).Orig.X - 20) Or _
@@ -984,6 +986,8 @@ Public Function MoveNPCChar(ByVal NPCIndex As Integer, ByVal nHeading As Byte) A
                 Call NPCTelep(NPCIndex, Npclist(NPCIndex).Orig, True)
                     
             End If
+        
+            Call ModAreas.UpdateEntity(NPCIndex, ENTITY_TYPE_NPC, .Pos)
         
             ' Npc has moved
             MoveNPCChar = True
@@ -1229,7 +1233,7 @@ Public Sub NPCTelep(ByVal NPCIndex As Integer, Posicion As WorldPos, ByVal FXTel
             'Añadimos el NPC a la nueva posición en el mapa
             MapData(Posicion.Map, Posicion.X, Posicion.Y).NPCIndex = NPCIndex
             
-            Call CheckUpdateNeededNpc(NPCIndex, nHeading)
+            'Call CheckUpdateNeededNpc(NPCIndex, nHeading) AREAS
             
             '¿Mostramos FX?
             If FXTelep Then
@@ -1483,6 +1487,12 @@ Public Function OpenNPC(ByVal NpcNumber As Integer, _
         .SpeedVar = val(Leer.GetValue("NPC" & NpcNumber, "Speed"))
         
         .EsdeFortaleza = val(Leer.GetValue("NPC" & NpcNumber, "Fortaleza"))
+        
+        .SizeWidth = CByte(val(Leer.GetValue("NPC" & NpcNumber, "SizeWidth")))
+        .SizeHeight = CByte(val(Leer.GetValue("NPC" & NpcNumber, "SizeHeight")))
+                
+        If .SizeWidth = 0 Then .SizeWidth = ModAreas.DEFAULT_ENTITY_WIDTH
+        If .SizeHeight = 0 Then .SizeHeight = ModAreas.DEFAULT_ENTITY_HEIGHT
 
     End With
     

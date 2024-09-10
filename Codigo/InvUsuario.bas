@@ -39,7 +39,7 @@ Public Function TieneObjetosRobables(ByVal UserIndex As Integer) As Boolean
     '17/09/02
     'Agregue que la funcion se asegure que el objeto no es un barco
 
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
 
     Dim i        As Integer
 
@@ -61,7 +61,7 @@ Public Function TieneObjetosRobables(ByVal UserIndex As Integer) As Boolean
     
     Exit Function
 
-errHandler:
+ErrHandler:
     Call LogError("Error en TieneObjetosRobables. Error: " & Err.Number & " - " & Err.description)
 
 End Function
@@ -271,7 +271,7 @@ Sub TirarOro(ByVal Cantidad As Long, ByVal UserIndex As Integer)
     'Last Modification: 23/01/2007
     '23/01/2007 -> Pablo (ToxicWaste): Billetera invertida y explotar oro en el agua.
     '***************************************************
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
 
     'If Cantidad > 100000 Then Exit Sub
 
@@ -387,7 +387,7 @@ Sub TirarOro(ByVal Cantidad As Long, ByVal UserIndex As Integer)
 
     Exit Sub
 
-errHandler:
+ErrHandler:
     Call LogError("Error en TirarOro. Error " & Err.Number & " : " & Err.description)
 
 End Sub
@@ -401,7 +401,7 @@ Sub QuitarUserInvItem(ByVal UserIndex As Integer, _
     '
     '***************************************************
 
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
 
     If Slot < 1 Or Slot > UserList(UserIndex).CurrentInventorySlots Then Exit Sub
     
@@ -427,7 +427,7 @@ Sub QuitarUserInvItem(ByVal UserIndex As Integer, _
 
     Exit Sub
 
-errHandler:
+ErrHandler:
     Call LogError("Error en QuitarUserInvItem. Error " & Err.Number & " : " & Err.description)
     
 End Sub
@@ -441,7 +441,7 @@ Sub UpdateUserInv(ByVal UpdateAll As Boolean, _
     '
     '***************************************************
 
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
 
     Dim NullObj As UserObj
 
@@ -481,7 +481,7 @@ Sub UpdateUserInv(ByVal UpdateAll As Boolean, _
 
     End With
 
-errHandler:
+ErrHandler:
     Call LogError("Error en UpdateUserInv. Error " & Err.Number & " : " & Err.description)
 
 End Sub
@@ -600,8 +600,8 @@ Sub EraseObj(ByVal Num As Integer, _
         If .ObjInfo.Amount <= 0 Then
             .ObjInfo.ObjIndex = 0
             .ObjInfo.Amount = 0
-
-            Call modSendData.SendToAreaByPos(Map, X, Y, PrepareMessageObjectDelete(X, Y))
+            
+            Call ModAreas.DeleteEntity(ModAreas.Pack(Map, X, Y), ENTITY_TYPE_OBJECT)
 
         End If
 
@@ -628,17 +628,25 @@ Sub MakeObj(ByRef obj As obj, _
             Else
                 .ObjInfo = obj
                 
-                Call modSendData.SendToAreaByPos(Map, X, Y, PrepareMessageObjectCreate(ObjData(obj.ObjIndex).GrhIndex, ObjData(obj.ObjIndex).ParticulaIndex, X, Y, ObjData(obj.ObjIndex).Shadow))
+                Dim Coordinates As WorldPos
+
+                Coordinates.Map = Map
+                Coordinates.X = X
+                Coordinates.Y = Y
+                
+                Call ModAreas.CreateEntity(ModAreas.Pack(Map, X, Y), ENTITY_TYPE_OBJECT, Coordinates, ObjData(.ObjInfo.ObjIndex).SizeWidth, ObjData(.ObjInfo.ObjIndex).SizeHeight)
 
             End If
             
             '//Agregamos las pos de los objetos
             If ObjData(obj.ObjIndex).OBJType <> otFogata And ItemNoEsDeMapa(ObjData(obj.ObjIndex).OBJType) Then
+            
                 Dim xPos As WorldPos
 
                 xPos.Map = Map
                 xPos.X = X
                 xPos.Y = Y
+                
                 If (MapData(xPos.Map, xPos.X, xPos.Y).Trigger <> eTrigger.CASA Or MapData(xPos.Map, xPos.X, xPos.Y).Trigger <> eTrigger.BAJOTECHO) And MapData(xPos.Map, xPos.X, xPos.Y).Blocked <> 1 Then AgregarObjetoLimpieza xPos
 
             End If
@@ -656,7 +664,7 @@ Function MeterItemEnInventario(ByVal UserIndex As Integer, ByRef MiObj As obj) A
     'Obtengo el numero de getMaxInventorySlots antes que nada para que funcionen correctamente las mochilas y alforjas (Recox)
     '***************************************************
 
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
 
     Dim Slot As Byte
 
@@ -725,7 +733,7 @@ Function MeterItemEnInventario(ByVal UserIndex As Integer, ByRef MiObj As obj) A
     Call UpdateUserInv(False, UserIndex, Slot)
     
     Exit Function
-errHandler:
+ErrHandler:
     Call LogError("Error en MeterItemEnInventario. Error " & Err.Number & " : " & Err.description)
 
 End Function
@@ -832,7 +840,7 @@ Public Sub Desequipar(ByVal UserIndex As Integer, ByVal Slot As Byte)
     '
     '***************************************************
 
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
 
     'Desequipa el item slot del inventario
     Dim obj As ObjData
@@ -975,7 +983,7 @@ Public Sub Desequipar(ByVal UserIndex As Integer, ByVal Slot As Byte)
     
     Exit Sub
 
-errHandler:
+ErrHandler:
     Call LogError("Error en Desquipar. Error " & Err.Number & " : " & Err.description)
 
 End Sub
@@ -1019,7 +1027,7 @@ Function SexoPuedeUsarItem(ByVal UserIndex As Integer, _
     '14/01/2010: ZaMa - Agrego el motivo por el que no puede equipar/usar el item.
     '***************************************************
 
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
     
     If ObjData(ObjIndex).Mujer = 1 Then
         SexoPuedeUsarItem = UserList(UserIndex).Genero <> eGenero.Hombre
@@ -1033,7 +1041,7 @@ Function SexoPuedeUsarItem(ByVal UserIndex As Integer, _
     If Not SexoPuedeUsarItem Then sMotivo = "Tu genero no puede usar este objeto."
     
     Exit Function
-errHandler:
+ErrHandler:
     Call LogError("SexoPuedeUsarItem")
 
 End Function
@@ -1082,7 +1090,7 @@ Sub EquiparInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
     '03/02/2020: WyroX - Nivel minimo y skill minimo para poder equipar
     '*************************************************
 
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
 
     'Equipa un item del inventario
     Dim obj      As ObjData
@@ -1405,7 +1413,7 @@ Sub EquiparInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
     
     Exit Sub
     
-errHandler:
+ErrHandler:
     Call LogError("EquiparInvItem Slot:" & Slot & " - Error: " & Err.Number & " - Error Description : " & Err.description)
 
 End Sub
@@ -1419,7 +1427,7 @@ Private Function CheckRazaUsaRopa(ByVal UserIndex As Integer, _
     '14/01/2010: ZaMa - Agrego el motivo por el que no puede equipar/usar el item.
     '***************************************************
 
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
 
     With UserList(UserIndex)
 
@@ -1443,7 +1451,7 @@ Private Function CheckRazaUsaRopa(ByVal UserIndex As Integer, _
     
     Exit Function
     
-errHandler:
+ErrHandler:
     Call LogError("Error CheckRazaUsaRopa ItemIndex:" & ItemIndex)
 
 End Function
@@ -2362,7 +2370,7 @@ Sub TirarTodo(ByVal UserIndex As Integer)
     '
     '***************************************************
 
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
 
     With UserList(UserIndex)
 
@@ -2386,7 +2394,7 @@ Sub TirarTodo(ByVal UserIndex As Integer)
 
     Exit Sub
 
-errHandler:
+ErrHandler:
     Call LogError("Error en TirarTodo. Error: " & Err.Number & " - " & Err.description)
 
 End Sub
@@ -2412,7 +2420,7 @@ Sub TirarTodosLosItems(ByVal UserIndex As Integer)
     'Last Modification: 12/01/2010 (ZaMa)
     '12/01/2010: ZaMa - Ahora los piratas no explotan items solo si estan entre 20 y 25
     '***************************************************
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
 
     Dim i         As Byte
 
@@ -2474,7 +2482,7 @@ Sub TirarTodosLosItems(ByVal UserIndex As Integer)
     
     Exit Sub
     
-errHandler:
+ErrHandler:
     Call LogError("Error en TirarTodosLosItems. Error: " & Err.Number & " - " & Err.description)
 
 End Sub

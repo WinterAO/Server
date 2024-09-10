@@ -419,7 +419,7 @@ Public Sub EraseUserChar(ByVal UserIndex As Integer, ByVal IsAdminInvisible As B
 
         End If
         
-        Call QuitarUser(UserIndex, .Pos.Map)
+        Call ModAreas.DeleteEntity(UserIndex, ENTITY_TYPE_PLAYER)
         
         MapData(.Pos.Map, .Pos.X, .Pos.Y).UserIndex = 0
         .Char.CharIndex = 0
@@ -539,13 +539,13 @@ Public Function GetNickColor(ByVal UserIndex As Integer) As Byte
     
 End Function
 
-Public Sub MakeUserChar(ByVal toMap As Boolean, _
+Public Function MakeUserChar(ByVal toMap As Boolean, _
                         ByVal sndIndex As Integer, _
                         ByVal UserIndex As Integer, _
                         ByVal Map As Integer, _
                         ByVal X As Integer, _
                         ByVal Y As Integer, _
-                        Optional ButIndex As Boolean = False)
+                        Optional ButIndex As Boolean = False) As Boolean
     '*************************************************
     'Author: Unknown
     'Last modified: 15/01/2010
@@ -553,7 +553,7 @@ Public Sub MakeUserChar(ByVal toMap As Boolean, _
     '15/01/2010: ZaMa - Ahora se envia el color del nick.
     '*************************************************
 
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
 
     Dim CharIndex  As Integer
 
@@ -619,23 +619,28 @@ Public Sub MakeUserChar(ByVal toMap As Boolean, _
             
                 Call WriteCharacterCreate(sndIndex, .Char.body, .Char.Head, .Char.Heading, .Char.CharIndex, X, Y, .Char.WeaponAnim, .Char.ShieldAnim, .Char.FX, 999, .Char.CascoAnim, 0, username, NickColor, Privileges, .Char.AuraAnim, .Char.AuraColor)
             Else
-                'Hide the name and clan - set privs as normal user
-                Call AgregarUser(UserIndex, .Pos.Map, ButIndex)
+                ' Me lo mando a mi mismo
+                Call MakeUserChar(False, UserIndex, UserIndex, Map, X, Y)
+                
+                ' Se lo mando a los demas
+                Call ModAreas.CreateEntity(UserIndex, ENTITY_TYPE_PLAYER, .Pos, ModAreas.DEFAULT_ENTITY_WIDTH, ModAreas.DEFAULT_ENTITY_HEIGHT)
 
             End If
 
         End If
 
     End With
+    
+    MakeUserChar = True
 
-    Exit Sub
+    Exit Function
 
-errHandler:
+ErrHandler:
     LogError ("MakeUserChar: num: " & Err.Number & " desc: " & Err.description)
     'Resume Next
     Call CloseSocket(UserIndex)
 
-End Sub
+End Function
 
 ''
 ' Checks if the user gets the next level.
@@ -684,7 +689,7 @@ Public Sub CheckUserLevel(ByVal UserIndex As Integer, _
 
     Dim SubiodeLvL       As Boolean
     
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
     
     WasNewbie = EsNewbie(UserIndex)
     SubiodeLvL = False
@@ -965,7 +970,7 @@ Public Sub CheckUserLevel(ByVal UserIndex As Integer, _
     
     Exit Sub
 
-errHandler:
+ErrHandler:
     Call LogError("Error en la subrutina CheckUserLevel - Error : " & Err.Number & " - Description : " & Err.description)
 
 End Sub
@@ -995,7 +1000,7 @@ Public Sub CheckUserLevelPVP(ByVal UserIndex As Integer, Optional ByVal PrintInC
     Dim GI               As Integer 'Guild Index
     Dim SubiodeLvL       As Boolean
     
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
     
     WasNewbie = EsNewbie(UserIndex)
     SubiodeLvL = False
@@ -1044,7 +1049,7 @@ Public Sub CheckUserLevelPVP(ByVal UserIndex As Integer, Optional ByVal PrintInC
     
     Exit Sub
 
-errHandler:
+ErrHandler:
     Call LogError("Error en la subrutina CheckUserLevelPVP - Error : " & Err.Number & " - Description : " & Err.description)
 
 End Sub
@@ -1135,25 +1140,25 @@ Public Function MoveUserChar(ByVal UserIndex As Integer, _
                         Call HeadtoPos(CasperHeading, .Pos)
                     
                         ' Si es un admin invisible, no se avisa a los demas clientes
-                        If Not .flags.AdminInvisible = 1 Then Call SendData(SendTarget.ToPCAreaButIndex, CasperIndex, PrepareMessageCharacterMove(.Char.CharIndex, .Pos.X, .Pos.Y))
+                        'If Not .flags.AdminInvisible = 1 Then Call SendData(SendTarget.ToPCAreaButIndex, CasperIndex, PrepareMessageCharacterMove(.Char.CharIndex, .Pos.X, .Pos.Y))
                         
                         Call WriteForceCharMove(CasperIndex, CasperHeading)
                             
                         'Update map and char
                         .Char.Heading = CasperHeading
                         MapData(.Pos.Map, .Pos.X, .Pos.Y).UserIndex = CasperIndex
-
+                        
+                        'Actualizamos las areas de ser necesario
+                        Call ModAreas.UpdateEntity(CasperIndex, ENTITY_TYPE_PLAYER, .Pos)
+                        
                     End With
                 
-                    'Actualizamos las areas de ser necesario
-                    Call Areas.CheckUpdateNeededUser(CasperIndex, CasperHeading)
-
                 End If
 
             End If
             
             ' Si es un admin invisible, no se avisa a los demas clientes
-            If Not isAdminInvi Then Call SendData(SendTarget.ToPCAreaButIndex, UserIndex, PrepareMessageCharacterMove(.Char.CharIndex, nPos.X, nPos.Y))
+            'If Not isAdminInvi Then Call SendData(SendTarget.ToPCAreaButIndex, UserIndex, PrepareMessageCharacterMove(.Char.CharIndex, nPos.X, nPos.Y))
             
         End If
         
@@ -1187,11 +1192,12 @@ Public Function MoveUserChar(ByVal UserIndex As Integer, _
                     If MapZonas(OldMap, OldZona).NumUsers < 0 Then MapZonas(OldMap, OldZona).NumUsers = 0
                     
                 End If
-
+                
+                'Actualizamos las areas de ser necesario
+                Call ModAreas.UpdateEntity(UserIndex, ENTITY_TYPE_PLAYER, .Pos)
+                
             End With
             
-            'Actualizamos las areas de ser necesario
-            Call Areas.CheckUpdateNeededUser(UserIndex, nHeading)
         Else
             Call WritePosUpdate(UserIndex)
 
@@ -2111,7 +2117,7 @@ Sub Tilelibre(ByRef Pos As WorldPos, _
     '23/01/2007 -> Pablo (ToxicWaste): El agua es ahora un TileLibre agregando las condiciones necesarias.
     '18/09/2010: ZaMa - Aplico optimizacion de busqueda de tile libre en forma de rombo.
     '**************************************************************
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
 
     Dim Found As Boolean
 
@@ -2162,7 +2168,7 @@ Sub Tilelibre(ByRef Pos As WorldPos, _
     
     Exit Sub
     
-errHandler:
+ErrHandler:
     Call LogError("Error en Tilelibre. Error: " & Err.Number & " - " & Err.description)
 
 End Sub
@@ -2875,7 +2881,7 @@ Public Function FarthestPet(ByVal UserIndex As Integer) As Integer
     'Last Modify Date: 18/11/2009
     'Devuelve el indice de la mascota mas lejana.
     '**************************************************************
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
     
     Dim PetIndex      As Integer
 
@@ -2921,7 +2927,7 @@ Public Function FarthestPet(ByVal UserIndex As Integer) As Integer
 
     Exit Function
     
-errHandler:
+ErrHandler:
     Call LogError("Error en FarthestPet")
 
 End Function

@@ -43,7 +43,7 @@ Public Sub DoPermanecerOculto(ByVal UserIndex As Integer)
     '13/01/2010: ZaMa - Now hidden on boat pirats recover the proper boat body.
     '13/01/2010: ZaMa - Arreglo condicional para que el bandido camine oculto.
     '********************************************************
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
 
     With UserList(UserIndex)
         .Counters.TiempoOculto = .Counters.TiempoOculto - 1
@@ -86,7 +86,7 @@ Public Sub DoPermanecerOculto(ByVal UserIndex As Integer)
     
     Exit Sub
 
-errHandler:
+ErrHandler:
     Call LogError("Error en Sub DoPermanecerOculto")
 
 End Sub
@@ -100,7 +100,7 @@ Public Sub DoOcultarse(ByVal UserIndex As Integer)
     '13/01/2010: ZaMa - El pirata se transforma en galeon fantasmal cuando se oculta en agua.
     '***************************************************
 
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
 
     Dim Suerte As Double
 
@@ -170,7 +170,7 @@ Public Sub DoOcultarse(ByVal UserIndex As Integer)
     
     Exit Sub
 
-errHandler:
+ErrHandler:
     Call LogError("Error en Sub DoOcultarse")
 
 End Sub
@@ -318,7 +318,7 @@ Public Sub FundirMineral(ByVal UserIndex As Integer)
     '
     '***************************************************
 
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
 
     With UserList(UserIndex)
 
@@ -337,7 +337,7 @@ Public Sub FundirMineral(ByVal UserIndex As Integer)
 
     Exit Sub
 
-errHandler:
+ErrHandler:
     Call LogError("Error en FundirMineral. Error " & Err.Number & " : " & Err.description)
 
 End Sub
@@ -622,7 +622,7 @@ Public Sub CarpinteroConstruirItem(ByVal UserIndex As Integer, ByVal ItemIndex A
     '22/05/2010: ZaMa - Los caos ya no suben plebe al trabajar.
     '28/05/2010: ZaMa - Los pks no suben plebe al trabajar.
     '***************************************************
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
 
     Dim TieneMateriales     As Boolean
 
@@ -723,7 +723,7 @@ Public Sub CarpinteroConstruirItem(ByVal UserIndex As Integer, ByVal ItemIndex A
     End With
     
     Exit Sub
-errHandler:
+ErrHandler:
     Call LogError("Error en CarpinteroConstruirItem. Error " & Err.Number & " : " & Err.description & ". UserIndex:" & UserIndex & ". ItemIndex:" & ItemIndex)
 
 End Sub
@@ -734,7 +734,7 @@ Public Sub SastreConstruirItem(ByVal UserIndex As Integer, ByVal ItemIndex As In
     'Author: Lorwik
     'Last Modification: 21/08/2020
     '***************************************************
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
 
     Dim TieneMateriales As Boolean
 
@@ -819,7 +819,7 @@ Public Sub SastreConstruirItem(ByVal UserIndex As Integer, ByVal ItemIndex As In
     End With
     
     Exit Sub
-errHandler:
+ErrHandler:
     Call LogError("Error en SastreConstruirItem. Error " & Err.Number & " : " & Err.description & ". UserIndex:" & UserIndex & ". ItemIndex:" & ItemIndex)
 
 End Sub
@@ -830,7 +830,7 @@ Public Sub AlquimistaConstruirItem(ByVal UserIndex As Integer, ByVal ItemIndex A
     'Author: Lorwik
     'Last Modification: 21/08/2020
     '***************************************************
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
 
     Dim TieneMateriales     As Boolean
 
@@ -931,7 +931,7 @@ Public Sub AlquimistaConstruirItem(ByVal UserIndex As Integer, ByVal ItemIndex A
     End With
     
     Exit Sub
-errHandler:
+ErrHandler:
     Call LogError("Error en AlquimistaConstruirItem. Error " & Err.Number & " : " & Err.description & ". UserIndex:" & UserIndex & ". ItemIndex:" & ItemIndex)
 
 End Sub
@@ -1175,7 +1175,7 @@ Sub DoDomar(ByVal UserIndex As Integer, ByVal NPCIndex As Integer)
     '01/05/2010: ZaMa - Agrego bonificacion 11% para domar con flauta magica.
     '***************************************************
 
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
 
     Dim puntosDomar      As Integer
 
@@ -1279,7 +1279,7 @@ Sub DoDomar(ByVal UserIndex As Integer, ByVal NPCIndex As Integer)
     
     Exit Sub
 
-errHandler:
+ErrHandler:
     Call LogError("Error en DoDomar. Error " & Err.Number & " : " & Err.description)
 
 End Sub
@@ -1375,6 +1375,9 @@ Sub DoAdminInvisible(ByVal UserIndex As Integer)
              
             'Le mandamos el mensaje para crear el personaje a los clientes que esten cerca
             Call MakeUserChar(True, .Pos.Map, UserIndex, .Pos.Map, .Pos.X, .Pos.Y, True)
+            
+            ' Se lo mando a los demas
+            Call ModAreas.CreateEntity(UserIndex, ENTITY_TYPE_PLAYER, .Pos, ModAreas.DEFAULT_ENTITY_WIDTH, ModAreas.DEFAULT_ENTITY_HEIGHT)
 
         End If
 
@@ -1484,7 +1487,7 @@ Public Sub DoPescar(ByVal UserIndex As Integer, ByVal Red As Boolean)
     'Last Modification: 26/10/2018
     '26/10/2018: CHOTS - Multiplicador de oficios
     '***************************************************
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
 
     Dim iSkill        As Integer
 
@@ -1562,7 +1565,7 @@ Public Sub DoPescar(ByVal UserIndex As Integer, ByVal Red As Boolean)
     
     Exit Sub
 
-errHandler:
+ErrHandler:
     Call LogError("Error en DoPescar Red: " & Red)
 
 End Sub
@@ -1587,7 +1590,7 @@ Public Sub DoRobar(ByVal LadrOnIndex As Integer, ByVal VictimaIndex As Integer)
     '23/04/2010: ZaMa - El alcance de robo pasa a ser de 1 tile.
     '*************************************************
 
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
 
     Dim OtroUserIndex As Integer
 
@@ -1779,7 +1782,7 @@ Public Sub DoRobar(ByVal LadrOnIndex As Integer, ByVal VictimaIndex As Integer)
 
     Exit Sub
 
-errHandler:
+ErrHandler:
     Call LogError("Error en DoRobar. Error " & Err.Number & " : " & Err.description)
 
 End Sub
@@ -2113,7 +2116,7 @@ Public Sub QuitarSta(ByVal UserIndex As Integer, ByVal Cantidad As Integer)
     '
     '***************************************************
 
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
 
     If UserList(UserIndex).Invent.AnilloEqpObjIndex > 0 Then
         If ObjData(UserList(UserIndex).Invent.AnilloEqpObjIndex).Efecto = Trabajador Then _
@@ -2127,7 +2130,7 @@ Public Sub QuitarSta(ByVal UserIndex As Integer, ByVal Cantidad As Integer)
     
     Exit Sub
 
-errHandler:
+ErrHandler:
     Call LogError("Error en QuitarSta. Error " & Err.Number & " : " & Err.description)
     
 End Sub
@@ -2146,7 +2149,7 @@ Public Sub DoTalar(ByVal UserIndex As Integer, _
     '28/05/2010: ZaMa - Los pks no suben plebe al trabajar.
     '26/10/2018: CHOTS - Multiplicador de oficios
     '***************************************************
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
 
     Dim Suerte        As Integer
 
@@ -2221,7 +2224,7 @@ Public Sub DoTalar(ByVal UserIndex As Integer, _
 
     Exit Sub
 
-errHandler:
+ErrHandler:
     Call LogError("Error en DoTalar")
 
 End Sub
@@ -2238,7 +2241,7 @@ Public Sub DoMineria(ByVal UserIndex As Integer)
     '28/05/2010: ZaMa - Los pks no suben plebe al trabajar.
     '26/10/2018: CHOTS - Multiplicador de oficios
     '***************************************************
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
 
     Dim Suerte        As Integer
 
@@ -2314,7 +2317,7 @@ Public Sub DoMineria(ByVal UserIndex As Integer)
 
     Exit Sub
 
-errHandler:
+ErrHandler:
     Call LogError("Error en Sub DoMineria")
 
 End Sub
@@ -2869,7 +2872,7 @@ Public Sub DoExtraer(ByVal UserIndex As Integer, ByVal Profesion As Integer)
     'Descripción: Extrae recursos de forma pasiva
     '***************************************************
     
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
 
     Dim Suerte        As Integer
     Dim res           As Integer
@@ -2955,7 +2958,7 @@ Public Sub DoExtraer(ByVal UserIndex As Integer, ByVal Profesion As Integer)
 
     Exit Sub
 
-errHandler:
+ErrHandler:
     Call LogError("Error en Sub DoExtraer")
 
 End Sub
@@ -3173,7 +3176,7 @@ Function TieneReceta(ByVal i As Integer, ByVal UserIndex As Integer, ByVal SlotP
     'Descripcion: Busca una receta entre las conocidas
     '***************************************************
 
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
     
     Dim j As Integer
 
@@ -3193,6 +3196,6 @@ Function TieneReceta(ByVal i As Integer, ByVal UserIndex As Integer, ByVal SlotP
     
     TieneReceta = False
     Exit Function
-errHandler:
+ErrHandler:
 
 End Function

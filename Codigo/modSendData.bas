@@ -32,11 +32,11 @@ Option Explicit
 
 Public Enum SendTarget
 
-    ToAll = 1
+    Toall = 1
+    ToUser
     toMap
     ToPCArea
     ToAllButIndex
-    ToMapButIndex
     ToGM
     ToNPCArea
     ToGuildMembers
@@ -80,7 +80,15 @@ Public Sub SendData(ByVal sndRoute As SendTarget, _
 
     Dim LoopC As Long
     
+    Debug.Print "SendData> " & sndRoute
+
     Select Case sndRoute
+    
+        Case SendTarget.ToUser
+            If UserList(sndIndex).ConnID <> -1 Then
+                Call UserList(sndIndex).outgoingData.WriteASCIIStringFixed(sndData)
+
+            End If
 
         Case SendTarget.ToPCArea
             Call SendToUserArea(sndIndex, sndData)
@@ -113,7 +121,7 @@ Public Sub SendData(ByVal sndRoute As SendTarget, _
 
             Exit Sub
         
-        Case SendTarget.ToAll
+        Case SendTarget.Toall
 
             For LoopC = 1 To LastUser
 
@@ -147,10 +155,6 @@ Public Sub SendData(ByVal sndRoute As SendTarget, _
         
         Case SendTarget.toMap
             Call SendToMap(sndIndex, sndData)
-            Exit Sub
-          
-        Case SendTarget.ToMapButIndex
-            Call SendToMapButIndex(sndIndex, sndData)
             Exit Sub
         
         Case SendTarget.ToGuildMembers
@@ -430,24 +434,17 @@ Private Sub SendToUserArea(ByVal UserIndex As Integer, ByVal sdData As String)
     'Last Modify Date: Unknow
     '
     '**************************************************************
-    Dim LoopC     As Long
-    Dim tempIndex As Integer
-    Dim Map       As Integer
 
-    Map = UserList(UserIndex).Pos.Map
+    Dim query() As Collision.UUID
+    
+    Dim i       As Long
+    
+    For i = 0 To ModAreas.QueryObservers(UserIndex, ENTITY_TYPE_PLAYER, query, ENTITY_TYPE_PLAYER)
 
-    If Not MapaValido(Map) Then Exit Sub
+        Debug.Print "SendToUserArea"
+        Call UserList(query(i).Name).outgoingData.WriteASCIIStringFixed(sdData)
 
-    For LoopC = 1 To ConnGroups(Map).Count()
-        tempIndex = ConnGroups(Map).Item(LoopC)
-
-        If EstanMismoArea(UserIndex, tempIndex) Then
-            If UserList(tempIndex).ConnIDValida Then
-                Call UserList(tempIndex).outgoingData.WriteASCIIStringFixed(sdData)
-            End If
-        End If
-
-    Next LoopC
+    Next i
 
 End Sub
 
@@ -458,26 +455,18 @@ Private Sub SendToUserAreaButindex(ByVal UserIndex As Integer, ByVal sdData As S
     'Last Modify Date: Unknow
     '
     '**************************************************************
-    Dim LoopC     As Long
-    Dim tempIndex As Integer
-    Dim Map       As Integer
+    Dim query() As Collision.UUID
 
-    Map = UserList(UserIndex).Pos.Map
+    Dim i       As Long
+    
+    For i = 0 To ModAreas.QueryObservers(UserIndex, ENTITY_TYPE_PLAYER, query, ENTITY_TYPE_PLAYER)
 
-    If Not MapaValido(Map) Then Exit Sub
-
-    For LoopC = 1 To ConnGroups(Map).Count()
-        tempIndex = ConnGroups(Map).Item(LoopC)
-
-        If tempIndex <> UserIndex Then
-            If EstanMismoArea(UserIndex, tempIndex) Then
-                If UserList(tempIndex).ConnIDValida Then
-                    Call UserList(tempIndex).outgoingData.WriteASCIIStringFixed(sdData)
-                End If
-            End If
+        If query(i).Name <> UserIndex Then
+            Debug.Print "ToPCAreaButIndex"
+            Call UserList(query(i).Name).outgoingData.WriteASCIIStringFixed(sdData)
         End If
 
-    Next LoopC
+    Next i
 
 End Sub
 
@@ -488,25 +477,19 @@ Private Sub SendToDeadUserArea(ByVal UserIndex As Integer, ByVal sdData As Strin
     'Last Modify Date: Unknow
     '
     '**************************************************************
-    Dim LoopC     As Long
-    Dim tempIndex As Integer
-    Dim Map       As Integer
-
-    Map = UserList(UserIndex).Pos.Map
     
-    If Not MapaValido(Map) Then Exit Sub
-    
-    For LoopC = 1 To ConnGroups(Map).Count()
-        tempIndex = ConnGroups(Map).Item(LoopC)
+    Dim query() As Collision.UUID
 
-        If EstanMismoArea(UserIndex, tempIndex) Then
-            'Dead and admins read
-            If UserList(tempIndex).ConnIDValida = True And (UserList(tempIndex).flags.Muerto = 1 Or (UserList(tempIndex).flags.Privilegios And (PlayerType.Admin Or PlayerType.Dios Or PlayerType.SemiDios Or PlayerType.Consejero)) <> 0) Then
-                Call UserList(tempIndex).outgoingData.WriteASCIIStringFixed(sdData)
-            End If
+    Dim i       As Long
+    
+    For i = 0 To ModAreas.QueryObservers(UserIndex, ENTITY_TYPE_PLAYER, query, ENTITY_TYPE_PLAYER)
+
+        'Dead and admins read
+        If UserList(query(i).Name).ConnIDValida = True And (UserList(query(i).Name).flags.Muerto = 1 Or (UserList(query(i).Name).flags.Privilegios And (PlayerType.Admin Or PlayerType.Dios Or PlayerType.SemiDios Or PlayerType.Consejero)) <> 0) Then
+            Call UserList(query(i).Name).outgoingData.WriteASCIIStringFixed(sdData)
         End If
 
-    Next LoopC
+    Next i
 
 End Sub
 
@@ -517,26 +500,25 @@ Private Sub SendToUserGuildArea(ByVal UserIndex As Integer, ByVal sdData As Stri
     'Last Modify Date: Unknow
     '
     '**************************************************************
-    Dim LoopC     As Long
-    Dim tempIndex As Integer
-    Dim Map       As Integer
+    Dim query()    As Collision.UUID
 
-    Map = UserList(UserIndex).Pos.Map
+    Dim i          As Long
 
-    If Not MapaValido(Map) Then Exit Sub
+    Dim GuildIndex As Integer
+    
+    GuildIndex = UserList(UserIndex).GuildIndex
+    
+    For i = 0 To ModAreas.QueryObservers(UserIndex, ENTITY_TYPE_PLAYER, query, ENTITY_TYPE_PLAYER)
 
-    If UserList(UserIndex).GuildIndex = 0 Then Exit Sub
+        With UserList(query(i).Name)
 
-    For LoopC = 1 To ConnGroups(Map).Count()
-        tempIndex = ConnGroups(Map).Item(LoopC)
-        
-        If EstanMismoArea(UserIndex, tempIndex) Then
-            If UserList(tempIndex).ConnIDValida And (UserList(tempIndex).GuildIndex = UserList(UserIndex).GuildIndex Or ((UserList(tempIndex).flags.Privilegios And PlayerType.Dios) And (UserList(tempIndex).flags.Privilegios And PlayerType.RoleMaster) = 0)) Then
-                Call UserList(tempIndex).outgoingData.WriteASCIIStringFixed(sdData)
+            If (.GuildIndex = GuildIndex Or (.flags.Privilegios And PlayerType.Dios)) Then
+                Call UserList(query(i).Name).outgoingData.WriteASCIIStringFixed(sdData)
             End If
-        End If
+            
+        End With
 
-    Next LoopC
+    Next i
 
 End Sub
 
@@ -547,26 +529,23 @@ Private Sub SendToUserPartyArea(ByVal UserIndex As Integer, ByVal sdData As Stri
     'Last Modify Date: Unknow
     '
     '**************************************************************
-    Dim LoopC     As Long
-    Dim tempIndex As Integer
-    Dim Map       As Integer
+    Dim query()    As Collision.UUID
 
-    Map = UserList(UserIndex).Pos.Map
+    Dim i          As Long
 
-    If Not MapaValido(Map) Then Exit Sub
+    Dim GroupIndex As Long
+
+    GroupIndex = UserList(UserIndex).PartyIndex
     
-    If UserList(UserIndex).PartyIndex = 0 Then Exit Sub
+    If GroupIndex = 0 Then Exit Sub
     
-    For LoopC = 1 To ConnGroups(Map).Count()
-        tempIndex = ConnGroups(Map).Item(LoopC)
+    For i = 0 To ModAreas.QueryObservers(UserIndex, ENTITY_TYPE_PLAYER, query, ENTITY_TYPE_PLAYER)
 
-        If EstanMismoArea(UserIndex, tempIndex) Then
-            If UserList(tempIndex).ConnIDValida And UserList(tempIndex).PartyIndex = UserList(UserIndex).PartyIndex Then
-                Call UserList(tempIndex).outgoingData.WriteASCIIStringFixed(sdData)
-            End If
+        If (UserList(query(i).Name).PartyIndex = GroupIndex) Then
+            Call UserList(query(i).Name).outgoingData.WriteASCIIStringFixed(sdData)
         End If
 
-    Next LoopC
+    Next i
 
 End Sub
 
@@ -578,26 +557,23 @@ Private Sub SendToAdminsButConsejerosArea(ByVal UserIndex As Integer, _
     'Last Modify Date: Unknow
     '
     '**************************************************************
-    Dim LoopC     As Long
-    Dim tempIndex As Integer
-    Dim Map       As Integer
+    Dim query()    As Collision.UUID
 
-    Map = UserList(UserIndex).Pos.Map
+    Dim i          As Long
 
-    If Not MapaValido(Map) Then Exit Sub
+    Dim GroupIndex As Long
 
-    For LoopC = 1 To ConnGroups(Map).Count()
-        tempIndex = ConnGroups(Map).Item(LoopC)
-
-        If EstanMismoArea(UserIndex, tempIndex) Then
-            If UserList(tempIndex).ConnIDValida Then
-                If UserList(tempIndex).flags.Privilegios And (PlayerType.SemiDios Or PlayerType.Dios Or PlayerType.Admin) Then
-                    Call UserList(tempIndex).outgoingData.WriteASCIIStringFixed(sdData)
-                End If
-            End If
+    GroupIndex = UserList(UserIndex).PartyIndex
+    
+    If GroupIndex = 0 Then Exit Sub
+    
+    For i = 0 To ModAreas.QueryObservers(UserIndex, ENTITY_TYPE_PLAYER, query, ENTITY_TYPE_PLAYER)
+    
+        If UserList(query(i).Name).flags.Privilegios And (PlayerType.SemiDios Or PlayerType.Dios Or PlayerType.Admin) Then
+            Call UserList(query(i).Name).outgoingData.WriteASCIIStringFixed(sdData)
         End If
 
-    Next LoopC
+    Next i
 
 End Sub
 
@@ -608,24 +584,14 @@ Private Sub SendToNpcArea(ByVal NPCIndex As Long, ByVal sdData As String)
     'Last Modify Date: Unknow
     '
     '**************************************************************
-    Dim LoopC     As Long
-    Dim tempIndex As Integer
-    Dim Map       As Integer
+    Dim query() As Collision.UUID
 
-    Map = Npclist(NPCIndex).Pos.Map
-
-    If Not MapaValido(Map) Then Exit Sub
-
-    For LoopC = 1 To ConnGroups(Map).Count()
-        tempIndex = ConnGroups(Map).Item(LoopC)
-
-        If EstanMismoAreaNPC(NPCIndex, tempIndex) Then
-            If UserList(tempIndex).ConnIDValida Then
-                Call UserList(tempIndex).outgoingData.WriteASCIIStringFixed(sdData)
-            End If
-        End If
-
-    Next LoopC
+    Dim i       As Long
+    
+    For i = 0 To ModAreas.QueryObservers(NPCIndex, ENTITY_TYPE_NPC, query, ENTITY_TYPE_PLAYER)
+        Debug.Print "SendToNPCArea"
+        Call UserList(query(i).Name).outgoingData.WriteASCIIStringFixed(sdData)
+    Next i
 
 End Sub
 
@@ -639,21 +605,19 @@ Public Sub SendToAreaByPos(ByVal Map As Integer, _
     'Last Modify Date: Unknow
     '
     '**************************************************************
-    Dim LoopC     As Long
-    Dim tempIndex As Integer
+    Dim query() As Collision.UUID
 
-    If Not MapaValido(Map) Then Exit Sub
+    Dim i       As Long
 
-    For LoopC = 1 To ConnGroups(Map).Count()
-        tempIndex = ConnGroups(Map).Item(LoopC)
+    Dim ItemID  As Long
 
-        If EstanMismoAreaPos(tempIndex, X, Y) Then
-            If UserList(tempIndex).ConnIDValida Then
-                Call UserList(tempIndex).outgoingData.WriteASCIIStringFixed(sdData)
-            End If
-        End If
+    ItemID = Pack(Map, X, Y)
+    
+    For i = 0 To ModAreas.QueryObservers(ItemID, ENTITY_TYPE_OBJECT, query, ENTITY_TYPE_PLAYER)
+    
+        Call UserList(query(i).Name).outgoingData.WriteASCIIStringFixed(sdData)
 
-    Next LoopC
+    Next i
 
 End Sub
 
@@ -667,42 +631,13 @@ Public Sub SendToMap(ByVal Map As Integer, ByVal sdData As String)
     Dim LoopC     As Long
 
     Dim tempIndex As Integer
-    
-    If Not MapaValido(Map) Then Exit Sub
 
-    For LoopC = 1 To ConnGroups(Map).Count()
-        tempIndex = ConnGroups(Map).Item(LoopC)
+    For LoopC = 1 To LastUser
         
-        If UserList(tempIndex).ConnIDValida Then
-            Call UserList(tempIndex).outgoingData.WriteASCIIStringFixed(sdData)
-        End If
-
-    Next LoopC
-
-End Sub
-
-Public Sub SendToMapButIndex(ByVal UserIndex As Integer, ByVal sdData As String)
-
-    '**************************************************************
-    'Author: Juan Martin Sotuyo Dodero (Maraxus)
-    'Last Modify Date: 5/24/2007
-    '
-    '**************************************************************
-    Dim LoopC     As Long
-
-    Dim Map       As Integer
-
-    Dim tempIndex As Integer
-    
-    Map = UserList(UserIndex).Pos.Map
-    
-    If Not MapaValido(Map) Then Exit Sub
-
-    For LoopC = 1 To ConnGroups(Map).Count()
-        tempIndex = ConnGroups(Map).Item(LoopC)
+        If UserList(LoopC).Pos.Map = Map Then
         
-        If tempIndex <> UserIndex And UserList(tempIndex).ConnIDValida Then
-            Call UserList(tempIndex).outgoingData.WriteASCIIStringFixed(sdData)
+            Call UserList(LoopC).outgoingData.WriteASCIIStringFixed(sdData)
+        
         End If
 
     Next LoopC
@@ -718,31 +653,22 @@ Private Sub SendToGMsAreaButRmsOrCounselors(ByVal UserIndex As Integer, _
     '12/02/2010: ZaMa - Restrinjo solo a dioses, admins y gms.
     '15/02/2010: ZaMa - Cambio el nombre de la funcion (viejo: ToGmsArea, nuevo: ToGmsAreaButRMsOrCounselors)
     '**************************************************************
-    Dim LoopC     As Long
-    Dim tempIndex As Integer
-    Dim Map       As Integer
+    Dim query() As Collision.UUID
 
-    Map = UserList(UserIndex).Pos.Map
-
-    If Not MapaValido(Map) Then Exit Sub
-
-    For LoopC = 1 To ConnGroups(Map).Count()
-        tempIndex = ConnGroups(Map).Item(LoopC)
+    Dim i       As Long
+    
+    For i = 0 To ModAreas.QueryObservers(UserIndex, ENTITY_TYPE_PLAYER, query, ENTITY_TYPE_PLAYER)
         
-        With UserList(tempIndex)
+        With UserList(query(i).Name)
 
-            If EstanMismoArea(UserIndex, tempIndex) Then
-                If .ConnIDValida Then
-                    ' Exclusivo para dioses, admins y gms
-                    If (.flags.Privilegios And Not PlayerType.User And Not PlayerType.Consejero And Not PlayerType.RoleMaster) = .flags.Privilegios Then
-                        Call UserList(tempIndex).outgoingData.WriteASCIIStringFixed(sdData)
-                    End If
-                End If
+            ' Exclusivo para dioses, admins y gms
+            If (.flags.Privilegios And Not PlayerType.User And Not PlayerType.Consejero And Not PlayerType.RoleMaster) = .flags.Privilegios Then
+                Call UserList(query(i).Name).outgoingData.WriteASCIIStringFixed(sdData)
             End If
 
         End With
 
-    Next LoopC
+    Next i
 
 End Sub
 
@@ -753,26 +679,18 @@ Private Sub SendToUsersAreaButGMs(ByVal UserIndex As Integer, ByVal sdData As St
     'Last Modify Date: 10/17/2009
     '
     '**************************************************************
-    Dim LoopC     As Long
-    Dim tempIndex As Integer
-    Dim Map       As Integer
+    
+    Dim query() As Collision.UUID
 
-    Map = UserList(UserIndex).Pos.Map
-
-    If Not MapaValido(Map) Then Exit Sub
-
-    For LoopC = 1 To ConnGroups(Map).Count()
-        tempIndex = ConnGroups(Map).Item(LoopC)
-
-        If EstanMismoArea(UserIndex, tempIndex) Then
-            If UserList(tempIndex).ConnIDValida Then
-                If UserList(tempIndex).flags.Privilegios And PlayerType.User Then
-                    Call UserList(tempIndex).outgoingData.WriteASCIIStringFixed(sdData)
-                End If
-            End If
+    Dim i       As Long
+    
+    For i = 0 To ModAreas.QueryObservers(UserIndex, ENTITY_TYPE_PLAYER, query, ENTITY_TYPE_PLAYER)
+        
+        If UserList(query(i).Name).flags.Privilegios And PlayerType.User Then
+            Call UserList(query(i).Name).outgoingData.WriteASCIIStringFixed(sdData)
         End If
 
-    Next LoopC
+    Next i
 
 End Sub
 
@@ -784,26 +702,17 @@ Private Sub SendToUsersAndRmsAndCounselorsAreaButGMs(ByVal UserIndex As Integer,
     'Last Modify Date: 10/17/2009
     '
     '**************************************************************
-    Dim LoopC     As Long
-    Dim tempIndex As Integer
-    Dim Map       As Integer
+    Dim query() As Collision.UUID
 
-    Map = UserList(UserIndex).Pos.Map
+    Dim i       As Long
+    
+    For i = 0 To ModAreas.QueryObservers(UserIndex, ENTITY_TYPE_PLAYER, query, ENTITY_TYPE_PLAYER)
 
-    If Not MapaValido(Map) Then Exit Sub
-
-    For LoopC = 1 To ConnGroups(Map).Count()
-        tempIndex = ConnGroups(Map).Item(LoopC)
-
-        If EstanMismoArea(UserIndex, tempIndex) Then
-            If UserList(tempIndex).ConnIDValida Then
-                If UserList(tempIndex).flags.Privilegios And (PlayerType.User Or PlayerType.Consejero Or PlayerType.RoleMaster) Then
-                    Call UserList(tempIndex).outgoingData.WriteASCIIStringFixed(sdData)
-                End If
-            End If
+        If UserList(query(i).Name).flags.Privilegios And (PlayerType.User Or PlayerType.Consejero Or PlayerType.RoleMaster) Then
+            Call UserList(query(i).Name).outgoingData.WriteASCIIStringFixed(sdData)
         End If
 
-    Next LoopC
+    Next i
 
 End Sub
 
@@ -814,11 +723,11 @@ Public Sub AlertarFaccionarios(ByVal UserIndex As Integer)
     'Last Modify Date: 17/11/2009
     'Alerta a los faccionarios, dandoles una orientacion
     '**************************************************************
-    Dim LoopC     As Long
-    Dim tempIndex As Integer
-    Dim Map       As Integer
-    Dim Font      As FontTypeNames
-    Dim tempData  As String
+    
+    Dim query()  As Collision.UUID
+    Dim i        As Long
+    Dim Font     As FontTypeNames
+    Dim tempData As String
     
     If esCaos(UserIndex) Then
         Font = FontTypeNames.FONTTYPE_CONSEJOCAOS
@@ -826,31 +735,22 @@ Public Sub AlertarFaccionarios(ByVal UserIndex As Integer)
         Font = FontTypeNames.FONTTYPE_CONSEJO
     End If
     
-    Map = UserList(UserIndex).Pos.Map
-    
-    If Not MapaValido(Map) Then Exit Sub
-
-    For LoopC = 1 To ConnGroups(Map).Count()
-        tempIndex = ConnGroups(Map).Item(LoopC)
-        
-        If UserList(tempIndex).ConnIDValida Then
+    For i = 0 To ModAreas.QueryObservers(UserIndex, ENTITY_TYPE_PLAYER, query, ENTITY_TYPE_PLAYER)
             
-            If tempIndex <> UserIndex Then
+        If query(i).Name <> UserIndex Then
 
-                ' Solo se envia a los de la misma faccion
-                If SameFaccion(UserIndex, tempIndex) Then
+            ' Solo se envia a los de la misma faccion
+            If SameFaccion(query(i).Name, query(i).Name) Then
                 
-                    tempData = PrepareMessageConsoleMsg("Escuchas el llamado de un companero que proviene del " & GetDireccion(UserIndex, tempIndex), Font)
+                tempData = PrepareMessageConsoleMsg("Escuchas el llamado de un companero que proviene del " & GetDireccion(UserIndex, query(i).Name), Font)
                     
-                    Call UserList(tempIndex).outgoingData.WriteASCIIStringFixed(tempData)
-
-                End If
+                Call UserList(query(i).Name).outgoingData.WriteASCIIStringFixed(tempData)
 
             End If
 
         End If
 
-    Next LoopC
+    Next i
 
 End Sub
 

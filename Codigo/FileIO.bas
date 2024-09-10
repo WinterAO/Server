@@ -475,7 +475,7 @@ Public Sub CargarHechizos()
     '
     '###################################################
 
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
 
     If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando Hechizos."
     
@@ -613,7 +613,7 @@ Public Sub CargarHechizos()
     
     Exit Sub
 
-errHandler:
+ErrHandler:
     MsgBox "Error cargando hechizos.dat " & Err.Number & ": " & Err.description
  
 End Sub
@@ -815,7 +815,7 @@ Sub LoadOBJData()
 
     'Call LogTarea("Sub LoadOBJData")
 
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
 
     If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando base de datos de los objetos."
     
@@ -1117,6 +1117,12 @@ Sub LoadOBJData()
             .Recurso.Profesion = val(ReadField(1, Leer.GetValue("OBJ" & Object, "Recurso"), Asc("-"))) 'Profesion a la que pertenece
             .Recurso.Categoria = val(ReadField(2, Leer.GetValue("OBJ" & Object, "Recurso"), Asc("-"))) 'Categoria del recurso
             
+            .SizeWidth = CByte(val(Leer.GetValue("OBJ" & Object, "SizeWidth")))
+            .SizeHeight = CByte(val(Leer.GetValue("OBJ" & Object, "SizeHeight")))
+            
+            If .SizeWidth = 0 Then .SizeWidth = ModAreas.DEFAULT_ENTITY_WIDTH
+            If .SizeHeight = 0 Then .SizeHeight = ModAreas.DEFAULT_ENTITY_HEIGHT
+            
             frmCargando.pCargar.Value = frmCargando.pCargar.Value + 1
 
         End With
@@ -1132,7 +1138,7 @@ Sub LoadOBJData()
     If frmMain.Visible Then frmMain.txtStatus.Text = Date & " " & time & " - Se cargo base de datos de los objetos. Operacion Realizada con exito."
     
     Exit Sub
-errHandler:
+ErrHandler:
     MsgBox "error cargando objetos " & Err.Number & ": " & Err.description
 
 End Sub
@@ -1144,7 +1150,7 @@ Sub LoadGlobalDrop()
 'Descripcion: Carga la lista de drops globales de NPCs
 '**********************************************
 
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
 
     If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando base de datos de drop globales."
     
@@ -1183,7 +1189,7 @@ Sub LoadGlobalDrop()
     If frmMain.Visible Then frmMain.txtStatus.Text = Date & " " & time & " - Se cargo base de datos de los drop globales. Operacion Realizada con exito."
     
     Exit Sub
-errHandler:
+ErrHandler:
     MsgBox "error cargando drop globales " & Err.Number & ": " & Err.description
 
 End Sub
@@ -1195,7 +1201,7 @@ Sub LoadShop()
 'Descripcion: Carga la lista de items de Shop
 '**********************************************
 
-    On Error GoTo errHandler
+    On Error GoTo ErrHandler
 
     If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando base de datos de Shop."
     
@@ -1227,7 +1233,7 @@ Sub LoadShop()
     If frmMain.Visible Then frmMain.txtStatus.Text = Date & " " & time & " - Se cargo base de datos de la shop. Operacion Realizada con exito."
     
     Exit Sub
-errHandler:
+ErrHandler:
     MsgBox "error cargando lista de shop " & Err.Number & ": " & Err.description
     
 End Sub
@@ -1273,6 +1279,8 @@ Sub CargarBackUp()
 '    On Error GoTo man
 '
 '    NumMaps = val(GetVar(DatPath & "Map.dat", "INIT", "NumMaps"))
+
+'    Call ModAreas.Initialise(NumMaps)
 '
 '    frmCargando.cargar.min = 0
 '    frmCargando.cargar.max = NumMaps
@@ -1334,6 +1342,8 @@ Sub LoadMapData()
     Else
         NumMaps = val(GetVar(DatPath & "Map.dat", "INIT", "NumMaps"))
     End If
+    
+    Call ModAreas.Initialise(NumMaps)
         
     frmCargando.pCargar.min = 0
     frmCargando.pCargar.max = NumMaps
@@ -1490,6 +1500,18 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
                 For i = 1 To .NumeroOBJs
                     MapData(Map, Objetos(i).X, Objetos(i).Y).ObjInfo.ObjIndex = Objetos(i).ObjIndex
                     MapData(Map, Objetos(i).X, Objetos(i).Y).ObjInfo.Amount = Objetos(i).ObjAmmount
+                    
+                    ' TODO: Item and Object separation
+                    Dim Coordinates As WorldPos
+
+                    Coordinates.Map = Map
+                    Coordinates.X = Objetos(i).X
+                    Coordinates.Y = Objetos(i).Y
+                    
+                    With ObjData(MapData(Map, Objetos(i).X, Objetos(i).Y).ObjInfo.ObjIndex)
+                        Call ModAreas.CreateEntity(ModAreas.Pack(Map, Objetos(i).X, Objetos(i).Y), ENTITY_TYPE_OBJECT, Coordinates, .SizeWidth, .SizeHeight)
+                    End With
+                    
                 Next i
             End If
                 
