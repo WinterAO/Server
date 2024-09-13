@@ -32,7 +32,7 @@ Option Explicit
 
 Public Enum SendTarget
 
-    ToAll = 1
+    Toall = 1
     toMap
     ToPCArea
     ToAllButIndex
@@ -113,7 +113,7 @@ Public Sub SendData(ByVal sndRoute As SendTarget, _
 
             Exit Sub
         
-        Case SendTarget.ToAll
+        Case SendTarget.Toall
 
             For LoopC = 1 To LastUser
 
@@ -441,7 +441,7 @@ Private Sub SendToUserArea(ByVal UserIndex As Integer, ByVal sdData As String)
     For LoopC = 1 To ConnGroups(Map).Count()
         tempIndex = ConnGroups(Map).Item(LoopC)
 
-        If EstanMismoArea(UserIndex, tempIndex) Then
+        If modAreas.EstanMismoArea(UserIndex, tempIndex) Then
             If UserList(tempIndex).ConnIDValida Then
                 Call UserList(tempIndex).outgoingData.WriteASCIIStringFixed(sdData)
             End If
@@ -470,7 +470,7 @@ Private Sub SendToUserAreaButindex(ByVal UserIndex As Integer, ByVal sdData As S
         tempIndex = ConnGroups(Map).Item(LoopC)
 
         If tempIndex <> UserIndex Then
-            If EstanMismoArea(UserIndex, tempIndex) Then
+            If modAreas.EstanMismoArea(UserIndex, tempIndex) Then
                 If UserList(tempIndex).ConnIDValida Then
                     Call UserList(tempIndex).outgoingData.WriteASCIIStringFixed(sdData)
                 End If
@@ -499,7 +499,7 @@ Private Sub SendToDeadUserArea(ByVal UserIndex As Integer, ByVal sdData As Strin
     For LoopC = 1 To ConnGroups(Map).Count()
         tempIndex = ConnGroups(Map).Item(LoopC)
 
-        If EstanMismoArea(UserIndex, tempIndex) Then
+        If modAreas.EstanMismoArea(UserIndex, tempIndex) Then
             'Dead and admins read
             If UserList(tempIndex).ConnIDValida = True And (UserList(tempIndex).flags.Muerto = 1 Or (UserList(tempIndex).flags.Privilegios And (PlayerType.Admin Or PlayerType.Dios Or PlayerType.SemiDios Or PlayerType.Consejero)) <> 0) Then
                 Call UserList(tempIndex).outgoingData.WriteASCIIStringFixed(sdData)
@@ -530,7 +530,7 @@ Private Sub SendToUserGuildArea(ByVal UserIndex As Integer, ByVal sdData As Stri
     For LoopC = 1 To ConnGroups(Map).Count()
         tempIndex = ConnGroups(Map).Item(LoopC)
         
-        If EstanMismoArea(UserIndex, tempIndex) Then
+        If modAreas.EstanMismoArea(UserIndex, tempIndex) Then
             If UserList(tempIndex).ConnIDValida And (UserList(tempIndex).GuildIndex = UserList(UserIndex).GuildIndex Or ((UserList(tempIndex).flags.Privilegios And PlayerType.Dios) And (UserList(tempIndex).flags.Privilegios And PlayerType.RoleMaster) = 0)) Then
                 Call UserList(tempIndex).outgoingData.WriteASCIIStringFixed(sdData)
             End If
@@ -560,7 +560,7 @@ Private Sub SendToUserPartyArea(ByVal UserIndex As Integer, ByVal sdData As Stri
     For LoopC = 1 To ConnGroups(Map).Count()
         tempIndex = ConnGroups(Map).Item(LoopC)
 
-        If EstanMismoArea(UserIndex, tempIndex) Then
+        If modAreas.EstanMismoArea(UserIndex, tempIndex) Then
             If UserList(tempIndex).ConnIDValida And UserList(tempIndex).PartyIndex = UserList(UserIndex).PartyIndex Then
                 Call UserList(tempIndex).outgoingData.WriteASCIIStringFixed(sdData)
             End If
@@ -589,7 +589,7 @@ Private Sub SendToAdminsButConsejerosArea(ByVal UserIndex As Integer, _
     For LoopC = 1 To ConnGroups(Map).Count()
         tempIndex = ConnGroups(Map).Item(LoopC)
 
-        If EstanMismoArea(UserIndex, tempIndex) Then
+        If modAreas.EstanMismoArea(UserIndex, tempIndex) Then
             If UserList(tempIndex).ConnIDValida Then
                 If UserList(tempIndex).flags.Privilegios And (PlayerType.SemiDios Or PlayerType.Dios Or PlayerType.Admin) Then
                     Call UserList(tempIndex).outgoingData.WriteASCIIStringFixed(sdData)
@@ -619,7 +619,7 @@ Private Sub SendToNpcArea(ByVal NPCIndex As Long, ByVal sdData As String)
     For LoopC = 1 To ConnGroups(Map).Count()
         tempIndex = ConnGroups(Map).Item(LoopC)
 
-        If EstanMismoAreaNPC(NPCIndex, tempIndex) Then
+        If modAreas.EstanMismoAreaNPC(NPCIndex, tempIndex) Then
             If UserList(tempIndex).ConnIDValida Then
                 Call UserList(tempIndex).outgoingData.WriteASCIIStringFixed(sdData)
             End If
@@ -647,7 +647,7 @@ Public Sub SendToAreaByPos(ByVal Map As Integer, _
     For LoopC = 1 To ConnGroups(Map).Count()
         tempIndex = ConnGroups(Map).Item(LoopC)
 
-        If EstanMismoAreaPos(tempIndex, X, Y) Then
+        If modAreas.EstanMismoAreaPos(tempIndex, X, Y) Then
             If UserList(tempIndex).ConnIDValida Then
                 Call UserList(tempIndex).outgoingData.WriteASCIIStringFixed(sdData)
             End If
@@ -731,7 +731,7 @@ Private Sub SendToGMsAreaButRmsOrCounselors(ByVal UserIndex As Integer, _
         
         With UserList(tempIndex)
 
-            If EstanMismoArea(UserIndex, tempIndex) Then
+            If modAreas.EstanMismoArea(UserIndex, tempIndex) Then
                 If .ConnIDValida Then
                     ' Exclusivo para dioses, admins y gms
                     If (.flags.Privilegios And Not PlayerType.User And Not PlayerType.Consejero And Not PlayerType.RoleMaster) = .flags.Privilegios Then
@@ -764,7 +764,7 @@ Private Sub SendToUsersAreaButGMs(ByVal UserIndex As Integer, ByVal sdData As St
     For LoopC = 1 To ConnGroups(Map).Count()
         tempIndex = ConnGroups(Map).Item(LoopC)
 
-        If EstanMismoArea(UserIndex, tempIndex) Then
+        If modAreas.EstanMismoArea(UserIndex, tempIndex) Then
             If UserList(tempIndex).ConnIDValida Then
                 If UserList(tempIndex).flags.Privilegios And PlayerType.User Then
                     Call UserList(tempIndex).outgoingData.WriteASCIIStringFixed(sdData)
@@ -795,7 +795,7 @@ Private Sub SendToUsersAndRmsAndCounselorsAreaButGMs(ByVal UserIndex As Integer,
     For LoopC = 1 To ConnGroups(Map).Count()
         tempIndex = ConnGroups(Map).Item(LoopC)
 
-        If EstanMismoArea(UserIndex, tempIndex) Then
+        If modAreas.EstanMismoArea(UserIndex, tempIndex) Then
             If UserList(tempIndex).ConnIDValida Then
                 If UserList(tempIndex).flags.Privilegios And (PlayerType.User Or PlayerType.Consejero Or PlayerType.RoleMaster) Then
                     Call UserList(tempIndex).outgoingData.WriteASCIIStringFixed(sdData)

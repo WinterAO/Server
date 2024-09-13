@@ -672,9 +672,9 @@ Private Function KingBestTarget(ByVal NPCIndex As Integer, _
 
         If CounterStep = 1 Then
             CounterStart = 1
-            CounterEnd = Areas.ConnGroups(Mapa).Count()
+            CounterEnd = modAreas.ConnGroups(Mapa).Count()
         Else
-            CounterStart = Areas.ConnGroups(Mapa).Count()
+            CounterStart = modAreas.ConnGroups(Mapa).Count()
             CounterEnd = 1
             CounterStep = -1
 
@@ -683,7 +683,7 @@ Private Function KingBestTarget(ByVal NPCIndex As Integer, _
         ' Search for the best user target
         For Counter = CounterStart To CounterEnd Step CounterStep
         
-            UserIndex = Areas.ConnGroups(Mapa).Item(Counter)
+            UserIndex = modAreas.ConnGroups(Mapa).Item(Counter)
             
             'Is it in it's range of vision??
             If InVisionRange(UserIndex, NPCPosX, NPCPosY) Then
@@ -1024,9 +1024,9 @@ Private Function HealerBestTarget(ByVal NPCIndex As Integer, _
 
     If CounterStep = 1 Then
         CounterStart = 1
-        CounterEnd = Areas.ConnGroups(CenterPos.Map).Count()
+        CounterEnd = modAreas.ConnGroups(CenterPos.Map).Count()
     Else
-        CounterStart = Areas.ConnGroups(CenterPos.Map).Count()
+        CounterStart = modAreas.ConnGroups(CenterPos.Map).Count()
         CounterEnd = 1
         CounterStep = -1
 
@@ -1034,7 +1034,7 @@ Private Function HealerBestTarget(ByVal NPCIndex As Integer, _
     
     For Counter = CounterStart To CounterEnd Step CounterStep
     
-        UserIndex = Areas.ConnGroups(CenterPos.Map).Item(Counter)
+        UserIndex = modAreas.ConnGroups(CenterPos.Map).Item(Counter)
         
         ' Can be atacked (doesn't matter if invisible or hidden)?
         If UserAtacable(UserIndex, False) Then
@@ -1275,9 +1275,9 @@ Private Function SpellCasterBestTarget(ByVal NPCIndex As Integer, _
 
     If CounterStep = 1 Then
         CounterStart = 1
-        CounterEnd = Areas.ConnGroups(CenterPos.Map).Count()
+        CounterEnd = modAreas.ConnGroups(CenterPos.Map).Count()
     Else
-        CounterStart = Areas.ConnGroups(CenterPos.Map).Count()
+        CounterStart = modAreas.ConnGroups(CenterPos.Map).Count()
         CounterEnd = 1
         CounterStep = -1
 
@@ -1285,7 +1285,7 @@ Private Function SpellCasterBestTarget(ByVal NPCIndex As Integer, _
     
     For Counter = CounterStart To CounterEnd Step CounterStep
     
-        UserIndex = Areas.ConnGroups(CenterPos.Map).Item(Counter)
+        UserIndex = modAreas.ConnGroups(CenterPos.Map).Item(Counter)
         
         'Is it in it's range of vision??
         If InVisionRange(UserIndex, NpcX, NpcY) Then
@@ -1481,9 +1481,9 @@ Private Sub DealWandDamage(ByVal NPCIndex As Integer, ByVal spellIndex As Intege
         X = .Pos.X
         Y = .Pos.Y
         
-        For Counter = 1 To Areas.ConnGroups(CenterPos.Map).Count()
+        For Counter = 1 To modAreas.ConnGroups(CenterPos.Map).Count()
             
-            UserIndex = Areas.ConnGroups(CenterPos.Map).Item(Counter)
+            UserIndex = modAreas.ConnGroups(CenterPos.Map).Item(Counter)
             
             If UserIndex <> 0 Then
             
@@ -1654,9 +1654,9 @@ Private Function SwordMasterBestTarget(ByVal NPCIndex As Integer) As Integer
 
     If CounterStep = 1 Then
         CounterStart = 1
-        CounterEnd = Areas.ConnGroups(CenterPos.Map).Count()
+        CounterEnd = modAreas.ConnGroups(CenterPos.Map).Count()
     Else
-        CounterStart = Areas.ConnGroups(CenterPos.Map).Count()
+        CounterStart = modAreas.ConnGroups(CenterPos.Map).Count()
         CounterEnd = 1
         CounterStep = -1
 
@@ -1664,7 +1664,7 @@ Private Function SwordMasterBestTarget(ByVal NPCIndex As Integer) As Integer
     
     For Counter = CounterStart To CounterEnd Step CounterStep
     
-        UserIndex = Areas.ConnGroups(CenterPos.Map).Item(Counter)
+        UserIndex = modAreas.ConnGroups(CenterPos.Map).Item(Counter)
         
         'Is it in it's range of vision??
         If InVisionRange(UserIndex, NpcX, NpcY) Then
@@ -1874,9 +1874,9 @@ Private Function ShooterBestTarget(ByVal NPCIndex As Integer) As Integer
 
     If CounterStep = 1 Then
         CounterStart = 1
-        CounterEnd = Areas.ConnGroups(CenterPos.Map).Count()
+        CounterEnd = modAreas.ConnGroups(CenterPos.Map).Count()
     Else
-        CounterStart = Areas.ConnGroups(CenterPos.Map).Count()
+        CounterStart = modAreas.ConnGroups(CenterPos.Map).Count()
         CounterEnd = 1
         CounterStep = -1
 
@@ -1884,7 +1884,7 @@ Private Function ShooterBestTarget(ByVal NPCIndex As Integer) As Integer
     
     For Counter = CounterStart To CounterEnd Step CounterStep
     
-        UserIndex = Areas.ConnGroups(CenterPos.Map).Item(Counter)
+        UserIndex = modAreas.ConnGroups(CenterPos.Map).Item(Counter)
         
         'Is it in it's range of vision??
         If InVisionRange(UserIndex, NpcX, NpcY) Then
@@ -1978,9 +1978,9 @@ Private Sub ShooterMove(ByVal NPCIndex As Integer, ByVal BestTarget As Integer)
 
             Dim UserIndex As Integer
             
-            For Counter = 1 To Areas.ConnGroups(CenterPos.Map).Count()
+            For Counter = 1 To modAreas.ConnGroups(CenterPos.Map).Count()
             
-                UserIndex = Areas.ConnGroups(CenterPos.Map).Item(Counter)
+                UserIndex = modAreas.ConnGroups(CenterPos.Map).Item(Counter)
                 
                 'Is it in extended range of vision from center position??
                 If InVisionRange(UserIndex, CenterPos.X, CenterPos.Y, True) Then
@@ -2080,9 +2080,9 @@ Private Function ThiefBestTarget(ByVal NPCIndex As Integer, _
 
     If CounterStep = 1 Then
         CounterStart = 1
-        CounterEnd = Areas.ConnGroups(CenterPos.Map).Count()
+        CounterEnd = modAreas.ConnGroups(CenterPos.Map).Count()
     Else
-        CounterStart = Areas.ConnGroups(CenterPos.Map).Count()
+        CounterStart = modAreas.ConnGroups(CenterPos.Map).Count()
         CounterEnd = 1
         CounterStep = -1
 
@@ -2090,7 +2090,7 @@ Private Function ThiefBestTarget(ByVal NPCIndex As Integer, _
     
     For Counter = CounterStart To CounterEnd Step CounterStep
     
-        UserIndex = Areas.ConnGroups(CenterPos.Map).Item(Counter)
+        UserIndex = modAreas.ConnGroups(CenterPos.Map).Item(Counter)
         
         'Is it in it's range of vision??
         If InVisionRange(UserIndex, NpcX, NpcY) Then

@@ -411,7 +411,7 @@ Sub Main()
 
     End If
 
-    Call InitializeAreas
+    Call modAreas.InitializeAreas
 
     ' Fortalezas (No pueden ir antes o los npc no hacen spawn)
     frmCargando.pCargar.CustomText = "Cargando Fortalezas.dat"

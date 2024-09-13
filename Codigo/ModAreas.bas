@@ -1,4 +1,4 @@
-Attribute VB_Name = "Areas"
+Attribute VB_Name = "modAreas"
 '************************************************
 '*   Sistema de areas refactorizado por WyroX   *
 '*       Menos brujeria, mas comentarios.       *

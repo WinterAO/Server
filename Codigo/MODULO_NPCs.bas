@@ -847,7 +847,7 @@ Public Sub MakeNPCChar(ByVal toMap As Boolean, _
                 X, Y, .Char.WeaponAnim, .Char.ShieldAnim, 0, 0, .Char.CascoAnim, .Char.AnimAtaque, NombreNPC, color, 0, NingunAura, NingunAura, .NoShadow, estadoQuest)
     '
         Else
-            Call AgregarNpc(NPCIndex)
+            Call modAreas.AgregarNpc(NPCIndex)
     
         End If
     
@@ -974,7 +974,7 @@ Public Function MoveNPCChar(ByVal NPCIndex As Integer, ByVal nHeading As Byte) A
             .Pos = nPos
             .Char.Heading = nHeading
             MapData(.Pos.Map, nPos.X, nPos.Y).NPCIndex = NPCIndex
-            Call CheckUpdateNeededNpc(NPCIndex, nHeading)
+            Call modAreas.CheckUpdateNeededNpc(NPCIndex, nHeading)
             
             'Si es un WorldBoss y se aleja 10 tiles de su OrigPos se le devuelve.
             If Npclist(NPCIndex).NPCtype = eNPCType.WorldBoss And Npclist(NPCIndex).Pos.X <= (Npclist(NPCIndex).Orig.X - 20) Or _
@@ -1229,7 +1229,7 @@ Public Sub NPCTelep(ByVal NPCIndex As Integer, Posicion As WorldPos, ByVal FXTel
             'Añadimos el NPC a la nueva posición en el mapa
             MapData(Posicion.Map, Posicion.X, Posicion.Y).NPCIndex = NPCIndex
             
-            Call CheckUpdateNeededNpc(NPCIndex, nHeading)
+            Call modAreas.CheckUpdateNeededNpc(NPCIndex, nHeading)
             
             '¿Mostramos FX?
             If FXTelep Then

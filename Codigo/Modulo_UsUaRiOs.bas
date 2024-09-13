@@ -419,7 +419,7 @@ Public Sub EraseUserChar(ByVal UserIndex As Integer, ByVal IsAdminInvisible As B
 
         End If
         
-        Call QuitarUser(UserIndex, .Pos.Map)
+        Call modAreas.QuitarUser(UserIndex, .Pos.Map)
         
         MapData(.Pos.Map, .Pos.X, .Pos.Y).UserIndex = 0
         .Char.CharIndex = 0
@@ -620,7 +620,7 @@ Public Sub MakeUserChar(ByVal toMap As Boolean, _
                 Call WriteCharacterCreate(sndIndex, .Char.body, .Char.Head, .Char.Heading, .Char.CharIndex, X, Y, .Char.WeaponAnim, .Char.ShieldAnim, .Char.FX, 999, .Char.CascoAnim, 0, username, NickColor, Privileges, .Char.AuraAnim, .Char.AuraColor)
             Else
                 'Hide the name and clan - set privs as normal user
-                Call AgregarUser(UserIndex, .Pos.Map, ButIndex)
+                Call modAreas.AgregarUser(UserIndex, .Pos.Map, ButIndex)
 
             End If
 
@@ -1146,7 +1146,7 @@ Public Function MoveUserChar(ByVal UserIndex As Integer, _
                     End With
                 
                     'Actualizamos las areas de ser necesario
-                    Call Areas.CheckUpdateNeededUser(CasperIndex, CasperHeading)
+                    Call modAreas.CheckUpdateNeededUser(CasperIndex, CasperHeading)
 
                 End If
 
@@ -1191,7 +1191,7 @@ Public Function MoveUserChar(ByVal UserIndex As Integer, _
             End With
             
             'Actualizamos las areas de ser necesario
-            Call Areas.CheckUpdateNeededUser(UserIndex, nHeading)
+            Call modAreas.CheckUpdateNeededUser(UserIndex, nHeading)
         Else
             Call WritePosUpdate(UserIndex)
 
