@@ -219,6 +219,7 @@ Public Sub DoNavega(ByVal UserIndex As Integer, _
         If .flags.Navegando = 0 Then
             
             Call ComenzaraNavegar(UserIndex, Slot)
+            Call UpdateUserSpeed(UserIndex)
         
         ' Estaba navegando
         Else
@@ -305,6 +306,8 @@ Public Sub DejardeNavegar(ByVal UserIndex As Integer)
         Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.Heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
     
         Call WriteNavigateToggle(UserIndex)
+        
+        Call UpdateUserSpeed(UserIndex)
     
     End With
 End Sub
@@ -2774,8 +2777,7 @@ Public Sub DoEquita(ByVal UserIndex As Integer, _
     
                 '  Comienza a equitar
                 .flags.Equitando = 1
-                .flags.Velocidad = ObjData(.Invent.MonturaObjIndex).Speed
-                Call WriteSetSpeed(UserIndex)
+                Call UpdateUserSpeed(UserIndex)
                 
                 Call WriteEquitandoToggle(UserIndex)
 
@@ -2810,8 +2812,7 @@ Public Sub UnmountMontura(ByVal UserIndex As Integer)
   
         ' Termina de equitar
         .flags.Equitando = 0
-        .flags.Velocidad = SPEED_NORMAL
-        Call WriteSetSpeed(UserIndex)
+        Call UpdateUserSpeed(UserIndex)
         
         .Counters.MonturaCounter = 3
 

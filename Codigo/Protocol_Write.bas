@@ -98,6 +98,7 @@ Private Enum ServerPacketID
     BattleGs                     'Battlegrounds
     MostrarShop
     ActualizarGemasShop
+    SpeedToChar
     
     'GM =  messages
     SpawnList                    ' SPL
@@ -108,7 +109,6 @@ Private Enum ServerPacketID
     ShowDenounces
     RecordList
     RecordDetails
-    
     ShowGuildAlign
     ShowPartyForm
     PeticionInvitarParty
@@ -1192,7 +1192,7 @@ Public Sub WriteCharacterCreate(ByVal UserIndex As Integer, _
                                 ByVal Privileges As Byte, _
                                 ByVal GrhAura As Long, _
                                 ByVal AuraColor As Long, _
-                                Optional ByVal NoShadow As Byte = False, _
+                                ByVal speeding As Single, _
                                 Optional ByVal estadoQuest As Byte = 255)
 
     '***************************************************
@@ -1202,7 +1202,7 @@ Public Sub WriteCharacterCreate(ByVal UserIndex As Integer, _
     '***************************************************
     On Error GoTo errHandler
 
-    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterCreate(body, Head, Heading, CharIndex, X, Y, weapon, shield, FX, FXLoops, helmet, AnimAtaque, Name, NickColor, Privileges, GrhAura, AuraColor, NoShadow, estadoQuest))
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterCreate(body, Head, Heading, CharIndex, X, Y, weapon, shield, FX, FXLoops, helmet, AnimAtaque, Name, NickColor, Privileges, GrhAura, AuraColor, speeding, estadoQuest))
     Exit Sub
 
 errHandler:
@@ -4353,7 +4353,7 @@ Public Function PrepareMessageCharacterCreate(ByVal body As Integer, _
                                               ByVal Privileges As Byte, _
                                               ByVal GrhAura As Long, _
                                               ByVal AuraColor As Long, _
-                                              ByVal NoShadow As Byte, _
+                                              ByVal speeding As Single, _
                                               ByVal estadoQuest As Byte) As String
 
     '***************************************************
@@ -4381,7 +4381,7 @@ Public Function PrepareMessageCharacterCreate(ByVal body As Integer, _
         Call .WriteByte(Privileges)
         Call .WriteLong(GrhAura)
         Call .WriteLong(AuraColor)
-        Call .WriteByte(NoShadow)
+        Call .WriteLong(speeding)
         Call .WriteByte(estadoQuest)
         
         PrepareMessageCharacterCreate = .ReadASCIIStringFixed(.Length)
@@ -5051,20 +5051,39 @@ errHandler:
     End If
 End Sub
 
-Public Function PrepareMessageCreateDamage(ByVal X As Integer, ByVal Y As Integer, ByVal DamageValue As Long, ByVal DamageType As Byte)
+Public Function PrepareMessageCreateDamage(ByVal X As Integer, _
+                                           ByVal Y As Integer, _
+                                           ByVal DamageValue As Long, _
+                                           ByVal DamageType As Byte)
  
-' @ Envia el paquete para crear dano (Y)
+    ' @ Envia el paquete para crear dano (Y)
  
-With auxiliarBuffer
-     .WriteByte ServerPacketID.CreateDamage
-     .WriteInteger X
-     .WriteInteger Y
-     .WriteLong DamageValue
-     .WriteByte DamageType
+    With auxiliarBuffer
+        .WriteByte ServerPacketID.CreateDamage
+        .WriteInteger X
+        .WriteInteger Y
+        .WriteLong DamageValue
+        .WriteByte DamageType
      
-     PrepareMessageCreateDamage = .ReadASCIIStringFixed(.Length)
+        PrepareMessageCreateDamage = .ReadASCIIStringFixed(.Length)
      
-End With
+    End With
+ 
+End Function
+
+Public Function PrepareMessageSpeeding(ByVal CharIndex As Integer, _
+                                       ByVal speeding As Single)
+ 
+    ' @ Envia el paquete para cambiar la velocidad
+ 
+    With auxiliarBuffer
+        Call .WriteByte(ServerPacketID.SpeedToChar)
+        Call .WriteInteger(CharIndex)
+        Call .WriteSingle(speeding)
+     
+        PrepareMessageSpeeding = .ReadASCIIStringFixed(.Length)
+     
+    End With
  
 End Function
 
@@ -5117,15 +5136,10 @@ Public Sub WriteSetSpeed(ByVal UserIndex As Integer)
 
 On Error GoTo errHandler
 
-    Dim Client_Speed As Double
 
     With UserList(UserIndex)
         Call .outgoingData.WriteByte(ServerPacketID.SetSpeed)
-        
-        'Transformamos a valores que maneja el cliente
-        Client_Speed = .flags.Velocidad / 100
-        
-        Call .outgoingData.WriteDouble(Client_Speed)
+        Call .outgoingData.WriteSingle(.flags.Velocidad)
         
     End With
 

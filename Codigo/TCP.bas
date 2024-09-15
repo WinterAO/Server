@@ -1292,15 +1292,6 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
 
         End If
         
-        'Seteamos la velocidad
-        If .flags.Muerto = 1 Then
-            .flags.Velocidad = SPEED_MUERTO
-        Else
-            .flags.Velocidad = SPEED_NORMAL
-        End If
-        
-        Call WriteSetSpeed(UserIndex)
-        
         'Actualizamos los seguros
         If .flags.ModoCombate Then
             Call WriteMultiMessage(UserIndex, eMessages.CombatSafeOn)
@@ -1360,6 +1351,7 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
         Call MakeUserChar(True, .Pos.Map, UserIndex, .Pos.Map, .Pos.X, .Pos.Y)
     
         Call WriteUserCharIndexInServer(UserIndex)
+        Call UpdateUserSpeed(UserIndex)
         ''[/el oso]
     
         Call DoTileEvents(UserIndex, .Pos.Map, .Pos.X, .Pos.Y)
@@ -1621,7 +1613,8 @@ Sub ResetContadores(ByVal UserIndex As Integer)
         .MacroTrabajo = 0
         .Trabajando = 0
         .Veneno = 0
-
+        .SpeedHackCounter = 0
+        .LastStep = 0
     End With
     
     Call modAntiCheat.ResetAllCount(UserIndex)
@@ -1834,9 +1827,6 @@ Sub ResetUserFlags(ByVal UserIndex As Integer)
         .AdminInvisible = 0
         .ValCoDe = 0
         .Hechizo = 0
-        .TimesWalk = 0
-        .StartWalk = 0
-        .CountSH = 0
         .Silenciado = 0
         .AdminPerseguible = False
         .MacroTrabajo = 0

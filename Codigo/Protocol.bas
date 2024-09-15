@@ -2030,13 +2030,13 @@ End Sub
 ' @param    userIndex The index of the user sending the message.
 
 Private Sub HandleWalk(ByVal UserIndex As Integer)
-'***************************************************
-'Author: Juan Martin Sotuyo Dodero (Maraxus)
-'Last Modification: 12/01/2012 (Recox)
-'11/19/09 Pato - Now the class bandit can walk hidden.
-'13/01/2010: ZaMa - Now hidden on boat pirats recover the proper boat body.
-'12/01/2020: Recox - TiempoDeWalk agregado para las monturas
-'***************************************************
+
+    '***************************************************
+    'Author: Juan Martin Sotuyo Dodero (Maraxus)
+    'Last Modification: 15/09/2024 (Lorwik)
+    '11/19/09 Pato - Now the class bandit can walk hidden.
+    '13/01/2010: ZaMa - Now hidden on boat pirats recover the proper boat body.
+    '***************************************************
     If UserList(UserIndex).incomingData.Length < 2 Then
         Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
@@ -2059,20 +2059,9 @@ Private Sub HandleWalk(ByVal UserIndex As Integer)
         If .flags.MacroTrabajo <> 0 Then
             Call DejardeTrabajar(UserIndex)
         End If
-
-        Dim TiempoDeWalk As Byte
         
-  
+        If .flags.Paralizado = 0 Or .flags.Inmovilizado = 0 Then
         
-        .flags.TimesWalk = .flags.TimesWalk + 1
-        
-        'If exiting, cancel
-        Call CancelExit(UserIndex)
-        
-        'Si esta casteando, lo cancelamos
-        Call CancelCast(UserIndex)
-        
-        If .flags.Paralizado = 0 Then
             If .flags.Meditando Then
                 'Stop meditating, next action will start movement.
                 .flags.Meditando = False
@@ -2082,10 +2071,47 @@ Private Sub HandleWalk(ByVal UserIndex As Integer)
                 Call WriteConsoleMsg(UserIndex, "Dejas de meditar.", FontTypeNames.FONTTYPE_INFO)
                 
                 Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageCreateFX(.Char.CharIndex, 0, 0))
-                Call MoveUserChar(UserIndex, Heading)
-            Else
-                'Move user
-                Call MoveUserChar(UserIndex, Heading)
+            End If
+        
+            Dim CurrentTick As Long
+            CurrentTick = GetTickCount
+            
+            'Prevent SpeedHack (refactored by WyroX)
+            If Not EsGm(UserIndex) And .flags.Velocidad > 0 Then
+                Dim ElapsedTimeStep As Long, MinTimeStep As Long, DeltaStep As Single
+                ElapsedTimeStep = CurrentTick - .Counters.LastStep
+                MinTimeStep = IntervaloCaminar / .flags.Velocidad
+                DeltaStep = (MinTimeStep - ElapsedTimeStep) / MinTimeStep
+
+                If DeltaStep > 0 Then
+                
+                    .Counters.SpeedHackCounter = .Counters.SpeedHackCounter + DeltaStep
+                
+                    If .Counters.SpeedHackCounter > MaximoSpeedHack Then
+                        'Call SendData(SendTarget.ToAdmins, 0, PrepareMessageConsoleMsg("Administración » Posible uso de SpeedHack del usuario " & .name & ".", e_FontTypeNames.FONTTYPE_SERVER))
+                        Call WritePosUpdate(UserIndex)
+                        Exit Sub
+
+                    End If
+
+                Else
+                
+                    .Counters.SpeedHackCounter = .Counters.SpeedHackCounter + DeltaStep * 5
+
+                    If .Counters.SpeedHackCounter < 0 Then .Counters.SpeedHackCounter = 0
+
+                End If
+
+            End If
+        
+            'Move user
+            If MoveUserChar(UserIndex, Heading) Then
+            
+                'If exiting, cancel
+                Call CancelExit(UserIndex)
+        
+                'Si esta casteando, lo cancelamos
+                Call CancelCast(UserIndex)
                 
                 'Stop resting if needed
                 If .flags.Descansar Then
@@ -2095,7 +2121,11 @@ Private Sub HandleWalk(ByVal UserIndex As Integer)
                     Call WriteConsoleMsg(UserIndex, "Has dejado de descansar.", FontTypeNames.FONTTYPE_INFO)
 
                 End If
-
+                
+            Else
+                .Counters.LastStep = 0
+                Call WritePosUpdate(UserIndex)
+            
             End If
 
         Else    'paralized
@@ -2106,8 +2136,6 @@ Private Sub HandleWalk(ByVal UserIndex As Integer)
                 Call WriteConsoleMsg(UserIndex, "No puedes moverte porque estas paralizado.", FontTypeNames.FONTTYPE_INFO)
 
             End If
-            
-            .flags.CountSH = 0
 
         End If
         
@@ -10984,6 +11012,7 @@ Private Sub HandleEditChar(ByVal UserIndex As Integer)
                         
                         UserList(tUser).flags.Velocidad = Speed
                         Call WriteSetSpeed(tUser)
+                        Call SendData(SendTarget.ToPCArea, tUser, PrepareMessageSpeeding(UserList(tUser).Char.CharIndex, UserList(tUser).flags.Velocidad))
                         
                 Case Else
                     Call WriteConsoleMsg(UserIndex, "Comando no permitido.", FontTypeNames.FONTTYPE_INFO)
@@ -11639,6 +11668,7 @@ Private Sub HandleReviveChar(ByVal UserIndex As Integer)
                         End If
                         
                         Call ChangeUserChar(tUser, .Char.body, .OrigChar.Head, .Char.Heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
+                        Call UpdateUserSpeed(tUser)
                         
                         Call WriteConsoleMsg(tUser, UserList(UserIndex).Name & " te ha resucitado.", FontTypeNames.FONTTYPE_INFO)
                     Else

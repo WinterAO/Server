@@ -924,6 +924,7 @@ Sub LoadOBJData()
                     .Real = val(Leer.GetValue("OBJ" & Object, "Real"))
                     .Caos = val(Leer.GetValue("OBJ" & Object, "Caos"))
                     .MontTipo = val(Leer.GetValue("OBJ" & Object, "MontTipo"))
+                    .Speed = val(Leer.GetValue("OBJ" & Object, "Speed")) 'Cambia la velocidad
                 
                 Case eOBJType.otFlechas
                     .MaxHIT = val(Leer.GetValue("OBJ" & Object, "MaxHIT"))
@@ -937,6 +938,7 @@ Sub LoadOBJData()
                     .MaxHIT = val(Leer.GetValue("OBJ" & Object, "MaxHIT"))
                     .MinHIT = val(Leer.GetValue("OBJ" & Object, "MinHIT"))
                     .MontTipo = val(Leer.GetValue("OBJ" & Object, "MontTipo"))
+                    .Speed = val(Leer.GetValue("OBJ" & Object, "Speed")) 'Cambia la velocidad
 
                 Case eOBJType.otAnillo 'Pablo (ToxicWaste)
                     .MaxHIT = val(Leer.GetValue("OBJ" & Object, "MaxHIT"))
@@ -978,8 +980,6 @@ Sub LoadOBJData()
                     .TiempoVIP = val(Leer.GetValue("OBJ" & Object, "TiempoVIP"))
 
             End Select
-            
-            .Speed = val(Leer.GetValue("OBJ" & Object, "Speed")) 'Cambia la velocidad
             
             .Ropaje = val(Leer.GetValue("OBJ" & Object, "NumRopaje"))
             .HechizoIndex = val(Leer.GetValue("OBJ" & Object, "HechizoIndex"))
@@ -1660,6 +1660,7 @@ Sub LoadSini()
     EstadisticasInicialesUsarConfiguracionPersonalizada = CBool(val(Lector.GetValue("ESTADISTICASINICIALESPJ", "Activado")))
 
     'Intervalos
+    'TODO: Mover a otro archivo
     SanaIntervaloSinDescansar = val(Lector.GetValue("INTERVALOS", "SanaIntervaloSinDescansar"))
     StaminaIntervaloSinDescansar = val(Lector.GetValue("INTERVALOS", "StaminaIntervaloSinDescansar"))
     SanaIntervaloDescansar = val(Lector.GetValue("INTERVALOS", "SanaIntervaloDescansar"))
@@ -1681,12 +1682,16 @@ Sub LoadSini()
     IntervaloUserPuedeAtacar = val(Lector.GetValue("INTERVALOS", "IntervaloUserPuedeAtacar"))
     INTERVALO_GLOBAL = val(Lector.GetValue("INTERVALOS", "IntervaloGlobal"))
     IntervaloPuedeMakrear = val(Lector.GetValue("INTERVALOS", "IntervaloMakreo"))
+    IntervaloCaminar = val(Lector.GetValue("INTERVALOS", "IntervaloCaminar"))
     
     'TODO : Agregar estos intervalos al form!!!
     IntervaloMagiaGolpe = val(Lector.GetValue("INTERVALOS", "IntervaloMagiaGolpe"))
     IntervaloGolpeMagia = val(Lector.GetValue("INTERVALOS", "IntervaloGolpeMagia"))
     IntervaloGolpeUsar = val(Lector.GetValue("INTERVALOS", "IntervaloGolpeUsar"))
     IntervaloOcultable = val(Lector.GetValue("INTERVALOS", "IntervaloPuedeOcultar"))
+    
+    '&&&&&&&&&&&&&&&&&&&&& ANTICHEAT &&&&&&&&&&&&&&&&&&&&&&&
+    MaximoSpeedHack = val(Lector.GetValue("ANTICHEAT", "MaximoSpeedHack"))
     
     '&&&&&&&&&&&&&&&&&&&&& TIMERS &&&&&&&&&&&&&&&&&&&&&&&
     IntervaloPuedeSerAtacado = val(Lector.GetValue("TIMERS", "IntervaloPuedeSerAtacado"))

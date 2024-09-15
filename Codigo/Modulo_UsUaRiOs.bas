@@ -129,8 +129,7 @@ Public Sub RevivirUsuario(ByVal UserIndex As Integer)
         Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.Heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
         Call WriteUpdateUserStats(UserIndex)
         
-        .flags.Velocidad = SPEED_NORMAL
-        Call WriteSetSpeed(UserIndex)
+        Call UpdateUserSpeed(UserIndex)
 
     End With
 
@@ -617,7 +616,7 @@ Public Sub MakeUserChar(ByVal toMap As Boolean, _
 
                 End If
             
-                Call WriteCharacterCreate(sndIndex, .Char.body, .Char.Head, .Char.Heading, .Char.CharIndex, X, Y, .Char.WeaponAnim, .Char.ShieldAnim, .Char.FX, 999, .Char.CascoAnim, 0, username, NickColor, Privileges, .Char.AuraAnim, .Char.AuraColor)
+                Call WriteCharacterCreate(sndIndex, .Char.body, .Char.Head, .Char.Heading, .Char.CharIndex, X, Y, .Char.WeaponAnim, .Char.ShieldAnim, .Char.FX, 999, .Char.CascoAnim, 0, username, NickColor, Privileges, .Char.AuraAnim, .Char.AuraColor, .flags.Velocidad)
             Else
                 'Hide the name and clan - set privs as normal user
                 Call modAreas.AgregarUser(UserIndex, .Pos.Map, ButIndex)
@@ -2030,8 +2029,7 @@ Public Sub UserDie(ByVal UserIndex As Integer, Optional ByVal AttackerIndex As I
             End If
         End If
         
-        .flags.Velocidad = SPEED_MUERTO
-        Call WriteSetSpeed(UserIndex)
+        Call UpdateUserSpeed(UserIndex)
         
     End With
 
@@ -3184,3 +3182,45 @@ Public Sub MandaraCasa(ByVal UserIndex As Integer)
     End With
     
 End Sub
+
+Public Function UpdateUserSpeed(ByVal UserIndex As Integer) As Single
+    On Error GoTo UpdateUserSpeed_Err
+    
+    Dim Velocidad       As Single
+    Dim ModificadorItem As Single
+    
+    Velocidad = SPEED_NORMAL
+    ModificadorItem = 1
+    
+    With UserList(UserIndex)
+    
+        If .flags.Muerto = 1 Then
+            Velocidad = SPEED_MUERTO
+        End If
+        
+        If (.flags.Navegando > 0) And (.Invent.BarcoObjIndex > 0) Then
+            ModificadorItem = ObjData(.Invent.BarcoObjIndex).Speed
+        End If
+        
+        If (.flags.Equitando = 1) And (.Invent.MonturaObjIndex > 0) Then
+             ModificadorItem = ObjData(.Invent.MonturaObjIndex).Speed
+        End If
+        
+        Velocidad = SPEED_NORMAL * ModificadorItem
+        
+UpdateSpeed:
+
+        If Velocidad < 1 Then Velocidad = SPEED_NORMAL
+        .flags.Velocidad = Velocidad
+        
+        Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageSpeeding(.Char.CharIndex, .flags.Velocidad))
+        Call WriteSetSpeed(UserIndex)
+
+    End With
+    
+    Exit Function
+    
+UpdateUserSpeed_Err:
+    Call TraceError(Err.Number, Err.description, "UsUaRiOs.UpdateUserSpeed_Err", Erl)
+
+End Function

@@ -121,6 +121,8 @@ Public IntervaloFlechasCazadores         As Long
 
 Public IntervaloPuedeMakrear             As Integer
 
+Public IntervaloCaminar                  As Integer
+
 Public IntervaloPuedeSerAtacado          As Long
 
 Public IntervaloAtacable                 As Long
@@ -148,6 +150,8 @@ Public BootDelBackUp                     As Boolean
 Public Lloviendo                         As Boolean
 
 Public DeNoche                           As Boolean
+
+Public MaximoSpeedHack                   As Integer
 
 Public DificultadExtraer                 As Integer
 
