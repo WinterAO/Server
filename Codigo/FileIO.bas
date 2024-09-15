@@ -120,6 +120,7 @@ Private Type tMapDat
     zone As String
     terrain As String
     Ambient As Integer
+    AmbientNight As Integer
     lvlMinimo As Integer
     lvlMaximo As Integer
     RoboNpcsPermitido As Boolean
