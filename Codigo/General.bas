@@ -454,8 +454,6 @@ Sub Main()
     
     tInicioServer = GetTickCount() And &H7FFFFFFF
 
-    frmMain.Caption = GetVersionOfTheServer() & " - Modo " & " - " & IIf(Battlegrounds, "Battleground", "Rol")
-
     'Este ultimo es para saber siempre los records en el frmMain
     frmMain.txtRecordOnline.Text = RecordUsuariosOnline
     

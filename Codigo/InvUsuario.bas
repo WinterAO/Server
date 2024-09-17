@@ -191,18 +191,10 @@ Sub QuitarNewbieObj(ByVal UserIndex As Integer)
             Select Case .Hogar
             
                 Case eCiudad.cRamx
-                    If Not Battlegrounds Then
-                        DeDonde = Ramx
-                    Else
-                        DeDonde = Battleground
-                    End If
-
+                    DeDonde = Ramx
+        
                 Case Else
-                    If Not Battlegrounds Then
-                        DeDonde = Ramx
-                    Else
-                        DeDonde = Battleground
-                    End If
+                    DeDonde = Ramx
 
             End Select
         

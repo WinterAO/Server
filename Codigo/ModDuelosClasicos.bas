@@ -6,18 +6,13 @@ Private Const MapaDuelosELO As Byte = 1
 Private DuelandoClasico As Boolean
 
 Public Sub DesconectarDuelos(ByVal UserIndex As Integer)
+
     With UserList(UserIndex)
-        If Battlegrounds Then
-            If EstaDueleandoSet Or EstaenDuelosClasicos Then _
-                Call WarpUserChar(UserIndex, Battleground.Map, Battleground.X, Battleground.Y, True)
-            
-        Else
-            If EstaDueleandoSet Or EstaenDuelosClasicos Then _
-                Call WarpUserChar(UserIndex, Ramx.Map, Ramx.X, Ramx.Y, True)
-        
-        End If
-            DuelandoClasico = False
-            .flags.EstaDuelosClasicos = False
+
+        If EstaDueleandoSet Or EstaenDuelosClasicos Then Call WarpUserChar(UserIndex, Ramx.Map, Ramx.X, Ramx.Y, True)
+   
+        DuelandoClasico = False
+        .flags.EstaDuelosClasicos = False
     End With
 End Sub
 
@@ -109,18 +104,18 @@ Si esta en True sera un torneo con ELO.
         '¿Es el primero en entrar?
         If DuelandoClasico = False Then
             If ConELO = False Then
-                Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Torneo: " & .Name & " espera rival en la sala de torneo.", FontTypeNames.FONTTYPE_TALK))
+                Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("Torneo: " & .Name & " espera rival en la sala de torneo.", FontTypeNames.FONTTYPE_TALK))
             Else
-                Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Duelos 1vs1 ELO: " & .Name & " espera rival en la Sala de torneos Clasicos con ELO.", FontTypeNames.FONTTYPE_TALK))
+                Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("Duelos 1vs1 ELO: " & .Name & " espera rival en la Sala de torneos Clasicos con ELO.", FontTypeNames.FONTTYPE_TALK))
             End If
         End If
         
         If DuelandoClasico Then
             If ConELO = False Then
-                Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Torneo: " & .Name & " aceptó el desafío!!!", FontTypeNames.FONTTYPE_TALK))
+                Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("Torneo: " & .Name & " aceptó el desafío!!!", FontTypeNames.FONTTYPE_TALK))
                 .flags.DuelosClasicos = 0
             Else
-                Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Duelos 1vs1 ELO: " & .Name & " aceptó el desafío!!!", FontTypeNames.FONTTYPE_TALK))
+                Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("Duelos 1vs1 ELO: " & .Name & " aceptó el desafío!!!", FontTypeNames.FONTTYPE_TALK))
             End If
         End If
         
@@ -158,7 +153,7 @@ Private Sub ContarMuerteDuelo(ByVal GanadorIndex As Integer, ByVal PerdedorIndex
     If Not UserList(GanadorIndex).flags.EstaDueleandoSet Then Exit Sub
     
     'Notificamos del ganador
-    Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Torneo: " & UserList(GanadorIndex).Name & " ha derrotado a " & UserList(PerdedorIndex).Name & ", lleva " & UserList(GanadorIndex).flags.DuelosClasicos & " victorias consecutivas!", FontTypeNames.FONTTYPE_TALK))
+    Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("Torneo: " & UserList(GanadorIndex).Name & " ha derrotado a " & UserList(PerdedorIndex).Name & ", lleva " & UserList(GanadorIndex).flags.DuelosClasicos & " victorias consecutivas!", FontTypeNames.FONTTYPE_TALK))
     
     'Por matarle, le damos un premio.
     UserList(GanadorIndex).Stats.Gld = UserList(GanadorIndex).Stats.Gld + (3 * UserList(GanadorIndex).Stats.ELV)
@@ -171,27 +166,27 @@ Private Sub ContarMuerteDuelo(ByVal GanadorIndex As Integer, ByVal PerdedorIndex
     
     Select Case UserList(GanadorIndex).flags.DuelosClasicos
         Case 5
-            Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Torneo: " & UserList(GanadorIndex).Name & " ganador del torneo 5 veces consecutivas!! Obtiene un premio de 500 de oro.", FontTypeNames.FONTTYPE_TALK))
-            Call SendData(SendTarget.ToAll, 0, PrepareMessagePlayWave(69, NO_3D_SOUND, NO_3D_SOUND))
+            Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("Torneo: " & UserList(GanadorIndex).Name & " ganador del torneo 5 veces consecutivas!! Obtiene un premio de 500 de oro.", FontTypeNames.FONTTYPE_TALK))
+            Call SendData(SendTarget.Toall, 0, PrepareMessagePlayWave(69, NO_3D_SOUND, NO_3D_SOUND))
             UserList(GanadorIndex).Stats.Gld = UserList(GanadorIndex).Stats.Gld + 500
             Call WriteUpdateGold(GanadorIndex)
             
         Case 10
-            Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Torneo: " & UserList(GanadorIndex).Name & " ganador del torneo 10 veces consecutivas!! Obtiene un premio de 1000 de oro.", FontTypeNames.FONTTYPE_TALK))
+            Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("Torneo: " & UserList(GanadorIndex).Name & " ganador del torneo 10 veces consecutivas!! Obtiene un premio de 1000 de oro.", FontTypeNames.FONTTYPE_TALK))
             UserList(GanadorIndex).Stats.Gld = UserList(GanadorIndex).Stats.Gld + 1000
-            Call SendData(SendTarget.ToAll, 0, PrepareMessagePlayWave(70, NO_3D_SOUND, NO_3D_SOUND))
+            Call SendData(SendTarget.Toall, 0, PrepareMessagePlayWave(70, NO_3D_SOUND, NO_3D_SOUND))
             Call WriteUpdateGold(GanadorIndex)
             
         Case 15
-            Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Torneo: " & UserList(GanadorIndex).Name & " ganador del torneo 15 veces consecutivas!! Obtiene un premio de 1500 de oro.", FontTypeNames.FONTTYPE_TALK))
+            Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("Torneo: " & UserList(GanadorIndex).Name & " ganador del torneo 15 veces consecutivas!! Obtiene un premio de 1500 de oro.", FontTypeNames.FONTTYPE_TALK))
             UserList(GanadorIndex).Stats.Gld = UserList(GanadorIndex).Stats.Gld + 1500
-            Call SendData(SendTarget.ToAll, 0, PrepareMessagePlayWave(71, NO_3D_SOUND, NO_3D_SOUND))
+            Call SendData(SendTarget.Toall, 0, PrepareMessagePlayWave(71, NO_3D_SOUND, NO_3D_SOUND))
             Call WriteUpdateGold(GanadorIndex)
             
         Case 20
-            Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Torneo: " & UserList(GanadorIndex).Name & " ganador del torneo 20 veces consecutivas!! Obtiene un premio de 2000 de oro.", FontTypeNames.FONTTYPE_TALK))
+            Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("Torneo: " & UserList(GanadorIndex).Name & " ganador del torneo 20 veces consecutivas!! Obtiene un premio de 2000 de oro.", FontTypeNames.FONTTYPE_TALK))
             UserList(GanadorIndex).Stats.Gld = UserList(GanadorIndex).Stats.Gld + 2000
-            Call SendData(SendTarget.ToAll, 0, PrepareMessagePlayWave(72, NO_3D_SOUND, NO_3D_SOUND))
+            Call SendData(SendTarget.Toall, 0, PrepareMessagePlayWave(72, NO_3D_SOUND, NO_3D_SOUND))
             Call WriteUpdateGold(GanadorIndex)
     End Select
 End Sub
@@ -205,7 +200,7 @@ Private Sub ContarMuerteDueloELO(ByVal UserIndex As Integer, ByVal MuertoIndex A
         If Not .flags.EsperandoDueloSet Then Exit Sub
         
         'Notificamos del ganador
-            Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Duelos 1vs1 ELO: " & UserList(MuertoIndex).Name & " derrota a " & .Name, FontTypeNames.FONTTYPE_TALK))
+            Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("Duelos 1vs1 ELO: " & UserList(MuertoIndex).Name & " derrota a " & .Name, FontTypeNames.FONTTYPE_TALK))
         
             'Calcularmos el ELO
             ELOGANADOR = CalcularELO(UserIndex, MuertoIndex, True)

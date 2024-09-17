@@ -423,12 +423,7 @@ Sub ConnectNewUser(ByVal UserIndex As Integer, _
         .clase = UserClase
         .Raza = UserRaza
         .Genero = UserSexo
-        
-        If Not Battlegrounds Then
-            .Hogar = eCiudad.cRamx
-        Else
-            .Hogar = eCiudad.cbattle
-        End If
+        .Hogar = eCiudad.cRamx
         
         For i = 0 To 1
             .Profesion(i).Profesion = 0
@@ -447,7 +442,7 @@ Sub ConnectNewUser(ByVal UserIndex As Integer, _
         '???????????????? INVENTARIO
         Call AddItemsToNewUser(UserIndex, UserClase, UserRaza)
 
-        If EstadisticasInicialesUsarConfiguracionPersonalizada Or Battlegrounds Then _
+        If EstadisticasInicialesUsarConfiguracionPersonalizada Then _
             Call SetAttributesCustomToNewUser(UserIndex)
 
         Call DarCuerpo(UserIndex)
@@ -456,11 +451,7 @@ Sub ConnectNewUser(ByVal UserIndex As Integer, _
     
         .OrigChar = .Char
         
-        If Not Battlegrounds Then
-            .Pos = IslaNew
-        Else
-            .Pos = Battleground
-        End If
+        .Pos = IslaNew
             
         'De primeras podra hablar por global
         .flags.Global = 1
@@ -1190,8 +1181,6 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
             End If
         
         End If
-        
-        Call WriteBattlegrounds(UserIndex, Battlegrounds)
     
         'Tratamos de evitar en lo posible el "Telefrag". Solo 1 intento de loguear en pos adjacentes.
         'Codigo por Pablo (ToxicWaste) y revisado por Nacho (Integer), corregido para que realmetne ande y no tire el server por Juan Martin Sotuyo Dodero (Maraxus)

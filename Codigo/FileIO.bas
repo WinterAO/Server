@@ -1330,11 +1330,7 @@ Sub LoadMapData()
     
     On Error GoTo man
         
-    If Battlegrounds Then
-        NumMaps = val(GetVar(DatPath & "Map.dat", "INIT", "NumBgs"))
-    Else
-        NumMaps = val(GetVar(DatPath & "Map.dat", "INIT", "NumMaps"))
-    End If
+    NumMaps = val(GetVar(DatPath & "Map.dat", "INIT", "NumMaps"))
         
     frmCargando.pCargar.min = 0
     frmCargando.pCargar.max = NumMaps
@@ -1346,11 +1342,7 @@ Sub LoadMapData()
           
     For Map = 1 To NumMaps
             
-        If Battlegrounds Then
-            tFileName = MapPath & "Bg" & Map
-        Else
-            tFileName = MapPath & "Mapa" & Map
-        End If
+        tFileName = MapPath & "Mapa" & Map
         
         Call CargarMapa(Map, tFileName)
             
@@ -1612,8 +1604,6 @@ Sub LoadSini()
 
     PuedeCrearPersonajes = val(Lector.GetValue("INIT", "PuedeCrearPersonajes"))
     ServerSoloGMs = val(Lector.GetValue("INIT", "ServerSoloGMs"))
-    
-    Battlegrounds = CBool(val(Lector.GetValue("INIT", "Battlegrounds")))
     
     ArmaduraImperial1 = val(Lector.GetValue("INIT", "ArmaduraImperial1"))
     ArmaduraImperial2 = val(Lector.GetValue("INIT", "ArmaduraImperial2"))

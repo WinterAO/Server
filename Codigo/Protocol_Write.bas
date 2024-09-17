@@ -95,7 +95,6 @@ Private Enum ServerPacketID
     SendNight                    ' NOC
     Pong
     UpdateTagAndStatus
-    BattleGs                     'Battlegrounds
     MostrarShop
     ActualizarGemasShop
     SpeedToChar
@@ -5224,30 +5223,6 @@ On Error GoTo errHandler
         Call .WriteInteger(NPCIndex)
     End With
     
-Exit Sub
-
-errHandler:
-    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(UserIndex)
-        Resume
-    End If
-End Sub
-
-Public Sub WriteBattlegrounds(ByVal UserIndex As Integer, ByVal BGs As Boolean)
-'**************************************
-'Autor Lorwik
-'Fecha: 02/05/2022
-'Descripción: Envia la variable Battlegrounds al cliente
-'**************************************
-On Error GoTo errHandler
-
-    With UserList(UserIndex).outgoingData
-    
-        Call .WriteByte(ServerPacketID.BattleGs)
-        Call .WriteBoolean(BGs)
-    
-    End With
-
 Exit Sub
 
 errHandler:
