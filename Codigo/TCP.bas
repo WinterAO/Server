@@ -2019,11 +2019,6 @@ Sub CloseUser(ByVal UserIndex As Integer)
     
         'Subastas
         Call Revisar_Subasta(UserIndex)
-    
-        'Nuevo centinela - maTih.-
-        If .CentinelaUsuario.centinelaIndex <> 0 Then
-            Call modCentinela.UsuarioInActivo(UserIndex)
-        End If
         
         'mato los comercios seguros
         If .ComUsu.DestUsu > 0 Then

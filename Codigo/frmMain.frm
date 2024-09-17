@@ -844,11 +844,6 @@ Private Sub AutoSave_Timer()
     Call HappyHourManager
     
     Call SpawnRetardado
-    
-    'Actualizamos el Centinela en caso de que este activo en el server.ini
-    If isCentinelaActivated Then
-        Call modCentinela.ChekearUsuarios
-    End If
 
     'Actualizamos la lluvia
     Call tLluviaEvent

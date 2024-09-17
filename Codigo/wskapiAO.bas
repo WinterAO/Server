@@ -465,11 +465,6 @@ Public Sub EventoSockRead(ByVal Slot As Integer, ByRef Datos() As Byte)
 End Sub
 
 Public Sub EventoSockClose(ByVal Slot As Integer)
-    
-    'maTih.-  Nuevo centinela.
-    If UserList(Slot).CentinelaUsuario.centinelaIndex <> 0 Then
-        Call modCentinela.UsuarioInActivo(Slot)
-    End If
 
     If UserList(Slot).flags.UserLogged Or UserList(Slot).flags.AccountLogged Then
         Call CloseSocketSL(Slot)

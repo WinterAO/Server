@@ -1656,24 +1656,6 @@ Sub LookatTile(ByVal UserIndex As Integer, _
                             End If
 
                         End If
-                  
-                        'Centinela
-                        If Npclist(TempCharIndex).Numero = NUM_CENTI Then
-                            If UserList(UserIndex).CentinelaUsuario.Revisando Then
-                                Stat = "Sigo esperando, ingresa el codigo que te he solicitado."
-                            Else
-                                Stat = "No estoy hablando contigo."
-
-                            End If
-                      
-                            'Enviamos el mensaje propiamente dicho:
-                            Call WriteChatOverHead(UserIndex, Stat, Npclist(TempCharIndex).Char.CharIndex, 255, 255, 0)
-                      
-                        Else
-                            'Enviamos el mensaje propiamente dicho:
-                            Call WriteChatOverHead(UserIndex, Stat, Npclist(TempCharIndex).Char.CharIndex, 255, 255, 255)
-
-                        End If
               
                     Else
 

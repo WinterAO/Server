@@ -10,18 +10,6 @@ Public Sub Auditoria()
     On Error GoTo errhand
     
     Call PasarSegundo 'sistema de desconexion de 10 segs
-    
-    Static centinelSecs As Byte
-
-    centinelSecs = centinelSecs + 1
-
-    If centinelSecs = 30 Then
-        'Every 5 seconds, we try to call the player's attention so it will report the code.
-        Call modCentinela.AvisarUsuarios
-    
-        centinelSecs = 0
-
-    End If
 
     Exit Sub
 

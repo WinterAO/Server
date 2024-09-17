@@ -44,17 +44,6 @@ Public Const DAMAGE_CURAR   As Byte = 5
 Public Const DAMAGE_TRABAJO As Byte = 6
 '********** Constantes de dano en render.
 
-' Nuevo Centinela
-Type CentinelaUser
-
-    centinelaIndex     As Byte         'Centinela del usuario.
-    Codigo             As String       'Codigo que debe ingresar.
-    CentinelaCheck     As Boolean      'Si respondio o no.
-    Revisando          As Boolean      'Si tiene centinela.
-    UltimaRevision     As Long         'Ultima revision al usuario.
-
-End Type
-
 Public tickLimpieza        As Integer
 
 ''
@@ -1200,7 +1189,7 @@ End Type
 
 Public Type tQuestNpc
 
-    NpcIndex As Integer
+    NPCIndex As Integer
     Amount As Integer
 
 End Type
@@ -1643,8 +1632,8 @@ Public Type UserCounters
     TimerEstadoAtacable As Long
     TimerPuedeOcultar As Long
     
-    Trabajando As Long  ' Para el centinela
-    Ocultando As Long   ' Unico trabajo no revisado por el centinela
+    Trabajando As Long
+    Ocultando As Long
     Cheat As modAntiCheat.TimeIntervalos
     
     failedUsageAttempts As Long
@@ -1811,8 +1800,6 @@ Public Type User
     incomingData As clsByteQueue
     
     CurrentInventorySlots As Byte
-
-    CentinelaUsuario As CentinelaUser
     
     cvcUser As cvc_User
     
@@ -1921,7 +1908,7 @@ End Type
 
 Public Type tCriaturasEntrenador
 
-    NpcIndex As Integer
+    NPCIndex As Integer
     NpcName As String
     tmpIndex As Integer
 
@@ -2036,7 +2023,7 @@ Public Type MapBlock
     Blocked As Byte
     Graphic(1 To 4) As Long
     UserIndex As Integer
-    NpcIndex As Integer
+    NPCIndex As Integer
     ObjInfo As obj
     TileExit As WorldPos
     Trigger As eTrigger
@@ -2343,163 +2330,6 @@ Public Enum eMessages
     Hechizo_PropioMSG
     Hechizo_TargetMSG
 
-End Enum
-
-Public Enum eGMCommands
-
-    GMMessage = 1           '/GMSG
-    showName                '/SHOWNAME
-    OnlineRoyalArmy         '/ONLINEREAL
-    OnlineChaosLegion       '/ONLINECAOS
-    GoNearby                '/IRCERCA
-    comment                 '/REM
-    serverTime              '/HORA
-    Where                   '/DONDE
-    CreaturesInMap          '/NENE
-    WarpMeToTarget          '/TELEPLOC
-    WarpChar                '/TELEP
-    Silence                 '/SILENCIAR
-    SOSShowList             '/SHOW SOS
-    SOSRemove               'SOSDONE
-    GoToChar                '/IRA
-    invisible               '/INVISIBLE
-    GMPanel                 '/PANELGM
-    RequestUserList         'LISTUSU
-    Working                 '/TRABAJANDO
-    Hiding                  '/OCULTANDO
-    Jail                    '/CARCEL
-    KillNPC                 '/RMATA
-    WarnUser                '/ADVERTENCIA
-    EditChar                '/MOD
-    RequestCharInfo         '/INFO
-    RequestCharStats        '/STAT
-    RequestCharGold         '/BAL
-    RequestCharInventory    '/INV
-    RequestCharBank         '/BOV
-    RequestCharSkills       '/SKILLS
-    ReviveChar              '/REVIVIR
-    OnlineGM                '/ONLINEGM
-    OnlineMap               '/ONLINEMAP
-    Forgive                 '/PERDON
-    Kick                    '/ECHAR
-    Execute                 '/EJECUTAR
-    BanChar                 '/BAN
-    UnbanChar               '/UNBAN
-    NPCFollow               '/SEGUIR
-    SummonChar              '/SUM
-    SpawnListRequest        '/CC
-    SpawnCreature           'SPA
-    ResetNPCInventory       '/RESETINV
-    ServerMessage           '/RMSG
-    NickToIP                '/NICK2IP
-    IPToNick                '/IP2NICK
-    GuildOnlineMembers      '/ONCLAN
-    TeleportCreate          '/CT
-    TeleportDestroy         '/DT
-    MeteoToggle             '/METEO
-    SetCharDescription      '/SETDESC
-    ForceMUSICToMap          '/FORCEMUSICMAP
-    ForceWAVEToMap          '/FORCEWAVMAP
-    RoyalArmyMessage        '/REALMSG
-    ChaosLegionMessage      '/CAOSMSG
-    CitizenMessage          '/CIUMSG
-    CriminalMessage         '/CRIMSG
-    TalkAsNPC               '/TALKAS
-    DestroyAllItemsInArea   '/MASSDEST
-    AcceptRoyalCouncilMember '/ACEPTCONSE
-    AcceptChaosCouncilMember '/ACEPTCONSECAOS
-    ItemsInTheFloor         '/PISO
-    MakeDumb                '/ESTUPIDO
-    MakeDumbNoMore          '/NOESTUPIDO
-    DumpIPTables            '/DUMPSECURITY
-    CouncilKick             '/KICKCONSE
-    SetTrigger              '/TRIGGER
-    AskTrigger              '/TRIGGER with no args
-    BannedIPList            '/BANIPLIST
-    BannedIPReload          '/BANIPRELOAD
-    GuildMemberList         '/MIEMBROSCLAN
-    GuildBan                '/BANCLAN
-    BanIP                   '/BANIP
-    UnbanIP                 '/UNBANIP
-    CreateItem              '/CI
-    DestroyItems            '/DEST
-    ChaosLegionKick         '/NOCAOS
-    RoyalArmyKick           '/NOREAL
-    ForceMUSICAll           '/FORCEMUSIC
-    ForceWAVEAll            '/FORCEWAV
-    RemovePunishment        '/BORRARPENA
-    TileBlockedToggle       '/BLOQ
-    KillNPCNoRespawn        '/MATA
-    KillAllNearbyNPCs       '/MASSKILL
-    LastIP                  '/LASTIP
-    ChangeMOTD              '/MOTDCAMBIA
-    SetMOTD                 'ZMOTD
-    SystemMessage           '/SMSG
-    CreateNPC               '/ACC y /RACC
-    ImperialArmour          '/AI1 - 4
-    ChaosArmour             '/AC1 - 4
-    NavigateToggle          '/NAVE
-    ServerOpenToUsersToggle '/HABILITAR
-    TurnOffServer           '/APAGAR
-    TurnCriminal            '/CONDEN
-    ResetFactions           '/RAJAR
-    RemoveCharFromGuild     '/RAJARCLAN
-    RequestCharMail         '/LASTEMAIL
-    AlterName               '/ANAME
-    DoBackUp                '/DOBACKUP
-    ShowGuildMessages       '/SHOWCMSG
-    SaveMap                 '/GUARDAMAPA
-    ChangeZonaPK            '/MODZona PK
-    ChangeZonaBackup        '/MODZona BACKUP
-    ChangeZonaRestricted    '/MODZona RESTRINGIR
-    ChangeZonaNoMagic       '/MODZona MAGIASINEFECTO
-    ChangeZonaNoInvi        '/MODZona INVISINEFECTO
-    ChangeZonaNoResu        '/MODZona RESUSINEFECTO
-    ChangeZonaLand          '/MODZona TERRENO
-    ChangeZonaZone          '/MODZona ZONA
-    ChangeZonaStealNpc      '/MODZona ROBONPC
-    ChangeZonaNoOcultar     '/MODZona OCULTARSINEFECTO
-    ChangeZonaNoInvocar     '/MODZona INVOCARSINEFECTO
-    SaveChars               '/GRABAR
-    CleanSOS                '/BORRAR SOS
-    ShowServerForm          '/SHOW INT
-    night                   '/NOCHE
-    KickAllChars            '/ECHARTODOSPJS
-    ReloadNPCs              '/RELOADNPCS
-    ReloadServerIni         '/RELOADSINI
-    ReloadSpells            '/RELOADHECHIZOS
-    ReloadObjects           '/RELOADOBJ
-    Restart                 '/REINICIAR
-    ResetAutoUpdate         '/AUTOUPDATE
-    ChatColor               '/CHATCOLOR
-    Ignored                 '/IGNORADO
-    CheckSlot               '/SLOT
-    SetIniVar               '/SETINIVAR LLAVE CLAVE VALOR
-    CreatePretorianClan     '/CREARPRETORIANOS
-    RemovePretorianClan     '/ELIMINARPRETORIANOS
-    EnableDenounces         '/DENUNCIAS
-    ShowDenouncesList       '/SHOW DENUNCIAS
-    MapMessage              '/MAPMSG
-    SetDialog               '/SETDIALOG
-    Impersonate             '/IMPERSONAR
-    Imitate                 '/MIMETIZAR
-    RecordAdd
-    RecordRemove
-    RecordAddObs
-    RecordListRequest
-    RecordDetailsRequest
-    ExitDestroy             '/DE
-    ToggleCentinelActivated '/CENTINELAACTIVADO
-    SearchNpc               '/BUSCAR
-    SearchObj               '/BUSCAR
-    LimpiarMundo            '/LIMPIARMUNDO
-    EditGems                '/EDITGEMS
-    ConsultarGemas          '/CONSULTARGEMS
-    SilenciarGlobal         '/SILENCIARGLOBAL
-    ToggleGlobal            '/TOGGLEGLOBAL
-    BanSerial
-    UnBanSerial
-    BanTemporal
 End Enum
 
 Public Const MATRIX_INITIAL_MAP                     As Integer = 1

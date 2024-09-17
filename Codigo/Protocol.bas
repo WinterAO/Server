@@ -167,7 +167,6 @@ Private Enum ClientPacketID
     Consultation
     moveItem
     LoginExistingAccount      'CHOTS | Accounts
-    CentinelReport
     Ecvc
     Acvc
     IrCvc
@@ -200,6 +199,161 @@ Private Enum ClientPacketID
     InitPVP
     DueloSet
     GMCommands
+End Enum
+
+Public Enum eGMCommands
+    GMMessage = 1           '/GMSG
+    showName                '/SHOWNAME
+    OnlineRoyalArmy         '/ONLINEREAL
+    OnlineChaosLegion       '/ONLINECAOS
+    GoNearby                '/IRCERCA
+    comment                 '/REM
+    serverTime              '/HORA
+    Where                   '/DONDE
+    CreaturesInMap          '/NENE
+    WarpMeToTarget          '/TELEPLOC
+    WarpChar                '/TELEP
+    Silence                 '/SILENCIAR
+    SOSShowList             '/SHOW SOS
+    SOSRemove               'SOSDONE
+    GoToChar                '/IRA
+    invisible               '/INVISIBLE
+    GMPanel                 '/PANELGM
+    RequestUserList         'LISTUSU
+    Working                 '/TRABAJANDO
+    Hiding                  '/OCULTANDO
+    Jail                    '/CARCEL
+    KillNPC                 '/RMATA
+    WarnUser                '/ADVERTENCIA
+    EditChar                '/MOD
+    RequestCharInfo         '/INFO
+    RequestCharStats        '/STAT
+    RequestCharGold         '/BAL
+    RequestCharInventory    '/INV
+    RequestCharBank         '/BOV
+    RequestCharSkills       '/SKILLS
+    ReviveChar              '/REVIVIR
+    OnlineGM                '/ONLINEGM
+    OnlineMap               '/ONLINEMAP
+    Forgive                 '/PERDON
+    Kick                    '/ECHAR
+    Execute                 '/EJECUTAR
+    BanChar                 '/BAN
+    UnbanChar               '/UNBAN
+    NPCFollow               '/SEGUIR
+    SummonChar              '/SUM
+    SpawnListRequest        '/CC
+    SpawnCreature           'SPA
+    ResetNPCInventory       '/RESETINV
+    ServerMessage           '/RMSG
+    NickToIP                '/NICK2IP
+    IPToNick                '/IP2NICK
+    GuildOnlineMembers      '/ONCLAN
+    TeleportCreate          '/CT
+    TeleportDestroy         '/DT
+    MeteoToggle             '/METEO
+    SetCharDescription      '/SETDESC
+    ForceMUSICToMap          '/FORCEMUSICMAP
+    ForceWAVEToMap          '/FORCEWAVMAP
+    RoyalArmyMessage        '/REALMSG
+    ChaosLegionMessage      '/CAOSMSG
+    CitizenMessage          '/CIUMSG
+    CriminalMessage         '/CRIMSG
+    TalkAsNPC               '/TALKAS
+    DestroyAllItemsInArea   '/MASSDEST
+    AcceptRoyalCouncilMember '/ACEPTCONSE
+    AcceptChaosCouncilMember '/ACEPTCONSECAOS
+    ItemsInTheFloor         '/PISO
+    MakeDumb                '/ESTUPIDO
+    MakeDumbNoMore          '/NOESTUPIDO
+    DumpIPTables            '/DUMPSECURITY
+    CouncilKick             '/KICKCONSE
+    SetTrigger              '/TRIGGER
+    AskTrigger              '/TRIGGER with no args
+    BannedIPList            '/BANIPLIST
+    BannedIPReload          '/BANIPRELOAD
+    GuildMemberList         '/MIEMBROSCLAN
+    GuildBan                '/BANCLAN
+    BanIP                   '/BANIP
+    UnbanIP                 '/UNBANIP
+    CreateItem              '/CI
+    DestroyItems            '/DEST
+    ChaosLegionKick         '/NOCAOS
+    RoyalArmyKick           '/NOREAL
+    ForceMUSICAll           '/FORCEMUSIC
+    ForceWAVEAll            '/FORCEWAV
+    RemovePunishment        '/BORRARPENA
+    TileBlockedToggle       '/BLOQ
+    KillNPCNoRespawn        '/MATA
+    KillAllNearbyNPCs       '/MASSKILL
+    LastIP                  '/LASTIP
+    ChangeMOTD              '/MOTDCAMBIA
+    SetMOTD                 'ZMOTD
+    SystemMessage           '/SMSG
+    CreateNPC               '/ACC y /RACC
+    ImperialArmour          '/AI1 - 4
+    ChaosArmour             '/AC1 - 4
+    NavigateToggle          '/NAVE
+    ServerOpenToUsersToggle '/HABILITAR
+    TurnOffServer           '/APAGAR
+    TurnCriminal            '/CONDEN
+    ResetFactions           '/RAJAR
+    RemoveCharFromGuild     '/RAJARCLAN
+    RequestCharMail         '/LASTEMAIL
+    AlterName               '/ANAME
+    DoBackUp                '/DOBACKUP
+    ShowGuildMessages       '/SHOWCMSG
+    SaveMap                 '/GUARDAMAPA
+    ChangeZonaPK            '/MODZona PK
+    ChangeZonaBackup        '/MODZona BACKUP
+    ChangeZonaRestricted    '/MODZona RESTRINGIR
+    ChangeZonaNoMagic       '/MODZona MAGIASINEFECTO
+    ChangeZonaNoInvi        '/MODZona INVISINEFECTO
+    ChangeZonaNoResu        '/MODZona RESUSINEFECTO
+    ChangeZonaLand          '/MODZona TERRENO
+    ChangeZonaZone          '/MODZona ZONA
+    ChangeZonaStealNpc      '/MODZona ROBONPC
+    ChangeZonaNoOcultar     '/MODZona OCULTARSINEFECTO
+    ChangeZonaNoInvocar     '/MODZona INVOCARSINEFECTO
+    SaveChars               '/GRABAR
+    CleanSOS                '/BORRAR SOS
+    ShowServerForm          '/SHOW INT
+    night                   '/NOCHE
+    KickAllChars            '/ECHARTODOSPJS
+    ReloadNPCs              '/RELOADNPCS
+    ReloadServerIni         '/RELOADSINI
+    ReloadSpells            '/RELOADHECHIZOS
+    ReloadObjects           '/RELOADOBJ
+    Restart                 '/REINICIAR
+    ResetAutoUpdate         '/AUTOUPDATE
+    ChatColor               '/CHATCOLOR
+    Ignored                 '/IGNORADO
+    CheckSlot               '/SLOT
+    SetIniVar               '/SETINIVAR LLAVE CLAVE VALOR
+    CreatePretorianClan     '/CREARPRETORIANOS
+    RemovePretorianClan     '/ELIMINARPRETORIANOS
+    EnableDenounces         '/DENUNCIAS
+    ShowDenouncesList       '/SHOW DENUNCIAS
+    MapMessage              '/MAPMSG
+    SetDialog               '/SETDIALOG
+    Impersonate             '/IMPERSONAR
+    Imitate                 '/MIMETIZAR
+    RecordAdd
+    RecordRemove
+    RecordAddObs
+    RecordListRequest
+    RecordDetailsRequest
+    ExitDestroy             '/DE
+    SearchNpc               '/BUSCAR
+    SearchObj               '/BUSCAR
+    LimpiarMundo            '/LIMPIARMUNDO
+    EditGems                '/EDITGEMS
+    ConsultarGemas          '/CONSULTARGEMS
+    SilenciarGlobal         '/SILENCIARGLOBAL
+    ToggleGlobal            '/TOGGLEGLOBAL
+    BanSerial
+    UnBanSerial
+    BanTemporal
 End Enum
 
 ''
@@ -701,9 +855,6 @@ Public Function HandleIncomingData(ByVal UserIndex As Integer) As Boolean
 
         Case ClientPacketID.LoginExistingAccount
             Call HandleLoginExistingAccount(UserIndex)
-        
-        Case ClientPacketID.CentinelReport
-            Call HandleCentinelReport(UserIndex)
             
         Case ClientPacketID.Ecvc
             Call HandleEnviaCvc(UserIndex)
@@ -1144,7 +1295,7 @@ Private Sub HandleGMCommands(ByVal UserIndex As Integer)
             Case eGMCommands.AlterName               '/ANAME
                 Call HandleAlterName(UserIndex)
         
-            Case Declaraciones.eGMCommands.DoBackUp               '/DOBACKUP
+            Case eGMCommands.DoBackUp               '/DOBACKUP
                 Call HandleDoBackUp(UserIndex)
         
             Case eGMCommands.ShowGuildMessages       '/SHOWCMSG
@@ -1269,9 +1420,6 @@ Private Sub HandleGMCommands(ByVal UserIndex As Integer)
             
             Case eGMCommands.ExitDestroy
                 Call HandleExitDestroy(UserIndex)
-
-            Case eGMCommands.ToggleCentinelActivated            '/CENTINELAACTIVADO
-                Call HandleToggleCentinelActivated(UserIndex)
         
             Case eGMCommands.SearchNpc                          '/BUSCAR
                 Call HandleSearchNpc(UserIndex)
@@ -7294,33 +7442,6 @@ errHandler:
     Set Buffer = Nothing
     
     If Error <> 0 Then Err.Raise Error
-
-End Sub
-
-''
-' Handles the "CentinelReport" message.
-'
-' @param    userIndex The index of the user sending the message.
- 
-Private Sub HandleCentinelReport(ByVal UserIndex As Integer)
-    '***************************************************
-    'Author: Juan Martin Sotuyo Dodero (Maraxus)
-    'Last Modification: 02/05/2012
-    '                         Nuevo centinela (maTih.-)
-    '***************************************************
-    
-    Dim NotBuff As New clsByteQueue
-    
-    With UserList(UserIndex)
-        Call NotBuff.CopyBuffer(.incomingData)
-        
-        Call NotBuff.ReadByte
-                
-        Call modCentinela.IngresaClave(UserIndex, NotBuff.ReadASCIIString())
-        
-        Call .incomingData.CopyBuffer(NotBuff)
-        
-    End With
 
 End Sub
 
@@ -16622,31 +16743,6 @@ Public Sub HandleDoBackUp(ByVal UserIndex As Integer)
         
         Call ES.DoBackUp 'Sino lo confunde con la id del paquete
 
-    End With
-
-End Sub
-
-''
-' Handle the "ToggleCentinelActivated" message
-'
-' @param userIndex The index of the user sending the message
- 
-Public Sub HandleToggleCentinelActivated(ByVal UserIndex As Integer)
-
-    '***************************************************
-    'Author: Lucas Tavolaro Ortiz (Tavo)
-    'Last Modification: 02/05/2012
-    'Nuevo centinela (maTih.-)
-    '***************************************************
-    With UserList(UserIndex)
-        'Remove Packet ID
-        Call .incomingData.ReadByte
-        
-        'Solo para Admins y Dioses
-        If Not EsAdmin(.Name) Or Not EsDios(.Name) Then Exit Sub
-        
-        Call modCentinela.CambiarEstado(UserIndex)
-        
     End With
 
 End Sub

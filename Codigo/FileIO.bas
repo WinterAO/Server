@@ -1584,7 +1584,6 @@ Sub LoadSini()
 'CHOTS: Agregado multiplicador oficio
 'CHOTS: Agregado min y max Dados
 'Jopi: Uso de clsIniManager para cargar los valores.
-'Recox: Cargamos si el centinela esta activo o no.
 '***************************************************
 
     Dim Temporal As Long
@@ -1610,9 +1609,6 @@ Sub LoadSini()
     
     'Lee la version correcta del cliente
     ULTIMAVERSION = Lector.GetValue("INIT", "VersionBuildCliente")
-
-    'Esto es para ver si el centinela esta activo o no.
-    isCentinelaActivated = CBool(val(Lector.GetValue("INIT", "CentinelaAuditoriaTrabajoActivo")))
 
     PuedeCrearPersonajes = val(Lector.GetValue("INIT", "PuedeCrearPersonajes"))
     ServerSoloGMs = val(Lector.GetValue("INIT", "ServerSoloGMs"))
