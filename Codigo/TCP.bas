@@ -2108,7 +2108,7 @@ Sub CloseUser(ByVal UserIndex As Integer)
     
         'Borrar el personaje
         If .Char.CharIndex > 0 Then
-            Call EraseUserChar(UserIndex, .flags.AdminInvisible = 1)
+            Call EraseUserChar(UserIndex, .flags.AdminInvisible = 1, .flags.AdminInvisible = 1)
 
         End If
     

@@ -1192,6 +1192,7 @@ Public Sub WriteCharacterCreate(ByVal UserIndex As Integer, _
                                 ByVal GrhAura As Long, _
                                 ByVal AuraColor As Long, _
                                 ByVal speeding As Single, _
+                                Optional ByVal EsNPC As Boolean = False, _
                                 Optional ByVal estadoQuest As Byte = 255)
 
     '***************************************************
@@ -1201,36 +1202,7 @@ Public Sub WriteCharacterCreate(ByVal UserIndex As Integer, _
     '***************************************************
     On Error GoTo errHandler
 
-    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterCreate(body, Head, Heading, CharIndex, X, Y, weapon, shield, FX, FXLoops, helmet, AnimAtaque, Name, NickColor, Privileges, GrhAura, AuraColor, speeding, estadoQuest))
-    Exit Sub
-
-errHandler:
-
-    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(UserIndex)
-        Resume
-
-    End If
-
-End Sub
-
-''
-' Writes the "CharacterRemove" message to the given user's outgoing data buffer.
-'
-' @param    UserIndex User to which the message is intended.
-' @param    CharIndex Character to be removed.
-' @remarks  The data is not actually sent until the buffer is properly flushed.
-
-Public Sub WriteCharacterRemove(ByVal UserIndex As Integer, ByVal CharIndex As Integer)
-
-    '***************************************************
-    'Author: Juan Martin Sotuyo Dodero (Maraxus)
-    'Last Modification: 05/17/06
-    'Writes the "CharacterRemove" message to the given user's outgoing data buffer
-    '***************************************************
-    On Error GoTo errHandler
-
-    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterRemove(CharIndex))
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterCreate(body, Head, Heading, CharIndex, X, Y, weapon, shield, FX, FXLoops, helmet, AnimAtaque, Name, NickColor, Privileges, GrhAura, AuraColor, speeding, EsNPC, estadoQuest))
     Exit Sub
 
 errHandler:
@@ -4274,7 +4246,8 @@ End Function
 ' @return   The formated message ready to be writen as is on outgoing buffers.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Function PrepareMessageCharacterRemove(ByVal CharIndex As Integer) As String
+Public Function PrepareMessageCharacterRemove(ByVal CharIndex As Integer, ByVal Desvanecido As Boolean, _
+                                              Optional ByVal FueWarp As Boolean = False) As String
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -4284,7 +4257,9 @@ Public Function PrepareMessageCharacterRemove(ByVal CharIndex As Integer) As Str
     With auxiliarBuffer
         Call .WriteByte(ServerPacketID.CharacterRemove)
         Call .WriteInteger(CharIndex)
-        
+        Call .WriteBoolean(Desvanecido)
+        Call .WriteBoolean(FueWarp)
+
         PrepareMessageCharacterRemove = .ReadASCIIStringFixed(.Length)
 
     End With
@@ -4353,6 +4328,7 @@ Public Function PrepareMessageCharacterCreate(ByVal body As Integer, _
                                               ByVal GrhAura As Long, _
                                               ByVal AuraColor As Long, _
                                               ByVal speeding As Single, _
+                                              ByVal EsNPC As Boolean, _
                                               ByVal estadoQuest As Byte) As String
 
     '***************************************************
@@ -4381,6 +4357,7 @@ Public Function PrepareMessageCharacterCreate(ByVal body As Integer, _
         Call .WriteLong(GrhAura)
         Call .WriteLong(AuraColor)
         Call .WriteLong(speeding)
+        Call .WriteBoolean(EsNPC)
         Call .WriteByte(estadoQuest)
         
         PrepareMessageCharacterCreate = .ReadASCIIStringFixed(.Length)

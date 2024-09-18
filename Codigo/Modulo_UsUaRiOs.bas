@@ -387,7 +387,7 @@ Public Sub EnviarFama(ByVal UserIndex As Integer)
 
 End Sub
 
-Public Sub EraseUserChar(ByVal UserIndex As Integer, ByVal IsAdminInvisible As Boolean)
+Public Sub EraseUserChar(ByVal UserIndex As Integer, ByVal IsAdminInvisible As Boolean, ByVal Desvanecer As Boolean, Optional ByVal FueWarp As Boolean = False)
     '*************************************************
     'Author: Unknown
     'Last modified: 08/01/2009
@@ -411,10 +411,10 @@ Public Sub EraseUserChar(ByVal UserIndex As Integer, ByVal IsAdminInvisible As B
         
         ' Si esta invisible, solo el sabe de su propia existencia, es innecesario borrarlo en los demas clientes
         If IsAdminInvisible Then
-            Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterRemove(.Char.CharIndex))
+            Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterRemove(.Char.CharIndex, FueWarp))
         Else
             'Le mandamos el mensaje para que borre el personaje a los clientes que esten cerca
-            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageCharacterRemove(.Char.CharIndex))
+            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageCharacterRemove(.Char.CharIndex, Desvanecer, FueWarp))
 
         End If
         
@@ -2191,7 +2191,7 @@ Sub WarpUserChar(ByVal UserIndex As Integer, _
         OldMap = .Pos.Map
         OldZona = UserZonaId(UserIndex)
 
-        Call EraseUserChar(UserIndex, .flags.AdminInvisible = 1)
+        Call EraseUserChar(UserIndex, .flags.AdminInvisible = 1, True, FX)
         
         If OldMap <> Map Or OldZona <> MapData(Map, X, Y).ZonaIndex Then
             Call WriteChangeMap(UserIndex, Map, MapZonas(.Pos.Map, UserZonaId(UserIndex)).MapVersion)
