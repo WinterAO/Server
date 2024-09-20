@@ -143,7 +143,7 @@ Public CantZonas() As Integer
 
 #If False Then
 
-    Dim X, Y, n, Map, Mapa, Email, max, Value As Variant
+    Dim X, Y, n, Map, Mapa, Email, Max, Value As Variant
 
 #End If
 
@@ -494,9 +494,7 @@ Public Sub CargarHechizos()
     
     ReDim Hechizos(1 To NumeroHechizos) As tHechizo
     
-    frmCargando.pCargar.min = 0
-    frmCargando.pCargar.max = NumeroHechizos
-    frmCargando.pCargar.Value = 0
+    Call UpdateProgressBar(frmCargando.picBar, CInt(NumeroHechizos), 0, frmCargando.OriginalWidthBar)
     
     'Llena la lista
     For Hechizo = 1 To NumeroHechizos
@@ -586,7 +584,6 @@ Public Sub CargarHechizos()
             .StaRequerido = val(Leer.GetValue("Hechizo" & Hechizo, "StaRequerido"))
             
             .Target = val(Leer.GetValue("Hechizo" & Hechizo, "Target"))
-            frmCargando.pCargar.Value = frmCargando.pCargar.Value + 1
             
             .NeedStaff = val(Leer.GetValue("Hechizo" & Hechizo, "NeedStaff"))
             .StaffAffected = CBool(val(Leer.GetValue("Hechizo" & Hechizo, "StaffAffected")))
@@ -603,6 +600,8 @@ Public Sub CargarHechizos()
             .CastFX = val(Leer.GetValue("Hechizo" & Hechizo, "CastFX"))
             
             .RadioArea = val(Leer.GetValue("Hechizo" & Hechizo, "RadioArea"))
+            
+            Call UpdateProgressBar(frmCargando.picBar, CInt(NumeroHechizos), CInt(Hechizo), frmCargando.OriginalWidthBar)
 
         End With
 
@@ -834,9 +833,7 @@ Sub LoadOBJData()
     'obtiene el numero de obj
     NumObjDatas = val(Leer.GetValue("INIT", "NumObjs"))
     
-    frmCargando.pCargar.min = 0
-    frmCargando.pCargar.max = NumObjDatas
-    frmCargando.pCargar.Value = 0
+    Call UpdateProgressBar(frmCargando.picBar, CInt(NumObjDatas), 0, frmCargando.OriginalWidthBar)
     
     ReDim Preserve ObjData(1 To NumObjDatas) As ObjData
     
@@ -1118,7 +1115,7 @@ Sub LoadOBJData()
             .Recurso.Profesion = val(ReadField(1, Leer.GetValue("OBJ" & Object, "Recurso"), Asc("-"))) 'Profesion a la que pertenece
             .Recurso.Categoria = val(ReadField(2, Leer.GetValue("OBJ" & Object, "Recurso"), Asc("-"))) 'Categoria del recurso
             
-            frmCargando.pCargar.Value = frmCargando.pCargar.Value + 1
+            Call UpdateProgressBar(frmCargando.picBar, CInt(NumObjDatas), CInt(Object), frmCargando.OriginalWidthBar)
 
         End With
 
@@ -1159,15 +1156,13 @@ Sub LoadGlobalDrop()
     Call Leer.Initialize(DatPath & "global_drop.dat")
     
     'obtiene el numero de obj
-    NUMGLOBALDROPS = val(Leer.GetValue("GLOBAL", "NumDrops"))
+    NumGlobalDrops = val(Leer.GetValue("GLOBAL", "NumDrops"))
+
+    Call UpdateProgressBar(frmCargando.picBar, CInt(NumGlobalDrops), 0, frmCargando.OriginalWidthBar)
     
-    frmCargando.pCargar.min = 0
-    frmCargando.pCargar.max = NUMGLOBALDROPS
-    frmCargando.pCargar.Value = 0
+    ReDim Preserve GlobalDROPObject(1 To NumGlobalDrops) As GlobalObj
     
-    ReDim Preserve GlobalDROPObject(1 To NUMGLOBALDROPS) As GlobalObj
-    
-    For i = 1 To NUMGLOBALDROPS
+    For i = 1 To NumGlobalDrops
     
         GlobalDROPObject(i).ObjIndex = Leer.GetValue("DROP" & i, "ObjIndex")
         
@@ -1176,6 +1171,8 @@ Sub LoadGlobalDrop()
         GlobalDROPObject(i).MinAmount = val(ReadField(1, ln, Asc("-")))
         GlobalDROPObject(i).MaxAmount = val(ReadField(2, ln, Asc("-")))
         GlobalDROPObject(i).Prob = Leer.GetValue("DROP" & i, "Prob")
+        
+        Call UpdateProgressBar(frmCargando.picBar, CInt(NumGlobalDrops), CInt(i), frmCargando.OriginalWidthBar)
     
     Next i
     
@@ -1207,19 +1204,19 @@ Sub LoadShop()
     
     Call Leer.Initialize(DatPath & "Shop.dat")
     
-    NUMSHOPS = val(Leer.GetValue("INIT", "NumObjs"))
+    NumShops = val(Leer.GetValue("INIT", "NumObjs"))
+
+    Call UpdateProgressBar(frmCargando.picBar, CInt(NumGlobalDrops), 0, frmCargando.OriginalWidthBar)
     
-    frmCargando.pCargar.min = 0
-    frmCargando.pCargar.max = NUMSHOPS
-    frmCargando.pCargar.Value = 0
+    ReDim Preserve ShopObject(1 To NumShops) As ShopObj
     
-    ReDim Preserve ShopObject(1 To NUMSHOPS) As ShopObj
-    
-    For i = 1 To NUMSHOPS
+    For i = 1 To NumShops
     
         ShopObject(i).ObjIndex = Leer.GetValue("OBJ" & i, "Index")
         ShopObject(i).Amount = Leer.GetValue("OBJ" & i, "Cant")
         ShopObject(i).Valor = Leer.GetValue("OBJ" & i, "Valor")
+        
+        Call UpdateProgressBar(frmCargando.picBar, CInt(NumShops), CInt(i), frmCargando.OriginalWidthBar)
     
     Next i
     
@@ -1331,10 +1328,8 @@ Sub LoadMapData()
     On Error GoTo man
         
     NumMaps = val(GetVar(DatPath & "Map.dat", "INIT", "NumMaps"))
-        
-    frmCargando.pCargar.min = 0
-    frmCargando.pCargar.max = NumMaps
-    frmCargando.pCargar.Value = 0
+    
+    Call UpdateProgressBar(frmCargando.picBar, CInt(NumMaps), 0, frmCargando.OriginalWidthBar)
         
     ReDim MapData(1 To NumMaps, XMinMapSize To XMaxMapSize, YMinMapSize To YMaxMapSize) As MapBlock
     ReDim MapInfo(1 To NumMaps) As MapInfo
@@ -1345,8 +1340,8 @@ Sub LoadMapData()
         tFileName = MapPath & "Mapa" & Map
         
         Call CargarMapa(Map, tFileName)
-            
-        frmCargando.pCargar.Value = frmCargando.pCargar.Value + 1
+
+        Call UpdateProgressBar(frmCargando.picBar, CInt(NumMaps), CInt(Map), frmCargando.OriginalWidthBar)
         DoEvents
     Next Map
  

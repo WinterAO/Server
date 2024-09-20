@@ -232,16 +232,14 @@ Sub WorldSave()
         Next i
     Next j
     
-    FrmStat.pCargar.min = 0
-    FrmStat.pCargar.max = K
-    FrmStat.pCargar.Value = 0
+    Call UpdateProgressBar(FrmStat.picBar, CInt(K), 0, FrmStat.OriginalWidthBar)
     
     For loopX = 1 To NumMaps
         'DoEvents
         For i = 0 To CantZonas(loopX)
             If MapZonas(loopX, i).BackUp = 1 Then
                 Call GrabarMapa(loopX, App.Path & "\WorldBackUp\Mapa" & loopX)
-                FrmStat.pCargar.Value = FrmStat.pCargar.Value + 1
+                Call UpdateProgressBar(FrmStat.picBar, CInt(K), CInt(i), FrmStat.OriginalWidthBar)
     
             End If
         Next i

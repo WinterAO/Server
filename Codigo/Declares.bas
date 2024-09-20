@@ -2491,7 +2491,7 @@ Public Type GlobalObj
 End Type
 
 Public GlobalDROPObject() As GlobalObj
-Public NUMGLOBALDROPS     As Integer
+Public NumGlobalDrops     As Integer
 
 'ITEMS DE SHOP
 Public Type ShopObj
@@ -2501,7 +2501,7 @@ Public Type ShopObj
 End Type
 
 Public ShopObject()            As ShopObj
-Public NUMSHOPS                As Integer
+Public NumShops                As Integer
 
 Public PortalEvento()          As New clsEventoMapa
 Public TotalEventosMap         As Byte

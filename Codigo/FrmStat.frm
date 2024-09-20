@@ -1,9 +1,8 @@
 VERSION 5.00
-Object = "{1A9E0E29-581D-4BEC-8CB2-12B3FFE9C437}#1.0#0"; "AOProgress.ocx"
 Begin VB.Form FrmStat 
    BackColor       =   &H00424242&
    BorderStyle     =   3  'Fixed Dialog
-   ClientHeight    =   1365
+   ClientHeight    =   1125
    ClientLeft      =   45
    ClientTop       =   45
    ClientWidth     =   5685
@@ -12,46 +11,37 @@ Begin VB.Form FrmStat
    LinkTopic       =   "Form1"
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   ScaleHeight     =   91
+   ScaleHeight     =   75
    ScaleMode       =   3  'Pixel
    ScaleWidth      =   379
    ShowInTaskbar   =   0   'False
    StartUpPosition =   1  'CenterOwner
-   Begin AOProgress.uAOProgress pCargar 
-      Height          =   615
+   Begin VB.PictureBox picContent 
+      Appearance      =   0  'Flat
+      BackColor       =   &H00C0C0C0&
+      ForeColor       =   &H80000008&
+      Height          =   285
       Left            =   120
+      ScaleHeight     =   17
+      ScaleMode       =   3  'Pixel
+      ScaleWidth      =   361
       TabIndex        =   1
-      Top             =   600
-      Width           =   5415
-      _ExtentX        =   9551
-      _ExtentY        =   1085
-      Min             =   1
-      ShadowTextColor =   16777215
-      BackgroundDangerColor=   8388736
-      BackColor       =   16384
-      BackAddColor    =   32768
-      BackDangerColor =   128
-      BackSubColor    =   32896
-      ShowShadow      =   0   'False
-      CustomText      =   "Iniciando"
-      BeginProperty FONT {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
-         Name            =   "Arial"
-         Size            =   8.25
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
-      BeginProperty FONT {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
-         Name            =   "Arial"
-         Size            =   8.25
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
+      TabStop         =   0   'False
+      Top             =   660
+      Width           =   5445
+      Begin VB.PictureBox picBar 
+         BackColor       =   &H00FF8080&
+         BorderStyle     =   0  'None
+         Height          =   255
+         Left            =   0
+         ScaleHeight     =   17
+         ScaleMode       =   3  'Pixel
+         ScaleWidth      =   359
+         TabIndex        =   2
+         TabStop         =   0   'False
+         Top             =   0
+         Width           =   5385
+      End
    End
    Begin VB.Label Titu 
       AutoSize        =   -1  'True
@@ -108,3 +98,9 @@ Attribute VB_Exposed = False
 'Pablo Ignacio Marquez
 
 Option Explicit
+
+Public OriginalWidthBar As Single
+
+Private Sub Form_Load()
+    OriginalWidthBar = picBar.ScaleWidth
+End Sub
