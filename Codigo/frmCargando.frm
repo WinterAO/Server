@@ -1,11 +1,10 @@
 VERSION 5.00
 Object = "{48E59290-9880-11CF-9754-00AA00C00908}#1.0#0"; "MSINET.OCX"
-Object = "{1A9E0E29-581D-4BEC-8CB2-12B3FFE9C437}#1.0#0"; "AOProgress.ocx"
 Begin VB.Form frmCargando 
    BackColor       =   &H00C0C0C0&
    BorderStyle     =   0  'None
    Caption         =   "Argentum"
-   ClientHeight    =   3495
+   ClientHeight    =   3525
    ClientLeft      =   1410
    ClientTop       =   3000
    ClientWidth     =   6615
@@ -13,55 +12,46 @@ Begin VB.Form frmCargando
    LinkTopic       =   "Form1"
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   ScaleHeight     =   293.987
-   ScaleMode       =   0  'User
+   ScaleHeight     =   235
+   ScaleMode       =   3  'Pixel
    ScaleWidth      =   441
    ShowInTaskbar   =   0   'False
    StartUpPosition =   2  'CenterScreen
-   Begin AOProgress.uAOProgress pCargar 
-      Height          =   615
-      Left            =   0
-      TabIndex        =   1
-      Top             =   2880
-      Width           =   6615
-      _ExtentX        =   11668
-      _ExtentY        =   1085
-      Min             =   1
-      ShadowTextColor =   16777215
-      BackgroundDangerColor=   8388736
-      BackColor       =   16384
-      BackAddColor    =   32768
-      BackDangerColor =   128
-      BackSubColor    =   32896
-      ShowShadow      =   0   'False
-      CustomText      =   "Iniciando"
-      BeginProperty FONT {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
-         Name            =   "Arial"
-         Size            =   8.25
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
-      BeginProperty FONT {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
-         Name            =   "Arial"
-         Size            =   8.25
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
+   Begin VB.PictureBox picContent 
+      Appearance      =   0  'Flat
+      BackColor       =   &H00C0C0C0&
+      ForeColor       =   &H80000008&
+      Height          =   285
+      Left            =   120
+      ScaleHeight     =   17
+      ScaleMode       =   3  'Pixel
+      ScaleWidth      =   427
+      TabIndex        =   2
+      TabStop         =   0   'False
+      Top             =   3180
+      Width           =   6435
+      Begin VB.PictureBox picBar 
+         BackColor       =   &H00FF8080&
+         BorderStyle     =   0  'None
+         Height          =   255
+         Left            =   0
+         ScaleHeight     =   17
+         ScaleMode       =   3  'Pixel
+         ScaleWidth      =   425
+         TabIndex        =   1
+         TabStop         =   0   'False
+         Top             =   0
+         Width           =   6375
+      End
    End
    Begin VB.PictureBox Picture1 
       BorderStyle     =   0  'None
       Height          =   2895
-      Left            =   0
+      Left            =   30
       ScaleHeight     =   2895
       ScaleWidth      =   6615
       TabIndex        =   0
-      Top             =   0
+      Top             =   -30
       Width           =   6615
       Begin InetCtlsObjects.Inet Inet1 
          Left            =   1440
@@ -70,6 +60,27 @@ Begin VB.Form frmCargando
          _ExtentY        =   1005
          _Version        =   393216
       End
+   End
+   Begin VB.Label lblStatus 
+      Alignment       =   2  'Center
+      AutoSize        =   -1  'True
+      BackStyle       =   0  'Transparent
+      Caption         =   "Status"
+      BeginProperty Font 
+         Name            =   "Tahoma"
+         Size            =   9.75
+         Charset         =   0
+         Weight          =   700
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      ForeColor       =   &H000000FF&
+      Height          =   195
+      Left            =   720
+      TabIndex        =   3
+      Top             =   2880
+      Width           =   5220
    End
 End
 Attribute VB_Name = "frmCargando"
@@ -107,7 +118,11 @@ Attribute VB_Exposed = False
 
 Option Explicit
 
+Public OriginalWidthBar As Single
+
 Private Sub Form_Load()
-    pCargar.CustomText = GetVersionOfTheServer()
+    lblStatus.Caption = GetVersionOfTheServer()
     Picture1.Picture = LoadPicture(App.Path & "\logo.jpg")
+    
+    OriginalWidthBar = picBar.ScaleWidth
 End Sub

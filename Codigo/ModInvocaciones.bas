@@ -53,9 +53,7 @@ On Error GoTo errHandler
     
     NumInvocaciones = val(Leer.GetValue("GLOBAL", "NumInvocaciones"))
     
-    frmCargando.pCargar.Min = 0
-    frmCargando.pCargar.Max = NumInvocaciones
-    frmCargando.pCargar.Value = 0
+    Call UpdateProgressBar(frmCargando.picBar, CInt(NumInvocaciones), 0, frmCargando.OriginalWidthBar)
     
     ReDim Preserve Invocacion(1 To NumInvocaciones) As tInvocacion
     
@@ -84,6 +82,8 @@ On Error GoTo errHandler
         Invocacion(i).PosAparicion.Map = Invocacion(i).Mapa
         Invocacion(i).PosAparicion.X = val(ReadField(1, tmpStr, Asc("-")))
         Invocacion(i).PosAparicion.Y = val(ReadField(2, tmpStr, Asc("-")))
+        
+        Call UpdateProgressBar(frmCargando.picBar, CInt(NumInvocaciones), CInt(i), frmCargando.OriginalWidthBar)
         
     Next i
     
@@ -139,7 +139,7 @@ Public Sub IniciarRitoInvocacion(ByVal UserIndex As Integer)
         If Invocacion(InvocID).Quest = 0 Then
             '¿Tiene la quest en curso?
             If buscarQuestenCurso(UserIndex, Invocacion(InvocID).Quest) > 0 Then
-                Call WriteConsoleMsg(UserIndex, "Para invocar esta criatura necesitas tener activa la quest '" & QuestList(Invocacion(InvocID).Quest).nombre & "'", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(UserIndex, "Para invocar esta criatura necesitas tener activa la quest '" & QuestList(Invocacion(InvocID).Quest).Nombre & "'", FontTypeNames.FONTTYPE_INFO)
                 Exit Sub
             End If
         End If
@@ -190,7 +190,7 @@ Public Sub IniciarRitoInvocacion(ByVal UserIndex As Integer)
         Invocacion(InvocID).EstadoInvocacion.Tiempo = Invocacion(InvocID).CastInvocacion 'Tiempo de casteo para que aparezca el bicho
         Invocacion(InvocID).Invocado = True
         
-        Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Esta dando comienzo el ritual para la invocación de una criatura legendaria.", FontTypeNames.FONTTYPE_FIGHT))
+        Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("Esta dando comienzo el ritual para la invocación de una criatura legendaria.", FontTypeNames.FONTTYPE_FIGHT))
     End With
 
 End Sub
@@ -256,7 +256,7 @@ Public Sub CastearInvoc(ByVal Indice As Byte)
                 'Si no paso, restamos
                 .EstadoInvocacion.Tiempo = .EstadoInvocacion.Tiempo - 1
                 
-                If .EstadoInvocacion.Tiempo = 10 Then Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("El ritual de invocación casi ha concluido. Faltan 10 segundos para al aparición de la criatura legendaria.", FontTypeNames.FONTTYPE_FIGHT))
+                If .EstadoInvocacion.Tiempo = 10 Then Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("El ritual de invocación casi ha concluido. Faltan 10 segundos para al aparición de la criatura legendaria.", FontTypeNames.FONTTYPE_FIGHT))
                 
             Else 'Si paso, invocamos al NPC
                 'Eliminamos el portal
@@ -268,7 +268,7 @@ Public Sub CastearInvoc(ByVal Indice As Byte)
                 'El NPC aparece
                 Invocacion(Indice).NPCIndex = SpawnNpc(.NPC, .PosAparicion, False, False, False)
                 
-                Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Una criatura legendaria ha sido invocada.", FontTypeNames.FONTTYPE_FIGHT))
+                Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("Una criatura legendaria ha sido invocada.", FontTypeNames.FONTTYPE_FIGHT))
                 
             End If
 

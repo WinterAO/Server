@@ -25,7 +25,7 @@ Begin VB.Form frmCrearCuenta
    ShowInTaskbar   =   0   'False
    StartUpPosition =   2  'CenterScreen
    Begin VB.Frame FraEditarPass 
-      BackColor       =   &H00000000&
+      BackColor       =   &H00535353&
       Caption         =   "Editar Pass Cuenta"
       BeginProperty Font 
          Name            =   "Tahoma"
@@ -90,7 +90,7 @@ Begin VB.Form frmCrearCuenta
             Italic          =   0   'False
             Strikethrough   =   0   'False
          EndProperty
-         ForeColor       =   &H0000C000&
+         ForeColor       =   &H00FFFFFF&
          Height          =   195
          Left            =   240
          TabIndex        =   14
@@ -110,7 +110,7 @@ Begin VB.Form frmCrearCuenta
             Italic          =   0   'False
             Strikethrough   =   0   'False
          EndProperty
-         ForeColor       =   &H0000C000&
+         ForeColor       =   &H00FFFFFF&
          Height          =   195
          Left            =   240
          TabIndex        =   13
@@ -129,7 +129,7 @@ Begin VB.Form frmCrearCuenta
       Width           =   2085
    End
    Begin VB.Frame FraNuevaCuenta 
-      BackColor       =   &H00000000&
+      BackColor       =   &H00535353&
       Caption         =   "Nueva Cuenta"
       BeginProperty Font 
          Name            =   "Tahoma"
@@ -202,7 +202,7 @@ Begin VB.Form frmCrearCuenta
             Italic          =   0   'False
             Strikethrough   =   0   'False
          EndProperty
-         ForeColor       =   &H0000C000&
+         ForeColor       =   &H00FFFFFF&
          Height          =   195
          Left            =   840
          TabIndex        =   4
@@ -222,7 +222,7 @@ Begin VB.Form frmCrearCuenta
             Italic          =   0   'False
             Strikethrough   =   0   'False
          EndProperty
-         ForeColor       =   &H0000C000&
+         ForeColor       =   &H00FFFFFF&
          Height          =   195
          Left            =   1320
          TabIndex        =   3
@@ -242,7 +242,7 @@ Begin VB.Form frmCrearCuenta
             Italic          =   0   'False
             Strikethrough   =   0   'False
          EndProperty
-         ForeColor       =   &H0000C000&
+         ForeColor       =   &H00FFFFFF&
          Height          =   195
          Left            =   240
          TabIndex        =   2

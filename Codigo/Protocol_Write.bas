@@ -72,7 +72,6 @@ Private Enum ServerPacketID
     UpdateHungerAndThirst        ' EHYS
     Fame                         ' FAMA
     MiniStats                    ' MEST
-    LevelUp                      ' SUNI
     AddForumMsg                  ' FMSG
     ShowForumForm                ' MFOR
     SetInvisible                 ' NOVER
@@ -96,9 +95,9 @@ Private Enum ServerPacketID
     SendNight                    ' NOC
     Pong
     UpdateTagAndStatus
-    BattleGs                     'Battlegrounds
     MostrarShop
     ActualizarGemasShop
+    SpeedToChar
     
     'GM =  messages
     SpawnList                    ' SPL
@@ -109,7 +108,6 @@ Private Enum ServerPacketID
     ShowDenounces
     RecordList
     RecordDetails
-    
     ShowGuildAlign
     ShowPartyForm
     PeticionInvitarParty
@@ -913,7 +911,9 @@ End Sub
 Public Sub WriteChatOverHead(ByVal UserIndex As Integer, _
                              ByVal Chat As String, _
                              ByVal CharIndex As Integer, _
-                             ByVal color As Long, _
+                             ByVal r As Byte, _
+                             ByVal g As Byte, _
+                             ByVal b As Byte, _
                              Optional ByVal NoConsole As Boolean = False)
 
     '***************************************************
@@ -923,7 +923,7 @@ Public Sub WriteChatOverHead(ByVal UserIndex As Integer, _
     '***************************************************
     On Error GoTo errHandler
 
-    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageChatOverHead(Chat, CharIndex, color, NoConsole))
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageChatOverHead(Chat, CharIndex, r, g, b, NoConsole))
     Exit Sub
 
 errHandler:
@@ -1191,7 +1191,8 @@ Public Sub WriteCharacterCreate(ByVal UserIndex As Integer, _
                                 ByVal Privileges As Byte, _
                                 ByVal GrhAura As Long, _
                                 ByVal AuraColor As Long, _
-                                Optional ByVal NoShadow As Byte = False, _
+                                ByVal speeding As Single, _
+                                Optional ByVal EsNPC As Boolean = False, _
                                 Optional ByVal estadoQuest As Byte = 255)
 
     '***************************************************
@@ -1201,36 +1202,7 @@ Public Sub WriteCharacterCreate(ByVal UserIndex As Integer, _
     '***************************************************
     On Error GoTo errHandler
 
-    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterCreate(body, Head, Heading, CharIndex, X, Y, weapon, shield, FX, FXLoops, helmet, AnimAtaque, Name, NickColor, Privileges, GrhAura, AuraColor, NoShadow, estadoQuest))
-    Exit Sub
-
-errHandler:
-
-    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(UserIndex)
-        Resume
-
-    End If
-
-End Sub
-
-''
-' Writes the "CharacterRemove" message to the given user's outgoing data buffer.
-'
-' @param    UserIndex User to which the message is intended.
-' @param    CharIndex Character to be removed.
-' @remarks  The data is not actually sent until the buffer is properly flushed.
-
-Public Sub WriteCharacterRemove(ByVal UserIndex As Integer, ByVal CharIndex As Integer)
-
-    '***************************************************
-    'Author: Juan Martin Sotuyo Dodero (Maraxus)
-    'Last Modification: 05/17/06
-    'Writes the "CharacterRemove" message to the given user's outgoing data buffer
-    '***************************************************
-    On Error GoTo errHandler
-
-    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterRemove(CharIndex))
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterCreate(body, Head, Heading, CharIndex, X, Y, weapon, shield, FX, FXLoops, helmet, AnimAtaque, Name, NickColor, Privileges, GrhAura, AuraColor, speeding, EsNPC, estadoQuest))
     Exit Sub
 
 errHandler:
@@ -2410,40 +2382,9 @@ Public Sub WriteMiniStats(ByVal UserIndex As Integer)
         Call .WriteInteger(UserList(UserIndex).Stats.NPCsMuertos)
         
         Call .WriteByte(UserList(UserIndex).clase)
+        Call .WriteByte(UserList(UserIndex).Raza)
+        
         Call .WriteLong(UserList(UserIndex).Counters.Pena)
-
-    End With
-
-    Exit Sub
-
-errHandler:
-
-    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(UserIndex)
-        Resume
-
-    End If
-
-End Sub
-
-''
-' Writes the "LevelUp" message to the given user's outgoing data buffer.
-'
-' @param    skillPoints The number of free skill points the player has.
-' @remarks  The data is not actually sent until the buffer is properly flushed.
-
-Public Sub WriteLevelUp(ByVal UserIndex As Integer, ByVal skillPoints As Integer)
-
-    '***************************************************
-    'Author: Juan Martin Sotuyo Dodero (Maraxus)
-    'Last Modification: 05/17/06
-    'Writes the "LevelUp" message to the given user's outgoing data buffer
-    '***************************************************
-    On Error GoTo errHandler
-
-    With UserList(UserIndex).outgoingData
-        Call .WriteByte(ServerPacketID.LevelUp)
-        Call .WriteInteger(skillPoints)
 
     End With
 
@@ -2978,7 +2919,7 @@ End Sub
 ' @param    criminalsKilled The number of criminals killed by the requested char.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Sub WriteCharacterInfo(ByVal UserIndex As Integer, ByVal charName As String, ByVal race As eRaza, ByVal Class As eClass, ByVal gender As eGenero, ByVal level As Byte, ByVal Gold As Long, ByVal bank As Long, ByVal reputation As Long, ByVal previousPetitions As String, ByVal currentGuild As String, ByVal previousGuilds As String, ByVal RoyalArmy As Boolean, ByVal CaosLegion As Boolean, ByVal citicensKilled As Long, ByVal criminalsKilled As Long)
+Public Sub WriteCharacterInfo(ByVal UserIndex As Integer, ByVal CharName As String, ByVal race As eRaza, ByVal Class As eClass, ByVal gender As eGenero, ByVal level As Byte, ByVal Gold As Long, ByVal bank As Long, ByVal reputation As Long, ByVal previousPetitions As String, ByVal currentGuild As String, ByVal previousGuilds As String, ByVal RoyalArmy As Boolean, ByVal CaosLegion As Boolean, ByVal citicensKilled As Long, ByVal criminalsKilled As Long)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -2990,7 +2931,7 @@ Public Sub WriteCharacterInfo(ByVal UserIndex As Integer, ByVal charName As Stri
     With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.CharacterInfo)
         
-        Call .WriteASCIIString(charName)
+        Call .WriteASCIIString(CharName)
         Call .WriteByte(race)
         Call .WriteByte(Class)
         Call .WriteByte(gender)
@@ -3936,7 +3877,9 @@ End Function
 
 Public Function PrepareMessageChatOverHead(ByVal Chat As String, _
                                            ByVal CharIndex As Integer, _
-                                           ByVal color As Long, _
+                                           ByVal r As Byte, _
+                                           ByVal g As Byte, _
+                                           ByVal b As Byte, _
                                            Optional ByVal NoConsole As Boolean = False) As String
 
     '***************************************************
@@ -3950,10 +3893,9 @@ Public Function PrepareMessageChatOverHead(ByVal Chat As String, _
         Call .WriteInteger(CharIndex)
         Call .WriteBoolean(NoConsole)
         
-        ' Write rgb channels and save one byte from long :D
-        Call .WriteByte(color And &HFF)
-        Call .WriteByte((color And &HFF00&) \ &H100&)
-        Call .WriteByte((color And &HFF0000) \ &H10000)
+        Call .WriteByte(r)
+        Call .WriteByte(g)
+        Call .WriteByte(b)
         
         PrepareMessageChatOverHead = .ReadASCIIStringFixed(.Length)
 
@@ -4304,7 +4246,8 @@ End Function
 ' @return   The formated message ready to be writen as is on outgoing buffers.
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
-Public Function PrepareMessageCharacterRemove(ByVal CharIndex As Integer) As String
+Public Function PrepareMessageCharacterRemove(ByVal CharIndex As Integer, ByVal Desvanecido As Boolean, _
+                                              Optional ByVal FueWarp As Boolean = False) As String
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -4314,7 +4257,9 @@ Public Function PrepareMessageCharacterRemove(ByVal CharIndex As Integer) As Str
     With auxiliarBuffer
         Call .WriteByte(ServerPacketID.CharacterRemove)
         Call .WriteInteger(CharIndex)
-        
+        Call .WriteBoolean(Desvanecido)
+        Call .WriteBoolean(FueWarp)
+
         PrepareMessageCharacterRemove = .ReadASCIIStringFixed(.Length)
 
     End With
@@ -4382,7 +4327,8 @@ Public Function PrepareMessageCharacterCreate(ByVal body As Integer, _
                                               ByVal Privileges As Byte, _
                                               ByVal GrhAura As Long, _
                                               ByVal AuraColor As Long, _
-                                              ByVal NoShadow As Byte, _
+                                              ByVal speeding As Single, _
+                                              ByVal EsNPC As Boolean, _
                                               ByVal estadoQuest As Byte) As String
 
     '***************************************************
@@ -4410,7 +4356,8 @@ Public Function PrepareMessageCharacterCreate(ByVal body As Integer, _
         Call .WriteByte(Privileges)
         Call .WriteLong(GrhAura)
         Call .WriteLong(AuraColor)
-        Call .WriteByte(NoShadow)
+        Call .WriteLong(speeding)
+        Call .WriteBoolean(EsNPC)
         Call .WriteByte(estadoQuest)
         
         PrepareMessageCharacterCreate = .ReadASCIIStringFixed(.Length)
@@ -5080,20 +5027,39 @@ errHandler:
     End If
 End Sub
 
-Public Function PrepareMessageCreateDamage(ByVal X As Integer, ByVal Y As Integer, ByVal DamageValue As Long, ByVal DamageType As Byte)
+Public Function PrepareMessageCreateDamage(ByVal X As Integer, _
+                                           ByVal Y As Integer, _
+                                           ByVal DamageValue As Long, _
+                                           ByVal DamageType As Byte)
  
-' @ Envia el paquete para crear dano (Y)
+    ' @ Envia el paquete para crear dano (Y)
  
-With auxiliarBuffer
-     .WriteByte ServerPacketID.CreateDamage
-     .WriteInteger X
-     .WriteInteger Y
-     .WriteLong DamageValue
-     .WriteByte DamageType
+    With auxiliarBuffer
+        .WriteByte ServerPacketID.CreateDamage
+        .WriteInteger X
+        .WriteInteger Y
+        .WriteLong DamageValue
+        .WriteByte DamageType
      
-     PrepareMessageCreateDamage = .ReadASCIIStringFixed(.Length)
+        PrepareMessageCreateDamage = .ReadASCIIStringFixed(.Length)
      
-End With
+    End With
+ 
+End Function
+
+Public Function PrepareMessageSpeeding(ByVal CharIndex As Integer, _
+                                       ByVal speeding As Single)
+ 
+    ' @ Envia el paquete para cambiar la velocidad
+ 
+    With auxiliarBuffer
+        Call .WriteByte(ServerPacketID.SpeedToChar)
+        Call .WriteInteger(CharIndex)
+        Call .WriteSingle(speeding)
+     
+        PrepareMessageSpeeding = .ReadASCIIStringFixed(.Length)
+     
+    End With
  
 End Function
 
@@ -5146,15 +5112,10 @@ Public Sub WriteSetSpeed(ByVal UserIndex As Integer)
 
 On Error GoTo errHandler
 
-    Dim Client_Speed As Double
 
     With UserList(UserIndex)
         Call .outgoingData.WriteByte(ServerPacketID.SetSpeed)
-        
-        'Transformamos a valores que maneja el cliente
-        Client_Speed = .flags.Velocidad / 100
-        
-        Call .outgoingData.WriteDouble(Client_Speed)
+        Call .outgoingData.WriteSingle(.flags.Velocidad)
         
     End With
 
@@ -5239,30 +5200,6 @@ On Error GoTo errHandler
         Call .WriteInteger(NPCIndex)
     End With
     
-Exit Sub
-
-errHandler:
-    If Err.Number = UserList(UserIndex).outgoingData.NotEnoughSpaceErrCode Then
-        Call FlushBuffer(UserIndex)
-        Resume
-    End If
-End Sub
-
-Public Sub WriteBattlegrounds(ByVal UserIndex As Integer, ByVal BGs As Boolean)
-'**************************************
-'Autor Lorwik
-'Fecha: 02/05/2022
-'Descripción: Envia la variable Battlegrounds al cliente
-'**************************************
-On Error GoTo errHandler
-
-    With UserList(UserIndex).outgoingData
-    
-        Call .WriteByte(ServerPacketID.BattleGs)
-        Call .WriteBoolean(BGs)
-    
-    End With
-
 Exit Sub
 
 errHandler:

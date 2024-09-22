@@ -219,6 +219,7 @@ Public Sub DoNavega(ByVal UserIndex As Integer, _
         If .flags.Navegando = 0 Then
             
             Call ComenzaraNavegar(UserIndex, Slot)
+            Call UpdateUserSpeed(UserIndex)
         
         ' Estaba navegando
         Else
@@ -305,6 +306,8 @@ Public Sub DejardeNavegar(ByVal UserIndex As Integer)
         Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.Heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
     
         Call WriteNavigateToggle(UserIndex)
+        
+        Call UpdateUserSpeed(UserIndex)
     
     End With
 End Sub
@@ -945,7 +948,7 @@ Public Sub ArtesanoConstruirItem(ByVal UserIndex As Integer, ByVal Item As Integ
 
     ' Revisamos si tiene las monedas para la comision
     If UserList(UserIndex).Stats.Gld < ArtesaniaCosto Then
-        Call WriteChatOverHead(UserIndex, "No tienes suficientes monedas de oro para pagarme!", Npclist(NPCIndex).Char.CharIndex, vbWhite)
+        Call WriteChatOverHead(UserIndex, "No tienes suficientes monedas de oro para pagarme!", Npclist(NPCIndex).Char.CharIndex, 255, 255, 255)
         Exit Sub
     End If
 
@@ -956,7 +959,7 @@ Public Sub ArtesanoConstruirItem(ByVal UserIndex As Integer, ByVal Item As Integ
         With ArtesanoObj.ItemCrafteo(i)
 
             If Not TieneObjetos(.ObjIndex, .Amount, UserIndex) Then
-                Call WriteChatOverHead(UserIndex, "No tienes los materiales necesarios!", Npclist(NPCIndex).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "No tienes los materiales necesarios!", Npclist(NPCIndex).Char.CharIndex, 255, 255, 255)
                 Exit Sub
             End If
 
@@ -990,7 +993,7 @@ Public Sub ArtesanoConstruirItem(ByVal UserIndex As Integer, ByVal Item As Integ
         Call TirarItemAlPiso(UserList(UserIndex).Pos, ObjetoCreado)
     End If
 
-    Call WriteChatOverHead(UserIndex, "Aqui tienes tu " & ArtesanoObj.Name & ". Vuelve pronto!", Npclist(NPCIndex).Char.CharIndex, vbWhite)
+    Call WriteChatOverHead(UserIndex, "Aqui tienes tu " & ArtesanoObj.Name & ". Vuelve pronto!", Npclist(NPCIndex).Char.CharIndex, 255, 255, 255)
 
 End Sub
 
@@ -1358,7 +1361,7 @@ Sub DoAdminInvisible(ByVal UserIndex As Integer)
             Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(tempData)
             
             'Le mandamos el mensaje para que borre el personaje a los clientes que esten cerca
-            Call SendData(SendTarget.ToPCAreaButIndex, UserIndex, PrepareMessageCharacterRemove(.Char.CharIndex))
+            Call SendData(SendTarget.ToPCAreaButIndex, UserIndex, PrepareMessageCharacterRemove(.Char.CharIndex, True))
             
         Else
             .flags.AdminInvisible = 0
@@ -2774,8 +2777,7 @@ Public Sub DoEquita(ByVal UserIndex As Integer, _
     
                 '  Comienza a equitar
                 .flags.Equitando = 1
-                .flags.Velocidad = ObjData(.Invent.MonturaObjIndex).Speed
-                Call WriteSetSpeed(UserIndex)
+                Call UpdateUserSpeed(UserIndex)
                 
                 Call WriteEquitandoToggle(UserIndex)
 
@@ -2810,8 +2812,7 @@ Public Sub UnmountMontura(ByVal UserIndex As Integer)
   
         ' Termina de equitar
         .flags.Equitando = 0
-        .flags.Velocidad = SPEED_NORMAL
-        Call WriteSetSpeed(UserIndex)
+        Call UpdateUserSpeed(UserIndex)
         
         .Counters.MonturaCounter = 3
 

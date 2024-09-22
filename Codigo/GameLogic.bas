@@ -904,7 +904,7 @@ Function CheckForSameNameAccount(ByVal Name As String) As Boolean
             'ESE EVENTO NO DISPARA UN SAVE USER, LO QUE PUEDE SER UTILIZADO PARA DUPLICAR ITEMS
             'ESTE BUG EN ALKON PRODUJO QUE EL SERVIDOR ESTE CAIDO DURANTE 3 DIAS. ATENTOS.
             
-            If UCase$(UserList(LoopC).AccountInfo.UserName) = UCase$(Name) Then
+            If UCase$(UserList(LoopC).AccountInfo.username) = UCase$(Name) Then
             
                 CheckForSameNameAccount = True
                 Exit Function
@@ -1202,7 +1202,7 @@ Public Sub Expresar(ByVal NPCIndex As Integer, ByVal UserIndex As Integer)
         Dim randomi
 
         randomi = RandomNumber(1, Npclist(NPCIndex).NroExpresiones)
-        Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead(Npclist(NPCIndex).Expresiones(randomi), Npclist(NPCIndex).Char.CharIndex, vbWhite))
+        Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead(Npclist(NPCIndex).Expresiones(randomi), Npclist(NPCIndex).Char.CharIndex, 255, 255, 255))
 
     End If
 
@@ -1654,24 +1654,6 @@ Sub LookatTile(ByVal UserIndex As Integer, _
                                 End If
 
                             End If
-
-                        End If
-                  
-                        'Centinela
-                        If Npclist(TempCharIndex).Numero = NUM_CENTI Then
-                            If UserList(UserIndex).CentinelaUsuario.Revisando Then
-                                Stat = "Sigo esperando, ingresa el codigo que te he solicitado."
-                            Else
-                                Stat = "No estoy hablando contigo."
-
-                            End If
-                      
-                            'Enviamos el mensaje propiamente dicho:
-                            Call WriteChatOverHead(UserIndex, Stat, Npclist(TempCharIndex).Char.CharIndex, vbYellow)
-                      
-                        Else
-                            'Enviamos el mensaje propiamente dicho:
-                            Call WriteChatOverHead(UserIndex, Stat, Npclist(TempCharIndex).Char.CharIndex, vbWhite)
 
                         End If
               

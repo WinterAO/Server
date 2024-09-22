@@ -10,7 +10,7 @@ Private Const YEsquinaArriba As Byte = 51
 Public Oponente(0 To 1) As Byte
 
 Type Rank
-    nombre As String
+    Nombre As String
     ELO As Double
     Posicion As Byte
 End Type
@@ -20,7 +20,7 @@ Private Duelando As Boolean
 Public Ranked(5) As Rank
     
 Public Sub DesconectarDueloSet(ByVal Ganador As Integer, ByVal Perdedor As Integer)
-    Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Duelos por Set: El duelo ha sido cancelado por la desconexión de " & UserList(Perdedor).Name, FontTypeNames.FONTTYPE_CITIZEN))
+    Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("Duelos por Set: El duelo ha sido cancelado por la desconexión de " & UserList(Perdedor).Name, FontTypeNames.FONTTYPE_CITIZEN))
 
     'Reseteamos los flags del Ganador
     UserList(Ganador).flags.EsperandoDueloSet = False
@@ -29,15 +29,8 @@ Public Sub DesconectarDueloSet(ByVal Ganador As Integer, ByVal Perdedor As Integ
     UserList(Ganador).flags.PerdioRondaSet = 0
     
     'Teletransportamso a los usuarios
-    If Battlegrounds Then
-        Call WarpUserChar(Perdedor, Battleground.Map, Battleground.X, Battleground.Y, True)
-        Call WarpUserChar(Ganador, Battleground.Map, Battleground.X, Battleground.Y, True)
-            
-    Else
-        Call WarpUserChar(Perdedor, Ramx.Map, Ramx.X, Ramx.Y, True)
-        Call WarpUserChar(Ganador, Ramx.Map, Ramx.X, Ramx.Y, True)
-            
-    End If
+    Call WarpUserChar(Perdedor, Ramx.Map, Ramx.X, Ramx.Y, True)
+    Call WarpUserChar(Ganador, Ramx.Map, Ramx.X, Ramx.Y, True)
     
     'Reseteamos los Flags Perdedor
     UserList(Perdedor).flags.EsperandoDueloSet = False
@@ -85,11 +78,11 @@ Public Sub EsperarOponenteDuelo(ByVal UserIndex As Integer)
         If Oponente(0) = 0 Then
             'No lo hay, pues lo metemos en la cola y le asignamos el puesto 0
             Oponente(0) = UserIndex
-            Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Ranked: " & UserList(UserIndex).Name & " está buscando contrincante.", FontTypeNames.FONTTYPE_DIOS))
+            Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("Ranked: " & UserList(UserIndex).Name & " está buscando contrincante.", FontTypeNames.FONTTYPE_DIOS))
         Else
             'Si lo hay, le asignamos el puesto 1 y para dentro.
             Oponente(1) = UserIndex
-            Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Ranked: ¡" & UserList(Oponente(1)).Name & " aceptó el desafío!", FontTypeNames.FONTTYPE_DIOS))
+            Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("Ranked: ¡" & UserList(Oponente(1)).Name & " aceptó el desafío!", FontTypeNames.FONTTYPE_DIOS))
             
             Call ComenzarDuelo(Oponente(0), Oponente(1))
         End If
@@ -127,7 +120,7 @@ Public Sub TerminarDueloSet(ByVal Ganador As Integer, ByVal Perdedor As Integer)
 
     With UserList(Perdedor)
         If .flags.PerdioRondaSet = 1 Then
-            Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Ranked: ¡" & UserList(Ganador).flags.PerdioRondaSet & "-" & UserList(Perdedor).flags.PerdioRondaSet & " para " & UserList(Ganador).Name & "!", FontTypeNames.FONTTYPE_DIOS))
+            Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("Ranked: ¡" & UserList(Ganador).flags.PerdioRondaSet & "-" & UserList(Perdedor).flags.PerdioRondaSet & " para " & UserList(Ganador).Name & "!", FontTypeNames.FONTTYPE_DIOS))
             Call WarpUserChar(Perdedor, MapaDuelos, XEsquinaAbajo, YEsquinaAbajo, True) 'esqina de duelos
             Call WarpUserChar(Ganador, MapaDuelos, XEsquinaArriba, YEsquinaArriba, True) 'esqina de duelos
 
@@ -140,7 +133,7 @@ Public Sub TerminarDueloSet(ByVal Ganador As Integer, ByVal Perdedor As Integer)
             UserList(Ganador).flags.TimeDueloSet = 9
             UserList(Ganador).flags.GanoDueloSet = True
             
-            Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Ranked: ¡" & UserList(Ganador).flags.PerdioRondaSet & "-" & UserList(Perdedor).flags.PerdioRondaSet & " para " & UserList(Ganador).Name & "! ¡" & UserList(Ganador).Name & " Gana!", FontTypeNames.FONTTYPE_DIOS))
+            Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("Ranked: ¡" & UserList(Ganador).flags.PerdioRondaSet & "-" & UserList(Perdedor).flags.PerdioRondaSet & " para " & UserList(Ganador).Name & "! ¡" & UserList(Ganador).Name & " Gana!", FontTypeNames.FONTTYPE_DIOS))
             
             'Calcularmos el ELO
             ELOGANADOR = CalcularELO(Ganador, Perdedor, True)
@@ -151,13 +144,8 @@ Public Sub TerminarDueloSet(ByVal Ganador As Integer, ByVal Perdedor As Integer)
             UserList(Perdedor).Stats.ELO = ELOPERDEDOR + UserList(Perdedor).Stats.ELO
             Call WriteConsoleMsg(Perdedor, "Ranked: ¡Has perdido " & ELOPERDEDOR & " puntos! Tu ELO actual es de " & UserList(Perdedor).Stats.ELO & ".", FontTypeNames.FONTTYPE_INFOBOLD)
             
-            If Battlegrounds Then
-                Call WarpUserChar(Perdedor, Battleground.Map, Battleground.X, Battleground.Y, True)
+            Call WarpUserChar(Perdedor, Ramx.Map, Ramx.X, Ramx.Y, True)
             
-            Else
-                Call WarpUserChar(Perdedor, Ramx.Map, Ramx.X, Ramx.Y, True)
-            
-            End If
             .flags.EsperandoDueloSet = False
             .flags.OponenteSet = 0
             .flags.EstaDueleandoSet = False
@@ -207,7 +195,7 @@ Public Sub CargarRank()
         Call Leer.Initialize(App.Path & "\Ranking.dat")
         
         For i = 1 To 5
-            Ranked(i).nombre = Leer.GetValue("Posicion" & i, "Nombre")
+            Ranked(i).Nombre = Leer.GetValue("Posicion" & i, "Nombre")
             Ranked(i).ELO = Leer.GetValue("Posicion" & i, "ELO")
             Ranked(i).Posicion = i
         Next i
@@ -221,13 +209,13 @@ End Sub
 
 Public Sub GuardarRank()
     Dim i As Byte
-    Dim File As String
+    Dim file As String
     
-    File = DatPath & "\Ranking.dat"
+    file = DatPath & "\Ranking.dat"
         
     For i = 1 To 5
-        Call WriteVar(File, "Posicion" & i, "Nombre", Ranked(i).nombre)
-        Call WriteVar(File, "Posicion" & i, "ELO", Ranked(i).ELO)
+        Call WriteVar(file, "Posicion" & i, "Nombre", Ranked(i).Nombre)
+        Call WriteVar(file, "Posicion" & i, "ELO", Ranked(i).ELO)
     Next i
 End Sub
 
@@ -247,7 +235,7 @@ Public Sub ActualizarRank(ByVal UserIndex As Integer)
         If (i = 5) And (UserAgregado = True) Then Exit Sub
         If UserAgregado Then
             If i + 1 < 5 Then
-                Ranked(i + 1).nombre = NameIndex
+                Ranked(i + 1).Nombre = NameIndex
                 Ranked(i + 1).ELO = ELOIndex
                 Ranked(i + 1).Posicion = i
             End If
@@ -255,12 +243,12 @@ Public Sub ActualizarRank(ByVal UserIndex As Integer)
 
         If Ranked(i).ELO <= ELOIndex Then
             If i + 1 < 5 Then
-                Ranked(i + 1).nombre = Ranked(i).nombre
+                Ranked(i + 1).Nombre = Ranked(i).Nombre
                 Ranked(i + 1).ELO = Ranked(i).ELO
                 Ranked(i + 1).Posicion = i + 1
                 
                 'Insertamos al usuario en su nueva posicion
-                Ranked(i).nombre = NameIndex
+                Ranked(i).Nombre = NameIndex
                 Ranked(i).ELO = ELOIndex
                 Ranked(i).Posicion = i
                 UserAgregado = True

@@ -69,7 +69,7 @@ Private Type tDatosZonas
 End Type
 
 Public Type tDatosLuces
-    R As Integer
+    r As Integer
     g As Integer
     b As Integer
     range As Byte
@@ -116,12 +116,13 @@ Private Type tMapDat
     battle_mode As Boolean
     backup_mode As Boolean
     restrict_mode As String
-    music_number As String
+    music_number As Integer
     zone As String
     terrain As String
-    Ambient As String
-    lvlMinimo As String
-    lvlMaximo As String
+    Ambient As Integer
+    AmbientNight As Integer
+    lvlMinimo As Integer
+    lvlMaximo As Integer
     RoboNpcsPermitido As Boolean
     InvocarSinEfecto As Boolean
     OcultarSinEfecto As Boolean
@@ -142,19 +143,9 @@ Public CantZonas() As Integer
 
 #If False Then
 
-    Dim X, Y, n, Map, Mapa, Email, max, Value As Variant
+    Dim X, Y, n, Map, Mapa, Email, Max, Value As Variant
 
 #End If
-
-Public Sub IniciarCabecera()
-
-    With MiCabecera
-        .Desc = "WinterAO Resurrection mod Argentum Online by Noland Studios. http://winterao.com.ar"
-        .crc = Rnd * 245
-        .MagicWord = Rnd * 92
-    End With
-    
-End Sub
 
 Public Sub CargarSpawnList()
     '****************************************************************************************
@@ -503,9 +494,7 @@ Public Sub CargarHechizos()
     
     ReDim Hechizos(1 To NumeroHechizos) As tHechizo
     
-    frmCargando.pCargar.min = 0
-    frmCargando.pCargar.max = NumeroHechizos
-    frmCargando.pCargar.Value = 0
+    Call UpdateProgressBar(frmCargando.picBar, CInt(NumeroHechizos), 0, frmCargando.OriginalWidthBar)
     
     'Llena la lista
     For Hechizo = 1 To NumeroHechizos
@@ -595,7 +584,6 @@ Public Sub CargarHechizos()
             .StaRequerido = val(Leer.GetValue("Hechizo" & Hechizo, "StaRequerido"))
             
             .Target = val(Leer.GetValue("Hechizo" & Hechizo, "Target"))
-            frmCargando.pCargar.Value = frmCargando.pCargar.Value + 1
             
             .NeedStaff = val(Leer.GetValue("Hechizo" & Hechizo, "NeedStaff"))
             .StaffAffected = CBool(val(Leer.GetValue("Hechizo" & Hechizo, "StaffAffected")))
@@ -612,6 +600,8 @@ Public Sub CargarHechizos()
             .CastFX = val(Leer.GetValue("Hechizo" & Hechizo, "CastFX"))
             
             .RadioArea = val(Leer.GetValue("Hechizo" & Hechizo, "RadioArea"))
+            
+            Call UpdateProgressBar(frmCargando.picBar, CInt(NumeroHechizos), CInt(Hechizo), frmCargando.OriginalWidthBar)
 
         End With
 
@@ -843,9 +833,7 @@ Sub LoadOBJData()
     'obtiene el numero de obj
     NumObjDatas = val(Leer.GetValue("INIT", "NumObjs"))
     
-    frmCargando.pCargar.min = 0
-    frmCargando.pCargar.max = NumObjDatas
-    frmCargando.pCargar.Value = 0
+    Call UpdateProgressBar(frmCargando.picBar, CInt(NumObjDatas), 0, frmCargando.OriginalWidthBar)
     
     ReDim Preserve ObjData(1 To NumObjDatas) As ObjData
     
@@ -933,6 +921,7 @@ Sub LoadOBJData()
                     .Real = val(Leer.GetValue("OBJ" & Object, "Real"))
                     .Caos = val(Leer.GetValue("OBJ" & Object, "Caos"))
                     .MontTipo = val(Leer.GetValue("OBJ" & Object, "MontTipo"))
+                    .Speed = val(Leer.GetValue("OBJ" & Object, "Speed")) 'Cambia la velocidad
                 
                 Case eOBJType.otFlechas
                     .MaxHIT = val(Leer.GetValue("OBJ" & Object, "MaxHIT"))
@@ -946,6 +935,7 @@ Sub LoadOBJData()
                     .MaxHIT = val(Leer.GetValue("OBJ" & Object, "MaxHIT"))
                     .MinHIT = val(Leer.GetValue("OBJ" & Object, "MinHIT"))
                     .MontTipo = val(Leer.GetValue("OBJ" & Object, "MontTipo"))
+                    .Speed = val(Leer.GetValue("OBJ" & Object, "Speed")) 'Cambia la velocidad
 
                 Case eOBJType.otAnillo 'Pablo (ToxicWaste)
                     .MaxHIT = val(Leer.GetValue("OBJ" & Object, "MaxHIT"))
@@ -987,8 +977,6 @@ Sub LoadOBJData()
                     .TiempoVIP = val(Leer.GetValue("OBJ" & Object, "TiempoVIP"))
 
             End Select
-            
-            .Speed = val(Leer.GetValue("OBJ" & Object, "Speed")) 'Cambia la velocidad
             
             .Ropaje = val(Leer.GetValue("OBJ" & Object, "NumRopaje"))
             .HechizoIndex = val(Leer.GetValue("OBJ" & Object, "HechizoIndex"))
@@ -1127,7 +1115,7 @@ Sub LoadOBJData()
             .Recurso.Profesion = val(ReadField(1, Leer.GetValue("OBJ" & Object, "Recurso"), Asc("-"))) 'Profesion a la que pertenece
             .Recurso.Categoria = val(ReadField(2, Leer.GetValue("OBJ" & Object, "Recurso"), Asc("-"))) 'Categoria del recurso
             
-            frmCargando.pCargar.Value = frmCargando.pCargar.Value + 1
+            Call UpdateProgressBar(frmCargando.picBar, CInt(NumObjDatas), CInt(Object), frmCargando.OriginalWidthBar)
 
         End With
 
@@ -1168,15 +1156,13 @@ Sub LoadGlobalDrop()
     Call Leer.Initialize(DatPath & "global_drop.dat")
     
     'obtiene el numero de obj
-    NUMGLOBALDROPS = val(Leer.GetValue("GLOBAL", "NumDrops"))
+    NumGlobalDrops = val(Leer.GetValue("GLOBAL", "NumDrops"))
+
+    Call UpdateProgressBar(frmCargando.picBar, CInt(NumGlobalDrops), 0, frmCargando.OriginalWidthBar)
     
-    frmCargando.pCargar.min = 0
-    frmCargando.pCargar.max = NUMGLOBALDROPS
-    frmCargando.pCargar.Value = 0
+    ReDim Preserve GlobalDROPObject(1 To NumGlobalDrops) As GlobalObj
     
-    ReDim Preserve GlobalDROPObject(1 To NUMGLOBALDROPS) As GlobalObj
-    
-    For i = 1 To NUMGLOBALDROPS
+    For i = 1 To NumGlobalDrops
     
         GlobalDROPObject(i).ObjIndex = Leer.GetValue("DROP" & i, "ObjIndex")
         
@@ -1185,6 +1171,8 @@ Sub LoadGlobalDrop()
         GlobalDROPObject(i).MinAmount = val(ReadField(1, ln, Asc("-")))
         GlobalDROPObject(i).MaxAmount = val(ReadField(2, ln, Asc("-")))
         GlobalDROPObject(i).Prob = Leer.GetValue("DROP" & i, "Prob")
+        
+        Call UpdateProgressBar(frmCargando.picBar, CInt(NumGlobalDrops), CInt(i), frmCargando.OriginalWidthBar)
     
     Next i
     
@@ -1216,19 +1204,19 @@ Sub LoadShop()
     
     Call Leer.Initialize(DatPath & "Shop.dat")
     
-    NUMSHOPS = val(Leer.GetValue("INIT", "NumObjs"))
+    NumShops = val(Leer.GetValue("INIT", "NumObjs"))
+
+    Call UpdateProgressBar(frmCargando.picBar, CInt(NumGlobalDrops), 0, frmCargando.OriginalWidthBar)
     
-    frmCargando.pCargar.min = 0
-    frmCargando.pCargar.max = NUMSHOPS
-    frmCargando.pCargar.Value = 0
+    ReDim Preserve ShopObject(1 To NumShops) As ShopObj
     
-    ReDim Preserve ShopObject(1 To NUMSHOPS) As ShopObj
-    
-    For i = 1 To NUMSHOPS
+    For i = 1 To NumShops
     
         ShopObject(i).ObjIndex = Leer.GetValue("OBJ" & i, "Index")
         ShopObject(i).Amount = Leer.GetValue("OBJ" & i, "Cant")
         ShopObject(i).Valor = Leer.GetValue("OBJ" & i, "Valor")
+        
+        Call UpdateProgressBar(frmCargando.picBar, CInt(NumShops), CInt(i), frmCargando.OriginalWidthBar)
     
     Next i
     
@@ -1339,15 +1327,9 @@ Sub LoadMapData()
     
     On Error GoTo man
         
-    If Battlegrounds Then
-        NumMaps = val(GetVar(DatPath & "Map.dat", "INIT", "NumBgs"))
-    Else
-        NumMaps = val(GetVar(DatPath & "Map.dat", "INIT", "NumMaps"))
-    End If
-        
-    frmCargando.pCargar.min = 0
-    frmCargando.pCargar.max = NumMaps
-    frmCargando.pCargar.Value = 0
+    NumMaps = val(GetVar(DatPath & "Map.dat", "INIT", "NumMaps"))
+    
+    Call UpdateProgressBar(frmCargando.picBar, CInt(NumMaps), 0, frmCargando.OriginalWidthBar)
         
     ReDim MapData(1 To NumMaps, XMinMapSize To XMaxMapSize, YMinMapSize To YMaxMapSize) As MapBlock
     ReDim MapInfo(1 To NumMaps) As MapInfo
@@ -1355,15 +1337,11 @@ Sub LoadMapData()
           
     For Map = 1 To NumMaps
             
-        If Battlegrounds Then
-            tFileName = MapPath & "Bg" & Map
-        Else
-            tFileName = MapPath & "Mapa" & Map
-        End If
+        tFileName = MapPath & "Mapa" & Map
         
         Call CargarMapa(Map, tFileName)
-            
-        frmCargando.pCargar.Value = frmCargando.pCargar.Value + 1
+
+        Call UpdateProgressBar(frmCargando.picBar, CInt(NumMaps), CInt(Map), frmCargando.OriginalWidthBar)
         DoEvents
     Next Map
  
@@ -1406,7 +1384,6 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
     Dim Zonas()         As tDatosZonas
     
     Dim npcfile         As String
-    Dim LaCabecera      As tCabecera
     
     Dim i               As Long
     Dim j               As Long
@@ -1416,8 +1393,6 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
     fh = FreeFile
     
     Open MAPFl & ".csm" For Binary Access Read As fh
-    
-        Get #fh, , LaCabecera
     
         Get #fh, , MH
         Get #fh, , MapSize
@@ -1596,7 +1571,6 @@ Sub LoadSini()
 'CHOTS: Agregado multiplicador oficio
 'CHOTS: Agregado min y max Dados
 'Jopi: Uso de clsIniManager para cargar los valores.
-'Recox: Cargamos si el centinela esta activo o no.
 '***************************************************
 
     Dim Temporal As Long
@@ -1623,13 +1597,8 @@ Sub LoadSini()
     'Lee la version correcta del cliente
     ULTIMAVERSION = Lector.GetValue("INIT", "VersionBuildCliente")
 
-    'Esto es para ver si el centinela esta activo o no.
-    isCentinelaActivated = CBool(val(Lector.GetValue("INIT", "CentinelaAuditoriaTrabajoActivo")))
-
     PuedeCrearPersonajes = val(Lector.GetValue("INIT", "PuedeCrearPersonajes"))
     ServerSoloGMs = val(Lector.GetValue("INIT", "ServerSoloGMs"))
-    
-    Battlegrounds = CBool(val(Lector.GetValue("INIT", "Battlegrounds")))
     
     ArmaduraImperial1 = val(Lector.GetValue("INIT", "ArmaduraImperial1"))
     ArmaduraImperial2 = val(Lector.GetValue("INIT", "ArmaduraImperial2"))
@@ -1672,6 +1641,7 @@ Sub LoadSini()
     EstadisticasInicialesUsarConfiguracionPersonalizada = CBool(val(Lector.GetValue("ESTADISTICASINICIALESPJ", "Activado")))
 
     'Intervalos
+    'TODO: Mover a otro archivo
     SanaIntervaloSinDescansar = val(Lector.GetValue("INTERVALOS", "SanaIntervaloSinDescansar"))
     StaminaIntervaloSinDescansar = val(Lector.GetValue("INTERVALOS", "StaminaIntervaloSinDescansar"))
     SanaIntervaloDescansar = val(Lector.GetValue("INTERVALOS", "SanaIntervaloDescansar"))
@@ -1693,12 +1663,16 @@ Sub LoadSini()
     IntervaloUserPuedeAtacar = val(Lector.GetValue("INTERVALOS", "IntervaloUserPuedeAtacar"))
     INTERVALO_GLOBAL = val(Lector.GetValue("INTERVALOS", "IntervaloGlobal"))
     IntervaloPuedeMakrear = val(Lector.GetValue("INTERVALOS", "IntervaloMakreo"))
+    IntervaloCaminar = val(Lector.GetValue("INTERVALOS", "IntervaloCaminar"))
     
     'TODO : Agregar estos intervalos al form!!!
     IntervaloMagiaGolpe = val(Lector.GetValue("INTERVALOS", "IntervaloMagiaGolpe"))
     IntervaloGolpeMagia = val(Lector.GetValue("INTERVALOS", "IntervaloGolpeMagia"))
     IntervaloGolpeUsar = val(Lector.GetValue("INTERVALOS", "IntervaloGolpeUsar"))
     IntervaloOcultable = val(Lector.GetValue("INTERVALOS", "IntervaloPuedeOcultar"))
+    
+    '&&&&&&&&&&&&&&&&&&&&& ANTICHEAT &&&&&&&&&&&&&&&&&&&&&&&
+    MaximoSpeedHack = val(Lector.GetValue("ANTICHEAT", "MaximoSpeedHack"))
     
     '&&&&&&&&&&&&&&&&&&&&& TIMERS &&&&&&&&&&&&&&&&&&&&&&&
     IntervaloPuedeSerAtacado = val(Lector.GetValue("TIMERS", "IntervaloPuedeSerAtacado"))
@@ -1872,10 +1846,10 @@ Sub CargarCiudades()
             .Y = Lector.GetValue("IslaZharkel", "Y")
         End With
         
-        With Winterhold
-            .Map = Lector.GetValue("Winterhold", "Mapa")
-            .X = Lector.GetValue("Winterhold", "X")
-            .Y = Lector.GetValue("Winterhold", "Y")
+        With Frostdale
+            .Map = Lector.GetValue("Frostdale", "Mapa")
+            .X = Lector.GetValue("Frostdale", "X")
+            .Y = Lector.GetValue("Frostdale", "Y")
         End With
         
         With Prision
@@ -1908,7 +1882,7 @@ Sub CargarCiudades()
     Ciudades(eCiudad.cShakoud) = Shakoud
     Ciudades(eCiudad.cBelleuve) = Belleuve
     Ciudades(eCiudad.cIslaZharkel) = IslaZharkel
-    Ciudades(eCiudad.cWinterhold) = Winterhold
+    Ciudades(eCiudad.cFrostdale) = Frostdale
     Ciudades(eCiudad.cbattle) = Battleground
 
     If frmMain.Visible Then frmMain.txtStatus.Text = Date & " " & time & " - Se cargaron las ciudades.dat"
@@ -2048,9 +2022,9 @@ Sub CargarNpcBackUp(ByVal NPCIndex As Integer, ByVal NpcNumber As Integer)
         
         .Char.body = val(GetVar(npcfile, "NPC" & NpcNumber, "Body"))
         .Char.Head = val(GetVar(npcfile, "NPC" & NpcNumber, "Head"))
-        .Char.WeaponAnim = val(GetVar(npcfile, "NPC" & NpcNumber, "WeaponAnim"))
-        .Char.CascoAnim = val(GetVar(npcfile, "NPC" & NpcNumber, "CascoAnim"))
-        .Char.ShieldAnim = val(GetVar(npcfile, "NPC" & NpcNumber, "ShieldAnim"))
+        .Char.WeaponAnim = val(GetVar(npcfile, "NPC" & NpcNumber, "Weapon"))
+        .Char.CascoAnim = val(GetVar(npcfile, "NPC" & NpcNumber, "Helmet"))
+        .Char.ShieldAnim = val(GetVar(npcfile, "NPC" & NpcNumber, "Shield"))
         .Char.Heading = val(GetVar(npcfile, "NPC" & NpcNumber, "Heading"))
         
         .Attackable = val(GetVar(npcfile, "NPC" & NpcNumber, "Attackable"))
@@ -2485,3 +2459,34 @@ CargarEventosMapa_Err:
         'Call TraceError(Err.Number, Err.description, "ES.CargarEventosMapa", Erl)
 
     End Sub
+
+Public Sub CargarExperiencias()
+    On Error GoTo CargarExperiencias_Err
+    
+    If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando Experiencias."
+    
+    If Not FileExist(DatPath & "Experiencias.dat", vbArchive) Then
+        MsgBox "No se ha encontrado el archivo Experiencias.dat en la carpeta " & DatPath
+        Exit Sub
+    End If
+    
+    Dim Lector     As clsIniManager
+    Dim i As Byte
+    Set Lector = New clsIniManager
+    Call Lector.Initialize(DatPath & "Experiencias.dat")
+    
+    ReDim TablaExperiencia(STAT_MAXELV) As Long
+    
+    For i = 1 To STAT_MAXELV
+    
+        TablaExperiencia(i) = Lector.GetValue("EXPERIENCIAS", "LVL" & i)
+    
+    Next i
+
+    Exit Sub
+
+CargarExperiencias_Err:
+
+    'Call RegistrarError(Err.Number, Err.description, "ES.CargarExperiencias", Erl)
+    Resume Next
+End Sub

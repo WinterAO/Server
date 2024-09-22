@@ -1,4 +1,4 @@
-Attribute VB_Name = "Areas"
+Attribute VB_Name = "modAreas"
 '************************************************
 '*   Sistema de areas refactorizado por WyroX   *
 '*       Menos brujeria, mas comentarios.       *
@@ -22,8 +22,6 @@ Attribute VB_Name = "Areas"
  
 Option Explicit
 
-
-
 '************************************************
 '*            Valores modificables              *
 '************************************************
@@ -40,12 +38,12 @@ Public Const ANCHO_MAP As Byte = 10
 
 ' Tamanio en tiles de la pantalla.
 'ADVERTENCIA: TIENEN QUE SER IMPAR!
-Public Const XWindow            As Byte = 23
+Public Const XWindow            As Byte = 31
 Public Const YWindow            As Byte = 19
 
 ' Cantidad de tiles buffer
 ' (para que graficos grandes se vean desde fuera de la pantalla)
-Private Const TileBufferSize    As Byte = 8
+Private Const TileBufferSize    As Integer = 8
 
 '************************************************
 '*      Valores calculados automaticamente      *

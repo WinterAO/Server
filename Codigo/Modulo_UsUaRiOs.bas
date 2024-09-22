@@ -129,8 +129,7 @@ Public Sub RevivirUsuario(ByVal UserIndex As Integer)
         Call ChangeUserChar(UserIndex, .Char.body, .Char.Head, .Char.Heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
         Call WriteUpdateUserStats(UserIndex)
         
-        .flags.Velocidad = SPEED_NORMAL
-        Call WriteSetSpeed(UserIndex)
+        Call UpdateUserSpeed(UserIndex)
 
     End With
 
@@ -388,7 +387,7 @@ Public Sub EnviarFama(ByVal UserIndex As Integer)
 
 End Sub
 
-Public Sub EraseUserChar(ByVal UserIndex As Integer, ByVal IsAdminInvisible As Boolean)
+Public Sub EraseUserChar(ByVal UserIndex As Integer, ByVal IsAdminInvisible As Boolean, ByVal Desvanecer As Boolean, Optional ByVal FueWarp As Boolean = False)
     '*************************************************
     'Author: Unknown
     'Last modified: 08/01/2009
@@ -412,14 +411,14 @@ Public Sub EraseUserChar(ByVal UserIndex As Integer, ByVal IsAdminInvisible As B
         
         ' Si esta invisible, solo el sabe de su propia existencia, es innecesario borrarlo en los demas clientes
         If IsAdminInvisible Then
-            Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterRemove(.Char.CharIndex))
+            Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageCharacterRemove(.Char.CharIndex, FueWarp))
         Else
             'Le mandamos el mensaje para que borre el personaje a los clientes que esten cerca
-            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageCharacterRemove(.Char.CharIndex))
+            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageCharacterRemove(.Char.CharIndex, Desvanecer, FueWarp))
 
         End If
         
-        Call QuitarUser(UserIndex, .Pos.Map)
+        Call modAreas.QuitarUser(UserIndex, .Pos.Map)
         
         MapData(.Pos.Map, .Pos.X, .Pos.Y).UserIndex = 0
         .Char.CharIndex = 0
@@ -617,10 +616,10 @@ Public Sub MakeUserChar(ByVal toMap As Boolean, _
 
                 End If
             
-                Call WriteCharacterCreate(sndIndex, .Char.body, .Char.Head, .Char.Heading, .Char.CharIndex, X, Y, .Char.WeaponAnim, .Char.ShieldAnim, .Char.FX, 999, .Char.CascoAnim, 0, username, NickColor, Privileges, .Char.AuraAnim, .Char.AuraColor)
+                Call WriteCharacterCreate(sndIndex, .Char.body, .Char.Head, .Char.Heading, .Char.CharIndex, X, Y, .Char.WeaponAnim, .Char.ShieldAnim, .Char.FX, 999, .Char.CascoAnim, 0, username, NickColor, Privileges, .Char.AuraAnim, .Char.AuraColor, .flags.Velocidad)
             Else
                 'Hide the name and clan - set privs as normal user
-                Call AgregarUser(UserIndex, .Pos.Map, ButIndex)
+                Call modAreas.AgregarUser(UserIndex, .Pos.Map, ButIndex)
 
             End If
 
@@ -642,7 +641,8 @@ End Sub
 '
 ' @param UserIndex Specifies reference to user
 
-Public Sub CheckUserLevel(ByVal UserIndex As Integer, Optional ByVal PrintInConsole As Boolean = True)
+Public Sub CheckUserLevel(ByVal UserIndex As Integer, _
+                          Optional ByVal PrintInConsole As Boolean = True)
 
     '*************************************************
     'Author: Unknown
@@ -662,16 +662,25 @@ Public Sub CheckUserLevel(ByVal UserIndex As Integer, Optional ByVal PrintInCons
     '08/04/2011: Amraphen - Arreglada la distribucion de probabilidades para la vida en el caso de promedio entero.
     '06/09/2019: Jopi - Guardado de usuario al pasar de nivel.
     '*************************************************
-    Dim Pts              As Integer
+
     Dim AumentoHIT       As Integer
+
     Dim AumentoMANA      As Integer
+
     Dim AumentoSTA       As Integer
+
     Dim AumentoHP        As Integer
+
     Dim WasNewbie        As Boolean
+
     Dim Promedio         As Double
+
     Dim aux              As Integer
+
     Dim DistVida(1 To 5) As Integer
+
     Dim GI               As Integer 'Guild Index
+
     Dim SubiodeLvL       As Boolean
     
     On Error GoTo errHandler
@@ -698,13 +707,6 @@ Public Sub CheckUserLevel(ByVal UserIndex As Integer, Optional ByVal PrintInCons
                 Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_NIVEL, .Pos.X, .Pos.Y))
                 Call WriteConsoleMsg(UserIndex, "Has subido de nivel!", FontTypeNames.FONTTYPE_INFO)
                 Call WriteScreenMsg(UserIndex, "Nivel " & .Stats.ELV + 1, "Has alcanzado el")
-            End If
-            
-            If .Stats.ELV = 1 Then
-                Pts = 10
-            Else
-                'For multiple levels being rised at once
-                Pts = Pts + 5
 
             End If
             
@@ -712,21 +714,23 @@ Public Sub CheckUserLevel(ByVal UserIndex As Integer, Optional ByVal PrintInCons
             
             .Stats.Exp = .Stats.Exp - .Stats.ELU
                   
+            .Stats.ELU = TablaExperiencia(.Stats.ELV)
+                  
             'Nueva subida de exp x lvl. Pablo (ToxicWaste)
-            If .Stats.ELV < 15 Then
-                .Stats.ELU = .Stats.ELU * 1.4
-            ElseIf .Stats.ELV < 21 Then
-                .Stats.ELU = .Stats.ELU * 1.35
-            ElseIf .Stats.ELV < 26 Then
-                .Stats.ELU = .Stats.ELU * 1.3
-            ElseIf .Stats.ELV < 35 Then
-                .Stats.ELU = .Stats.ELU * 1.2
-            ElseIf .Stats.ELV < 40 Then
-                .Stats.ELU = .Stats.ELU * 1.3
-            Else
-                .Stats.ELU = .Stats.ELU * 1.375
-
-            End If
+            '            If .Stats.ELV < 15 Then
+            '                .Stats.ELU = .Stats.ELU * 1.4
+            '            ElseIf .Stats.ELV < 21 Then
+            '                .Stats.ELU = .Stats.ELU * 1.35
+            '            ElseIf .Stats.ELV < 26 Then
+            '                .Stats.ELU = .Stats.ELU * 1.3
+            '            ElseIf .Stats.ELV < 35 Then
+            '                .Stats.ELU = .Stats.ELU * 1.2
+            '            ElseIf .Stats.ELV < 40 Then
+            '                .Stats.ELU = .Stats.ELU * 1.3
+            '            Else
+            '                .Stats.ELU = .Stats.ELU * 1.375
+            '
+            '            End If
             
             'Calculo subida de vida
             Promedio = ModVida(.clase) - (21 - .Stats.UserAtributos(eAtributos.Constitucion)) * 0.5
@@ -896,6 +900,7 @@ Public Sub CheckUserLevel(ByVal UserIndex As Integer, Optional ByVal PrintInCons
                     Call WriteConsoleMsg(UserIndex, "Tu golpe minimo aumento en " & AumentoHIT & " puntos.", FontTypeNames.FONTTYPE_INFO)
 
                 End If
+
             End If
             
             'Marcamos que subio del lvl
@@ -922,6 +927,7 @@ Public Sub CheckUserLevel(ByVal UserIndex As Integer, Optional ByVal PrintInCons
                         If PrintInConsole Then
                             Call SendData(SendTarget.ToGuildMembers, GI, PrepareMessageConsoleMsg(.Name & " deja el clan.", FontTypeNames.FONTTYPE_GUILD))
                             Call WriteConsoleMsg(UserIndex, "Ya tienes la madurez suficiente como para decidir bajo que estandarte pelearas! Por esta razon, hasta tanto no te enlistes en la faccion bajo la cual tu clan esta alineado, estaras excluido del mismo.", FontTypeNames.FONTTYPE_GUILD)
+
                         End If
 
                     End If
@@ -937,23 +943,13 @@ Public Sub CheckUserLevel(ByVal UserIndex As Integer, Optional ByVal PrintInCons
             Call QuitarNewbieObj(UserIndex)
 
             If MapZonas(.Pos.Map, UserZonaId(UserIndex)).Restringir = eRestrict.restrict_newbie Then
-                Call WarpUserChar(UserIndex, 1, 50, 50, True)
+                Call MandaraCasa(UserIndex)
 
                 If PrintInConsole Then
                     Call WriteConsoleMsg(UserIndex, "Debes abandonar el Dungeon Newbie.", FontTypeNames.FONTTYPE_INFO)
+
                 End If
 
-            End If
-
-        End If
-        
-        'Send all gained skill points at once (if any)
-        If Pts > 0 Then
-            Call WriteLevelUp(UserIndex, Pts)
-            
-            .Stats.SkillPts = .Stats.SkillPts + Pts
-            If PrintInConsole Then
-                Call WriteConsoleMsg(UserIndex, "Has ganado un total de " & Pts & " skillpoints.", FontTypeNames.FONTTYPE_INFO)
             End If
 
         End If
@@ -964,7 +960,7 @@ Public Sub CheckUserLevel(ByVal UserIndex As Integer, Optional ByVal PrintInCons
     
     'Si subio de nivel guardamos los datos del usuario.
     'If SubiodeLvL Then _
-        Call SaveUser(UserIndex, True)
+     Call SaveUser(UserIndex, True)
     
     Exit Sub
 
@@ -972,6 +968,7 @@ errHandler:
     Call LogError("Error en la subrutina CheckUserLevel - Error : " & Err.Number & " - Description : " & Err.description)
 
 End Sub
+
 
 ''
 ' Checks if the user gets the next level PVP.
@@ -1148,7 +1145,7 @@ Public Function MoveUserChar(ByVal UserIndex As Integer, _
                     End With
                 
                     'Actualizamos las areas de ser necesario
-                    Call Areas.CheckUpdateNeededUser(CasperIndex, CasperHeading)
+                    Call modAreas.CheckUpdateNeededUser(CasperIndex, CasperHeading)
 
                 End If
 
@@ -1193,7 +1190,7 @@ Public Function MoveUserChar(ByVal UserIndex As Integer, _
             End With
             
             'Actualizamos las areas de ser necesario
-            Call Areas.CheckUpdateNeededUser(UserIndex, nHeading)
+            Call modAreas.CheckUpdateNeededUser(UserIndex, nHeading)
         Else
             Call WritePosUpdate(UserIndex)
 
@@ -1678,16 +1675,6 @@ Sub SubirSkill(ByVal UserIndex As Integer, _
     With UserList(UserIndex)
 
         If .flags.Hambre = 0 And .flags.Sed = 0 Then
-            If .Counters.AsignedSkills < 10 Then
-                If Not .flags.UltimoMensaje = 7 Then
-                    Call WriteConsoleMsg(UserIndex, "Para poder entrenar un skill debes asignar los 10 skills iniciales.", FontTypeNames.FONTTYPE_INFO)
-                    .flags.UltimoMensaje = 7
-
-                End If
-                
-                Exit Sub
-
-            End If
             
             With .Stats
 
@@ -2042,8 +2029,7 @@ Public Sub UserDie(ByVal UserIndex As Integer, Optional ByVal AttackerIndex As I
             End If
         End If
         
-        .flags.Velocidad = SPEED_MUERTO
-        Call WriteSetSpeed(UserIndex)
+        Call UpdateUserSpeed(UserIndex)
         
     End With
 
@@ -2205,7 +2191,7 @@ Sub WarpUserChar(ByVal UserIndex As Integer, _
         OldMap = .Pos.Map
         OldZona = UserZonaId(UserIndex)
 
-        Call EraseUserChar(UserIndex, .flags.AdminInvisible = 1)
+        Call EraseUserChar(UserIndex, .flags.AdminInvisible = 1, True, FX)
         
         If OldMap <> Map Or OldZona <> MapData(Map, X, Y).ZonaIndex Then
             Call WriteChangeMap(UserIndex, Map, MapZonas(.Pos.Map, UserZonaId(UserIndex)).MapVersion)
@@ -3120,17 +3106,17 @@ Public Sub setHome(ByVal UserIndex As Integer, _
     With UserList(UserIndex)
         '¿La ciudad que tiene el NPC es invalida?
         If newHome <= 0 Then
-            Call WriteChatOverHead(UserIndex, "Lo siento, en estos momentos no puedo aceptarte en mi ciudad.", Npclist(NPCIndex).Char.CharIndex, vbWhite)
+            Call WriteChatOverHead(UserIndex, "Lo siento, en estos momentos no puedo aceptarte en mi ciudad.", Npclist(NPCIndex).Char.CharIndex, 255, 255, 255)
             Call LogError("Error en SetHome: La ciudad a la que " & .Name & " quiere establecer como hogar, es invalida. NewHome: " & newHome)
             
         Else
             If .Hogar <> newHome Then
                 .Hogar = newHome
             
-                Call WriteChatOverHead(UserIndex, "Bienvenido a nuestra humilde comunidad, este es ahora tu nuevo hogar!!!", Npclist(NPCIndex).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "Bienvenido a nuestra humilde comunidad, este es ahora tu nuevo hogar!!!", Npclist(NPCIndex).Char.CharIndex, 255, 255, 255)
                 Call WriteConsoleMsg(UserIndex, "Ahora eres ciudadano de " & MapZonas(Ciudades(.Hogar).Map, UserZonaId(UserIndex)).Name, FontTypeNames.FONTTYPE_INFO)
             Else
-                Call WriteChatOverHead(UserIndex, "Ya eres miembro de nuestra humilde comunidad!!!", Npclist(NPCIndex).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "Ya eres miembro de nuestra humilde comunidad!!!", Npclist(NPCIndex).Char.CharIndex, 255, 255, 255)
         
             End If
         End If
@@ -3196,3 +3182,45 @@ Public Sub MandaraCasa(ByVal UserIndex As Integer)
     End With
     
 End Sub
+
+Public Function UpdateUserSpeed(ByVal UserIndex As Integer) As Single
+    On Error GoTo UpdateUserSpeed_Err
+    
+    Dim Velocidad       As Single
+    Dim ModificadorItem As Single
+    
+    Velocidad = SPEED_NORMAL
+    ModificadorItem = 1
+    
+    With UserList(UserIndex)
+    
+        If .flags.Muerto = 1 Then
+            Velocidad = SPEED_MUERTO
+        End If
+        
+        If (.flags.Navegando > 0) And (.Invent.BarcoObjIndex > 0) Then
+            ModificadorItem = ObjData(.Invent.BarcoObjIndex).Speed
+        End If
+        
+        If (.flags.Equitando = 1) And (.Invent.MonturaObjIndex > 0) Then
+             ModificadorItem = ObjData(.Invent.MonturaObjIndex).Speed
+        End If
+        
+        Velocidad = SPEED_NORMAL * ModificadorItem
+        
+UpdateSpeed:
+
+        If Velocidad < 1 Then Velocidad = SPEED_NORMAL
+        .flags.Velocidad = Velocidad
+        
+        Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageSpeeding(.Char.CharIndex, .flags.Velocidad))
+        Call WriteSetSpeed(UserIndex)
+
+    End With
+    
+    Exit Function
+    
+UpdateUserSpeed_Err:
+    Call TraceError(Err.Number, Err.description, "UsUaRiOs.UpdateUserSpeed_Err", Erl)
+
+End Function

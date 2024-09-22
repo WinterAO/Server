@@ -121,6 +121,8 @@ Public IntervaloFlechasCazadores         As Long
 
 Public IntervaloPuedeMakrear             As Integer
 
+Public IntervaloCaminar                  As Integer
+
 Public IntervaloPuedeSerAtacado          As Long
 
 Public IntervaloAtacable                 As Long
@@ -148,6 +150,8 @@ Public BootDelBackUp                     As Boolean
 Public Lloviendo                         As Boolean
 
 Public DeNoche                           As Boolean
+
+Public MaximoSpeedHack                   As Integer
 
 Public DificultadExtraer                 As Integer
 
@@ -215,7 +219,7 @@ Sub WorldSave()
 
     Dim hFile As Integer
     
-    Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Servidor> Iniciando WorldSave", FontTypeNames.FONTTYPE_SERVER))
+    Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("Servidor> Iniciando WorldSave", FontTypeNames.FONTTYPE_SERVER))
     
     Call ReSpawnOrigPosNpcs 'respawn de los guardias en las pos originales
     
@@ -228,16 +232,14 @@ Sub WorldSave()
         Next i
     Next j
     
-    FrmStat.pCargar.Min = 0
-    FrmStat.pCargar.Max = K
-    FrmStat.pCargar.Value = 0
+    Call UpdateProgressBar(FrmStat.picBar, CInt(K), 0, FrmStat.OriginalWidthBar)
     
     For loopX = 1 To NumMaps
         'DoEvents
-        For i = 0 To CantZonas(j)
+        For i = 0 To CantZonas(loopX)
             If MapZonas(loopX, i).BackUp = 1 Then
                 Call GrabarMapa(loopX, App.Path & "\WorldBackUp\Mapa" & loopX)
-                FrmStat.pCargar.Value = FrmStat.pCargar.Value + 1
+                Call UpdateProgressBar(FrmStat.picBar, CInt(K), CInt(i), FrmStat.OriginalWidthBar)
     
             End If
         Next i
@@ -265,7 +267,7 @@ Sub WorldSave()
     
     Call SaveForums
     
-    Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Servidor> WorldSave ha concluido.", FontTypeNames.FONTTYPE_SERVER))
+    Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("Servidor> WorldSave ha concluido.", FontTypeNames.FONTTYPE_SERVER))
 
 End Sub
 
@@ -314,19 +316,19 @@ Public Function BorrarUsuario(ByVal UserIndex As Integer, ByVal Slot As Byte) As
     'Last Modification: 21/05/2020
     '********************************************************************************
     
-    Dim UserName As String
+    Dim username As String
     
     'Obtenemos el nombre del usuario
-    UserName = UserList(UserIndex).AccountInfo.AccountPJ(Slot).Name
+    username = UserList(UserIndex).AccountInfo.AccountPJ(Slot).Name
     
     'Podria estar de mas, pero... Existe el personaje?
-    If Not PersonajeExiste(UserName) Then
+    If Not PersonajeExiste(username) Then
         BorrarUsuario = False
         Exit Function
     End If
     
     'Mandamos "borrar" en la base de datos (en realidad no se borra)
-    Call BorrarUsuarioDatabase(UserName)
+    Call BorrarUsuarioDatabase(username)
     
     'Actualizamo las listas y el cliente del usuario
     Call DeletePJCuenta(UserIndex, Slot)
@@ -347,7 +349,7 @@ Public Function BANCheck(ByVal Name As String) As Boolean
 
 End Function
 
-Public Function PersonajeExiste(ByVal UserName As String) As Boolean
+Public Function PersonajeExiste(ByVal username As String) As Boolean
 
     '***************************************************
     'Author: Unknown
@@ -355,29 +357,29 @@ Public Function PersonajeExiste(ByVal UserName As String) As Boolean
     '18/09/2018 CHOTS: Checks database too
     '***************************************************
 
-    PersonajeExiste = PersonajeExisteDatabase(UserName)
+    PersonajeExiste = PersonajeExisteDatabase(username)
 
 End Function
 
-Public Function CuentaExiste(ByVal UserName As String) As Boolean
+Public Function CuentaExiste(ByVal username As String) As Boolean
 
     '***************************************************
     'Author: Juan Andres Dalmasso (CHOTS)
     'Last Modification: 12/10/2018
     '***************************************************
 
-    CuentaExiste = CuentaExisteDatabase(UserName)
+    CuentaExiste = CuentaExisteDatabase(username)
 
 End Function
 
-Public Function EmailExiste(ByVal UserName As String) As Boolean
+Public Function EmailExiste(ByVal username As String) As Boolean
 
     '***************************************************
     'Author: Lorwik
     'Last Modification: 30/01/2022
     '***************************************************
 
-    EmailExiste = EmailExisteDatabase(UserName)
+    EmailExiste = EmailExisteDatabase(username)
 
 End Function
 
@@ -396,40 +398,40 @@ Public Sub UnBan(ByVal Name As String)
 
 End Sub
 
-Public Function GetUserGuildIndex(ByVal UserName As String) As Integer
+Public Function GetUserGuildIndex(ByVal username As String) As Integer
 
     '***************************************************
     'Author: Juan Andres Dalmasso
     'Last Modification: 18/09/2018
     '18/09/2018 CHOTS: Checks database too
     '***************************************************
-    If InStrB(UserName, "\") <> 0 Then
-        UserName = Replace(UserName, "\", vbNullString)
+    If InStrB(username, "\") <> 0 Then
+        username = Replace(username, "\", vbNullString)
 
     End If
 
-    If InStrB(UserName, "/") <> 0 Then
-        UserName = Replace(UserName, "/", vbNullString)
+    If InStrB(username, "/") <> 0 Then
+        username = Replace(username, "/", vbNullString)
 
     End If
 
-    If InStrB(UserName, ".") <> 0 Then
-        UserName = Replace(UserName, ".", vbNullString)
+    If InStrB(username, ".") <> 0 Then
+        username = Replace(username, ".", vbNullString)
 
     End If
 
-    GetUserGuildIndex = GetUserGuildIndexDatabase(UserName)
+    GetUserGuildIndex = GetUserGuildIndexDatabase(username)
 
 End Function
 
-Public Sub CopyUser(ByVal UserName As String, ByVal newName As String)
+Public Sub CopyUser(ByVal username As String, ByVal newName As String)
     '***************************************************
     'Author: Unknown
     'Last Modification: 18/09/2018
     '18/09/2018 CHOTS: Checks database too
     '***************************************************
     
-    Call CopyUserDatabase(UserName, newName)
+    Call CopyUserDatabase(username, newName)
 
 End Sub
 
@@ -558,7 +560,7 @@ Public Sub BanIpCargar()
 
 End Sub
 
-Public Sub BanSerialOK(ByVal bannerUserIndex As Integer, ByVal UserName As String)
+Public Sub BanSerialOK(ByVal bannerUserIndex As Integer, ByVal username As String)
   
     On Error GoTo BanSerialOK_Err
 
@@ -581,20 +583,20 @@ Public Sub BanSerialOK(ByVal bannerUserIndex As Integer, ByVal UserName As Strin
 
     Dim MacAdress As String
     
-    If InStrB(UserName, "+") Then
-        UserName = Replace(UserName, "+", " ")
+    If InStrB(username, "+") Then
+        username = Replace(username, "+", " ")
 
     End If
     
-    tUser = NameIndex(UserName)
+    tUser = NameIndex(username)
     
     Rank = PlayerType.Admin Or PlayerType.Dios Or PlayerType.SemiDios Or PlayerType.Consejero
     
     With UserList(bannerUserIndex)
       
-        If PersonajeExiste(UserName) Then
+        If PersonajeExiste(username) Then
           
-            CuentaID = GetAccountID(UserName)
+            CuentaID = GetAccountID(username)
             Serial = GetUserSerial(CuentaID)
             MacAdress = GetUserMacAdress(CuentaID)
 
@@ -606,12 +608,12 @@ Public Sub BanSerialOK(ByVal bannerUserIndex As Integer, ByVal UserName As Strin
             Print #1, MacAdress
             Close #1
 
-            Call SendData(SendTarget.ToAdmins, 0, PrepareMessageConsoleMsg("Servidor> " & .Name & " ha baneado la computadora de: " & UserName & "(" & CuentaID & ").", FontTypeNames.FONTTYPE_SERVER))
+            Call SendData(SendTarget.ToAdmins, 0, PrepareMessageConsoleMsg("Servidor> " & .Name & " ha baneado la computadora de: " & username & "(" & CuentaID & ").", FontTypeNames.FONTTYPE_SERVER))
       
-            Call LogGM(.Name, "Baneo la computadora de " & UserName & ".")
+            Call LogGM(.Name, "Baneo la computadora de " & username & ".")
 
         Else
-            Call WriteConsoleMsg(bannerUserIndex, "El pj " & UserName & " no existe.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(bannerUserIndex, "El pj " & username & " no existe.", FontTypeNames.FONTTYPE_INFO)
 
         End If
   
@@ -632,7 +634,7 @@ BanSerialOK_Err:
   
 End Sub
 
-Public Sub UnBanSerialOK(ByVal bannerUserIndex As Integer, ByVal UserName As String)
+Public Sub UnBanSerialOK(ByVal bannerUserIndex As Integer, ByVal username As String)
   
     On Error GoTo UnBanSerialOK_Err
 
@@ -655,28 +657,28 @@ Public Sub UnBanSerialOK(ByVal bannerUserIndex As Integer, ByVal UserName As Str
 
     Dim MacAdress As String
     
-    If InStrB(UserName, "+") Then
-        UserName = Replace(UserName, "+", " ")
+    If InStrB(username, "+") Then
+        username = Replace(username, "+", " ")
 
     End If
     
-    tUser = NameIndex(UserName)
+    tUser = NameIndex(username)
     
     Rank = PlayerType.Admin Or PlayerType.Dios Or PlayerType.SemiDios Or PlayerType.Consejero
     
     With UserList(bannerUserIndex)
 
         '¿Existe el usuario?
-        If PersonajeExiste(UserName) Then
+        If PersonajeExiste(username) Then
           
-            CuentaID = GetAccountID(UserName)
+            CuentaID = GetAccountID(username)
             Serial = GetUserSerial(CuentaID)
             MacAdress = GetUserMacAdress(CuentaID)
       
             Call WriteConsoleMsg(bannerUserIndex, "Solamente desbaneo manual: HDSerial:" & Serial & ". MacAdress:" & MacAdress & ".", FontTypeNames.FONTTYPE_INFO)
 
         Else
-            Call WriteConsoleMsg(bannerUserIndex, "El pj " & UserName & " no existe.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(bannerUserIndex, "El pj " & username & " no existe.", FontTypeNames.FONTTYPE_INFO)
 
         End If
   
@@ -714,7 +716,7 @@ Public Function UserDarPrivilegioLevel(ByVal Name As String) As PlayerType
 End Function
 
 Public Sub BanCharacter(ByVal bannerUserIndex As Integer, _
-                        ByVal UserName As String, _
+                        ByVal username As String, _
                         ByVal Reason As String, _
                         Optional ByVal Dias As Date = 0)
     '***************************************************
@@ -731,12 +733,12 @@ Public Sub BanCharacter(ByVal bannerUserIndex As Integer, _
 
     Dim Rank      As Integer
     
-    If InStrB(UserName, "+") Then
-        UserName = Replace(UserName, "+", " ")
+    If InStrB(username, "+") Then
+        username = Replace(username, "+", " ")
 
     End If
     
-    tUser = NameIndex(UserName)
+    tUser = NameIndex(username)
     
     Rank = PlayerType.Admin Or PlayerType.Dios Or PlayerType.SemiDios Or PlayerType.Consejero
     
@@ -745,26 +747,26 @@ Public Sub BanCharacter(ByVal bannerUserIndex As Integer, _
         If tUser <= 0 Then
             Call WriteConsoleMsg(bannerUserIndex, "El usuario no esta online.", FontTypeNames.FONTTYPE_SERVER)
             
-            If PersonajeExiste(UserName) Then
-                userPriv = UserDarPrivilegioLevel(UserName)
+            If PersonajeExiste(username) Then
+                userPriv = UserDarPrivilegioLevel(username)
                 
                 If (userPriv And Rank) > (.flags.Privilegios And Rank) Then
                     Call WriteConsoleMsg(bannerUserIndex, "No puedes banear a al alguien de mayor jerarquia.", FontTypeNames.FONTTYPE_INFO)
                 Else
 
-                    If BANCheck(UserName) Then
+                    If BANCheck(username) Then
                         Call WriteConsoleMsg(bannerUserIndex, "El personaje ya se encuentra baneado.", FontTypeNames.FONTTYPE_INFO)
                         
                     Else
-                        Call LogBanFromName(UserName, bannerUserIndex, Reason)
-                        Call SendData(SendTarget.ToAdmins, 0, PrepareMessageConsoleMsg("Servidor> " & .Name & " ha baneado a " & UserName & ".", FontTypeNames.FONTTYPE_SERVER))
+                        Call LogBanFromName(username, bannerUserIndex, Reason)
+                        Call SendData(SendTarget.ToAdmins, 0, PrepareMessageConsoleMsg("Servidor> " & .Name & " ha baneado a " & username & ".", FontTypeNames.FONTTYPE_SERVER))
                         
                         '¿Es un baneo permanente?
                         If Dias = 0 Then
-                            Call SaveBan(UserName, Reason, .Name)
+                            Call SaveBan(username, Reason, .Name)
                             
                         Else
-                            Call SaveBan(UserName, Reason, .Name, (Now + Dias))
+                            Call SaveBan(username, Reason, .Name, (Now + Dias))
                             
                         End If
                         
@@ -775,14 +777,14 @@ Public Sub BanCharacter(ByVal bannerUserIndex As Integer, _
 
                         End If
                         
-                        Call LogGM(.Name, "BAN a " & UserName)
+                        Call LogGM(.Name, "BAN a " & username)
 
                     End If
 
                 End If
 
             Else
-                Call WriteConsoleMsg(bannerUserIndex, "El pj " & UserName & " no existe.", FontTypeNames.FONTTYPE_INFO)
+                Call WriteConsoleMsg(bannerUserIndex, "El pj " & username & " no existe.", FontTypeNames.FONTTYPE_INFO)
 
             End If
 
@@ -805,14 +807,14 @@ Public Sub BanCharacter(ByVal bannerUserIndex As Integer, _
 
                 End If
                 
-                Call LogGM(.Name, "BAN a " & UserName)
+                Call LogGM(.Name, "BAN a " & username)
                 
                 '¿Es un baneo permanente?
                 If Dias = 0 Then
-                    Call SaveBan(UserName, Reason, .Name)
+                    Call SaveBan(username, Reason, .Name)
                             
                 Else
-                    Call SaveBan(UserName, Reason, .Name, (Now + Dias))
+                    Call SaveBan(username, Reason, .Name, (Now + Dias))
                             
                 End If
                 

@@ -306,7 +306,7 @@ Sub Main()
     '***************************************************
 
     On Error Resume Next
-    
+
     ' Paths
     ChDir App.Path
     ChDrive App.Path
@@ -314,9 +314,6 @@ Sub Main()
     If Not setRutas Then Exit Sub
     
     Call modStats.RecordStat(modStats.EVENT_INITIALIZED, "")
-    
-    'Inicializamos la cabecera
-    Call IniciarCabecera
     
     Call BanIpCargar
     
@@ -327,31 +324,32 @@ Sub Main()
     frmCargando.Show
     
     ' Constants & vars
-    frmCargando.pCargar.CustomText = "Cargando constantes..."
+    frmCargando.lblStatus.Caption = "Cargando constantes..."
     Call LoadConstants
     Call InicializarSonidos
     DoEvents
     
     ' Motd
-    frmCargando.pCargar.CustomText = "Cargando Motd..."
+    frmCargando.lblStatus.Caption = "Cargando Motd..."
     Call LoadMotd
     DoEvents
     
     ' Arrays
-    frmCargando.pCargar.CustomText = "Iniciando Arrays..."
+    frmCargando.lblStatus.Caption = "Iniciando Arrays..."
     Call LoadArrays
     
     ' Server.ini & Apuestas.dat & Ciudades.dat
-    frmCargando.pCargar.CustomText = "Cargando Server.ini"
+    frmCargando.lblStatus.Caption = "Cargando Server.ini"
     Call LoadSini 'Configuración general (Server.ini)
     Call Load_Rates 'Rates (Rates.ini)
+    Call CargarExperiencias
     Call loadAdministrativeUsers 'Gms (GameMasters.ini)
     Call CargarCiudades
     Call CargaApuestas
     
     'Base de datos MySQL
 #If DBConexionUnica = 1 Then
-    frmCargando.pCargar.CustomText = "Cargando Base de datos"
+    frmCargando.lblStatus.Caption = "Cargando Base de datos"
     
     Set User_Database = New clsDataBase
     Set Account_Database = New clsDataBase
@@ -372,58 +370,58 @@ Sub Main()
 #End If
 
     ' Npcs.dat
-    frmCargando.pCargar.CustomText = "Cargando NPCs.Dat"
+    frmCargando.lblStatus.Caption = "Cargando NPCs.Dat"
     Call CargaNpcsDat
 
     ' Obj.dat
-    frmCargando.pCargar.CustomText = "Cargando Obj.Dat"
+    frmCargando.lblStatus.Caption = "Cargando Obj.Dat"
     Call LoadOBJData
     Call LoadGlobalDrop
     Call LoadShop
     
     ' Hechizos.dat
-    frmCargando.pCargar.CustomText = "Cargando Hechizos.Dat"
+    frmCargando.lblStatus.Caption = "Cargando Hechizos.Dat"
     Call CargarHechizos
     
     ' Objetos del Artesano
-    frmCargando.pCargar.CustomText = "Cargando Objetos del Artesano"
+    frmCargando.lblStatus.Caption = "Cargando Objetos del Artesano"
     Call LoadObjArtesano
     
     ' Balance.dat
-    frmCargando.pCargar.CustomText = "Cargando Balance.Dat"
+    frmCargando.lblStatus.Caption = "Cargando Balance.Dat"
     Call LoadBalance
     
     ' Armaduras faccionarias
-    frmCargando.pCargar.CustomText = "Cargando ArmadurasFaccionarias.dat"
+    frmCargando.lblStatus.Caption = "Cargando ArmadurasFaccionarias.dat"
     Call LoadArmadurasFaccion
     
     ' Pretorianos
     If PRETORIANOS_ACTIVADO Then
-        frmCargando.pCargar.CustomText = "Cargando Pretorianos.dat"
+        frmCargando.lblStatus.Caption = "Cargando Pretorianos.dat"
         Call LoadPretorianData
     End If
     
     ' Mapas
     If BootDelBackUp Then
-        frmCargando.pCargar.CustomText = "Cargando Backup"
+        frmCargando.lblStatus.Caption = "Cargando Backup"
         Call CargarBackUp
     Else
-        frmCargando.pCargar.CustomText = "Cargando Mapas"
+        frmCargando.lblStatus.Caption = "Cargando Mapas"
         Call LoadMapData
 
     End If
 
-    Call InitializeAreas
+    Call modAreas.InitializeAreas
 
     ' Fortalezas (No pueden ir antes o los npc no hacen spawn)
-    frmCargando.pCargar.CustomText = "Cargando Fortalezas.dat"
+    frmCargando.lblStatus.Caption = "Cargando Fortalezas.dat"
     Call CargarFortalezas
     
     'Arenas de Retos
     Call LoadArenas
     
     'Invocaciones.dat
-    frmCargando.pCargar.CustomText = "Cargando Invocaciones.dat"
+    frmCargando.lblStatus.Caption = "Cargando Invocaciones.dat"
     Call InitInvocaciones
     
     'Eventos de portales en mapas:
@@ -435,7 +433,7 @@ Sub Main()
     ' Sockets
     Call SocketConfig
     
-    frmCargando.pCargar.CustomText = "Cargando Clima"
+    frmCargando.lblStatus.Caption = "Cargando Clima"
     Call SortearHorario 'Lorwik> Lo coloco aqui o no funciona
     
     ' Timers
@@ -455,8 +453,6 @@ Sub Main()
     End If
     
     tInicioServer = GetTickCount() And &H7FFFFFFF
-
-    frmMain.Caption = GetVersionOfTheServer() & " - Modo " & " - " & IIf(Battlegrounds, "Battleground", "Rol")
 
     'Este ultimo es para saber siempre los records en el frmMain
     frmMain.txtRecordOnline.Text = RecordUsuariosOnline
@@ -2113,3 +2109,17 @@ Public Function esMapaPortalEvento(ByVal Mapa As Integer) As Byte
     esMapaPortalEvento = 0
 
 End Function
+
+Public Sub UpdateProgressBar(PictureBoxBarra As PictureBox, Max As Long, Value As Long, MaxWidth As Single)
+'************************************
+'Autor: Lorwik
+'Fecha: 20/09/2024
+'Descripcion: Simulación de la barra de progreso
+'************************************
+
+    ' Nos aseguramos de que el valor esté dentro de los límites
+    If Value > Max Then Value = Max
+    
+    PictureBoxBarra.Width = (Value / Max) * MaxWidth ' Proporción del progreso
+    DoEvents
+End Sub

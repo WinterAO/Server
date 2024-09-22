@@ -1,12 +1,12 @@
 VERSION 5.00
 Begin VB.Form frmMain 
-   BackColor       =   &H00E0E0E0&
+   BackColor       =   &H00424242&
    BorderStyle     =   1  'Fixed Single
    Caption         =   "WinterAO Resurrection Server"
-   ClientHeight    =   5880
+   ClientHeight    =   6000
    ClientLeft      =   1950
    ClientTop       =   1815
-   ClientWidth     =   10875
+   ClientWidth     =   10965
    ControlBox      =   0   'False
    FillColor       =   &H00C0C0C0&
    BeginProperty Font 
@@ -24,8 +24,8 @@ Begin VB.Form frmMain
    MaxButton       =   0   'False
    MinButton       =   0   'False
    PaletteMode     =   1  'UseZOrder
-   ScaleHeight     =   5880
-   ScaleWidth      =   10875
+   ScaleHeight     =   6000
+   ScaleWidth      =   10965
    StartUpPosition =   2  'CenterScreen
    WindowState     =   1  'Minimized
    Begin VB.Timer Estadisticas 
@@ -34,7 +34,7 @@ Begin VB.Form frmMain
       Top             =   1680
    End
    Begin VB.Frame Frame2 
-      BackColor       =   &H00E0E0E0&
+      BackColor       =   &H00424242&
       Caption         =   "Información general"
       Height          =   3075
       Left            =   5190
@@ -103,8 +103,9 @@ Begin VB.Form frmMain
          AutoSize        =   -1  'True
          BackStyle       =   0  'Transparent
          Caption         =   "Estabilidad 0%"
+         ForeColor       =   &H00FFFFFF&
          Height          =   210
-         Left            =   150
+         Left            =   180
          TabIndex        =   14
          Top             =   2550
          Width           =   1155
@@ -115,9 +116,9 @@ Begin VB.Form frmMain
          BackColor       =   &H00000000&
          BackStyle       =   0  'Transparent
          Caption         =   "Tiempo para la reconexion de la DB: Cargando..."
-         ForeColor       =   &H00000000&
+         ForeColor       =   &H00FFFFFF&
          Height          =   210
-         Left            =   120
+         Left            =   150
          TabIndex        =   15
          Top             =   2790
          Width           =   3900
@@ -137,9 +138,9 @@ Begin VB.Form frmMain
             Italic          =   0   'False
             Strikethrough   =   0   'False
          EndProperty
-         ForeColor       =   &H00000000&
+         ForeColor       =   &H00FFFFFF&
          Height          =   195
-         Left            =   120
+         Left            =   150
          TabIndex        =   12
          Top             =   1995
          Width           =   3450
@@ -159,9 +160,9 @@ Begin VB.Form frmMain
             Italic          =   0   'False
             Strikethrough   =   0   'False
          EndProperty
-         ForeColor       =   &H00000000&
+         ForeColor       =   &H00FFFFFF&
          Height          =   195
-         Left            =   120
+         Left            =   150
          TabIndex        =   10
          Top             =   1440
          Width           =   3375
@@ -181,11 +182,11 @@ Begin VB.Form frmMain
             Italic          =   0   'False
             Strikethrough   =   0   'False
          EndProperty
-         ForeColor       =   &H00000000&
+         ForeColor       =   &H00FFFFFF&
          Height          =   195
-         Left            =   120
+         Left            =   150
          TabIndex        =   11
-         Top             =   1720
+         Top             =   1725
          Width           =   3600
       End
       Begin VB.Label lblLloviendoInfo 
@@ -203,9 +204,9 @@ Begin VB.Form frmMain
             Italic          =   0   'False
             Strikethrough   =   0   'False
          EndProperty
-         ForeColor       =   &H00000000&
+         ForeColor       =   &H00FFFFFF&
          Height          =   195
-         Left            =   150
+         Left            =   180
          TabIndex        =   13
          Top             =   2280
          Width           =   2265
@@ -225,9 +226,9 @@ Begin VB.Form frmMain
             Italic          =   0   'False
             Strikethrough   =   0   'False
          EndProperty
-         ForeColor       =   &H00000000&
+         ForeColor       =   &H00FFFFFF&
          Height          =   195
-         Left            =   120
+         Left            =   150
          TabIndex        =   5
          Top             =   720
          Width           =   2460
@@ -247,9 +248,9 @@ Begin VB.Form frmMain
             Italic          =   0   'False
             Strikethrough   =   0   'False
          EndProperty
-         ForeColor       =   &H00000000&
+         ForeColor       =   &H00FFFFFF&
          Height          =   195
-         Left            =   120
+         Left            =   150
          TabIndex        =   8
          Top             =   1080
          Width           =   1965
@@ -269,16 +270,16 @@ Begin VB.Form frmMain
             Italic          =   0   'False
             Strikethrough   =   0   'False
          EndProperty
-         ForeColor       =   &H00000000&
+         ForeColor       =   &H00FFFFFF&
          Height          =   195
-         Left            =   120
+         Left            =   150
          TabIndex        =   2
          Top             =   360
          Width           =   2820
       End
    End
    Begin VB.Frame FraBaseDe 
-      BackColor       =   &H00E0E0E0&
+      BackColor       =   &H00424242&
       Caption         =   "Base de datos"
       BeginProperty Font 
          Name            =   "Tahoma"
@@ -289,18 +290,18 @@ Begin VB.Form frmMain
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      ForeColor       =   &H00000000&
+      ForeColor       =   &H00FFFFFF&
       Height          =   735
       Left            =   5160
       TabIndex        =   25
       Top             =   5130
-      Width           =   5535
+      Width           =   5685
       Begin VB.CommandButton cmdDB 
          BackColor       =   &H80000005&
          Caption         =   "Reconectar"
          Height          =   375
          Index           =   3
-         Left            =   2670
+         Left            =   2790
          Style           =   1  'Graphical
          TabIndex        =   29
          Top             =   240
@@ -311,7 +312,7 @@ Begin VB.Form frmMain
          Caption         =   "Estado"
          Height          =   375
          Index           =   2
-         Left            =   4140
+         Left            =   4290
          Style           =   1  'Graphical
          TabIndex        =   28
          Top             =   240
@@ -322,7 +323,7 @@ Begin VB.Form frmMain
          Caption         =   "Desconectar"
          Height          =   375
          Index           =   1
-         Left            =   1320
+         Left            =   1410
          Style           =   1  'Graphical
          TabIndex        =   27
          Top             =   240
@@ -342,7 +343,7 @@ Begin VB.Form frmMain
    End
    Begin VB.TextBox txtStatus 
       Appearance      =   0  'Flat
-      BackColor       =   &H00400000&
+      BackColor       =   &H80000012&
       BeginProperty Font 
          Name            =   "Tahoma"
          Size            =   9
@@ -362,7 +363,7 @@ Begin VB.Form frmMain
       Width           =   5655
    End
    Begin VB.CheckBox chkServerHabilitado 
-      BackColor       =   &H00E0E0E0&
+      BackColor       =   &H00424242&
       Caption         =   "Server Habilitado Solo Gms"
       BeginProperty Font 
          Name            =   "Tahoma"
@@ -373,31 +374,31 @@ Begin VB.Form frmMain
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      ForeColor       =   &H00000000&
+      ForeColor       =   &H00FFFFFF&
       Height          =   255
       Left            =   90
       TabIndex        =   21
-      Top             =   4620
+      Top             =   4650
       Width           =   2775
    End
    Begin VB.CommandButton cmdConfiguracion 
       BackColor       =   &H80000005&
       Caption         =   "Configuracion General"
       Height          =   375
-      Left            =   90
+      Left            =   120
       Style           =   1  'Graphical
       TabIndex        =   24
-      Top             =   5400
+      Top             =   5490
       Width           =   4935
    End
    Begin VB.CommandButton cmdDump 
       BackColor       =   &H80000005&
       Caption         =   "Crear Log Critico de Usuarios"
       Height          =   375
-      Left            =   90
+      Left            =   120
       Style           =   1  'Graphical
       TabIndex        =   23
-      Top             =   4920
+      Top             =   5010
       Width           =   4935
    End
    Begin VB.Timer AutoSave 
@@ -407,7 +408,7 @@ Begin VB.Form frmMain
       Top             =   1680
    End
    Begin VB.Frame Frame1 
-      BackColor       =   &H00E0E0E0&
+      BackColor       =   &H00424242&
       Caption         =   "Mensajea todos los clientes (Solo testeo)"
       BeginProperty Font 
          Name            =   "Tahoma"
@@ -418,7 +419,7 @@ Begin VB.Form frmMain
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      ForeColor       =   &H00000000&
+      ForeColor       =   &H00FFFFFF&
       Height          =   4335
       Left            =   120
       TabIndex        =   16
@@ -461,8 +462,8 @@ Begin VB.Form frmMain
          Top             =   1440
       End
       Begin VB.TextBox txtChat 
-         Height          =   3045
-         Left            =   60
+         Height          =   2985
+         Left            =   90
          MultiLine       =   -1  'True
          TabIndex        =   20
          Top             =   1260
@@ -843,11 +844,6 @@ Private Sub AutoSave_Timer()
     Call HappyHourManager
     
     Call SpawnRetardado
-    
-    'Actualizamos el Centinela en caso de que este activo en el server.ini
-    If isCentinelaActivated Then
-        Call modCentinela.ChekearUsuarios
-    End If
 
     'Actualizamos la lluvia
     Call tLluviaEvent

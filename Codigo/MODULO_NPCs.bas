@@ -844,10 +844,10 @@ Public Sub MakeNPCChar(ByVal toMap As Boolean, _
         
         If Not toMap Then
             Call WriteCharacterCreate(sndIndex, .Char.body, .Char.Head, .Char.Heading, .Char.CharIndex, _
-                X, Y, .Char.WeaponAnim, .Char.ShieldAnim, 0, 0, .Char.CascoAnim, .Char.AnimAtaque, NombreNPC, color, 0, NingunAura, NingunAura, .NoShadow, estadoQuest)
+                X, Y, .Char.WeaponAnim, .Char.ShieldAnim, 0, 0, .Char.CascoAnim, .Char.AnimAtaque, NombreNPC, color, 0, NingunAura, NingunAura, .flags.Velocidad, True, estadoQuest)
     '
         Else
-            Call AgregarNpc(NPCIndex)
+            Call modAreas.AgregarNpc(NPCIndex)
     
         End If
     
@@ -903,7 +903,7 @@ Private Sub EraseNPCChar(ByVal NPCIndex As Integer)
     MapData(Npclist(NPCIndex).Pos.Map, Npclist(NPCIndex).Pos.X, Npclist(NPCIndex).Pos.Y).NPCIndex = 0
 
     'Actualizamos los clientes
-    Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessageCharacterRemove(Npclist(NPCIndex).Char.CharIndex))
+    Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessageCharacterRemove(Npclist(NPCIndex).Char.CharIndex, True))
 
     'Update la lista npc
     Npclist(NPCIndex).Char.CharIndex = 0
@@ -974,7 +974,7 @@ Public Function MoveNPCChar(ByVal NPCIndex As Integer, ByVal nHeading As Byte) A
             .Pos = nPos
             .Char.Heading = nHeading
             MapData(.Pos.Map, nPos.X, nPos.Y).NPCIndex = NPCIndex
-            Call CheckUpdateNeededNpc(NPCIndex, nHeading)
+            Call modAreas.CheckUpdateNeededNpc(NPCIndex, nHeading)
             
             'Si es un WorldBoss y se aleja 10 tiles de su OrigPos se le devuelve.
             If Npclist(NPCIndex).NPCtype = eNPCType.WorldBoss And Npclist(NPCIndex).Pos.X <= (Npclist(NPCIndex).Orig.X - 20) Or _
@@ -1229,7 +1229,7 @@ Public Sub NPCTelep(ByVal NPCIndex As Integer, Posicion As WorldPos, ByVal FXTel
             'Añadimos el NPC a la nueva posición en el mapa
             MapData(Posicion.Map, Posicion.X, Posicion.Y).NPCIndex = NPCIndex
             
-            Call CheckUpdateNeededNpc(NPCIndex, nHeading)
+            Call modAreas.CheckUpdateNeededNpc(NPCIndex, nHeading)
             
             '¿Mostramos FX?
             If FXTelep Then
@@ -1344,9 +1344,9 @@ Public Function OpenNPC(ByVal NpcNumber As Integer, _
         .Char.body = val(Leer.GetValue("NPC" & NpcNumber, "Body"))
         .Char.Head = val(Leer.GetValue("NPC" & NpcNumber, "Head"))
         .Char.Heading = val(Leer.GetValue("NPC" & NpcNumber, "Heading"))
-        .Char.ShieldAnim = val(Leer.GetValue("NPC" & NpcNumber, "ShieldAnim"))
-        .Char.WeaponAnim = val(Leer.GetValue("NPC" & NpcNumber, "WeaponAnim"))
-        .Char.CascoAnim = val(Leer.GetValue("NPC" & NpcNumber, "CascoAnim"))
+        .Char.ShieldAnim = val(Leer.GetValue("NPC" & NpcNumber, "Shield"))
+        .Char.WeaponAnim = val(Leer.GetValue("NPC" & NpcNumber, "Weapon"))
+        .Char.CascoAnim = val(Leer.GetValue("NPC" & NpcNumber, "Helmet"))
         
         .Attackable = val(Leer.GetValue("NPC" & NpcNumber, "Attackable"))
         .Comercia = val(Leer.GetValue("NPC" & NpcNumber, "Comercia"))
@@ -1354,6 +1354,7 @@ Public Function OpenNPC(ByVal NpcNumber As Integer, _
         .flags.OldHostil = .Hostile
         
         .GiveEXP = val(Leer.GetValue("NPC" & NpcNumber, "GiveEXP")) * ExpMultiplier
+
         If HappyHourActivated And (HappyHour <> 0) Then .GiveEXP = .GiveEXP * HappyHour
         
         .flags.ExpCount = .GiveEXP
@@ -1481,6 +1482,13 @@ Public Function OpenNPC(ByVal NpcNumber As Integer, _
         .Instruye = val(Leer.GetValue("NPC" & NpcNumber, "Instruye"))
         
         .SpeedVar = val(Leer.GetValue("NPC" & NpcNumber, "Speed"))
+        
+        If .SpeedVar = 0 Then
+            .SpeedVar = 380
+            .flags.Velocidad = frmMain.TIMER_AI.interval / 330
+        Else
+            .flags.Velocidad = 210 / .SpeedVar
+        End If
         
         .EsdeFortaleza = val(Leer.GetValue("NPC" & NpcNumber, "Fortaleza"))
 

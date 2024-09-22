@@ -36,26 +36,15 @@ Option Explicit
 #End If
 
 '********** Constantes de dano en render.
-Public Const DAMAGE_PUNAL    As Byte = 1
-Public Const DAMAGE_NORMAL   As Byte = 2
-Public Const DAMAGE_CRITICO  As Byte = 3
-Public Const DAMAGE_FALLO    As Byte = 4
-Public Const DAMAGE_CURAR    As Byte = 5
-Public Const DAMAGE_TRABAJO  As Byte = 6
+Public Const DAMAGE_PUNAL   As Byte = 1
+Public Const DAMAGE_NORMAL  As Byte = 2
+Public Const DAMAGE_CRITICO As Byte = 3
+Public Const DAMAGE_FALLO   As Byte = 4
+Public Const DAMAGE_CURAR   As Byte = 5
+Public Const DAMAGE_TRABAJO As Byte = 6
 '********** Constantes de dano en render.
 
-' Nuevo Centinela
-Type CentinelaUser
-
-    centinelaIndex     As Byte         'Centinela del usuario.
-    Codigo             As String       'Codigo que debe ingresar.
-    CentinelaCheck     As Boolean      'Si respondio o no.
-    Revisando          As Boolean      'Si tiene centinela.
-    UltimaRevision     As Long         'Ultima revision al usuario.
-
-End Type
-
-Public tickLimpieza      As Integer
+Public tickLimpieza        As Integer
 
 ''
 ' Modulo de declaraciones. Aca hay de todo.
@@ -63,9 +52,9 @@ Public tickLimpieza      As Integer
 
 Public Const MAXMATERIALES As Byte = 4 '4 materiales maximo para construir un item con profesiones
 
-Public aClon          As clsAntiMassClon
+Public aClon               As clsAntiMassClon
 
-Public TrashCollector As Collection
+Public TrashCollector      As Collection
 
 Public Const MAXSPAWNATTEMPS = 60
 
@@ -77,21 +66,13 @@ Public Const FX_PASA_NIVEL = 51
 
 Public Const FX_PASA_NIVELPVP = 45
 
-Public Const MAXAMIGOS As Byte = 50   'Cantidad Maxima de Amigos
+Public Const MAXAMIGOS    As Byte = 50   'Cantidad Maxima de Amigos
 
 Public Const MINLVLGLOBAL As Byte = 5 'Nivel minimo para poder usar el chat global.
 
 ''
-' The color of chats over head of dead characters.
-Public Const CHAT_COLOR_DEAD_CHAR As Long = &HC0C0C0
-
-''
-' The color of yells made by any kind of game administrator.
-Public Const CHAT_COLOR_GM_YELL   As Long = &HF82FF
-
-''
 ' Coordinates for normal sounds (not 3D, like rain)
-Public Const NO_3D_SOUND          As Byte = 0
+Public Const NO_3D_SOUND  As Byte = 0
 
 Public Const iFragataFantasmal = 87
 
@@ -203,7 +184,7 @@ Public Enum eCiudad
     cShakoud
     cBelleuve
     cIslaZharkel
-    cWinterhold
+    cFrostdale
     cbattle
 
 End Enum
@@ -238,17 +219,7 @@ Public Enum eClanType
 
 End Enum
 
-Public Const LimiteNewbie As Byte = 12
-
-Public Type tCabecera 'Cabecera de los con
-
-    Desc As String * 255
-    crc As Long
-    MagicWord As Long
-
-End Type
-
-Public MiCabecera                    As tCabecera
+Public Const LimiteNewbie            As Byte = 12
 
 'Barrin 3/10/03
 'Cambiado a 2 segundos el 30/11/07
@@ -393,13 +364,13 @@ Public Enum TipoHechizo
 
 End Enum
 
-Public Const MAXUSERHECHIZOS               As Byte = 35
+Public Const MAXUSERHECHIZOS   As Byte = 35
 
 ' TODO: Y ESTO ? LO CONOCE GD ?
 
-Public Const EsfuerzoExtraer               As Byte = 3
+Public Const EsfuerzoExtraer   As Byte = 3
 
-Public Const FX_TELEPORT_INDEX             As Integer = 25
+Public Const FX_TELEPORT_INDEX As Integer = 25
 
 ' La utilidad de esto es casi nula, solo se revisa si fue a la cabeza...
 Public Enum PartesCuerpo
@@ -413,79 +384,79 @@ Public Enum PartesCuerpo
 
 End Enum
 
-Public Const MAXUSERRECETAS                 As Integer = 200 'Un usuario puede aprender 200 recetas de una profesion como maximo
+Public Const MAXUSERRECETAS       As Integer = 200 'Un usuario puede aprender 200 recetas de una profesion como maximo
 
-Public Const Guardias                       As Integer = 6
+Public Const Guardias             As Integer = 6
 
-Public Const MAX_ORO_EDIT                   As Long = 500000
+Public Const MAX_ORO_EDIT         As Long = 500000
 
-Public Const MAX_EXP_EDIT                   As Long = 5000000
+Public Const MAX_EXP_EDIT         As Long = 5000000
 
-Public Const MAX_VIDA_EDIT                  As Long = 30000
+Public Const MAX_VIDA_EDIT        As Long = 30000
 
-Public Const TAG_USER_INVISIBLE             As String = "[INVISIBLE]"
+Public Const TAG_USER_INVISIBLE   As String = "[INVISIBLE]"
 
-Public Const TAG_CONSULT_MODE               As String = "[CONSULTA]"
+Public Const TAG_CONSULT_MODE     As String = "[CONSULTA]"
 
-Public Const MAXREP                         As Long = 6000000
+Public Const MAXREP               As Long = 6000000
 
-Public Const MAXORO                         As Long = 200000000
+Public Const MAXORO               As Long = 200000000
 
-Public Const MAXEXP                         As Long = 999999999
+Public Const MAXEXP               As Long = 999999999
 
-Public Const MAXUSERMATADOS                 As Long = 65000
+Public Const MAXUSERMATADOS       As Long = 65000
 
-Public Const MAXATRIBUTOS                   As Byte = 40
+Public Const MAXATRIBUTOS         As Byte = 40
 
-Public Const MINATRIBUTOS                   As Byte = 6
+Public Const MINATRIBUTOS         As Byte = 6
 
-Public Const LingoteHierro                  As Integer = 386
+Public Const LingoteHierro        As Integer = 386
 
-Public Const LingotePlata                   As Integer = 387
+Public Const LingotePlata         As Integer = 387
 
-Public Const LingoteOro                     As Integer = 388
+Public Const LingoteOro           As Integer = 388
 
-Public Const Lena                           As Integer = 58
+Public Const Lena                 As Integer = 58
 
-Public Const LenaElfica                     As Integer = 1006
+Public Const LenaElfica           As Integer = 1006
 
-Public Const MAXNPCS                        As Integer = 10000
+Public Const MAXNPCS              As Integer = 10000
 
-Public Const MAXCHARS                       As Integer = 10000
+Public Const MAXCHARS             As Integer = 10000
 
-Public Const HACHA_LENADOR                  As Integer = 127
+Public Const HACHA_LENADOR        As Integer = 127
 
-Public Const HACHA_LENA_ELFICA              As Integer = 1005
+Public Const HACHA_LENA_ELFICA    As Integer = 1005
 
-Public Const PIQUETE_MINERO                 As Integer = 187
+Public Const PIQUETE_MINERO       As Integer = 187
 
-Public Const DAGA                           As Integer = 15
+Public Const DAGA                 As Integer = 15
 
-Public Const FOGATA_APAG                    As Integer = 136
+Public Const FOGATA_APAG          As Integer = 136
 
-Public Const FOGATA                         As Integer = 63
+Public Const FOGATA               As Integer = 63
 
-Public Const ORO_MINA                       As Integer = 194
+Public Const ORO_MINA             As Integer = 194
 
-Public Const PLATA_MINA                     As Integer = 193
+Public Const PLATA_MINA           As Integer = 193
 
-Public Const HIERRO_MINA                    As Integer = 192
+Public Const HIERRO_MINA          As Integer = 192
 
-Public Const MARTILLO_HERRERO               As Integer = 389
+Public Const MARTILLO_HERRERO     As Integer = 389
 
-Public Const SERRUCHO_CARPINTERO            As Integer = 198
+Public Const SERRUCHO_CARPINTERO  As Integer = 198
 
-Public Const KIT_DE_COSTURA                 As Integer = 1298
+Public Const KIT_DE_COSTURA       As Integer = 1298
 
-Public Const OLLA_ALQUIMISTA                As Integer = 1306
+Public Const OLLA_ALQUIMISTA      As Integer = 1306
 
-Public Const ObjArboles                     As Integer = 4
+Public Const ObjArboles           As Integer = 4
 
-Public Const RED_PESCA                      As Integer = 543
+Public Const RED_PESCA            As Integer = 543
 
-Public Const CANA_PESCA                     As Integer = 138
+Public Const CANA_PESCA           As Integer = 138
 
-Public Const AMULETO_DEL_SILENCIO           As Integer = 1126
+Public Const AMULETO_DEL_SILENCIO As Integer = 1126
 
 Public Enum eNPCType
 
@@ -574,9 +545,9 @@ Public Const vlProleta     As Integer = 2
 
 '%%%%%%%% CONSTANTES DE VELOCIDADES %%%%%%%%%%%%%
 
-Public Const SPEED_NORMAL As Double = 1.8
+Public Const SPEED_NORMAL  As Double = 1
 
-Public Const SPEED_MUERTO As Double = 2
+Public Const SPEED_MUERTO  As Double = 1.4
 
 '%%%%%%%%%% CONSTANTES DE INDICES %%%%%%%%%%%%%%%
 Public Const iCuerpoMuerto As Integer = 8
@@ -725,7 +696,7 @@ Public Const MAX_NORMAL_INVENTORY_SLOTS As Byte = 25
 
 ''
 ' Cantidad de "slots" en el inventario por fila
-Public Const SLOTS_PER_ROW_INVENTORY As Byte = 5
+Public Const SLOTS_PER_ROW_INVENTORY    As Byte = 5
 
 ''
 ' Constante para indicar que se esta usando ORO
@@ -780,25 +751,27 @@ Public Enum eOBJType
 End Enum
 
 'Estadisticas
-Public STAT_MAXELV                    As Byte
+Public STAT_MAXELV               As Byte
 
-Public Const STAT_MAXHP               As Integer = 999
+Public TablaExperiencia()        As Long
 
-Public Const STAT_MAXSTA              As Integer = 999
+Public Const STAT_MAXHP          As Integer = 999
 
-Public Const STAT_MAXMAN              As Integer = 9999
+Public Const STAT_MAXSTA         As Integer = 999
 
-Public Const STAT_MAXHIT_UNDER36      As Byte = 99
+Public Const STAT_MAXMAN         As Integer = 9999
 
-Public Const STAT_MAXHIT_OVER36       As Integer = 999
+Public Const STAT_MAXHIT_UNDER36 As Byte = 99
 
-Public Const STAT_MAXDEF              As Byte = 99
+Public Const STAT_MAXHIT_OVER36  As Integer = 999
 
-Public Const ELU_SKILL_INICIAL        As Byte = 200
+Public Const STAT_MAXDEF         As Byte = 99
 
-Public Const EXP_ACIERTO_SKILL        As Byte = 50
+Public Const ELU_SKILL_INICIAL   As Byte = 200
 
-Public Const EXP_FALLO_SKILL          As Byte = 20
+Public Const EXP_ACIERTO_SKILL   As Byte = 50
+
+Public Const EXP_FALLO_SKILL     As Byte = 20
 
 ' **************************************************************
 ' **************************************************************
@@ -1202,7 +1175,7 @@ Public Type ObjData
     
     Efecto As tEfectos
     
-    Speed As Double
+    Speed As Single
     
     TiempoVIP As Integer
 End Type
@@ -1456,6 +1429,14 @@ Public Type UserStats
     
 End Type
 
+Public Type RGB
+
+    r As Byte
+    g As Byte
+    b As Byte
+        
+End Type
+
 'Flags
 Public Type UserFlags
     GMRequested As Integer
@@ -1551,13 +1532,7 @@ Public Type UserFlags
     AdminInvisible As Byte
     AdminPerseguible As Boolean
     
-    ChatColor As Long
-    
-    '[Barrin 30-11-03]
-    TimesWalk As Long
-    StartWalk As Long
-    CountSH As Long
-    '[/Barrin 30-11-03]
+    ChatColor As RGB
     
     '[CDT 17-02-04]
     UltimoMensaje As Byte
@@ -1588,7 +1563,7 @@ Public Type UserFlags
     
     Trabajando As Byte
     
-    Velocidad As Double
+    Velocidad As Single
     
     EsperandoDueloSet As Boolean
     EstaDueleandoSet As Boolean
@@ -1619,13 +1594,17 @@ Public Type UserCounters
     Paralisis As Integer
     Ceguera As Integer
     Estupidez As Integer
+    Mimetismo As Integer
     
     MonturaCounter As Long
+    
+    ' Anticheat
+    SpeedHackCounter As Single
+    LastStep As Long
     
     Invisibilidad As Integer
     TiempoOculto As Integer
     
-    Mimetismo As Integer
     PiqueteC As Long
     ContadorPiquete As Long
     Pena As Long
@@ -1653,13 +1632,11 @@ Public Type UserCounters
     TimerEstadoAtacable As Long
     TimerPuedeOcultar As Long
     
-    Trabajando As Long  ' Para el centinela
-    Ocultando As Long   ' Unico trabajo no revisado por el centinela
+    Trabajando As Long
+    Ocultando As Long
     Cheat As modAntiCheat.TimeIntervalos
     
     failedUsageAttempts As Long
-    
-    AsignedSkills As Byte
     
     PacketsTick As Byte
 
@@ -1823,8 +1800,6 @@ Public Type User
     incomingData As clsByteQueue
     
     CurrentInventorySlots As Byte
-
-    CentinelaUsuario As CentinelaUser
     
     cvcUser As cvc_User
     
@@ -1926,6 +1901,8 @@ Public Type NPCFlags
     Recurso As tProfesion
     
     ArenasRinkel As Byte 'Identifica si un NPC pertenece al evento de arenas de Rinkel
+    
+    Velocidad As Single
     
 End Type
 
@@ -2095,21 +2072,21 @@ End Type
 
 '********** V A R I A B L E S     P U B L I C A S ***********
 
-Public SERVERONLINE                       As Boolean
+Public SERVERONLINE                      As Boolean
 
-Public ULTIMAVERSION                      As String
+Public ULTIMAVERSION                     As String
 
-Public BackUp                             As Boolean ' TODO: Se usa esta variable ?
+Public BackUp                            As Boolean ' TODO: Se usa esta variable ?
 
-Public ListaRazas(1 To NUMRAZAS)          As String
+Public ListaRazas(1 To NUMRAZAS)         As String
 
-Public SkillsNames(1 To NUMSKILLS)        As String
+Public SkillsNames(1 To NUMSKILLS)       As String
 
-Public ListaClases(1 To NUMCLASES)        As String
+Public ListaClases(1 To NUMCLASES)       As String
 
-Public ListaAtributos(1 To NUMATRIBUTOS)  As String
+Public ListaAtributos(1 To NUMATRIBUTOS) As String
 
-Public RecordUsuariosOnline                     As Long
+Public RecordUsuariosOnline              As Long
 
 '
 'Directorios
@@ -2117,92 +2094,89 @@ Public RecordUsuariosOnline                     As Long
 
 ''
 'Ruta base del server, en donde esta el "server.ini"
-Public ConfigPath                         As String
+Public ConfigPath                        As String
 
 ''
 'Ruta base para guardar los chars
-Public CharPath                           As String
+Public CharPath                          As String
 ''
 'Ruta base para los archivos de mapas
-Public MapPath                            As String
+Public MapPath                           As String
 
 ''
 'Ruta base para los DATs
-Public DatPath                            As String
+Public DatPath                           As String
 
 ''
 'Bordes del mapa
-Public MinXBorder                         As Integer
-Public MaxXBorder                         As Integer
-Public MinYBorder                         As Integer
-Public MaxYBorder                         As Integer
-
+Public MinXBorder                        As Integer
+Public MaxXBorder                        As Integer
+Public MinYBorder                        As Integer
+Public MaxYBorder                        As Integer
 
 ''
 'Numero de usuarios actual
-Public NumUsers                           As Integer
+Public NumUsers                          As Integer
 
-Public NumCuentas                         As Integer
+Public NumCuentas                        As Integer
 
-Public LastUser                           As Integer
+Public LastUser                          As Integer
 
-Public LastChar                           As Integer
+Public LastChar                          As Integer
 
-Public NumChars                           As Integer
+Public NumChars                          As Integer
 
-Public LastNPC                            As Integer
+Public LastNPC                           As Integer
 
-Public NumNPCs                            As Integer
+Public NumNPCs                           As Integer
 
-Public TotalNPCDat                        As Integer
+Public TotalNPCDat                       As Integer
 
-Public NumFX                              As Integer
+Public NumFX                             As Integer
 
-Public NumMaps                            As Integer
+Public NumMaps                           As Integer
 
-Public NumObjDatas                        As Integer
+Public NumObjDatas                       As Integer
 
-Public NumeroHechizos                     As Integer
+Public NumeroHechizos                    As Integer
 
-Public AllowMultiLogins                   As Boolean
+Public AllowMultiLogins                  As Boolean
 
-Public IdleLimit                          As Integer
+Public IdleLimit                         As Integer
 
-Public LimiteConexionesPorIp              As Byte
+Public LimiteConexionesPorIp             As Byte
 
-Public MaxUsers                           As Integer
+Public MaxUsers                          As Integer
 
-Public HideMe                             As Boolean
+Public HideMe                            As Boolean
 
-Public LastBackup                         As String
+Public LastBackup                        As String
 
-Public Minutos                            As String
+Public Minutos                           As String
 
-Public haciendoBK                         As Boolean
+Public haciendoBK                        As Boolean
 
-Public PuedeCrearPersonajes               As Integer
+Public PuedeCrearPersonajes              As Integer
 
-Public ServerSoloGMs                      As Integer
+Public ServerSoloGMs                     As Integer
 
-Public Battlegrounds                      As Boolean
+Public NumRecords                        As Integer
 
-Public NumRecords                         As Integer
+Public EnPausa                           As Boolean
 
-Public EnPausa                            As Boolean
-
-Public EnTesting                          As Boolean
+Public EnTesting                         As Boolean
 
 ' Sistema de Happy Hour (adaptado de 0.13.5)
-Public iniHappyHourActivado As Boolean ' GSZAO
-Public HappyHour As Single      ' 0.13.5
-Public HappyHourActivated As Boolean      ' 0.13.5
+Public iniHappyHourActivado              As Boolean ' GSZAO
+Public HappyHour                         As Single      ' 0.13.5
+Public HappyHourActivated                As Boolean      ' 0.13.5
 
 Public Type tHappyHour ' GSZAO
     Multi As Single ' Multi
     Hour As Integer ' Hora
 End Type
 
-Public HappyHourDays(1 To 7) As tHappyHour    ' 0.13.5
+Public HappyHourDays(1 To 7)              As tHappyHour    ' 0.13.5
 
 '*****************ARRAYS PUBLICOS*************************
 Public UserList()                         As User 'USUARIOS
@@ -2270,7 +2244,7 @@ Public Shakoud         As WorldPos
 
 Public Belleuve        As WorldPos
 
-Public Winterhold      As WorldPos
+Public Frostdale       As WorldPos
 
 Public IslaZharkel     As WorldPos
 
@@ -2354,163 +2328,6 @@ Public Enum eMessages
     Hechizo_PropioMSG
     Hechizo_TargetMSG
 
-End Enum
-
-Public Enum eGMCommands
-
-    GMMessage = 1           '/GMSG
-    showName                '/SHOWNAME
-    OnlineRoyalArmy         '/ONLINEREAL
-    OnlineChaosLegion       '/ONLINECAOS
-    GoNearby                '/IRCERCA
-    comment                 '/REM
-    serverTime              '/HORA
-    Where                   '/DONDE
-    CreaturesInMap          '/NENE
-    WarpMeToTarget          '/TELEPLOC
-    WarpChar                '/TELEP
-    Silence                 '/SILENCIAR
-    SOSShowList             '/SHOW SOS
-    SOSRemove               'SOSDONE
-    GoToChar                '/IRA
-    invisible               '/INVISIBLE
-    GMPanel                 '/PANELGM
-    RequestUserList         'LISTUSU
-    Working                 '/TRABAJANDO
-    Hiding                  '/OCULTANDO
-    Jail                    '/CARCEL
-    KillNPC                 '/RMATA
-    WarnUser                '/ADVERTENCIA
-    EditChar                '/MOD
-    RequestCharInfo         '/INFO
-    RequestCharStats        '/STAT
-    RequestCharGold         '/BAL
-    RequestCharInventory    '/INV
-    RequestCharBank         '/BOV
-    RequestCharSkills       '/SKILLS
-    ReviveChar              '/REVIVIR
-    OnlineGM                '/ONLINEGM
-    OnlineMap               '/ONLINEMAP
-    Forgive                 '/PERDON
-    Kick                    '/ECHAR
-    Execute                 '/EJECUTAR
-    BanChar                 '/BAN
-    UnbanChar               '/UNBAN
-    NPCFollow               '/SEGUIR
-    SummonChar              '/SUM
-    SpawnListRequest        '/CC
-    SpawnCreature           'SPA
-    ResetNPCInventory       '/RESETINV
-    ServerMessage           '/RMSG
-    NickToIP                '/NICK2IP
-    IPToNick                '/IP2NICK
-    GuildOnlineMembers      '/ONCLAN
-    TeleportCreate          '/CT
-    TeleportDestroy         '/DT
-    MeteoToggle             '/METEO
-    SetCharDescription      '/SETDESC
-    ForceMUSICToMap          '/FORCEMUSICMAP
-    ForceWAVEToMap          '/FORCEWAVMAP
-    RoyalArmyMessage        '/REALMSG
-    ChaosLegionMessage      '/CAOSMSG
-    CitizenMessage          '/CIUMSG
-    CriminalMessage         '/CRIMSG
-    TalkAsNPC               '/TALKAS
-    DestroyAllItemsInArea   '/MASSDEST
-    AcceptRoyalCouncilMember '/ACEPTCONSE
-    AcceptChaosCouncilMember '/ACEPTCONSECAOS
-    ItemsInTheFloor         '/PISO
-    MakeDumb                '/ESTUPIDO
-    MakeDumbNoMore          '/NOESTUPIDO
-    DumpIPTables            '/DUMPSECURITY
-    CouncilKick             '/KICKCONSE
-    SetTrigger              '/TRIGGER
-    AskTrigger              '/TRIGGER with no args
-    BannedIPList            '/BANIPLIST
-    BannedIPReload          '/BANIPRELOAD
-    GuildMemberList         '/MIEMBROSCLAN
-    GuildBan                '/BANCLAN
-    BanIP                   '/BANIP
-    UnbanIP                 '/UNBANIP
-    CreateItem              '/CI
-    DestroyItems            '/DEST
-    ChaosLegionKick         '/NOCAOS
-    RoyalArmyKick           '/NOREAL
-    ForceMUSICAll           '/FORCEMUSIC
-    ForceWAVEAll            '/FORCEWAV
-    RemovePunishment        '/BORRARPENA
-    TileBlockedToggle       '/BLOQ
-    KillNPCNoRespawn        '/MATA
-    KillAllNearbyNPCs       '/MASSKILL
-    LastIP                  '/LASTIP
-    ChangeMOTD              '/MOTDCAMBIA
-    SetMOTD                 'ZMOTD
-    SystemMessage           '/SMSG
-    CreateNPC               '/ACC y /RACC
-    ImperialArmour          '/AI1 - 4
-    ChaosArmour             '/AC1 - 4
-    NavigateToggle          '/NAVE
-    ServerOpenToUsersToggle '/HABILITAR
-    TurnOffServer           '/APAGAR
-    TurnCriminal            '/CONDEN
-    ResetFactions           '/RAJAR
-    RemoveCharFromGuild     '/RAJARCLAN
-    RequestCharMail         '/LASTEMAIL
-    AlterName               '/ANAME
-    DoBackUp                '/DOBACKUP
-    ShowGuildMessages       '/SHOWCMSG
-    SaveMap                 '/GUARDAMAPA
-    ChangeZonaPK            '/MODZona PK
-    ChangeZonaBackup        '/MODZona BACKUP
-    ChangeZonaRestricted    '/MODZona RESTRINGIR
-    ChangeZonaNoMagic       '/MODZona MAGIASINEFECTO
-    ChangeZonaNoInvi        '/MODZona INVISINEFECTO
-    ChangeZonaNoResu        '/MODZona RESUSINEFECTO
-    ChangeZonaLand          '/MODZona TERRENO
-    ChangeZonaZone          '/MODZona ZONA
-    ChangeZonaStealNpc      '/MODZona ROBONPC
-    ChangeZonaNoOcultar     '/MODZona OCULTARSINEFECTO
-    ChangeZonaNoInvocar     '/MODZona INVOCARSINEFECTO
-    SaveChars               '/GRABAR
-    CleanSOS                '/BORRAR SOS
-    ShowServerForm          '/SHOW INT
-    night                   '/NOCHE
-    KickAllChars            '/ECHARTODOSPJS
-    ReloadNPCs              '/RELOADNPCS
-    ReloadServerIni         '/RELOADSINI
-    ReloadSpells            '/RELOADHECHIZOS
-    ReloadObjects           '/RELOADOBJ
-    Restart                 '/REINICIAR
-    ResetAutoUpdate         '/AUTOUPDATE
-    ChatColor               '/CHATCOLOR
-    Ignored                 '/IGNORADO
-    CheckSlot               '/SLOT
-    SetIniVar               '/SETINIVAR LLAVE CLAVE VALOR
-    CreatePretorianClan     '/CREARPRETORIANOS
-    RemovePretorianClan     '/ELIMINARPRETORIANOS
-    EnableDenounces         '/DENUNCIAS
-    ShowDenouncesList       '/SHOW DENUNCIAS
-    MapMessage              '/MAPMSG
-    SetDialog               '/SETDIALOG
-    Impersonate             '/IMPERSONAR
-    Imitate                 '/MIMETIZAR
-    RecordAdd
-    RecordRemove
-    RecordAddObs
-    RecordListRequest
-    RecordDetailsRequest
-    ExitDestroy             '/DE
-    ToggleCentinelActivated '/CENTINELAACTIVADO
-    SearchNpc               '/BUSCAR
-    SearchObj               '/BUSCAR
-    LimpiarMundo            '/LIMPIARMUNDO
-    EditGems                '/EDITGEMS
-    ConsultarGemas          '/CONSULTARGEMS
-    SilenciarGlobal         '/SILENCIARGLOBAL
-    ToggleGlobal            '/TOGGLEGLOBAL
-    BanSerial
-    UnBanSerial
-    BanTemporal
 End Enum
 
 Public Const MATRIX_INITIAL_MAP                     As Integer = 1
@@ -2619,35 +2436,35 @@ Public Enum e_SoundIndex
 End Enum
 
 'SERVER INI
-Public ExpMultiplier        As Integer
+Public ExpMultiplier                                       As Integer
 
-Public OroMultiplier        As Integer
+Public OroMultiplier                                       As Integer
 
-Public OficioMultiplier     As Integer
+Public OficioMultiplier                                    As Integer
 
-Public DropItemsAlMorir     As Boolean
+Public DropItemsAlMorir                                    As Boolean
 
-Public ArtesaniaCosto       As Long
+Public ArtesaniaCosto                                      As Long
 
-Public ContadorAntiPiquete  As Integer
+Public ContadorAntiPiquete                                 As Integer
 
-Public MinutosCarcelPiquete As Integer
+Public MinutosCarcelPiquete                                As Integer
 
 Public EstadisticasInicialesUsarConfiguracionPersonalizada As Boolean
 
-Public ConexionAPI As Boolean
+Public ConexionAPI                                         As Boolean
 
-Public ApiUrlServer As String
+Public ApiUrlServer                                        As String
 
-Public ApiPath As String
+Public ApiPath                                             As String
 
 'Esta variable es para poder luego cerrar el programa cuando cerramos el cliente.
-Public ApiNodeJsTaskId As Double
+Public ApiNodeJsTaskId                                     As Double
 
-Public Security As New clsSecurity
+Public Security                                            As New clsSecurity
 
-Public User_Database As New clsDataBase
-Public Account_Database As New clsDataBase
+Public User_Database                                       As New clsDataBase
+Public Account_Database                                    As New clsDataBase
 
 'Lorwik> Sistema de retardo de Spawn de NPC
 Type tRetarded
@@ -2663,7 +2480,7 @@ Public RetardoSpawn(1 To MAXNPCS) As tRetarded
 'CHAT GLOBAL
 Public Declare Function timeGetTime Lib "winmm.dll" () As Long
 Public BanUsersChatGlobal As Collection
-Public GlobalChatActive As Boolean
+Public GlobalChatActive   As Boolean
 
 'DROP GLOBALES
 Public Type GlobalObj
@@ -2674,7 +2491,7 @@ Public Type GlobalObj
 End Type
 
 Public GlobalDROPObject() As GlobalObj
-Public NUMGLOBALDROPS As Integer
+Public NumGlobalDrops     As Integer
 
 'ITEMS DE SHOP
 Public Type ShopObj
@@ -2683,13 +2500,12 @@ Public Type ShopObj
     Valor As Long
 End Type
 
-Public ShopObject() As ShopObj
-Public NUMSHOPS As Integer
+Public ShopObject()            As ShopObj
+Public NumShops                As Integer
 
-Public PortalEvento() As New clsEventoMapa
-Public TotalEventosMap As Byte
+Public PortalEvento()          As New clsEventoMapa
+Public TotalEventosMap         As Byte
 Public HorarioEventoPortal(23) As Byte
-
 
 Public Enum e_AccionBarra
     Runa = 1

@@ -83,7 +83,6 @@ Private Enum ClientPacketID
     SpellInfo                      'INFS
     EquipItem                      'EQUI
     ChangeHeading                  'CHEA
-    ModifySkills                   'SKSE
     Train                          'ENTR
     CommerceBuy                    'COMP
     BankExtractItem                'RETI
@@ -168,7 +167,6 @@ Private Enum ClientPacketID
     Consultation
     moveItem
     LoginExistingAccount      'CHOTS | Accounts
-    CentinelReport
     Ecvc
     Acvc
     IrCvc
@@ -201,6 +199,161 @@ Private Enum ClientPacketID
     InitPVP
     DueloSet
     GMCommands
+End Enum
+
+Public Enum eGMCommands
+    GMMessage = 1           '/GMSG
+    showName                '/SHOWNAME
+    OnlineRoyalArmy         '/ONLINEREAL
+    OnlineChaosLegion       '/ONLINECAOS
+    GoNearby                '/IRCERCA
+    comment                 '/REM
+    serverTime              '/HORA
+    Where                   '/DONDE
+    CreaturesInMap          '/NENE
+    WarpMeToTarget          '/TELEPLOC
+    WarpChar                '/TELEP
+    Silence                 '/SILENCIAR
+    SOSShowList             '/SHOW SOS
+    SOSRemove               'SOSDONE
+    GoToChar                '/IRA
+    invisible               '/INVISIBLE
+    GMPanel                 '/PANELGM
+    RequestUserList         'LISTUSU
+    Working                 '/TRABAJANDO
+    Hiding                  '/OCULTANDO
+    Jail                    '/CARCEL
+    KillNPC                 '/RMATA
+    WarnUser                '/ADVERTENCIA
+    EditChar                '/MOD
+    RequestCharInfo         '/INFO
+    RequestCharStats        '/STAT
+    RequestCharGold         '/BAL
+    RequestCharInventory    '/INV
+    RequestCharBank         '/BOV
+    RequestCharSkills       '/SKILLS
+    ReviveChar              '/REVIVIR
+    OnlineGM                '/ONLINEGM
+    OnlineMap               '/ONLINEMAP
+    Forgive                 '/PERDON
+    Kick                    '/ECHAR
+    Execute                 '/EJECUTAR
+    BanChar                 '/BAN
+    UnbanChar               '/UNBAN
+    NPCFollow               '/SEGUIR
+    SummonChar              '/SUM
+    SpawnListRequest        '/CC
+    SpawnCreature           'SPA
+    ResetNPCInventory       '/RESETINV
+    ServerMessage           '/RMSG
+    NickToIP                '/NICK2IP
+    IPToNick                '/IP2NICK
+    GuildOnlineMembers      '/ONCLAN
+    TeleportCreate          '/CT
+    TeleportDestroy         '/DT
+    MeteoToggle             '/METEO
+    SetCharDescription      '/SETDESC
+    ForceMUSICToMap          '/FORCEMUSICMAP
+    ForceWAVEToMap          '/FORCEWAVMAP
+    RoyalArmyMessage        '/REALMSG
+    ChaosLegionMessage      '/CAOSMSG
+    CitizenMessage          '/CIUMSG
+    CriminalMessage         '/CRIMSG
+    TalkAsNPC               '/TALKAS
+    DestroyAllItemsInArea   '/MASSDEST
+    AcceptRoyalCouncilMember '/ACEPTCONSE
+    AcceptChaosCouncilMember '/ACEPTCONSECAOS
+    ItemsInTheFloor         '/PISO
+    MakeDumb                '/ESTUPIDO
+    MakeDumbNoMore          '/NOESTUPIDO
+    DumpIPTables            '/DUMPSECURITY
+    CouncilKick             '/KICKCONSE
+    SetTrigger              '/TRIGGER
+    AskTrigger              '/TRIGGER with no args
+    BannedIPList            '/BANIPLIST
+    BannedIPReload          '/BANIPRELOAD
+    GuildMemberList         '/MIEMBROSCLAN
+    GuildBan                '/BANCLAN
+    BanIP                   '/BANIP
+    UnbanIP                 '/UNBANIP
+    CreateItem              '/CI
+    DestroyItems            '/DEST
+    ChaosLegionKick         '/NOCAOS
+    RoyalArmyKick           '/NOREAL
+    ForceMUSICAll           '/FORCEMUSIC
+    ForceWAVEAll            '/FORCEWAV
+    RemovePunishment        '/BORRARPENA
+    TileBlockedToggle       '/BLOQ
+    KillNPCNoRespawn        '/MATA
+    KillAllNearbyNPCs       '/MASSKILL
+    LastIP                  '/LASTIP
+    ChangeMOTD              '/MOTDCAMBIA
+    SetMOTD                 'ZMOTD
+    SystemMessage           '/SMSG
+    CreateNPC               '/ACC y /RACC
+    ImperialArmour          '/AI1 - 4
+    ChaosArmour             '/AC1 - 4
+    NavigateToggle          '/NAVE
+    ServerOpenToUsersToggle '/HABILITAR
+    TurnOffServer           '/APAGAR
+    TurnCriminal            '/CONDEN
+    ResetFactions           '/RAJAR
+    RemoveCharFromGuild     '/RAJARCLAN
+    RequestCharMail         '/LASTEMAIL
+    AlterName               '/ANAME
+    DoBackUp                '/DOBACKUP
+    ShowGuildMessages       '/SHOWCMSG
+    SaveMap                 '/GUARDAMAPA
+    ChangeZonaPK            '/MODZona PK
+    ChangeZonaBackup        '/MODZona BACKUP
+    ChangeZonaRestricted    '/MODZona RESTRINGIR
+    ChangeZonaNoMagic       '/MODZona MAGIASINEFECTO
+    ChangeZonaNoInvi        '/MODZona INVISINEFECTO
+    ChangeZonaNoResu        '/MODZona RESUSINEFECTO
+    ChangeZonaLand          '/MODZona TERRENO
+    ChangeZonaZone          '/MODZona ZONA
+    ChangeZonaStealNpc      '/MODZona ROBONPC
+    ChangeZonaNoOcultar     '/MODZona OCULTARSINEFECTO
+    ChangeZonaNoInvocar     '/MODZona INVOCARSINEFECTO
+    SaveChars               '/GRABAR
+    CleanSOS                '/BORRAR SOS
+    ShowServerForm          '/SHOW INT
+    night                   '/NOCHE
+    KickAllChars            '/ECHARTODOSPJS
+    ReloadNPCs              '/RELOADNPCS
+    ReloadServerIni         '/RELOADSINI
+    ReloadSpells            '/RELOADHECHIZOS
+    ReloadObjects           '/RELOADOBJ
+    Restart                 '/REINICIAR
+    ResetAutoUpdate         '/AUTOUPDATE
+    ChatColor               '/CHATCOLOR
+    Ignored                 '/IGNORADO
+    CheckSlot               '/SLOT
+    SetIniVar               '/SETINIVAR LLAVE CLAVE VALOR
+    CreatePretorianClan     '/CREARPRETORIANOS
+    RemovePretorianClan     '/ELIMINARPRETORIANOS
+    EnableDenounces         '/DENUNCIAS
+    ShowDenouncesList       '/SHOW DENUNCIAS
+    MapMessage              '/MAPMSG
+    SetDialog               '/SETDIALOG
+    Impersonate             '/IMPERSONAR
+    Imitate                 '/MIMETIZAR
+    RecordAdd
+    RecordRemove
+    RecordAddObs
+    RecordListRequest
+    RecordDetailsRequest
+    ExitDestroy             '/DE
+    SearchNpc               '/BUSCAR
+    SearchObj               '/BUSCAR
+    LimpiarMundo            '/LIMPIARMUNDO
+    EditGems                '/EDITGEMS
+    ConsultarGemas          '/CONSULTARGEMS
+    SilenciarGlobal         '/SILENCIARGLOBAL
+    ToggleGlobal            '/TOGGLEGLOBAL
+    BanSerial
+    UnBanSerial
+    BanTemporal
 End Enum
 
 ''
@@ -247,7 +400,6 @@ Public Enum eEditOptions
     eo_Level
     eo_Class
     eo_Skills
-    eo_SkillPointsLeft
     eo_Nobleza
     eo_Asesino
     eo_Sex
@@ -451,9 +603,6 @@ Public Function HandleIncomingData(ByVal UserIndex As Integer) As Boolean
         
         Case ClientPacketID.ChangeHeading           'CHEA
             Call HandleChangeHeading(UserIndex)
-            
-        Case ClientPacketID.ModifySkills            'SKSE
-            Call HandleModifySkills(UserIndex)
         
         Case ClientPacketID.Train                   'ENTR
             Call HandleTrain(UserIndex)
@@ -706,9 +855,6 @@ Public Function HandleIncomingData(ByVal UserIndex As Integer) As Boolean
 
         Case ClientPacketID.LoginExistingAccount
             Call HandleLoginExistingAccount(UserIndex)
-        
-        Case ClientPacketID.CentinelReport
-            Call HandleCentinelReport(UserIndex)
             
         Case ClientPacketID.Ecvc
             Call HandleEnviaCvc(UserIndex)
@@ -1149,7 +1295,7 @@ Private Sub HandleGMCommands(ByVal UserIndex As Integer)
             Case eGMCommands.AlterName               '/ANAME
                 Call HandleAlterName(UserIndex)
         
-            Case Declaraciones.eGMCommands.DoBackUp               '/DOBACKUP
+            Case eGMCommands.DoBackUp               '/DOBACKUP
                 Call HandleDoBackUp(UserIndex)
         
             Case eGMCommands.ShowGuildMessages       '/SHOWCMSG
@@ -1274,9 +1420,6 @@ Private Sub HandleGMCommands(ByVal UserIndex As Integer)
             
             Case eGMCommands.ExitDestroy
                 Call HandleExitDestroy(UserIndex)
-
-            Case eGMCommands.ToggleCentinelActivated            '/CENTINELAACTIVADO
-                Call HandleToggleCentinelActivated(UserIndex)
         
             Case eGMCommands.SearchNpc                          '/BUSCAR
                 Call HandleSearchNpc(UserIndex)
@@ -1732,9 +1875,9 @@ Private Sub HandleTalk(ByVal UserIndex As Integer)
             
             If Not (.flags.AdminInvisible = 1) Then
                 If .flags.Muerto = 1 Then
-                    Call SendData(SendTarget.ToDeadArea, UserIndex, PrepareMessageChatOverHead(Chat, .Char.CharIndex, CHAT_COLOR_DEAD_CHAR))
+                    Call SendData(SendTarget.ToDeadArea, UserIndex, PrepareMessageChatOverHead(Chat, .Char.CharIndex, 129, 129, 129))
                 Else
-                    Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead(Chat, .Char.CharIndex, .flags.ChatColor))
+                    Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead(Chat, .Char.CharIndex, .flags.ChatColor.r, .flags.ChatColor.g, .flags.ChatColor.b))
 
                 End If
 
@@ -1843,16 +1986,16 @@ Private Sub HandleYell(ByVal UserIndex As Integer)
                 
             If .flags.Privilegios And PlayerType.User Then
                 If UserList(UserIndex).flags.Muerto = 1 Then
-                    Call SendData(SendTarget.ToDeadArea, UserIndex, PrepareMessageChatOverHead(Chat, .Char.CharIndex, CHAT_COLOR_DEAD_CHAR))
+                    Call SendData(SendTarget.ToDeadArea, UserIndex, PrepareMessageChatOverHead(Chat, .Char.CharIndex, 129, 129, 129))
                 Else
-                    Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead(Chat, .Char.CharIndex, vbRed))
+                    Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead(Chat, .Char.CharIndex, 255, 0, 0))
 
                 End If
 
             Else
 
                 If Not (.flags.AdminInvisible = 1) Then
-                    Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead(Chat, .Char.CharIndex, CHAT_COLOR_GM_YELL))
+                    Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead(Chat, .Char.CharIndex, 255, 255, 0))
                 Else
                     Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageConsoleMsg("Gm> " & Chat, FontTypeNames.FONTTYPE_GM))
 
@@ -1988,8 +2131,8 @@ Private Sub HandleWhisper(ByVal UserIndex As Integer)
                             Call WriteConsoleMsg(TargetUserIndex, UserList(UserIndex).Name & "> " & Chat, FontTypeNames.FONTTYPE_PRIVADO)
                             
                         ElseIf Not (.flags.AdminInvisible = 1) Then
-                            Call WriteChatOverHead(UserIndex, Chat, .Char.CharIndex, &HC000&, True)
-                            Call WriteChatOverHead(TargetUserIndex, Chat, .Char.CharIndex, &HC000&, True)
+                            Call WriteChatOverHead(UserIndex, Chat, .Char.CharIndex, 0, 192, 0, True)
+                            Call WriteChatOverHead(TargetUserIndex, Chat, .Char.CharIndex, 0, 192, 0, True)
                             Call WriteConsoleMsg(UserIndex, UserList(UserIndex).Name & "> " & Chat, FontTypeNames.FONTTYPE_PRIVADO)
                             Call WriteConsoleMsg(TargetUserIndex, UserList(UserIndex).Name & "> " & Chat, FontTypeNames.FONTTYPE_PRIVADO)
 
@@ -2035,13 +2178,13 @@ End Sub
 ' @param    userIndex The index of the user sending the message.
 
 Private Sub HandleWalk(ByVal UserIndex As Integer)
-'***************************************************
-'Author: Juan Martin Sotuyo Dodero (Maraxus)
-'Last Modification: 12/01/2012 (Recox)
-'11/19/09 Pato - Now the class bandit can walk hidden.
-'13/01/2010: ZaMa - Now hidden on boat pirats recover the proper boat body.
-'12/01/2020: Recox - TiempoDeWalk agregado para las monturas
-'***************************************************
+
+    '***************************************************
+    'Author: Juan Martin Sotuyo Dodero (Maraxus)
+    'Last Modification: 15/09/2024 (Lorwik)
+    '11/19/09 Pato - Now the class bandit can walk hidden.
+    '13/01/2010: ZaMa - Now hidden on boat pirats recover the proper boat body.
+    '***************************************************
     If UserList(UserIndex).incomingData.Length < 2 Then
         Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
         Exit Sub
@@ -2064,20 +2207,9 @@ Private Sub HandleWalk(ByVal UserIndex As Integer)
         If .flags.MacroTrabajo <> 0 Then
             Call DejardeTrabajar(UserIndex)
         End If
-
-        Dim TiempoDeWalk As Byte
         
-  
+        If .flags.Paralizado = 0 Or .flags.Inmovilizado = 0 Then
         
-        .flags.TimesWalk = .flags.TimesWalk + 1
-        
-        'If exiting, cancel
-        Call CancelExit(UserIndex)
-        
-        'Si esta casteando, lo cancelamos
-        Call CancelCast(UserIndex)
-        
-        If .flags.Paralizado = 0 Then
             If .flags.Meditando Then
                 'Stop meditating, next action will start movement.
                 .flags.Meditando = False
@@ -2087,10 +2219,47 @@ Private Sub HandleWalk(ByVal UserIndex As Integer)
                 Call WriteConsoleMsg(UserIndex, "Dejas de meditar.", FontTypeNames.FONTTYPE_INFO)
                 
                 Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageCreateFX(.Char.CharIndex, 0, 0))
-                Call MoveUserChar(UserIndex, Heading)
-            Else
-                'Move user
-                Call MoveUserChar(UserIndex, Heading)
+            End If
+        
+            Dim CurrentTick As Long
+            CurrentTick = GetTickCount
+            
+            'Prevent SpeedHack (refactored by WyroX)
+            If Not EsGm(UserIndex) And .flags.Velocidad > 0 Then
+                Dim ElapsedTimeStep As Long, MinTimeStep As Long, DeltaStep As Single
+                ElapsedTimeStep = CurrentTick - .Counters.LastStep
+                MinTimeStep = IntervaloCaminar / .flags.Velocidad
+                DeltaStep = (MinTimeStep - ElapsedTimeStep) / MinTimeStep
+
+                If DeltaStep > 0 Then
+                
+                    .Counters.SpeedHackCounter = .Counters.SpeedHackCounter + DeltaStep
+                
+                    If .Counters.SpeedHackCounter > MaximoSpeedHack Then
+                        'Call SendData(SendTarget.ToAdmins, 0, PrepareMessageConsoleMsg("Administración » Posible uso de SpeedHack del usuario " & .name & ".", e_FontTypeNames.FONTTYPE_SERVER))
+                        Call WritePosUpdate(UserIndex)
+                        Exit Sub
+
+                    End If
+
+                Else
+                
+                    .Counters.SpeedHackCounter = .Counters.SpeedHackCounter + DeltaStep * 5
+
+                    If .Counters.SpeedHackCounter < 0 Then .Counters.SpeedHackCounter = 0
+
+                End If
+
+            End If
+        
+            'Move user
+            If MoveUserChar(UserIndex, Heading) Then
+            
+                'If exiting, cancel
+                Call CancelExit(UserIndex)
+        
+                'Si esta casteando, lo cancelamos
+                Call CancelCast(UserIndex)
                 
                 'Stop resting if needed
                 If .flags.Descansar Then
@@ -2100,7 +2269,11 @@ Private Sub HandleWalk(ByVal UserIndex As Integer)
                     Call WriteConsoleMsg(UserIndex, "Has dejado de descansar.", FontTypeNames.FONTTYPE_INFO)
 
                 End If
-
+                
+            Else
+                .Counters.LastStep = 0
+                Call WritePosUpdate(UserIndex)
+            
             End If
 
         Else    'paralized
@@ -2111,8 +2284,6 @@ Private Sub HandleWalk(ByVal UserIndex As Integer)
                 Call WriteConsoleMsg(UserIndex, "No puedes moverte porque estas paralizado.", FontTypeNames.FONTTYPE_INFO)
 
             End If
-            
-            .flags.CountSH = 0
 
         End If
         
@@ -3822,100 +3993,6 @@ Private Sub HandleChangeHeading(ByVal UserIndex As Integer)
 End Sub
 
 ''
-' Handles the "ModifySkills" message.
-'
-' @param    userIndex The index of the user sending the message.
-
-Private Sub HandleModifySkills(ByVal UserIndex As Integer)
-
-    '***************************************************
-    'Author: Juan Martin Sotuyo Dodero (Maraxus)
-    'Last Modification: 11/19/09
-    '11/19/09: Pato - Adapting to new skills system.
-    '***************************************************
-    If UserList(UserIndex).incomingData.Length < 1 + NUMSKILLS Then
-        Err.Raise UserList(UserIndex).incomingData.NotEnoughDataErrCode
-        Exit Sub
-
-    End If
-    
-    With UserList(UserIndex)
-        'Remove packet ID
-        Call .incomingData.ReadByte
-        
-        Dim i                      As Long
-
-        Dim Count                  As Integer
-
-        Dim points(1 To NUMSKILLS) As Byte
-        
-        'Codigo para prevenir el hackeo de los skills
-        
-        For i = 1 To NUMSKILLS
-            points(i) = .incomingData.ReadByte()
-            
-            If points(i) < 0 Then
-                Call LogHackAttemp(.Name & " IP:" & .IP & " trato de hackear los skills.")
-                .Stats.SkillPts = 0
-                Call CloseSocket(UserIndex)
-                Exit Sub
-
-            End If
-            
-            Count = Count + points(i)
-        Next i
-        
-        If Count > .Stats.SkillPts Then
-            Call LogHackAttemp(.Name & " IP:" & .IP & " trato de hackear los skills.")
-            Call CloseSocket(UserIndex)
-            Exit Sub
-
-        End If
-        
-        'Comprobamos que no intente hackear y asignar en uno de los skills fijos
-        For i = 1 To NUMSKILLS
-            If points(i) > 0 Then
-                '¿El skill asignado es uno de los fijos?
-                If i = eSkill.Talar Or i = eSkill.Mineria Or i = eSkill.Carpinteria Or i = eSkill.herreria Or _
-                    i = eSkill.Liderazgo Or i = eSkill.Navegacion Or i = eSkill.Equitacion Or i = eSkill.pesca Then
-                    
-                    Call LogHackAttemp(.Name & " IP:" & .IP & " trato de hackear los skills.")
-                    Call CloseSocket(UserIndex)
-                    Exit Sub
-                End If
-            End If
-        Next i
-        
-        .Counters.AsignedSkills = MinimoInt(10, .Counters.AsignedSkills + Count)
-        
-        With .Stats
-
-            For i = 1 To NUMSKILLS
-
-                If points(i) > 0 Then
-                    .SkillPts = .SkillPts - points(i)
-                    .UserSkills(i) = .UserSkills(i) + points(i)
-                    
-                    'Client should prevent this, but just in case...
-                    If .UserSkills(i) > 100 Then
-                        .SkillPts = .SkillPts + .UserSkills(i) - 100
-                        .UserSkills(i) = 100
-
-                    End If
-                    
-                    Call CheckEluSkill(UserIndex, i, True)
-
-                End If
-
-            Next i
-
-        End With
-
-    End With
-
-End Sub
-
-''
 ' Handles the "Train" message.
 '
 ' @param    userIndex The index of the user sending the message.
@@ -3961,7 +4038,7 @@ Private Sub HandleTrain(ByVal UserIndex As Integer)
             End If
 
         Else
-            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead("No puedo traer mas criaturas, mata las existentes.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite))
+            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead("No puedo traer mas criaturas, mata las existentes.", Npclist(.flags.TargetNPC).Char.CharIndex, 255, 255, 255))
 
         End If
 
@@ -4011,7 +4088,7 @@ Private Sub HandleCommerceBuy(ByVal UserIndex As Integer)
             
         'El NPC puede comerciar?
         If Npclist(.flags.TargetNPC).Comercia = 0 Then
-            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead("No tengo ningun interes en comerciar.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite))
+            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead("No tengo ningun interes en comerciar.", Npclist(.flags.TargetNPC).Char.CharIndex, 255, 255, 255))
             Exit Sub
 
         End If
@@ -4125,7 +4202,7 @@ Private Sub HandleCommerceSell(ByVal UserIndex As Integer)
         
         'El NPC puede comerciar?
         If Npclist(.flags.TargetNPC).Comercia = 0 Then
-            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead("No tengo ningun interes en comerciar.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite))
+            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageChatOverHead("No tengo ningun interes en comerciar.", Npclist(.flags.TargetNPC).Char.CharIndex, 255, 255, 255))
             Exit Sub
 
         End If
@@ -4223,7 +4300,7 @@ Private Sub HandleForumPost(ByVal UserIndex As Integer)
         
         Dim ForumMsgType As eForumMsgType
         
-        Dim File         As String
+        Dim file         As String
 
         Dim Title        As String
 
@@ -6019,7 +6096,7 @@ Private Sub HandleRequestAccountState(ByVal UserIndex As Integer)
         Select Case Npclist(.flags.TargetNPC).NPCtype
 
             Case eNPCType.Banquero
-                Call WriteChatOverHead(UserIndex, "Tienes " & .Stats.Banco & " monedas de oro en tu cuenta.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "Tienes " & .Stats.Banco & " monedas de oro en tu cuenta.", Npclist(.flags.TargetNPC).Char.CharIndex, 255, 255, 255)
             
             Case eNPCType.Timbero
 
@@ -6734,7 +6811,7 @@ Private Sub HandleCommerceStart(ByVal UserIndex As Integer)
             If Npclist(.flags.TargetNPC).Comercia = 0 Then
 
                 If LenB(Npclist(.flags.TargetNPC).Desc) <> 0 Then
-                    Call WriteChatOverHead(UserIndex, "No tengo ningun interes en comerciar.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+                    Call WriteChatOverHead(UserIndex, "No tengo ningun interes en comerciar.", Npclist(.flags.TargetNPC).Char.CharIndex, 255, 255, 255)
                 End If
                 
                 Exit Sub
@@ -6949,7 +7026,7 @@ Private Sub HandleInformation(ByVal UserIndex As Integer)
         
         If Npclist(.flags.TargetNPC).flags.Faccion = 0 Then
             If .Faccion.ArmadaReal = 0 Then
-                Call WriteChatOverHead(UserIndex, "No perteneces a las tropas reales!!", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "No perteneces a las tropas reales!!", Npclist(.flags.TargetNPC).Char.CharIndex, 255, 255, 255)
                 Exit Sub
 
             End If
@@ -6958,16 +7035,16 @@ Private Sub HandleInformation(ByVal UserIndex As Integer)
             Diferencia = NextRecom - Matados
             
             If Diferencia > 0 Then
-                Call WriteChatOverHead(UserIndex, "Tu deber es combatir criminales, mata " & Diferencia & " criminales mas y te dare una recompensa.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "Tu deber es combatir criminales, mata " & Diferencia & " criminales mas y te dare una recompensa.", Npclist(.flags.TargetNPC).Char.CharIndex, 255, 255, 255)
             Else
-                Call WriteChatOverHead(UserIndex, "Tu deber es combatir criminales, y ya has matado los suficientes como para merecerte una recompensa.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "Tu deber es combatir criminales, y ya has matado los suficientes como para merecerte una recompensa.", Npclist(.flags.TargetNPC).Char.CharIndex, 255, 255, 255)
 
             End If
 
         Else
 
             If .Faccion.FuerzasCaos = 0 Then
-                Call WriteChatOverHead(UserIndex, "No perteneces a la legion oscura!!", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "No perteneces a la legion oscura!!", Npclist(.flags.TargetNPC).Char.CharIndex, 255, 255, 255)
                 Exit Sub
 
             End If
@@ -6976,9 +7053,9 @@ Private Sub HandleInformation(ByVal UserIndex As Integer)
             Diferencia = NextRecom - Matados
             
             If Diferencia > 0 Then
-                Call WriteChatOverHead(UserIndex, "Tu deber es sembrar el caos y la desesperanza, mata " & Diferencia & " ciudadanos mas y te dare una recompensa.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "Tu deber es sembrar el caos y la desesperanza, mata " & Diferencia & " ciudadanos mas y te dare una recompensa.", Npclist(.flags.TargetNPC).Char.CharIndex, 255, 255, 255)
             Else
-                Call WriteChatOverHead(UserIndex, "Tu deber es sembrar el caos y la desesperanza, y creo que estas en condiciones de merecer una recompensa.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "Tu deber es sembrar el caos y la desesperanza, y creo que estas en condiciones de merecer una recompensa.", Npclist(.flags.TargetNPC).Char.CharIndex, 255, 255, 255)
 
             End If
 
@@ -7021,7 +7098,7 @@ Private Sub HandleReward(ByVal UserIndex As Integer)
         
         If Npclist(.flags.TargetNPC).flags.Faccion = 0 Then
             If .Faccion.ArmadaReal = 0 Then
-                Call WriteChatOverHead(UserIndex, "No perteneces a las tropas reales!!", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "No perteneces a las tropas reales!!", Npclist(.flags.TargetNPC).Char.CharIndex, 255, 255, 255)
                 Exit Sub
 
             End If
@@ -7030,7 +7107,7 @@ Private Sub HandleReward(ByVal UserIndex As Integer)
         Else
 
             If .Faccion.FuerzasCaos = 0 Then
-                Call WriteChatOverHead(UserIndex, "No perteneces a la legion oscura!!", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "No perteneces a la legion oscura!!", Npclist(.flags.TargetNPC).Char.CharIndex, 255, 255, 255)
                 Exit Sub
 
             End If
@@ -7277,7 +7354,7 @@ Private Sub HandleGuildMessage(ByVal UserIndex As Integer)
             If .GuildIndex > 0 Then
                 Call SendData(SendTarget.ToDiosesYclan, .GuildIndex, PrepareMessageGuildChat(.Name & "> " & Chat))
                 
-                If Not (.flags.AdminInvisible = 1) Then Call SendData(SendTarget.ToClanArea, UserIndex, PrepareMessageChatOverHead("< " & Chat & " >", .Char.CharIndex, vbYellow))
+                If Not (.flags.AdminInvisible = 1) Then Call SendData(SendTarget.ToClanArea, UserIndex, PrepareMessageChatOverHead("< " & Chat & " >", .Char.CharIndex, 255, 255, 0))
 
             End If
 
@@ -7365,33 +7442,6 @@ errHandler:
     Set Buffer = Nothing
     
     If Error <> 0 Then Err.Raise Error
-
-End Sub
-
-''
-' Handles the "CentinelReport" message.
-'
-' @param    userIndex The index of the user sending the message.
- 
-Private Sub HandleCentinelReport(ByVal UserIndex As Integer)
-    '***************************************************
-    'Author: Juan Martin Sotuyo Dodero (Maraxus)
-    'Last Modification: 02/05/2012
-    '                         Nuevo centinela (maTih.-)
-    '***************************************************
-    
-    Dim NotBuff As New clsByteQueue
-    
-    With UserList(UserIndex)
-        Call NotBuff.CopyBuffer(.incomingData)
-        
-        Call NotBuff.ReadByte
-                
-        Call modCentinela.IngresaClave(UserIndex, NotBuff.ReadASCIIString())
-        
-        Call .incomingData.CopyBuffer(NotBuff)
-        
-    End With
 
 End Sub
 
@@ -8153,33 +8203,33 @@ Private Sub HandleGamble(ByVal UserIndex As Integer)
             
             ' Normal npcs don't speak
             If TargetNpcType <> eNPCType.Comun And TargetNpcType <> eNPCType.DRAGON And TargetNpcType <> eNPCType.Pretoriano Then
-                Call WriteChatOverHead(UserIndex, "No tengo ningUn interes en apostar.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "No tengo ningUn interes en apostar.", Npclist(.flags.TargetNPC).Char.CharIndex, 255, 255, 255)
 
             End If
             
             ' Validate amount
         ElseIf Amount < 1 Then
-            Call WriteChatOverHead(UserIndex, "El minimo de apuesta es 1 moneda.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+            Call WriteChatOverHead(UserIndex, "El minimo de apuesta es 1 moneda.", Npclist(.flags.TargetNPC).Char.CharIndex, 255, 255, 255)
         
             ' Validate amount
         ElseIf Amount > 5000 Then
-            Call WriteChatOverHead(UserIndex, "El maximo de apuesta es 5000 monedas.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+            Call WriteChatOverHead(UserIndex, "El maximo de apuesta es 5000 monedas.", Npclist(.flags.TargetNPC).Char.CharIndex, 255, 255, 255)
         
             ' Validate user gold
         ElseIf .Stats.Gld < Amount Then
-            Call WriteChatOverHead(UserIndex, "No tienes esa cantidad.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+            Call WriteChatOverHead(UserIndex, "No tienes esa cantidad.", Npclist(.flags.TargetNPC).Char.CharIndex, 255, 255, 255)
         
         Else
 
             If RandomNumber(1, 100) <= 47 Then
                 .Stats.Gld = .Stats.Gld + Amount
-                Call WriteChatOverHead(UserIndex, "Felicidades! Has ganado " & CStr(Amount) & " monedas de oro.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "Felicidades! Has ganado " & CStr(Amount) & " monedas de oro.", Npclist(.flags.TargetNPC).Char.CharIndex, 255, 255, 255)
                 
                 Apuestas.Perdidas = Apuestas.Perdidas + Amount
                 Call WriteVar(DatPath & "apuestas.dat", "Main", "Perdidas", CStr(Apuestas.Perdidas))
             Else
                 .Stats.Gld = .Stats.Gld - Amount
-                Call WriteChatOverHead(UserIndex, "Lo siento, has perdido " & CStr(Amount) & " monedas de oro.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "Lo siento, has perdido " & CStr(Amount) & " monedas de oro.", Npclist(.flags.TargetNPC).Char.CharIndex, 255, 255, 255)
                 
                 Apuestas.Ganancias = Apuestas.Ganancias + Amount
                 Call WriteVar(DatPath & "apuestas.dat", "Main", "Ganancias", CStr(Apuestas.Ganancias))
@@ -8282,9 +8332,9 @@ Private Sub HandleBankExtractGold(ByVal UserIndex As Integer)
         If Amount > 0 And Amount <= .Stats.Banco Then
             .Stats.Banco = .Stats.Banco - Amount
             .Stats.Gld = .Stats.Gld + Amount
-            Call WriteChatOverHead(UserIndex, "Tenes " & .Stats.Banco & " monedas de oro en tu cuenta.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+            Call WriteChatOverHead(UserIndex, "Tenes " & .Stats.Banco & " monedas de oro en tu cuenta.", Npclist(.flags.TargetNPC).Char.CharIndex, 255, 255, 255)
         Else
-            Call WriteChatOverHead(UserIndex, "No tienes esa cantidad.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+            Call WriteChatOverHead(UserIndex, "No tienes esa cantidad.", Npclist(.flags.TargetNPC).Char.CharIndex, 255, 255, 255)
 
         End If
         
@@ -8352,13 +8402,13 @@ Private Sub HandleLeaveFaction(ByVal UserIndex As Integer)
 
             ' Si le pidio al demonio salir de la armada, este le responde.
             If TalkToDemon Then
-                Call WriteChatOverHead(UserIndex, "Sal de aqui bufon!!!", Npclist(NPCIndex).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "Sal de aqui bufon!!!", Npclist(NPCIndex).Char.CharIndex, 255, 255, 255)
             
             Else
 
                 ' Si le pidio al rey salir de la armada, le responde.
                 If TalkToKing Then
-                    Call WriteChatOverHead(UserIndex, "Seras bienvenido a las fuerzas imperiales si deseas regresar.", Npclist(NPCIndex).Char.CharIndex, vbWhite)
+                    Call WriteChatOverHead(UserIndex, "Seras bienvenido a las fuerzas imperiales si deseas regresar.", Npclist(NPCIndex).Char.CharIndex, 255, 255, 255)
 
                 End If
                 
@@ -8371,12 +8421,12 @@ Private Sub HandleLeaveFaction(ByVal UserIndex As Integer)
 
             ' Si le pidio al rey salir del caos, le responde.
             If TalkToKing Then
-                Call WriteChatOverHead(UserIndex, "Sal de aqui maldito criminal!!!", Npclist(NPCIndex).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "Sal de aqui maldito criminal!!!", Npclist(NPCIndex).Char.CharIndex, 255, 255, 255)
             Else
 
                 ' Si le pidio al demonio salir del caos, este le responde.
                 If TalkToDemon Then
-                    Call WriteChatOverHead(UserIndex, "Ya volveras arrastrandote.", Npclist(NPCIndex).Char.CharIndex, vbWhite)
+                    Call WriteChatOverHead(UserIndex, "Ya volveras arrastrandote.", Npclist(NPCIndex).Char.CharIndex, 255, 255, 255)
 
                 End If
                 
@@ -8390,11 +8440,11 @@ Private Sub HandleLeaveFaction(ByVal UserIndex As Integer)
             ' Si le hablaba al rey o demonio, le repsonden ellos
             'Corregido, solo si son en efecto el rey o el demonio, no cualquier NPC (C4b3z0n)
             If (TalkToDemon And criminal(UserIndex)) Or (TalkToKing And Not criminal(UserIndex)) Then 'Si se pueden unir a la faccion (status), son invitados
-                Call WriteChatOverHead(UserIndex, "No perteneces a nuestra faccion. Si deseas unirte, di /ENLISTAR", Npclist(NPCIndex).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "No perteneces a nuestra faccion. Si deseas unirte, di /ENLISTAR", Npclist(NPCIndex).Char.CharIndex, 255, 255, 255)
             ElseIf (TalkToDemon And Not criminal(UserIndex)) Then
-                Call WriteChatOverHead(UserIndex, "Sal de aqui bufon!!!", Npclist(NPCIndex).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "Sal de aqui bufon!!!", Npclist(NPCIndex).Char.CharIndex, 255, 255, 255)
             ElseIf (TalkToKing And criminal(UserIndex)) Then
-                Call WriteChatOverHead(UserIndex, "Sal de aqui maldito criminal!!!", Npclist(NPCIndex).Char.CharIndex, vbWhite)
+                Call WriteChatOverHead(UserIndex, "Sal de aqui maldito criminal!!!", Npclist(NPCIndex).Char.CharIndex, 255, 255, 255)
             Else
                 Call WriteConsoleMsg(UserIndex, "No perteneces a ninguna faccion!", FontTypeNames.FONTTYPE_FIGHT)
 
@@ -8460,17 +8510,17 @@ Private Sub HandleBankDepositGold(ByVal UserIndex As Integer)
         RemainingAmountToMaximumGold = 2147483647 - .Stats.Gld
 
         If .Stats.Banco >= 2147483647 And RemainingAmountToMaximumGold <= Amount Then
-            Call WriteChatOverHead(UserIndex, "No puedes depositar el oro por que tendrias mas del maximo permitido (2147483647)", Npclist(.flags.TargetNPC).Char.CharIndex, vbRed)
+            Call WriteChatOverHead(UserIndex, "No puedes depositar el oro por que tendrias mas del maximo permitido (2147483647)", Npclist(.flags.TargetNPC).Char.CharIndex, 255, 0, 0)
 
         ElseIf Amount > 0 And Amount <= .Stats.Gld Then
             .Stats.Banco = .Stats.Banco + Amount
             .Stats.Gld = .Stats.Gld - Amount
-            Call WriteChatOverHead(UserIndex, "Tenes " & .Stats.Banco & " monedas de oro en tu cuenta.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+            Call WriteChatOverHead(UserIndex, "Tenes " & .Stats.Banco & " monedas de oro en tu cuenta.", Npclist(.flags.TargetNPC).Char.CharIndex, 255, 255, 255)
             
             Call WriteUpdateGold(UserIndex)
             Call WriteUpdateBankGold(UserIndex)
         Else
-            Call WriteChatOverHead(UserIndex, "No tenes esa cantidad.", Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite)
+            Call WriteChatOverHead(UserIndex, "No tenes esa cantidad.", Npclist(.flags.TargetNPC).Char.CharIndex, 255, 255, 255)
 
         End If
 
@@ -10901,19 +10951,6 @@ Private Sub HandleEditChar(ByVal UserIndex As Integer)
                         
                         ' Log it
                         CommandString = CommandString & "SKILLS "
-                        
-                Case eEditOptions.eo_SkillPointsLeft
-
-                        If tUser <= 0 Then ' Offline
-                            Call WriteConsoleMsg(UserIndex, "El usuario esta offline o no existe.", FontTypeNames.FONTTYPE_INFO)
-                            Call LogGM(.Name, "Intento editar un usuario inexistente u offline.")
-                        Else ' Online
-                            UserList(tUser).Stats.SkillPts = val(Arg1)
-
-                        End If
-                        
-                        ' Log it
-                        CommandString = CommandString & "SKILLSLIBRES "
                     
                 Case eEditOptions.eo_Nobleza
                         Var = IIf(val(Arg1) > MAXREP, MAXREP, val(Arg1))
@@ -11096,6 +11133,7 @@ Private Sub HandleEditChar(ByVal UserIndex As Integer)
                         
                         UserList(tUser).flags.Velocidad = Speed
                         Call WriteSetSpeed(tUser)
+                        Call SendData(SendTarget.ToPCArea, tUser, PrepareMessageSpeeding(UserList(tUser).Char.CharIndex, UserList(tUser).flags.Velocidad))
                         
                 Case Else
                     Call WriteConsoleMsg(UserIndex, "Comando no permitido.", FontTypeNames.FONTTYPE_INFO)
@@ -11751,6 +11789,7 @@ Private Sub HandleReviveChar(ByVal UserIndex As Integer)
                         End If
                         
                         Call ChangeUserChar(tUser, .Char.body, .OrigChar.Head, .Char.Heading, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CascoAnim, .Char.AuraAnim, .Char.AuraColor)
+                        Call UpdateUserSpeed(tUser)
                         
                         Call WriteConsoleMsg(tUser, UserList(UserIndex).Name & " te ha resucitado.", FontTypeNames.FONTTYPE_INFO)
                     Else
@@ -13975,7 +14014,7 @@ Private Sub HandleTalkAsNPC(ByVal UserIndex As Integer)
 
             'Asegurarse haya un NPC seleccionado
             If .flags.TargetNPC > 0 Then
-                Call SendData(SendTarget.ToNPCArea, .flags.TargetNPC, PrepareMessageChatOverHead(Message, Npclist(.flags.TargetNPC).Char.CharIndex, vbWhite))
+                Call SendData(SendTarget.ToNPCArea, .flags.TargetNPC, PrepareMessageChatOverHead(Message, Npclist(.flags.TargetNPC).Char.CharIndex, 255, 255, 255))
             Else
                 Call WriteConsoleMsg(UserIndex, "Debes seleccionar el NPC por el que quieres hablar antes de usar este comando.", FontTypeNames.FONTTYPE_INFO)
 
@@ -15597,13 +15636,18 @@ Public Sub HandleChatColor(ByVal UserIndex As Integer)
         'Remove packet ID
         Call .incomingData.ReadByte
         
-        Dim color As Long
+        Dim r As Byte
+        Dim g As Byte
+        Dim b As Byte
         
-        color = RGB(.incomingData.ReadByte(), .incomingData.ReadByte(), .incomingData.ReadByte())
+        r = .incomingData.ReadByte()
+        g = .incomingData.ReadByte()
+        b = .incomingData.ReadByte()
         
         If (.flags.Privilegios And (PlayerType.Admin Or PlayerType.Dios Or PlayerType.RoleMaster)) Then
-            .flags.ChatColor = color
-
+            .flags.ChatColor.r = r
+            .flags.ChatColor.g = g
+            .flags.ChatColor.b = b
         End If
 
     End With
@@ -16699,31 +16743,6 @@ Public Sub HandleDoBackUp(ByVal UserIndex As Integer)
         
         Call ES.DoBackUp 'Sino lo confunde con la id del paquete
 
-    End With
-
-End Sub
-
-''
-' Handle the "ToggleCentinelActivated" message
-'
-' @param userIndex The index of the user sending the message
- 
-Public Sub HandleToggleCentinelActivated(ByVal UserIndex As Integer)
-
-    '***************************************************
-    'Author: Lucas Tavolaro Ortiz (Tavo)
-    'Last Modification: 02/05/2012
-    'Nuevo centinela (maTih.-)
-    '***************************************************
-    With UserList(UserIndex)
-        'Remove Packet ID
-        Call .incomingData.ReadByte
-        
-        'Solo para Admins y Dioses
-        If Not EsAdmin(.Name) Or Not EsDios(.Name) Then Exit Sub
-        
-        Call modCentinela.CambiarEstado(UserIndex)
-        
     End With
 
 End Sub

@@ -423,12 +423,7 @@ Sub ConnectNewUser(ByVal UserIndex As Integer, _
         .clase = UserClase
         .Raza = UserRaza
         .Genero = UserSexo
-        
-        If Not Battlegrounds Then
-            .Hogar = eCiudad.cRamx
-        Else
-            .Hogar = eCiudad.cbattle
-        End If
+        .Hogar = eCiudad.cRamx
         
         For i = 0 To 1
             .Profesion(i).Profesion = 0
@@ -447,7 +442,7 @@ Sub ConnectNewUser(ByVal UserIndex As Integer, _
         '???????????????? INVENTARIO
         Call AddItemsToNewUser(UserIndex, UserClase, UserRaza)
 
-        If EstadisticasInicialesUsarConfiguracionPersonalizada Or Battlegrounds Then _
+        If EstadisticasInicialesUsarConfiguracionPersonalizada Then _
             Call SetAttributesCustomToNewUser(UserIndex)
 
         Call DarCuerpo(UserIndex)
@@ -456,11 +451,7 @@ Sub ConnectNewUser(ByVal UserIndex As Integer, _
     
         .OrigChar = .Char
         
-        If Not Battlegrounds Then
-            .Pos = IslaNew
-        Else
-            .Pos = Battleground
-        End If
+        .Pos = IslaNew
             
         'De primeras podra hablar por global
         .flags.Global = 1
@@ -511,7 +502,6 @@ Private Sub SetAttributesCustomToNewUser(ByVal UserIndex As Integer)
             End If
         Next i
         
-        .Stats.SkillPts = 0
     End With
 
 End Sub
@@ -532,8 +522,6 @@ Private Sub SetAttributesToNewUser(ByVal UserIndex As Integer, ByVal UserClase A
             .Stats.UserSkills(i) = 0
             Call CheckEluSkill(UserIndex, i, True)
         Next i
-    
-        .Stats.SkillPts = 10
     
         Dim MiInt As Long
 
@@ -595,7 +583,7 @@ Private Sub SetAttributesToNewUser(ByVal UserIndex As Integer, ByVal UserClase A
     
         .Stats.Exp = 0
         .Stats.ELV = 1
-        .Stats.ELU = 300
+        .Stats.ELU = TablaExperiencia(.Stats.ELV)
         
         .Stats.ExpPVP = 0
         .Stats.ELVPVP = 1
@@ -1193,8 +1181,6 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
             End If
         
         End If
-        
-        Call WriteBattlegrounds(UserIndex, Battlegrounds)
     
         'Tratamos de evitar en lo posible el "Telefrag". Solo 1 intento de loguear en pos adjacentes.
         'Codigo por Pablo (ToxicWaste) y revisado por Nacho (Integer), corregido para que realmetne ande y no tire el server por Juan Martin Sotuyo Dodero (Maraxus)
@@ -1295,15 +1281,6 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
 
         End If
         
-        'Seteamos la velocidad
-        If .flags.Muerto = 1 Then
-            .flags.Velocidad = SPEED_MUERTO
-        Else
-            .flags.Velocidad = SPEED_NORMAL
-        End If
-        
-        Call WriteSetSpeed(UserIndex)
-        
         'Actualizamos los seguros
         If .flags.ModoCombate Then
             Call WriteMultiMessage(UserIndex, eMessages.CombatSafeOn)
@@ -1324,15 +1301,29 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
         Call WriteChangeMap(UserIndex, .Pos.Map, MapZonas(.Pos.Map, UserZonaId(UserIndex)).MapVersion) 'Carga el mapa
         
         If .flags.Privilegios = PlayerType.Dios Then
-            .flags.ChatColor = RGB(250, 250, 150)
+            .flags.ChatColor.r = 250
+            .flags.ChatColor.g = 250
+            .flags.ChatColor.b = 150
+            
         ElseIf .flags.Privilegios <> PlayerType.User And .flags.Privilegios <> (PlayerType.User Or PlayerType.ChaosCouncil) And .flags.Privilegios <> (PlayerType.User Or PlayerType.RoyalCouncil) Then
-            .flags.ChatColor = RGB(0, 255, 0)
+            .flags.ChatColor.r = 0
+            .flags.ChatColor.g = 255
+            .flags.ChatColor.b = 0
+            
         ElseIf .flags.Privilegios = (PlayerType.User Or PlayerType.RoyalCouncil) Then
-            .flags.ChatColor = RGB(0, 255, 255)
+            .flags.ChatColor.r = 0
+            .flags.ChatColor.g = 255
+            .flags.ChatColor.b = 255
+            
         ElseIf .flags.Privilegios = (PlayerType.User Or PlayerType.ChaosCouncil) Then
-            .flags.ChatColor = RGB(255, 128, 64)
+            .flags.ChatColor.r = 255
+            .flags.ChatColor.g = 128
+            .flags.ChatColor.b = 64
+            
         Else
-            .flags.ChatColor = vbWhite
+            .flags.ChatColor.r = 255
+            .flags.ChatColor.g = 255
+            .flags.ChatColor.b = 255
 
         End If
     
@@ -1349,6 +1340,7 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
         Call MakeUserChar(True, .Pos.Map, UserIndex, .Pos.Map, .Pos.X, .Pos.Y)
     
         Call WriteUserCharIndexInServer(UserIndex)
+        Call UpdateUserSpeed(UserIndex)
         ''[/el oso]
     
         Call DoTileEvents(UserIndex, .Pos.Map, .Pos.X, .Pos.Y)
@@ -1390,12 +1382,6 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
     
         'usado para borrar Pjs
         Call UpdateUserLogged(.Name, 1)
-    
-        If .Stats.SkillPts > 0 Then
-            Call WriteSendSkills(UserIndex)
-            Call WriteLevelUp(UserIndex, .Stats.SkillPts)
-
-        End If
         
         'Le enviamos sus privilegios
         Call WritePrivilegios(UserIndex)
@@ -1581,7 +1567,6 @@ Sub ResetContadores(ByVal UserIndex As Integer)
     With UserList(UserIndex).Counters
         .TimeFight = 0
         .AGUACounter = 0
-        .AsignedSkills = 0
         .AttackCounter = 0
         .bPuedeMeditar = True
         .Ceguera = 0
@@ -1617,7 +1602,8 @@ Sub ResetContadores(ByVal UserIndex As Integer)
         .MacroTrabajo = 0
         .Trabajando = 0
         .Veneno = 0
-
+        .SpeedHackCounter = 0
+        .LastStep = 0
     End With
     
     Call modAntiCheat.ResetAllCount(UserIndex)
@@ -1716,7 +1702,6 @@ Sub ResetBasicUserInfo(ByVal UserIndex As Integer)
             .def = 0
             .NPCsMuertos = 0
             .UsuariosMatados = 0
-            .SkillPts = 0
             .Gld = 0
             .UserAtributos(1) = 0
             .UserAtributos(2) = 0
@@ -1831,9 +1816,6 @@ Sub ResetUserFlags(ByVal UserIndex As Integer)
         .AdminInvisible = 0
         .ValCoDe = 0
         .Hechizo = 0
-        .TimesWalk = 0
-        .StartWalk = 0
-        .CountSH = 0
         .Silenciado = 0
         .AdminPerseguible = False
         .MacroTrabajo = 0
@@ -2026,11 +2008,6 @@ Sub CloseUser(ByVal UserIndex As Integer)
     
         'Subastas
         Call Revisar_Subasta(UserIndex)
-    
-        'Nuevo centinela - maTih.-
-        If .CentinelaUsuario.centinelaIndex <> 0 Then
-            Call modCentinela.UsuarioInActivo(UserIndex)
-        End If
         
         'mato los comercios seguros
         If .ComUsu.DestUsu > 0 Then
@@ -2131,7 +2108,7 @@ Sub CloseUser(ByVal UserIndex As Integer)
     
         'Borrar el personaje
         If .Char.CharIndex > 0 Then
-            Call EraseUserChar(UserIndex, .flags.AdminInvisible = 1)
+            Call EraseUserChar(UserIndex, .flags.AdminInvisible = 1, .flags.AdminInvisible = 1)
 
         End If
     

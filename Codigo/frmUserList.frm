@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin VB.Form frmUserList 
-   BackColor       =   &H00E0E0E0&
+   BackColor       =   &H00424242&
    BorderStyle     =   1  'Fixed Single
    Caption         =   "Debug de Userlist"
    ClientHeight    =   5115
