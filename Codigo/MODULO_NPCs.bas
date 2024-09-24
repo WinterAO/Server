@@ -1455,9 +1455,6 @@ Public Function OpenNPC(ByVal NpcNumber As Integer, _
             
             .Invocacion = val(Leer.GetValue("NPC" & NpcNumber, "Invocacion"))
             
-            .Recurso.Profesion = val(ReadField(1, Leer.GetValue("NPC" & NpcNumber, "Recurso"), Asc("-")))
-            .Recurso.Categoria = val(ReadField(2, Leer.GetValue("NPC" & NpcNumber, "Recurso"), Asc("-")))
-            
             .ArenasRinkel = val(Leer.GetValue("NPC" & NpcNumber, "ArenasRinkel"))
         End With
         

@@ -3494,7 +3494,7 @@ Private Sub HandleWorkLeftClick(ByVal UserIndex As Integer)
                     Select Case WeaponIndex
 
                         Case CANA_PESCA
-                            .flags.MacroTrabajo = eMacroTrabajo.PESCAR
+                            .flags.MacroTrabajo = eMacroTrabajo.Pescar
                         
                         Case RED_PESCA
                         
@@ -3521,37 +3521,6 @@ Private Sub HandleWorkLeftClick(ByVal UserIndex As Integer)
                 Else
                     Call WriteConsoleMsg(UserIndex, "No hay agua donde pescar. Busca un lago, rio o mar.", FontTypeNames.FONTTYPE_INFO)
 
-                End If
-            
-            Case eSkill.Mineria, eSkill.Talar
-                'Target whatever is in the tile
-                Call LookatTile(UserIndex, .Pos.Map, X, Y)
-                
-                DummyINT = MapData(.Pos.Map, X, Y).ObjInfo.ObjIndex
-                
-                If DummyINT > 0 Then
-                    'Check distance
-                    If Abs(.Pos.X - X) + Abs(.Pos.Y - Y) > 1 Then
-                        Call WriteConsoleMsg(UserIndex, "Estás demasiado lejos.", FontTypeNames.FONTTYPE_INFO)
-                        Exit Sub
-                    End If
-                    
-                    DummyINT = MapData(.Pos.Map, X, Y).ObjInfo.ObjIndex 'CHECK
-                    
-                    '¿Hay un yacimiento donde clickeo?
-                    If ObjData(DummyINT).Recurso.Profesion = Skill Then
-                        If PuedeExtraer(UserIndex, Skill) Then
-                            .flags.MacroTrabajo = Skill
-                            Call WriteConsoleMsg(UserIndex, "Comienzas a trabajar.", FontTypeNames.FONTTYPE_INFO)
-                        End If
-                        
-                    Else
-                        Call WriteConsoleMsg(UserIndex, "Ahí no hay ninguna fuente de recursos que puedas extraer con esa herramienta.", FontTypeNames.FONTTYPE_INFO)
-                        
-                    End If
-                Else
-                    Call WriteConsoleMsg(UserIndex, "Ahí no hay ninguna fuente de recursos.", FontTypeNames.FONTTYPE_INFO)
-                    
                 End If
             
             Case eSkill.Domar

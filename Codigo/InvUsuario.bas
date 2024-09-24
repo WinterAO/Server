@@ -1118,6 +1118,15 @@ Sub EquiparInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
         Select Case obj.OBJType
 
             Case eOBJType.otWeapon
+                
+                '¿Es una herramienta?
+                If ObjData(ObjIndex).Herramienta.Profesion > 0 Then
+                    '¿No tiene la profesion aprendida para poder usarla?
+                    If Not ConoceProfesion(UserIndex, ObjData(ObjIndex).Herramienta.Profesion) Then
+                        Call WriteConsoleMsg(UserIndex, "No posees los conocimientos necesarios para poder utilizar esta herramienta.", FontTypeNames.FONTTYPE_INFO)
+                        Exit Sub
+                    End If
+                End If
 
                 If ClasePuedeUsarItem(UserIndex, ObjIndex, sMotivo) And FaccionPuedeUsarItem(UserIndex, ObjIndex, sMotivo) Then
 
@@ -1612,36 +1621,6 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                             ' Lo tiene equipado?
                             If .Invent.WeaponEqpObjIndex = ObjIndex Then
                                 Call WriteMultiMessage(UserIndex, eMessages.WorkRequestTarget, eSkill.pesca)  'Call WriteWorkRequestTarget(UserIndex, eSkill.Pesca)
-                            Else
-                                Call WriteConsoleMsg(UserIndex, "Debes tener equipada la herramienta para trabajar.", FontTypeNames.FONTTYPE_INFO)
-
-                            End If
-                            
-                        Case HACHA_LENADOR, HACHA_LENA_ELFICA
-                            
-                            If ConoceProfesion(UserIndex, eSkill.Talar) < 0 Then
-                                Call WriteConsoleMsg(UserIndex, "No conoces esa profesion.", FontTypeNames.FONTTYPE_INFOBOLD)
-                                Exit Sub
-                            End If
-                            
-                            ' Lo tiene equipado?
-                            If .Invent.WeaponEqpObjIndex = ObjIndex Then
-                                Call WriteMultiMessage(UserIndex, eMessages.WorkRequestTarget, eSkill.Talar)
-                            Else
-                                Call WriteConsoleMsg(UserIndex, "Debes tener equipada la herramienta para trabajar.", FontTypeNames.FONTTYPE_INFO)
-
-                            End If
-                            
-                        Case PIQUETE_MINERO
-                        
-                            If ConoceProfesion(UserIndex, eSkill.Mineria) < 0 Then
-                                Call WriteConsoleMsg(UserIndex, "No conoces esa profesion.", FontTypeNames.FONTTYPE_INFOBOLD)
-                                Exit Sub
-                            End If
-                        
-                            ' Lo tiene equipado?
-                            If .Invent.WeaponEqpObjIndex = ObjIndex Then
-                                Call WriteMultiMessage(UserIndex, eMessages.WorkRequestTarget, eSkill.Mineria)
                             Else
                                 Call WriteConsoleMsg(UserIndex, "Debes tener equipada la herramienta para trabajar.", FontTypeNames.FONTTYPE_INFO)
 

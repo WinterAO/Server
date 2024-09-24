@@ -143,7 +143,7 @@ Public CantZonas() As Integer
 
 #If False Then
 
-    Dim X, Y, n, Map, Mapa, Email, Max, Value As Variant
+    Dim X, Y, n, Map, Mapa, Email, max, Value As Variant
 
 #End If
 
@@ -895,6 +895,10 @@ Sub LoadOBJData()
                     
                     .WeaponRazaEnanaAnim = val(Leer.GetValue("OBJ" & Object, "RazaEnanaAnim"))
                     .MinLevel = val(Leer.GetValue("OBJ" & Object, "MinLevel"))
+                    
+                    'Un arma podria ser una herramienta.
+                    .Herramienta.Profesion = val(Leer.GetValue("OBJ" & Object, "Profession"))  'Profesion a la que pertenece segun el Skill de la profesion
+                    .Herramienta.Categoria = val(Leer.GetValue("OBJ" & Object, "Category"))  'Tier de la herramienta
                 
                 Case eOBJType.otInstrumentos
                     .Snd1 = val(Leer.GetValue("OBJ" & Object, "SND1"))
@@ -975,7 +979,16 @@ Sub LoadOBJData()
                     
                 Case eOBJType.otPaseVIP
                     .TiempoVIP = val(Leer.GetValue("OBJ" & Object, "TiempoVIP"))
-
+                    
+                Case eOBJType.otArboles, eOBJType.otYacimiento
+                    .ResourceNode.TotalHP = val(Leer.GetValue("OBJ" & Object, "TotalHP"))
+                    .ResourceNode.RegenerationTime = val(Leer.GetValue("OBJ" & Object, "RegenerationTime"))
+                    .ResourceNode.ResourceIndex = val(Leer.GetValue("OBJ" & Object, "ResourceIndex")) 'Index del recurso que porporciona
+                    .ResourceNode.ResourceAmount = val(Leer.GetValue("OBJ" & Object, "ResourceAmount"))
+                    .ResourceNode.Tier = val(Leer.GetValue("OBJ" & Object, "Tier"))
+                    .ResourceNode.DestroySound = val(Leer.GetValue("OBJ" & Object, "DestroySound"))
+                    .ResourceNode.SoundKnock = val(Leer.GetValue("OBJ" & Object, "SoundKnock"))
+                    
             End Select
             
             .Ropaje = val(Leer.GetValue("OBJ" & Object, "NumRopaje"))
@@ -1108,12 +1121,6 @@ Sub LoadOBJData()
             .AuraColor = val(ReadField(2, Aura, Asc("-")))
             
             .NoRobable = val(Leer.GetValue("OBJ" & Object, "NoRobable"))
-            
-            .Herramienta.Profesion = val(ReadField(1, Leer.GetValue("OBJ" & Object, "Herramienta"), Asc("-"))) 'Profesion a la que pertenece
-            .Herramienta.Categoria = val(ReadField(2, Leer.GetValue("OBJ" & Object, "Herramienta"), Asc("-"))) 'Categoria de la herramienta
-            
-            .Recurso.Profesion = val(ReadField(1, Leer.GetValue("OBJ" & Object, "Recurso"), Asc("-"))) 'Profesion a la que pertenece
-            .Recurso.Categoria = val(ReadField(2, Leer.GetValue("OBJ" & Object, "Recurso"), Asc("-"))) 'Categoria del recurso
             
             Call UpdateProgressBar(frmCargando.picBar, CInt(NumObjDatas), CInt(Object), frmCargando.OriginalWidthBar)
 
@@ -1363,168 +1370,202 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
     
     On Error GoTo errh
     
-    Dim fh              As Integer
+    Dim fh            As Integer
     
-    Dim MH              As tMapHeader
-    Dim Blqs()          As tDatosBloqueados
+    Dim MH            As tMapHeader
+    Dim Blqs()        As tDatosBloqueados
     
-    Dim L1()            As Long
-    Dim L2()            As tDatosGrh
-    Dim L3()            As tDatosGrh
-    Dim L4()            As tDatosGrh
+    Dim L1()          As Long
+    Dim L2()          As tDatosGrh
+    Dim L3()          As tDatosGrh
+    Dim L4()          As tDatosGrh
     
-    Dim Triggers()      As tDatosTrigger
-    Dim Luces()         As tDatosLuces
-    Dim Particulas()    As tDatosParticulas
-    Dim Objetos()       As tDatosObjs
-    Dim NPCs()          As tDatosNPC
-    Dim TEs()           As tDatosTE
-    Dim MapSize         As tMapSize
-    Dim MapDat()          As tMapDat
-    Dim Zonas()         As tDatosZonas
+    Dim Triggers()    As tDatosTrigger
+    Dim Luces()       As tDatosLuces
+    Dim Particulas()  As tDatosParticulas
+    Dim Objetos()     As tDatosObjs
+    Dim NPCs()        As tDatosNPC
+    Dim TEs()         As tDatosTE
+    Dim MapSize       As tMapSize
+    Dim MapDat()      As tMapDat
+    Dim Zonas()       As tDatosZonas
     
-    Dim npcfile         As String
+    Dim npcfile       As String
     
-    Dim i               As Long
-    Dim j               As Long
+    Dim i             As Long
+    Dim j             As Long
     
-    Static ZonaMaxima   As Integer
+    Static ZonaMaxima As Integer
     
     fh = FreeFile
     
     Open MAPFl & ".csm" For Binary Access Read As fh
     
-        Get #fh, , MH
-        Get #fh, , MapSize
+    Get #fh, , MH
+    Get #fh, , MapSize
         
-        CantZonas(Map) = MH.NumeroData
+    CantZonas(Map) = MH.NumeroData
         
-        'Lorwik> Explicación: Debemos darle una dimensión al Array de MapZonas, para optimizar y
-        'no poner un numero excesivo de zonas mediante una constante, vamos a establecer el numero de zonas
-        'según el mapa que mas zonas tenga.
-        If CantZonas(Map) > ZonaMaxima Then ZonaMaxima = CantZonas(Map)
+    'Lorwik> Explicación: Debemos darle una dimensión al Array de MapZonas, para optimizar y
+    'no poner un numero excesivo de zonas mediante una constante, vamos a establecer el numero de zonas
+    'según el mapa que mas zonas tenga.
+    If CantZonas(Map) > ZonaMaxima Then ZonaMaxima = CantZonas(Map)
 
-        ReDim Preserve MapZonas(NumMaps, ZonaMaxima) As tZonaInfo
-        ReDim MapDat(CantZonas(Map)) As tMapDat
+    ReDim Preserve MapZonas(NumMaps, ZonaMaxima) As tZonaInfo
+    ReDim MapDat(CantZonas(Map)) As tMapDat
         
-        Get #fh, , MapDat
+    Get #fh, , MapDat
         
-        ReDim L1(MapSize.XMin To MapSize.XMax, MapSize.YMin To MapSize.YMax) As Long
+    ReDim L1(MapSize.XMin To MapSize.XMax, MapSize.YMin To MapSize.YMax) As Long
         
-        Get #fh, , L1
+    Get #fh, , L1
         
-        With MH
-            If .NumeroBloqueados > 0 Then
-                ReDim Blqs(1 To .NumeroBloqueados)
-                Get #fh, , Blqs
-                For i = 1 To .NumeroBloqueados
-                    MapData(Map, Blqs(i).X, Blqs(i).Y).Blocked = 1
-                Next i
-            End If
+    With MH
+
+        If .NumeroBloqueados > 0 Then
+            ReDim Blqs(1 To .NumeroBloqueados)
+            Get #fh, , Blqs
+
+            For i = 1 To .NumeroBloqueados
+                MapData(Map, Blqs(i).X, Blqs(i).Y).Blocked = 1
+            Next i
+
+        End If
             
-            If .NumeroLayers(2) > 0 Then
-                ReDim L2(1 To .NumeroLayers(2))
-                Get #fh, , L2
-                For i = 1 To .NumeroLayers(2)
-                    MapData(Map, L2(i).X, L2(i).Y).Graphic(2) = L2(i).GrhIndex
-                Next i
-            End If
+        If .NumeroLayers(2) > 0 Then
+            ReDim L2(1 To .NumeroLayers(2))
+            Get #fh, , L2
+
+            For i = 1 To .NumeroLayers(2)
+                MapData(Map, L2(i).X, L2(i).Y).Graphic(2) = L2(i).GrhIndex
+            Next i
+
+        End If
             
-            If .NumeroLayers(3) > 0 Then
-                ReDim L3(1 To .NumeroLayers(3))
-                Get #fh, , L3
-                For i = 1 To .NumeroLayers(3)
-                    MapData(Map, L3(i).X, L3(i).Y).Graphic(3) = L3(i).GrhIndex
-                Next i
-            End If
+        If .NumeroLayers(3) > 0 Then
+            ReDim L3(1 To .NumeroLayers(3))
+            Get #fh, , L3
+
+            For i = 1 To .NumeroLayers(3)
+                MapData(Map, L3(i).X, L3(i).Y).Graphic(3) = L3(i).GrhIndex
+            Next i
+
+        End If
             
-            If .NumeroLayers(4) > 0 Then
-                ReDim L4(1 To .NumeroLayers(4))
-                Get #fh, , L4
-                For i = 1 To .NumeroLayers(4)
-                    MapData(Map, L4(i).X, L4(i).Y).Graphic(4) = L4(i).GrhIndex
-                Next i
-            End If
+        If .NumeroLayers(4) > 0 Then
+            ReDim L4(1 To .NumeroLayers(4))
+            Get #fh, , L4
+
+            For i = 1 To .NumeroLayers(4)
+                MapData(Map, L4(i).X, L4(i).Y).Graphic(4) = L4(i).GrhIndex
+            Next i
+
+        End If
             
-            If .NumeroTriggers > 0 Then
-                ReDim Triggers(1 To .NumeroTriggers)
-                Get #fh, , Triggers
-                For i = 1 To .NumeroTriggers
-                    MapData(Map, Triggers(i).X, Triggers(i).Y).Trigger = Triggers(i).Trigger
-                Next i
-            End If
+        If .NumeroTriggers > 0 Then
+            ReDim Triggers(1 To .NumeroTriggers)
+            Get #fh, , Triggers
+
+            For i = 1 To .NumeroTriggers
+                MapData(Map, Triggers(i).X, Triggers(i).Y).Trigger = Triggers(i).Trigger
+            Next i
+
+        End If
             
-            If .NumeroParticulas > 0 Then
-                ReDim Particulas(1 To .NumeroParticulas)
-                Get #fh, , Particulas
-            End If
+        If .NumeroParticulas > 0 Then
+            ReDim Particulas(1 To .NumeroParticulas)
+            Get #fh, , Particulas
+        End If
             
-            If .NumeroLuces > 0 Then
-                ReDim Luces(1 To .NumeroLuces)
-                Get #fh, , Luces
-            End If
+        If .NumeroLuces > 0 Then
+            ReDim Luces(1 To .NumeroLuces)
+            Get #fh, , Luces
+        End If
             
-            If .NumeroZonas > 0 Then
-                ReDim Zonas(1 To .NumeroZonas)
-                Get #fh, , Zonas
-                For i = 1 To .NumeroZonas
-                    MapData(Map, Zonas(i).X, Zonas(i).Y).ZonaIndex = Zonas(i).Zona
-                Next i
-            End If
+        If .NumeroZonas > 0 Then
+            ReDim Zonas(1 To .NumeroZonas)
+            Get #fh, , Zonas
+
+            For i = 1 To .NumeroZonas
+                MapData(Map, Zonas(i).X, Zonas(i).Y).ZonaIndex = Zonas(i).Zona
+            Next i
+
+        End If
             
-            If .NumeroOBJs > 0 Then
-                ReDim Objetos(1 To .NumeroOBJs)
-                Get #fh, , Objetos
-                For i = 1 To .NumeroOBJs
-                    MapData(Map, Objetos(i).X, Objetos(i).Y).ObjInfo.ObjIndex = Objetos(i).ObjIndex
-                    MapData(Map, Objetos(i).X, Objetos(i).Y).ObjInfo.Amount = Objetos(i).ObjAmmount
-                Next i
-            End If
+        If .NumeroOBJs > 0 Then
+            ReDim Objetos(1 To .NumeroOBJs)
+            Get #fh, , Objetos
+
+            For i = 1 To .NumeroOBJs
+                MapData(Map, Objetos(i).X, Objetos(i).Y).ObjInfo.ObjIndex = Objetos(i).ObjIndex
+                MapData(Map, Objetos(i).X, Objetos(i).Y).ObjInfo.Amount = Objetos(i).ObjAmmount
+
+                With ObjData(Objetos(i).ObjIndex)
+
+                    Select Case .OBJType
+
+                        Case eOBJType.otYacimiento, eOBJType.otArboles, eOBJType.otDestruible
+                            MapData(Map, Objetos(i).X, Objetos(i).Y).ObjInfo.VidaUtil = ObjData(Objetos(i).ObjIndex).ResourceNode.TotalHP
+                            MapData(Map, Objetos(i).X, Objetos(i).Y).ObjInfo.MaxLong = &H7FFFFFFF ' Ultimo uso = Max Long
+
+                        Case Else
+                            MapData(Map, Objetos(i).X, Objetos(i).Y).ObjInfo.Amount = Objetos(i).ObjAmmount
+                    End Select
+                End With
+            Next i
+
+        End If
                 
-            If .NumeroNPCs > 0 Then
-                ReDim NPCs(1 To .NumeroNPCs)
-                Get #fh, , NPCs
-                For i = 1 To .NumeroNPCs
-                    MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex = NPCs(i).NPCIndex
-                    If MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex > 0 Then
-                        
-                        npcfile = DatPath & "NPCs.dat"
-                        
-                        MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex = OpenNPC(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex)
-                        Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Orig.Map = Map
-                        Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Orig.X = NPCs(i).X
-                        Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Orig.Y = NPCs(i).Y
-                        
-                        If Not MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex = 0 Then
-                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Pos.Map = Map
-                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Pos.X = NPCs(i).X
-                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Pos.Y = NPCs(i).Y
-                            
-                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).ZonaOrig = MapData(Map, NPCs(i).X, NPCs(i).Y).ZonaIndex
-       
-                            Call MakeNPCChar(True, 0, MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex, Map, NPCs(i).X, NPCs(i).Y)
-                        End If
-                        
-                    End If
-                Next i
-            End If
+        If .NumeroNPCs > 0 Then
+            ReDim NPCs(1 To .NumeroNPCs)
+            Get #fh, , NPCs
 
-            If .NumeroTE > 0 Then
-                ReDim TEs(1 To .NumeroTE)
-                Get #fh, , TEs
-                For i = 1 To .NumeroTE
-                    MapData(Map, TEs(i).X, TEs(i).Y).TileExit.Map = TEs(i).DestM
-                    MapData(Map, TEs(i).X, TEs(i).Y).TileExit.X = TEs(i).DestX
-                    MapData(Map, TEs(i).X, TEs(i).Y).TileExit.Y = TEs(i).DestY
-                Next i
-            End If
+            For i = 1 To .NumeroNPCs
+                MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex = NPCs(i).NPCIndex
+
+                If MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex > 0 Then
+                        
+                    npcfile = DatPath & "NPCs.dat"
+                        
+                    MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex = OpenNPC(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex)
+                    Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Orig.Map = Map
+                    Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Orig.X = NPCs(i).X
+                    Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Orig.Y = NPCs(i).Y
+                        
+                    If Not MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex = 0 Then
+                        Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Pos.Map = Map
+                        Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Pos.X = NPCs(i).X
+                        Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Pos.Y = NPCs(i).Y
+                            
+                        Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).ZonaOrig = MapData(Map, NPCs(i).X, NPCs(i).Y).ZonaIndex
+       
+                        Call MakeNPCChar(True, 0, MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex, Map, NPCs(i).X, NPCs(i).Y)
+                    End If
+                        
+                End If
+            Next i
+
+        End If
+
+        If .NumeroTE > 0 Then
+            ReDim TEs(1 To .NumeroTE)
+            Get #fh, , TEs
+
+            For i = 1 To .NumeroTE
+                MapData(Map, TEs(i).X, TEs(i).Y).TileExit.Map = TEs(i).DestM
+                MapData(Map, TEs(i).X, TEs(i).Y).TileExit.X = TEs(i).DestX
+                MapData(Map, TEs(i).X, TEs(i).Y).TileExit.Y = TEs(i).DestY
+            Next i
+
+        End If
             
-        End With
+    End With
     
     Close fh
         
     For j = MapSize.YMin To MapSize.YMax
         For i = MapSize.XMin To MapSize.XMax
+
             If L1(i, j) > 0 Then
                 MapData(Map, j, i).Graphic(1) = L1(j, i)
             End If
@@ -1533,6 +1574,7 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
     
     'Cargamos los extras
     For i = 0 To CantZonas(Map)
+
         With MapZonas(Map, i)
             .Name = MapDat(i).map_name
             .music = MapDat(i).music_number
@@ -1556,7 +1598,7 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
         End With
     Next i
 
-Exit Sub
+    Exit Sub
 
 errh:
     'Call LogError("Error cargando mapa: " & map & " - Pos: " & .X & "," & Y & "." & Err.description)

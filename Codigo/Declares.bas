@@ -746,6 +746,8 @@ Public Enum eOBJType
     otRunaHogar = 39
     otInstruye = 40
     otPaseVIP = 41
+    otHerramientas = 42
+    otDestruible = 43
     otCualquiera = 1000
 
 End Enum
@@ -997,7 +999,7 @@ Public Const MAX_ITEMS_CRAFTEO As Byte = 4
 
 Public Type tProfesion
     Profesion As Byte 'Indica el skill
-    Categoria As Byte 'Indica la categoria
+    Categoria As Byte 'Indica la categoria (Tier)
 End Type
 
 'Efectos de los anillos magicos
@@ -1007,6 +1009,18 @@ Public Enum tEfectos
     Ultratumba = 3
     Sabiduria = 4
 End Enum
+
+Public Type tResourceNode
+            
+    TotalHP As Integer
+    RegenerationTime As Integer
+    ResourceIndex As Integer
+    ResourceAmount As Integer
+    Tier As Byte
+    DestroySound As Integer
+    SoundKnock As Integer
+            
+End Type
 
 'Tipos de objetos
 Public Type ObjData
@@ -1104,15 +1118,18 @@ Public Type ObjData
     
     Agarrable As Byte
     
+    'Profesiones - Materiales
     Materiales(1 To MAXMATERIALES)
     CantMateriales(1 To MAXMATERIALES)
-    
     SkHerreria As Integer
     SkCarpinteria As Integer
     SkSastreria As Integer
     SkAlquimia As Integer
-    
     ItemCrafteo() As CraftingItem
+    'Profesiones - Nodos de recursos
+    ResourceNode As tResourceNode
+    'Profesiones - Herramientas
+    Herramienta As tProfesion
 
     ' Usado por barcos y lingotes [WyroX: Lo dejo para no romper codigo donde no es necesario :)]
     MinSkill As Byte
@@ -1170,9 +1187,6 @@ Public Type ObjData
     GrhAura As Long
     AuraColor As Long
     
-    Herramienta As tProfesion
-    Recurso As tProfesion
-    
     Efecto As tEfectos
     
     Speed As Single
@@ -1184,6 +1198,8 @@ Public Type obj
 
     ObjIndex As Integer
     Amount As Integer
+    VidaUtil As Integer
+    MaxLong As Double
 
 End Type
 
@@ -1897,8 +1913,6 @@ Public Type NPCFlags
     Tepeable As Byte
     
     Invocacion As Byte
-    
-    Recurso As tProfesion
     
     ArenasRinkel As Byte 'Identifica si un NPC pertenece al evento de arenas de Rinkel
     

@@ -13,14 +13,10 @@ Public Enum eMacroTrabajo '(El 0 es no activado)
     Ninguno = 0
     Lingotear = 1
     PescarRed = 2
-    'DEBE y Coincide con el numero de los skills:
-    Talando = 17
-    PESCAR = 18
-    Minando = 19
+    Pescar = 18
     Carpinteando = 20
     Herreando = 21
     Sastreando = 22
-    Plantitas = 23
     CreandoPotis = 24
 End Enum
 
@@ -607,7 +603,7 @@ Public Sub MacroTrabajo(ByVal UserIndex As Integer, ByRef Tarea As eMacroTrabajo
         Select Case Tarea
         
             'Pesca con caña
-            Case eMacroTrabajo.PESCAR
+            Case eMacroTrabajo.Pescar
                 If PuedePescar(UserIndex) Then
                     Call DoPescar(UserIndex, False)
                 Else
@@ -621,15 +617,7 @@ Public Sub MacroTrabajo(ByVal UserIndex As Integer, ByRef Tarea As eMacroTrabajo
                 Else
                     Call DejardeTrabajar(UserIndex)
                 End If
-                    
-            'Mineria, Talar
-            Case eMacroTrabajo.Minando, eMacroTrabajo.Talando, eMacroTrabajo.Plantitas
-                If PuedeExtraer(UserIndex, Tarea) Then
-                    Call DoExtraer(UserIndex, Tarea)
-                Else
-                    Call DejardeTrabajar(UserIndex)
-                End If
-                
+
             'Lingotear
             Case eMacroTrabajo.Lingotear
                 If PuedeLingotear(UserIndex) Then
