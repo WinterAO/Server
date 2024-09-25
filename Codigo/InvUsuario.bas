@@ -579,25 +579,45 @@ End Sub
 Sub EraseObj(ByVal Num As Integer, _
              ByVal Map As Integer, _
              ByVal X As Integer, _
-             ByVal Y As Integer)
+             ByVal Y As Integer, _
+             Optional ByVal NoRespawn As Boolean = False)
     '***************************************************
     'Author: Unknown
-    'Last Modification: -
+    'Last Modification: 25/09/2024 - Lorwik
     '
     '***************************************************
+    
+    On Error GoTo EraseObj_Err
 
     With MapData(Map, X, Y)
+    
+        If .ObjInfo.ObjIndex = 0 Then Exit Sub
         .ObjInfo.Amount = .ObjInfo.Amount - Num
     
         If .ObjInfo.Amount <= 0 Then
+        
+            If ObjData(.ObjInfo.ObjIndex).ResourceNode.RegenerationTime >= 1 And NoRespawn = False Then _
+                Call aItemManager.AddItem(Map, X, Y, .ObjInfo.ObjIndex, ObjData(.ObjInfo.ObjIndex).ResourceNode.RegenerationTime)
+                
+            If ObjData(.ObjInfo.ObjIndex).OBJType = eOBJType.otArboles Or ObjData(.ObjInfo.ObjIndex).OBJType = eOBJType.otYacimiento Or ObjData(.ObjInfo.ObjIndex).OBJType = eOBJType.otDestruible Then
+                .Blocked = 0
+                Call Bloquear(True, Map, X, Y, .Blocked)
+            End If
+            
             .ObjInfo.ObjIndex = 0
             .ObjInfo.Amount = 0
+            .ObjInfo.VidaUtil = 0
 
             Call modSendData.SendToAreaByPos(Map, X, Y, PrepareMessageObjectDelete(X, Y))
 
         End If
 
     End With
+    
+    Exit Sub
+
+EraseObj_Err:
+    Call LogError("Error en EraseObj. Error " & Err.Number & " : " & Err.description)
 
 End Sub
 
@@ -614,13 +634,19 @@ Sub MakeObj(ByRef obj As obj, _
     If obj.ObjIndex > 0 And obj.ObjIndex <= UBound(ObjData) Then
     
         With MapData(Map, X, Y)
+        
+            If ObjData(obj.ObjIndex).OBJType = eOBJType.otDestruible Or ObjData(obj.ObjIndex).OBJType = eOBJType.otArboles Or ObjData(obj.ObjIndex).OBJType = eOBJType.otYacimiento Then
+                obj.VidaUtil = ObjData(obj.ObjIndex).ResourceNode.TotalHP
+                .Blocked = 1
+                Call Bloquear(True, Map, X, Y, .Blocked)
+            End If
 
             If .ObjInfo.ObjIndex = obj.ObjIndex Then
                 .ObjInfo.Amount = .ObjInfo.Amount + obj.Amount
             Else
                 .ObjInfo = obj
                 
-                Call modSendData.SendToAreaByPos(Map, X, Y, PrepareMessageObjectCreate(ObjData(obj.ObjIndex).GrhIndex, ObjData(obj.ObjIndex).ParticulaIndex, X, Y, ObjData(obj.ObjIndex).Shadow))
+                Call modSendData.SendToAreaByPos(Map, X, Y, PrepareMessageObjectCreate(ObjData(obj.ObjIndex).GrhIndex, ObjData(obj.ObjIndex).ParticulaIndex, X, Y))
 
             End If
             
@@ -2362,14 +2388,14 @@ errHandler:
 
 End Sub
 
-Public Function ItemSeCae(ByVal index As Integer) As Boolean
+Public Function ItemSeCae(ByVal Index As Integer) As Boolean
     '***************************************************
     'Author: Unknown
     'Last Modification: -
     '
     '***************************************************
 
-    With ObjData(index)
+    With ObjData(Index)
         ItemSeCae = (.Real <> 1 Or .NoSeCae = 0) And (.Caos <> 1 Or .NoSeCae = 0) And .OBJType <> eOBJType.otLlaves And .OBJType <> eOBJType.otBarcos And .NoSeCae = 0
 
     End With

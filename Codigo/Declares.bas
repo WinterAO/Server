@@ -52,10 +52,6 @@ Public tickLimpieza        As Integer
 
 Public Const MAXMATERIALES As Byte = 4 '4 materiales maximo para construir un item con profesiones
 
-Public aClon               As clsAntiMassClon
-
-Public TrashCollector      As Collection
-
 Public Const MAXSPAWNATTEMPS = 60
 
 Public Const INFINITE_LOOPS As Integer = -1
@@ -1012,7 +1008,7 @@ End Enum
 
 Public Type tResourceNode
             
-    TotalHP As Integer
+    TotalHP As Long
     RegenerationTime As Integer
     ResourceIndex As Integer
     ResourceAmount As Integer
@@ -1030,7 +1026,7 @@ Public Type ObjData
     OBJType As eOBJType 'Tipo enum que determina cuales son las caract del obj
     
     GrhIndex As Long ' Indice del grafico que representa el obj
-    GrhSecundario As Long
+    GrhCartel As Long
     
     ParticulaIndex As Integer
     
@@ -1044,8 +1040,8 @@ Public Type ObjData
     
     ForoID As String
     
-    MinHp As Integer ' Minimo puntos de vida
-    MaxHp As Integer ' Maximo puntos de vida
+    'MinHp As Integer ' Minimo puntos de vida
+    'MaxHp As Integer ' Maximo puntos de vida
     
     RecursoIndex As Integer
     LingoteInex As Integer
@@ -1057,8 +1053,6 @@ Public Type ObjData
     
     Crucial As Byte
     Newbie As Integer
-    
-    Shadow As Byte
     
     'Puntos de Stamina que da
     MinSta As Integer ' Minimo puntos de stamina
@@ -1198,8 +1192,7 @@ Public Type obj
 
     ObjIndex As Integer
     Amount As Integer
-    VidaUtil As Integer
-    MaxLong As Double
+    VidaUtil As Long
 
 End Type
 
@@ -1729,7 +1722,7 @@ End Type
 Public Type Amigos
     Nombre As String
     Ignorado As Byte
-    index As Integer
+    Index As Integer
 
 End Type
 
@@ -2017,7 +2010,6 @@ Public Type NPC
     'Para diferenciar entre clanes
     ClanIndex As Integer
     
-    NoShadow As Byte
     Instruye As Byte 'Instruye un profesion
     
     SpeedVar As Long
@@ -2244,6 +2236,12 @@ Public Ciudades(1 To NUMCIUDADES)         As WorldPos
 Public QuestList()                        As tQuest
 
 Public Records()                          As tRecord
+
+Public aItemManager                       As clsWorldItemManager
+
+Public aClon                              As clsAntiMassClon
+
+Public TrashCollector                     As Collection
 '*********************************************************
 
 Type HomeDistance

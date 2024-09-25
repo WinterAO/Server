@@ -1474,8 +1474,6 @@ Public Function OpenNPC(ByVal NpcNumber As Integer, _
         
         .Ciudad = val(Leer.GetValue("NPC" & NpcNumber, "Ciudad"))
         
-        .NoShadow = val(Leer.GetValue("NPC" & NpcNumber, "NoShadow"))
-        
         .Instruye = val(Leer.GetValue("NPC" & NpcNumber, "Instruye"))
         
         .SpeedVar = val(Leer.GetValue("NPC" & NpcNumber, "Speed"))

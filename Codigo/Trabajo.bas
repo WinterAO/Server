@@ -600,7 +600,7 @@ Public Sub HerreroConstruirItem(ByVal UserIndex As Integer, ByVal ItemIndex As I
             Call LogDesarrollo(.Name & " ha construido " & MiObj.Amount & " " & ObjData(MiObj.ObjIndex).Name)
         
         Call SubirSkill(UserIndex, eSkill.herreria, True)
-        Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_TRABAJO_HERRERO, .Pos.x, .Pos.y))
+        Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_TRABAJO_HERRERO, .Pos.X, .Pos.Y))
         
         If Not criminal(UserIndex) Then
             .Reputacion.PlebeRep = .Reputacion.PlebeRep + vlProleta
@@ -707,7 +707,7 @@ Public Sub CarpinteroConstruirItem(ByVal UserIndex As Integer, ByVal ItemIndex A
             End If
             
             Call SubirSkill(UserIndex, eSkill.Carpinteria, True)
-            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_TRABAJO_CARPINTERO, .Pos.x, .Pos.y))
+            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_TRABAJO_CARPINTERO, .Pos.X, .Pos.Y))
             
             If Not criminal(UserIndex) Then
                 .Reputacion.PlebeRep = .Reputacion.PlebeRep + vlProleta
@@ -803,7 +803,7 @@ Public Sub SastreConstruirItem(ByVal UserIndex As Integer, ByVal ItemIndex As In
             End If
             
             Call SubirSkill(UserIndex, eSkill.Sastreria, True)
-            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_TRABAJO_CARPINTERO, .Pos.x, .Pos.y))
+            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_TRABAJO_CARPINTERO, .Pos.X, .Pos.Y))
             
             If Not criminal(UserIndex) Then
                 .Reputacion.PlebeRep = .Reputacion.PlebeRep + vlProleta
@@ -915,7 +915,7 @@ Public Sub AlquimistaConstruirItem(ByVal UserIndex As Integer, ByVal ItemIndex A
             End If
             
             Call SubirSkill(UserIndex, eSkill.Alquimia, True)
-            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_TRABAJO_CARPINTERO, .Pos.x, .Pos.y))
+            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_TRABAJO_CARPINTERO, .Pos.X, .Pos.Y))
             
             If Not criminal(UserIndex) Then
                 .Reputacion.PlebeRep = .Reputacion.PlebeRep + vlProleta
@@ -1229,12 +1229,12 @@ Sub DoDomar(ByVal UserIndex As Integer, ByVal NPCIndex As Integer)
             
             If puntosRequeridos <= puntosDomar And RandomNumber(1, 5) = 1 Then
 
-                Dim index As Integer
+                Dim Index As Integer
 
                 .NroMascotas = .NroMascotas + 1
-                index = FreeMascotaIndex(UserIndex)
-                .MascotasIndex(index) = NPCIndex
-                .MascotasType(index) = Npclist(NPCIndex).Numero
+                Index = FreeMascotaIndex(UserIndex)
+                .MascotasIndex(Index) = NPCIndex
+                .MascotasType(Index) = Npclist(NPCIndex).Numero
                 
                 Npclist(NPCIndex).MaestroUser = UserIndex
                 
@@ -1252,7 +1252,7 @@ Sub DoDomar(ByVal UserIndex As Integer, ByVal NPCIndex As Integer)
                     
                     Call QuitarNPC(NPCIndex)
                     
-                    .MascotasType(index) = petType
+                    .MascotasType(Index) = petType
                     .NroMascotas = NroPets
                     
                     Call WriteConsoleMsg(UserIndex, "No se permiten mascotas en zona segura. estas te esperaran afuera.", FontTypeNames.FONTTYPE_INFO)
@@ -1377,7 +1377,7 @@ Sub DoAdminInvisible(ByVal UserIndex As Integer)
             Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(tempData)
              
             'Le mandamos el mensaje para crear el personaje a los clientes que esten cerca
-            Call MakeUserChar(True, .Pos.Map, UserIndex, .Pos.Map, .Pos.x, .Pos.y, True)
+            Call MakeUserChar(True, .Pos.Map, UserIndex, .Pos.Map, .Pos.X, .Pos.Y, True)
 
         End If
 
@@ -1386,8 +1386,8 @@ Sub DoAdminInvisible(ByVal UserIndex As Integer)
 End Sub
 
 Sub TratarDeHacerFogata(ByVal Map As Integer, _
-                        ByVal x As Integer, _
-                        ByVal y As Integer, _
+                        ByVal X As Integer, _
+                        ByVal Y As Integer, _
                         ByVal UserIndex As Integer)
     '***************************************************
     'Author: Unknown
@@ -1403,16 +1403,16 @@ Sub TratarDeHacerFogata(ByVal Map As Integer, _
 
     Dim posMadera As WorldPos
 
-    If Not LegalPos(Map, x, y) Then Exit Sub
+    If Not LegalPos(Map, X, Y) Then Exit Sub
 
     With posMadera
         .Map = Map
-        .x = x
-        .y = y
+        .X = X
+        .Y = Y
 
     End With
 
-    If MapData(Map, x, y).ObjInfo.ObjIndex <> 58 Then
+    If MapData(Map, X, Y).ObjInfo.ObjIndex <> 58 Then
         Call WriteConsoleMsg(UserIndex, "Necesitas clickear sobre lena para hacer ramitas.", FontTypeNames.FONTTYPE_INFO)
         Exit Sub
 
@@ -1430,7 +1430,7 @@ Sub TratarDeHacerFogata(ByVal Map As Integer, _
 
     End If
 
-    If MapData(Map, x, y).ObjInfo.Amount < 3 Then
+    If MapData(Map, X, Y).ObjInfo.Amount < 3 Then
         Call WriteConsoleMsg(UserIndex, "Necesitas por lo menos tres troncos para hacer una fogata.", FontTypeNames.FONTTYPE_INFO)
         Exit Sub
 
@@ -1453,11 +1453,11 @@ Sub TratarDeHacerFogata(ByVal Map As Integer, _
 
     If exito = 1 Then
         obj.ObjIndex = FOGATA_APAG
-        obj.Amount = MapData(Map, x, y).ObjInfo.Amount \ 3
+        obj.Amount = MapData(Map, X, Y).ObjInfo.Amount \ 3
     
         Call WriteConsoleMsg(UserIndex, "Has hecho " & obj.Amount & " fogatas.", FontTypeNames.FONTTYPE_INFO)
     
-        Call MakeObj(obj, Map, x, y)
+        Call MakeObj(obj, Map, X, Y)
     
         'Seteamos la fogata como el nuevo TargetObj del user
         UserList(UserIndex).flags.TargetObj = FOGATA_APAG
@@ -1557,7 +1557,7 @@ Public Sub DoPescar(ByVal UserIndex As Integer, ByVal Red As Boolean)
         If .Reputacion.PlebeRep > MAXREP Then .Reputacion.PlebeRep = MAXREP
         
         'Sonido
-        Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_PESCAR, .Pos.x, .Pos.y))
+        Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_PESCAR, .Pos.X, .Pos.Y))
         
         .Counters.Trabajando = .Counters.Trabajando + 1
     
@@ -1964,7 +1964,7 @@ Public Sub DoApunalar(ByVal UserIndex As Integer, _
                 .Stats.MinHp = .Stats.MinHp - dano
                 
                 'Renderizo el dano en render
-                Call SendData(SendTarget.ToPCArea, VictimUserIndex, PrepareMessageCreateDamage(UserList(VictimUserIndex).Pos.x, UserList(VictimUserIndex).Pos.y, dano, DAMAGE_PUNAL))
+                Call SendData(SendTarget.ToPCArea, VictimUserIndex, PrepareMessageCreateDamage(UserList(VictimUserIndex).Pos.X, UserList(VictimUserIndex).Pos.Y, dano, DAMAGE_PUNAL))
                 
                 Call WriteConsoleMsg(UserIndex, "Has apunalado a " & .Name & " por " & dano, FontTypeNames.FONTTYPE_FIGHT)
                 Call WriteConsoleMsg(VictimUserIndex, "Te ha apunalado " & UserList(UserIndex).Name & " por " & dano, FontTypeNames.FONTTYPE_FIGHT)
@@ -1980,7 +1980,7 @@ Public Sub DoApunalar(ByVal UserIndex As Integer, _
                 End If
                 
                 'Renderizo el dano en render
-                Call SendData(SendTarget.ToPCArea, VictimNpcIndex, PrepareMessageCreateDamage(.Pos.x, .Pos.y, Int(dano * 2), DAMAGE_PUNAL))
+                Call SendData(SendTarget.ToPCArea, VictimNpcIndex, PrepareMessageCreateDamage(.Pos.X, .Pos.Y, Int(dano * 2), DAMAGE_PUNAL))
                 
                 Call WriteConsoleMsg(UserIndex, "Has apunalado la criatura por " & Int(dano * 2), FontTypeNames.FONTTYPE_FIGHT)
                 Call CalcularDarExp(UserIndex, VictimNpcIndex, dano * 2)
@@ -2078,7 +2078,7 @@ Public Sub DoGolpeCritico(ByVal UserIndex As Integer, _
                 .Stats.MinHp = .Stats.MinHp - dano
                 
                 'Renderizo el dano en render
-                Call SendData(SendTarget.ToPCArea, VictimUserIndex, PrepareMessageCreateDamage(.Pos.x, .Pos.y, Int(dano * 2), DAMAGE_PUNAL))
+                Call SendData(SendTarget.ToPCArea, VictimUserIndex, PrepareMessageCreateDamage(.Pos.X, .Pos.Y, Int(dano * 2), DAMAGE_PUNAL))
                 
                 Call WriteConsoleMsg(UserIndex, "Has golpeado criticamente a " & .Name & " por " & dano & ".", FontTypeNames.FONTTYPE_FIGHT)
                 Call WriteConsoleMsg(VictimUserIndex, UserList(UserIndex).Name & " te ha golpeado criticamente por " & dano & ".", FontTypeNames.FONTTYPE_FIGHT)
@@ -2094,7 +2094,7 @@ Public Sub DoGolpeCritico(ByVal UserIndex As Integer, _
                 End If
                 
                 'Renderizo el dano en render
-                Call SendData(SendTarget.ToPCArea, VictimNpcIndex, PrepareMessageCreateDamage(.Pos.x, .Pos.y, Int(dano * 2), DAMAGE_PUNAL))
+                Call SendData(SendTarget.ToPCArea, VictimNpcIndex, PrepareMessageCreateDamage(.Pos.X, .Pos.Y, Int(dano * 2), DAMAGE_PUNAL))
                 
                 Call WriteConsoleMsg(UserIndex, "Has golpeado criticamente a la criatura por " & dano & ".", FontTypeNames.FONTTYPE_FIGHT)
                 
@@ -2283,7 +2283,7 @@ Public Sub DoMineria(ByVal UserIndex As Integer)
             Call WriteConsoleMsg(UserIndex, "Has extraido algunos minerales!", FontTypeNames.FONTTYPE_INFO)
             
             'Renderizo el dano en render.
-            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageCreateDamage(.Pos.x, .Pos.y, MiObj.Amount, DAMAGE_TRABAJO))
+            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageCreateDamage(.Pos.X, .Pos.Y, MiObj.Amount, DAMAGE_TRABAJO))
             Call WriteMessageCreateDamage(UserIndex, MiObj.Amount, DAMAGE_TRABAJO)
             
             Call SubirSkill(UserIndex, eSkill.Mineria, True)
@@ -2311,7 +2311,7 @@ Public Sub DoMineria(ByVal UserIndex As Integer)
         .Counters.Trabajando = .Counters.Trabajando + 1
         
         'Play sound!
-        Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_MINERO, .Pos.x, .Pos.y))
+        Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_MINERO, .Pos.X, .Pos.Y))
 
     End With
 
@@ -2753,7 +2753,7 @@ Public Sub DoEquita(ByVal UserIndex As Integer, _
             Exit Sub
         End If
 
-        If MapData(.Pos.Map, .Pos.x, .Pos.y).Trigger = eTrigger.BAJOTECHO Or MapData(.Pos.Map, .Pos.x, .Pos.y).Trigger = eTrigger.CASA Then
+        If MapData(.Pos.Map, .Pos.X, .Pos.Y).Trigger = eTrigger.BAJOTECHO Or MapData(.Pos.Map, .Pos.X, .Pos.Y).Trigger = eTrigger.CASA Then
             'TODO: SACAR ESTA VALIDACION DE ACA, Y HACER UN legalpos HAY TECHO en el cliente
             If .flags.Equitando = 0 Then Exit Sub
 
@@ -3197,33 +3197,3 @@ Function TieneReceta(ByVal i As Integer, ByVal UserIndex As Integer, ByVal SlotP
 errHandler:
 
 End Function
-
-Public Sub ActualizarRecurso(ByVal Map As Integer, ByVal x As Integer, ByVal y As Integer)
-    '***************************************************
-    'Author: Lorwik
-    'Last Modification: 21/09/2024
-    '***************************************************
-    
-    On Error GoTo ActualizarRecurso_Err
-        
-    Dim ObjIndex As Integer
-
-    ObjIndex = MapData(Map, x, y).ObjInfo.ObjIndex
-
-    Dim TiempoActual As Long
-
-    TiempoActual = GetTickCount()
-
-    ' Data = Ultimo uso
-    If (TiempoActual - MapData(Map, x, y).ObjInfo.MaxLong) * 0.001 > ObjData(ObjIndex).ResourceNode.RegenerationTime Then
-        MapData(Map, x, y).ObjInfo.VidaUtil = ObjData(ObjIndex).ResourceNode.TotalHP
-        MapData(Map, x, y).ObjInfo.MaxLong = &H7FFFFFFF   ' Ultimo uso = Max Long
-
-    End If
-
-    Exit Sub
-
-ActualizarRecurso_Err:
-    Call TraceError(Err.Number, Err.description, "Trabajo.ActualizarRecurso", Erl)
-
-End Sub

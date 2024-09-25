@@ -458,7 +458,7 @@ Begin VB.Form frmMain
       Begin VB.Timer Auditoria 
          Enabled         =   0   'False
          Interval        =   1000
-         Left            =   690
+         Left            =   720
          Top             =   1440
       End
       Begin VB.TextBox txtChat 
@@ -879,6 +879,9 @@ Private Sub AutoSave_Timer()
 
     End If
     
+    'Actualizamos los objetos con respawn
+    Call aItemManager.StepMinute
+    
     'Reconexion a la base de datos
     If MinutosReconexion >= IntervaloReconexionDB Then
         MinutosReconexion = 0
@@ -976,14 +979,14 @@ Private Sub cmdConfiguracion_Click()
 
 End Sub
 
-Private Sub cmdDB_Click(index As Integer)
+Private Sub cmdDB_Click(Index As Integer)
 
 #If DBConexionUnica = 0 Then
     MsgBox ("El server esta configurado para conexion/desconexion por cada query, no es posible conectar ni desconectar en este modo. Cambie la configuracion desde los argunmentos en el codigo.")
     Exit Sub
 #End If
 
-    Select Case index
+    Select Case Index
     
         Case 0 'Conectar
             If MsgBox("¿Desea CONECTAR a la base de datos MYSQL? ¡Si ya esta conectada podria provocar errores!!!", vbYesNo, "¡CONEXION A LA MYSQL!") = vbNo Then Exit Sub
@@ -1016,8 +1019,8 @@ Private Sub cmdDB_Click(index As Integer)
     End Select
 End Sub
 
-Private Sub cmdDebugRapido_Click(index As Integer)
-    Select Case index
+Private Sub cmdDebugRapido_Click(Index As Integer)
+    Select Case Index
     
         Case 0
             frmUserList.Show

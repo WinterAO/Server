@@ -1213,7 +1213,7 @@ Public Sub UsuarioAtaca(ByVal UserIndex As Integer)
     '21/09/2024: Lorwik - Cambio el mensaje de falta de energia por uno mas neutral, ademas añado objetos atacables
     '***************************************************
 
-    Dim index     As Integer
+    Dim Index     As Integer
 
     Dim AttackPos As WorldPos
     Dim bot_Index As Byte
@@ -1258,13 +1258,13 @@ Public Sub UsuarioAtaca(ByVal UserIndex As Integer)
         '-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
         'USUARIO
         '-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-        index = MapData(AttackPos.Map, AttackPos.X, AttackPos.Y).UserIndex
+        Index = MapData(AttackPos.Map, AttackPos.X, AttackPos.Y).UserIndex
         
         'Look for user
-        If index > 0 Then
-            Call UsuarioAtacaUsuario(UserIndex, index)
+        If Index > 0 Then
+            Call UsuarioAtacaUsuario(UserIndex, Index)
             Call WriteUpdateUserStats(UserIndex)
-            Call WriteUpdateUserStats(index)
+            Call WriteUpdateUserStats(Index)
             Exit Sub
 
         End If
@@ -1272,18 +1272,18 @@ Public Sub UsuarioAtaca(ByVal UserIndex As Integer)
         '-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
         'NPC
         '-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-        index = MapData(AttackPos.Map, AttackPos.X, AttackPos.Y).NPCIndex
+        Index = MapData(AttackPos.Map, AttackPos.X, AttackPos.Y).NPCIndex
         
         'Look for NPC
-        If index > 0 Then
-            If Npclist(index).Attackable Then
-                If Npclist(index).MaestroUser > 0 And MapZonas(Npclist(index).Pos.Map, NPCZonaId(index)).Pk = False Then
+        If Index > 0 Then
+            If Npclist(Index).Attackable Then
+                If Npclist(Index).MaestroUser > 0 And MapZonas(Npclist(Index).Pos.Map, NPCZonaId(Index)).Pk = False Then
                     Call WriteConsoleMsg(UserIndex, "No puedes atacar mascotas en zona segura.", FontTypeNames.FONTTYPE_WARNING)
                     Exit Sub
 
                 End If
                 
-                Call UsuarioAtacaNpc(UserIndex, index)
+                Call UsuarioAtacaNpc(UserIndex, Index)
             Else
                 Call WriteConsoleMsg(UserIndex, "No puedes atacar a este NPC.", FontTypeNames.FONTTYPE_WARNING)
 
@@ -1299,12 +1299,12 @@ Public Sub UsuarioAtaca(ByVal UserIndex As Integer)
         'OBJETO DESTRUIBLE
         '-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
         
-        index = MapData(AttackPos.Map, AttackPos.X, AttackPos.Y).ObjInfo.ObjIndex
+        Index = MapData(AttackPos.Map, AttackPos.X, AttackPos.Y).ObjInfo.ObjIndex
         
         'Look for NPC
-        If index > 0 Then
+        If Index > 0 Then
         
-            If ObjData(index).OBJType = eOBJType.otArboles Or ObjData(index).OBJType = eOBJType.otYacimiento Then
+            If ObjData(Index).OBJType = eOBJType.otArboles Or ObjData(Index).OBJType = eOBJType.otYacimiento Then
                 Call UsuarioAtacaObj(UserIndex, AttackPos.Map, AttackPos.X, AttackPos.Y)
                 Call WriteUpdateUserStats(UserIndex)
                 Exit Sub
@@ -1385,7 +1385,7 @@ Private Function UsuarioAtacaObj(ByVal UserIndex As Integer, _
         Exit Function
     End If
     
-    PoderAtaque = MaximoInt(PoderAtaqueArma(UserIndex) * 10, RandomNumber(PoderAtaqueArma(UserIndex) * 10, PoderAtaqueArma(UserIndex) * 20))
+    PoderAtaque = MaximoInt(PoderAtaqueArma(UserIndex) * 2, RandomNumber(PoderAtaqueArma(UserIndex) * 2, PoderAtaqueArma(UserIndex) * 2))
     
     If PoderAtaque > 0 Then
     
@@ -1397,8 +1397,24 @@ Private Function UsuarioAtacaObj(ByVal UserIndex As Integer, _
             'Emitimos el sonido del recurso al ser destruido
             Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(ObjData(ObjIndex).ResourceNode.DestroySound, UserList(UserIndex).Pos.X, UserList(UserIndex).Pos.Y))
             
-            'TODO: Eliminar el obj o reemplazar el grafico y el estado (con el TotalHP se puede saber si esta vivo o muerto)
-            Debug.Print "TODO: Eliminar el obj o reemplazar el grafico y el estado (con el TotalHP se puede saber si esta vivo o muerto)"
+            'Quitamos el objeto
+            Call EraseObj(MapData(Map, X, Y).ObjInfo.Amount, Map, X, Y)
+            
+            '¿El objeto tenia algo que dropear?
+            If ObjData(ObjIndex).ResourceNode.ResourceIndex > 0 And ObjData(ObjIndex).ResourceNode.ResourceAmount > 0 Then
+                'Preparamos todo para el drop
+                Dim MiObj As obj
+                MiObj.Amount = ObjData(ObjIndex).ResourceNode.ResourceAmount
+                MiObj.ObjIndex = ObjData(ObjIndex).ResourceNode.ResourceIndex
+                
+                Dim ItemPos As WorldPos
+                ItemPos.Map = Map
+                ItemPos.X = X
+                ItemPos.Y = Y
+                
+                Call TirarItemAlPiso(ItemPos, MiObj)
+            End If
+            
         Else
             'Emitimos el sonido del recurso al ser golpeado
             Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(ObjData(ObjIndex).ResourceNode.SoundKnock, UserList(UserIndex).Pos.X, UserList(UserIndex).Pos.Y))
@@ -1422,6 +1438,7 @@ UsuarioAtacaObj_Err:
     
     Call LogError("Error en UsuarioAtacaObj. Error " & Err.Number & " : " & Err.description & ". User: " & UserIndex & "-> " & username & ". ObjIndex: " & ObjIndex & ".")
 End Function
+
 Private Function PuedeAtacarRecurso(ByVal UserIndex As Integer, _
                                     ByVal ObjIndex As Integer, _
                                     ByVal WeaponIndex As Integer, _

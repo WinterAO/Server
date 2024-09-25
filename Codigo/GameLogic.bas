@@ -1171,7 +1171,7 @@ Function LegalPosNPC(ByVal Map As Integer, _
 
 End Function
 
-Sub SendHelp(ByVal index As Integer)
+Sub SendHelp(ByVal Index As Integer)
     '***************************************************
     'Author: Unknown
     'Last Modification: -
@@ -1185,7 +1185,7 @@ Sub SendHelp(ByVal index As Integer)
     NumHelpLines = val(GetVar(DatPath & "Help.dat", "INIT", "NumLines"))
 
     For LoopC = 1 To NumHelpLines
-        Call WriteConsoleMsg(index, GetVar(DatPath & "Help.dat", "Help", "Line" & LoopC), FontTypeNames.FONTTYPE_INFO)
+        Call WriteConsoleMsg(Index, GetVar(DatPath & "Help.dat", "Help", "Line" & LoopC), FontTypeNames.FONTTYPE_INFO)
     Next LoopC
 
 End Sub
@@ -1295,11 +1295,18 @@ Sub LookatTile(ByVal UserIndex As Integer, _
                 If FoundSomething = 1 Then
                     .TargetObj = MapData(Map, .TargetObjX, .TargetObjY).ObjInfo.ObjIndex
 
-                    If MostrarCantidad(.TargetObj) Then
-                        Call WriteConsoleMsg(UserIndex, ObjData(.TargetObj).Name & " - " & MapData(.TargetObjMap, .TargetObjX, .TargetObjY).ObjInfo.Amount & "", FontTypeNames.FONTTYPE_INFO)
+                    If ObjData(MapData(Map, .TargetObjX, .TargetObjY).ObjInfo.ObjIndex).OBJType = eOBJType.otDestruible Or _
+                            ObjData(MapData(Map, .TargetObjX, .TargetObjY).ObjInfo.ObjIndex).OBJType = eOBJType.otArboles Or _
+                            ObjData(MapData(Map, .TargetObjX, .TargetObjY).ObjInfo.ObjIndex).OBJType = eOBJType.otYacimiento Then
+                            
+                            Call WriteConsoleMsg(UserIndex, ObjData(.TargetObj).Name & " (Resistencia: " & MapData(.TargetObjMap, .TargetObjX, .TargetObjY).ObjInfo.VidaUtil & ")", FontTypeNames.FONTTYPE_INFO)
                     Else
-                        Call WriteConsoleMsg(UserIndex, ObjData(.TargetObj).Name, FontTypeNames.FONTTYPE_INFO)
-
+                        If MostrarCantidad(.TargetObj) Then
+                            Call WriteConsoleMsg(UserIndex, ObjData(.TargetObj).Name & " - " & MapData(.TargetObjMap, .TargetObjX, .TargetObjY).ObjInfo.Amount & "", FontTypeNames.FONTTYPE_INFO)
+                        Else
+                            Call WriteConsoleMsg(UserIndex, ObjData(.TargetObj).Name, FontTypeNames.FONTTYPE_INFO)
+    
+                        End If
                     End If
       
                 End If
@@ -1854,28 +1861,28 @@ Function FindDirection(Pos As WorldPos, Target As WorldPos) As eHeading
  
 End Function
 
-Public Function ItemNoEsDeMapa(ByVal index As Integer) As Boolean
+Public Function ItemNoEsDeMapa(ByVal Index As Integer) As Boolean
     '***************************************************
     'Author: Unknown
     'Last Modification: -
     '
     '***************************************************
 
-    With ObjData(index)
+    With ObjData(Index)
         ItemNoEsDeMapa = .OBJType <> eOBJType.otPuertas And .OBJType <> eOBJType.otArboles And .OBJType <> eOBJType.otYacimiento And .OBJType <> eOBJType.otTeleport
     
     End With
 
 End Function
 
-Public Function MostrarCantidad(ByVal index As Integer) As Boolean
+Public Function MostrarCantidad(ByVal Index As Integer) As Boolean
     '***************************************************
     'Author: Unknown
     'Last Modification: -
     '
     '***************************************************
 
-    With ObjData(index)
+    With ObjData(Index)
         MostrarCantidad = .OBJType <> eOBJType.otPuertas And .OBJType <> eOBJType.otForos And .OBJType <> eOBJType.otCarteles And .OBJType <> eOBJType.otArboles And .OBJType <> eOBJType.otYacimiento And .OBJType <> eOBJType.otTeleport
 
     End With

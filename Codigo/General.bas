@@ -31,7 +31,7 @@ Option Explicit
 
 #If False Then
 
-    Dim X, Y, Map, K, errHandler, obj, index, n, Email As Variant
+    Dim X, Y, Map, K, errHandler, obj, Index, n, Email As Variant
 
 #End If
 
@@ -571,6 +571,7 @@ Private Sub LoadConstants()
 
     Set aClon = New clsAntiMassClon
     Set TrashCollector = New Collection
+    Set aItemManager = New clsWorldItemManager
 
 End Sub
 
@@ -1759,9 +1760,9 @@ Public Sub FreeCharIndexes()
 End Sub
 
 Public Sub ReproducirSonido(ByVal Destino As SendTarget, _
-                            ByVal index As Integer, _
+                            ByVal Index As Integer, _
                             ByVal SoundIndex As Integer)
-    Call SendData(Destino, index, PrepareMessagePlayWave(SoundIndex, UserList(index).Pos.X, UserList(index).Pos.Y))
+    Call SendData(Destino, Index, PrepareMessagePlayWave(SoundIndex, UserList(Index).Pos.X, UserList(Index).Pos.Y))
 
 End Sub
 
@@ -2110,7 +2111,7 @@ Public Function esMapaPortalEvento(ByVal Mapa As Integer) As Byte
 
 End Function
 
-Public Sub UpdateProgressBar(PictureBoxBarra As PictureBox, Max As Long, Value As Long, MaxWidth As Single)
+Public Sub UpdateProgressBar(PictureBoxBarra As PictureBox, max As Long, Value As Long, MaxWidth As Single)
 '************************************
 'Autor: Lorwik
 'Fecha: 20/09/2024
@@ -2118,8 +2119,8 @@ Public Sub UpdateProgressBar(PictureBoxBarra As PictureBox, Max As Long, Value A
 '************************************
 
     ' Nos aseguramos de que el valor esté dentro de los límites
-    If Value > Max Then Value = Max
+    If Value > max Then Value = max
     
-    PictureBoxBarra.Width = (Value / Max) * MaxWidth ' Proporción del progreso
+    PictureBoxBarra.Width = (Value / max) * MaxWidth ' Proporción del progreso
     DoEvents
 End Sub

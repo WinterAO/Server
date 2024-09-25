@@ -856,8 +856,6 @@ Sub LoadOBJData()
             
             .Newbie = val(Leer.GetValue("OBJ" & Object, "Newbie"))
             
-            .Shadow = val(Leer.GetValue("OBJ" & Object, "Shadow"))
-            
             Select Case .OBJType
 
                 Case eOBJType.otArmadura
@@ -967,7 +965,8 @@ Sub LoadOBJData()
                     .MinLevel = val(Leer.GetValue("OBJ" & Object, "MinLevel"))
                     
                 Case eOBJType.otForos
-                    Call AddForum(Leer.GetValue("OBJ" & Object, "ID"))
+                    .ForoID = Leer.GetValue("OBJ" & Object, "ID")
+                    Call AddForum(.ForoID)
                     
                 Case eOBJType.otPergaminos
                     .MinLevel = val(Leer.GetValue("OBJ" & Object, "MinLevel"))
@@ -989,6 +988,10 @@ Sub LoadOBJData()
                     .ResourceNode.DestroySound = val(Leer.GetValue("OBJ" & Object, "DestroySound"))
                     .ResourceNode.SoundKnock = val(Leer.GetValue("OBJ" & Object, "SoundKnock"))
                     
+                Case eOBJType.otCarteles
+                    .texto = Leer.GetValue("OBJ" & Object, "Texto")
+                    .GrhCartel = val(Leer.GetValue("OBJ" & Object, "GrhCartel"))
+                    
             End Select
             
             .Ropaje = val(Leer.GetValue("OBJ" & Object, "NumRopaje"))
@@ -1000,8 +1003,8 @@ Sub LoadOBJData()
             .RecetaIndex = val(Leer.GetValue("OBJ" & Object, "RecetaIndex"))
             .Profesion = val(Leer.GetValue("OBJ" & Object, "Profesion"))
             
-            .MaxHp = val(Leer.GetValue("OBJ" & Object, "MaxHP"))
-            .MinHp = val(Leer.GetValue("OBJ" & Object, "MinHP"))
+            '.MaxHp = val(Leer.GetValue("OBJ" & Object, "MaxHP"))
+            '.MinHp = val(Leer.GetValue("OBJ" & Object, "MinHP"))
             
             .Mujer = val(Leer.GetValue("OBJ" & Object, "Mujer"))
             .Hombre = val(Leer.GetValue("OBJ" & Object, "Hombre"))
@@ -1036,12 +1039,8 @@ Sub LoadOBJData()
             
             'Puertas y llaves
             .Clave = val(Leer.GetValue("OBJ" & Object, "Clave"))
-            
-            .texto = Leer.GetValue("OBJ" & Object, "Texto")
-            .GrhSecundario = val(Leer.GetValue("OBJ" & Object, "VGrande"))
-            
+     
             .Agarrable = val(Leer.GetValue("OBJ" & Object, "Agarrable"))
-            .ForoID = Leer.GetValue("OBJ" & Object, "ID")
             
             .Acuchilla = val(Leer.GetValue("OBJ" & Object, "Acuchilla"))
             
@@ -1502,15 +1501,11 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
 
                 With ObjData(Objetos(i).ObjIndex)
 
-                    Select Case .OBJType
-
-                        Case eOBJType.otYacimiento, eOBJType.otArboles, eOBJType.otDestruible
-                            MapData(Map, Objetos(i).X, Objetos(i).Y).ObjInfo.VidaUtil = ObjData(Objetos(i).ObjIndex).ResourceNode.TotalHP
-                            MapData(Map, Objetos(i).X, Objetos(i).Y).ObjInfo.MaxLong = &H7FFFFFFF ' Ultimo uso = Max Long
-
-                        Case Else
-                            MapData(Map, Objetos(i).X, Objetos(i).Y).ObjInfo.Amount = Objetos(i).ObjAmmount
-                    End Select
+                    If .OBJType = eOBJType.otYacimiento Or .OBJType = eOBJType.otArboles Or .OBJType = eOBJType.otDestruible Then
+                        MapData(Map, Objetos(i).X, Objetos(i).Y).ObjInfo.VidaUtil = ObjData(Objetos(i).ObjIndex).ResourceNode.TotalHP
+                    Else
+                        MapData(Map, Objetos(i).X, Objetos(i).Y).ObjInfo.VidaUtil = 0
+                    End If
                 End With
             Next i
 
