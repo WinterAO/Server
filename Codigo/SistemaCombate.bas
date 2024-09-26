@@ -1304,7 +1304,7 @@ Public Sub UsuarioAtaca(ByVal UserIndex As Integer)
         'Look for NPC
         If Index > 0 Then
         
-            If ObjData(Index).OBJType = eOBJType.otArboles Or ObjData(Index).OBJType = eOBJType.otYacimiento Then
+            If ObjData(Index).OBJType = eOBJType.otDestruible Then
                 Call UsuarioAtacaObj(UserIndex, AttackPos.Map, AttackPos.X, AttackPos.Y)
                 Call WriteUpdateUserStats(UserIndex)
                 Exit Sub
@@ -1349,16 +1349,12 @@ Private Function UsuarioAtacaObj(ByVal UserIndex As Integer, _
     End If
     
     WeaponIndex = UserList(UserIndex).Invent.WeaponEqpObjIndex
+    Skill = ObjData(ObjIndex).ResourceNode.ProfessionSkill
     
-    Select Case ObjData(ObjIndex).OBJType
-    
-        Case eOBJType.otArboles
-            Skill = eSkill.Talar
-            
-        Case eOBJType.otYacimiento
-            Skill = eSkill.Mineria
-        
-        Case eOBJType.otDestruible
+    'Si el objeto no tenia un ProfessionSkill definido es que se trata de algo que no requiere una profesion como una roca...
+    If Skill < 1 Then
+
+            Skill = eSkill.Armas
 
             If WeaponIndex < 1 Then
                 Call WriteConsoleMsg(UserIndex, "Necesitas un arma para romper eso.", FontTypeNames.FONTTYPE_INFO)
@@ -1372,12 +1368,7 @@ Private Function UsuarioAtacaObj(ByVal UserIndex As Integer, _
                 Exit Function
             End If
             
-            Skill = eSkill.Armas
-            
-        Case Else 'No deberia llegar aqui, pero por si acaso...
-            UsuarioAtacaObj = False
-            Exit Function
-    End Select
+    End If
     
     ' Verificación del ataque a recursos
     If (Skill = eSkill.Talar Or Skill = eSkill.Mineria) And Not PuedeAtacarRecurso(UserIndex, ObjIndex, WeaponIndex, Skill) Then
@@ -1409,7 +1400,7 @@ Private Function UsuarioAtacaObj(ByVal UserIndex As Integer, _
                 
                 Dim ItemPos As WorldPos
                 ItemPos.Map = Map
-                ItemPos.X = X
+                ItemPos.X = X + 1
                 ItemPos.Y = Y
                 
                 Call TirarItemAlPiso(ItemPos, MiObj)

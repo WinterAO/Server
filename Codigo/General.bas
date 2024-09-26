@@ -1819,11 +1819,6 @@ Private Sub InicializarSonidos()
     SND_IMPACTO2 = 12
     SND_LENADOR = 13
     SND_FOGATA = 14
-    SND_AVE(1) = 21
-    SND_AVE(2) = 22
-    SND_AVE(3) = 34
-    SND_GRILLO(1) = 28
-    SND_GRILLO(2) = 29
     SND_SACARARMA = 25
     SND_ESCUDO(1) = 211
     SND_ESCUDO(2) = 212

@@ -979,14 +979,16 @@ Sub LoadOBJData()
                 Case eOBJType.otPaseVIP
                     .TiempoVIP = val(Leer.GetValue("OBJ" & Object, "TiempoVIP"))
                     
-                Case eOBJType.otArboles, eOBJType.otYacimiento
+                Case eOBJType.otDestruible
                     .ResourceNode.TotalHP = val(Leer.GetValue("OBJ" & Object, "TotalHP"))
+                    .ResourceNode.ProfessionSkill = val(Leer.GetValue("OBJ" & Object, "ProfessionSkill"))
                     .ResourceNode.RegenerationTime = val(Leer.GetValue("OBJ" & Object, "RegenerationTime"))
                     .ResourceNode.ResourceIndex = val(Leer.GetValue("OBJ" & Object, "ResourceIndex")) 'Index del recurso que porporciona
                     .ResourceNode.ResourceAmount = val(Leer.GetValue("OBJ" & Object, "ResourceAmount"))
                     .ResourceNode.Tier = val(Leer.GetValue("OBJ" & Object, "Tier"))
                     .ResourceNode.DestroySound = val(Leer.GetValue("OBJ" & Object, "DestroySound"))
                     .ResourceNode.SoundKnock = val(Leer.GetValue("OBJ" & Object, "SoundKnock"))
+                    .ResourceNode.GrhRemains = val(Leer.GetValue("OBJ" & Object, "GrhRemains"))
                     
                 Case eOBJType.otCarteles
                     .texto = Leer.GetValue("OBJ" & Object, "Texto")
@@ -1501,7 +1503,7 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
 
                 With ObjData(Objetos(i).ObjIndex)
 
-                    If .OBJType = eOBJType.otYacimiento Or .OBJType = eOBJType.otArboles Or .OBJType = eOBJType.otDestruible Then
+                    If .OBJType = eOBJType.otDestruible Then
                         MapData(Map, Objetos(i).X, Objetos(i).Y).ObjInfo.VidaUtil = ObjData(Objetos(i).ObjIndex).ResourceNode.TotalHP
                     Else
                         MapData(Map, Objetos(i).X, Objetos(i).Y).ObjInfo.VidaUtil = 0

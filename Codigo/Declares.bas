@@ -660,10 +660,6 @@ Public SND_LENADOR                      As Byte
 
 Public SND_FOGATA                       As Byte
 
-Public SND_AVE(1 To 3)                  As Byte
-
-Public SND_GRILLO(1 To 2)               As Byte
-
 Public SND_SACARARMA                    As Byte
 
 Public SND_ESCUDO(1 To 4)               As Byte
@@ -704,7 +700,7 @@ Public Enum eOBJType
     otUseOnce = 1
     otWeapon = 2
     otArmadura = 3
-    otArboles = 4
+    otDestruible = 4
     otOro = 5
     otPuertas = 6
     otContenedores = 7
@@ -722,7 +718,7 @@ Public Enum eOBJType
     otTeleport = 19
     otMuebles = 20
     otJoyas = 21 'Hacer algo con esto, no en uso
-    otYacimiento = 22
+    'Libre
     otMinerales = 23
     otPergaminos = 24
     otMonturas = 25
@@ -738,12 +734,11 @@ Public Enum eOBJType
     otManuales = 35
     otPasajes = 36
     otMochilas = 37
-    otYacimientoPez = 38
+    'LIBRE
     otRunaHogar = 39
     otInstruye = 40
     otPaseVIP = 41
     otHerramientas = 42
-    otDestruible = 43
     otCualquiera = 1000
 
 End Enum
@@ -1009,12 +1004,14 @@ End Enum
 Public Type tResourceNode
             
     TotalHP As Long
+    ProfessionSkill As Byte
     RegenerationTime As Integer
     ResourceIndex As Integer
     ResourceAmount As Integer
     Tier As Byte
     DestroySound As Integer
     SoundKnock As Integer
+    GrhRemains As Long
             
 End Type
 

@@ -599,7 +599,7 @@ Sub EraseObj(ByVal Num As Integer, _
             If ObjData(.ObjInfo.ObjIndex).ResourceNode.RegenerationTime >= 1 And NoRespawn = False Then _
                 Call aItemManager.AddItem(Map, X, Y, .ObjInfo.ObjIndex, ObjData(.ObjInfo.ObjIndex).ResourceNode.RegenerationTime)
                 
-            If ObjData(.ObjInfo.ObjIndex).OBJType = eOBJType.otArboles Or ObjData(.ObjInfo.ObjIndex).OBJType = eOBJType.otYacimiento Or ObjData(.ObjInfo.ObjIndex).OBJType = eOBJType.otDestruible Then
+            If ObjData(.ObjInfo.ObjIndex).OBJType = eOBJType.otDestruible Then
                 .Blocked = 0
                 Call Bloquear(True, Map, X, Y, .Blocked)
             End If
@@ -635,7 +635,7 @@ Sub MakeObj(ByRef obj As obj, _
     
         With MapData(Map, X, Y)
         
-            If ObjData(obj.ObjIndex).OBJType = eOBJType.otDestruible Or ObjData(obj.ObjIndex).OBJType = eOBJType.otArboles Or ObjData(obj.ObjIndex).OBJType = eOBJType.otYacimiento Then
+            If ObjData(obj.ObjIndex).OBJType = eOBJType.otDestruible Then
                 obj.VidaUtil = ObjData(obj.ObjIndex).ResourceNode.TotalHP
                 .Blocked = 1
                 Call Bloquear(True, Map, X, Y, .Blocked)
@@ -1015,8 +1015,7 @@ Function EsUsable(ByVal ObjIndex As Integer)
               eOBJType.otMuebles, _
               eOBJType.otPuertas, _
               eOBJType.otTeleport, _
-              eOBJType.otYacimiento, _
-              eOBJType.otYacimientoPez, _
+              eOBJType.otDestruible, _
               eOBJType.otYunque
          
             EsUsable = False

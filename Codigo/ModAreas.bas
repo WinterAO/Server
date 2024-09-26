@@ -241,6 +241,11 @@ Public Sub CheckUpdateNeededUser(ByVal UserIndex As Integer, ByVal Heading As By
                         If ObjData(CurUser).OBJType = eOBJType.otPuertas Then
                             Call Bloquear(False, UserIndex, X, Y, MapData(Map, X, Y).Blocked)
                             Call Bloquear(False, UserIndex, X - 1, Y, MapData(Map, X - 1, Y).Blocked)
+                            
+                        ElseIf ObjData(CurUser).OBJType = eOBJType.otDestruible Then
+                            MapData(Map, X, Y).Blocked = 1
+                            Call Bloquear(False, UserIndex, X, Y, MapData(Map, X, Y).Blocked)
+                            
                         End If
                     End If
                 End If
