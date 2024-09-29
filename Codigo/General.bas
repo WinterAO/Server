@@ -341,6 +341,7 @@ Sub Main()
     ' Server.ini & Apuestas.dat & Ciudades.dat
     frmCargando.lblStatus.Caption = "Cargando Server.ini"
     Call LoadSini 'Configuración general (Server.ini)
+    Call LoadIntervals
     Call Load_Rates 'Rates (Rates.ini)
     Call CargarExperiencias
     Call loadAdministrativeUsers 'Gms (GameMasters.ini)
