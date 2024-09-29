@@ -274,6 +274,10 @@ Public Sub loadAdministrativeUsers()
     'Especiales  => Especial
     'Consejeros  => Consejero
     'RoleMasters => RM
+    
+    If Not FileExist(ConfigPath & "GameMasters.ini", vbArchive) Then _
+        MsgBox "No se encontro el archivo de configuracion de GMs en " & ConfigPath & "GameMasters.ini" & ". El servidor se iniciara sin GM's configurados."
+    
     If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando Administradores/Dioses/Gms."
 
     'Si esta mierda tuviese array asociativos el codigo seria tan lindo.
@@ -624,6 +628,10 @@ Sub LoadMotd()
     'Last Modification: -
     '
     '***************************************************
+    
+    If Not FileExist(ConfigPath & "Motd.ini", vbArchive) Then _
+        MsgBox "No se ha encontrado el archivo " & ConfigPath & "Motd.ini. El servidor iniciara sin Motd's configurados."
+    
     If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando archivo MOTD.INI."
 
     Dim i As Integer
@@ -1814,9 +1822,10 @@ LoadIntervals_Err:
 End Sub
 
 Public Function Load_ConfigDatBase() As Boolean
-
-    Dim Lector As clsIniManager
-    Set Lector = New clsIniManager
+    '***************************************************
+    'Author: Lorwik
+    'Last Modification: ????
+    '***************************************************
     
     If frmMain.Visible Then
         frmMain.txtStatus.Text = "Cargando info de inicio del server."
@@ -1832,6 +1841,8 @@ Public Function Load_ConfigDatBase() As Boolean
         Exit Function
     End If
     
+    Dim Lector As clsIniManager
+    Set Lector = New clsIniManager
     
     Call Lector.Initialize(fileConfig)
     
@@ -1905,6 +1916,11 @@ Sub CargarCiudades()
     'Last Modification: 15/05/2019 (Jopi)
     'Jopi: Uso de clsIniManager para cargar los valores.
     '***************************************************
+    
+    If Not FileExist(DatPath & "Ciudades.dat", vbArchive) Then
+        MsgBox "No se ha encontrado el archivo de configuracion de ciudades en " & DatPath & "Ciudades.dat" & ". Se cancela el inicio del servidor."
+        End
+    End If
     
     If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando Ciudades.dat"
     
@@ -2213,11 +2229,20 @@ Public Sub CargaApuestas()
     'Last Modification: -
     '
     '***************************************************
+    
+    Dim fileDir As String
+    fileDir = DatPath & "apuestas.dat"
+    
+    If Not FileExist(fileDir, vbArchive) Then
+        MsgBox "No se ha encontrado el archivo " & DatPath & "apuestas.dat" & ". Se cancela el inicio del servidor."
+        End
+    End If
+    
     If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando apuestas.dat"
 
-    Apuestas.Ganancias = val(GetVar(DatPath & "apuestas.dat", "Main", "Ganancias"))
-    Apuestas.Perdidas = val(GetVar(DatPath & "apuestas.dat", "Main", "Perdidas"))
-    Apuestas.Jugadas = val(GetVar(DatPath & "apuestas.dat", "Main", "Jugadas"))
+    Apuestas.Ganancias = val(GetVar(fileDir, "Main", "Ganancias"))
+    Apuestas.Perdidas = val(GetVar(fileDir, "Main", "Perdidas"))
+    Apuestas.Jugadas = val(GetVar(fileDir, "Main", "Jugadas"))
 
     If frmMain.Visible Then frmMain.txtStatus.Text = Date & " " & time & " - Se cargo el archivo apuestas.dat"
 
@@ -2556,8 +2581,8 @@ Public Sub CargarExperiencias()
     If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando Experiencias."
     
     If Not FileExist(DatPath & "Experiencias.dat", vbArchive) Then
-        MsgBox "No se ha encontrado el archivo Experiencias.dat en la carpeta " & DatPath
-        Exit Sub
+        MsgBox "No se ha encontrado el archivo Experiencias.dat en la carpeta " & DatPath & ". Se cancela el inicio del servidor."
+        End
     End If
     
     Dim Lector     As clsIniManager
