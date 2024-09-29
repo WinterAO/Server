@@ -1419,27 +1419,27 @@ Private Sub SpellCasterDestroyWand(ByVal NPCIndex As Integer, ByVal spellIndex A
 
             Case 5
                 Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessageChatOverHead("Rahma", .Char.CharIndex, 0, 255, 0))
-                Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessagePlayWave(SONIDO_DRAGON_VIVO, .Pos.X, .Pos.Y))
+                Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessagePlayWave(SND_DRAGON_VIVO, .Pos.X, .Pos.Y))
 
             Case 4
                 Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessageChatOverHead("vortax", .Char.CharIndex, 0, 255, 0))
-                Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessagePlayWave(SONIDO_DRAGON_VIVO, .Pos.X, .Pos.Y))
+                Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessagePlayWave(SND_DRAGON_VIVO, .Pos.X, .Pos.Y))
 
             Case 3
                 Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessageChatOverHead("Zill", .Char.CharIndex, 0, 255, 0))
-                Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessagePlayWave(SONIDO_DRAGON_VIVO, .Pos.X, .Pos.Y))
+                Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessagePlayWave(SND_DRAGON_VIVO, .Pos.X, .Pos.Y))
 
             Case 2
                 Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessageChatOverHead("yaka E'nta", .Char.CharIndex, 0, 255, 0))
-                Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessagePlayWave(SONIDO_DRAGON_VIVO, .Pos.X, .Pos.Y))
+                Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessagePlayWave(SND_DRAGON_VIVO, .Pos.X, .Pos.Y))
 
             Case 1
                 Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessageChatOverHead("Korata!!", .Char.CharIndex, 0, 255, 0))
-                Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessagePlayWave(SONIDO_DRAGON_VIVO, .Pos.X, .Pos.Y))
+                Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessagePlayWave(SND_DRAGON_VIVO, .Pos.X, .Pos.Y))
 
             Case 0
                 Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessageChatOverHead(vbNullString, .Char.CharIndex, 0, 255, 0))
-                Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessagePlayWave(SONIDO_DRAGON_VIVO, .Pos.X, .Pos.Y))
+                Call SendData(SendTarget.ToNPCArea, NPCIndex, PrepareMessagePlayWave(SND_DRAGON_VIVO, .Pos.X, .Pos.Y))
                 
                 Call DealWandDamage(NPCIndex, .Spells(spellIndex))
 

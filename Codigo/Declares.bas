@@ -631,48 +631,36 @@ Public Const AumentoSTBrujo             As Byte = AumentoSTDef + 25
 
 'Sonidos
 Public SND_SWING                        As Byte
-
-Public SND_TALAR                        As Byte
-
 Public SND_PESCAR                       As Byte
-
-Public SND_MINERO                       As Integer
-
 Public SND_WARP                         As Byte
-
 Public SND_QUEST                        As Byte
-
 Public SND_QUESTTARGET                  As Integer
-
 Public SND_PUERTA                       As Byte
-
-Public SND_DROP                         As Integer
-
+Public SND_DROP                         As Byte
+Public SND_TIRAR_ORO                    As Byte
 Public SND_NIVEL                        As Byte
-
 Public SND_USERMUERTE                   As Byte
-
 Public SND_IMPACTO                      As Byte
-
 Public SND_IMPACTO2                     As Byte
-
-Public SND_LENADOR                      As Byte
-
 Public SND_FOGATA                       As Byte
-
 Public SND_SACARARMA                    As Byte
-
 Public SND_ESCUDO(1 To 4)               As Byte
-
 Public SND_TRABAJO_HERRERO              As Byte
-
-Public SND_TRABAJO_CARPINTERO           As Byte
-
+Public SND_CARPINTERO(1 To 3)           As Byte
 Public SND_BEBER                        As Byte
-
 Public SND_RESUCITAR_SACERDOTE          As Byte
-
 Public SND_CURAR_SACERDOTE              As Byte
+Public SND_ALQUIMIA                     As Byte
+Public SND_SASTRE                       As Byte
+Public SND_FRAGUA                       As Byte
+Public SND_HERRERO                      As Byte
+Public SND_NPC_EXPLOTA                  As Byte
+Public SND_NEW_GUILD                    As Byte
+Public SND_GUILD_WAR                    As Byte
+Public SND_NEW_MEMBER                   As Byte
+Public SND_KICK_GUILD                   As Byte
+Public SND_DRAGON_VIVO                  As Byte
+Public SND_EVENTO_PORTAL                As Byte
 
 ''
 ' Cantidad maxima de objetos por slot de inventario

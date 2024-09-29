@@ -312,8 +312,6 @@ Public Sub DejardeNavegar(ByVal UserIndex As Integer)
     End With
 End Sub
 
-
-
 Public Sub FundirMineral(ByVal UserIndex As Integer)
     '***************************************************
     'Author: Unknown
@@ -600,7 +598,7 @@ Public Sub HerreroConstruirItem(ByVal UserIndex As Integer, ByVal ItemIndex As I
             Call LogDesarrollo(.Name & " ha construido " & MiObj.Amount & " " & ObjData(MiObj.ObjIndex).Name)
         
         Call SubirSkill(UserIndex, eSkill.herreria, True)
-        Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_TRABAJO_HERRERO, .Pos.X, .Pos.Y))
+        Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_HERRERO, .Pos.X, .Pos.Y))
         
         If Not criminal(UserIndex) Then
             .Reputacion.PlebeRep = .Reputacion.PlebeRep + vlProleta
@@ -707,7 +705,11 @@ Public Sub CarpinteroConstruirItem(ByVal UserIndex As Integer, ByVal ItemIndex A
             End If
             
             Call SubirSkill(UserIndex, eSkill.Carpinteria, True)
-            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_TRABAJO_CARPINTERO, .Pos.X, .Pos.Y))
+            
+            Dim R As Byte
+            R = RandomNumber(1, 3)
+            
+            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_CARPINTERO(R), .Pos.X, .Pos.Y))
             
             If Not criminal(UserIndex) Then
                 .Reputacion.PlebeRep = .Reputacion.PlebeRep + vlProleta
@@ -803,7 +805,8 @@ Public Sub SastreConstruirItem(ByVal UserIndex As Integer, ByVal ItemIndex As In
             End If
             
             Call SubirSkill(UserIndex, eSkill.Sastreria, True)
-            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_TRABAJO_CARPINTERO, .Pos.X, .Pos.Y))
+            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_SASTRE, .Pos.X, .Pos.Y))
+            Debug.Print "TODO: SONIDO DE SASTRE"
             
             If Not criminal(UserIndex) Then
                 .Reputacion.PlebeRep = .Reputacion.PlebeRep + vlProleta
@@ -915,7 +918,7 @@ Public Sub AlquimistaConstruirItem(ByVal UserIndex As Integer, ByVal ItemIndex A
             End If
             
             Call SubirSkill(UserIndex, eSkill.Alquimia, True)
-            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_TRABAJO_CARPINTERO, .Pos.X, .Pos.Y))
+            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_ALQUIMIA, .Pos.X, .Pos.Y))
             
             If Not criminal(UserIndex) Then
                 .Reputacion.PlebeRep = .Reputacion.PlebeRep + vlProleta
@@ -1097,6 +1100,7 @@ Public Sub DoLingotes(ByVal UserIndex As Integer)
         
         Call UpdateUserInv(False, UserIndex, Slot)
         Call WriteConsoleMsg(UserIndex, "Has obtenido " & CantidadItems & " lingote" & IIf(CantidadItems = 1, "", "s") & "!", FontTypeNames.FONTTYPE_INFO)
+        Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_FRAGUA, .Pos.X, .Pos.Y))
     
         .Counters.Trabajando = .Counters.Trabajando + 1
 
@@ -2226,99 +2230,6 @@ Public Sub DoTalar(ByVal UserIndex As Integer, _
 
 errHandler:
     Call LogError("Error en DoTalar")
-
-End Sub
-
-Public Sub DoMineria(ByVal UserIndex As Integer)
-
-    '***************************************************
-    'Autor: Unknown
-    'Last Modification: 26/10/2018
-    '16/11/2009: ZaMa - Implementado nuevo sistema de extraccion.
-    '11/05/2010: ZaMa - Arreglo formula de maximo de items contruibles/extraibles.
-    '05/13/2010: Pato - Refix a la formula de maximo de items construibles/extraibles.
-    '22/05/2010: ZaMa - Los caos ya no suben plebe al trabajar.
-    '28/05/2010: ZaMa - Los pks no suben plebe al trabajar.
-    '26/10/2018: CHOTS - Multiplicador de oficios
-    '***************************************************
-    On Error GoTo errHandler
-
-    Dim Suerte        As Integer
-
-    Dim res           As Integer
-
-    Dim MAXITEMS      As Integer
-
-    Dim CantidadItems As Integer
-
-    With UserList(UserIndex)
-
-        Call QuitarSta(UserIndex, EsfuerzoExtraer)
-
-        Dim Skill As Integer
-
-        Skill = .Stats.UserSkills(eSkill.Mineria)
-        Suerte = Int(-0.00125 * Skill * Skill - 0.3 * Skill + 49)
-    
-        res = RandomNumber(1, Suerte)
-
-        If res <= DificultadExtraer Then
-
-            Dim MiObj As obj
-        
-            If .flags.TargetObj = 0 Then Exit Sub
-        
-            MiObj.ObjIndex = ObjData(.flags.TargetObj).RecursoIndex
-        
-            MAXITEMS = MaxItemsExtraibles(.Stats.ELV)
-            
-            CantidadItems = RandomNumber(1, MAXITEMS)
-
-            CantidadItems = CantidadItems * OficioMultiplier
-
-            MiObj.Amount = CantidadItems
-       
-            If Not MeterItemEnInventario(UserIndex, MiObj) Then Call TirarItemAlPiso(.Pos, MiObj)
-        
-            Call WriteConsoleMsg(UserIndex, "Has extraido algunos minerales!", FontTypeNames.FONTTYPE_INFO)
-            
-            'Renderizo el dano en render.
-            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageCreateDamage(.Pos.X, .Pos.Y, MiObj.Amount, DAMAGE_TRABAJO))
-            Call WriteMessageCreateDamage(UserIndex, MiObj.Amount, DAMAGE_TRABAJO)
-            
-            Call SubirSkill(UserIndex, eSkill.Mineria, True)
-        Else
-
-            '[CDT 17-02-2004]
-            If Not .flags.UltimoMensaje = 9 Then
-                Call WriteConsoleMsg(UserIndex, "No has conseguido nada!", FontTypeNames.FONTTYPE_INFO)
-                .flags.UltimoMensaje = 9
-
-            End If
-
-            '[/CDT]
-            Call SubirSkill(UserIndex, eSkill.Mineria, False)
-
-        End If
-    
-        If Not criminal(UserIndex) Then
-            .Reputacion.PlebeRep = .Reputacion.PlebeRep + vlProleta
-
-            If .Reputacion.PlebeRep > MAXREP Then .Reputacion.PlebeRep = MAXREP
-
-        End If
-    
-        .Counters.Trabajando = .Counters.Trabajando + 1
-        
-        'Play sound!
-        Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_MINERO, .Pos.X, .Pos.Y))
-
-    End With
-
-    Exit Sub
-
-errHandler:
-    Call LogError("Error en Sub DoMineria")
 
 End Sub
 

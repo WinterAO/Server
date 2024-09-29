@@ -3769,7 +3769,7 @@ Private Sub HandleCreateNewGuild(ByVal UserIndex As Integer)
             Message = .Name & " fundo el clan " & GuildName & " de alineacion " & modGuilds.GuildAlignment(.GuildIndex)
 
             Call SendData(SendTarget.Toall, UserIndex, PrepareMessageConsoleMsg(Message, FontTypeNames.FONTTYPE_GUILD))
-            Call SendData(SendTarget.Toall, 0, PrepareMessagePlayWave(44, NO_3D_SOUND, NO_3D_SOUND))
+            Call SendData(SendTarget.Toall, 0, PrepareMessagePlayWave(SND_NEW_GUILD, NO_3D_SOUND, NO_3D_SOUND))
             
             'Update tag
             Call RefreshCharStatus(UserIndex)
@@ -5332,8 +5332,8 @@ Private Sub HandleGuildDeclareWar(ByVal UserIndex As Integer)
             'WAR shall be!
             Call SendData(SendTarget.ToGuildMembers, .GuildIndex, PrepareMessageConsoleMsg("TU CLAN HA ENTRADO EN GUERRA CON " & Guild & ".", FontTypeNames.FONTTYPE_GUILD))
             Call SendData(SendTarget.ToGuildMembers, otherGuildIndex, PrepareMessageConsoleMsg(modGuilds.GuildName(.GuildIndex) & " LE DECLARA LA GUERRA A TU CLAN.", FontTypeNames.FONTTYPE_GUILD))
-            Call SendData(SendTarget.ToGuildMembers, .GuildIndex, PrepareMessagePlayWave(45, NO_3D_SOUND, NO_3D_SOUND))
-            Call SendData(SendTarget.ToGuildMembers, otherGuildIndex, PrepareMessagePlayWave(45, NO_3D_SOUND, NO_3D_SOUND))
+            Call SendData(SendTarget.ToGuildMembers, .GuildIndex, PrepareMessagePlayWave(SND_GUILD_WAR, NO_3D_SOUND, NO_3D_SOUND))
+            Call SendData(SendTarget.ToGuildMembers, otherGuildIndex, PrepareMessagePlayWave(SND_GUILD_WAR, NO_3D_SOUND, NO_3D_SOUND))
 
         End If
         
@@ -5461,7 +5461,7 @@ Private Sub HandleGuildAcceptNewMember(ByVal UserIndex As Integer)
             End If
             
             Call SendData(SendTarget.ToGuildMembers, .GuildIndex, PrepareMessageConsoleMsg(username & " ha sido aceptado como miembro del clan.", FontTypeNames.FONTTYPE_GUILD))
-            Call SendData(SendTarget.ToGuildMembers, .GuildIndex, PrepareMessagePlayWave(43, NO_3D_SOUND, NO_3D_SOUND))
+            Call SendData(SendTarget.ToGuildMembers, .GuildIndex, PrepareMessagePlayWave(SND_NEW_MEMBER, NO_3D_SOUND, NO_3D_SOUND))
 
         End If
         
@@ -5604,7 +5604,7 @@ Private Sub HandleGuildKickMember(ByVal UserIndex As Integer)
         
         If GuildIndex > 0 Then
             Call SendData(SendTarget.ToGuildMembers, GuildIndex, PrepareMessageConsoleMsg(username & " fue expulsado del clan.", FontTypeNames.FONTTYPE_GUILD))
-            Call SendData(SendTarget.ToGuildMembers, GuildIndex, PrepareMessagePlayWave(45, NO_3D_SOUND, NO_3D_SOUND))
+            Call SendData(SendTarget.ToGuildMembers, GuildIndex, PrepareMessagePlayWave(SND_KICK_GUILD, NO_3D_SOUND, NO_3D_SOUND))
         Else
             Call WriteConsoleMsg(UserIndex, "No puedes expulsar ese personaje del clan.", FontTypeNames.FONTTYPE_GUILD)
 

@@ -365,6 +365,8 @@ Sub TirarOro(ByVal Cantidad As Long, ByVal UserIndex As Integer)
 
                 End If
                 
+                Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_TIRAR_ORO, UserList(UserIndex).Pos.X, UserList(UserIndex).Pos.Y))
+                
             Loop
 
             If TeniaOro = .Stats.Gld Then Extra = 0

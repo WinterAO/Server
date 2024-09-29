@@ -1604,12 +1604,13 @@ End Sub
 Sub LoadSini()
 '***************************************************
 'Author: Unknown
-'Last Modification: 13/11/2019 (Recox)
+'Last Modification: 29/09/2024
 'CHOTS: Database params
 'Cucsifae: Agregados multiplicadores exp y oro
 'CHOTS: Agregado multiplicador oficio
 'CHOTS: Agregado min y max Dados
 'Jopi: Uso de clsIniManager para cargar los valores.
+'Lorwik: Muevo los intervalos a otro archivo
 '***************************************************
 
     Dim Temporal As Long
@@ -1678,60 +1679,6 @@ Sub LoadSini()
 
     'Atributos Iniciales
     EstadisticasInicialesUsarConfiguracionPersonalizada = CBool(val(Lector.GetValue("ESTADISTICASINICIALESPJ", "Activado")))
-
-    'Intervalos
-    'TODO: Mover a otro archivo
-    SanaIntervaloSinDescansar = val(Lector.GetValue("INTERVALOS", "SanaIntervaloSinDescansar"))
-    StaminaIntervaloSinDescansar = val(Lector.GetValue("INTERVALOS", "StaminaIntervaloSinDescansar"))
-    SanaIntervaloDescansar = val(Lector.GetValue("INTERVALOS", "SanaIntervaloDescansar"))
-    StaminaIntervaloDescansar = val(Lector.GetValue("INTERVALOS", "StaminaIntervaloDescansar"))
-    StaminaIntervaloLloviendo = val(Lector.GetValue("INTERVALOS", "StaminaIntervaloLloviendo"))
-    IntervaloSed = val(Lector.GetValue("INTERVALOS", "IntervaloSed"))
-    IntervaloHambre = val(Lector.GetValue("INTERVALOS", "IntervaloHambre"))
-    IntervaloVeneno = val(Lector.GetValue("INTERVALOS", "IntervaloVeneno"))
-    IntervaloIncinerado = val(Lector.GetValue("INTERVALOS", "IntervaloIncinerado"))
-    IntervaloParalizado = val(Lector.GetValue("INTERVALOS", "IntervaloParalizado"))
-    IntervaloInvisible = val(Lector.GetValue("INTERVALOS", "IntervaloInvisible"))
-    IntervaloFrio = val(Lector.GetValue("INTERVALOS", "IntervaloFrio"))
-    IntervaloWavFx = val(Lector.GetValue("INTERVALOS", "IntervaloWAVFX"))
-    IntervaloNPCPuedeAtacar = val(Lector.GetValue("INTERVALOS", "IntervaloNpcPuedeAtacar"))
-    IntervaloInvocacion = val(Lector.GetValue("INTERVALOS", "IntervaloInvocacion"))
-    IntervaloParaConexion = val(Lector.GetValue("INTERVALOS", "IntervaloParaConexion"))
-    IntervaloUserPuedeCastear = val(Lector.GetValue("INTERVALOS", "IntervaloLanzaHechizo"))
-    IntervaloUserPuedeTrabajar = val(Lector.GetValue("INTERVALOS", "IntervaloTrabajo"))
-    IntervaloUserPuedeAtacar = val(Lector.GetValue("INTERVALOS", "IntervaloUserPuedeAtacar"))
-    INTERVALO_GLOBAL = val(Lector.GetValue("INTERVALOS", "IntervaloGlobal"))
-    IntervaloPuedeMakrear = val(Lector.GetValue("INTERVALOS", "IntervaloMakreo"))
-    IntervaloCaminar = val(Lector.GetValue("INTERVALOS", "IntervaloCaminar"))
-    
-    'TODO : Agregar estos intervalos al form!!!
-    IntervaloMagiaGolpe = val(Lector.GetValue("INTERVALOS", "IntervaloMagiaGolpe"))
-    IntervaloGolpeMagia = val(Lector.GetValue("INTERVALOS", "IntervaloGolpeMagia"))
-    IntervaloGolpeUsar = val(Lector.GetValue("INTERVALOS", "IntervaloGolpeUsar"))
-    IntervaloOcultable = val(Lector.GetValue("INTERVALOS", "IntervaloPuedeOcultar"))
-    
-    '&&&&&&&&&&&&&&&&&&&&& ANTICHEAT &&&&&&&&&&&&&&&&&&&&&&&
-    MaximoSpeedHack = val(Lector.GetValue("ANTICHEAT", "MaximoSpeedHack"))
-    
-    '&&&&&&&&&&&&&&&&&&&&& TIMERS &&&&&&&&&&&&&&&&&&&&&&&
-    IntervaloPuedeSerAtacado = val(Lector.GetValue("TIMERS", "IntervaloPuedeSerAtacado"))
-    IntervaloAtacable = val(Lector.GetValue("TIMERS", "IntervaloAtacable"))
-    IntervaloOwnedNpc = val(Lector.GetValue("TIMERS", "IntervaloOwnedNpc"))
-    
-
-    MinutosWs = val(Lector.GetValue("INTERVALOS", "IntervaloWS"))
-
-    If MinutosWs < 60 Then MinutosWs = 180
-    
-    MinutosGuardarUsuarios = val(Lector.GetValue("INTERVALOS", "IntervaloGuardarUsuarios"))
-    IntervaloCerrarConexion = val(Lector.GetValue("INTERVALOS", "IntervaloCerrarConexion"))
-    IntervaloReconexionDB = val(Lector.GetValue("INTERVALOS", "IntervaloReconexionDB"))
-    IntervaloUserPuedeUsar = val(Lector.GetValue("INTERVALOS", "IntervaloUserPuedeUsar"))
-    IntervaloFlechasCazadores = val(Lector.GetValue("INTERVALOS", "IntervaloFlechasCazadores"))
-    
-    IntervaloOculto = val(Lector.GetValue("INTERVALOS", "IntervaloOculto"))
-    
-    '&&&&&&&&&&&&&&&&&&&&& FIN TIMERS &&&&&&&&&&&&&&&&&&&&&&&
       
     RecordUsuariosOnline = val(Lector.GetValue("INIT", "Record"))
 
@@ -1785,6 +1732,87 @@ Sub LoadSini()
     
 End Sub
 
+Public Sub LoadIntervals()
+'***************************************************
+'Author: Lorwik
+'Last Modification: 29/09/2024
+'***************************************************
+
+    On Error GoTo LoadIntervals_Err
+    
+    If Not FileExist(ConfigPath & "Intervalos.ini") Then
+        MsgBox "No se ha encontrado el archivo Intervalos.ini en la carpeta de configuración, se cancela el inicio del servidor."
+        End
+    End If
+    
+    If frmMain.Visible Then
+        frmMain.txtStatus.Text = "Cargando Intervalos."
+    End If
+    
+    Dim Lector As clsIniManager
+    Set Lector = New clsIniManager
+    
+    Call Lector.Initialize(ConfigPath & "Intervalos.ini")
+    
+    'Intervalos
+    SanaIntervaloSinDescansar = val(Lector.GetValue("INTERVALOS", "SanaIntervaloSinDescansar"))
+    StaminaIntervaloSinDescansar = val(Lector.GetValue("INTERVALOS", "StaminaIntervaloSinDescansar"))
+    SanaIntervaloDescansar = val(Lector.GetValue("INTERVALOS", "SanaIntervaloDescansar"))
+    StaminaIntervaloDescansar = val(Lector.GetValue("INTERVALOS", "StaminaIntervaloDescansar"))
+    StaminaIntervaloLloviendo = val(Lector.GetValue("INTERVALOS", "StaminaIntervaloLloviendo"))
+    IntervaloSed = val(Lector.GetValue("INTERVALOS", "IntervaloSed"))
+    IntervaloHambre = val(Lector.GetValue("INTERVALOS", "IntervaloHambre"))
+    IntervaloVeneno = val(Lector.GetValue("INTERVALOS", "IntervaloVeneno"))
+    IntervaloIncinerado = val(Lector.GetValue("INTERVALOS", "IntervaloIncinerado"))
+    IntervaloParalizado = val(Lector.GetValue("INTERVALOS", "IntervaloParalizado"))
+    IntervaloInvisible = val(Lector.GetValue("INTERVALOS", "IntervaloInvisible"))
+    IntervaloFrio = val(Lector.GetValue("INTERVALOS", "IntervaloFrio"))
+    IntervaloWavFx = val(Lector.GetValue("INTERVALOS", "IntervaloWAVFX"))
+    IntervaloNPCPuedeAtacar = val(Lector.GetValue("INTERVALOS", "IntervaloNpcPuedeAtacar"))
+    IntervaloInvocacion = val(Lector.GetValue("INTERVALOS", "IntervaloInvocacion"))
+    IntervaloParaConexion = val(Lector.GetValue("INTERVALOS", "IntervaloParaConexion"))
+    IntervaloUserPuedeCastear = val(Lector.GetValue("INTERVALOS", "IntervaloLanzaHechizo"))
+    IntervaloUserPuedeTrabajar = val(Lector.GetValue("INTERVALOS", "IntervaloTrabajo"))
+    IntervaloUserPuedeAtacar = val(Lector.GetValue("INTERVALOS", "IntervaloUserPuedeAtacar"))
+    INTERVALO_GLOBAL = val(Lector.GetValue("INTERVALOS", "IntervaloGlobal"))
+    IntervaloPuedeMakrear = val(Lector.GetValue("INTERVALOS", "IntervaloMakreo"))
+    IntervaloCaminar = val(Lector.GetValue("INTERVALOS", "IntervaloCaminar"))
+    
+    'TODO : Agregar estos intervalos al form!!!
+    IntervaloMagiaGolpe = val(Lector.GetValue("INTERVALOS", "IntervaloMagiaGolpe"))
+    IntervaloGolpeMagia = val(Lector.GetValue("INTERVALOS", "IntervaloGolpeMagia"))
+    IntervaloGolpeUsar = val(Lector.GetValue("INTERVALOS", "IntervaloGolpeUsar"))
+    IntervaloOcultable = val(Lector.GetValue("INTERVALOS", "IntervaloPuedeOcultar"))
+    
+    MinutosWs = val(Lector.GetValue("INTERVALOS", "IntervaloWS"))
+
+    If MinutosWs < 60 Then MinutosWs = 180
+    
+    MinutosGuardarUsuarios = val(Lector.GetValue("INTERVALOS", "IntervaloGuardarUsuarios"))
+    IntervaloCerrarConexion = val(Lector.GetValue("INTERVALOS", "IntervaloCerrarConexion"))
+    IntervaloReconexionDB = val(Lector.GetValue("INTERVALOS", "IntervaloReconexionDB"))
+    IntervaloUserPuedeUsar = val(Lector.GetValue("INTERVALOS", "IntervaloUserPuedeUsar"))
+    IntervaloFlechasCazadores = val(Lector.GetValue("INTERVALOS", "IntervaloFlechasCazadores"))
+    
+    IntervaloOculto = val(Lector.GetValue("INTERVALOS", "IntervaloOculto"))
+    
+    '&&&&&&&&&&&&&&&&&&&&& ANTICHEAT &&&&&&&&&&&&&&&&&&&&&&&
+    MaximoSpeedHack = val(Lector.GetValue("ANTICHEAT", "MaximoSpeedHack"))
+    
+    '&&&&&&&&&&&&&&&&&&&&& TIMERS &&&&&&&&&&&&&&&&&&&&&&&
+    IntervaloPuedeSerAtacado = val(Lector.GetValue("TIMERS", "IntervaloPuedeSerAtacado"))
+    IntervaloAtacable = val(Lector.GetValue("TIMERS", "IntervaloAtacable"))
+    IntervaloOwnedNpc = val(Lector.GetValue("TIMERS", "IntervaloOwnedNpc"))
+    '&&&&&&&&&&&&&&&&&&&&& FIN TIMERS &&&&&&&&&&&&&&&&&&&&&&&
+    
+    Set Lector = Nothing
+    
+    Exit Sub
+    
+LoadIntervals_Err:
+    
+End Sub
+
 Public Function Load_ConfigDatBase() As Boolean
 
     Dim Lector As clsIniManager
@@ -1822,9 +1850,18 @@ Public Function Load_ConfigDatBase() As Boolean
 End Function
 
 Public Sub Load_Rates()
-
+    '***************************************************
+    'Author: Lorwik
+    'Last Modification: 29/09/2024
+    '***************************************************
+    
     Dim Lector As clsIniManager
     Set Lector = New clsIniManager
+    
+    If Not FileExist(ConfigPath & "rates.ini") Then
+        MsgBox "No se ha encontrado el archivo Rates.ini en la carpeta de confiración. Se cancela el inicio del servidor."
+        End
+    End If
     
     If frmMain.Visible Then
         frmMain.txtStatus.Text = "Cargando info de inicio del server."
@@ -1855,6 +1892,7 @@ Sub CargarCiudades()
     'Last Modification: 15/05/2019 (Jopi)
     'Jopi: Uso de clsIniManager para cargar los valores.
     '***************************************************
+    
     If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando Ciudades.dat"
     
     Dim Lector As clsIniManager: Set Lector = New clsIniManager
@@ -2528,4 +2566,74 @@ CargarExperiencias_Err:
 
     'Call RegistrarError(Err.Number, Err.description, "ES.CargarExperiencias", Erl)
     Resume Next
+End Sub
+
+Public Sub InicializarSonidos()
+'****************************************
+'Autor: Lorwik
+'Fecha: 01/05/2020
+'Descripción: Inicializa las variable de los Sonidos
+'Ultima modificacion: 29/09/2024 - Lorwik: Ahora se cargan desde un .ini
+'****************************************
+
+    On Error GoTo InicializarSonidos_Err
+
+    If Not FileExist(ConfigPath & "sonidos.ini") Then
+        MsgBox "No se ha encontrado el archivo sonidos.ini en la carpeta de confiración. Se cancela el inicio del servidor."
+        End
+    End If
+    
+    If frmMain.Visible Then
+        frmMain.txtStatus.Text = "Cargando Sonidos."
+    End If
+    
+    Dim Lector As clsIniManager
+    Set Lector = New clsIniManager
+    
+    Call Lector.Initialize(ConfigPath & "Sonidos.ini")
+
+    SND_PESCAR = val(Lector.GetValue("SOUNDS", "SND_PESCAR"))
+    SND_CARPINTERO(1) = val(Lector.GetValue("SOUNDS", "SND_CARPINTERO1"))
+    SND_CARPINTERO(2) = val(Lector.GetValue("SOUNDS", "SND_CARPINTERO2"))
+    SND_CARPINTERO(3) = val(Lector.GetValue("SOUNDS", "SND_CARPINTERO3"))
+    SND_HERRERO = val(Lector.GetValue("SOUNDS", "SND_HERRERO"))
+    SND_ALQUIMIA = val(Lector.GetValue("SOUNDS", "SND_ALQUIMI"))
+    SND_SASTRE = val(Lector.GetValue("SOUNDS", "SND_SASTRE"))
+    SND_SWING = val(Lector.GetValue("SOUNDS", "SND_SWING"))
+    SND_DROP = val(Lector.GetValue("SOUNDS", "SND_DROP"))
+    SND_PUERTA = val(Lector.GetValue("SOUNDS", "SND_PUERTA"))
+    SND_SACARARMA = val(Lector.GetValue("SOUNDS", "SND_SACARARMA"))
+    SND_WARP = val(Lector.GetValue("SOUNDS", "SND_WARP"))
+    SND_ESCUDO(1) = val(Lector.GetValue("SOUNDS", "SND_ESCUDO1"))
+    SND_ESCUDO(2) = val(Lector.GetValue("SOUNDS", "SND_ESCUDO2"))
+    SND_ESCUDO(3) = val(Lector.GetValue("SOUNDS", "SND_ESCUDO3"))
+    SND_ESCUDO(4) = val(Lector.GetValue("SOUNDS", "SND_ESCUDO4"))
+    SND_BEBER = val(Lector.GetValue("SOUNDS", "SND_BEBER"))
+    SND_NIVEL = val(Lector.GetValue("SOUNDS", "SND_NIVEL"))
+    SND_CURAR_SACERDOTE = val(Lector.GetValue("SOUNDS", "SND_CURAR_SACERDOTE"))
+    SND_RESUCITAR_SACERDOTE = val(Lector.GetValue("SOUNDS", "SND_RESUCITAR_SACERDOTE"))
+    SND_USERMUERTE = val(Lector.GetValue("SOUNDS", "SND_USERMUERTE"))
+    SND_IMPACTO = val(Lector.GetValue("SOUNDS", "SND_IMPACTO"))
+    SND_IMPACTO2 = val(Lector.GetValue("SOUNDS", "SND_IMPACTO2"))
+    SND_FRAGUA = val(Lector.GetValue("SOUNDS", "SND_FRAGUA"))
+    SND_TIRAR_ORO = val(Lector.GetValue("SOUNDS", "SND_TIRAR_ORO"))
+    SND_NPC_EXPLOTA = val(Lector.GetValue("SOUNDS", "SND_NPC_EXPLOTA"))
+    SND_NEW_GUILD = val(Lector.GetValue("SOUNDS", "SND_NEW_GUILD"))
+    SND_GUILD_WAR = val(Lector.GetValue("SOUNDS", "SND_GUILD_WAR"))
+    SND_NEW_MEMBER = val(Lector.GetValue("SOUNDS", "SND_NEW_MEMBER"))
+    SND_KICK_GUILD = val(Lector.GetValue("SOUNDS", "SND_KICK_GUILD"))
+    SND_DRAGON_VIVO = val(Lector.GetValue("SOUNDS", "SND_DRAGON_VIVO"))
+    SND_EVENTO_PORTAL = val(Lector.GetValue("SOUNDS", "SND_EVENTO_PORTAL"))
+    SND_QUEST = val(Lector.GetValue("SOUNDS", "SND_QUEST"))
+    SND_QUESTTARGET = val(Lector.GetValue("SOUNDS", "SND_QUESTTARGET"))
+    SND_FOGATA = val(Lector.GetValue("SOUNDS", "SND_FOGATA"))
+    
+    Set Lector = Nothing
+    
+    Exit Sub
+    
+InicializarSonidos_Err:
+    Call TraceError(Err.Number, Err.description, "ES.InicializarSonidos", Erl)
+    Resume Next
+    
 End Sub

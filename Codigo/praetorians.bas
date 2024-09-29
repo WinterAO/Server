@@ -56,11 +56,6 @@ Public MAPA_PRETORIANO          As Byte
 Public PRETORIANO_X             As Integer
 Public PRETORIANO_Y             As Integer
 
-''''''''''''''''''''''''''''''''''''''''''''''
-''Estos numeros son necesarios por cuestiones de
-''sonido. Son los numeros de los wavs del cliente.
-Public Const SONIDO_DRAGON_VIVO As Integer = 30
-
 '''ALCOBAS REALES
 '''OJO LOS BICHOS TAN HARDCODEADOS, NO CAMBIAR EL MAPA DONDE
 '''ESTaN UBICADOS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

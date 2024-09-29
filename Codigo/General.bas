@@ -1798,41 +1798,6 @@ Public Sub CloseServer()
     End
 End Sub
 
-Private Sub InicializarSonidos()
-'****************************************
-'Autor: Lorwik
-'Fecha: 01/05/2020
-'Descripción: Inicializa las variable de los Sonidos
-'****************************************
-
-    SND_SWING = 2
-    SND_TALAR = 13
-    SND_PESCAR = 71
-    SND_MINERO = 261
-    SND_WARP = 3
-    SND_QUEST = 109
-    SND_QUESTTARGET = 444
-    SND_PUERTA = 5
-    SND_NIVEL = 128
-    SND_USERMUERTE = 11
-    SND_IMPACTO = 10
-    SND_IMPACTO2 = 12
-    SND_LENADOR = 13
-    SND_FOGATA = 14
-    SND_SACARARMA = 25
-    SND_ESCUDO(1) = 211
-    SND_ESCUDO(2) = 212
-    SND_ESCUDO(3) = 213
-    SND_ESCUDO(4) = 214
-    SND_TRABAJO_HERRERO = 150
-    SND_TRABAJO_CARPINTERO = 168
-    SND_BEBER = 135
-    SND_RESUCITAR_SACERDOTE = 103
-    SND_CURAR_SACERDOTE = 104
-    SND_DROP = 484
-    
-End Sub
-
 Public Sub LogGlobal(ByVal str As String)
 '***************************************************
 'Autor: Lorwik

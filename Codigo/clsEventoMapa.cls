@@ -60,7 +60,7 @@ Public Sub IniciarEvento()
     ET.ObjIndex = 378
     
     Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("[EVENTO] Se ha abierto un portal misterioso en " & MapZonas(PortalMap, MapData(evMapa, evX, evY).ZonaIndex).Name, FontTypeNames.FONTTYPE_SERVER))
-    Call SendData(SendTarget.Toall, 0, PrepareMessagePlayWave(355, NO_3D_SOUND, NO_3D_SOUND))
+    Call SendData(SendTarget.Toall, 0, PrepareMessagePlayWave(SND_EVENTO_PORTAL, NO_3D_SOUND, NO_3D_SOUND))
     Call MakeObj(ET, PortalMap, PortalX, PortalY)
     
     With MapData(PortalMap, PortalX, PortalY)
