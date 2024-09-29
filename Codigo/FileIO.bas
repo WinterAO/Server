@@ -2230,19 +2230,19 @@ Public Sub CargaApuestas()
     '
     '***************************************************
     
-    Dim fileDir As String
-    fileDir = DatPath & "apuestas.dat"
+    Dim FileDir As String
+    FileDir = DatPath & "apuestas.dat"
     
-    If Not FileExist(fileDir, vbArchive) Then
+    If Not FileExist(FileDir, vbArchive) Then
         MsgBox "No se ha encontrado el archivo " & DatPath & "apuestas.dat" & ". Se cancela el inicio del servidor."
         End
     End If
     
     If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando apuestas.dat"
 
-    Apuestas.Ganancias = val(GetVar(fileDir, "Main", "Ganancias"))
-    Apuestas.Perdidas = val(GetVar(fileDir, "Main", "Perdidas"))
-    Apuestas.Jugadas = val(GetVar(fileDir, "Main", "Jugadas"))
+    Apuestas.Ganancias = val(GetVar(FileDir, "Main", "Ganancias"))
+    Apuestas.Perdidas = val(GetVar(FileDir, "Main", "Perdidas"))
+    Apuestas.Jugadas = val(GetVar(FileDir, "Main", "Jugadas"))
 
     If frmMain.Visible Then frmMain.txtStatus.Text = Date & " " & time & " - Se cargo el archivo apuestas.dat"
 
@@ -2647,10 +2647,12 @@ Public Sub InicializarSonidos()
     SND_ESCUDO(3) = val(Lector.GetValue("SOUNDS", "SND_ESCUDO3"))
     SND_ESCUDO(4) = val(Lector.GetValue("SOUNDS", "SND_ESCUDO4"))
     SND_BEBER = val(Lector.GetValue("SOUNDS", "SND_BEBER"))
+    SND_COMER = val(Lector.GetValue("SOUNDS", "SND_COMER"))
     SND_NIVEL = val(Lector.GetValue("SOUNDS", "SND_NIVEL"))
     SND_CURAR_SACERDOTE = val(Lector.GetValue("SOUNDS", "SND_CURAR_SACERDOTE"))
     SND_RESUCITAR_SACERDOTE = val(Lector.GetValue("SOUNDS", "SND_RESUCITAR_SACERDOTE"))
-    SND_USERMUERTE = val(Lector.GetValue("SOUNDS", "SND_USERMUERTE"))
+    SND_HOMBRE = val(Lector.GetValue("SOUNDS", "SND_HOMBRE"))
+    SND_MUJER = val(Lector.GetValue("SOUNDS", "SND_MUJER"))
     SND_IMPACTO = val(Lector.GetValue("SOUNDS", "SND_IMPACTO"))
     SND_IMPACTO2 = val(Lector.GetValue("SOUNDS", "SND_IMPACTO2"))
     SND_FRAGUA = val(Lector.GetValue("SOUNDS", "SND_FRAGUA"))

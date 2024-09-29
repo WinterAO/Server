@@ -639,7 +639,8 @@ Public SND_PUERTA                       As Byte
 Public SND_DROP                         As Byte
 Public SND_TIRAR_ORO                    As Byte
 Public SND_NIVEL                        As Byte
-Public SND_USERMUERTE                   As Byte
+Public SND_HOMBRE                       As Byte
+Public SND_MUJER                        As Byte
 Public SND_IMPACTO                      As Byte
 Public SND_IMPACTO2                     As Byte
 Public SND_FOGATA                       As Byte
@@ -648,6 +649,7 @@ Public SND_ESCUDO(1 To 4)               As Byte
 Public SND_TRABAJO_HERRERO              As Byte
 Public SND_CARPINTERO(1 To 3)           As Byte
 Public SND_BEBER                        As Byte
+Public SND_COMER                        As Byte
 Public SND_RESUCITAR_SACERDOTE          As Byte
 Public SND_CURAR_SACERDOTE              As Byte
 Public SND_ALQUIMIA                     As Byte
@@ -2417,20 +2419,6 @@ Public Const MENSAJE_DEMONIO_CIUDADANO_NOENLISTABLE As String = "Tu indecision t
 Public Const MENSAJE_DEMONIO_CIUDADANO_ENLISTABLE   As String = "Siento el miedo por tus venas. Deja de ser escoria y unete a mis filas, sabras que es el mejor camino."
 
 Public Administradores                              As clsIniManager
-
-'sonidos conocidos, pasados a enum para intelisense
-Public Enum e_SoundIndex
-
-    MUERTE_HOMBRE = 11
-    MUERTE_MUJER = 74
-    FLECHA_IMPACTO = 65
-    CONVERSION_BARCO = 55
-    MORFAR_MANZANA = 82
-    SOUND_COMIDA = 7
-    MUERTE_MUJER_AGUA = 211
-    MUERTE_HOMBRE_AGUA = 212
-
-End Enum
 
 'SERVER INI
 Public ExpMultiplier                                       As Integer

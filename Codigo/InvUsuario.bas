@@ -1567,15 +1567,10 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                 If .Stats.MinHam > .Stats.MaxHam Then .Stats.MinHam = .Stats.MaxHam
                 .flags.Hambre = 0
                 Call WriteUpdateHungerAndThirst(UserIndex)
+                
                 'Sonido
-                
-                If ObjIndex = e_ObjetosCriticos.Manzana Or ObjIndex = e_ObjetosCriticos.Manzana2 Or ObjIndex = e_ObjetosCriticos.ManzanaNewbie Then
-                    Call ReproducirSonido(SendTarget.ToPCArea, UserIndex, e_SoundIndex.MORFAR_MANZANA)
-                Else
-                    Call ReproducirSonido(SendTarget.ToPCArea, UserIndex, e_SoundIndex.SOUND_COMIDA)
-
-                End If
-                
+                Call ReproducirSonido(SendTarget.ToPCArea, UserIndex, SND_COMER)
+     
                 'Quitamos del inv el item
                 Call QuitarUserInvItem(UserIndex, Slot, 1)
                 

@@ -1725,7 +1725,8 @@ End Sub
 ' @param UserIndex  Indice del usuario que muere
 '
 
-Public Sub UserDie(ByVal UserIndex As Integer, Optional ByVal AttackerIndex As Integer = 0)
+Public Sub UserDie(ByVal UserIndex As Integer, _
+                   Optional ByVal AttackerIndex As Integer = 0)
 
     '************************************************
     'Author: Uknown
@@ -1740,34 +1741,21 @@ Public Sub UserDie(ByVal UserIndex As Integer, Optional ByVal AttackerIndex As I
     '************************************************
     On Error GoTo ErrorHandler
 
-    Dim i                   As Long
+    Dim i                 As Long
 
-    Dim aN                  As Integer
+    Dim aN                As Integer
     
-    Dim iSoundDeath         As Integer
+    Dim iSoundDeath       As Integer
     
-    Dim SortijaUltratumba   As Boolean
+    Dim SortijaUltratumba As Boolean
     
     With UserList(UserIndex)
 
         'Sonido
         If .Genero = eGenero.Mujer Then
-            If HayAgua(.Pos.Map, .Pos.X, .Pos.Y) Then
-                iSoundDeath = e_SoundIndex.MUERTE_MUJER_AGUA
-            Else
-                iSoundDeath = e_SoundIndex.MUERTE_MUJER
-
-            End If
-
+            iSoundDeath = SND_MUJER
         Else
-
-            If HayAgua(.Pos.Map, .Pos.X, .Pos.Y) Then
-                iSoundDeath = e_SoundIndex.MUERTE_HOMBRE_AGUA
-            Else
-                iSoundDeath = e_SoundIndex.MUERTE_HOMBRE
-
-            End If
-
+            iSoundDeath = SND_HOMBRE
         End If
         
         Call ReproducirSonido(SendTarget.ToPCArea, UserIndex, iSoundDeath)
@@ -1871,14 +1859,14 @@ Public Sub UserDie(ByVal UserIndex As Integer, Optional ByVal AttackerIndex As I
                     
                     '¿Tiene la sortija de ultratumba?
                     If .Invent.AnilloEqpObjIndex > 0 Then
-                        If ObjData(.Invent.AnilloEqpObjIndex).Efecto = Ultratumba Then _
-                            SortijaUltratumba = True
+                        If ObjData(.Invent.AnilloEqpObjIndex).Efecto = Ultratumba Then SortijaUltratumba = True
                     End If
                         
                     If SortijaUltratumba Then
                         Call DropObj(UserIndex, UserList(UserIndex).Invent.AnilloEqpSlot, 1, .Pos.Map, .Pos.X, .Pos.Y)
                             
                     Else
+
                         ' << Si es newbie no pierde el inventario >>
                         If Not EsNewbie(UserIndex) Then
                             Call TirarTodo(UserIndex) '
@@ -2327,7 +2315,7 @@ Private Sub WarpMascotas(ByVal UserIndex As Integer)
 
     Dim canWarp          As Boolean
 
-    Dim index            As Integer
+    Dim Index            As Integer
 
     Dim iMinHP           As Integer
     
@@ -2335,13 +2323,13 @@ Private Sub WarpMascotas(ByVal UserIndex As Integer)
     canWarp = (MapZonas(UserList(UserIndex).Pos.Map, UserZonaId(UserIndex)).Pk = True)
     
     For i = 1 To MAXMASCOTAS
-        index = UserList(UserIndex).MascotasIndex(i)
+        Index = UserList(UserIndex).MascotasIndex(i)
         
-        If index > 0 Then
+        If Index > 0 Then
 
             ' si la mascota tiene tiempo de vida > 0 significa q fue invocada => we kill it
-            If Npclist(index).Contadores.TiempoExistencia > 0 Then
-                Call QuitarNPC(index)
+            If Npclist(Index).Contadores.TiempoExistencia > 0 Then
+                Call QuitarNPC(Index)
                 UserList(UserIndex).MascotasIndex(i) = 0
                 InvocadosMatados = InvocadosMatados + 1
                 NroPets = NroPets - 1
@@ -2354,9 +2342,9 @@ Private Sub WarpMascotas(ByVal UserIndex As Integer)
                 'PetTiempoDeVida = Npclist(index).Contadores.TiempoExistencia
                 
                 ' Guardamos el hp, para restaurarlo uando se cree el npc
-                iMinHP = Npclist(index).Stats.MinHp
+                iMinHP = Npclist(Index).Stats.MinHp
                 
-                Call QuitarNPC(index)
+                Call QuitarNPC(Index)
                 
                 ' Restauramos el valor de la variable
                 UserList(UserIndex).MascotasType(i) = petType
@@ -2381,21 +2369,21 @@ Private Sub WarpMascotas(ByVal UserIndex As Integer)
             SpawnPos.X = UserList(UserIndex).Pos.X + RandomNumber(-3, 3)
             SpawnPos.Y = UserList(UserIndex).Pos.Y + RandomNumber(-3, 3)
         
-            index = SpawnNpc(petType, SpawnPos, False, PetRespawn)
+            Index = SpawnNpc(petType, SpawnPos, False, PetRespawn)
             
             'Controlamos que se sumoneo OK - should never happen. Continue to allow removal of other pets if not alone
             ' Exception: Pets don't spawn in water if they can't swim
-            If index = 0 Then
+            If Index = 0 Then
                 Call WriteConsoleMsg(UserIndex, "Tus mascotas no pueden transitar este mapa.", FontTypeNames.FONTTYPE_INFO)
             Else
-                UserList(UserIndex).MascotasIndex(i) = index
+                UserList(UserIndex).MascotasIndex(i) = Index
 
                 ' Nos aseguramos de que conserve el hp, si estaba danado
-                Npclist(index).Stats.MinHp = IIf(iMinHP = 0, Npclist(index).Stats.MinHp, iMinHP)
+                Npclist(Index).Stats.MinHp = IIf(iMinHP = 0, Npclist(Index).Stats.MinHp, iMinHP)
             
-                Npclist(index).MaestroUser = UserIndex
-                Npclist(index).Contadores.TiempoExistencia = PetTiempoDeVida
-                Call FollowAmo(index)
+                Npclist(Index).MaestroUser = UserIndex
+                Npclist(Index).Contadores.TiempoExistencia = PetTiempoDeVida
+                Call FollowAmo(Index)
 
             End If
 
