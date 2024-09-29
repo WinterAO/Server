@@ -109,7 +109,7 @@ Public Sub DoTileEvents(ByVal UserIndex As Integer, _
             
                 If UserList(UserIndex).Stats.ELV < MapZonas(.TileExit.Map, UserZonaId(UserIndex)).lvlMinimo Then
                 
-                    Call WriteConsoleMsg(UserIndex, "Percibes un gran peligro más allá donde vas y no te atreves a continuar. Sientes que al nivel " & MapZonas(.TileExit.Map, UserZonaId(UserIndex)).lvlMinimo & " estarás preparado para afrontar el peligro.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "Percibes un gran peligro más allá donde vas y no te atreves a continuar. Sientes que al nivel " & MapZonas(.TileExit.Map, UserZonaId(UserIndex)).lvlMinimo & " estarás preparado para afrontar la amenaza.", FontTypeNames.FONTTYPE_INFO)
                     Call ClosestStablePos(UserList(UserIndex).Pos, nPos)
             
                     If nPos.X <> 0 And nPos.Y <> 0 Then
@@ -1659,6 +1659,9 @@ Sub LookatTile(ByVal UserIndex As Integer, _
                             End If
 
                         End If
+                        
+                        'Enviamos el mensaje propiamente dicho:
+                        Call WriteChatOverHead(UserIndex, Stat, Npclist(TempCharIndex).Char.CharIndex, 255, 255, 255)
               
                     Else
 
