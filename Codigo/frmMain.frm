@@ -3,14 +3,14 @@ Begin VB.Form frmMain
    BackColor       =   &H00424242&
    BorderStyle     =   1  'Fixed Single
    Caption         =   "WinterAO Resurrection Server"
-   ClientHeight    =   6000
+   ClientHeight    =   6420
    ClientLeft      =   1950
    ClientTop       =   1815
-   ClientWidth     =   10965
+   ClientWidth     =   15780
    ControlBox      =   0   'False
    FillColor       =   &H00C0C0C0&
    BeginProperty Font 
-      Name            =   "Arial"
+      Name            =   "Tahoma"
       Size            =   8.25
       Charset         =   0
       Weight          =   700
@@ -24,10 +24,159 @@ Begin VB.Form frmMain
    MaxButton       =   0   'False
    MinButton       =   0   'False
    PaletteMode     =   1  'UseZOrder
-   ScaleHeight     =   6000
-   ScaleWidth      =   10965
+   ScaleHeight     =   6420
+   ScaleWidth      =   15780
    StartUpPosition =   2  'CenterScreen
    WindowState     =   1  'Minimized
+   Begin VB.Frame FraRates 
+      BackColor       =   &H00424242&
+      Caption         =   "Rates"
+      BeginProperty Font 
+         Name            =   "Arial"
+         Size            =   8.25
+         Charset         =   0
+         Weight          =   700
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   2175
+      Left            =   5190
+      TabIndex        =   30
+      Top             =   3330
+      Width           =   5685
+      Begin VB.Label lblCostoArtesano 
+         AutoSize        =   -1  'True
+         BackStyle       =   0  'Transparent
+         Caption         =   "Costo Artesano:"
+         BeginProperty Font 
+            Name            =   "Tahoma"
+            Size            =   8.25
+            Charset         =   0
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         ForeColor       =   &H00FFFFFF&
+         Height          =   195
+         Left            =   150
+         TabIndex        =   37
+         Top             =   1830
+         Width           =   1350
+      End
+      Begin VB.Label lblDificultadExtraer 
+         AutoSize        =   -1  'True
+         BackStyle       =   0  'Transparent
+         Caption         =   "Dificultad extracción:"
+         BeginProperty Font 
+            Name            =   "Tahoma"
+            Size            =   8.25
+            Charset         =   0
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         ForeColor       =   &H00FFFFFF&
+         Height          =   195
+         Left            =   150
+         TabIndex        =   36
+         Top             =   1320
+         Width           =   1785
+      End
+      Begin VB.Label lblDropAl 
+         AutoSize        =   -1  'True
+         BackStyle       =   0  'Transparent
+         Caption         =   "Drop al morir:"
+         BeginProperty Font 
+            Name            =   "Tahoma"
+            Size            =   8.25
+            Charset         =   0
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         ForeColor       =   &H00FFFFFF&
+         Height          =   195
+         Left            =   150
+         TabIndex        =   35
+         Top             =   1560
+         Width           =   1170
+      End
+      Begin VB.Label lblProfesiones 
+         AutoSize        =   -1  'True
+         BackStyle       =   0  'Transparent
+         Caption         =   "Profesiones:"
+         BeginProperty Font 
+            Name            =   "Tahoma"
+            Size            =   8.25
+            Charset         =   0
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         ForeColor       =   &H00FFFFFF&
+         Height          =   195
+         Left            =   150
+         TabIndex        =   34
+         Top             =   1080
+         Width           =   1035
+      End
+      Begin VB.Label lblOro 
+         AutoSize        =   -1  'True
+         BackStyle       =   0  'Transparent
+         Caption         =   "Oro:"
+         BeginProperty Font 
+            Name            =   "Tahoma"
+            Size            =   8.25
+            Charset         =   0
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         ForeColor       =   &H00FFFFFF&
+         Height          =   195
+         Left            =   150
+         TabIndex        =   33
+         Top             =   840
+         Width           =   1020
+      End
+      Begin VB.Label lblMultiplicadorDe 
+         AutoSize        =   -1  'True
+         BackStyle       =   0  'Transparent
+         Caption         =   "Experiencia:"
+         BeginProperty Font 
+            Name            =   "Tahoma"
+            Size            =   8.25
+            Charset         =   0
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         ForeColor       =   &H00FFFFFF&
+         Height          =   195
+         Left            =   150
+         TabIndex        =   32
+         Top             =   600
+         Width           =   1020
+      End
+      Begin VB.Label lblNivelMaximo 
+         AutoSize        =   -1  'True
+         BackStyle       =   0  'Transparent
+         Caption         =   "Nivel Maximo:"
+         ForeColor       =   &H00FFFFFF&
+         Height          =   195
+         Left            =   150
+         TabIndex        =   31
+         Top             =   360
+         Width           =   1170
+      End
+   End
    Begin VB.Timer Estadisticas 
       Interval        =   10000
       Left            =   3630
@@ -36,14 +185,32 @@ Begin VB.Form frmMain
    Begin VB.Frame Frame2 
       BackColor       =   &H00424242&
       Caption         =   "Información general"
+      BeginProperty Font 
+         Name            =   "Arial"
+         Size            =   8.25
+         Charset         =   0
+         Weight          =   700
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
       Height          =   3075
       Left            =   5190
       TabIndex        =   1
       Top             =   210
-      Width           =   5655
+      Width           =   5685
       Begin VB.CommandButton cmdDebugRapido 
          BackColor       =   &H80000005&
          Caption         =   "Stats de Slots"
+         BeginProperty Font 
+            Name            =   "Arial"
+            Size            =   8.25
+            Charset         =   0
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Height          =   375
          Index           =   1
          Left            =   4050
@@ -55,6 +222,15 @@ Begin VB.Form frmMain
       Begin VB.CommandButton cmdDebugRapido 
          BackColor       =   &H80000005&
          Caption         =   "Debug UserList"
+         BeginProperty Font 
+            Name            =   "Arial"
+            Size            =   8.25
+            Charset         =   0
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Height          =   375
          Index           =   0
          Left            =   4050
@@ -67,6 +243,15 @@ Begin VB.Form frmMain
          Alignment       =   2  'Center
          Appearance      =   0  'Flat
          BackColor       =   &H8000000F&
+         BeginProperty Font 
+            Name            =   "Arial"
+            Size            =   8.25
+            Charset         =   0
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Height          =   255
          Left            =   2640
          Locked          =   -1  'True
@@ -79,6 +264,15 @@ Begin VB.Form frmMain
          Alignment       =   2  'Center
          Appearance      =   0  'Flat
          BackColor       =   &H8000000F&
+         BeginProperty Font 
+            Name            =   "Arial"
+            Size            =   8.25
+            Charset         =   0
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Height          =   255
          Left            =   2160
          Locked          =   -1  'True
@@ -91,6 +285,15 @@ Begin VB.Form frmMain
          Alignment       =   2  'Center
          Appearance      =   0  'Flat
          BackColor       =   &H8000000F&
+         BeginProperty Font 
+            Name            =   "Arial"
+            Size            =   8.25
+            Charset         =   0
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Height          =   255
          Left            =   2880
          Locked          =   -1  'True
@@ -103,6 +306,15 @@ Begin VB.Form frmMain
          AutoSize        =   -1  'True
          BackStyle       =   0  'Transparent
          Caption         =   "Estabilidad 0%"
+         BeginProperty Font 
+            Name            =   "Arial"
+            Size            =   8.25
+            Charset         =   0
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          ForeColor       =   &H00FFFFFF&
          Height          =   210
          Left            =   180
@@ -116,6 +328,15 @@ Begin VB.Form frmMain
          BackColor       =   &H00000000&
          BackStyle       =   0  'Transparent
          Caption         =   "Tiempo para la reconexion de la DB: Cargando..."
+         BeginProperty Font 
+            Name            =   "Arial"
+            Size            =   8.25
+            Charset         =   0
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          ForeColor       =   &H00FFFFFF&
          Height          =   210
          Left            =   150
@@ -292,13 +513,22 @@ Begin VB.Form frmMain
       EndProperty
       ForeColor       =   &H00FFFFFF&
       Height          =   735
-      Left            =   5160
+      Left            =   5190
       TabIndex        =   25
-      Top             =   5130
+      Top             =   5550
       Width           =   5685
       Begin VB.CommandButton cmdDB 
          BackColor       =   &H80000005&
          Caption         =   "Reconectar"
+         BeginProperty Font 
+            Name            =   "Arial"
+            Size            =   8.25
+            Charset         =   0
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Height          =   375
          Index           =   3
          Left            =   2790
@@ -310,6 +540,15 @@ Begin VB.Form frmMain
       Begin VB.CommandButton cmdDB 
          BackColor       =   &H80000005&
          Caption         =   "Estado"
+         BeginProperty Font 
+            Name            =   "Arial"
+            Size            =   8.25
+            Charset         =   0
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Height          =   375
          Index           =   2
          Left            =   4290
@@ -321,6 +560,15 @@ Begin VB.Form frmMain
       Begin VB.CommandButton cmdDB 
          BackColor       =   &H80000005&
          Caption         =   "Desconectar"
+         BeginProperty Font 
+            Name            =   "Arial"
+            Size            =   8.25
+            Charset         =   0
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Height          =   375
          Index           =   1
          Left            =   1410
@@ -332,6 +580,15 @@ Begin VB.Form frmMain
       Begin VB.CommandButton cmdDB 
          BackColor       =   &H80000005&
          Caption         =   "Conectar"
+         BeginProperty Font 
+            Name            =   "Arial"
+            Size            =   8.25
+            Charset         =   0
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Height          =   375
          Index           =   0
          Left            =   120
@@ -354,13 +611,13 @@ Begin VB.Form frmMain
          Strikethrough   =   0   'False
       EndProperty
       ForeColor       =   &H0000C000&
-      Height          =   1695
-      Left            =   5190
+      Height          =   5985
+      Left            =   10950
       MultiLine       =   -1  'True
       TabIndex        =   22
       Text            =   "frmMain.frx":1042
-      Top             =   3360
-      Width           =   5655
+      Top             =   300
+      Width           =   4725
    End
    Begin VB.CheckBox chkServerHabilitado 
       BackColor       =   &H00424242&
@@ -376,29 +633,47 @@ Begin VB.Form frmMain
       EndProperty
       ForeColor       =   &H00FFFFFF&
       Height          =   255
-      Left            =   90
+      Left            =   120
       TabIndex        =   21
-      Top             =   4650
+      Top             =   5040
       Width           =   2775
    End
    Begin VB.CommandButton cmdConfiguracion 
       BackColor       =   &H80000005&
       Caption         =   "Configuracion General"
+      BeginProperty Font 
+         Name            =   "Arial"
+         Size            =   8.25
+         Charset         =   0
+         Weight          =   700
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
       Height          =   375
-      Left            =   120
+      Left            =   150
       Style           =   1  'Graphical
       TabIndex        =   24
-      Top             =   5490
+      Top             =   5880
       Width           =   4935
    End
    Begin VB.CommandButton cmdDump 
       BackColor       =   &H80000005&
       Caption         =   "Crear Log Critico de Usuarios"
+      BeginProperty Font 
+         Name            =   "Arial"
+         Size            =   8.25
+         Charset         =   0
+         Weight          =   700
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
       Height          =   375
-      Left            =   120
+      Left            =   150
       Style           =   1  'Graphical
       TabIndex        =   23
-      Top             =   5010
+      Top             =   5400
       Width           =   4935
    End
    Begin VB.Timer AutoSave 
@@ -420,7 +695,7 @@ Begin VB.Form frmMain
          Strikethrough   =   0   'False
       EndProperty
       ForeColor       =   &H00FFFFFF&
-      Height          =   4335
+      Height          =   4755
       Left            =   120
       TabIndex        =   16
       Top             =   240
@@ -458,11 +733,20 @@ Begin VB.Form frmMain
       Begin VB.Timer Auditoria 
          Enabled         =   0   'False
          Interval        =   1000
-         Left            =   690
+         Left            =   720
          Top             =   1440
       End
       Begin VB.TextBox txtChat 
-         Height          =   2985
+         BeginProperty Font 
+            Name            =   "Arial"
+            Size            =   8.25
+            Charset         =   0
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         Height          =   3375
          Left            =   90
          MultiLine       =   -1  'True
          TabIndex        =   20
@@ -508,6 +792,15 @@ Begin VB.Form frmMain
          Width           =   2295
       End
       Begin VB.TextBox BroadMsg 
+         BeginProperty Font 
+            Name            =   "Arial"
+            Size            =   8.25
+            Charset         =   0
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Height          =   315
          Left            =   120
          TabIndex        =   17
@@ -879,6 +1172,9 @@ Private Sub AutoSave_Timer()
 
     End If
     
+    'Actualizamos los objetos con respawn
+    Call aItemManager.StepMinute
+    
     'Reconexion a la base de datos
     If MinutosReconexion >= IntervaloReconexionDB Then
         MinutosReconexion = 0
@@ -976,14 +1272,14 @@ Private Sub cmdConfiguracion_Click()
 
 End Sub
 
-Private Sub cmdDB_Click(index As Integer)
+Private Sub cmdDB_Click(Index As Integer)
 
 #If DBConexionUnica = 0 Then
     MsgBox ("El server esta configurado para conexion/desconexion por cada query, no es posible conectar ni desconectar en este modo. Cambie la configuracion desde los argunmentos en el codigo.")
     Exit Sub
 #End If
 
-    Select Case index
+    Select Case Index
     
         Case 0 'Conectar
             If MsgBox("¿Desea CONECTAR a la base de datos MYSQL? ¡Si ya esta conectada podria provocar errores!!!", vbYesNo, "¡CONEXION A LA MYSQL!") = vbNo Then Exit Sub
@@ -1016,8 +1312,8 @@ Private Sub cmdDB_Click(index As Integer)
     End Select
 End Sub
 
-Private Sub cmdDebugRapido_Click(index As Integer)
-    Select Case index
+Private Sub cmdDebugRapido_Click(Index As Integer)
+    Select Case Index
     
         Case 0
             frmUserList.Show

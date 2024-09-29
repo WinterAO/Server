@@ -1170,7 +1170,6 @@ End Sub
 ' @param    name Name of the new character.
 ' @param    criminal Determines if the character is a criminal or not.
 ' @param    privileges Sets if the character is a normal one or any kind of administrative character.
-' @param    NoShadow establece si el cuerpo no emite sombra
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
 Public Sub WriteCharacterCreate(ByVal UserIndex As Integer, _
@@ -1329,15 +1328,13 @@ End Sub
 ' @param    GrhIndex Grh of the object.
 ' @param    X X coord of the character's new position.
 ' @param    Y Y coord of the character's new position.
-' @param    Shadow establece si el objeto emite sombra
 ' @remarks  The data is not actually sent until the buffer is properly flushed.
 
 Public Sub WriteObjectCreate(ByVal UserIndex As Integer, _
                              ByVal GrhIndex As Long, _
                              ByVal ParticulaIndex As Integer, _
                              ByVal X As Integer, _
-                             ByVal Y As Integer, _
-                             Optional ByVal Shadow As Byte = 0)
+                             ByVal Y As Integer)
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -1346,7 +1343,7 @@ Public Sub WriteObjectCreate(ByVal UserIndex As Integer, _
     '***************************************************
     On Error GoTo errHandler
 
-    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageObjectCreate(GrhIndex, ParticulaIndex, X, Y, Shadow))
+    Call UserList(UserIndex).outgoingData.WriteASCIIStringFixed(PrepareMessageObjectCreate(GrhIndex, ParticulaIndex, X, Y))
     Exit Sub
 
 errHandler:
@@ -2204,7 +2201,7 @@ Public Sub WriteShowSignal(ByVal UserIndex As Integer, ByVal ObjIndex As Integer
     With UserList(UserIndex).outgoingData
         Call .WriteByte(ServerPacketID.ShowSignal)
         Call .WriteASCIIString(ObjData(ObjIndex).texto)
-        Call .WriteLong(ObjData(ObjIndex).GrhSecundario)
+        Call .WriteLong(ObjData(ObjIndex).GrhCartel)
 
     End With
 
@@ -4217,8 +4214,7 @@ End Function
 Public Function PrepareMessageObjectCreate(ByVal GrhIndex As Long, _
                                            ByVal ParticulaIndex As Integer, _
                                            ByVal X As Integer, _
-                                           ByVal Y As Integer, _
-                                           ByVal Shadow As Byte) As String
+                                           ByVal Y As Integer) As String
 
     '***************************************************
     'Author: Juan Martin Sotuyo Dodero (Maraxus)
@@ -4231,7 +4227,6 @@ Public Function PrepareMessageObjectCreate(ByVal GrhIndex As Long, _
         Call .WriteInteger(Y)
         Call .WriteLong(GrhIndex)
         Call .WriteInteger(ParticulaIndex)
-        Call .WriteByte(Shadow)
         
         PrepareMessageObjectCreate = .ReadASCIIStringFixed(.Length)
 
@@ -5224,9 +5219,9 @@ On Error GoTo errHandler
     
         Call .WriteByte(ServerPacketID.MostrarShop)
         Call .WriteInteger(UserList(UserIndex).AccountInfo.Gemas)
-        Call .WriteInteger(NUMSHOPS)
+        Call .WriteInteger(NumShops)
         
-        For i = 1 To NUMSHOPS
+        For i = 1 To NumShops
         
             Call .WriteInteger(ObjData(ShopObject(i).ObjIndex).GrhIndex)
             Call .WriteASCIIString(ObjData(ShopObject(i).ObjIndex).Name)

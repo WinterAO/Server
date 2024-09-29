@@ -167,26 +167,26 @@ Private Sub ContarMuerteDuelo(ByVal GanadorIndex As Integer, ByVal PerdedorIndex
     Select Case UserList(GanadorIndex).flags.DuelosClasicos
         Case 5
             Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("Torneo: " & UserList(GanadorIndex).Name & " ganador del torneo 5 veces consecutivas!! Obtiene un premio de 500 de oro.", FontTypeNames.FONTTYPE_TALK))
-            Call SendData(SendTarget.Toall, 0, PrepareMessagePlayWave(69, NO_3D_SOUND, NO_3D_SOUND))
+            'Call SendData(SendTarget.Toall, 0, PrepareMessagePlayWave(69, NO_3D_SOUND, NO_3D_SOUND))
             UserList(GanadorIndex).Stats.Gld = UserList(GanadorIndex).Stats.Gld + 500
             Call WriteUpdateGold(GanadorIndex)
             
         Case 10
             Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("Torneo: " & UserList(GanadorIndex).Name & " ganador del torneo 10 veces consecutivas!! Obtiene un premio de 1000 de oro.", FontTypeNames.FONTTYPE_TALK))
             UserList(GanadorIndex).Stats.Gld = UserList(GanadorIndex).Stats.Gld + 1000
-            Call SendData(SendTarget.Toall, 0, PrepareMessagePlayWave(70, NO_3D_SOUND, NO_3D_SOUND))
+            'Call SendData(SendTarget.Toall, 0, PrepareMessagePlayWave(70, NO_3D_SOUND, NO_3D_SOUND))
             Call WriteUpdateGold(GanadorIndex)
             
         Case 15
             Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("Torneo: " & UserList(GanadorIndex).Name & " ganador del torneo 15 veces consecutivas!! Obtiene un premio de 1500 de oro.", FontTypeNames.FONTTYPE_TALK))
             UserList(GanadorIndex).Stats.Gld = UserList(GanadorIndex).Stats.Gld + 1500
-            Call SendData(SendTarget.Toall, 0, PrepareMessagePlayWave(71, NO_3D_SOUND, NO_3D_SOUND))
+            'Call SendData(SendTarget.Toall, 0, PrepareMessagePlayWave(71, NO_3D_SOUND, NO_3D_SOUND))
             Call WriteUpdateGold(GanadorIndex)
             
         Case 20
             Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("Torneo: " & UserList(GanadorIndex).Name & " ganador del torneo 20 veces consecutivas!! Obtiene un premio de 2000 de oro.", FontTypeNames.FONTTYPE_TALK))
             UserList(GanadorIndex).Stats.Gld = UserList(GanadorIndex).Stats.Gld + 2000
-            Call SendData(SendTarget.Toall, 0, PrepareMessagePlayWave(72, NO_3D_SOUND, NO_3D_SOUND))
+            'Call SendData(SendTarget.Toall, 0, PrepareMessagePlayWave(72, NO_3D_SOUND, NO_3D_SOUND))
             Call WriteUpdateGold(GanadorIndex)
     End Select
 End Sub

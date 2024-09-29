@@ -35,7 +35,7 @@ Option Explicit
 
 #If False Then
 
-    Dim Map, X, Y, n, Mapa, race, helmet, weapon, shield, color, Value, errHandler, punishments, Length, obj, index As Variant
+    Dim Map, X, Y, n, Mapa, race, helmet, weapon, shield, color, Value, errHandler, punishments, Length, obj, Index As Variant
 
 #End If
 
@@ -3494,7 +3494,7 @@ Private Sub HandleWorkLeftClick(ByVal UserIndex As Integer)
                     Select Case WeaponIndex
 
                         Case CANA_PESCA
-                            .flags.MacroTrabajo = eMacroTrabajo.PESCAR
+                            .flags.MacroTrabajo = eMacroTrabajo.Pescar
                         
                         Case RED_PESCA
                         
@@ -3521,37 +3521,6 @@ Private Sub HandleWorkLeftClick(ByVal UserIndex As Integer)
                 Else
                     Call WriteConsoleMsg(UserIndex, "No hay agua donde pescar. Busca un lago, rio o mar.", FontTypeNames.FONTTYPE_INFO)
 
-                End If
-            
-            Case eSkill.Mineria, eSkill.Talar
-                'Target whatever is in the tile
-                Call LookatTile(UserIndex, .Pos.Map, X, Y)
-                
-                DummyINT = MapData(.Pos.Map, X, Y).ObjInfo.ObjIndex
-                
-                If DummyINT > 0 Then
-                    'Check distance
-                    If Abs(.Pos.X - X) + Abs(.Pos.Y - Y) > 1 Then
-                        Call WriteConsoleMsg(UserIndex, "Estás demasiado lejos.", FontTypeNames.FONTTYPE_INFO)
-                        Exit Sub
-                    End If
-                    
-                    DummyINT = MapData(.Pos.Map, X, Y).ObjInfo.ObjIndex 'CHECK
-                    
-                    '¿Hay un yacimiento donde clickeo?
-                    If ObjData(DummyINT).Recurso.Profesion = Skill Then
-                        If PuedeExtraer(UserIndex, Skill) Then
-                            .flags.MacroTrabajo = Skill
-                            Call WriteConsoleMsg(UserIndex, "Comienzas a trabajar.", FontTypeNames.FONTTYPE_INFO)
-                        End If
-                        
-                    Else
-                        Call WriteConsoleMsg(UserIndex, "Ahí no hay ninguna fuente de recursos que puedas extraer con esa herramienta.", FontTypeNames.FONTTYPE_INFO)
-                        
-                    End If
-                Else
-                    Call WriteConsoleMsg(UserIndex, "Ahí no hay ninguna fuente de recursos.", FontTypeNames.FONTTYPE_INFO)
-                    
                 End If
             
             Case eSkill.Domar
@@ -3800,7 +3769,7 @@ Private Sub HandleCreateNewGuild(ByVal UserIndex As Integer)
             Message = .Name & " fundo el clan " & GuildName & " de alineacion " & modGuilds.GuildAlignment(.GuildIndex)
 
             Call SendData(SendTarget.Toall, UserIndex, PrepareMessageConsoleMsg(Message, FontTypeNames.FONTTYPE_GUILD))
-            Call SendData(SendTarget.Toall, 0, PrepareMessagePlayWave(44, NO_3D_SOUND, NO_3D_SOUND))
+            Call SendData(SendTarget.Toall, 0, PrepareMessagePlayWave(SND_NEW_GUILD, NO_3D_SOUND, NO_3D_SOUND))
             
             'Update tag
             Call RefreshCharStatus(UserIndex)
@@ -5363,8 +5332,8 @@ Private Sub HandleGuildDeclareWar(ByVal UserIndex As Integer)
             'WAR shall be!
             Call SendData(SendTarget.ToGuildMembers, .GuildIndex, PrepareMessageConsoleMsg("TU CLAN HA ENTRADO EN GUERRA CON " & Guild & ".", FontTypeNames.FONTTYPE_GUILD))
             Call SendData(SendTarget.ToGuildMembers, otherGuildIndex, PrepareMessageConsoleMsg(modGuilds.GuildName(.GuildIndex) & " LE DECLARA LA GUERRA A TU CLAN.", FontTypeNames.FONTTYPE_GUILD))
-            Call SendData(SendTarget.ToGuildMembers, .GuildIndex, PrepareMessagePlayWave(45, NO_3D_SOUND, NO_3D_SOUND))
-            Call SendData(SendTarget.ToGuildMembers, otherGuildIndex, PrepareMessagePlayWave(45, NO_3D_SOUND, NO_3D_SOUND))
+            Call SendData(SendTarget.ToGuildMembers, .GuildIndex, PrepareMessagePlayWave(SND_GUILD_WAR, NO_3D_SOUND, NO_3D_SOUND))
+            Call SendData(SendTarget.ToGuildMembers, otherGuildIndex, PrepareMessagePlayWave(SND_GUILD_WAR, NO_3D_SOUND, NO_3D_SOUND))
 
         End If
         
@@ -5492,7 +5461,7 @@ Private Sub HandleGuildAcceptNewMember(ByVal UserIndex As Integer)
             End If
             
             Call SendData(SendTarget.ToGuildMembers, .GuildIndex, PrepareMessageConsoleMsg(username & " ha sido aceptado como miembro del clan.", FontTypeNames.FONTTYPE_GUILD))
-            Call SendData(SendTarget.ToGuildMembers, .GuildIndex, PrepareMessagePlayWave(43, NO_3D_SOUND, NO_3D_SOUND))
+            Call SendData(SendTarget.ToGuildMembers, .GuildIndex, PrepareMessagePlayWave(SND_NEW_MEMBER, NO_3D_SOUND, NO_3D_SOUND))
 
         End If
         
@@ -5635,7 +5604,7 @@ Private Sub HandleGuildKickMember(ByVal UserIndex As Integer)
         
         If GuildIndex > 0 Then
             Call SendData(SendTarget.ToGuildMembers, GuildIndex, PrepareMessageConsoleMsg(username & " fue expulsado del clan.", FontTypeNames.FONTTYPE_GUILD))
-            Call SendData(SendTarget.ToGuildMembers, GuildIndex, PrepareMessagePlayWave(45, NO_3D_SOUND, NO_3D_SOUND))
+            Call SendData(SendTarget.ToGuildMembers, GuildIndex, PrepareMessagePlayWave(SND_KICK_GUILD, NO_3D_SOUND, NO_3D_SOUND))
         Else
             Call WriteConsoleMsg(UserIndex, "No puedes expulsar ese personaje del clan.", FontTypeNames.FONTTYPE_GUILD)
 
@@ -14259,8 +14228,8 @@ Private Sub HandleItemsInTheFloor(ByVal UserIndex As Integer)
 
     '***************************************************
     'Author: Nicolas Matias Gonzalez (NIGO)
-    'Last Modification: 12/30/06
-    '
+    'Last Modification: 26/09/2024
+    '26/09/2024 - Lorwik: Ahora solo recorre 50 a cada lado al rededor del que ejecuto el comando.
     '***************************************************
     With UserList(UserIndex)
         'Remove packet ID
@@ -14269,27 +14238,44 @@ Private Sub HandleItemsInTheFloor(ByVal UserIndex As Integer)
         If .flags.Privilegios And (PlayerType.User Or PlayerType.Consejero Or PlayerType.SemiDios) Then Exit Sub
         
         Dim tObj  As Integer
-
         Dim lista As String
-
-        Dim X     As Long
-
-        Dim Y     As Long
         
-        For X = 5 To 95
-            For Y = 5 To 95
-                tObj = MapData(.Pos.Map, X, Y).ObjInfo.ObjIndex
+        Dim X     As Long
+        Dim Y     As Long
 
-                If tObj > 0 Then
-                    If ObjData(tObj).OBJType <> eOBJType.otArboles Then
-                        Call WriteConsoleMsg(UserIndex, "(" & X & "," & Y & ") " & ObjData(tObj).Name, FontTypeNames.FONTTYPE_INFO)
+        Dim MinX  As Integer
+        Dim MaxX  As Integer
+        Dim MinY  As Integer
+        Dim MaxY  As Integer
+        
+        With UserList(UserIndex)
+        
+            MinX = .Pos.X - 50
+            MaxX = .Pos.X + 50
+            MinY = .Pos.Y - 50
+            MaxY = .Pos.Y + 50
+            
+            If MinX < XMinMapSize Then MinX = XMinMapSize + 1
+            If MaxX > XMaxMapSize Then MaxX = XMaxMapSize - 1
+            If MinY < YMinMapSize Then MinY = YMinMapSize + 1
+            If MaxY > YMaxMapSize Then MaxY = YMaxMapSize - 1
+        
+            For X = MinX To MaxX
+                For Y = MinY To MaxY
+                    tObj = MapData(.Pos.Map, X, Y).ObjInfo.ObjIndex
+                
+                    If tObj > 0 Then
+                        If ObjData(tObj).OBJType <> eOBJType.otDestruible Then
+                            Call WriteConsoleMsg(UserIndex, "(" & X & "," & Y & ") " & ObjData(tObj).Name, FontTypeNames.FONTTYPE_INFO)
+
+                        End If
 
                     End If
 
-                End If
-
-            Next Y
-        Next X
+                Next Y
+            Next X
+        
+        End With
 
     End With
 
@@ -16923,16 +16909,16 @@ Public Sub HandleImperialArmour(ByVal UserIndex As Integer)
         'Remove Packet ID
         Call .incomingData.ReadByte
         
-        Dim index    As Byte
+        Dim Index    As Byte
 
         Dim ObjIndex As Integer
         
-        index = .incomingData.ReadByte()
+        Index = .incomingData.ReadByte()
         ObjIndex = .incomingData.ReadInteger()
         
         If .flags.Privilegios And (PlayerType.User Or PlayerType.Consejero Or PlayerType.SemiDios Or PlayerType.RoleMaster) Then Exit Sub
         
-        Select Case index
+        Select Case Index
 
             Case 1
                 ArmaduraImperial1 = ObjIndex
@@ -16974,16 +16960,16 @@ Public Sub HandleChaosArmour(ByVal UserIndex As Integer)
         'Remove Packet ID
         Call .incomingData.ReadByte
         
-        Dim index    As Byte
+        Dim Index    As Byte
 
         Dim ObjIndex As Integer
         
-        index = .incomingData.ReadByte()
+        Index = .incomingData.ReadByte()
         ObjIndex = .incomingData.ReadInteger()
         
         If .flags.Privilegios And (PlayerType.User Or PlayerType.Consejero Or PlayerType.SemiDios Or PlayerType.RoleMaster) Then Exit Sub
         
-        Select Case index
+        Select Case Index
 
             Case 1
                 ArmaduraCaos1 = ObjIndex
@@ -17701,7 +17687,7 @@ Public Sub HandleCreatePretorianClan(ByVal UserIndex As Integer)
     Dim Map   As Integer
     Dim X     As Integer
     Dim Y     As Integer
-    Dim index As Long
+    Dim Index As Long
     
     With UserList(UserIndex)
         
@@ -17729,21 +17715,21 @@ Public Sub HandleCreatePretorianClan(ByVal UserIndex As Integer)
         
         ' Choose pretorian clan index
         If Map = MAPA_PRETORIANO Then
-            index = ePretorianType.Default ' Default clan
+            Index = ePretorianType.Default ' Default clan
         Else
-            index = ePretorianType.Custom ' Custom Clan
+            Index = ePretorianType.Custom ' Custom Clan
         End If
             
         ' Is already active any clan?
-        If Not ClanPretoriano(index).Active Then
+        If Not ClanPretoriano(Index).Active Then
             
-            If Not ClanPretoriano(index).SpawnClan(Map, X, Y, index) Then
+            If Not ClanPretoriano(Index).SpawnClan(Map, X, Y, Index) Then
                 Call WriteConsoleMsg(UserIndex, "La posicion no es apropiada para crear el clan", FontTypeNames.FONTTYPE_INFO)
 
             End If
         
         Else
-            Call WriteConsoleMsg(UserIndex, "El clan pretoriano se encuentra activo en el mapa " & ClanPretoriano(index).ClanMap & ". Utilice /EliminarPretorianos MAPA y reintente.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "El clan pretoriano se encuentra activo en el mapa " & ClanPretoriano(Index).ClanMap & ". Utilice /EliminarPretorianos MAPA y reintente.", FontTypeNames.FONTTYPE_INFO)
 
         End If
     
@@ -17771,7 +17757,7 @@ Public Sub HandleDeletePretorianClan(ByVal UserIndex As Integer)
     
     Dim Map   As Integer
 
-    Dim index As Long
+    Dim Index As Long
     
     With UserList(UserIndex)
         
@@ -17795,16 +17781,16 @@ Public Sub HandleDeletePretorianClan(ByVal UserIndex As Integer)
 
         End If
     
-        For index = 1 To UBound(ClanPretoriano)
+        For Index = 1 To UBound(ClanPretoriano)
          
             ' Search for the clan to be deleted
-            If ClanPretoriano(index).ClanMap = Map Then
-                ClanPretoriano(index).DeleteClan
+            If ClanPretoriano(Index).ClanMap = Map Then
+                ClanPretoriano(Index).DeleteClan
                 Exit For
 
             End If
         
-        Next index
+        Next Index
     
     End With
 
@@ -18596,8 +18582,8 @@ Public Sub HandleMsgAmigo(ByVal UserIndex As Integer)
 
         For i = 1 To MAXAMIGOS
 
-            If .Amigos(i).index > 0 Then
-                Call WriteConsoleMsg(.Amigos(i).index, "FMSG[" & .Name & "]: " & Mensaje, FontTypeNames.FONTTYPE_GM)
+            If .Amigos(i).Index > 0 Then
+                Call WriteConsoleMsg(.Amigos(i).Index, "FMSG[" & .Name & "]: " & Mensaje, FontTypeNames.FONTTYPE_GM)
             End If
 
         Next i
@@ -18635,8 +18621,8 @@ Public Sub HandleOnAmigo(ByVal UserIndex As Integer)
 
         For i = 1 To MAXAMIGOS
 
-            If .Amigos(i).index > 0 Then
-                list = list & "[" & UserList(.Amigos(i).index).Name & "-" & MapZonas(UserList(.Amigos(i).index).Pos.Map, UserZonaId(UserIndex)).Name & "];"
+            If .Amigos(i).Index > 0 Then
+                list = list & "[" & UserList(.Amigos(i).Index).Name & "-" & MapZonas(UserList(.Amigos(i).Index).Pos.Map, UserZonaId(UserIndex)).Name & "];"
             End If
 
         Next i
@@ -18731,13 +18717,13 @@ Public Sub HandleAddAmigo(ByVal UserIndex As Integer)
                         Slot = ObtenerIndexLibre(UserIndex)
 
                         If Slot > 0 Then
-                            .Amigos(Slot).index = tUser
+                            .Amigos(Slot).Index = tUser
                         End If
 
                         Slot = ObtenerIndexLibre(tUser)
 
                         If Slot > 0 Then
-                            UserList(tUser).Amigos(Slot).index = UserIndex
+                            UserList(tUser).Amigos(Slot).Index = UserIndex
                         End If
 
                         .Quien = vbNullString
@@ -18822,13 +18808,13 @@ Public Sub HandleDelAmigo(ByVal UserIndex As Integer)
                 Slot = ObtenerIndexUsuado(UserIndex, tUser)
 
                 If Slot > 0 Then
-                    .Amigos(Slot).index = 0
+                    .Amigos(Slot).Index = 0
                 End If
 
                 Slot = ObtenerIndexUsuado(tUser, UserIndex)
 
                 If Slot > 0 Then
-                    UserList(tUser).Amigos(Slot).index = 0
+                    UserList(tUser).Amigos(Slot).Index = 0
                 End If
 
             End If

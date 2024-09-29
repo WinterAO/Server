@@ -31,7 +31,7 @@ Option Explicit
 
 #If False Then
 
-    Dim X, Y, Map, K, errHandler, obj, index, n, Email As Variant
+    Dim X, Y, Map, K, errHandler, obj, Index, n, Email As Variant
 
 #End If
 
@@ -341,6 +341,7 @@ Sub Main()
     ' Server.ini & Apuestas.dat & Ciudades.dat
     frmCargando.lblStatus.Caption = "Cargando Server.ini"
     Call LoadSini 'Configuración general (Server.ini)
+    Call LoadIntervals
     Call Load_Rates 'Rates (Rates.ini)
     Call CargarExperiencias
     Call loadAdministrativeUsers 'Gms (GameMasters.ini)
@@ -571,6 +572,7 @@ Private Sub LoadConstants()
 
     Set aClon = New clsAntiMassClon
     Set TrashCollector = New Collection
+    Set aItemManager = New clsWorldItemManager
 
 End Sub
 
@@ -1759,9 +1761,9 @@ Public Sub FreeCharIndexes()
 End Sub
 
 Public Sub ReproducirSonido(ByVal Destino As SendTarget, _
-                            ByVal index As Integer, _
+                            ByVal Index As Integer, _
                             ByVal SoundIndex As Integer)
-    Call SendData(Destino, index, PrepareMessagePlayWave(SoundIndex, UserList(index).Pos.X, UserList(index).Pos.Y))
+    Call SendData(Destino, Index, PrepareMessagePlayWave(SoundIndex, UserList(Index).Pos.X, UserList(Index).Pos.Y))
 
 End Sub
 
@@ -1795,46 +1797,6 @@ Public Sub CloseServer()
     End If
     
     End
-End Sub
-
-Private Sub InicializarSonidos()
-'****************************************
-'Autor: Lorwik
-'Fecha: 01/05/2020
-'Descripción: Inicializa las variable de los Sonidos
-'****************************************
-
-    SND_SWING = 2
-    SND_TALAR = 13
-    SND_PESCAR = 71
-    SND_MINERO = 261
-    SND_WARP = 3
-    SND_QUEST = 109
-    SND_QUESTTARGET = 444
-    SND_PUERTA = 5
-    SND_NIVEL = 128
-    SND_USERMUERTE = 11
-    SND_IMPACTO = 10
-    SND_IMPACTO2 = 12
-    SND_LENADOR = 13
-    SND_FOGATA = 14
-    SND_AVE(1) = 21
-    SND_AVE(2) = 22
-    SND_AVE(3) = 34
-    SND_GRILLO(1) = 28
-    SND_GRILLO(2) = 29
-    SND_SACARARMA = 25
-    SND_ESCUDO(1) = 211
-    SND_ESCUDO(2) = 212
-    SND_ESCUDO(3) = 213
-    SND_ESCUDO(4) = 214
-    SND_TRABAJO_HERRERO = 150
-    SND_TRABAJO_CARPINTERO = 168
-    SND_BEBER = 135
-    SND_RESUCITAR_SACERDOTE = 103
-    SND_CURAR_SACERDOTE = 104
-    SND_DROP = 484
-    
 End Sub
 
 Public Sub LogGlobal(ByVal str As String)
@@ -2110,7 +2072,7 @@ Public Function esMapaPortalEvento(ByVal Mapa As Integer) As Byte
 
 End Function
 
-Public Sub UpdateProgressBar(PictureBoxBarra As PictureBox, Max As Long, Value As Long, MaxWidth As Single)
+Public Sub UpdateProgressBar(PictureBoxBarra As PictureBox, max As Long, Value As Long, MaxWidth As Single)
 '************************************
 'Autor: Lorwik
 'Fecha: 20/09/2024
@@ -2118,8 +2080,8 @@ Public Sub UpdateProgressBar(PictureBoxBarra As PictureBox, Max As Long, Value A
 '************************************
 
     ' Nos aseguramos de que el valor esté dentro de los límites
-    If Value > Max Then Value = Max
+    If Value > max Then Value = max
     
-    PictureBoxBarra.Width = (Value / Max) * MaxWidth ' Proporción del progreso
+    PictureBoxBarra.Width = (Value / max) * MaxWidth ' Proporción del progreso
     DoEvents
 End Sub

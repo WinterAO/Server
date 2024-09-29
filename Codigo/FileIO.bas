@@ -143,7 +143,7 @@ Public CantZonas() As Integer
 
 #If False Then
 
-    Dim X, Y, n, Map, Mapa, Email, Max, Value As Variant
+    Dim X, Y, n, Map, Mapa, Email, max, Value As Variant
 
 #End If
 
@@ -274,6 +274,10 @@ Public Sub loadAdministrativeUsers()
     'Especiales  => Especial
     'Consejeros  => Consejero
     'RoleMasters => RM
+    
+    If Not FileExist(ConfigPath & "GameMasters.ini", vbArchive) Then _
+        MsgBox "No se encontro el archivo de configuracion de GMs en " & ConfigPath & "GameMasters.ini" & ". El servidor se iniciara sin GM's configurados."
+    
     If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando Administradores/Dioses/Gms."
 
     'Si esta mierda tuviese array asociativos el codigo seria tan lindo.
@@ -624,6 +628,10 @@ Sub LoadMotd()
     'Last Modification: -
     '
     '***************************************************
+    
+    If Not FileExist(ConfigPath & "Motd.ini", vbArchive) Then _
+        MsgBox "No se ha encontrado el archivo " & ConfigPath & "Motd.ini. El servidor iniciara sin Motd's configurados."
+    
     If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando archivo MOTD.INI."
 
     Dim i As Integer
@@ -856,8 +864,6 @@ Sub LoadOBJData()
             
             .Newbie = val(Leer.GetValue("OBJ" & Object, "Newbie"))
             
-            .Shadow = val(Leer.GetValue("OBJ" & Object, "Shadow"))
-            
             Select Case .OBJType
 
                 Case eOBJType.otArmadura
@@ -895,6 +901,10 @@ Sub LoadOBJData()
                     
                     .WeaponRazaEnanaAnim = val(Leer.GetValue("OBJ" & Object, "RazaEnanaAnim"))
                     .MinLevel = val(Leer.GetValue("OBJ" & Object, "MinLevel"))
+                    
+                    'Un arma podria ser una herramienta.
+                    .Herramienta.Profesion = val(Leer.GetValue("OBJ" & Object, "Profession"))  'Profesion a la que pertenece segun el Skill de la profesion
+                    .Herramienta.Categoria = val(Leer.GetValue("OBJ" & Object, "Category"))  'Tier de la herramienta
                 
                 Case eOBJType.otInstrumentos
                     .Snd1 = val(Leer.GetValue("OBJ" & Object, "SND1"))
@@ -963,7 +973,8 @@ Sub LoadOBJData()
                     .MinLevel = val(Leer.GetValue("OBJ" & Object, "MinLevel"))
                     
                 Case eOBJType.otForos
-                    Call AddForum(Leer.GetValue("OBJ" & Object, "ID"))
+                    .ForoID = Leer.GetValue("OBJ" & Object, "ID")
+                    Call AddForum(.ForoID)
                     
                 Case eOBJType.otPergaminos
                     .MinLevel = val(Leer.GetValue("OBJ" & Object, "MinLevel"))
@@ -975,7 +986,22 @@ Sub LoadOBJData()
                     
                 Case eOBJType.otPaseVIP
                     .TiempoVIP = val(Leer.GetValue("OBJ" & Object, "TiempoVIP"))
-
+                    
+                Case eOBJType.otDestruible
+                    .ResourceNode.TotalHP = val(Leer.GetValue("OBJ" & Object, "TotalHP"))
+                    .ResourceNode.ProfessionSkill = val(Leer.GetValue("OBJ" & Object, "ProfessionSkill"))
+                    .ResourceNode.RegenerationTime = val(Leer.GetValue("OBJ" & Object, "RegenerationTime"))
+                    .ResourceNode.ResourceIndex = val(Leer.GetValue("OBJ" & Object, "ResourceIndex")) 'Index del recurso que porporciona
+                    .ResourceNode.ResourceAmount = val(Leer.GetValue("OBJ" & Object, "ResourceAmount"))
+                    .ResourceNode.Tier = val(Leer.GetValue("OBJ" & Object, "Tier"))
+                    .ResourceNode.DestroySound = val(Leer.GetValue("OBJ" & Object, "DestroySound"))
+                    .ResourceNode.SoundKnock = val(Leer.GetValue("OBJ" & Object, "SoundKnock"))
+                    .ResourceNode.GrhRemains = val(Leer.GetValue("OBJ" & Object, "GrhRemains"))
+                    
+                Case eOBJType.otCarteles
+                    .texto = Leer.GetValue("OBJ" & Object, "Texto")
+                    .GrhCartel = val(Leer.GetValue("OBJ" & Object, "GrhCartel"))
+                    
             End Select
             
             .Ropaje = val(Leer.GetValue("OBJ" & Object, "NumRopaje"))
@@ -987,8 +1013,8 @@ Sub LoadOBJData()
             .RecetaIndex = val(Leer.GetValue("OBJ" & Object, "RecetaIndex"))
             .Profesion = val(Leer.GetValue("OBJ" & Object, "Profesion"))
             
-            .MaxHp = val(Leer.GetValue("OBJ" & Object, "MaxHP"))
-            .MinHp = val(Leer.GetValue("OBJ" & Object, "MinHP"))
+            '.MaxHp = val(Leer.GetValue("OBJ" & Object, "MaxHP"))
+            '.MinHp = val(Leer.GetValue("OBJ" & Object, "MinHP"))
             
             .Mujer = val(Leer.GetValue("OBJ" & Object, "Mujer"))
             .Hombre = val(Leer.GetValue("OBJ" & Object, "Hombre"))
@@ -1023,12 +1049,8 @@ Sub LoadOBJData()
             
             'Puertas y llaves
             .Clave = val(Leer.GetValue("OBJ" & Object, "Clave"))
-            
-            .texto = Leer.GetValue("OBJ" & Object, "Texto")
-            .GrhSecundario = val(Leer.GetValue("OBJ" & Object, "VGrande"))
-            
+     
             .Agarrable = val(Leer.GetValue("OBJ" & Object, "Agarrable"))
-            .ForoID = Leer.GetValue("OBJ" & Object, "ID")
             
             .Acuchilla = val(Leer.GetValue("OBJ" & Object, "Acuchilla"))
             
@@ -1108,12 +1130,6 @@ Sub LoadOBJData()
             .AuraColor = val(ReadField(2, Aura, Asc("-")))
             
             .NoRobable = val(Leer.GetValue("OBJ" & Object, "NoRobable"))
-            
-            .Herramienta.Profesion = val(ReadField(1, Leer.GetValue("OBJ" & Object, "Herramienta"), Asc("-"))) 'Profesion a la que pertenece
-            .Herramienta.Categoria = val(ReadField(2, Leer.GetValue("OBJ" & Object, "Herramienta"), Asc("-"))) 'Categoria de la herramienta
-            
-            .Recurso.Profesion = val(ReadField(1, Leer.GetValue("OBJ" & Object, "Recurso"), Asc("-"))) 'Profesion a la que pertenece
-            .Recurso.Categoria = val(ReadField(2, Leer.GetValue("OBJ" & Object, "Recurso"), Asc("-"))) 'Categoria del recurso
             
             Call UpdateProgressBar(frmCargando.picBar, CInt(NumObjDatas), CInt(Object), frmCargando.OriginalWidthBar)
 
@@ -1363,168 +1379,198 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
     
     On Error GoTo errh
     
-    Dim fh              As Integer
+    Dim fh            As Integer
     
-    Dim MH              As tMapHeader
-    Dim Blqs()          As tDatosBloqueados
+    Dim MH            As tMapHeader
+    Dim Blqs()        As tDatosBloqueados
     
-    Dim L1()            As Long
-    Dim L2()            As tDatosGrh
-    Dim L3()            As tDatosGrh
-    Dim L4()            As tDatosGrh
+    Dim L1()          As Long
+    Dim L2()          As tDatosGrh
+    Dim L3()          As tDatosGrh
+    Dim L4()          As tDatosGrh
     
-    Dim Triggers()      As tDatosTrigger
-    Dim Luces()         As tDatosLuces
-    Dim Particulas()    As tDatosParticulas
-    Dim Objetos()       As tDatosObjs
-    Dim NPCs()          As tDatosNPC
-    Dim TEs()           As tDatosTE
-    Dim MapSize         As tMapSize
-    Dim MapDat()          As tMapDat
-    Dim Zonas()         As tDatosZonas
+    Dim Triggers()    As tDatosTrigger
+    Dim Luces()       As tDatosLuces
+    Dim Particulas()  As tDatosParticulas
+    Dim Objetos()     As tDatosObjs
+    Dim NPCs()        As tDatosNPC
+    Dim TEs()         As tDatosTE
+    Dim MapSize       As tMapSize
+    Dim MapDat()      As tMapDat
+    Dim Zonas()       As tDatosZonas
     
-    Dim npcfile         As String
+    Dim npcfile       As String
     
-    Dim i               As Long
-    Dim j               As Long
+    Dim i             As Long
+    Dim j             As Long
     
-    Static ZonaMaxima   As Integer
+    Static ZonaMaxima As Integer
     
     fh = FreeFile
     
     Open MAPFl & ".csm" For Binary Access Read As fh
     
-        Get #fh, , MH
-        Get #fh, , MapSize
+    Get #fh, , MH
+    Get #fh, , MapSize
         
-        CantZonas(Map) = MH.NumeroData
+    CantZonas(Map) = MH.NumeroData
         
-        'Lorwik> Explicación: Debemos darle una dimensión al Array de MapZonas, para optimizar y
-        'no poner un numero excesivo de zonas mediante una constante, vamos a establecer el numero de zonas
-        'según el mapa que mas zonas tenga.
-        If CantZonas(Map) > ZonaMaxima Then ZonaMaxima = CantZonas(Map)
+    'Lorwik> Explicación: Debemos darle una dimensión al Array de MapZonas, para optimizar y
+    'no poner un numero excesivo de zonas mediante una constante, vamos a establecer el numero de zonas
+    'según el mapa que mas zonas tenga.
+    If CantZonas(Map) > ZonaMaxima Then ZonaMaxima = CantZonas(Map)
 
-        ReDim Preserve MapZonas(NumMaps, ZonaMaxima) As tZonaInfo
-        ReDim MapDat(CantZonas(Map)) As tMapDat
+    ReDim Preserve MapZonas(NumMaps, ZonaMaxima) As tZonaInfo
+    ReDim MapDat(CantZonas(Map)) As tMapDat
         
-        Get #fh, , MapDat
+    Get #fh, , MapDat
         
-        ReDim L1(MapSize.XMin To MapSize.XMax, MapSize.YMin To MapSize.YMax) As Long
+    ReDim L1(MapSize.XMin To MapSize.XMax, MapSize.YMin To MapSize.YMax) As Long
         
-        Get #fh, , L1
+    Get #fh, , L1
         
-        With MH
-            If .NumeroBloqueados > 0 Then
-                ReDim Blqs(1 To .NumeroBloqueados)
-                Get #fh, , Blqs
-                For i = 1 To .NumeroBloqueados
-                    MapData(Map, Blqs(i).X, Blqs(i).Y).Blocked = 1
-                Next i
-            End If
+    With MH
+
+        If .NumeroBloqueados > 0 Then
+            ReDim Blqs(1 To .NumeroBloqueados)
+            Get #fh, , Blqs
+
+            For i = 1 To .NumeroBloqueados
+                MapData(Map, Blqs(i).X, Blqs(i).Y).Blocked = 1
+            Next i
+
+        End If
             
-            If .NumeroLayers(2) > 0 Then
-                ReDim L2(1 To .NumeroLayers(2))
-                Get #fh, , L2
-                For i = 1 To .NumeroLayers(2)
-                    MapData(Map, L2(i).X, L2(i).Y).Graphic(2) = L2(i).GrhIndex
-                Next i
-            End If
+        If .NumeroLayers(2) > 0 Then
+            ReDim L2(1 To .NumeroLayers(2))
+            Get #fh, , L2
+
+            For i = 1 To .NumeroLayers(2)
+                MapData(Map, L2(i).X, L2(i).Y).Graphic(2) = L2(i).GrhIndex
+            Next i
+
+        End If
             
-            If .NumeroLayers(3) > 0 Then
-                ReDim L3(1 To .NumeroLayers(3))
-                Get #fh, , L3
-                For i = 1 To .NumeroLayers(3)
-                    MapData(Map, L3(i).X, L3(i).Y).Graphic(3) = L3(i).GrhIndex
-                Next i
-            End If
+        If .NumeroLayers(3) > 0 Then
+            ReDim L3(1 To .NumeroLayers(3))
+            Get #fh, , L3
+
+            For i = 1 To .NumeroLayers(3)
+                MapData(Map, L3(i).X, L3(i).Y).Graphic(3) = L3(i).GrhIndex
+            Next i
+
+        End If
             
-            If .NumeroLayers(4) > 0 Then
-                ReDim L4(1 To .NumeroLayers(4))
-                Get #fh, , L4
-                For i = 1 To .NumeroLayers(4)
-                    MapData(Map, L4(i).X, L4(i).Y).Graphic(4) = L4(i).GrhIndex
-                Next i
-            End If
+        If .NumeroLayers(4) > 0 Then
+            ReDim L4(1 To .NumeroLayers(4))
+            Get #fh, , L4
+
+            For i = 1 To .NumeroLayers(4)
+                MapData(Map, L4(i).X, L4(i).Y).Graphic(4) = L4(i).GrhIndex
+            Next i
+
+        End If
             
-            If .NumeroTriggers > 0 Then
-                ReDim Triggers(1 To .NumeroTriggers)
-                Get #fh, , Triggers
-                For i = 1 To .NumeroTriggers
-                    MapData(Map, Triggers(i).X, Triggers(i).Y).Trigger = Triggers(i).Trigger
-                Next i
-            End If
+        If .NumeroTriggers > 0 Then
+            ReDim Triggers(1 To .NumeroTriggers)
+            Get #fh, , Triggers
+
+            For i = 1 To .NumeroTriggers
+                MapData(Map, Triggers(i).X, Triggers(i).Y).Trigger = Triggers(i).Trigger
+            Next i
+
+        End If
             
-            If .NumeroParticulas > 0 Then
-                ReDim Particulas(1 To .NumeroParticulas)
-                Get #fh, , Particulas
-            End If
+        If .NumeroParticulas > 0 Then
+            ReDim Particulas(1 To .NumeroParticulas)
+            Get #fh, , Particulas
+        End If
             
-            If .NumeroLuces > 0 Then
-                ReDim Luces(1 To .NumeroLuces)
-                Get #fh, , Luces
-            End If
+        If .NumeroLuces > 0 Then
+            ReDim Luces(1 To .NumeroLuces)
+            Get #fh, , Luces
+        End If
             
-            If .NumeroZonas > 0 Then
-                ReDim Zonas(1 To .NumeroZonas)
-                Get #fh, , Zonas
-                For i = 1 To .NumeroZonas
-                    MapData(Map, Zonas(i).X, Zonas(i).Y).ZonaIndex = Zonas(i).Zona
-                Next i
-            End If
+        If .NumeroZonas > 0 Then
+            ReDim Zonas(1 To .NumeroZonas)
+            Get #fh, , Zonas
+
+            For i = 1 To .NumeroZonas
+                MapData(Map, Zonas(i).X, Zonas(i).Y).ZonaIndex = Zonas(i).Zona
+            Next i
+
+        End If
             
-            If .NumeroOBJs > 0 Then
-                ReDim Objetos(1 To .NumeroOBJs)
-                Get #fh, , Objetos
-                For i = 1 To .NumeroOBJs
-                    MapData(Map, Objetos(i).X, Objetos(i).Y).ObjInfo.ObjIndex = Objetos(i).ObjIndex
-                    MapData(Map, Objetos(i).X, Objetos(i).Y).ObjInfo.Amount = Objetos(i).ObjAmmount
-                Next i
-            End If
-                
-            If .NumeroNPCs > 0 Then
-                ReDim NPCs(1 To .NumeroNPCs)
-                Get #fh, , NPCs
-                For i = 1 To .NumeroNPCs
-                    MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex = NPCs(i).NPCIndex
-                    If MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex > 0 Then
-                        
-                        npcfile = DatPath & "NPCs.dat"
-                        
-                        MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex = OpenNPC(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex)
-                        Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Orig.Map = Map
-                        Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Orig.X = NPCs(i).X
-                        Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Orig.Y = NPCs(i).Y
-                        
-                        If Not MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex = 0 Then
-                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Pos.Map = Map
-                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Pos.X = NPCs(i).X
-                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Pos.Y = NPCs(i).Y
-                            
-                            Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).ZonaOrig = MapData(Map, NPCs(i).X, NPCs(i).Y).ZonaIndex
-       
-                            Call MakeNPCChar(True, 0, MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex, Map, NPCs(i).X, NPCs(i).Y)
-                        End If
-                        
+        If .NumeroOBJs > 0 Then
+            ReDim Objetos(1 To .NumeroOBJs)
+            Get #fh, , Objetos
+
+            For i = 1 To .NumeroOBJs
+                MapData(Map, Objetos(i).X, Objetos(i).Y).ObjInfo.ObjIndex = Objetos(i).ObjIndex
+                MapData(Map, Objetos(i).X, Objetos(i).Y).ObjInfo.Amount = Objetos(i).ObjAmmount
+
+                With ObjData(Objetos(i).ObjIndex)
+
+                    If .OBJType = eOBJType.otDestruible Then
+                        MapData(Map, Objetos(i).X, Objetos(i).Y).ObjInfo.VidaUtil = ObjData(Objetos(i).ObjIndex).ResourceNode.TotalHP
+                    Else
+                        MapData(Map, Objetos(i).X, Objetos(i).Y).ObjInfo.VidaUtil = 0
                     End If
-                Next i
-            End If
+                End With
+            Next i
 
-            If .NumeroTE > 0 Then
-                ReDim TEs(1 To .NumeroTE)
-                Get #fh, , TEs
-                For i = 1 To .NumeroTE
-                    MapData(Map, TEs(i).X, TEs(i).Y).TileExit.Map = TEs(i).DestM
-                    MapData(Map, TEs(i).X, TEs(i).Y).TileExit.X = TEs(i).DestX
-                    MapData(Map, TEs(i).X, TEs(i).Y).TileExit.Y = TEs(i).DestY
-                Next i
-            End If
+        End If
+                
+        If .NumeroNPCs > 0 Then
+            ReDim NPCs(1 To .NumeroNPCs)
+            Get #fh, , NPCs
+
+            For i = 1 To .NumeroNPCs
+                MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex = NPCs(i).NPCIndex
+
+                If MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex > 0 Then
+                        
+                    npcfile = DatPath & "NPCs.dat"
+                        
+                    MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex = OpenNPC(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex)
+                    Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Orig.Map = Map
+                    Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Orig.X = NPCs(i).X
+                    Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Orig.Y = NPCs(i).Y
+                        
+                    If Not MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex = 0 Then
+                        Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Pos.Map = Map
+                        Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Pos.X = NPCs(i).X
+                        Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).Pos.Y = NPCs(i).Y
+                            
+                        Npclist(MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex).ZonaOrig = MapData(Map, NPCs(i).X, NPCs(i).Y).ZonaIndex
+       
+                        Call MakeNPCChar(True, 0, MapData(Map, NPCs(i).X, NPCs(i).Y).NPCIndex, Map, NPCs(i).X, NPCs(i).Y)
+                    End If
+                        
+                End If
+            Next i
+
+        End If
+
+        If .NumeroTE > 0 Then
+            ReDim TEs(1 To .NumeroTE)
+            Get #fh, , TEs
+
+            For i = 1 To .NumeroTE
+                MapData(Map, TEs(i).X, TEs(i).Y).TileExit.Map = TEs(i).DestM
+                MapData(Map, TEs(i).X, TEs(i).Y).TileExit.X = TEs(i).DestX
+                MapData(Map, TEs(i).X, TEs(i).Y).TileExit.Y = TEs(i).DestY
+            Next i
+
+        End If
             
-        End With
+    End With
     
     Close fh
         
     For j = MapSize.YMin To MapSize.YMax
         For i = MapSize.XMin To MapSize.XMax
+
             If L1(i, j) > 0 Then
                 MapData(Map, j, i).Graphic(1) = L1(j, i)
             End If
@@ -1533,6 +1579,7 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
     
     'Cargamos los extras
     For i = 0 To CantZonas(Map)
+
         With MapZonas(Map, i)
             .Name = MapDat(i).map_name
             .music = MapDat(i).music_number
@@ -1556,7 +1603,7 @@ Public Sub CargarMapa(ByVal Map As Long, ByVal MAPFl As String)
         End With
     Next i
 
-Exit Sub
+    Exit Sub
 
 errh:
     'Call LogError("Error cargando mapa: " & map & " - Pos: " & .X & "," & Y & "." & Err.description)
@@ -1565,12 +1612,13 @@ End Sub
 Sub LoadSini()
 '***************************************************
 'Author: Unknown
-'Last Modification: 13/11/2019 (Recox)
+'Last Modification: 29/09/2024
 'CHOTS: Database params
 'Cucsifae: Agregados multiplicadores exp y oro
 'CHOTS: Agregado multiplicador oficio
 'CHOTS: Agregado min y max Dados
 'Jopi: Uso de clsIniManager para cargar los valores.
+'Lorwik: Muevo los intervalos a otro archivo
 '***************************************************
 
     Dim Temporal As Long
@@ -1639,60 +1687,6 @@ Sub LoadSini()
 
     'Atributos Iniciales
     EstadisticasInicialesUsarConfiguracionPersonalizada = CBool(val(Lector.GetValue("ESTADISTICASINICIALESPJ", "Activado")))
-
-    'Intervalos
-    'TODO: Mover a otro archivo
-    SanaIntervaloSinDescansar = val(Lector.GetValue("INTERVALOS", "SanaIntervaloSinDescansar"))
-    StaminaIntervaloSinDescansar = val(Lector.GetValue("INTERVALOS", "StaminaIntervaloSinDescansar"))
-    SanaIntervaloDescansar = val(Lector.GetValue("INTERVALOS", "SanaIntervaloDescansar"))
-    StaminaIntervaloDescansar = val(Lector.GetValue("INTERVALOS", "StaminaIntervaloDescansar"))
-    StaminaIntervaloLloviendo = val(Lector.GetValue("INTERVALOS", "StaminaIntervaloLloviendo"))
-    IntervaloSed = val(Lector.GetValue("INTERVALOS", "IntervaloSed"))
-    IntervaloHambre = val(Lector.GetValue("INTERVALOS", "IntervaloHambre"))
-    IntervaloVeneno = val(Lector.GetValue("INTERVALOS", "IntervaloVeneno"))
-    IntervaloIncinerado = val(Lector.GetValue("INTERVALOS", "IntervaloIncinerado"))
-    IntervaloParalizado = val(Lector.GetValue("INTERVALOS", "IntervaloParalizado"))
-    IntervaloInvisible = val(Lector.GetValue("INTERVALOS", "IntervaloInvisible"))
-    IntervaloFrio = val(Lector.GetValue("INTERVALOS", "IntervaloFrio"))
-    IntervaloWavFx = val(Lector.GetValue("INTERVALOS", "IntervaloWAVFX"))
-    IntervaloNPCPuedeAtacar = val(Lector.GetValue("INTERVALOS", "IntervaloNpcPuedeAtacar"))
-    IntervaloInvocacion = val(Lector.GetValue("INTERVALOS", "IntervaloInvocacion"))
-    IntervaloParaConexion = val(Lector.GetValue("INTERVALOS", "IntervaloParaConexion"))
-    IntervaloUserPuedeCastear = val(Lector.GetValue("INTERVALOS", "IntervaloLanzaHechizo"))
-    IntervaloUserPuedeTrabajar = val(Lector.GetValue("INTERVALOS", "IntervaloTrabajo"))
-    IntervaloUserPuedeAtacar = val(Lector.GetValue("INTERVALOS", "IntervaloUserPuedeAtacar"))
-    INTERVALO_GLOBAL = val(Lector.GetValue("INTERVALOS", "IntervaloGlobal"))
-    IntervaloPuedeMakrear = val(Lector.GetValue("INTERVALOS", "IntervaloMakreo"))
-    IntervaloCaminar = val(Lector.GetValue("INTERVALOS", "IntervaloCaminar"))
-    
-    'TODO : Agregar estos intervalos al form!!!
-    IntervaloMagiaGolpe = val(Lector.GetValue("INTERVALOS", "IntervaloMagiaGolpe"))
-    IntervaloGolpeMagia = val(Lector.GetValue("INTERVALOS", "IntervaloGolpeMagia"))
-    IntervaloGolpeUsar = val(Lector.GetValue("INTERVALOS", "IntervaloGolpeUsar"))
-    IntervaloOcultable = val(Lector.GetValue("INTERVALOS", "IntervaloPuedeOcultar"))
-    
-    '&&&&&&&&&&&&&&&&&&&&& ANTICHEAT &&&&&&&&&&&&&&&&&&&&&&&
-    MaximoSpeedHack = val(Lector.GetValue("ANTICHEAT", "MaximoSpeedHack"))
-    
-    '&&&&&&&&&&&&&&&&&&&&& TIMERS &&&&&&&&&&&&&&&&&&&&&&&
-    IntervaloPuedeSerAtacado = val(Lector.GetValue("TIMERS", "IntervaloPuedeSerAtacado"))
-    IntervaloAtacable = val(Lector.GetValue("TIMERS", "IntervaloAtacable"))
-    IntervaloOwnedNpc = val(Lector.GetValue("TIMERS", "IntervaloOwnedNpc"))
-    
-
-    MinutosWs = val(Lector.GetValue("INTERVALOS", "IntervaloWS"))
-
-    If MinutosWs < 60 Then MinutosWs = 180
-    
-    MinutosGuardarUsuarios = val(Lector.GetValue("INTERVALOS", "IntervaloGuardarUsuarios"))
-    IntervaloCerrarConexion = val(Lector.GetValue("INTERVALOS", "IntervaloCerrarConexion"))
-    IntervaloReconexionDB = val(Lector.GetValue("INTERVALOS", "IntervaloReconexionDB"))
-    IntervaloUserPuedeUsar = val(Lector.GetValue("INTERVALOS", "IntervaloUserPuedeUsar"))
-    IntervaloFlechasCazadores = val(Lector.GetValue("INTERVALOS", "IntervaloFlechasCazadores"))
-    
-    IntervaloOculto = val(Lector.GetValue("INTERVALOS", "IntervaloOculto"))
-    
-    '&&&&&&&&&&&&&&&&&&&&& FIN TIMERS &&&&&&&&&&&&&&&&&&&&&&&
       
     RecordUsuariosOnline = val(Lector.GetValue("INIT", "Record"))
 
@@ -1746,10 +1740,92 @@ Sub LoadSini()
     
 End Sub
 
-Public Function Load_ConfigDatBase() As Boolean
+Public Sub LoadIntervals()
+'***************************************************
+'Author: Lorwik
+'Last Modification: 29/09/2024
+'***************************************************
 
+    On Error GoTo LoadIntervals_Err
+    
+    If Not FileExist(ConfigPath & "Intervalos.ini") Then
+        MsgBox "No se ha encontrado el archivo Intervalos.ini en la carpeta de configuración, se cancela el inicio del servidor."
+        End
+    End If
+    
+    If frmMain.Visible Then
+        frmMain.txtStatus.Text = "Cargando Intervalos."
+    End If
+    
     Dim Lector As clsIniManager
     Set Lector = New clsIniManager
+    
+    Call Lector.Initialize(ConfigPath & "Intervalos.ini")
+    
+    'Intervalos
+    SanaIntervaloSinDescansar = val(Lector.GetValue("INTERVALOS", "SanaIntervaloSinDescansar"))
+    StaminaIntervaloSinDescansar = val(Lector.GetValue("INTERVALOS", "StaminaIntervaloSinDescansar"))
+    SanaIntervaloDescansar = val(Lector.GetValue("INTERVALOS", "SanaIntervaloDescansar"))
+    StaminaIntervaloDescansar = val(Lector.GetValue("INTERVALOS", "StaminaIntervaloDescansar"))
+    StaminaIntervaloLloviendo = val(Lector.GetValue("INTERVALOS", "StaminaIntervaloLloviendo"))
+    IntervaloSed = val(Lector.GetValue("INTERVALOS", "IntervaloSed"))
+    IntervaloHambre = val(Lector.GetValue("INTERVALOS", "IntervaloHambre"))
+    IntervaloVeneno = val(Lector.GetValue("INTERVALOS", "IntervaloVeneno"))
+    IntervaloIncinerado = val(Lector.GetValue("INTERVALOS", "IntervaloIncinerado"))
+    IntervaloParalizado = val(Lector.GetValue("INTERVALOS", "IntervaloParalizado"))
+    IntervaloInvisible = val(Lector.GetValue("INTERVALOS", "IntervaloInvisible"))
+    IntervaloFrio = val(Lector.GetValue("INTERVALOS", "IntervaloFrio"))
+    IntervaloWavFx = val(Lector.GetValue("INTERVALOS", "IntervaloWAVFX"))
+    IntervaloNPCPuedeAtacar = val(Lector.GetValue("INTERVALOS", "IntervaloNpcPuedeAtacar"))
+    IntervaloInvocacion = val(Lector.GetValue("INTERVALOS", "IntervaloInvocacion"))
+    IntervaloParaConexion = val(Lector.GetValue("INTERVALOS", "IntervaloParaConexion"))
+    IntervaloUserPuedeCastear = val(Lector.GetValue("INTERVALOS", "IntervaloLanzaHechizo"))
+    IntervaloUserPuedeTrabajar = val(Lector.GetValue("INTERVALOS", "IntervaloTrabajo"))
+    IntervaloUserPuedeAtacar = val(Lector.GetValue("INTERVALOS", "IntervaloUserPuedeAtacar"))
+    INTERVALO_GLOBAL = val(Lector.GetValue("INTERVALOS", "IntervaloGlobal"))
+    IntervaloPuedeMakrear = val(Lector.GetValue("INTERVALOS", "IntervaloMakreo"))
+    IntervaloCaminar = val(Lector.GetValue("INTERVALOS", "IntervaloCaminar"))
+    
+    'TODO : Agregar estos intervalos al form!!!
+    IntervaloMagiaGolpe = val(Lector.GetValue("INTERVALOS", "IntervaloMagiaGolpe"))
+    IntervaloGolpeMagia = val(Lector.GetValue("INTERVALOS", "IntervaloGolpeMagia"))
+    IntervaloGolpeUsar = val(Lector.GetValue("INTERVALOS", "IntervaloGolpeUsar"))
+    IntervaloOcultable = val(Lector.GetValue("INTERVALOS", "IntervaloPuedeOcultar"))
+    
+    MinutosWs = val(Lector.GetValue("INTERVALOS", "IntervaloWS"))
+
+    If MinutosWs < 60 Then MinutosWs = 180
+    
+    MinutosGuardarUsuarios = val(Lector.GetValue("INTERVALOS", "IntervaloGuardarUsuarios"))
+    IntervaloCerrarConexion = val(Lector.GetValue("INTERVALOS", "IntervaloCerrarConexion"))
+    IntervaloReconexionDB = val(Lector.GetValue("INTERVALOS", "IntervaloReconexionDB"))
+    IntervaloUserPuedeUsar = val(Lector.GetValue("INTERVALOS", "IntervaloUserPuedeUsar"))
+    IntervaloFlechasCazadores = val(Lector.GetValue("INTERVALOS", "IntervaloFlechasCazadores"))
+    
+    IntervaloOculto = val(Lector.GetValue("INTERVALOS", "IntervaloOculto"))
+    
+    '&&&&&&&&&&&&&&&&&&&&& ANTICHEAT &&&&&&&&&&&&&&&&&&&&&&&
+    MaximoSpeedHack = val(Lector.GetValue("ANTICHEAT", "MaximoSpeedHack"))
+    
+    '&&&&&&&&&&&&&&&&&&&&& TIMERS &&&&&&&&&&&&&&&&&&&&&&&
+    IntervaloPuedeSerAtacado = val(Lector.GetValue("TIMERS", "IntervaloPuedeSerAtacado"))
+    IntervaloAtacable = val(Lector.GetValue("TIMERS", "IntervaloAtacable"))
+    IntervaloOwnedNpc = val(Lector.GetValue("TIMERS", "IntervaloOwnedNpc"))
+    '&&&&&&&&&&&&&&&&&&&&& FIN TIMERS &&&&&&&&&&&&&&&&&&&&&&&
+    
+    Set Lector = Nothing
+    
+    Exit Sub
+    
+LoadIntervals_Err:
+    
+End Sub
+
+Public Function Load_ConfigDatBase() As Boolean
+    '***************************************************
+    'Author: Lorwik
+    'Last Modification: ????
+    '***************************************************
     
     If frmMain.Visible Then
         frmMain.txtStatus.Text = "Cargando info de inicio del server."
@@ -1765,6 +1841,8 @@ Public Function Load_ConfigDatBase() As Boolean
         Exit Function
     End If
     
+    Dim Lector As clsIniManager
+    Set Lector = New clsIniManager
     
     Call Lector.Initialize(fileConfig)
     
@@ -1783,9 +1861,18 @@ Public Function Load_ConfigDatBase() As Boolean
 End Function
 
 Public Sub Load_Rates()
-
+    '***************************************************
+    'Author: Lorwik
+    'Last Modification: 29/09/2024
+    '***************************************************
+    
     Dim Lector As clsIniManager
     Set Lector = New clsIniManager
+    
+    If Not FileExist(ConfigPath & "rates.ini") Then
+        MsgBox "No se ha encontrado el archivo Rates.ini en la carpeta de confiración. Se cancela el inicio del servidor."
+        End
+    End If
     
     If frmMain.Visible Then
         frmMain.txtStatus.Text = "Cargando info de inicio del server."
@@ -1805,6 +1892,19 @@ Public Sub Load_Rates()
 
     DificultadExtraer = val(Lector.GetValue("DIFICULTAD", "DificultadExtraer"))
     
+    '-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+    'Captions:
+    With frmMain
+        .lblNivelMaximo.Caption = "Nivel Maximo: " & STAT_MAXELV
+        .lblMultiplicadorDe.Caption = "Experiencia: x" & ExpMultiplier
+        .lblOro.Caption = "Oro: x" & OroMultiplier
+        .lblProfesiones.Caption = "Profesiones: x" & OficioMultiplier
+        .lblDificultadExtraer.Caption = "Dificultad de extraccion: x" & DificultadExtraer
+        .lblDropAl.Caption = "Drop al morir: " & IIf(DropItemsAlMorir, "Si", "No")
+        .lblCostoArtesano.Caption = "Costo del artesano: " & ArtesaniaCosto & " de oro"
+    End With
+    '-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+    
     Set Lector = Nothing
     
 End Sub
@@ -1816,6 +1916,12 @@ Sub CargarCiudades()
     'Last Modification: 15/05/2019 (Jopi)
     'Jopi: Uso de clsIniManager para cargar los valores.
     '***************************************************
+    
+    If Not FileExist(DatPath & "Ciudades.dat", vbArchive) Then
+        MsgBox "No se ha encontrado el archivo de configuracion de ciudades en " & DatPath & "Ciudades.dat" & ". Se cancela el inicio del servidor."
+        End
+    End If
+    
     If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando Ciudades.dat"
     
     Dim Lector As clsIniManager: Set Lector = New clsIniManager
@@ -2123,11 +2229,20 @@ Public Sub CargaApuestas()
     'Last Modification: -
     '
     '***************************************************
+    
+    Dim FileDir As String
+    FileDir = DatPath & "apuestas.dat"
+    
+    If Not FileExist(FileDir, vbArchive) Then
+        MsgBox "No se ha encontrado el archivo " & DatPath & "apuestas.dat" & ". Se cancela el inicio del servidor."
+        End
+    End If
+    
     If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando apuestas.dat"
 
-    Apuestas.Ganancias = val(GetVar(DatPath & "apuestas.dat", "Main", "Ganancias"))
-    Apuestas.Perdidas = val(GetVar(DatPath & "apuestas.dat", "Main", "Perdidas"))
-    Apuestas.Jugadas = val(GetVar(DatPath & "apuestas.dat", "Main", "Jugadas"))
+    Apuestas.Ganancias = val(GetVar(FileDir, "Main", "Ganancias"))
+    Apuestas.Perdidas = val(GetVar(FileDir, "Main", "Perdidas"))
+    Apuestas.Jugadas = val(GetVar(FileDir, "Main", "Jugadas"))
 
     If frmMain.Visible Then frmMain.txtStatus.Text = Date & " " & time & " - Se cargo el archivo apuestas.dat"
 
@@ -2466,8 +2581,8 @@ Public Sub CargarExperiencias()
     If frmMain.Visible Then frmMain.txtStatus.Text = "Cargando Experiencias."
     
     If Not FileExist(DatPath & "Experiencias.dat", vbArchive) Then
-        MsgBox "No se ha encontrado el archivo Experiencias.dat en la carpeta " & DatPath
-        Exit Sub
+        MsgBox "No se ha encontrado el archivo Experiencias.dat en la carpeta " & DatPath & ". Se cancela el inicio del servidor."
+        End
     End If
     
     Dim Lector     As clsIniManager
@@ -2489,4 +2604,76 @@ CargarExperiencias_Err:
 
     'Call RegistrarError(Err.Number, Err.description, "ES.CargarExperiencias", Erl)
     Resume Next
+End Sub
+
+Public Sub InicializarSonidos()
+'****************************************
+'Autor: Lorwik
+'Fecha: 01/05/2020
+'Descripción: Inicializa las variable de los Sonidos
+'Ultima modificacion: 29/09/2024 - Lorwik: Ahora se cargan desde un .ini
+'****************************************
+
+    On Error GoTo InicializarSonidos_Err
+
+    If Not FileExist(ConfigPath & "sonidos.ini") Then
+        MsgBox "No se ha encontrado el archivo sonidos.ini en la carpeta de confiración. Se cancela el inicio del servidor."
+        End
+    End If
+    
+    If frmMain.Visible Then
+        frmMain.txtStatus.Text = "Cargando Sonidos."
+    End If
+    
+    Dim Lector As clsIniManager
+    Set Lector = New clsIniManager
+    
+    Call Lector.Initialize(ConfigPath & "Sonidos.ini")
+
+    SND_PESCAR = val(Lector.GetValue("SOUNDS", "SND_PESCAR"))
+    SND_CARPINTERO(1) = val(Lector.GetValue("SOUNDS", "SND_CARPINTERO1"))
+    SND_CARPINTERO(2) = val(Lector.GetValue("SOUNDS", "SND_CARPINTERO2"))
+    SND_CARPINTERO(3) = val(Lector.GetValue("SOUNDS", "SND_CARPINTERO3"))
+    SND_HERRERO = val(Lector.GetValue("SOUNDS", "SND_HERRERO"))
+    SND_ALQUIMIA = val(Lector.GetValue("SOUNDS", "SND_ALQUIMI"))
+    SND_SASTRE = val(Lector.GetValue("SOUNDS", "SND_SASTRE"))
+    SND_SWING = val(Lector.GetValue("SOUNDS", "SND_SWING"))
+    SND_DROP = val(Lector.GetValue("SOUNDS", "SND_DROP"))
+    SND_PUERTA = val(Lector.GetValue("SOUNDS", "SND_PUERTA"))
+    SND_SACARARMA = val(Lector.GetValue("SOUNDS", "SND_SACARARMA"))
+    SND_WARP = val(Lector.GetValue("SOUNDS", "SND_WARP"))
+    SND_ESCUDO(1) = val(Lector.GetValue("SOUNDS", "SND_ESCUDO1"))
+    SND_ESCUDO(2) = val(Lector.GetValue("SOUNDS", "SND_ESCUDO2"))
+    SND_ESCUDO(3) = val(Lector.GetValue("SOUNDS", "SND_ESCUDO3"))
+    SND_ESCUDO(4) = val(Lector.GetValue("SOUNDS", "SND_ESCUDO4"))
+    SND_BEBER = val(Lector.GetValue("SOUNDS", "SND_BEBER"))
+    SND_COMER = val(Lector.GetValue("SOUNDS", "SND_COMER"))
+    SND_NIVEL = val(Lector.GetValue("SOUNDS", "SND_NIVEL"))
+    SND_CURAR_SACERDOTE = val(Lector.GetValue("SOUNDS", "SND_CURAR_SACERDOTE"))
+    SND_RESUCITAR_SACERDOTE = val(Lector.GetValue("SOUNDS", "SND_RESUCITAR_SACERDOTE"))
+    SND_HOMBRE = val(Lector.GetValue("SOUNDS", "SND_HOMBRE"))
+    SND_MUJER = val(Lector.GetValue("SOUNDS", "SND_MUJER"))
+    SND_IMPACTO = val(Lector.GetValue("SOUNDS", "SND_IMPACTO"))
+    SND_IMPACTO2 = val(Lector.GetValue("SOUNDS", "SND_IMPACTO2"))
+    SND_FRAGUA = val(Lector.GetValue("SOUNDS", "SND_FRAGUA"))
+    SND_TIRAR_ORO = val(Lector.GetValue("SOUNDS", "SND_TIRAR_ORO"))
+    SND_NPC_EXPLOTA = val(Lector.GetValue("SOUNDS", "SND_NPC_EXPLOTA"))
+    SND_NEW_GUILD = val(Lector.GetValue("SOUNDS", "SND_NEW_GUILD"))
+    SND_GUILD_WAR = val(Lector.GetValue("SOUNDS", "SND_GUILD_WAR"))
+    SND_NEW_MEMBER = val(Lector.GetValue("SOUNDS", "SND_NEW_MEMBER"))
+    SND_KICK_GUILD = val(Lector.GetValue("SOUNDS", "SND_KICK_GUILD"))
+    SND_DRAGON_VIVO = val(Lector.GetValue("SOUNDS", "SND_DRAGON_VIVO"))
+    SND_EVENTO_PORTAL = val(Lector.GetValue("SOUNDS", "SND_EVENTO_PORTAL"))
+    SND_QUEST = val(Lector.GetValue("SOUNDS", "SND_QUEST"))
+    SND_QUESTTARGET = val(Lector.GetValue("SOUNDS", "SND_QUESTTARGET"))
+    SND_FOGATA = val(Lector.GetValue("SOUNDS", "SND_FOGATA"))
+    
+    Set Lector = Nothing
+    
+    Exit Sub
+    
+InicializarSonidos_Err:
+    Call TraceError(Err.Number, Err.description, "ES.InicializarSonidos", Erl)
+    Resume Next
+    
 End Sub

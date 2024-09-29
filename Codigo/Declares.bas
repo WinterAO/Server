@@ -52,10 +52,6 @@ Public tickLimpieza        As Integer
 
 Public Const MAXMATERIALES As Byte = 4 '4 materiales maximo para construir un item con profesiones
 
-Public aClon               As clsAntiMassClon
-
-Public TrashCollector      As Collection
-
 Public Const MAXSPAWNATTEMPS = 60
 
 Public Const INFINITE_LOOPS As Integer = -1
@@ -635,52 +631,38 @@ Public Const AumentoSTBrujo             As Byte = AumentoSTDef + 25
 
 'Sonidos
 Public SND_SWING                        As Byte
-
-Public SND_TALAR                        As Byte
-
 Public SND_PESCAR                       As Byte
-
-Public SND_MINERO                       As Integer
-
 Public SND_WARP                         As Byte
-
 Public SND_QUEST                        As Byte
-
 Public SND_QUESTTARGET                  As Integer
-
 Public SND_PUERTA                       As Byte
-
-Public SND_DROP                         As Integer
-
+Public SND_DROP                         As Byte
+Public SND_TIRAR_ORO                    As Byte
 Public SND_NIVEL                        As Byte
-
-Public SND_USERMUERTE                   As Byte
-
+Public SND_HOMBRE                       As Byte
+Public SND_MUJER                        As Byte
 Public SND_IMPACTO                      As Byte
-
 Public SND_IMPACTO2                     As Byte
-
-Public SND_LENADOR                      As Byte
-
 Public SND_FOGATA                       As Byte
-
-Public SND_AVE(1 To 3)                  As Byte
-
-Public SND_GRILLO(1 To 2)               As Byte
-
 Public SND_SACARARMA                    As Byte
-
 Public SND_ESCUDO(1 To 4)               As Byte
-
 Public SND_TRABAJO_HERRERO              As Byte
-
-Public SND_TRABAJO_CARPINTERO           As Byte
-
+Public SND_CARPINTERO(1 To 3)           As Byte
 Public SND_BEBER                        As Byte
-
+Public SND_COMER                        As Byte
 Public SND_RESUCITAR_SACERDOTE          As Byte
-
 Public SND_CURAR_SACERDOTE              As Byte
+Public SND_ALQUIMIA                     As Byte
+Public SND_SASTRE                       As Byte
+Public SND_FRAGUA                       As Byte
+Public SND_HERRERO                      As Byte
+Public SND_NPC_EXPLOTA                  As Byte
+Public SND_NEW_GUILD                    As Byte
+Public SND_GUILD_WAR                    As Byte
+Public SND_NEW_MEMBER                   As Byte
+Public SND_KICK_GUILD                   As Byte
+Public SND_DRAGON_VIVO                  As Byte
+Public SND_EVENTO_PORTAL                As Byte
 
 ''
 ' Cantidad maxima de objetos por slot de inventario
@@ -708,7 +690,7 @@ Public Enum eOBJType
     otUseOnce = 1
     otWeapon = 2
     otArmadura = 3
-    otArboles = 4
+    otDestruible = 4
     otOro = 5
     otPuertas = 6
     otContenedores = 7
@@ -726,7 +708,7 @@ Public Enum eOBJType
     otTeleport = 19
     otMuebles = 20
     otJoyas = 21 'Hacer algo con esto, no en uso
-    otYacimiento = 22
+    'Libre
     otMinerales = 23
     otPergaminos = 24
     otMonturas = 25
@@ -742,10 +724,11 @@ Public Enum eOBJType
     otManuales = 35
     otPasajes = 36
     otMochilas = 37
-    otYacimientoPez = 38
+    'LIBRE
     otRunaHogar = 39
     otInstruye = 40
     otPaseVIP = 41
+    otHerramientas = 42
     otCualquiera = 1000
 
 End Enum
@@ -997,7 +980,7 @@ Public Const MAX_ITEMS_CRAFTEO As Byte = 4
 
 Public Type tProfesion
     Profesion As Byte 'Indica el skill
-    Categoria As Byte 'Indica la categoria
+    Categoria As Byte 'Indica la categoria (Tier)
 End Type
 
 'Efectos de los anillos magicos
@@ -1008,6 +991,20 @@ Public Enum tEfectos
     Sabiduria = 4
 End Enum
 
+Public Type tResourceNode
+            
+    TotalHP As Long
+    ProfessionSkill As Byte
+    RegenerationTime As Integer
+    ResourceIndex As Integer
+    ResourceAmount As Integer
+    Tier As Byte
+    DestroySound As Integer
+    SoundKnock As Integer
+    GrhRemains As Long
+            
+End Type
+
 'Tipos de objetos
 Public Type ObjData
 
@@ -1016,7 +1013,7 @@ Public Type ObjData
     OBJType As eOBJType 'Tipo enum que determina cuales son las caract del obj
     
     GrhIndex As Long ' Indice del grafico que representa el obj
-    GrhSecundario As Long
+    GrhCartel As Long
     
     ParticulaIndex As Integer
     
@@ -1030,8 +1027,8 @@ Public Type ObjData
     
     ForoID As String
     
-    MinHp As Integer ' Minimo puntos de vida
-    MaxHp As Integer ' Maximo puntos de vida
+    'MinHp As Integer ' Minimo puntos de vida
+    'MaxHp As Integer ' Maximo puntos de vida
     
     RecursoIndex As Integer
     LingoteInex As Integer
@@ -1043,8 +1040,6 @@ Public Type ObjData
     
     Crucial As Byte
     Newbie As Integer
-    
-    Shadow As Byte
     
     'Puntos de Stamina que da
     MinSta As Integer ' Minimo puntos de stamina
@@ -1104,15 +1099,18 @@ Public Type ObjData
     
     Agarrable As Byte
     
+    'Profesiones - Materiales
     Materiales(1 To MAXMATERIALES)
     CantMateriales(1 To MAXMATERIALES)
-    
     SkHerreria As Integer
     SkCarpinteria As Integer
     SkSastreria As Integer
     SkAlquimia As Integer
-    
     ItemCrafteo() As CraftingItem
+    'Profesiones - Nodos de recursos
+    ResourceNode As tResourceNode
+    'Profesiones - Herramientas
+    Herramienta As tProfesion
 
     ' Usado por barcos y lingotes [WyroX: Lo dejo para no romper codigo donde no es necesario :)]
     MinSkill As Byte
@@ -1170,9 +1168,6 @@ Public Type ObjData
     GrhAura As Long
     AuraColor As Long
     
-    Herramienta As tProfesion
-    Recurso As tProfesion
-    
     Efecto As tEfectos
     
     Speed As Single
@@ -1184,6 +1179,7 @@ Public Type obj
 
     ObjIndex As Integer
     Amount As Integer
+    VidaUtil As Long
 
 End Type
 
@@ -1713,7 +1709,7 @@ End Type
 Public Type Amigos
     Nombre As String
     Ignorado As Byte
-    index As Integer
+    Index As Integer
 
 End Type
 
@@ -1898,8 +1894,6 @@ Public Type NPCFlags
     
     Invocacion As Byte
     
-    Recurso As tProfesion
-    
     ArenasRinkel As Byte 'Identifica si un NPC pertenece al evento de arenas de Rinkel
     
     Velocidad As Single
@@ -2003,7 +1997,6 @@ Public Type NPC
     'Para diferenciar entre clanes
     ClanIndex As Integer
     
-    NoShadow As Byte
     Instruye As Byte 'Instruye un profesion
     
     SpeedVar As Long
@@ -2230,6 +2223,12 @@ Public Ciudades(1 To NUMCIUDADES)         As WorldPos
 Public QuestList()                        As tQuest
 
 Public Records()                          As tRecord
+
+Public aItemManager                       As clsWorldItemManager
+
+Public aClon                              As clsAntiMassClon
+
+Public TrashCollector                     As Collection
 '*********************************************************
 
 Type HomeDistance
@@ -2420,20 +2419,6 @@ Public Const MENSAJE_DEMONIO_CIUDADANO_NOENLISTABLE As String = "Tu indecision t
 Public Const MENSAJE_DEMONIO_CIUDADANO_ENLISTABLE   As String = "Siento el miedo por tus venas. Deja de ser escoria y unete a mis filas, sabras que es el mejor camino."
 
 Public Administradores                              As clsIniManager
-
-'sonidos conocidos, pasados a enum para intelisense
-Public Enum e_SoundIndex
-
-    MUERTE_HOMBRE = 11
-    MUERTE_MUJER = 74
-    FLECHA_IMPACTO = 65
-    CONVERSION_BARCO = 55
-    MORFAR_MANZANA = 82
-    SOUND_COMIDA = 7
-    MUERTE_MUJER_AGUA = 211
-    MUERTE_HOMBRE_AGUA = 212
-
-End Enum
 
 'SERVER INI
 Public ExpMultiplier                                       As Integer

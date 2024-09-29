@@ -319,7 +319,7 @@ Sub AccionParaPuerta(ByVal Map As Integer, _
                     
                     MapData(Map, X, Y).ObjInfo.ObjIndex = ObjData(MapData(Map, X, Y).ObjInfo.ObjIndex).IndexAbierta
                     
-                    Call modSendData.SendToAreaByPos(Map, X, Y, PrepareMessageObjectCreate(ObjData(MapData(Map, X, Y).ObjInfo.ObjIndex).GrhIndex, 0, X, Y, ObjData(MapData(Map, X, Y).ObjInfo.ObjIndex).Shadow))
+                    Call modSendData.SendToAreaByPos(Map, X, Y, PrepareMessageObjectCreate(ObjData(MapData(Map, X, Y).ObjInfo.ObjIndex).GrhIndex, 0, X, Y))
                     
                     'Desbloquea
                     MapData(Map, X, Y).Blocked = 0
@@ -341,7 +341,7 @@ Sub AccionParaPuerta(ByVal Map As Integer, _
                 'Cierra puerta
                 MapData(Map, X, Y).ObjInfo.ObjIndex = ObjData(MapData(Map, X, Y).ObjInfo.ObjIndex).IndexCerrada
                 
-                Call modSendData.SendToAreaByPos(Map, X, Y, PrepareMessageObjectCreate(ObjData(MapData(Map, X, Y).ObjInfo.ObjIndex).GrhIndex, 0, X, Y, ObjData(MapData(Map, X, Y).ObjInfo.ObjIndex).Shadow))
+                Call modSendData.SendToAreaByPos(Map, X, Y, PrepareMessageObjectCreate(ObjData(MapData(Map, X, Y).ObjInfo.ObjIndex).GrhIndex, 0, X, Y))
                                 
                 MapData(Map, X, Y).Blocked = 1
                 MapData(Map, X - 1, Y).Blocked = 1

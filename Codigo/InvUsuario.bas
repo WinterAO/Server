@@ -365,6 +365,8 @@ Sub TirarOro(ByVal Cantidad As Long, ByVal UserIndex As Integer)
 
                 End If
                 
+                Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_TIRAR_ORO, UserList(UserIndex).Pos.X, UserList(UserIndex).Pos.Y))
+                
             Loop
 
             If TeniaOro = .Stats.Gld Then Extra = 0
@@ -579,25 +581,45 @@ End Sub
 Sub EraseObj(ByVal Num As Integer, _
              ByVal Map As Integer, _
              ByVal X As Integer, _
-             ByVal Y As Integer)
+             ByVal Y As Integer, _
+             Optional ByVal NoRespawn As Boolean = False)
     '***************************************************
     'Author: Unknown
-    'Last Modification: -
+    'Last Modification: 25/09/2024 - Lorwik
     '
     '***************************************************
+    
+    On Error GoTo EraseObj_Err
 
     With MapData(Map, X, Y)
+    
+        If .ObjInfo.ObjIndex = 0 Then Exit Sub
         .ObjInfo.Amount = .ObjInfo.Amount - Num
     
         If .ObjInfo.Amount <= 0 Then
+        
+            If ObjData(.ObjInfo.ObjIndex).ResourceNode.RegenerationTime >= 1 And NoRespawn = False Then _
+                Call aItemManager.AddItem(Map, X, Y, .ObjInfo.ObjIndex, ObjData(.ObjInfo.ObjIndex).ResourceNode.RegenerationTime)
+                
+            If ObjData(.ObjInfo.ObjIndex).OBJType = eOBJType.otDestruible Then
+                .Blocked = 0
+                Call Bloquear(True, Map, X, Y, .Blocked)
+            End If
+            
             .ObjInfo.ObjIndex = 0
             .ObjInfo.Amount = 0
+            .ObjInfo.VidaUtil = 0
 
             Call modSendData.SendToAreaByPos(Map, X, Y, PrepareMessageObjectDelete(X, Y))
 
         End If
 
     End With
+    
+    Exit Sub
+
+EraseObj_Err:
+    Call LogError("Error en EraseObj. Error " & Err.Number & " : " & Err.description)
 
 End Sub
 
@@ -614,13 +636,19 @@ Sub MakeObj(ByRef obj As obj, _
     If obj.ObjIndex > 0 And obj.ObjIndex <= UBound(ObjData) Then
     
         With MapData(Map, X, Y)
+        
+            If ObjData(obj.ObjIndex).OBJType = eOBJType.otDestruible Then
+                obj.VidaUtil = ObjData(obj.ObjIndex).ResourceNode.TotalHP
+                .Blocked = 1
+                Call Bloquear(True, Map, X, Y, .Blocked)
+            End If
 
             If .ObjInfo.ObjIndex = obj.ObjIndex Then
                 .ObjInfo.Amount = .ObjInfo.Amount + obj.Amount
             Else
                 .ObjInfo = obj
                 
-                Call modSendData.SendToAreaByPos(Map, X, Y, PrepareMessageObjectCreate(ObjData(obj.ObjIndex).GrhIndex, ObjData(obj.ObjIndex).ParticulaIndex, X, Y, ObjData(obj.ObjIndex).Shadow))
+                Call modSendData.SendToAreaByPos(Map, X, Y, PrepareMessageObjectCreate(ObjData(obj.ObjIndex).GrhIndex, ObjData(obj.ObjIndex).ParticulaIndex, X, Y))
 
             End If
             
@@ -989,8 +1017,7 @@ Function EsUsable(ByVal ObjIndex As Integer)
               eOBJType.otMuebles, _
               eOBJType.otPuertas, _
               eOBJType.otTeleport, _
-              eOBJType.otYacimiento, _
-              eOBJType.otYacimientoPez, _
+              eOBJType.otDestruible, _
               eOBJType.otYunque
          
             EsUsable = False
@@ -1118,6 +1145,15 @@ Sub EquiparInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
         Select Case obj.OBJType
 
             Case eOBJType.otWeapon
+                
+                '¿Es una herramienta?
+                If ObjData(ObjIndex).Herramienta.Profesion > 0 Then
+                    '¿No tiene la profesion aprendida para poder usarla?
+                    If Not ConoceProfesion(UserIndex, ObjData(ObjIndex).Herramienta.Profesion) Then
+                        Call WriteConsoleMsg(UserIndex, "No posees los conocimientos necesarios para poder utilizar esta herramienta.", FontTypeNames.FONTTYPE_INFO)
+                        Exit Sub
+                    End If
+                End If
 
                 If ClasePuedeUsarItem(UserIndex, ObjIndex, sMotivo) And FaccionPuedeUsarItem(UserIndex, ObjIndex, sMotivo) Then
 
@@ -1531,15 +1567,10 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                 If .Stats.MinHam > .Stats.MaxHam Then .Stats.MinHam = .Stats.MaxHam
                 .flags.Hambre = 0
                 Call WriteUpdateHungerAndThirst(UserIndex)
+                
                 'Sonido
-                
-                If ObjIndex = e_ObjetosCriticos.Manzana Or ObjIndex = e_ObjetosCriticos.Manzana2 Or ObjIndex = e_ObjetosCriticos.ManzanaNewbie Then
-                    Call ReproducirSonido(SendTarget.ToPCArea, UserIndex, e_SoundIndex.MORFAR_MANZANA)
-                Else
-                    Call ReproducirSonido(SendTarget.ToPCArea, UserIndex, e_SoundIndex.SOUND_COMIDA)
-
-                End If
-                
+                Call ReproducirSonido(SendTarget.ToPCArea, UserIndex, SND_COMER)
+     
                 'Quitamos del inv el item
                 Call QuitarUserInvItem(UserIndex, Slot, 1)
                 
@@ -1612,36 +1643,6 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                             ' Lo tiene equipado?
                             If .Invent.WeaponEqpObjIndex = ObjIndex Then
                                 Call WriteMultiMessage(UserIndex, eMessages.WorkRequestTarget, eSkill.pesca)  'Call WriteWorkRequestTarget(UserIndex, eSkill.Pesca)
-                            Else
-                                Call WriteConsoleMsg(UserIndex, "Debes tener equipada la herramienta para trabajar.", FontTypeNames.FONTTYPE_INFO)
-
-                            End If
-                            
-                        Case HACHA_LENADOR, HACHA_LENA_ELFICA
-                            
-                            If ConoceProfesion(UserIndex, eSkill.Talar) < 0 Then
-                                Call WriteConsoleMsg(UserIndex, "No conoces esa profesion.", FontTypeNames.FONTTYPE_INFOBOLD)
-                                Exit Sub
-                            End If
-                            
-                            ' Lo tiene equipado?
-                            If .Invent.WeaponEqpObjIndex = ObjIndex Then
-                                Call WriteMultiMessage(UserIndex, eMessages.WorkRequestTarget, eSkill.Talar)
-                            Else
-                                Call WriteConsoleMsg(UserIndex, "Debes tener equipada la herramienta para trabajar.", FontTypeNames.FONTTYPE_INFO)
-
-                            End If
-                            
-                        Case PIQUETE_MINERO
-                        
-                            If ConoceProfesion(UserIndex, eSkill.Mineria) < 0 Then
-                                Call WriteConsoleMsg(UserIndex, "No conoces esa profesion.", FontTypeNames.FONTTYPE_INFOBOLD)
-                                Exit Sub
-                            End If
-                        
-                            ' Lo tiene equipado?
-                            If .Invent.WeaponEqpObjIndex = ObjIndex Then
-                                Call WriteMultiMessage(UserIndex, eMessages.WorkRequestTarget, eSkill.Mineria)
                             Else
                                 Call WriteConsoleMsg(UserIndex, "Debes tener equipada la herramienta para trabajar.", FontTypeNames.FONTTYPE_INFO)
 
@@ -2383,14 +2384,14 @@ errHandler:
 
 End Sub
 
-Public Function ItemSeCae(ByVal index As Integer) As Boolean
+Public Function ItemSeCae(ByVal Index As Integer) As Boolean
     '***************************************************
     'Author: Unknown
     'Last Modification: -
     '
     '***************************************************
 
-    With ObjData(index)
+    With ObjData(Index)
         ItemSeCae = (.Real <> 1 Or .NoSeCae = 0) And (.Caos <> 1 Or .NoSeCae = 0) And .OBJType <> eOBJType.otLlaves And .OBJType <> eOBJType.otBarcos And .NoSeCae = 0
 
     End With

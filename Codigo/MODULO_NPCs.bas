@@ -143,7 +143,7 @@ Public Sub MuereNpc(ByVal NPCIndex As Integer, ByVal UserIndex As Integer)
                 .Stats.MinHp = .Stats.MinHp - dano
                 Call WriteUpdateHP(UserIndex)
                            
-                Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(27, UserList(UserIndex).Pos.X, UserList(UserIndex).Pos.Y))
+                Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_NPC_EXPLOTA, UserList(UserIndex).Pos.X, UserList(UserIndex).Pos.Y))
                 Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageCreateFX(UserList(UserIndex).Char.CharIndex, 27, 0))
                 Call WriteConsoleMsg(UserIndex, "¡La explosion de la criatura te ha quitado " & dano & " puntos de vida!", FontTypeNames.FONTTYPE_FIGHT)
 
@@ -1455,9 +1455,6 @@ Public Function OpenNPC(ByVal NpcNumber As Integer, _
             
             .Invocacion = val(Leer.GetValue("NPC" & NpcNumber, "Invocacion"))
             
-            .Recurso.Profesion = val(ReadField(1, Leer.GetValue("NPC" & NpcNumber, "Recurso"), Asc("-")))
-            .Recurso.Categoria = val(ReadField(2, Leer.GetValue("NPC" & NpcNumber, "Recurso"), Asc("-")))
-            
             .ArenasRinkel = val(Leer.GetValue("NPC" & NpcNumber, "ArenasRinkel"))
         End With
         
@@ -1476,8 +1473,6 @@ Public Function OpenNPC(ByVal NpcNumber As Integer, _
         .TipoItems = val(Leer.GetValue("NPC" & NpcNumber, "TipoItems"))
         
         .Ciudad = val(Leer.GetValue("NPC" & NpcNumber, "Ciudad"))
-        
-        .NoShadow = val(Leer.GetValue("NPC" & NpcNumber, "NoShadow"))
         
         .Instruye = val(Leer.GetValue("NPC" & NpcNumber, "Instruye"))
         

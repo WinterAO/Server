@@ -112,7 +112,7 @@ Public Sub NPC_TIRAR_ITEMS(ByVal UserIndex As Integer, ByRef NPC As NPC, ByVal I
         MenosProb = 0
             
         'Drops globales
-        For i = i To NUMGLOBALDROPS
+        For i = i To NumGlobalDrops
         
             Random = RandomNumber(1, 100)
         
@@ -365,6 +365,8 @@ Public Sub TirarOroNpc(ByVal UserIndex As Integer, ByVal Cantidad As Long, ByRef
         Call TirarItemAlPiso(Pos, MiObj)
 
     End If
+    
+    Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_TIRAR_ORO, UserList(UserIndex).Pos.X, UserList(UserIndex).Pos.Y))
 
     Exit Sub
 

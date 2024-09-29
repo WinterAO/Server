@@ -1208,11 +1208,12 @@ End Function
 Public Sub UsuarioAtaca(ByVal UserIndex As Integer)
     '***************************************************
     'Author: Unknown
-    'Last Modification: 13/02/2011 (Amraphen)
+    'Last Modification: 21/09/2024 (Lorwik)
     '13/02/2011: Amraphen - Ahora se quita la stamina en el sub UsuarioAtacaNPC.
+    '21/09/2024: Lorwik - Cambio el mensaje de falta de energia por uno mas neutral, ademas añado objetos atacables
     '***************************************************
 
-    Dim index     As Integer
+    Dim Index     As Integer
 
     Dim AttackPos As WorldPos
     Dim bot_Index As Byte
@@ -1240,15 +1241,8 @@ Public Sub UsuarioAtaca(ByVal UserIndex As Integer)
 
         'Chequeamos que tenga por lo menos 10 de stamina.
         If .Stats.MinSta < 10 Then
-            If .Genero = eGenero.Hombre Then
-                Call WriteConsoleMsg(UserIndex, "Estas muy cansado para luchar.", FontTypeNames.FONTTYPE_INFO)
-            Else
-                Call WriteConsoleMsg(UserIndex, "Estas muy cansada para luchar.", FontTypeNames.FONTTYPE_INFO)
-
-            End If
-
+            Call WriteConsoleMsg(UserIndex, "Te sientes demasiado agotado para continuar.", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
-
         End If
         
         AttackPos = .Pos
@@ -1261,29 +1255,35 @@ Public Sub UsuarioAtaca(ByVal UserIndex As Integer)
 
         End If
         
-        index = MapData(AttackPos.Map, AttackPos.X, AttackPos.Y).UserIndex
+        '-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+        'USUARIO
+        '-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+        Index = MapData(AttackPos.Map, AttackPos.X, AttackPos.Y).UserIndex
         
         'Look for user
-        If index > 0 Then
-            Call UsuarioAtacaUsuario(UserIndex, index)
+        If Index > 0 Then
+            Call UsuarioAtacaUsuario(UserIndex, Index)
             Call WriteUpdateUserStats(UserIndex)
-            Call WriteUpdateUserStats(index)
+            Call WriteUpdateUserStats(Index)
             Exit Sub
 
         End If
         
-        index = MapData(AttackPos.Map, AttackPos.X, AttackPos.Y).NPCIndex
+        '-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+        'NPC
+        '-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+        Index = MapData(AttackPos.Map, AttackPos.X, AttackPos.Y).NPCIndex
         
         'Look for NPC
-        If index > 0 Then
-            If Npclist(index).Attackable Then
-                If Npclist(index).MaestroUser > 0 And MapZonas(Npclist(index).Pos.Map, NPCZonaId(index)).Pk = False Then
+        If Index > 0 Then
+            If Npclist(Index).Attackable Then
+                If Npclist(Index).MaestroUser > 0 And MapZonas(Npclist(Index).Pos.Map, NPCZonaId(Index)).Pk = False Then
                     Call WriteConsoleMsg(UserIndex, "No puedes atacar mascotas en zona segura.", FontTypeNames.FONTTYPE_WARNING)
                     Exit Sub
 
                 End If
                 
-                Call UsuarioAtacaNpc(UserIndex, index)
+                Call UsuarioAtacaNpc(UserIndex, Index)
             Else
                 Call WriteConsoleMsg(UserIndex, "No puedes atacar a este NPC.", FontTypeNames.FONTTYPE_WARNING)
 
@@ -1293,6 +1293,23 @@ Public Sub UsuarioAtaca(ByVal UserIndex As Integer)
             
             Exit Sub
 
+        End If
+        
+        '-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+        'OBJETO DESTRUIBLE
+        '-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+        
+        Index = MapData(AttackPos.Map, AttackPos.X, AttackPos.Y).ObjInfo.ObjIndex
+        
+        'Look for NPC
+        If Index > 0 Then
+        
+            If ObjData(Index).OBJType = eOBJType.otDestruible Then
+                Call UsuarioAtacaObj(UserIndex, AttackPos.Map, AttackPos.X, AttackPos.Y)
+                Call WriteUpdateUserStats(UserIndex)
+                Exit Sub
+            End If
+        
         End If
         
         Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_SWING, .Pos.X, .Pos.Y))
@@ -1305,6 +1322,159 @@ Public Sub UsuarioAtaca(ByVal UserIndex As Integer)
     End With
 
 End Sub
+
+Private Function UsuarioAtacaObj(ByVal UserIndex As Integer, _
+                                 ByVal Map As Integer, _
+                                 ByVal X As Integer, _
+                                 ByVal Y As Integer) As Boolean
+    '***************************************************
+    'Author: Lorwik
+    'Last Modification: 21/09/2024
+    '***************************************************
+    
+    On Error GoTo UsuarioAtacaObj_Err
+    
+    Dim ObjIndex    As Integer
+    Dim WeaponIndex As Integer
+    Dim PoderAtaque As Long
+    Dim Skill       As eSkill
+    
+    ObjIndex = MapData(Map, X, Y).ObjInfo.ObjIndex
+    
+    If ObjData(ObjIndex).ResourceNode.TotalHP < 1 Or _
+       ObjData(ObjIndex).ResourceNode.ResourceIndex < 1 Or _
+       ObjData(ObjIndex).ResourceNode.ResourceAmount < 1 Then
+        UsuarioAtacaObj = False
+        Exit Function
+    End If
+    
+    WeaponIndex = UserList(UserIndex).Invent.WeaponEqpObjIndex
+    Skill = ObjData(ObjIndex).ResourceNode.ProfessionSkill
+    
+    'Si el objeto no tenia un ProfessionSkill definido es que se trata de algo que no requiere una profesion como una roca...
+    If Skill < 1 Then
+
+            Skill = eSkill.Armas
+
+            If WeaponIndex < 1 Then
+                Call WriteConsoleMsg(UserIndex, "Necesitas un arma para romper eso.", FontTypeNames.FONTTYPE_INFO)
+                UsuarioAtacaObj = False
+                Exit Function
+            End If
+            
+            If ObjData(WeaponIndex).proyectil = 1 Then
+                Call WriteConsoleMsg(UserIndex, "Necesitas un arma de cuerpo a cuerpo para romper eso.", FontTypeNames.FONTTYPE_INFO)
+                UsuarioAtacaObj = False
+                Exit Function
+            End If
+            
+    End If
+    
+    ' Verificación del ataque a recursos
+    If (Skill = eSkill.Talar Or Skill = eSkill.Mineria) And Not PuedeAtacarRecurso(UserIndex, ObjIndex, WeaponIndex, Skill) Then
+        UsuarioAtacaObj = False
+        Exit Function
+    End If
+    
+    PoderAtaque = MaximoInt(PoderAtaqueArma(UserIndex) * 2, RandomNumber(PoderAtaqueArma(UserIndex) * 2, PoderAtaqueArma(UserIndex) * 2))
+    
+    If PoderAtaque > 0 Then
+    
+        Call SubirSkill(UserIndex, Skill, True)
+        Call WriteConsoleMsg(UserIndex, "Has golpeado el " & ObjData(ObjIndex).Name & " por " & PoderAtaque, FontTypeNames.FONTTYPE_INFO)
+        MapData(Map, X, Y).ObjInfo.VidaUtil = MapData(Map, X, Y).ObjInfo.VidaUtil - PoderAtaque
+    
+        If MapData(Map, X, Y).ObjInfo.VidaUtil <= 0 Then
+            'Emitimos el sonido del recurso al ser destruido
+            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(ObjData(ObjIndex).ResourceNode.DestroySound, UserList(UserIndex).Pos.X, UserList(UserIndex).Pos.Y))
+            
+            'Quitamos el objeto
+            Call EraseObj(MapData(Map, X, Y).ObjInfo.Amount, Map, X, Y)
+            
+            '¿El objeto tenia algo que dropear?
+            If ObjData(ObjIndex).ResourceNode.ResourceIndex > 0 And ObjData(ObjIndex).ResourceNode.ResourceAmount > 0 Then
+                'Preparamos todo para el drop
+                Dim MiObj As obj
+                MiObj.Amount = ObjData(ObjIndex).ResourceNode.ResourceAmount
+                MiObj.ObjIndex = ObjData(ObjIndex).ResourceNode.ResourceIndex
+                
+                Dim ItemPos As WorldPos
+                ItemPos.Map = Map
+                ItemPos.X = X + 1
+                ItemPos.Y = Y
+                
+                Call TirarItemAlPiso(ItemPos, MiObj)
+            End If
+            
+        Else
+            'Emitimos el sonido del recurso al ser golpeado
+            Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(ObjData(ObjIndex).ResourceNode.SoundKnock, UserList(UserIndex).Pos.X, UserList(UserIndex).Pos.Y))
+        End If
+        
+    End If
+    
+    'Quitamos stamina
+    Call QuitarSta(UserIndex, RandomNumber(1, 10))
+    
+    ' Reveló su condición de usuario al atacar, los NPCs lo van a atacar
+    UserList(UserIndex).flags.Ignorado = False
+    
+    UsuarioAtacaObj = True
+    Exit Function
+    
+UsuarioAtacaObj_Err:
+    Dim username As String
+    
+    If UserIndex > 0 Then username = UserList(UserIndex).Name
+    
+    Call LogError("Error en UsuarioAtacaObj. Error " & Err.Number & " : " & Err.description & ". User: " & UserIndex & "-> " & username & ". ObjIndex: " & ObjIndex & ".")
+End Function
+
+Private Function PuedeAtacarRecurso(ByVal UserIndex As Integer, _
+                                    ByVal ObjIndex As Integer, _
+                                    ByVal WeaponIndex As Integer, _
+                                    ByVal Skill As eSkill) As Boolean
+                                    
+    '***************************************************
+    'Author: Lorwik
+    'Last Modification: 21/09/2024
+    '***************************************************
+    
+    On Error GoTo PuedeAtacarRecurso_Err
+
+    If WeaponIndex < 1 Then
+        Call WriteConsoleMsg(UserIndex, "Necesitas una herramienta para extraer ese recurso.", FontTypeNames.FONTTYPE_INFO)
+        PuedeAtacarRecurso = False
+        Exit Function
+    End If
+
+    '¿Tiene una herramienta con habilidad del Skill?
+    If ObjData(WeaponIndex).Herramienta.Profesion = Skill Then
+
+        '¿La herramienta es del mismo tier o superior a la del recurso?
+        If ObjData(WeaponIndex).Herramienta.Categoria < ObjData(ObjIndex).ResourceNode.Tier Then
+            Call WriteConsoleMsg(UserIndex, "Necesitas una herramienta de mayor calidad para extraer ese recurso.", FontTypeNames.FONTTYPE_INFO)
+            PuedeAtacarRecurso = False
+            Exit Function
+                
+        End If
+    Else
+        Call WriteConsoleMsg(UserIndex, "Necesitas la herramienta adecuada para extraer ese recurso.", FontTypeNames.FONTTYPE_INFO)
+        PuedeAtacarRecurso = False
+        Exit Function
+    End If
+    
+    PuedeAtacarRecurso = True
+    
+    Exit Function
+    
+PuedeAtacarRecurso_Err:
+    Dim username As String
+    
+    If UserIndex > 0 Then username = UserList(UserIndex).Name
+    
+    Call LogError("Error en UsuarioAtacaObj. Error " & Err.Number & " : " & Err.description & ". User: " & UserIndex & "-> " & username & ". ObjIndex: " & ObjIndex & ".")
+End Function
 
 Public Function UsuarioImpacto(ByVal AtacanteIndex As Integer, _
                                ByVal VictimaIndex As Integer) As Boolean

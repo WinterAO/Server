@@ -109,7 +109,7 @@ Public Sub DoTileEvents(ByVal UserIndex As Integer, _
             
                 If UserList(UserIndex).Stats.ELV < MapZonas(.TileExit.Map, UserZonaId(UserIndex)).lvlMinimo Then
                 
-                    Call WriteConsoleMsg(UserIndex, "Percibes un gran peligro más allá donde vas y no te atreves a continuar. Sientes que al nivel " & MapZonas(.TileExit.Map, UserZonaId(UserIndex)).lvlMinimo & " estarás preparado para afrontar el peligro.", FontTypeNames.FONTTYPE_INFO)
+                    Call WriteConsoleMsg(UserIndex, "Percibes un gran peligro más allá donde vas y no te atreves a continuar. Sientes que al nivel " & MapZonas(.TileExit.Map, UserZonaId(UserIndex)).lvlMinimo & " estarás preparado para afrontar la amenaza.", FontTypeNames.FONTTYPE_INFO)
                     Call ClosestStablePos(UserList(UserIndex).Pos, nPos)
             
                     If nPos.X <> 0 And nPos.Y <> 0 Then
@@ -970,6 +970,8 @@ Function LegalPos(ByVal Map As Integer, _
                 LegalPos = (.Blocked <> 1) And (.UserIndex = 0) And (.NPCIndex = 0) And (Not HayAgua(Map, X, Y))
             ElseIf PuedeAgua And Not PuedeTierra Then
                 LegalPos = (.Blocked <> 1) And (.UserIndex = 0) And (.NPCIndex = 0) And (HayAgua(Map, X, Y))
+            ElseIf ObjData(.ObjInfo.ObjIndex).OBJType = eOBJType.otDestruible Then
+                LegalPos = False
             Else
                 LegalPos = False
 
@@ -1028,6 +1030,8 @@ Function MoveToLegalPos(ByVal Map As Integer, _
                 MoveToLegalPos = (.Blocked <> 1) And (UserIndex = 0 Or IsDeadChar Or IsAdminInvisible) And (.NPCIndex = 0) And (Not HayAgua(Map, X, Y))
             ElseIf PuedeAgua And Not PuedeTierra Then
                 MoveToLegalPos = (.Blocked <> 1) And (UserIndex = 0 Or IsDeadChar Or IsAdminInvisible) And (.NPCIndex = 0) And (HayAgua(Map, X, Y))
+            ElseIf ObjData(.ObjInfo.ObjIndex).OBJType = eOBJType.otDestruible Then
+                MoveToLegalPos = False
             Else
                 MoveToLegalPos = False
 
@@ -1055,13 +1059,9 @@ Public Sub FindLegalPos(ByVal UserIndex As Integer, _
         If MapData(Map, X, Y).UserIndex = UserIndex Then Exit Sub
                             
         Dim FoundPlace     As Boolean
-
         Dim tX             As Long
-
         Dim tY             As Long
-
         Dim Rango          As Long
-
         Dim OtherUserIndex As Integer
     
         For Rango = 1 To 5
@@ -1070,11 +1070,10 @@ Public Sub FindLegalPos(ByVal UserIndex As Integer, _
 
                     'Reviso que no haya User ni NPC
                     If MapData(Map, tX, tY).UserIndex = 0 And MapData(Map, tX, tY).NPCIndex = 0 Then
-                        
-                        If InMapBounds(Map, tX, tY) Then FoundPlace = True
-                        
-                        Exit For
-
+                        If ObjData(MapData(Map, tX, tY).ObjInfo.ObjIndex).OBJType <> eOBJType.otDestruible Then ' GSZAO
+                            If InMapBounds(Map, tX, tY) Then FoundPlace = True
+                            Exit For
+                        End If
                     End If
 
                 Next tX
@@ -1171,7 +1170,7 @@ Function LegalPosNPC(ByVal Map As Integer, _
 
 End Function
 
-Sub SendHelp(ByVal index As Integer)
+Sub SendHelp(ByVal Index As Integer)
     '***************************************************
     'Author: Unknown
     'Last Modification: -
@@ -1185,7 +1184,7 @@ Sub SendHelp(ByVal index As Integer)
     NumHelpLines = val(GetVar(DatPath & "Help.dat", "INIT", "NumLines"))
 
     For LoopC = 1 To NumHelpLines
-        Call WriteConsoleMsg(index, GetVar(DatPath & "Help.dat", "Help", "Line" & LoopC), FontTypeNames.FONTTYPE_INFO)
+        Call WriteConsoleMsg(Index, GetVar(DatPath & "Help.dat", "Help", "Line" & LoopC), FontTypeNames.FONTTYPE_INFO)
     Next LoopC
 
 End Sub
@@ -1295,11 +1294,15 @@ Sub LookatTile(ByVal UserIndex As Integer, _
                 If FoundSomething = 1 Then
                     .TargetObj = MapData(Map, .TargetObjX, .TargetObjY).ObjInfo.ObjIndex
 
-                    If MostrarCantidad(.TargetObj) Then
-                        Call WriteConsoleMsg(UserIndex, ObjData(.TargetObj).Name & " - " & MapData(.TargetObjMap, .TargetObjX, .TargetObjY).ObjInfo.Amount & "", FontTypeNames.FONTTYPE_INFO)
+                    If ObjData(MapData(Map, .TargetObjX, .TargetObjY).ObjInfo.ObjIndex).OBJType = eOBJType.otDestruible Then
+                        Call WriteConsoleMsg(UserIndex, ObjData(.TargetObj).Name & " (Resistencia: " & MapData(.TargetObjMap, .TargetObjX, .TargetObjY).ObjInfo.VidaUtil & ")", FontTypeNames.FONTTYPE_INFO)
                     Else
-                        Call WriteConsoleMsg(UserIndex, ObjData(.TargetObj).Name, FontTypeNames.FONTTYPE_INFO)
-
+                        If MostrarCantidad(.TargetObj) Then
+                            Call WriteConsoleMsg(UserIndex, ObjData(.TargetObj).Name & " - " & MapData(.TargetObjMap, .TargetObjX, .TargetObjY).ObjInfo.Amount & "", FontTypeNames.FONTTYPE_INFO)
+                        Else
+                            Call WriteConsoleMsg(UserIndex, ObjData(.TargetObj).Name, FontTypeNames.FONTTYPE_INFO)
+    
+                        End If
                     End If
       
                 End If
@@ -1656,6 +1659,9 @@ Sub LookatTile(ByVal UserIndex As Integer, _
                             End If
 
                         End If
+                        
+                        'Enviamos el mensaje propiamente dicho:
+                        Call WriteChatOverHead(UserIndex, Stat, Npclist(TempCharIndex).Char.CharIndex, 255, 255, 255)
               
                     Else
 
@@ -1854,29 +1860,29 @@ Function FindDirection(Pos As WorldPos, Target As WorldPos) As eHeading
  
 End Function
 
-Public Function ItemNoEsDeMapa(ByVal index As Integer) As Boolean
+Public Function ItemNoEsDeMapa(ByVal Index As Integer) As Boolean
     '***************************************************
     'Author: Unknown
     'Last Modification: -
     '
     '***************************************************
 
-    With ObjData(index)
-        ItemNoEsDeMapa = .OBJType <> eOBJType.otPuertas And .OBJType <> eOBJType.otArboles And .OBJType <> eOBJType.otYacimiento And .OBJType <> eOBJType.otTeleport
+    With ObjData(Index)
+        ItemNoEsDeMapa = .OBJType <> eOBJType.otPuertas And .OBJType <> eOBJType.otForos And .OBJType <> eOBJType.otCarteles And Not (.OBJType = eOBJType.otTeleport) And Not (.OBJType = eOBJType.otDestruible)
     
     End With
 
 End Function
 
-Public Function MostrarCantidad(ByVal index As Integer) As Boolean
+Public Function MostrarCantidad(ByVal Index As Integer) As Boolean
     '***************************************************
     'Author: Unknown
     'Last Modification: -
     '
     '***************************************************
 
-    With ObjData(index)
-        MostrarCantidad = .OBJType <> eOBJType.otPuertas And .OBJType <> eOBJType.otForos And .OBJType <> eOBJType.otCarteles And .OBJType <> eOBJType.otArboles And .OBJType <> eOBJType.otYacimiento And .OBJType <> eOBJType.otTeleport
+    With ObjData(Index)
+        MostrarCantidad = .OBJType <> eOBJType.otPuertas And .OBJType <> eOBJType.otForos And .OBJType <> eOBJType.otCarteles And .OBJType <> eOBJType.otDestruible And .OBJType <> eOBJType.otTeleport
 
     End With
 
@@ -1889,7 +1895,7 @@ Public Function EsObjetoFijo(ByVal OBJType As eOBJType) As Boolean
     '
     '***************************************************
 
-    EsObjetoFijo = OBJType = eOBJType.otArboles Or OBJType = eOBJType.otYacimiento
+    EsObjetoFijo = OBJType = eOBJType.otForos Or OBJType = eOBJType.otCarteles
 
 End Function
 
