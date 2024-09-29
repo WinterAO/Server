@@ -1881,6 +1881,19 @@ Public Sub Load_Rates()
 
     DificultadExtraer = val(Lector.GetValue("DIFICULTAD", "DificultadExtraer"))
     
+    '-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+    'Captions:
+    With frmMain
+        .lblNivelMaximo.Caption = "Nivel Maximo: " & STAT_MAXELV
+        .lblMultiplicadorDe.Caption = "Experiencia: x" & ExpMultiplier
+        .lblOro.Caption = "Oro: x" & OroMultiplier
+        .lblProfesiones.Caption = "Profesiones: x" & OficioMultiplier
+        .lblDificultadExtraer.Caption = "Dificultad de extraccion: x" & DificultadExtraer
+        .lblDropAl.Caption = "Drop al morir: " & IIf(DropItemsAlMorir, "Si", "No")
+        .lblCostoArtesano.Caption = "Costo del artesano: " & ArtesaniaCosto & " de oro"
+    End With
+    '-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+    
     Set Lector = Nothing
     
 End Sub

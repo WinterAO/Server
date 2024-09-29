@@ -1,7 +1,7 @@
 VERSION 5.00
 Object = "{48E59290-9880-11CF-9754-00AA00C00908}#1.0#0"; "MSINET.OCX"
 Begin VB.Form frmCargando 
-   BackColor       =   &H00C0C0C0&
+   BackColor       =   &H00424242&
    BorderStyle     =   0  'None
    Caption         =   "Argentum"
    ClientHeight    =   3525
@@ -47,7 +47,7 @@ Begin VB.Form frmCargando
    Begin VB.PictureBox Picture1 
       BorderStyle     =   0  'None
       Height          =   2895
-      Left            =   30
+      Left            =   0
       ScaleHeight     =   2895
       ScaleWidth      =   6615
       TabIndex        =   0

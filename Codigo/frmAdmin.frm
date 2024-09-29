@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin VB.Form frmAdmin 
-   BackColor       =   &H00E0E0E0&
+   BackColor       =   &H00424242&
    BorderStyle     =   1  'Fixed Single
    Caption         =   "Administracion del servidor"
    ClientHeight    =   2865
@@ -13,7 +13,7 @@ Begin VB.Form frmAdmin
    ScaleWidth      =   4680
    StartUpPosition =   2  'CenterScreen
    Begin VB.Frame Frame1 
-      BackColor       =   &H00E0E0E0&
+      BackColor       =   &H00535353&
       Caption         =   "Personajes"
       BeginProperty Font 
          Name            =   "Tahoma"
@@ -151,7 +151,7 @@ Private Sub Command1_Click()
     tIndex = NameIndex(cboPjs.Text)
 
     If tIndex > 0 Then
-        Call SendData(SendTarget.ToAll, 0, PrepareMessageConsoleMsg("Servidor> " & UserList(tIndex).Name & " ha sido echado.", FontTypeNames.FONTTYPE_SERVER))
+        Call SendData(SendTarget.Toall, 0, PrepareMessageConsoleMsg("Servidor> " & UserList(tIndex).Name & " ha sido echado.", FontTypeNames.FONTTYPE_SERVER))
         Call CloseUser(tIndex)
 
     End If
