@@ -50,6 +50,7 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
     #If DBConexionUnica = 0 Then
         Call User_Database.Database_Connect
     #Else
+
         'Si perdimos la conexion reconectamos
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
@@ -65,12 +66,7 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
 
     With UserList(UserIndex)
 
-        Call User_Database.MakeQuery(query, True, .Name, .AccountInfo.ID, .Stats.ELV, .Stats.Exp, .Stats.ELU, .Genero, .Raza, .clase, .Hogar, .Desc, .Stats.Gld, _
-                                    .Stats.ELO, .Pos.Map, .Pos.X, .Pos.Y, .Char.body, .Char.Head, .Char.WeaponAnim, .Char.CascoAnim, .Char.ShieldAnim, .Invent.NroItems, .Invent.ArmourEqpSlot, _
-                                    .Invent.WeaponEqpSlot, .Stats.MinHp, .Stats.MaxHp, .Stats.MinMAN, .Stats.MaxMAN, .Stats.MinSta, .Stats.MaxSta, .Stats.MinHam, .Stats.MaxHam, _
-                                    .Stats.MinAGU, .Stats.MaxAGU, .Stats.MinHIT, .Stats.MaxHIT, .Reputacion.NobleRep, .Reputacion.PlebeRep, .Reputacion.Promedio, _
-                                    .Profesion(0).Profesion, .Profesion(1).Profesion, .Stats.ELVPVP, .Stats.ExpPVP, .Stats.ELUPVP, .OrigChar.body, .OrigChar.Head)
-        
+        Call User_Database.MakeQuery(query, True, .Name, .AccountInfo.ID, .Stats.ELV, .Stats.Exp, .Stats.ELU, .Genero, .Raza, .clase, .Hogar, .Desc, .Stats.Gld, .Stats.ELO, .Pos.Map, .Pos.X, .Pos.Y, .Char.body, .Char.Head, .Char.WeaponAnim, .Char.CascoAnim, .Char.ShieldAnim, .Invent.NroItems, .Invent.ArmourEqpSlot, .Invent.WeaponEqpSlot, .Stats.MinHp, .Stats.MaxHp, .Stats.MinMAN, .Stats.MaxMAN, .Stats.MinSta, .Stats.MaxSta, .Stats.MinHam, .Stats.MaxHam, .Stats.MinAGU, .Stats.MaxAGU, .Stats.MinHIT, .Stats.MaxHIT, .Reputacion.NobleRep, .Reputacion.PlebeRep, .Reputacion.Promedio, .Profesion(0).Profesion, .Profesion(1).Profesion, .Stats.ELVPVP, .Stats.ExpPVP, .Stats.ELUPVP, .OrigChar.body, .OrigChar.Head)
         
         'Obtenemos el ID del usuario
         Set User_Database.Database_RecordSet = User_Database.Database_Connection.Execute("SELECT LAST_INSERT_ID();")
@@ -92,6 +88,7 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
 
         For LoopC = 1 To NUMATRIBUTOS
             query = query & " att" & LoopC
+
             If LoopC < NUMATRIBUTOS Then query = query & ", "
         Next LoopC
 
@@ -99,6 +96,7 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
 
         For LoopC = 1 To NUMATRIBUTOS
             query = query & .Stats.UserAtributos(LoopC)
+
             If LoopC < NUMATRIBUTOS Then query = query & ", "
 
         Next LoopC
@@ -114,6 +112,7 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
         
         For LoopC = 1 To MAXUSERRECETAS
             query = query & "receta" & LoopC
+
             If LoopC < MAXUSERRECETAS Then query = query & ", "
         Next LoopC
 
@@ -121,6 +120,7 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
 
         For LoopC = 1 To MAXUSERRECETAS
             query = query & .Profesion(0).Recetas(LoopC)
+
             If LoopC < MAXUSERRECETAS Then query = query & ", "
         Next LoopC
 
@@ -135,6 +135,7 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
         
         For LoopC = 1 To MAXUSERRECETAS
             query = query & "receta" & LoopC
+
             If LoopC < MAXUSERRECETAS Then query = query & ", "
         Next LoopC
 
@@ -142,6 +143,7 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
 
         For LoopC = 1 To MAXUSERRECETAS
             query = query & .Profesion(1).Recetas(LoopC)
+
             If LoopC < MAXUSERRECETAS Then query = query & ", "
         Next LoopC
 
@@ -154,34 +156,30 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
         '*******************************************************************
         
         If MacrosActivados Then
-        
-            query = "INSERT INTO macros (user_id, "
-            
+
+            ' Insertar el usuario en la tabla "macros" si no existe
+            query = "INSERT IGNORE INTO macros (user_id) VALUES (" & .ID & ");"
+            Call User_Database.Database_Connection.Execute(query)
+
+            ' Insertar las macros asociadas al usuario
             For LoopC = 1 To NUMMACROS
-                query = query & "tipoaccion" & LoopC & ", "
-                query = query & "spell" & LoopC & ", "
-                query = query & "inv" & LoopC & ", "
-                query = query & "command" & LoopC
-                If LoopC < NUMMACROS Then query = query & ", "
-            Next LoopC
-    
-            query = query & ") VALUES (" & .ID & ", "
-    
-            For LoopC = 1 To NUMMACROS
+                query = "INSERT INTO macro_acciones (user_id, slot, tipo_accion, spell, inv, command) VALUES ("
+                query = query & .ID & ", "
+                query = query & LoopC & ", "
                 query = query & .MacrosKey(LoopC).TipoAccion & ", "
                 query = query & .MacrosKey(LoopC).hList & ", "
                 query = query & .MacrosKey(LoopC).InvObj & ", "
-                query = query & "'" & .MacrosKey(LoopC).Comando & "'"
-                
-                If LoopC < NUMMACROS Then query = query & ", "
+                query = query & "'" & .MacrosKey(LoopC).Comando & "') "
+                query = query & "ON DUPLICATE KEY UPDATE "
+                query = query & "tipo_accion = VALUES(tipo_accion), "
+                query = query & "spell = VALUES(spell), "
+                query = query & "inv = VALUES(inv), "
+                query = query & "command = VALUES(command);"
+
+                Call User_Database.Database_Connection.Execute(query)
             Next LoopC
-    
-            query = query & ");"
-    
-            Call User_Database.Database_Connection.Execute(query)
-        
+
         End If
-        
 
     End With
     
@@ -215,35 +213,35 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
     #If DBConexionUnica = 0 Then
         Call User_Database.Database_Connect
     #Else
+
         'Si perdimos la conexion reconectamos
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
 
     'Basic user data
-        query = "UPDATE personaje SET name = (?), level = (?), exp = (?), elu = (?), genre_id = (?), race_id = (?), class_id = (?), home_id = (?), description = (?), "
-        query = query & "gold = (?), bank_gold = (?), elo = (?), pet_amount = (?), pos_map = (?), pos_x = (?), pos_y = (?), last_map = (?), "
-        query = query & "body_id = (?), head_id = (?), weapon_id = (?), helmet_id = (?), shield_id = (?), aura_id = (?), aura_color = (?), heading = (?), items_amount = (?), "
-        query = query & "slot_armour = (?), slot_weapon = (?), slot_helmet = (?), slot_shield = (?), slot_ammo = (?), slot_ship = (?), slot_ring = (?), slot_bag = (?), "
-        query = query & "min_hp = (?), max_hp = (?), min_man = (?), max_man = (?), min_sta = (?), max_sta = (?), min_ham = (?), max_ham = (?), min_sed = (?), max_sed = (?), min_hit = (?), max_hit = (?), "
-        query = query & "killed_npcs = (?), killed_users = (?), rep_asesino = (?), rep_bandido = (?), rep_burgues = (?), rep_ladron = (?), rep_noble = (?), rep_plebe = (?), rep_average = (?), "
-        query = query & "is_naked = (?), is_poisoned = (?), is_incinerado = (?), is_hidden = (?), is_hungry = (?), is_thirsty = (?), is_ban = (?), is_dead = (?), is_sailing = (?), is_paralyzed = (?), "
-        query = query & "counter_pena = (?), pertenece_consejo_real = (?), pertenece_consejo_caos = (?), pertenece_real = (?), pertenece_caos = (?), ciudadanos_matados = (?), criminales_matados = (?), "
-        query = query & "recibio_armadura_real = (?), recibio_armadura_caos = (?), recibio_exp_real = (?), recibio_exp_caos = (?), recompensas_real = (?), recompensas_caos = (?), "
-        query = query & "reenlistadas = (?), fecha_ingreso = (?), nivel_ingreso = (?), matados_ingreso = (?), siguiente_recompensa = (?), guild_index = (?), is_global = (?), profesionA = (?), profesionB = (?), "
-        query = query & "modocombate = (?), seguro = (?), levelPVP = (?), expPVP = (?), eluPVP = (?) WHERE id = (?)"
+    query = "UPDATE personaje SET name = (?), level = (?), exp = (?), elu = (?), genre_id = (?), race_id = (?), class_id = (?), home_id = (?), description = (?), "
+    query = query & "gold = (?), bank_gold = (?), elo = (?), pet_amount = (?), pos_map = (?), pos_x = (?), pos_y = (?), last_map = (?), "
+    query = query & "body_id = (?), head_id = (?), weapon_id = (?), helmet_id = (?), shield_id = (?), aura_id = (?), aura_color = (?), heading = (?), items_amount = (?), "
+    query = query & "slot_armour = (?), slot_weapon = (?), slot_helmet = (?), slot_shield = (?), slot_ammo = (?), slot_ship = (?), slot_ring = (?), slot_bag = (?), "
+    query = query & "min_hp = (?), max_hp = (?), min_man = (?), max_man = (?), min_sta = (?), max_sta = (?), min_ham = (?), max_ham = (?), min_sed = (?), max_sed = (?), min_hit = (?), max_hit = (?), "
+    query = query & "killed_npcs = (?), killed_users = (?), rep_asesino = (?), rep_bandido = (?), rep_burgues = (?), rep_ladron = (?), rep_noble = (?), rep_plebe = (?), rep_average = (?), "
+    query = query & "is_naked = (?), is_poisoned = (?), is_incinerado = (?), is_hidden = (?), is_hungry = (?), is_thirsty = (?), is_ban = (?), is_dead = (?), is_sailing = (?), is_paralyzed = (?), "
+    query = query & "counter_pena = (?), pertenece_consejo_real = (?), pertenece_consejo_caos = (?), pertenece_real = (?), pertenece_caos = (?), ciudadanos_matados = (?), criminales_matados = (?), "
+    query = query & "recibio_armadura_real = (?), recibio_armadura_caos = (?), recibio_exp_real = (?), recibio_exp_caos = (?), recompensas_real = (?), recompensas_caos = (?), "
+    query = query & "reenlistadas = (?), fecha_ingreso = (?), nivel_ingreso = (?), matados_ingreso = (?), siguiente_recompensa = (?), guild_index = (?), is_global = (?), profesionA = (?), profesionB = (?), "
+    query = query & "modocombate = (?), seguro = (?), levelPVP = (?), expPVP = (?), eluPVP = (?) WHERE id = (?)"
 
     With UserList(UserIndex)
-            Call User_Database.MakeQuery(query, True, .Name, .Stats.ELV, .Stats.Exp, .Stats.ELU, .Genero, .Raza, .clase, .Hogar, .Desc, .Stats.Gld, .Stats.Banco, .Stats.ELO, .NroMascotas, _
-                                        .Pos.Map, .Pos.X, .Pos.Y, .flags.lastMap, .Char.body, .Char.Head, .Char.WeaponAnim, .Char.CascoAnim, .Char.ShieldAnim, .Char.AuraAnim, .Char.AuraColor, .Char.Heading, .Invent.NroItems, _
-                                        .Invent.ArmourEqpSlot, .Invent.WeaponEqpSlot, .Invent.CascoEqpSlot, .Invent.EscudoEqpSlot, .Invent.MunicionEqpSlot, .Invent.BarcoSlot, .Invent.AnilloEqpSlot, .Invent.MochilaEqpSlot, _
-                                        .Stats.MinHp, .Stats.MaxHp, .Stats.MinMAN, .Stats.MaxMAN, .Stats.MinSta, .Stats.MaxSta, .Stats.MinHam, .Stats.MaxHam, .Stats.MinAGU, .Stats.MaxAGU, .Stats.MinHIT, .Stats.MaxHIT, _
-                                        .Stats.NPCsMuertos, .Stats.UsuariosMatados, .Reputacion.AsesinoRep, .Reputacion.BandidoRep, .Reputacion.BurguesRep, .Reputacion.LadronesRep, .Reputacion.NobleRep, .Reputacion.PlebeRep, _
-                                        .Reputacion.Promedio, .flags.Desnudo, .flags.Envenenado, .flags.Incinerado, .flags.Escondido, .flags.Hambre, .flags.Sed, .flags.Ban, .flags.Muerto, .flags.Navegando, .flags.Paralizado, _
-                                        .Counters.Pena, (.flags.Privilegios And PlayerType.RoyalCouncil), (.flags.Privilegios And PlayerType.ChaosCouncil), .Faccion.ArmadaReal, .Faccion.FuerzasCaos, .Faccion.CiudadanosMatados, _
-                                        .Faccion.CriminalesMatados, .Faccion.RecibioArmaduraReal, .Faccion.RecibioArmaduraCaos, .Faccion.RecibioExpInicialReal, .Faccion.RecibioExpInicialCaos, .Faccion.RecompensasReal, _
-                                        .Faccion.RecompensasCaos, .Faccion.Reenlistadas, .Faccion.FechaIngreso, .Faccion.NivelIngreso, .Faccion.MatadosIngreso, .Faccion.NextRecompensa, .GuildIndex, .flags.Global, .Profesion(0).Profesion, _
-                                        .Profesion(1).Profesion, IIf(.flags.ModoCombate = True, "1", "0"), IIf(.flags.Seguro = True, "1", "0"), .Stats.ELVPVP, .Stats.ExpPVP, .Stats.ELUPVP, .ID)
-                                        
+        Call User_Database.MakeQuery(query, True, .Name, .Stats.ELV, .Stats.Exp, .Stats.ELU, .Genero, .Raza, .clase, .Hogar, .Desc, .Stats.Gld, .Stats.Banco, .Stats.ELO, .NroMascotas, _
+           .Pos.Map, .Pos.X, .Pos.Y, .flags.lastMap, .Char.body, .Char.Head, .Char.WeaponAnim, .Char.CascoAnim, .Char.ShieldAnim, .Char.AuraAnim, .Char.AuraColor, .Char.Heading, .Invent.NroItems, _
+           .Invent.ArmourEqpSlot, .Invent.WeaponEqpSlot, .Invent.CascoEqpSlot, .Invent.EscudoEqpSlot, .Invent.MunicionEqpSlot, .Invent.BarcoSlot, .Invent.AnilloEqpSlot, .Invent.MochilaEqpSlot, _
+           .Stats.MinHp, .Stats.MaxHp, .Stats.MinMAN, .Stats.MaxMAN, .Stats.MinSta, .Stats.MaxSta, .Stats.MinHam, .Stats.MaxHam, .Stats.MinAGU, .Stats.MaxAGU, .Stats.MinHIT, .Stats.MaxHIT, _
+           .Stats.NPCsMuertos, .Stats.UsuariosMatados, .Reputacion.AsesinoRep, .Reputacion.BandidoRep, .Reputacion.BurguesRep, .Reputacion.LadronesRep, .Reputacion.NobleRep, .Reputacion.PlebeRep, _
+           .Reputacion.Promedio, .flags.Desnudo, .flags.Envenenado, .flags.Incinerado, .flags.Escondido, .flags.Hambre, .flags.Sed, .flags.Ban, .flags.Muerto, .flags.Navegando, .flags.Paralizado, _
+           .Counters.Pena, (.flags.Privilegios And PlayerType.RoyalCouncil), (.flags.Privilegios And PlayerType.ChaosCouncil), .Faccion.ArmadaReal, .Faccion.FuerzasCaos, .Faccion.CiudadanosMatados, _
+           .Faccion.CriminalesMatados, .Faccion.RecibioArmaduraReal, .Faccion.RecibioArmaduraCaos, .Faccion.RecibioExpInicialReal, .Faccion.RecibioExpInicialCaos, .Faccion.RecompensasReal, _
+           .Faccion.RecompensasCaos, .Faccion.Reenlistadas, .Faccion.FechaIngreso, .Faccion.NivelIngreso, .Faccion.MatadosIngreso, .Faccion.NextRecompensa, .GuildIndex, .flags.Global, .Profesion(0).Profesion, _
+           .Profesion(1).Profesion, IIf(.flags.ModoCombate = True, "1", "0"), IIf(.flags.Seguro = True, "1", "0"), .Stats.ELVPVP, .Stats.ExpPVP, .Stats.ELUPVP, .ID)
 
         '*******************************************************************
         'Hechizos
@@ -337,6 +335,7 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
         
         For LoopC = 1 To MAXUSERRECETAS
             query = query & "receta" & LoopC & " = '" & .Profesion(0).Recetas(LoopC) & "'"
+
             If LoopC < MAXUSERRECETAS Then query = query & ", "
         Next LoopC
         
@@ -351,6 +350,7 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
         
         For LoopC = 1 To MAXUSERRECETAS
             query = query & "receta" & LoopC & " = '" & .Profesion(1).Recetas(LoopC) & "'"
+
             If LoopC < MAXUSERRECETAS Then query = query & ", "
         Next LoopC
         
@@ -418,24 +418,18 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
         'Macros
         '*******************************************************************
         If MacrosActivados Then
-        
-            query = "UPDATE macros SET "
-            
+
             For LoopC = 1 To NUMMACROS
-                
-                query = query & "tipoaccion" & LoopC & " = '" & .MacrosKey(LoopC).TipoAccion & "', "
-                query = query & "spell" & LoopC & " = '" & .MacrosKey(LoopC).hList & "', "
-                query = query & "inv" & LoopC & " = '" & .MacrosKey(LoopC).InvObj & "', "
-                query = query & "command" & LoopC & " = '" & .MacrosKey(LoopC).Comando & "'"
-                
-                If LoopC < NUMMACROS Then query = query & ", "
-                
+                query = "UPDATE macro_acciones SET "
+                query = query & "tipo_accion = " & .MacrosKey(LoopC).TipoAccion & ", "
+                query = query & "spell = " & .MacrosKey(LoopC).hList & ", "
+                query = query & "inv = " & .MacrosKey(LoopC).InvObj & ", "
+                query = query & "command = '" & .MacrosKey(LoopC).Comando & "' "
+                query = query & "WHERE user_id = " & .ID & " AND slot = " & LoopC & ";"
+
+                Call User_Database.Database_Connection.Execute(query)
             Next LoopC
-            
-            query = query & " WHERE user_id = '" & .ID & "'"
-            
-            Call User_Database.Database_Connection.Execute(query)
-        
+
         End If
 
     End With
@@ -563,6 +557,7 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
     #If DBConexionUnica = 0 Then
         Call User_Database.Database_Connect
     #Else
+
         'Si perdimos la conexion reconectamos
         If User_Database.CheckSQLStatus = False Then User_Database.Database_Reconnect
     #End If
@@ -758,7 +753,7 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
                 .Invent.Object(LoopC).Amount = User_Database.Database_RecordSet!Amount
                 .Invent.Object(LoopC).Equipped = User_Database.Database_RecordSet!is_equipped
                 
-                 User_Database.Database_RecordSet.MoveNext
+                User_Database.Database_RecordSet.MoveNext
             Wend
                 
         End If
@@ -865,19 +860,19 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
         '*******************************************************************
         'Macros - Acciones rapidas
         '*******************************************************************
-        query = "SELECT * FROM macros WHERE user_id = " & .ID & ";"
+        query = "SELECT slot, tipo_accion, spell, inv, command FROM macro_acciones WHERE user_id = " & .ID & ";"
         Set User_Database.Database_RecordSet = User_Database.Database_Connection.Execute(query)
 
-        If Not User_Database.Database_RecordSet.RecordCount = 0 Then
-            User_Database.Database_RecordSet.MoveFirst
+        If Not User_Database.Database_RecordSet.EOF Then
 
-            For LoopC = 1 To NUMMACROS
-                .MacrosKey(LoopC).TipoAccion = User_Database.Database_RecordSet("tipoaccion" & LoopC)
-                .MacrosKey(LoopC).hList = User_Database.Database_RecordSet("spell" & LoopC)
-                .MacrosKey(LoopC).InvObj = User_Database.Database_RecordSet("inv" & LoopC)
-                .MacrosKey(LoopC).Comando = User_Database.Database_RecordSet("command" & LoopC)
-            Next LoopC
-
+            Do Until User_Database.Database_RecordSet.EOF
+                LoopC = User_Database.Database_RecordSet("slot") ' Recuperar el número de slot
+                .MacrosKey(LoopC).TipoAccion = User_Database.Database_RecordSet("tipo_accion")
+                .MacrosKey(LoopC).hList = User_Database.Database_RecordSet("spell")
+                .MacrosKey(LoopC).InvObj = User_Database.Database_RecordSet("inv")
+                .MacrosKey(LoopC).Comando = User_Database.Database_RecordSet("command")
+                User_Database.Database_RecordSet.MoveNext
+            Loop
         End If
 
         Set User_Database.Database_RecordSet = Nothing

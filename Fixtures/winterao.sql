@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 09-10-2022 a las 21:54:49
--- Versión del servidor: 10.5.15-MariaDB-0+deb11u1
--- Versión de PHP: 7.4.30
+-- Tiempo de generación: 16-11-2024 a las 19:26:20
+-- Versión del servidor: 10.5.23-MariaDB-0+deb11u1
+-- Versión de PHP: 7.4.33
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -34,7 +34,7 @@ CREATE TABLE `amigos` (
   `slot` tinyint(3) UNSIGNED NOT NULL DEFAULT 0,
   `amigo` varchar(32) DEFAULT '',
   `ignorado` int(1) DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -49,7 +49,7 @@ CREATE TABLE `atributos` (
   `att3` tinyint(3) UNSIGNED NOT NULL,
   `att4` tinyint(3) UNSIGNED NOT NULL,
   `att5` tinyint(3) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -62,7 +62,7 @@ CREATE TABLE `banco_items` (
   `slot` tinyint(3) UNSIGNED NOT NULL,
   `item_id` smallint(5) UNSIGNED DEFAULT NULL,
   `amount` smallint(5) UNSIGNED DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -76,7 +76,33 @@ CREATE TABLE `inventario_items` (
   `item_id` smallint(5) UNSIGNED DEFAULT NULL,
   `amount` smallint(5) UNSIGNED DEFAULT NULL,
   `is_equipped` tinyint(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `macros`
+--
+
+CREATE TABLE `macros` (
+  `user_id` mediumint(8) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `macro_acciones`
+--
+
+CREATE TABLE `macro_acciones` (
+  `id` int(11) NOT NULL,
+  `user_id` mediumint(8) UNSIGNED NOT NULL,
+  `slot` tinyint(1) UNSIGNED NOT NULL,
+  `tipo_accion` tinyint(1) UNSIGNED DEFAULT 0,
+  `spell` smallint(5) UNSIGNED DEFAULT 0,
+  `inv` smallint(5) UNSIGNED DEFAULT 0,
+  `command` varchar(24) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -91,8 +117,6 @@ CREATE TABLE `personaje` (
   `name` varchar(30) NOT NULL,
   `level` smallint(5) UNSIGNED NOT NULL,
   `exp` int(10) UNSIGNED NOT NULL,
-  `free_skillpoints` int(10) UNSIGNED NOT NULL,
-  `assigned_skillpoints` int(10) UNSIGNED NOT NULL,
   `elu` int(10) UNSIGNED NOT NULL,
   `genre_id` tinyint(3) UNSIGNED NOT NULL,
   `race_id` tinyint(3) UNSIGNED NOT NULL,
@@ -192,7 +216,7 @@ CREATE TABLE `personaje` (
   `eluPVP` int(10) UNSIGNED NOT NULL,
   `origbody_id` smallint(5) UNSIGNED NOT NULL,
   `orighead_id` smallint(5) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -204,7 +228,7 @@ CREATE TABLE `pet` (
   `user_id` mediumint(8) UNSIGNED NOT NULL,
   `slot` tinyint(3) UNSIGNED NOT NULL,
   `pet_id` smallint(5) UNSIGNED DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -415,7 +439,7 @@ CREATE TABLE `profesion_primaria` (
   `receta198` smallint(6) UNSIGNED NOT NULL DEFAULT 0,
   `receta199` smallint(6) UNSIGNED NOT NULL DEFAULT 0,
   `receta200` smallint(6) UNSIGNED NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -626,77 +650,7 @@ CREATE TABLE `profesion_secundaria` (
   `receta198` smallint(6) UNSIGNED NOT NULL DEFAULT 0,
   `receta199` smallint(6) UNSIGNED NOT NULL DEFAULT 0,
   `receta200` smallint(6) UNSIGNED NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `macros`
---
-
-CREATE TABLE `macros` (
-	  `user_id` mediumint(8) UNSIGNED NOT NULL,
-      `tipoaccion1` tinyint(1) UNSIGNED NULL DEFAULT '0',
-      `spell1` smallint(5) UNSIGNED NULL DEFAULT '0',
-      `inv1` smallint(5) UNSIGNED NULL DEFAULT '0',
-	  `command1` varchar(24),
-	  
-	  `tipoaccion2` tinyint(1) UNSIGNED NULL DEFAULT '0',
-      `spell2` smallint(5) UNSIGNED NULL DEFAULT '0',
-      `inv2` smallint(5) UNSIGNED NULL DEFAULT '0',
-	  `command2` varchar(24),
-	  
-	  `tipoaccion3` tinyint(1) UNSIGNED NULL DEFAULT '0',
-      `spell3` smallint(5) UNSIGNED NULL DEFAULT '0',
-      `inv3` smallint(5) UNSIGNED NULL DEFAULT '0',
-	  `command3` varchar(24),
-	  
-	  `tipoaccion4` tinyint(1) UNSIGNED NULL DEFAULT '0',
-      `spell4` smallint(5) UNSIGNED NULL DEFAULT '0',
-      `inv4` smallint(5) UNSIGNED NULL DEFAULT '0',
-	  `command4` varchar(24),
-	  
-	  `tipoaccion5` tinyint(1) UNSIGNED NULL DEFAULT '0',
-      `spell5` smallint(5) UNSIGNED NULL DEFAULT '0',
-      `inv5` smallint(5) UNSIGNED NULL DEFAULT '0',
-	  `command5` varchar(24),
-	  
-	  `tipoaccion6` tinyint(1) UNSIGNED NULL DEFAULT '0',
-      `spell6` smallint(5) UNSIGNED NULL DEFAULT '0',
-      `inv6` smallint(5) UNSIGNED NULL DEFAULT '0',
-	  `command6` varchar(24),
-	  
-	  `tipoaccion7` tinyint(1) UNSIGNED NULL DEFAULT '0',
-      `spell7` smallint(5) UNSIGNED NULL DEFAULT '0',
-      `inv7` smallint(5) UNSIGNED NULL DEFAULT '0',
-	  `command7` varchar(24),
-	  
-	  `tipoaccion8` tinyint(1) UNSIGNED NULL DEFAULT '0',
-      `spell8` smallint(5) UNSIGNED NULL DEFAULT '0',
-      `inv8` smallint(5) UNSIGNED NULL DEFAULT '0',
-	  `command8` varchar(24),
-	  
-	  `tipoaccion9` tinyint(1) UNSIGNED NULL DEFAULT '0',
-      `spell9` smallint(5) UNSIGNED NULL DEFAULT '0',
-      `inv9` smallint(5) UNSIGNED NULL DEFAULT '0',
-	  `command9` varchar(24),
-	  
-	  `tipoaccion10` tinyint(1) UNSIGNED NULL DEFAULT '0',
-      `spell10` smallint(5) UNSIGNED NULL DEFAULT '0',
-      `inv10` smallint(5) UNSIGNED NULL DEFAULT '0',
-	  `command10` varchar(24),
-	  
-	  `tipoaccion11` tinyint(1) UNSIGNED NULL DEFAULT '0',
-      `spell11` smallint(5) UNSIGNED NULL DEFAULT '0',
-      `inv11` smallint(5) UNSIGNED NULL DEFAULT '0',
-	  `command11` varchar(24),
-	  
-	  `tipoaccion12` tinyint(1) UNSIGNED NULL DEFAULT '0',
-      `spell12` smallint(5) UNSIGNED NULL DEFAULT '0',
-      `inv12` smallint(5) UNSIGNED NULL DEFAULT '0',
-	  `command12` varchar(24)
-	  
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4; 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -708,7 +662,7 @@ CREATE TABLE `punishment` (
   `user_id` mediumint(8) UNSIGNED NOT NULL,
   `number` tinyint(3) UNSIGNED NOT NULL,
   `reason` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -721,7 +675,7 @@ CREATE TABLE `quest` (
   `quest_id` tinyint(3) UNSIGNED NOT NULL DEFAULT 0,
   `npcs` varchar(64) NOT NULL DEFAULT '',
   `estado` tinyint(1) UNSIGNED NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -735,7 +689,7 @@ CREATE TABLE `skillpoint` (
   `sk` tinyint(3) UNSIGNED NOT NULL,
   `exp` int(10) UNSIGNED NOT NULL,
   `elu` int(10) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -747,7 +701,7 @@ CREATE TABLE `spell` (
   `user_id` mediumint(8) UNSIGNED NOT NULL,
   `slot` tinyint(3) UNSIGNED NOT NULL,
   `spell_id` smallint(5) UNSIGNED DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Índices para tablas volcadas
@@ -776,6 +730,19 @@ ALTER TABLE `banco_items`
 --
 ALTER TABLE `inventario_items`
   ADD PRIMARY KEY (`user_id`,`slot`);
+
+--
+-- Indices de la tabla `macros`
+--
+ALTER TABLE `macros`
+  ADD PRIMARY KEY (`user_id`);
+
+--
+-- Indices de la tabla `macro_acciones`
+--
+ALTER TABLE `macro_acciones`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indices de la tabla `personaje`
@@ -813,17 +780,16 @@ ALTER TABLE `skillpoint`
 --
 ALTER TABLE `spell`
   ADD PRIMARY KEY (`user_id`,`slot`);
-  
---
--- Indices de la tabla `macros`
---
-ALTER TABLE `macros`
-  ADD PRIMARY KEY (`user_id`);
-
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
 --
+
+--
+-- AUTO_INCREMENT de la tabla `macro_acciones`
+--
+ALTER TABLE `macro_acciones`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `personaje`
@@ -860,6 +826,12 @@ ALTER TABLE `inventario_items`
   ADD CONSTRAINT `fk_inventory_user` FOREIGN KEY (`user_id`) REFERENCES `personaje` (`id`);
 
 --
+-- Filtros para la tabla `macro_acciones`
+--
+ALTER TABLE `macro_acciones`
+  ADD CONSTRAINT `macro_acciones_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `macros` (`user_id`);
+
+--
 -- Filtros para la tabla `pet`
 --
 ALTER TABLE `pet`
@@ -889,12 +861,6 @@ ALTER TABLE `skillpoint`
 ALTER TABLE `spell`
   ADD CONSTRAINT `fk_spell_user` FOREIGN KEY (`user_id`) REFERENCES `personaje` (`id`);
 COMMIT;
-
---
--- Filtros para la tabla `macros`
---
-ALTER TABLE `macros`
-  ADD CONSTRAINT `fk_user_macros` FOREIGN KEY (`user_id`) REFERENCES `personaje` (`id`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
