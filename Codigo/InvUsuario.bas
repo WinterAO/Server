@@ -2677,3 +2677,27 @@ Public Sub moveItem(ByVal UserIndex As Integer, _
     End With
 
 End Sub
+
+Public Function ObtenerSlotObj(ByVal UserIndex As Integer, ByVal ObjIndex As Integer) As Integer
+'****************************************
+'Autor: Lorwik
+'Fecha: 15/03/2021
+'Descripción: Devuelve el slot en el inventario donde esta el objeto.
+'****************************************
+
+    Dim i As Integer
+    
+    With UserList(UserIndex)
+
+        '¿Tiene el objeto en el inventario? Si es asi obtenemos el slot en el que esta
+        For i = 1 To .CurrentInventorySlots
+            If .Invent.Object(i).ObjIndex = ObjIndex Then
+                ObtenerSlotObj = i
+                Exit Function
+            End If
+        Next i
+
+        ObtenerSlotObj = 0
+    
+    End With
+End Function

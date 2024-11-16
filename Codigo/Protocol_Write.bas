@@ -98,6 +98,7 @@ Private Enum ServerPacketID
     MostrarShop
     ActualizarGemasShop
     SpeedToChar
+    EnviarMacros
     
     'GM =  messages
     SpawnList                    ' SPL
@@ -5474,3 +5475,50 @@ errHandler:
 
     End If
 End Sub
+
+Public Sub WriteEnviarMacros(ByVal UserIndex As Integer)
+'***************************************************
+'Autor: Lorwik
+'Fecha: 06/03/2021
+'Descripcion: Envia al cliente toda la configuracion de macros
+'***************************************************
+    Dim i As Byte
+    Dim GrhObj As Long
+    Dim NombreObj As String
+    Dim NombreSpell As String
+    
+    GrhObj = 0
+    NombreObj = vbNullString
+    NombreSpell = vbNullString
+    
+    With UserList(UserIndex)
+
+        Call .outgoingData.WriteByte(ServerPacketID.EnviarMacros)
+        
+        Call .outgoingData.WriteLong(MacrosActivados)
+        
+        If MacrosActivados Then
+
+            For i = 1 To NUMMACROS
+            
+                'Preparamos la data antes de mandarla
+                If .MacrosKey(i).hList > 0 Then _
+                    NombreSpell = Hechizos(.MacrosKey(i).hList).Nombre
+                    
+                If .MacrosKey(i).InvObj > 0 Then
+                    GrhObj = ObjData(.MacrosKey(i).InvObj).GrhIndex
+                    NombreObj = ObjData(.MacrosKey(i).InvObj).Name
+                End If
+            
+                Call .outgoingData.WriteByte(.MacrosKey(i).TipoAccion)
+                Call .outgoingData.WriteASCIIString(NombreSpell)
+                Call .outgoingData.WriteLong(GrhObj)
+                Call .outgoingData.WriteASCIIString(NombreObj)
+                Call .outgoingData.WriteASCIIString(.MacrosKey(i).Comando)
+            
+            Next i
+        End If
+        
+    End With
+End Sub
+

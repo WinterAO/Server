@@ -631,6 +631,76 @@ CREATE TABLE `profesion_secundaria` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `macros`
+--
+
+CREATE TABLE `macros` (
+	  `user_id` mediumint(8) UNSIGNED NOT NULL,
+      `tipoaccion1` tinyint(1) UNSIGNED NULL DEFAULT '0',
+      `spell1` smallint(5) UNSIGNED NULL DEFAULT '0',
+      `inv1` smallint(5) UNSIGNED NULL DEFAULT '0',
+	  `command1` varchar(24),
+	  
+	  `tipoaccion2` tinyint(1) UNSIGNED NULL DEFAULT '0',
+      `spell2` smallint(5) UNSIGNED NULL DEFAULT '0',
+      `inv2` smallint(5) UNSIGNED NULL DEFAULT '0',
+	  `command2` varchar(24),
+	  
+	  `tipoaccion3` tinyint(1) UNSIGNED NULL DEFAULT '0',
+      `spell3` smallint(5) UNSIGNED NULL DEFAULT '0',
+      `inv3` smallint(5) UNSIGNED NULL DEFAULT '0',
+	  `command3` varchar(24),
+	  
+	  `tipoaccion4` tinyint(1) UNSIGNED NULL DEFAULT '0',
+      `spell4` smallint(5) UNSIGNED NULL DEFAULT '0',
+      `inv4` smallint(5) UNSIGNED NULL DEFAULT '0',
+	  `command4` varchar(24),
+	  
+	  `tipoaccion5` tinyint(1) UNSIGNED NULL DEFAULT '0',
+      `spell5` smallint(5) UNSIGNED NULL DEFAULT '0',
+      `inv5` smallint(5) UNSIGNED NULL DEFAULT '0',
+	  `command5` varchar(24),
+	  
+	  `tipoaccion6` tinyint(1) UNSIGNED NULL DEFAULT '0',
+      `spell6` smallint(5) UNSIGNED NULL DEFAULT '0',
+      `inv6` smallint(5) UNSIGNED NULL DEFAULT '0',
+	  `command6` varchar(24),
+	  
+	  `tipoaccion7` tinyint(1) UNSIGNED NULL DEFAULT '0',
+      `spell7` smallint(5) UNSIGNED NULL DEFAULT '0',
+      `inv7` smallint(5) UNSIGNED NULL DEFAULT '0',
+	  `command7` varchar(24),
+	  
+	  `tipoaccion8` tinyint(1) UNSIGNED NULL DEFAULT '0',
+      `spell8` smallint(5) UNSIGNED NULL DEFAULT '0',
+      `inv8` smallint(5) UNSIGNED NULL DEFAULT '0',
+	  `command8` varchar(24),
+	  
+	  `tipoaccion9` tinyint(1) UNSIGNED NULL DEFAULT '0',
+      `spell9` smallint(5) UNSIGNED NULL DEFAULT '0',
+      `inv9` smallint(5) UNSIGNED NULL DEFAULT '0',
+	  `command9` varchar(24),
+	  
+	  `tipoaccion10` tinyint(1) UNSIGNED NULL DEFAULT '0',
+      `spell10` smallint(5) UNSIGNED NULL DEFAULT '0',
+      `inv10` smallint(5) UNSIGNED NULL DEFAULT '0',
+	  `command10` varchar(24),
+	  
+	  `tipoaccion11` tinyint(1) UNSIGNED NULL DEFAULT '0',
+      `spell11` smallint(5) UNSIGNED NULL DEFAULT '0',
+      `inv11` smallint(5) UNSIGNED NULL DEFAULT '0',
+	  `command11` varchar(24),
+	  
+	  `tipoaccion12` tinyint(1) UNSIGNED NULL DEFAULT '0',
+      `spell12` smallint(5) UNSIGNED NULL DEFAULT '0',
+      `inv12` smallint(5) UNSIGNED NULL DEFAULT '0',
+	  `command12` varchar(24)
+	  
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4; 
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `punishment`
 --
 
@@ -743,6 +813,13 @@ ALTER TABLE `skillpoint`
 --
 ALTER TABLE `spell`
   ADD PRIMARY KEY (`user_id`,`slot`);
+  
+--
+-- Indices de la tabla `macros`
+--
+ALTER TABLE `macros`
+  ADD PRIMARY KEY (`user_id`);
+
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
@@ -812,6 +889,12 @@ ALTER TABLE `skillpoint`
 ALTER TABLE `spell`
   ADD CONSTRAINT `fk_spell_user` FOREIGN KEY (`user_id`) REFERENCES `personaje` (`id`);
 COMMIT;
+
+--
+-- Filtros para la tabla `macros`
+--
+ALTER TABLE `macros`
+  ADD CONSTRAINT `fk_user_macros` FOREIGN KEY (`user_id`) REFERENCES `personaje` (`id`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

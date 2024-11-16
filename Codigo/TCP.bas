@@ -29,7 +29,7 @@ Attribute VB_Name = "TCP"
 
 #If False Then
 
-    Dim errHandler, Length, index As Variant
+    Dim errHandler, Length, Index As Variant
 
 #End If
 
@@ -710,7 +710,7 @@ Private Sub AddItemsToNewUser(ByVal UserIndex As Integer, ByVal UserClase As eCl
         For i = 1 To MAXAMIGOS
             .Amigos(i).Nombre = vbNullString
             .Amigos(i).Ignorado = 0
-            .Amigos(i).index = 0
+            .Amigos(i).Index = 0
         Next i
 
      End With
@@ -910,7 +910,7 @@ Sub CloseSocketSL(ByVal UserIndex As Integer)
 
 End Sub
 
-Function EstaPCarea(index As Integer, Index2 As Integer) As Boolean
+Function EstaPCarea(Index As Integer, Index2 As Integer) As Boolean
     '***************************************************
     'Author: Unknown
     'Last Modification: -
@@ -919,10 +919,10 @@ Function EstaPCarea(index As Integer, Index2 As Integer) As Boolean
 
     Dim X As Integer, Y As Integer
 
-    For Y = UserList(index).Pos.Y - MinYBorder + 1 To UserList(index).Pos.Y + MinYBorder - 1
-        For X = UserList(index).Pos.X - MinXBorder + 1 To UserList(index).Pos.X + MinXBorder - 1
+    For Y = UserList(Index).Pos.Y - MinYBorder + 1 To UserList(Index).Pos.Y + MinYBorder - 1
+        For X = UserList(Index).Pos.X - MinXBorder + 1 To UserList(Index).Pos.X + MinXBorder - 1
 
-            If MapData(UserList(index).Pos.Map, X, Y).UserIndex = Index2 Then
+            If MapData(UserList(Index).Pos.Map, X, Y).UserIndex = Index2 Then
                 EstaPCarea = True
                 Exit Function
 
@@ -1348,6 +1348,8 @@ Sub ConnectUser(ByVal UserIndex As Integer, _
         Call CheckUserLevel(UserIndex)
         Call CheckUserLevelPVP(UserIndex)
         Call WriteUpdateUserStats(UserIndex)
+        
+        Call WriteEnviarMacros(UserIndex)
     
         Call WriteUpdateHungerAndThirst(UserIndex)
         Call WriteUpdateStrenghtAndDexterity(UserIndex)
@@ -1925,6 +1927,28 @@ Sub ResetUserBanco(ByVal UserIndex As Integer)
 
 End Sub
 
+Sub ResetMacros(ByVal UserIndex As Integer)
+    '***************************************************
+    'Author: Lorwik
+    'Last Modification: 07/03/2021
+    '
+    '***************************************************
+    
+    Dim i As Byte
+    
+    With UserList(UserIndex)
+    
+        For i = 1 To NUMMACROS
+            .MacrosKey(i).TipoAccion = 0
+            .MacrosKey(i).hList = 0
+            .MacrosKey(i).InvObj = 0
+            .MacrosKey(i).Comando = ""
+        Next i
+    
+    End With
+    
+End Sub
+
 Public Sub LimpiarComercioSeguro(ByVal UserIndex As Integer)
     '***************************************************
     'Author: Unknown
@@ -1968,6 +1992,7 @@ Sub ResetUserSlot(ByVal UserIndex As Integer)
     Call ResetUserBanco(UserIndex)
     Call ResetQuestStats(UserIndex)
     Call ResetUserExtras(UserIndex)
+    Call ResetMacros(UserIndex)
     
     With UserList(UserIndex).ComUsu
         .Acepto = False
@@ -2243,7 +2268,7 @@ Public Sub ResetUserExtras(ByVal UserIndex As Integer)
 
   UserList(UserIndex).Amigos(i).Ignorado = 0
 
-  UserList(UserIndex).Amigos(i).index = 0
+  UserList(UserIndex).Amigos(i).Index = 0
 
   Next i
 

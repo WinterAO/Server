@@ -198,6 +198,8 @@ Private Enum ClientPacketID
     BuyShop
     InitPVP
     DueloSet
+    EjecutarMacro
+    GuardarMacro
     GMCommands
 End Enum
 
@@ -945,6 +947,12 @@ Public Function HandleIncomingData(ByVal UserIndex As Integer) As Boolean
             
         Case ClientPacketID.DueloSet
             Call HandleDueloSet(UserIndex)
+            
+        Case ClientPacketID.EjecutarMacro
+            Call HandleEjecutarMacro(UserIndex)
+            
+        Case ClientPacketID.GuardarMacro
+            Call HandleGuardarMacro(UserIndex)
             
         Case ClientPacketID.GMCommands              'GM Messages
             Call HandleGMCommands(UserIndex)
@@ -2937,32 +2945,7 @@ Private Sub HandleCastSpell(ByVal UserIndex As Integer)
         
         Spell = .incomingData.ReadByte()
         
-        If .flags.Muerto = 1 Then
-            'Call WriteConsoleMsg(UserIndex, "Estas muerto!!", FontTypeNames.FONTTYPE_INFO)
-            Call WriteMultiMessage(UserIndex, eMessages.UserMuerto)
-            Exit Sub
-
-        End If
-        
-        '¿Está trabajando?
-        If .flags.MacroTrabajo <> 0 Then
-            Call WriteConsoleMsg(UserIndex, "¡Estas trabajando!", FontTypeNames.FONTTYPE_INFOBOLD)
-            Exit Sub
-        End If
-        
-        'Now you can be atacked
-        .flags.NoPuedeSerAtacado = False
-        
-        If Spell < 1 Then
-            .flags.Hechizo = 0
-            Exit Sub
-        ElseIf Spell > MAXUSERHECHIZOS Then
-            .flags.Hechizo = 0
-            Exit Sub
-
-        End If
-        
-        .flags.Hechizo = .Stats.UserHechizos(Spell)
+        Call modHechizos.CastSpell(UserIndex, Spell)
 
     End With
 
@@ -3825,19 +3808,19 @@ Private Sub HandleSpellInfo(ByVal UserIndex As Integer)
         'Remove packet ID
         Call .incomingData.ReadByte
         
-        Dim spellSlot As Byte
+        Dim SpellSlot As Byte
         Dim Spell As Integer
         
-        spellSlot = .incomingData.ReadByte()
+        SpellSlot = .incomingData.ReadByte()
         
         'Validate slot
-        If spellSlot < 1 Or spellSlot > MAXUSERHECHIZOS Then
+        If SpellSlot < 1 Or SpellSlot > MAXUSERHECHIZOS Then
             Call WriteConsoleMsg(UserIndex, "¡Primero selecciona el hechizo.!", FontTypeNames.FONTTYPE_INFO)
             Exit Sub
         End If
         
         'Validate spell in the slot
-        Spell = .Stats.UserHechizos(spellSlot)
+        Spell = .Stats.UserHechizos(SpellSlot)
         If Spell > 0 And Spell < NumeroHechizos + 1 Then
             With Hechizos(Spell)
                 'Send information
@@ -19208,3 +19191,90 @@ Public Sub HandleDueloSet(ByVal UserIndex As Integer)
         End Select
     End With
 End Sub
+
+Private Sub HandleEjecutarMacro(ByVal UserIndex As Integer)
+'***************************************************
+'Autor: Lorwik
+'Fecha: 06/03/2021
+'Descripcion: Ejecuta la accion de un macro
+'***************************************************
+
+    Dim MacroIndex As Byte
+    Dim Slot As Integer
+    
+    With UserList(UserIndex)
+
+        'Remove Packet ID
+        Call .incomingData.ReadByte
+        
+        MacroIndex = .incomingData.ReadByte
+        
+        Select Case .MacrosKey(MacroIndex).TipoAccion
+                
+            Case 2 'Hechizos
+            
+                If .MacrosKey(MacroIndex).hList < 1 Then Exit Sub
+                
+                Call modHechizos.CastSpell(UserIndex, 0, .MacrosKey(MacroIndex).hList)
+                Call WriteMultiMessage(UserIndex, eMessages.WorkRequestTarget, eSkill.Magia)
+                
+            Case 3 'Equipar Item
+            
+                If .MacrosKey(MacroIndex).InvObj < 1 Then Exit Sub
+                
+                Slot = ObtenerSlotObj(UserIndex, .MacrosKey(MacroIndex).InvObj)
+                
+                'Si tiene el obj en el inventario lo equipamos
+                If Slot > 0 Then _
+                    Call EquiparInvItem(UserIndex, Slot)
+            
+            Case 4 'Usar Item
+                
+                If .MacrosKey(MacroIndex).InvObj < 1 Then Exit Sub
+                
+                Slot = ObtenerSlotObj(UserIndex, .MacrosKey(MacroIndex).InvObj)
+
+                'Si tiene el obj en el inventario lo usamos
+                If Slot > 0 Then _
+                    Call UseInvItem(UserIndex, Slot)
+            
+        End Select
+        
+    End With
+End Sub
+
+Private Sub HandleGuardarMacro(ByVal UserIndex As Integer)
+'***************************************************
+'Autor: Lorwik
+'Fecha: 06/03/2021
+'Descripcion: Guarda la configuracion de un macro
+'***************************************************
+
+    Dim MacroIndex As Byte
+    Dim SpellSlot As Integer
+    Dim ObjSlot As Integer
+
+    With UserList(UserIndex)
+        'Remove Packet ID
+        Call .incomingData.ReadByte
+        
+        MacroIndex = .incomingData.ReadByte
+        
+        .MacrosKey(MacroIndex).TipoAccion = .incomingData.ReadByte
+        SpellSlot = .incomingData.ReadInteger
+        ObjSlot = .incomingData.ReadInteger
+        .MacrosKey(MacroIndex).Comando = .incomingData.ReadASCIIString
+        
+        If SpellSlot > 0 Then _
+            .MacrosKey(MacroIndex).hList = .Stats.UserHechizos(SpellSlot)
+
+        If ObjSlot > 0 Then _
+            .MacrosKey(MacroIndex).InvObj = .Invent.Object(ObjSlot).ObjIndex
+    End With
+    
+    'Le enviamos los macros actualizados
+    Call WriteEnviarMacros(UserIndex)
+    
+End Sub
+
+

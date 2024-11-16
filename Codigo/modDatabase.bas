@@ -149,6 +149,40 @@ Sub InsertUserToDatabase(ByVal UserIndex As Integer, _
 
         Call User_Database.Database_Connection.Execute(query)
         
+        '*******************************************************************
+        'Macros
+        '*******************************************************************
+        
+        If MacrosActivados Then
+        
+            query = "INSERT INTO macros (user_id, "
+            
+            For LoopC = 1 To NUMMACROS
+                query = query & "tipoaccion" & LoopC & ", "
+                query = query & "spell" & LoopC & ", "
+                query = query & "inv" & LoopC & ", "
+                query = query & "command" & LoopC
+                If LoopC < NUMMACROS Then query = query & ", "
+            Next LoopC
+    
+            query = query & ") VALUES (" & .ID & ", "
+    
+            For LoopC = 1 To NUMMACROS
+                query = query & .MacrosKey(LoopC).TipoAccion & ", "
+                query = query & .MacrosKey(LoopC).hList & ", "
+                query = query & .MacrosKey(LoopC).InvObj & ", "
+                query = query & "'" & .MacrosKey(LoopC).Comando & "'"
+                
+                If LoopC < NUMMACROS Then query = query & ", "
+            Next LoopC
+    
+            query = query & ");"
+    
+            Call User_Database.Database_Connection.Execute(query)
+        
+        End If
+        
+
     End With
     
     #If DBConexionUnica = 0 Then
@@ -379,6 +413,30 @@ Sub UpdateUserToDatabase(ByVal UserIndex As Integer, _
         query = query & " ON DUPLICATE KEY UPDATE amigo=VALUES(amigo), ignorado=VALUES(ignorado); "
             
         Call User_Database.Database_Connection.Execute(query)
+
+        '*******************************************************************
+        'Macros
+        '*******************************************************************
+        If MacrosActivados Then
+        
+            query = "UPDATE macros SET "
+            
+            For LoopC = 1 To NUMMACROS
+                
+                query = query & "tipoaccion" & LoopC & " = '" & .MacrosKey(LoopC).TipoAccion & "', "
+                query = query & "spell" & LoopC & " = '" & .MacrosKey(LoopC).hList & "', "
+                query = query & "inv" & LoopC & " = '" & .MacrosKey(LoopC).InvObj & "', "
+                query = query & "command" & LoopC & " = '" & .MacrosKey(LoopC).Comando & "'"
+                
+                If LoopC < NUMMACROS Then query = query & ", "
+                
+            Next LoopC
+            
+            query = query & " WHERE user_id = '" & .ID & "'"
+            
+            Call User_Database.Database_Connection.Execute(query)
+        
+        End If
 
     End With
 
@@ -799,6 +857,26 @@ Sub LoadUserFromDatabase(ByVal UserIndex As Integer)
                 
                 User_Database.Database_RecordSet.MoveNext
             Wend
+
+        End If
+
+        Set User_Database.Database_RecordSet = Nothing
+        
+        '*******************************************************************
+        'Macros - Acciones rapidas
+        '*******************************************************************
+        query = "SELECT * FROM macros WHERE user_id = " & .ID & ";"
+        Set User_Database.Database_RecordSet = User_Database.Database_Connection.Execute(query)
+
+        If Not User_Database.Database_RecordSet.RecordCount = 0 Then
+            User_Database.Database_RecordSet.MoveFirst
+
+            For LoopC = 1 To NUMMACROS
+                .MacrosKey(LoopC).TipoAccion = User_Database.Database_RecordSet("tipoaccion" & LoopC)
+                .MacrosKey(LoopC).hList = User_Database.Database_RecordSet("spell" & LoopC)
+                .MacrosKey(LoopC).InvObj = User_Database.Database_RecordSet("inv" & LoopC)
+                .MacrosKey(LoopC).Comando = User_Database.Database_RecordSet("command" & LoopC)
+            Next LoopC
 
         End If
 

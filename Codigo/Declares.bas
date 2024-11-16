@@ -253,6 +253,8 @@ Public Const DANO_ACUCHILLAR         As Single = 0.2
 
 Public Const MAXMASCOTASENTRENADOR   As Byte = 7
 
+Public Const NUMMACROS               As Byte = 12
+
 Public Enum FXIDs
 
     FXMEDITARCHICO = 4
@@ -1718,6 +1720,14 @@ Public Type tUserProfesion
     Recetas(1 To MAXUSERRECETAS) As Long 'Indica la receta
 End Type
 
+'Macros - Acciones rapidas
+Type eMacros
+    TipoAccion  As Byte
+    hList       As Integer
+    InvObj      As Integer
+    Comando     As String
+End Type
+
 'Tipo de los Usuarios
 Public Type User
     PosAnt As WorldPos
@@ -1747,6 +1757,8 @@ Public Type User
     Hogar As eCiudad
         
     Invent As Inventario
+    
+    MacrosKey(1 To NUMMACROS) As eMacros
     
     Pos As WorldPos
     
@@ -2150,6 +2162,8 @@ Public Minutos                           As String
 Public haciendoBK                        As Boolean
 
 Public PuedeCrearPersonajes              As Integer
+
+Public MacrosActivados                   As Long
 
 Public ServerSoloGMs                     As Integer
 

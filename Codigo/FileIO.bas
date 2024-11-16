@@ -1646,6 +1646,7 @@ Sub LoadSini()
     ULTIMAVERSION = Lector.GetValue("INIT", "VersionBuildCliente")
 
     PuedeCrearPersonajes = val(Lector.GetValue("INIT", "PuedeCrearPersonajes"))
+    MacrosActivados = val(Lector.GetValue("INIT", "MacrosActivados"))
     ServerSoloGMs = val(Lector.GetValue("INIT", "ServerSoloGMs"))
     
     ArmaduraImperial1 = val(Lector.GetValue("INIT", "ArmaduraImperial1"))
