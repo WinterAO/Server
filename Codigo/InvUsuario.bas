@@ -1149,7 +1149,7 @@ Sub EquiparInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte)
                 '¿Es una herramienta?
                 If ObjData(ObjIndex).Herramienta.Profesion > 0 Then
                     '¿No tiene la profesion aprendida para poder usarla?
-                    If Not ConoceProfesion(UserIndex, ObjData(ObjIndex).Herramienta.Profesion) Then
+                    If ConoceProfesion(UserIndex, ObjData(ObjIndex).Herramienta.Profesion) < 0 Then
                         Call WriteConsoleMsg(UserIndex, "No posees los conocimientos necesarios para poder utilizar esta herramienta.", FontTypeNames.FONTTYPE_INFO)
                         Exit Sub
                     End If
