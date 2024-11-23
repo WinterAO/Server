@@ -19209,6 +19209,9 @@ Private Sub HandleEjecutarMacro(ByVal UserIndex As Integer)
         
         MacroIndex = .incomingData.ReadByte
         
+        '¿Estan los macros activados en el server?
+        If Not MacrosActivados Then Exit Sub
+        
         Select Case .MacrosKey(MacroIndex).TipoAccion
                 
             Case 2 'Hechizos
@@ -19251,19 +19254,27 @@ Private Sub HandleGuardarMacro(ByVal UserIndex As Integer)
 '***************************************************
 
     Dim MacroIndex As Byte
+    Dim TipoAccion As Byte
     Dim SpellSlot As Integer
     Dim ObjSlot As Integer
+    Dim Comando As String
+    
 
     With UserList(UserIndex)
         'Remove Packet ID
         Call .incomingData.ReadByte
         
         MacroIndex = .incomingData.ReadByte
-        
-        .MacrosKey(MacroIndex).TipoAccion = .incomingData.ReadByte
+        TipoAccion = .incomingData.ReadByte
         SpellSlot = .incomingData.ReadInteger
         ObjSlot = .incomingData.ReadInteger
-        .MacrosKey(MacroIndex).Comando = .incomingData.ReadASCIIString
+        Comando .incomingData.ReadASCIIString
+        
+        '¿Estan los macros activados en el server?
+        If Not MacrosActivados Then Exit Sub
+        
+        .MacrosKey(MacroIndex).TipoAccion = TipoAccion
+        .MacrosKey(MacroIndex).Comando = Comando
         
         If SpellSlot > 0 Then _
             .MacrosKey(MacroIndex).hList = .Stats.UserHechizos(SpellSlot)
