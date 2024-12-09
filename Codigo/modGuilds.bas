@@ -54,9 +54,14 @@ Public Const MAXASPIRANTES        As Byte = 10
 
 Private Const MAXANTIFACCION      As Byte = 5
 
-'Objeto necesario para poder fundar clan
+Private Type tClan_Requirements
+    Level As Integer
+    Skills As Integer
+    ItemRequirement As Boolean
+    ItemIndex As Integer
+End Type
 
-Private Const ITEMFUNDARCLAN      As Integer = 1251
+Public Clan_Requirements As tClan_Requirements
 
 'puntos maximos de antifaccion que un clan tolera antes de ser cambiada su alineacion
 
@@ -706,10 +711,17 @@ Public Function PuedeFundarUnClan(ByVal UserIndex As Integer, _
 
     End If
     
-    If UserList(UserIndex).Stats.ELV < 40 Or UserList(UserIndex).Stats.UserSkills(eSkill.Liderazgo) < 100 Or Not TieneObjetos(ITEMFUNDARCLAN, 1, UserIndex) Then
-        refError = "Para fundar un clan debes ser nivel 40, tener 100 skills en liderazgo y esta en posesión del " & ObjData(ITEMFUNDARCLAN).Name & "."
+    If UserList(UserIndex).Stats.ELV < Clan_Requirements.Level Or UserList(UserIndex).Stats.UserSkills(eSkill.Liderazgo) < Clan_Requirements.Skills Then
+        refError = "Para fundar un clan debes ser nivel " & Clan_Requirements.Level & ", tener " & Clan_Requirements.Skills & " skills en liderazgo. Consulta el manual del juego para mas informacion."
         Exit Function
 
+    End If
+    
+    If Clan_Requirements.ItemRequirement Then
+        If Not TieneObjetos(Clan_Requirements.ItemIndex, 1, UserIndex) Then
+            refError = "Para fundar clan debe estar en posesión del " & ObjData(Clan_Requirements.ItemIndex).Name & ". Consulta el manual del juego para mas informacion."
+            Exit Function
+        End If
     End If
     
     Select Case Alineacion

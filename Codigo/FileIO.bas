@@ -1906,6 +1906,12 @@ Public Sub Load_Rates()
     End With
     '-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
     
+    'CLANES
+    Clan_Requirements.Level = val(Lector.GetValue("CLANES", "Nivel"))
+    Clan_Requirements.Skills = val(Lector.GetValue("CLANES", "Skills"))
+    Clan_Requirements.ItemRequirement = val(Lector.GetValue("CLANES", "RequerirItem"))
+    Clan_Requirements.ItemIndex = val(Lector.GetValue("CLANES", "ItemIndex"))
+    
     Set Lector = Nothing
     
 End Sub

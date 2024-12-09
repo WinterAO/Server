@@ -19268,7 +19268,7 @@ Private Sub HandleGuardarMacro(ByVal UserIndex As Integer)
         TipoAccion = .incomingData.ReadByte
         SpellSlot = .incomingData.ReadInteger
         ObjSlot = .incomingData.ReadInteger
-        Comando .incomingData.ReadASCIIString
+        Comando = .incomingData.ReadASCIIString
         
         '¿Estan los macros activados en el server?
         If Not MacrosActivados Then Exit Sub
