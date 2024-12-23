@@ -1085,6 +1085,7 @@ Public Type ObjData
     IndexAbierta As Integer
     IndexCerrada As Integer
     IndexCerradaLlave As Integer
+    PuertaGigante As Byte
     
     RazaEnana As Byte
     RazaDrow As Byte

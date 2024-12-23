@@ -190,7 +190,7 @@ Private Sub HostilMalvadoAI(ByVal NPCIndex As Integer)
     Dim atacoPJ       As Boolean
 
     Dim UserProtected As Boolean
-    
+
     atacoPJ = False
     
     With Npclist(NPCIndex)
@@ -653,6 +653,7 @@ Private Sub SeguirAgresor(ByVal NPCIndex As Integer)
 
             '¿El NPC se salio de su zona de origen? ¡Tiene que volver!
             If MapData(.Pos.Map, .Pos.X, .Pos.Y).ZonaIndex <> .ZonaOrig Then
+                Debug.Print "No estoy en mi zona de origen"
                 Call NPCVuelveOrigin(NPCIndex)
                 .PFINFO.PathLenght = 0
                 Exit Sub

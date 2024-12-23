@@ -918,6 +918,7 @@ Sub LoadOBJData()
                     .IndexAbierta = val(Leer.GetValue("OBJ" & Object, "IndexAbierta"))
                     .IndexCerrada = val(Leer.GetValue("OBJ" & Object, "IndexCerrada"))
                     .IndexCerradaLlave = val(Leer.GetValue("OBJ" & Object, "IndexCerradaLlave"))
+                    .PuertaGigante = val(Leer.GetValue("OBJ" & Object, "PuertaGigante"))
                 
                 Case otPociones
                     .TipoPocion = val(Leer.GetValue("OBJ" & Object, "TipoPocion"))
@@ -1907,7 +1908,7 @@ Public Sub Load_Rates()
     '-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
     
     'CLANES
-    Clan_Requirements.Level = val(Lector.GetValue("CLANES", "Nivel"))
+    Clan_Requirements.level = val(Lector.GetValue("CLANES", "Nivel"))
     Clan_Requirements.Skills = val(Lector.GetValue("CLANES", "Skills"))
     Clan_Requirements.ItemRequirement = val(Lector.GetValue("CLANES", "RequerirItem"))
     Clan_Requirements.ItemIndex = val(Lector.GetValue("CLANES", "ItemIndex"))

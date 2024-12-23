@@ -309,60 +309,87 @@ Sub AccionParaPuerta(ByVal Map As Integer, _
     '***************************************************
 
     On Error Resume Next
+    
+    Dim i As Byte
 
-    If Not (Distance(UserList(UserIndex).Pos.X, UserList(UserIndex).Pos.Y, X, Y) > 2) Then
-        If ObjData(MapData(Map, X, Y).ObjInfo.ObjIndex).Llave = 0 Then
-            If ObjData(MapData(Map, X, Y).ObjInfo.ObjIndex).Cerrada = 1 Then
+    With MapData(Map, X, Y).ObjInfo
 
-                'Abre la puerta
-                If ObjData(MapData(Map, X, Y).ObjInfo.ObjIndex).Llave = 0 Then
+        If Not (Distance(UserList(UserIndex).Pos.X, UserList(UserIndex).Pos.Y, X, Y) > 2) Then
+            If ObjData(.ObjIndex).Llave = 0 Then
+                If ObjData(.ObjIndex).Cerrada = 1 Then
+
+                    'Abre la puerta
+                    If ObjData(.ObjIndex).Llave = 0 Then
                     
-                    MapData(Map, X, Y).ObjInfo.ObjIndex = ObjData(MapData(Map, X, Y).ObjInfo.ObjIndex).IndexAbierta
+                        .ObjIndex = ObjData(.ObjIndex).IndexAbierta
                     
-                    Call modSendData.SendToAreaByPos(Map, X, Y, PrepareMessageObjectCreate(ObjData(MapData(Map, X, Y).ObjInfo.ObjIndex).GrhIndex, 0, X, Y))
+                        Call modSendData.SendToAreaByPos(Map, X, Y, PrepareMessageObjectCreate(ObjData(.ObjIndex).GrhIndex, 0, X, Y))
                     
-                    'Desbloquea
-                    MapData(Map, X, Y).Blocked = 0
-                    MapData(Map, X - 1, Y).Blocked = 0
+                        If ObjData(.ObjIndex).PuertaGigante = 1 Then
+                        
+                            'Desbloquea
+                            MapData(Map, X + 1, Y).Blocked = 0
+                            MapData(Map, X + 2, Y).Blocked = 0
+                            
+                            'Bloquea todos los mapas
+                            Call Bloquear(True, Map, X + 1, Y, 0)
+                            Call Bloquear(True, Map, X + 2, Y, 0)
+                        
+                        End If
                     
-                    'Bloquea todos los mapas
-                    Call Bloquear(True, Map, X, Y, 0)
-                    Call Bloquear(True, Map, X - 1, Y, 0)
+                        'Desbloquea
+                        MapData(Map, X, Y).Blocked = 0
+                        MapData(Map, X - 1, Y).Blocked = 0
+                        
+                        'Bloquea todos los mapas
+                        Call Bloquear(True, Map, X, Y, 0)
+                        Call Bloquear(True, Map, X - 1, Y, 0)
                       
-                    'Sonido
-                    Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_PUERTA, X, Y))
+                        'Sonido
+                        Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_PUERTA, X, Y))
                     
+                    Else
+                        Call WriteConsoleMsg(UserIndex, "La puerta esta cerrada con llave.", FontTypeNames.FONTTYPE_INFO)
+
+                    End If
+
                 Else
-                    Call WriteConsoleMsg(UserIndex, "La puerta esta cerrada con llave.", FontTypeNames.FONTTYPE_INFO)
+                    'Cierra puerta
+                    .ObjIndex = ObjData(.ObjIndex).IndexCerrada
+                
+                    Call modSendData.SendToAreaByPos(Map, X, Y, PrepareMessageObjectCreate(ObjData(.ObjIndex).GrhIndex, 0, X, Y))
+                                
+                    If ObjData(.ObjIndex).PuertaGigante = 1 Then
+                        MapData(Map, X + 1, Y).Blocked = 1
+                        MapData(Map, X + 2, Y).Blocked = 1
+                
+                        Call Bloquear(True, Map, X + 1, Y, 1)
+                        Call Bloquear(True, Map, X + 2, Y, 1)
+
+                    End If
+                                
+                    MapData(Map, X, Y).Blocked = 1
+                    MapData(Map, X - 1, Y).Blocked = 1
+                
+                    Call Bloquear(True, Map, X - 1, Y, 1)
+                    Call Bloquear(True, Map, X, Y, 1)
+                
+                    Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_PUERTA, X, Y))
 
                 End If
-
+        
+                UserList(UserIndex).flags.TargetObj = .ObjIndex
             Else
-                'Cierra puerta
-                MapData(Map, X, Y).ObjInfo.ObjIndex = ObjData(MapData(Map, X, Y).ObjInfo.ObjIndex).IndexCerrada
-                
-                Call modSendData.SendToAreaByPos(Map, X, Y, PrepareMessageObjectCreate(ObjData(MapData(Map, X, Y).ObjInfo.ObjIndex).GrhIndex, 0, X, Y))
-                                
-                MapData(Map, X, Y).Blocked = 1
-                MapData(Map, X - 1, Y).Blocked = 1
-                
-                Call Bloquear(True, Map, X - 1, Y, 1)
-                Call Bloquear(True, Map, X, Y, 1)
-                
-                Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessagePlayWave(SND_PUERTA, X, Y))
+                Call WriteConsoleMsg(UserIndex, "La puerta esta cerrada con llave.", FontTypeNames.FONTTYPE_INFO)
 
             End If
-        
-            UserList(UserIndex).flags.TargetObj = MapData(Map, X, Y).ObjInfo.ObjIndex
+
         Else
-            Call WriteConsoleMsg(UserIndex, "La puerta esta cerrada con llave.", FontTypeNames.FONTTYPE_INFO)
+            Call WriteConsoleMsg(UserIndex, "Estas demasiado lejos.", FontTypeNames.FONTTYPE_INFO)
 
         End If
-
-    Else
-        Call WriteConsoleMsg(UserIndex, "Estas demasiado lejos.", FontTypeNames.FONTTYPE_INFO)
-
-    End If
+    
+    End With
 
 End Sub
 

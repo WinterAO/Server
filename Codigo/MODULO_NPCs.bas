@@ -977,12 +977,14 @@ Public Function MoveNPCChar(ByVal NPCIndex As Integer, ByVal nHeading As Byte) A
             Call modAreas.CheckUpdateNeededNpc(NPCIndex, nHeading)
             
             'Si es un WorldBoss y se aleja 10 tiles de su OrigPos se le devuelve.
-            If Npclist(NPCIndex).NPCtype = eNPCType.WorldBoss And Npclist(NPCIndex).Pos.X <= (Npclist(NPCIndex).Orig.X - 20) Or _
-                Npclist(NPCIndex).Pos.X >= (Npclist(NPCIndex).Orig.X + 20) Or Npclist(NPCIndex).Pos.Y <= (Npclist(NPCIndex).Orig.Y - 20) Or _
-                    Npclist(NPCIndex).Pos.Y >= (Npclist(NPCIndex).Orig.Y + 20) Then
+            If Npclist(NPCIndex).NPCtype = eNPCType.WorldBoss Then
+                If Npclist(NPCIndex).Pos.X <= (Npclist(NPCIndex).Orig.X - 20) Or Npclist(NPCIndex).Pos.X >= (Npclist(NPCIndex).Orig.X + 20) Or _
+                        Npclist(NPCIndex).Pos.Y <= (Npclist(NPCIndex).Orig.Y - 20) Or Npclist(NPCIndex).Pos.Y >= (Npclist(NPCIndex).Orig.Y + 20) Then
  
-                Call NPCTelep(NPCIndex, Npclist(NPCIndex).Orig, True)
-                    
+                    Call NPCTelep(NPCIndex, Npclist(NPCIndex).Orig, True)
+
+                End If
+               
             End If
         
             ' Npc has moved
